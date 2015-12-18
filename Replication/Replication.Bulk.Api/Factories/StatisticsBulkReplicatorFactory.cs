@@ -23,7 +23,7 @@ namespace NuClear.Replication.Bulk.Api.Factories
         public IReadOnlyCollection<IBulkReplicator> Create(IMetadataElement metadataElement)
         {
             var valueObjectMetadataElement = (StatisticsRecalculationMetadata<T>)metadataElement;
-            return new[] { new UpdatesBulkReplicator<T>(_query, _dataConnection, valueObjectMetadataElement.MapSpecificationProviderForSource.Invoke(Specs.Find.All<T>())) };
+            return new[] { new InsertsBulkReplicator<T>(_query, _dataConnection, valueObjectMetadataElement.MapSpecificationProviderForSource.Invoke(Specs.Find.All<T>())) };
         }
 
         public void Dispose()

@@ -16,16 +16,17 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
             {
                 public static partial class ToStatistics
                 {
-                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmCategoryStatistics>> FirmCategoryStatistics =
-                        new MapSpecification<IQuery, IQueryable<Statistics::FirmCategoryStatistics>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>> FirmCategory3 =
+                        new MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>>(
                             q => from firm in q.For<CI::Firm>()
-                                 join statistics in q.For<Statistics::FirmCategoryStatistics>() on firm.Id equals statistics.FirmId
-                                 select new Statistics::FirmCategoryStatistics
+                                 join statistics in q.For<Statistics::FirmCategory3>() on firm.Id equals statistics.FirmId
+                                 select new Statistics::FirmCategory3
                                  {
                                             ProjectId = firm.ProjectId,
 
                                             FirmId = statistics.FirmId,
                                             CategoryId = statistics.CategoryId,
+                                            Name = statistics.Name,
                                             AdvertisersShare = statistics.AdvertisersShare,
                                             FirmCount = statistics.FirmCount,
                                             Hits = statistics.Hits,

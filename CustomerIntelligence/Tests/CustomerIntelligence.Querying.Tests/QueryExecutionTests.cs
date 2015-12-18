@@ -8,12 +8,9 @@ using Microsoft.OData.Edm;
 
 using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.AdvancedSearch.Common.Metadata.Identities;
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
-using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
-using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Querying.EntityFramework.Emit;
 using NuClear.Querying.OData.Building;
 using NuClear.Querying.QueryExecution;
@@ -28,7 +25,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
     [TestFixture, SetCulture("")]
     public sealed class QueryExecutionTests : QueryExecutionBaseFixture
     {
-        private readonly IDictionary<Uri, IEdmModel> _models = BuildModels(MetadataProvider, BusinessDirectoryId, CustomerIntelligenceId);
+        private readonly IDictionary<Uri, IEdmModel> _models = BuildModels(TestMetadataProvider.Instance, BusinessDirectoryId, CustomerIntelligenceId);
 
         [TestCase("CategoryGroup", null, Result = "CategoryGroup[]")]
         [TestCase("Project", null, Result = "Project[]")]
@@ -49,9 +46,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         [TestCase("Firm", "$filter=AddressCount gt @amount&@amount=10", Result = "Firm[].Where($it => ($it.AddressCount > 10))", Description = "Поиск по количеству активных адресов.")]
         [TestCase("Firm", "$filter=CategoryGroup/Id eq @id&@id=12345", Result = "Firm[].Where($it => ($it.CategoryGroup.Id == Convert(12345)))", Description = "Поиск по ценовой категории фирмы.")]
         [TestCase("Firm", "$filter=Territories/any(it: (it/TerritoryId eq 123) or (it/TerritoryId eq null))", Result = "Firm[].Where($it => $it.Territories.Any(it => ((it.TerritoryId == Convert(123)) OrElse (it.TerritoryId == null))))", Description = "Поиск по территории.")]
-        [TestCase("Firm", "$filter=Categories/any(x:x/CategoryId eq @id1)&@id1=123", Result = "Firm[].Where($it => $it.Categories.Any(x => (x.CategoryId == Convert(123))))", Description = "Поиск по рубрике 1-го уровня.")]
-        [TestCase("Firm", "$filter=Categories/any(x:x/CategoryId eq @id2)&@id2=123", Result = "Firm[].Where($it => $it.Categories.Any(x => (x.CategoryId == Convert(123))))", Description = "Поиск по рубрике 2-го уровня.")]
-        [TestCase("Firm", "$filter=Categories/any(x:x/CategoryId eq @id3)&@id3=123", Result = "Firm[].Where($it => $it.Categories.Any(x => (x.CategoryId == Convert(123))))", Description = "Поиск по рубрике 3-го уровня.")]
+        [TestCase("Firm", "$filter=Categories1/any(x:x/CategoryId eq @id1)&@id1=123", Result = "Firm[].Where($it => $it.Categories1.Any(x => (x.CategoryId == Convert(123))))", Description = "Поиск по рубрике 1-го уровня.")]
+        [TestCase("Firm", "$filter=Categories2/any(x:x/CategoryId eq @id2)&@id2=123", Result = "Firm[].Where($it => $it.Categories2.Any(x => (x.CategoryId == Convert(123))))", Description = "Поиск по рубрике 2-го уровня.")]
+        [TestCase("Firm", "$filter=Categories3/any(x:x/CategoryId eq @id3)&@id3=123", Result = "Firm[].Where($it => $it.Categories3.Any(x => (x.CategoryId == Convert(123))))", Description = "Поиск по рубрике 3-го уровня.")]
         [TestCase("Firm", "$filter=Client/CategoryGroup/Id eq @id&@id=12345", Result = "Firm[].Where($it => ($it.Client.CategoryGroup.Id == Convert(12345)))", Description = "Поиск по ценовой категории клиента.")]
         [TestCase("Firm", "$filter=Client/Contacts/any(x:x/Role eq Querying.CustomerIntelligence.ContactRole'Employee')", Result = "Firm[].Where($it => $it.Client.Contacts.Any(x => (Convert(x.Role) == Convert(Employee))))", Description = "Поиск по роли контакта.")]
         [TestCase("Firm", "$filter=Balances/all(x:x/Balance gt @balance)&@balance=1000", Result = "Firm[].Where($it => $it.Balances.All(x => (x.Balance > Convert(1000))))", Description = "Поиск по балансу лицевого счета.")]
@@ -134,21 +131,5 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
         private static readonly Uri BusinessDirectoryId = Metadata.Id.For<QueryingMetadataIdentity>(BusinessDirectory);
         private static readonly Uri CustomerIntelligenceId = Metadata.Id.For<QueryingMetadataIdentity>(CustomerIntelligence);
-
-        private static IMetadataSource AdvancedSearchMetadataSource
-        {
-            get
-            {
-                return new QueryingMetadataSource();
-            }
-        }
-
-        private static IMetadataProvider MetadataProvider
-        {
-            get
-            {
-                return new MetadataProvider(new[] { AdvancedSearchMetadataSource }, new IMetadataProcessor[0]);
-            }
-        }
     }
 }

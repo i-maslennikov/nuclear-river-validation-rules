@@ -7,7 +7,7 @@ using NuClear.Storage.API.Specifications;
 namespace NuClear.CustomerIntelligence.Domain.Specifications
 {
     using Bit = NuClear.CustomerIntelligence.Domain.Model.Bit;
-    using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
+    using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
     using Statistics = NuClear.CustomerIntelligence.Domain.Model.Statistics;
 
     public static partial class Specs
@@ -17,36 +17,47 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
             public static partial class Facts
             {
                 public static partial class ToStatistics
-                { 
-                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmCategoryStatistics>> FirmCategoryStatistics =
-                        new MapSpecification<IQuery, IQueryable<Statistics::FirmCategoryStatistics>>(
+                {
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>> FirmCategory3 =
+                        new MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>>(
                             q =>
-                            {
-                                var firmCounts = q.For<Bit::FirmCategory>()
-                                                  .GroupBy(x => new { x.ProjectId, x.CategoryId })
-                                                  .Select(x => new { x.Key.ProjectId, x.Key.CategoryId, Count = x.Count() });
+                                {
+                                    var firmDtos = (from firm in q.For<Facts::Firm>()
+                                                    join project in q.For<Facts::Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
+                                                    join firmAddress in q.For<Facts::FirmAddress>() on firm.Id equals firmAddress.FirmId
+                                                    join categoryFirmAddress in q.For<Facts::CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
+                                                    select new { FirmId = firm.Id, ProjectId = project.Id, categoryFirmAddress.CategoryId }).Distinct();
 
-                                var a = from firm in q.For<Bit::FirmCategory>()
-                                        from firmStatistics in q.For<Bit::FirmCategoryStatistics>()
-                                                                .Where(x => x.FirmId == firm.FirmId && x.CategoryId == firm.CategoryId && x.ProjectId == firm.ProjectId)
-                                                                .DefaultIfEmpty(new Bit::FirmCategoryStatistics())
+                                    var firmCounts = from firm in firmDtos
+                                                     group firm by new { firm.ProjectId, firm.CategoryId }
+                                                     into grp
+                                                     // grp.Key.ProjectId не работает в sqllite
+                                                     // переписать на grp.Key.ProjectId когда будет im-memory join
+                                                     select new { grp.First().ProjectId, grp.First().CategoryId, Count = grp.Count() };
+
+                                    var categories3 = from firmDto in firmDtos
+                                            join category in q.For<Facts::Category>() on firmDto.CategoryId equals category.Id
+                                            from firmStatistics in q.For<Bit::FirmCategoryStatistics>()
+                                                                .Where(x => x.FirmId == firmDto.FirmId && x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
+                                                                .DefaultIfEmpty()
                                         from categoryStatistics in q.For<Bit::ProjectCategoryStatistics>()
-                                                                    .Where(x => x.CategoryId == firm.CategoryId && x.ProjectId == firm.ProjectId)
-                                                                    .DefaultIfEmpty(new Bit::ProjectCategoryStatistics())
-                                        from firmCount in firmCounts.Where(x => x.CategoryId == firm.CategoryId && x.ProjectId == firm.ProjectId)
+                                                                    .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
                                                                     .DefaultIfEmpty()
-                                        select new Statistics::FirmCategoryStatistics
+                                        from firmCount in firmCounts.Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
+                                                                    .DefaultIfEmpty()
+                                        select new Statistics::FirmCategory3
                                                {
-                                                   ProjectId = firm.ProjectId,
-                                                   FirmId = firm.FirmId,
-                                                   CategoryId = firm.CategoryId,
-                                                   Hits = firmStatistics != null ? firmStatistics.Hits : 0,
-                                                   Shows = firmStatistics != null ? firmStatistics.Shows : 0,
+                                                   ProjectId = firmDto.ProjectId,
+                                                   FirmId = firmDto.FirmId,
+                                                   CategoryId = firmDto.CategoryId,
+                                                   Name = category.Name,
+                                                   Hits = firmStatistics == null ? 0 : firmStatistics.Hits,
+                                                   Shows = firmStatistics == null ? 0 : firmStatistics.Shows,
                                                    FirmCount = firmCount.Count,
-                                                   AdvertisersShare = Math.Min(1, (float)categoryStatistics.AdvertisersCount / firmCount.Count)
+                                                   AdvertisersShare = categoryStatistics == null ? 0 : Math.Min(1, (float)categoryStatistics.AdvertisersCount / firmCount.Count)
                                                };
 
-                                return a.AsQueryable();
+                                return categories3;
                             });
                 }
             }

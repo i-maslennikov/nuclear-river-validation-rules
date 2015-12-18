@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 
@@ -14,7 +13,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
     using ClientContact = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.ClientContact;
     using Firm = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.Firm;
     using FirmBalance = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.FirmBalance;
-    using FirmCategory = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.FirmCategory;
+    using FirmCategory3 = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.FirmCategory3;
     using Project = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.Project;
     using Territory = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.Territory;
 
@@ -49,7 +48,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
                 Assert.That(context.Set<ClientContact>().ToArray(), Has.Length.EqualTo(3));
                 Assert.That(context.Set<Firm>().ToArray(), Has.Length.EqualTo(2));
                 Assert.That(context.Set<FirmBalance>().ToArray(), Has.Length.EqualTo(3));
-                Assert.That(context.Set<FirmCategory>().ToArray(), Has.Length.EqualTo(3));
+                Assert.That(context.Set<FirmCategory1>().ToArray(), Has.Length.EqualTo(2));
+                Assert.That(context.Set<FirmCategory2>().ToArray(), Has.Length.EqualTo(2));
+                Assert.That(context.Set<FirmCategory3>().ToArray(), Has.Length.EqualTo(3));
             }
         }
 
@@ -78,7 +79,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             {
                 var firm = context.Set<Firm>()
                     .Include(x => x.Balances)
-                    .Include(x => x.Categories)
+                    .Include(x => x.Categories1)
+                    .Include(x => x.Categories2)
+                    .Include(x => x.Categories3)
                     .Include(x => x.CategoryGroup)
                     .Include(x => x.Client)
                     .Include(x => x.Client.CategoryGroup)
@@ -90,7 +93,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
                 Assert.That(firm, Is.Not.Null);
                 Assert.That(firm.Name, Is.Not.Null.And.EqualTo("Firm 1"));
                 Assert.That(firm.Balances, Is.Not.Null.And.Count.EqualTo(2));
-                Assert.That(firm.Categories, Is.Not.Empty.And.Count.EqualTo(1));
+                Assert.That(firm.Categories1, Is.Not.Empty.And.Count.EqualTo(1));
+                Assert.That(firm.Categories2, Is.Not.Empty.And.Count.EqualTo(1));
+                Assert.That(firm.Categories3, Is.Not.Empty.And.Count.EqualTo(1));
                 Assert.That(firm.CategoryGroup, Is.Not.Null);
                 Assert.That(firm.Client, Is.Not.Null.And.Property("Name").EqualTo("Client 1"));
                 Assert.That(firm.Client.CategoryGroup, Is.Not.Null);
@@ -108,7 +113,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
             builder.Entity<Firm>().ToTable("FirmView");
             builder.Entity<FirmBalance>().HasKey(x => new { x.AccountId, x.FirmId });
-            builder.Entity<FirmCategory>().HasKey(x => new { x.CategoryId, x.FirmId });
+            builder.Entity<FirmCategory1>().HasKey(x => new { x.CategoryId });
+            builder.Entity<FirmCategory2>().HasKey(x => new { x.CategoryId });
+            builder.Entity<FirmCategory3>().HasKey(x => new { x.CategoryId });
             builder.Entity<ClientContact>().HasKey(x => new { x.ContactId, x.ClientId });
             builder.Entity<FirmTerritory>().HasKey(x => new { x.FirmAddressId, x.FirmId });
 
@@ -120,20 +127,19 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             {
                 var firm = context.Set<Firm>()
                     .Include(x => x.Balances)
-                    .Include(x => x.Categories)
+                    .Include(x => x.Categories1)
+                    .Include(x => x.Categories2)
+                    .Include(x => x.Categories3)
                     .OrderBy(x => x.Id)
                     .FirstOrDefault();
-                
+
                 Assert.That(firm, Is.Not.Null);
                 Assert.That(firm.Name, Is.Not.Null.And.EqualTo("Firm 1"));
                 Assert.That(firm.Balances, Is.Not.Null.And.Count.EqualTo(2));
-                Assert.That(firm.Categories, Is.Not.Null.And.Count.EqualTo(1));
+                Assert.That(firm.Categories1, Is.Not.Null.And.Count.EqualTo(1));
+                Assert.That(firm.Categories2, Is.Not.Null.And.Count.EqualTo(1));
+                Assert.That(firm.Categories3, Is.Not.Null.And.Count.EqualTo(1));
             }
-        }
-
-        private static DbModel CreateModel()
-        {
-            return BuildModel(AdvancedSearchMetadataSource, CustomerIntelligenceTypeProvider);
         }
   }
 }

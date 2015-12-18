@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence
 {
-    public class Territory
+    public sealed class Territory
     {
         public long Id { get; set; }
         public long ProjectId { get; set; }

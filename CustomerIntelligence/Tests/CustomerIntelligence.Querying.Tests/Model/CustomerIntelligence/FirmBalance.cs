@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence
 {
-    public class FirmBalance
+    public sealed class FirmBalance
     {
         public long AccountId { get; set; }
         public long FirmId { get; set; }

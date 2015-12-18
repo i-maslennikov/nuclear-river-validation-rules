@@ -112,7 +112,9 @@
     <Compile Include="Model\CustomerIntelligence\ContactRole.cs" />
     <Compile Include="Model\CustomerIntelligence\Firm.cs" />
     <Compile Include="Model\CustomerIntelligence\FirmBalance.cs" />
-    <Compile Include="Model\CustomerIntelligence\FirmCategory.cs" />
+    <Compile Include="Model\CustomerIntelligence\FirmCategory1.cs" />
+    <Compile Include="Model\CustomerIntelligence\FirmCategory2.cs" />
+    <Compile Include="Model\CustomerIntelligence\FirmCategory3.cs" />
     <Compile Include="Model\CustomerIntelligence\FirmTerritory.cs" />
     <Compile Include="Model\CustomerIntelligence\Project.cs" />
     <Compile Include="Model\CustomerIntelligence\Territory.cs" />
@@ -121,19 +123,22 @@
     <Compile Include="MetadataExtensions.cs" />
     <Compile Include="MetadataKind.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestMetadataProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\CategoryGroup.csv" />
     <EmbeddedResource Include="Data\Client.csv" />
     <EmbeddedResource Include="Data\ClientContact.csv" />
     <EmbeddedResource Include="Data\FirmBalance.csv" />
-    <EmbeddedResource Include="Data\FirmCategory.csv" />
+    <EmbeddedResource Include="Data\FirmCategory3.csv" />
     <EmbeddedResource Include="Data\FirmView.csv" />
     <EmbeddedResource Include="Data\Project.csv" />
     <EmbeddedResource Include="Data\ProjectCategory.csv" />
     <EmbeddedResource Include="Data\Territory.csv" />
     <EmbeddedResource Include="Data\FirmTerritory.csv" />
     <None Include="app.config" />
+    <EmbeddedResource Include="Data\FirmCategory1.csv" />
+    <EmbeddedResource Include="Data\FirmCategory2.csv" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

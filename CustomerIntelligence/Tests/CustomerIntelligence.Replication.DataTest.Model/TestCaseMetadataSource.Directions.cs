@@ -20,8 +20,8 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
             ActMetadataElement.Config
                               .Source(ContextName.Bit)
                               .Target(ContextName.Statistics)
+                              .Require(ContextName.Facts)
                               .Require(ContextName.CustomerIntelligence)
-                              .Action<PrefillStatisticsContext>()
                               .Action<BulkReplicationAdapter<Statistics>>();
     }
 }

@@ -187,22 +187,19 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new Facts::Category { Id = 2, Level = 2, ParentId = 1 },
                          new Facts::Category { Id = 3, Level = 3, ParentId = 2 },
                          new Facts::Category { Id = 4, Level = 3, ParentId = 2 });
-            SourceDb.Has(new Facts::Firm { Id = 1 });
             SourceDb.Has(new Facts::FirmAddress { Id = 1, FirmId = 1 },
                          new Facts::FirmAddress { Id = 2, FirmId = 1 });
             SourceDb.Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 },
                          new Facts::CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 4 });
-            SourceDb.Has(new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, Hits = 1, Shows = 1 },
-                         new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 2, Hits = 2 },
-                         new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 3, Shows = 2 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmCategories.Map(x).Where(c => c.FirmId == 1),
-                                           Inquire(new CI::FirmCategory { FirmId = 1, CategoryId = 1 },
-                                                   new CI::FirmCategory { FirmId = 1, CategoryId = 2 },
-                                                   new CI::FirmCategory { FirmId = 1, CategoryId = 3 },
-                                                   new CI::FirmCategory { FirmId = 1, CategoryId = 4 }),
-                                           "The firm categories should be processed.");
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmCategories1.Map(x).Where(c => c.FirmId == 1),
+                                           Inquire(new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 }),
+                                           "The firm categories1 should be processed.");
+            Transformation.Create(Query)
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmCategories2.Map(x).Where(c => c.FirmId == 1),
+                                           Inquire(new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 }),
+                                           "The firm categories2 should be processed.");
         }
 
         [Test]

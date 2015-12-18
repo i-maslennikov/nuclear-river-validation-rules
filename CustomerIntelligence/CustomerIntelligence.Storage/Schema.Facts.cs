@@ -44,11 +44,6 @@ namespace NuClear.CustomerIntelligence.Storage
                       .Property(x => x.ProjectId).IsPrimaryKey()
                       .Property(x => x.CategoryId).IsPrimaryKey();
 
-                config.Entity<FirmCategory>().HasSchemaName(BitSchema)
-                      .Property(x => x.ProjectId).IsPrimaryKey()
-                      .Property(x => x.CategoryId).IsPrimaryKey()
-                      .Property(x => x.FirmId).IsPrimaryKey();
-
                 return schema;
             }
         }
