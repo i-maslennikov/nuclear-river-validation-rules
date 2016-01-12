@@ -90,14 +90,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contexts\AggregateSubDomain.cs" />
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategory.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeDeniedPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrderPositionAdvertisement.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrganizationUnit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePrice.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePricePosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeProject.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromOrderValidationConfigFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
     <Compile Include="Identities\Telemetry\AggregateEnqueuedOperationCountIdentity.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
+    <Compile Include="Primary\ImportFactsFromErmAccumulator.cs" />
+    <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Primary\ImportFactsFromOrderValidationConfigAccumulator.cs" />
     <Compile Include="Primary\ImportFactsFromOrderValidationConfigHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

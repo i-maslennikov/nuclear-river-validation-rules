@@ -4,17 +4,25 @@
     {
         // Значения, взятые из ERM
         public const int Account = 142;
+        public const int AssociatedPosition = 177;
+        public const int AssociatedPositionsGroup = 176;
         public const int CategoryFirmAddress = 166;
         public const int CategoryOrganizationUnit = 161;
         public const int Client = 200;
         public const int Contact = 206;
+        public const int DeniedPosition = 180;
         public const int Firm = 146;
         public const int FirmAddress = 164;
         public const int FirmContact = 165;
         public const int LegalPerson = 147;
         public const int Order = 151;
+        public const int OrderPositionAdvertisement = 216;
         public const int CategoryGroup = 162;
+        public const int OrganizationUnit = 157;
+        public const int Position = 153;
         public const int Project = 158;
+        public const int Price = 155;
+        public const int PricePosition = 154;
         public const int Territory = 191;
         public const int SalesModelCategoryRestriction = 272;
 

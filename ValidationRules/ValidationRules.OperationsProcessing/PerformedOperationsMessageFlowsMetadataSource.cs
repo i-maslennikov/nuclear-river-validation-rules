@@ -17,6 +17,11 @@ namespace NuClear.ValidationRules.OperationsProcessing
         private static readonly HierarchyMetadata MetadataRoot =
             PerformedOperations.Flows
                                .Primary(
+                                   MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
+                                                      .Accumulator<ImportFactsFromErmAccumulator>()
+                                                      .Handler<ImportFactsFromErmHandler>()
+                                                      .To.Primary().Flow<ImportFactsFromErmFlow>().Connect(),
+
                                    MessageFlowMetadata.Config.For<ImportFactsFromOrderValidationConfigFlow>()
                                                       .Accumulator<ImportFactsFromOrderValidationConfigAccumulator>()
                                                       .Handler<ImportFactsFromOrderValidationConfigHandler>()

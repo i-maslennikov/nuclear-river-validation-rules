@@ -88,7 +88,7 @@ namespace NuClear.Replication.EntryPoint.DI
                                  };
             var storageSettings = settingsContainer.AsSettings<ISqlStoreSettingsAspect>();
 
-            container.RegisterContexts()
+            container.RegisterValidationRulesContexts()
                      .AttachQueryableContainerExtension()
                      .UseParameterResolvers(ParameterResolvers.Defaults)
                      .ConfigureValidationRulesMetadata()
@@ -167,13 +167,11 @@ namespace NuClear.Replication.EntryPoint.DI
                      .RegisterTypeWithDependencies(typeof(FileReceiver), Lifetime.PerScope, null)
                      .RegisterTypeWithDependencies(typeof(ServiceBusOperationsReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator>(Lifetime.Singleton)
-                     .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, TrackedUseCaseConfigurator>(
-                         Lifetime.Singleton,
-                         new InjectionFactory(x => x.Resolve<TrackedUseCaseConfigurator>(new DependencyOverride<IEntityTypeMappingRegistry<ISubDomain>>(new ResolvedParameter(typeof(IEntityTypeMappingRegistry<ErmSubDomain>))))))
+                     .RegisterValidationRulesTrackedUseCaseConfigurator()
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
                      .RegisterType<IOperationSender<AggregateOperation>, SqlStoreSender<AggregateOperation, AggregatesFlow>>(Lifetime.PerScope)
                      .RegisterType<IOperationSender<RecalculateStatisticsOperation>, SqlStoreSender<RecalculateStatisticsOperation, StatisticsFlow>>(Lifetime.PerScope)
-                     .RegisterType<IOperationSerializer<AggregateOperation>, AggregateOperationSerializer>()
+                     .RegisterValidationRulesAggregateOperationSerializer()
                      .RegisterType<IOperationSerializer<RecalculateStatisticsOperation>, StatisticsOperationSerializer>();
 
             // final
@@ -210,13 +208,7 @@ namespace NuClear.Replication.EntryPoint.DI
         private static IUnityContainer ConfigureReplication(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
         {
             return container
-                .RegisterType<IFactsReplicator, FactsReplicator>(entryPointSpecificLifetimeManagerFactory(),
-                                                                 new InjectionFactory(c => new FactsReplicator(
-                                                                                               c.Resolve<ITracer>(),
-                                                                                               c.Resolve<IReplicationSettings>(),
-                                                                                               c.Resolve<IMetadataProvider>(),
-                                                                                               c.Resolve<IFactProcessorFactory>(),
-                                                                                               new CustomerIntelligenceFactTypePriorityComparer())))
+                .RegisterValidationRulesFactsReplicator(entryPointSpecificLifetimeManagerFactory)
                 .RegisterType<IStatisticsImporterFactory, UnityStatisticsImporterFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregatesConstructor, AggregatesConstructor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStatisticsRecalculator, StatisticsRecalculator>(entryPointSpecificLifetimeManagerFactory())
@@ -246,13 +238,6 @@ namespace NuClear.Replication.EntryPoint.DI
                 };
 
             return container.RegisterInstance<IConnectionStringIdentityResolver>(new ConnectionStringIdentityResolver(readConnectionStringNameMap, writeConnectionStringNameMap));
-        }
-
-        private static IUnityContainer RegisterContexts(this IUnityContainer container)
-        {
-            return container.RegisterInstance(EntityTypeMap.CreateErmContext())
-                            .RegisterInstance(EntityTypeMap.CreateCustomerIntelligenceContext())
-                            .RegisterInstance(EntityTypeMap.CreateFactsContext());
         }
 
         private static class Scope

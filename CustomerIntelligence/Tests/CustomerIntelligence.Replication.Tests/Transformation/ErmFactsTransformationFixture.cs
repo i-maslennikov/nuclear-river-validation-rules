@@ -49,7 +49,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                                                      Mock.Of<IReplicationSettings>(),
                                                      provider,
                                                      factProcessorFactory.Object,
-                                                     new CustomerIntelligenceFactTypePriorityComparer());
+                                                     new CustomerIntelligenceFactTypePriorityComparer(),
+                                                     new FactMetadataUriProvider());
 
             SourceDb.Has(new Erm::Firm { Id = 2 })
                     .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 }, new Erm::FirmAddress { Id = 2, FirmId = 2 });

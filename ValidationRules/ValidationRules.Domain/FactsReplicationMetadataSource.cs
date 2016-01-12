@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.Domain
             HierarchyMetadata factsReplicationMetadataRoot =
                 HierarchyMetadata
                     .Config
-                    .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>("PriceContext.Facts"))
+                    .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextFacts))
                     .Childs(FactMetadata<AssociatedPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.AssociatedPosition),

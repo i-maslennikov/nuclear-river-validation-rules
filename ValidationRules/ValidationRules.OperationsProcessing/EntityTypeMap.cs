@@ -14,12 +14,25 @@ namespace NuClear.ValidationRules.OperationsProcessing
     {
         private static readonly Action<EntityTypeMappingRegistryBuilder> ErmTypeMap
             = builder => builder
-                             .AddMapping<EntityTypeOrder, Erm::Order>();
+                .AddMapping<EntityTypeAssociatedPositionsGroup, Erm::AssociatedPositionsGroup>()
+                .AddMapping<EntityTypeAssociatedPosition, Erm::AssociatedPosition>()
+                .AddMapping<EntityTypeDeniedPosition, Erm::DeniedPosition>()
+                .AddMapping<EntityTypeOrder, Erm::Order>()
+                .AddMapping<EntityTypeOrderPosition, Erm::OrderPosition>()
+                .AddMapping<EntityTypeOrderPositionAdvertisement, Erm::OrderPositionAdvertisement>()
+                .AddMapping<EntityTypeOrganizationUnit, Erm::OrganizationUnit>()
+                .AddMapping<EntityTypePrice, Erm::Price>()
+                .AddMapping<EntityTypePricePosition, Erm::PricePosition>()
+                .AddMapping<EntityTypeProject, Erm::Project>()
+                .AddMapping<EntityTypePosition, Erm::Position>()
+                .AddMapping<EntityTypeCategory, Erm::Category>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> FactsTypeMap
             = builder => builder
-                             .AddMapping<EntityTypeOrder, Facts::Order>();
+                .AddMapping<EntityTypeOrder, Facts::Order>();
 
+        private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap
+            = builder => { };
 
         public static IEntityTypeMappingRegistry<ErmSubDomain> CreateErmContext()
         {
@@ -33,6 +46,13 @@ namespace NuClear.ValidationRules.OperationsProcessing
             var builder = new EntityTypeMappingRegistryBuilder();
             FactsTypeMap.Invoke(builder);
             return builder.Create<FactsSubDomain>();
+        }
+
+        public static IEntityTypeMappingRegistry<AggregateSubDomain> CreateAggregateContext()
+        {
+            var builder = new EntityTypeMappingRegistryBuilder();
+            AggregateTypeMap.Invoke(builder);
+            return builder.Create<AggregateSubDomain>();
         }
     }
 

@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Domain
             HierarchyMetadata importStatisticsMetadataRoot =
                 HierarchyMetadata
                     .Config
-                    .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ImportStatisticsMetadataIdentity>("PriceContext.Config"))
+                    .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ImportStatisticsMetadataIdentity>(ReplicationMetadataName.PriceContextConfig))
                     .Childs(ImportStatisticsMetadata<GlobalAssociatedPosition, OrderValidationConfig>
                                 .Config
                                 .HasSource(Specs.Map.Config.ToFacts.GlobalAssociatedPosition)

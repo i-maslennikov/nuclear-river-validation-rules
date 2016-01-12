@@ -7,7 +7,10 @@ using LinqToDB.Mapping;
 using Microsoft.Practices.Unity;
 
 using NuClear.AdvancedSearch.Common.Metadata.Equality;
+using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Aggregates.Storage.DI.Unity;
+using NuClear.CustomerIntelligence.Domain.Model;
+using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
 using NuClear.DI.Unity.Config;
 using NuClear.Metamodeling.Domain.Processors.Concrete;
 using NuClear.Metamodeling.Processors;
@@ -15,9 +18,15 @@ using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
+using NuClear.Model.Common.Entities;
+using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.API.Settings;
+using NuClear.Replication.Core.Facts;
+using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
+using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 using NuClear.Storage.Core;
@@ -26,8 +35,10 @@ using NuClear.Storage.LinqToDB.Connections;
 using NuClear.Storage.LinqToDB.Writings;
 using NuClear.Storage.Readings;
 using NuClear.Storage.UseCases;
+using NuClear.Tracing.API;
 using NuClear.ValidationRules.Domain;
 using NuClear.ValidationRules.OperationsProcessing;
+using NuClear.ValidationRules.OperationsProcessing.Contexts;
 
 using DefaultEntityContainerNameResolver = NuClear.ValidationRules.Storage.DefaultEntityContainerNameResolver;
 using Schema = NuClear.ValidationRules.Storage.Schema;
@@ -69,6 +80,7 @@ namespace NuClear.Replication.EntryPoint.DI
                                 {
                                     { Scope.Erm, Schema.Erm },
                                     { Scope.Facts, Schema.Facts },
+                                    { Scope.Transport, OperationsProcessing.Transports.SQLStore.Schema.Transport },
                                 };
 
             return container
@@ -94,6 +106,37 @@ namespace NuClear.Replication.EntryPoint.DI
                 .RegisterType<IModifiableDomainContextProvider, ModifiableDomainContextProvider>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType(typeof(IBulkRepository<>), typeof(BulkRepository<>), entryPointSpecificLifetimeManagerFactory())
                 .ConfigureReadWriteModels();
+        }
+
+        private static IUnityContainer RegisterValidationRulesContexts(this IUnityContainer container)
+        {
+            return container.RegisterInstance(EntityTypeMap.CreateErmContext())
+                            .RegisterInstance(EntityTypeMap.CreateFactsContext());
+        }
+
+        private static IUnityContainer RegisterValidationRulesTrackedUseCaseConfigurator(this IUnityContainer container)
+        {
+            return container.RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, TrackedUseCaseConfigurator>(
+                         Lifetime.Singleton,
+                         new InjectionFactory(x => x.Resolve<TrackedUseCaseConfigurator>(new DependencyOverride<IEntityTypeMappingRegistry<ISubDomain>>(new ResolvedParameter(typeof(IEntityTypeMappingRegistry<ErmSubDomain>))))));
+        }
+
+        private static IUnityContainer RegisterValidationRulesAggregateOperationSerializer(this IUnityContainer container)
+        {
+            var factory = new InjectionFactory(x => new AggregateOperationSerializer(x.Resolve<IEntityTypeMappingRegistry<ErmSubDomain>>()));
+            return container.RegisterType<IOperationSerializer<AggregateOperation>, AggregateOperationSerializer>(factory);
+        }
+
+        private static IUnityContainer RegisterValidationRulesFactsReplicator(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
+        {
+            return container.RegisterType<IFactsReplicator, FactsReplicator>(entryPointSpecificLifetimeManagerFactory(),
+                                                                             new InjectionFactory(c => new FactsReplicator(
+                                                                                                           c.Resolve<ITracer>(),
+                                                                                                           c.Resolve<IReplicationSettings>(),
+                                                                                                           c.Resolve<IMetadataProvider>(),
+                                                                                                           c.Resolve<IFactProcessorFactory>(),
+                                                                                                           new CustomerIntelligenceFactTypePriorityComparer(),
+                                                                                                           new FactMetadataUriProvider())));
         }
     }
 }

@@ -8,6 +8,7 @@ namespace NuClear.ValidationRules.Storage
     {
         private const string Erm = "Erm";
         private const string Facts = "Facts";
+        private const string Transport = "Transport";
 
         public string Resolve(Type objType)
         {
@@ -19,6 +20,11 @@ namespace NuClear.ValidationRules.Storage
             if (objType.Namespace.Contains(Facts))
             {
                 return Facts;
+            }
+
+            if (objType.Name == "PerformedOperationFinalProcessing")
+            {
+                return Transport;
             }
 
             throw new ArgumentException($"Unsupported type {objType.Name}: can not determine scope", nameof(objType));
