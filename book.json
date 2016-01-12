@@ -20,6 +20,10 @@
     "pluginsConfig": {
         "github": {
           "url": "https://github.com/2gis/nuclear-river"
-        }
+        },
+        "edit-link": {
+          "base": "https://github.com/2gis/nuclear-river/tree/master/docs",
+          "label": "Edit This Page"
+        },
     }
 }
