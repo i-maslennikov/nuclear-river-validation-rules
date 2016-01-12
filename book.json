@@ -7,7 +7,6 @@
     "plugins": [
         "28msec",
         "clicky",
-        "sitemap",
         "richquotes",
         "image-captions",
         "printlinks",
