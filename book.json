@@ -3,7 +3,6 @@
     "description": "NuClear River Documentation",
     "plugins": [
         "28msec",
-        "clicky",
         "richquotes",
         "image-captions",
         "printlinks",
@@ -21,6 +20,6 @@
         "edit-link": {
           "base": "https://github.com/2gis/nuclear-river/tree/master/docs",
           "label": "Edit This Page"
-        },
+        }
     }
 }
