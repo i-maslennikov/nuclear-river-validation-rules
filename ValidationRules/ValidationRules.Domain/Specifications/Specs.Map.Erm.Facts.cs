@@ -171,7 +171,8 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                     Id = x.Id,
                                     Name = x.Name,
                                     IsComposite = x.IsComposite,
-                                    IsControlledByAmount = x.IsControlledByAmount
+                                    IsControlledByAmount = x.IsControlledByAmount,
+                                    PositionCategoryId = x.CategoryId,
                                 };
 
                         public static readonly Expression<Func<Erm::Price, Facts::Price>> Price =

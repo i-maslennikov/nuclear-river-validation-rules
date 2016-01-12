@@ -100,6 +100,7 @@ go
 
 create table PriceContext.Position(
     Id bigint not null,
+    PositionCategoryId bigint not null, -- в erm назван CategoryId
     IsControlledByAmount bit not null,
     IsComposite bit not null,
     Name nvarchar(max) not null
