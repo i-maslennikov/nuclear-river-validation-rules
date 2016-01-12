@@ -1,9 +1,6 @@
 {
     "title": "NuClear River Documentation",
     "description": "NuClear River Documentation",
-    "structure": {
-        "readme": "docs/README.md"
-    },
     "plugins": [
         "28msec",
         "clicky",
