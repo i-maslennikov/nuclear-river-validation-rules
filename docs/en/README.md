@@ -16,3 +16,7 @@ There are some important terms here:
 * Specification pattern
 
 See [Terms](terms.md) chapter for details
+
+The big picture how NuClear River can be integrated to your environment looks like this
+
+![](diagrams/nuclear-river-big-picture.png)
