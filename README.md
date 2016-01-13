@@ -4,3 +4,14 @@
 _NuClear is the set of 2GIS projects used internally and open for contribution_
 
 [![Gitter](https://badges.gitter.im/2gis/nuclear-river.svg)](https://gitter.im/2gis/nuclear-river?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+##Contributing
+
+If you have a question please feel free to ask in [gitter](https://gitter.im/2gis/nuclear-river?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) or by email [denis@ivanovdenis.ru](mailto:denis@ivanovdenis.ru)
+
+If you have found a bug or have a feature-request, use [issues][issues].
+
+Code changes could be provided via [pull request][pull-request]
+
+[issues]: https://github.com/2gis/nuclear-river/issues/new
+[pull-request]: https://github.com/2gis/nuclear-river/compare
