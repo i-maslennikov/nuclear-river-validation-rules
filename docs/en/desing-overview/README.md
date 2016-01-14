@@ -1,0 +1,1 @@
+NuClear River platform consists of two components: [Querying](../terms.md) and [Replication](../terms.md). Technically, they are independent from each other. But metadata descriptions used for both in a specific bounded context should be coordinated.
