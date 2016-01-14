@@ -66,6 +66,17 @@
     <Compile Include="FactMetadataUriProvider.cs" />
     <Compile Include="ImportOrderValidationConfigMetadataSource.cs" />
     <Compile Include="MetadataBuilderExtesnsions.cs" />
+    <Compile Include="Model\Aggregates\DeniedPosition.cs" />
+    <Compile Include="Model\Aggregates\MasterPosition.cs" />
+    <Compile Include="Model\Aggregates\Order.cs" />
+    <Compile Include="Model\Aggregates\OrderPeriod.cs" />
+    <Compile Include="Model\Aggregates\OrderPosition.cs" />
+    <Compile Include="Model\Aggregates\OrderPrice.cs" />
+    <Compile Include="Model\Aggregates\Period.cs" />
+    <Compile Include="Model\Aggregates\Position.cs" />
+    <Compile Include="Model\Aggregates\Price.cs" />
+    <Compile Include="Model\Aggregates\PricePeriod.cs" />
+    <Compile Include="Model\Aggregates\PricePosition.cs" />
     <Compile Include="Model\Facts\GlobalAssociatedPosition.cs" />
     <Compile Include="Model\Facts\GlobalDeniedPosition.cs" />
     <Compile Include="Model\IConfigFactObject.cs" />
