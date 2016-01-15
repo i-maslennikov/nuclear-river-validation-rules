@@ -1,4 +1,4 @@
--- create schema
+п»ї-- create schema
 if not exists (select * from sys.schemas where name = 'CustomerIntelligence') exec('create schema CustomerIntelligence')
 
 -- drop tables
@@ -12,8 +12,8 @@ if object_id('CustomerIntelligence.FirmActivity') is not null drop table Custome
 if object_id('CustomerIntelligence.Client') is not null drop table CustomerIntelligence.Client
 if object_id('CustomerIntelligence.Contact') is not null drop table CustomerIntelligence.Contact
 if object_id('CustomerIntelligence.ClientContact') is not null drop table CustomerIntelligence.ClientContact
-if object_id('CustomerIntelligence.FirmCategory') is not null drop table CustomerIntelligence.FirmCategory -- удалить после релиза
-if object_id('BIT.FirmCategory', 'view') is not null drop view BIT.FirmCategory -- удалить после релиза
+if object_id('CustomerIntelligence.FirmCategory') is not null drop table CustomerIntelligence.FirmCategory -- СѓРґР°Р»РёС‚СЊ РїРѕСЃР»Рµ СЂРµР»РёР·Р°
+if object_id('BIT.FirmCategory', 'view') is not null drop view BIT.FirmCategory -- СѓРґР°Р»РёС‚СЊ РїРѕСЃР»Рµ СЂРµР»РёР·Р°
 if object_id('CustomerIntelligence.FirmCategory1') is not null drop table CustomerIntelligence.FirmCategory1
 if object_id('CustomerIntelligence.FirmCategory2') is not null drop table CustomerIntelligence.FirmCategory2
 if object_id('CustomerIntelligence.FirmCategory3') is not null drop table CustomerIntelligence.FirmCategory3
@@ -164,7 +164,7 @@ from CustomerIntelligence.Firm
 go
 
 
--- Идексы для клиента
+-- РРґРµРєСЃС‹ РґР»СЏ РєР»РёРµРЅС‚Р°
 create nonclustered index IX_Quering_1
 on CustomerIntelligence.Firm (ProjectId,OwnerId,CreatedOn)
 include (Id)
