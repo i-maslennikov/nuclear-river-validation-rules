@@ -27,7 +27,10 @@ namespace NuClear.CustomerIntelligence.Storage
                 config.Entity<FirmBalance>().HasSchemaName(CustomerIntelligenceSchema)
                     .Property(x => x.AccountId).IsPrimaryKey()
                     .Property(x => x.FirmId).IsPrimaryKey();
-                config.Entity<FirmCategory>().HasSchemaName(CustomerIntelligenceSchema)
+                config.Entity<FirmCategory1>().HasSchemaName(CustomerIntelligenceSchema)
+                    .Property(x => x.CategoryId).IsPrimaryKey()
+                    .Property(x => x.FirmId).IsPrimaryKey();
+                config.Entity<FirmCategory2>().HasSchemaName(CustomerIntelligenceSchema)
                     .Property(x => x.CategoryId).IsPrimaryKey()
                     .Property(x => x.FirmId).IsPrimaryKey();
                 config.Entity<FirmTerritory>().HasSchemaName(CustomerIntelligenceSchema)
@@ -38,9 +41,8 @@ namespace NuClear.CustomerIntelligence.Storage
                     .Property(x => x.ProjectId).IsPrimaryKey()
                     .Property(x => x.CategoryId).IsPrimaryKey();
                 config.Entity<Territory>().HasSchemaName(CustomerIntelligenceSchema).Property(x => x.Id).IsPrimaryKey();
-                config.Entity<FirmCategoryStatistics>().HasSchemaName(CustomerIntelligenceSchema)
-                    .HasTableName("FirmCategory")
-                    .Property(x => x.ProjectId).IsNotColumn()
+
+                config.Entity<FirmCategory3>().HasSchemaName(CustomerIntelligenceSchema)
                     .Property(x => x.FirmId).IsPrimaryKey()
                     .Property(x => x.CategoryId).IsPrimaryKey();
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence
 {
-    public class Firm
+    public sealed class Firm
     {
         public long Id { get; set; }
         public long ProjectId { get; set; }
@@ -19,7 +19,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence
         public long OwnerId { get; set; }
 
         public ICollection<FirmBalance> Balances { get; set; }
-        public ICollection<FirmCategory> Categories { get; set; }
+        public ICollection<FirmCategory1> Categories1 { get; set; }
+        public ICollection<FirmCategory2> Categories2 { get; set; }
+        public ICollection<FirmCategory3> Categories3 { get; set; }
         public CategoryGroup CategoryGroup { get; set; }
         public Client Client { get; set; }
         public ICollection<FirmTerritory> Territories { get; set; }

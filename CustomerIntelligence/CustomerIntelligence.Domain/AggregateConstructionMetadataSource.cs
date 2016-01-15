@@ -18,8 +18,6 @@ namespace NuClear.CustomerIntelligence.Domain
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1115:ParameterMustFollowComma", Justification = "Reviewed. Suppression is OK here.")]
     public class AggregateConstructionMetadataSource : MetadataSourceBase<ReplicationMetadataIdentity>
     {
-        private readonly IReadOnlyDictionary<Uri, IMetadataElement> _metadata;
-
         public AggregateConstructionMetadataSource()
         {
             HierarchyMetadata aggregateConstructionMetadataRoot =
@@ -31,7 +29,8 @@ namespace NuClear.CustomerIntelligence.Domain
                                 .HasSource(Specs.Map.Facts.ToCI.Firms)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmActivities, Specs.Find.CI.FirmActivities)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmBalances, Specs.Find.CI.FirmBalances)
-                                .HasValueObject(Specs.Map.Facts.ToCI.FirmCategories, Specs.Find.CI.FirmCategories)
+                                .HasValueObject(Specs.Map.Facts.ToCI.FirmCategories1, Specs.Find.CI.FirmCategories1)
+                                .HasValueObject(Specs.Map.Facts.ToCI.FirmCategories2, Specs.Find.CI.FirmCategories2)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmTerritories, Specs.Find.CI.FirmTerritories),
 
                             AggregateMetadata<Client>
@@ -52,12 +51,9 @@ namespace NuClear.CustomerIntelligence.Domain
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.CategoryGroups));
 
-            _metadata = new Dictionary<Uri, IMetadataElement> { { aggregateConstructionMetadataRoot.Identity.Id, aggregateConstructionMetadataRoot } };
+            Metadata = new Dictionary<Uri, IMetadataElement> { { aggregateConstructionMetadataRoot.Identity.Id, aggregateConstructionMetadataRoot } };
         }
 
-        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata
-        {
-            get { return _metadata; }
-        }
+        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }
     }
 }

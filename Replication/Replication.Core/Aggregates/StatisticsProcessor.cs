@@ -9,7 +9,7 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public class StatisticsProcessor<T> : IStatisticsProcessor 
+    public class StatisticsProcessor<T> : IStatisticsProcessor
         where T : class
     {
         private readonly IBulkRepository<T> _repository;
@@ -34,8 +34,8 @@ namespace NuClear.Replication.Core.Aggregates
             var intermediateResult = _changesDetector.DetectChanges(Specs.Map.ZeroMapping<T>(), filter, _equalityComparerFactory.CreateCompleteComparer<T>());
             var changes = MergeTool.Merge(intermediateResult.Difference, intermediateResult.Complement, _equalityComparerFactory.CreateIdentityComparer<T>());
 
-            // Наличие или отсутствие статистики - не повод создавать или удалять рубрики у фирм.
-            // Поэтому только обновление.
+            _repository.Delete(changes.Complement);
+            _repository.Create(changes.Difference);
             _repository.Update(changes.Intersection);
         }
     }

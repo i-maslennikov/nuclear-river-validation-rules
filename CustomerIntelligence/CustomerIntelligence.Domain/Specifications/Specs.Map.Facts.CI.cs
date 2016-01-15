@@ -18,7 +18,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                 // ReSharper disable once InconsistentNaming
                 public static class ToCI
                 {
-                    public readonly static MapSpecification<IQuery, IQueryable<CategoryGroup>> CategoryGroups =
+                    public static readonly MapSpecification<IQuery, IQueryable<CategoryGroup>> CategoryGroups =
                         new MapSpecification<IQuery, IQueryable<CategoryGroup>>(
                             q => from categoryGroup in q.For<Facts::CategoryGroup>()
                                  select new CategoryGroup
@@ -28,7 +28,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                             Rate = categoryGroup.Rate
                                         });
 
-                    public readonly static MapSpecification<IQuery, IQueryable<Client>> Clients =
+                    public static readonly MapSpecification<IQuery, IQueryable<Client>> Clients =
                         new MapSpecification<IQuery, IQueryable<Client>>(
                             q =>
                             {
@@ -52,7 +52,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                               };
                             });
 
-                    public readonly static MapSpecification<IQuery, IQueryable<ClientContact>> ClientContacts =
+                    public static readonly MapSpecification<IQuery, IQueryable<ClientContact>> ClientContacts =
                         new MapSpecification<IQuery, IQueryable<ClientContact>>(
                             q => from contact in q.For<Facts::Contact>()
                                  select new ClientContact
@@ -62,7 +62,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                             Role = contact.Role,
                                         });
 
-                    public readonly static MapSpecification<IQuery, IQueryable<Firm>> Firms =
+                    public static readonly MapSpecification<IQuery, IQueryable<Firm>> Firms =
                          new MapSpecification<IQuery, IQueryable<Firm>>(
                             q =>
                             {
@@ -116,7 +116,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                               };
                             });
 
-                    public readonly static MapSpecification<IQuery, IQueryable<FirmActivity>> FirmActivities =
+                    public static readonly MapSpecification<IQuery, IQueryable<FirmActivity>> FirmActivities =
                         new MapSpecification<IQuery, IQueryable<FirmActivity>>(
                             q =>
                             {
@@ -142,58 +142,41 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                               };
                             });
 
-                    public readonly static MapSpecification<IQuery, IQueryable<FirmBalance>> FirmBalances =
+                    public static readonly MapSpecification<IQuery, IQueryable<FirmBalance>> FirmBalances =
                         new MapSpecification<IQuery, IQueryable<FirmBalance>>(
                             q => from firm in q.For<Facts::Firm>()
                                  join client in q.For<Facts::Client>() on firm.ClientId equals client.Id
-                                 join legalPerson in q.For<Facts::LegalPerson>() on client.Id equals legalPerson.ClientId 
+                                 join legalPerson in q.For<Facts::LegalPerson>() on client.Id equals legalPerson.ClientId
                                  join account in q.For<Facts::Account>() on legalPerson.Id equals account.LegalPersonId
-                                 join branchOfficeOrganizationUnit in q.For<Facts::BranchOfficeOrganizationUnit>() on account.BranchOfficeOrganizationUnitId equals branchOfficeOrganizationUnit.Id 
+                                 join branchOfficeOrganizationUnit in q.For<Facts::BranchOfficeOrganizationUnit>() on account.BranchOfficeOrganizationUnitId equals branchOfficeOrganizationUnit.Id
                                  join project in q.For<Facts::Project>() on branchOfficeOrganizationUnit.OrganizationUnitId equals project.OrganizationUnitId
-                                 
+
                                  select new FirmBalance { ProjectId = project.Id, FirmId = firm.Id, AccountId = account.Id, Balance = account.Balance });
 
-                    public readonly static MapSpecification<IQuery, IQueryable<FirmCategory>> FirmCategories = 
-                        new MapSpecification<IQuery, IQueryable<FirmCategory>>(
-                            q =>
-                            {
-                                var categories1 = q.For<Facts::Category>().Where(x => x.Level == 1);
-                                var categories2 = q.For<Facts::Category>().Where(x => x.Level == 2);
-                                var categories3 = q.For<Facts::Category>().Where(x => x.Level == 3);
+                    public static readonly MapSpecification<IQuery, IQueryable<FirmCategory1>> FirmCategories1 =
+                        new MapSpecification<IQuery, IQueryable<FirmCategory1>>(
+                            q => (from firmAddress in q.For<Facts::FirmAddress>()
+                                  join categoryFirmAddress in q.For<Facts::CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
+                                  join category3 in q.For<Facts::Category>().Where(x => x.Level == 3) on categoryFirmAddress.CategoryId equals category3.Id
+                                  join category2 in q.For<Facts::Category>().Where(x => x.Level == 2) on category3.ParentId equals category2.Id
+                                  join category1 in q.For<Facts::Category>().Where(x => x.Level == 1) on category2.ParentId equals category1.Id
+                                  select new FirmCategory1
+                                  {
+                                      FirmId = firmAddress.FirmId,
+                                      CategoryId = category1.Id
+                                  }).Distinct());
 
-                                var level3 = from firmAddress in q.For<Facts::FirmAddress>()
-                                             join categoryFirmAddress in q.For<Facts::CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
-                                             join category3 in categories3 on categoryFirmAddress.CategoryId equals category3.Id
-                                             select new FirmCategory
-                                             {
-                                                 FirmId = firmAddress.FirmId,
-                                                 CategoryId = category3.Id
-                                             };
-
-                                var level2 = from firmAddress in q.For<Facts::FirmAddress>()
-                                             join categoryFirmAddress in q.For<Facts::CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
-                                             join category3 in categories3 on categoryFirmAddress.CategoryId equals category3.Id
-                                             join category2 in categories2 on category3.ParentId equals category2.Id
-                                             select new FirmCategory
-                                             {
-                                                 FirmId = firmAddress.FirmId,
-                                                 CategoryId = category2.Id
-                                             };
-
-                                var level1 = from firmAddress in q.For<Facts::FirmAddress>()
-                                             join categoryFirmAddress in q.For<Facts::CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
-                                             join category3 in categories3 on categoryFirmAddress.CategoryId equals category3.Id
-                                             join category2 in categories2 on category3.ParentId equals category2.Id
-                                             join category1 in categories1 on category2.ParentId equals category1.Id
-                                             select new FirmCategory
-                                             {
-                                                 FirmId = firmAddress.FirmId,
-                                                 CategoryId = category1.Id
-                                             };
-
-                                // perform union using distinct
-                                return level3.Union(level2).Union(level1);
-                            });
+                    public static readonly MapSpecification<IQuery, IQueryable<FirmCategory2>> FirmCategories2 =
+                        new MapSpecification<IQuery, IQueryable<FirmCategory2>>(
+                            q => (from firmAddress in q.For<Facts::FirmAddress>()
+                                  join categoryFirmAddress in q.For<Facts::CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
+                                  join category3 in q.For<Facts::Category>().Where(x => x.Level == 3) on categoryFirmAddress.CategoryId equals category3.Id
+                                  join category2 in q.For<Facts::Category>().Where(x => x.Level == 2) on category3.ParentId equals category2.Id
+                                  select new FirmCategory2
+                                  {
+                                      FirmId = firmAddress.FirmId,
+                                      CategoryId = category2.Id
+                                  }).Distinct());
 
                     public static readonly MapSpecification<IQuery, IQueryable<FirmTerritory>> FirmTerritories =
                         new MapSpecification<IQuery, IQueryable<FirmTerritory>>(
@@ -201,7 +184,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                   select new FirmTerritory { FirmId = firmAddress.FirmId, FirmAddressId = firmAddress.Id, TerritoryId = firmAddress.TerritoryId })
                                      .Distinct());
 
-                    public readonly static MapSpecification<IQuery, IQueryable<Project>> Projects =
+                    public static readonly MapSpecification<IQuery, IQueryable<Project>> Projects =
                         new MapSpecification<IQuery, IQueryable<Project>>(
                             q => from project in q.For<Facts::Project>()
                                  select new Project
@@ -210,7 +193,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                             Name = project.Name
                                         });
 
-                    public readonly static MapSpecification<IQuery, IQueryable<ProjectCategory>> ProjectCategories =
+                    public static readonly MapSpecification<IQuery, IQueryable<ProjectCategory>> ProjectCategories =
                         new MapSpecification<IQuery, IQueryable<ProjectCategory>>(
                             q => from project in q.For<Facts::Project>()
                                  join categoryOrganizationUnit in q.For<Facts::CategoryOrganizationUnit>() on project.OrganizationUnitId equals categoryOrganizationUnit.OrganizationUnitId
@@ -226,7 +209,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                      SalesModel = restriction == null ? 0 : restriction.SalesModel
                                  });
 
-                    public readonly static MapSpecification<IQuery, IQueryable<Territory>> Territories =
+                    public static readonly MapSpecification<IQuery, IQueryable<Territory>> Territories =
                         new MapSpecification<IQuery, IQueryable<Territory>>(
                             q => from territory in q.For<Facts::Territory>()
                                  join project in q.For<Facts::Project>() on territory.OrganizationUnitId equals project.OrganizationUnitId

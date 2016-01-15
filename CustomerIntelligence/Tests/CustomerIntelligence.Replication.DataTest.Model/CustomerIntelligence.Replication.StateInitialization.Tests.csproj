@@ -71,7 +71,6 @@
     <Compile Include="Identitites\Connections\StatisticsTestConnectionStringIdentity.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="MappedConnectionStringSettings.cs" />
-    <Compile Include="PrefillStatisticsContext.cs" />
     <Compile Include="TestCaseMetadataSource.CategoryDictionary.cs" />
     <Compile Include="TestCaseMetadataSource.CategoryGroupDictionary.cs" />
     <Compile Include="TestCaseMetadataSource.Project.cs" />

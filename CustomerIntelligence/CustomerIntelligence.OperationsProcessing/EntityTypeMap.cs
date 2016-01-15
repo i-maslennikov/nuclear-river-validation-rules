@@ -8,6 +8,7 @@ using NuClear.Model.Common.Entities;
 using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
 using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
 using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
+using Statistics = NuClear.CustomerIntelligence.Domain.Model.Statistics;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing
 {
@@ -69,7 +70,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                     .AddMapping<EntityTypeContact, CI.ClientContact>()
                     .AddMapping<EntityTypeFirm, CI.Firm>()
                     .AddMapping<EntityTypeFirmBalance, CI.FirmBalance>()
-                    .AddMapping<EntityTypeFirmCategory, CI.FirmCategory>()
+                    .AddMapping<EntityTypeFirmCategory1, CI.FirmCategory1>()
+                    .AddMapping<EntityTypeFirmCategory2, CI.FirmCategory2>()
+                    .AddMapping<EntityTypeFirmCategory3, Statistics.FirmCategory3>()
                     .AddMapping<EntityTypeProject, CI.Project>()
                     .AddMapping<EntityTypeProjectCategory, CI.ProjectCategory>()
                     .AddMapping<EntityTypeTerritory, CI.Territory>();
