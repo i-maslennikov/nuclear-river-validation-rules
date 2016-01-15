@@ -27,9 +27,14 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                     return new FindSpecification<FirmBalance>(x => aggregateIds.Contains(x.FirmId));
                 }
 
-                public static FindSpecification<FirmCategory> FirmCategories(IReadOnlyCollection<long> aggregateIds)
+                public static FindSpecification<FirmCategory1> FirmCategories1(IReadOnlyCollection<long> aggregateIds)
                 {
-                    return new FindSpecification<FirmCategory>(x => aggregateIds.Contains(x.FirmId));
+                    return new FindSpecification<FirmCategory1>(x => aggregateIds.Contains(x.FirmId));
+                }
+
+                public static FindSpecification<FirmCategory2> FirmCategories2(IReadOnlyCollection<long> aggregateIds)
+                {
+                    return new FindSpecification<FirmCategory2>(x => aggregateIds.Contains(x.FirmId));
                 }
 
                 public static FindSpecification<FirmTerritory> FirmTerritories(IReadOnlyCollection<long> aggregateIds)
@@ -42,16 +47,16 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                     return new FindSpecification<ProjectCategory>(x => aggregateIds.Contains(x.ProjectId));
                 }
 
-                public static partial class FirmCategoryStatistics
+                public static partial class FirmCategory3
                 {
-                    public static FindSpecification<Model.Statistics.FirmCategoryStatistics> ByProject(long projectId)
+                    public static FindSpecification<Model.Statistics.FirmCategory3> ByProject(long projectId)
                     {
-                        return new FindSpecification<Model.Statistics.FirmCategoryStatistics>(x => x.ProjectId == projectId);
+                        return new FindSpecification<Model.Statistics.FirmCategory3>(x => x.ProjectId == projectId);
                     }
 
-                    public static FindSpecification<Model.Statistics.FirmCategoryStatistics> ByProjectAndCategories(long projectId, IReadOnlyCollection<long?> categoryIds)
+                    public static FindSpecification<Model.Statistics.FirmCategory3> ByProjectAndCategories(long projectId, IReadOnlyCollection<long?> categoryIds)
                     {
-                        return new FindSpecification<Model.Statistics.FirmCategoryStatistics>(x => x.ProjectId == projectId && categoryIds.Contains(x.CategoryId));
+                        return new FindSpecification<Model.Statistics.FirmCategory3>(x => x.ProjectId == projectId && categoryIds.Contains(x.CategoryId));
                     }
                 }
             }

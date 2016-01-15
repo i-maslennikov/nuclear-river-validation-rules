@@ -19,10 +19,8 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                 .IncludeSharedDictionary(CategoryDictionary)
                 .CustomerIntelligence(
                     new CI::Firm { Id = 1, ClientId = null, CreatedOn = DateTimeOffset.MinValue, AddressCount = 1, CategoryGroupId = 0, Name = "FirmName", HasPhone = false, HasWebsite = false, LastDisqualifiedOn = null, LastDistributedOn = null, ProjectId = 1, OwnerId = 27 },
-                    new CI::FirmCategory { FirmId = 1, CategoryId = 1 },
-                    new CI::FirmCategory { FirmId = 1, CategoryId = 2 },
-                    new CI::FirmCategory { FirmId = 1, CategoryId = 3 },
-                    new CI::FirmCategory { FirmId = 1, CategoryId = 4 },
+                    new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 },
+                    new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 },
                     new CI::FirmActivity { FirmId = 1, LastActivityOn = null },
                     new CI::FirmTerritory { FirmId = 1, FirmAddressId = 1, TerritoryId = 1 },
                     new CI::Project { Id = 1, Name = "ProjectOne" })
@@ -40,14 +38,10 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                     new Erm::Project { Id = 1, IsActive = true, Name = "ProjectOne", OrganizationUnitId = 1 })
                 .Bit(
                     new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 3, AdvertisersCount = 2 },
-                    new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 3, ProjectId = 1, Hits = 10, Shows = 20 },
-                    new Bit::FirmCategory { FirmId = 1, CategoryId = 3, ProjectId = 1 },
-                    new Bit::FirmCategory { FirmId = 1, CategoryId = 4, ProjectId = 1 })
+                    new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 3, ProjectId = 1, Hits = 10, Shows = 20 })
                 .Statistics(
-                    new Statistics::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = null, Hits = null, Shows = null, FirmCount = null },
-                    new Statistics::FirmCategoryStatistics { FirmId = 1, CategoryId = 2, ProjectId = 1, AdvertisersShare = null, Hits = null, Shows = null, FirmCount = null },
-                    new Statistics::FirmCategoryStatistics { FirmId = 1, CategoryId = 3, ProjectId = 1, Hits = 10, Shows = 20, AdvertisersShare = 1, FirmCount = 1 },
-                    new Statistics::FirmCategoryStatistics { FirmId = 1, CategoryId = 4, ProjectId = 1, Hits = 0, Shows = 0, AdvertisersShare = 0, FirmCount = 1 });
+                    new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 3, ProjectId = 1, Name = "Category 3 level 3", Hits = 10, Shows = 20, AdvertisersShare = 1, FirmCount = 1 },
+                    new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 4, ProjectId = 1, Name = "Category 4 level 3", Hits = 0, Shows = 0, AdvertisersShare = 0, FirmCount = 1 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmWithActivity

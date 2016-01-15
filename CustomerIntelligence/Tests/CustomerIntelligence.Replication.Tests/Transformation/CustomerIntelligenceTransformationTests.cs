@@ -194,24 +194,30 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateFirmHavingCategory()
         {
-            SourceDb.Has(new Facts::Category { Id = 1, Level = 3 },
-                         new Facts::Category { Id = 2, Level = 3 });
-            SourceDb.Has(new Facts::CategoryOrganizationUnit { Id = 1, CategoryId = 1, OrganizationUnitId = 1 },
-                         new Facts::CategoryOrganizationUnit { Id = 2, CategoryId = 2, OrganizationUnitId = 1 });
+            SourceDb.Has(new Facts::Category { Id = 1, Level = 1 },
+                         new Facts::Category { Id = 2, Level = 1 },
+                         new Facts::Category { Id = 3, Level = 2, ParentId = 1 },
+                         new Facts::Category { Id = 4, Level = 2, ParentId = 2 },
+                         new Facts::Category { Id = 5, Level = 3, ParentId = 3 },
+                         new Facts::Category { Id = 6, Level = 3, ParentId = 4 });
+            SourceDb.Has(new Facts::CategoryOrganizationUnit { Id = 1, CategoryId = 5, OrganizationUnitId = 1 },
+                         new Facts::CategoryOrganizationUnit { Id = 2, CategoryId = 6, OrganizationUnitId = 1 });
             SourceDb.Has(new Facts::Project { OrganizationUnitId = 1 });
             SourceDb.Has(new Facts::FirmAddress { Id = 1, FirmId = 1 },
                          new Facts::FirmAddress { Id = 2, FirmId = 2 });
-            SourceDb.Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 1 },
-                         new Facts::CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 2 });
+            SourceDb.Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 5 },
+                         new Facts::CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 6 });
             SourceDb.Has(new Facts::Firm { Id = 1, OrganizationUnitId = 1 },
-                 new Facts::Firm { Id = 2, OrganizationUnitId = 1 },
-                 new Facts::Firm { Id = 3, OrganizationUnitId = 1 });
+                         new Facts::Firm { Id = 2, OrganizationUnitId = 1 },
+                         new Facts::Firm { Id = 3, OrganizationUnitId = 1 });
 
             TargetDb.Has(new CI::Firm { Id = 1 },
                          new CI::Firm { Id = 2 },
                          new CI::Firm { Id = 3 })
-                    .Has(new CI::FirmCategory { FirmId = 2, CategoryId = 1 },
-                         new CI::FirmCategory { FirmId = 3, CategoryId = 1 });
+                    .Has(new CI::FirmCategory1 { FirmId = 1, CategoryId = 2 },
+                         new CI::FirmCategory1 { FirmId = 2, CategoryId = 1 })
+                    .Has(new CI::FirmCategory2 { FirmId = 1, CategoryId = 4 },
+                         new CI::FirmCategory2 { FirmId = 2, CategoryId = 3 });
 
             Transformation.Create(Query)
                           .Recalculate<CI::Firm>(1)
@@ -220,10 +226,15 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1, AddressCount = 1 }))))
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 2, AddressCount = 1 }))))
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 3 }))))
-                          .Verify<CI::FirmCategory>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory { FirmId = 1, CategoryId = 1 }))))
-                          .Verify<CI::FirmCategory>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory { FirmId = 2, CategoryId = 2 }))))
-                          .Verify<CI::FirmCategory>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory { FirmId = 2, CategoryId = 1 }))))
-                          .Verify<CI::FirmCategory>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory { FirmId = 3, CategoryId = 1 }))));
+                          .Verify<CI::FirmCategory1>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 }))))
+                          .Verify<CI::FirmCategory1>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 2, CategoryId = 2 }))))
+                          .Verify<CI::FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 1, CategoryId = 2 }))))
+                          .Verify<CI::FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 2, CategoryId = 1 }))))
+                          .Verify<CI::FirmCategory2>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 1, CategoryId = 3 }))))
+                          .Verify<CI::FirmCategory2>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 2, CategoryId = 4 }))))
+                          .Verify<CI::FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 1, CategoryId = 4 }))))
+                          .Verify<CI::FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 2, CategoryId = 3 }))))
+                          ;
         }
 
         [Test]
@@ -283,12 +294,16 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         public void ShouldDestroyFirmHavingCategory()
         {
             TargetDb.Has(new CI::Firm { Id = 1 })
-                    .Has(new CI::FirmCategory { FirmId = 1, CategoryId = 1 });
+                    .Has(new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 })
+                    .Has(new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 })
+                    ;
 
             Transformation.Create(Query)
                           .Destroy<CI::Firm>(1)
                           .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))))
-                          .Verify<CI::FirmCategory>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory { FirmId = 1, CategoryId = 1 }))));
+                          .Verify<CI::FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 }))))
+                          .Verify<CI::FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 }))))
+                          ;
         }
 
         [Test]

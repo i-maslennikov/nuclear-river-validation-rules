@@ -3,12 +3,9 @@
 using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.AdvancedSearch.Common.Metadata.Features;
 using NuClear.AdvancedSearch.Common.Metadata.Identities;
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
-using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
-using NuClear.Metamodeling.Provider.Sources;
 
 using NUnit.Framework;
 
@@ -17,23 +14,12 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
     [TestFixture]
     internal class MetadataTests
     {
-        private MetadataProvider _provider;
-
-        [TestFixtureSetUp]
-        public void Setup()
-        {
-            var sources = new IMetadataSource[] { new QueryingMetadataSource() };
-            var processors = new IMetadataProcessor[] {};
-
-            _provider = new MetadataProvider(sources, processors);
-        }
-
         [Test]
         public void ShouldReturnMetadataByIdentity()
         {
             MetadataSet metadataSet;
             
-            Assert.That(_provider.TryGetMetadata<QueryingMetadataIdentity>(out metadataSet), Is.True);
+            Assert.That(TestMetadataProvider.Instance.TryGetMetadata<QueryingMetadataIdentity>(out metadataSet), Is.True);
             Assert.That(metadataSet, Is.Not.Null);
         }
 
@@ -43,7 +29,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             BoundedContextElement contextElement;
 
             var id = Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(name);
-            Assert.That(_provider.TryGetMetadata(id, out contextElement), Is.True);
+            Assert.That(TestMetadataProvider.Instance.TryGetMetadata(id, out contextElement), Is.True);
             Assert.That(contextElement, Is.Not.Null);
         }
 
@@ -55,13 +41,17 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         [TestCase("CustomerIntelligence/ConceptualModel/Territory", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Territory'},'Features':[{'EntitySetName':'Territories'}]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Firm", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm'},'Features':[{'EntitySetName':'Firms'}]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Firm/Balances", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/Balances'},'Features':[{'Cardinality':'Many','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmBalance'},'Features':[]}}]}")]
-        [TestCase("CustomerIntelligence/ConceptualModel/Firm/Categories", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/Categories'},'Features':[{'Cardinality':'Many','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmCategory'},'Features':[]}}]}")]
+        [TestCase("CustomerIntelligence/ConceptualModel/Firm/Categories1", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/Categories1'},'Features':[{'Cardinality':'Many','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmCategory1'},'Features':[]}}]}")]
+        [TestCase("CustomerIntelligence/ConceptualModel/Firm/Categories2", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/Categories2'},'Features':[{'Cardinality':'Many','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmCategory2'},'Features':[]}}]}")]
+        [TestCase("CustomerIntelligence/ConceptualModel/Firm/Categories3", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/Categories3'},'Features':[{'Cardinality':'Many','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmCategory3'},'Features':[]}}]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Firm/CategoryGroup", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/CategoryGroup'},'Features':[{'Cardinality':'One','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/CategoryGroup'},'Features':[{'EntitySetName':'CategoryGroups'}]}}]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Firm/Client", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/Client'},'Features':[{'Cardinality':'OptionalOne','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Client'},'Features':[]}}]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Firm/OwnerId", MetadataKind.Identity, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/OwnerId'}}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Firm/Territories", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Firm/Territories'},'Features':[{'Cardinality':'Many','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmTerritory'},'Features':[]}}]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/FirmBalance", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmBalance'},'Features':[]}")]
-        [TestCase("CustomerIntelligence/ConceptualModel/FirmCategory", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmCategory'},'Features':[]}")]
+        [TestCase("CustomerIntelligence/ConceptualModel/FirmCategory1", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmCategory1'},'Features':[]}")]
+        [TestCase("CustomerIntelligence/ConceptualModel/FirmCategory2", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmCategory2'},'Features':[]}")]
+        [TestCase("CustomerIntelligence/ConceptualModel/FirmCategory3", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/FirmCategory3'},'Features':[]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Client", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Client'},'Features':[]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Client/CategoryGroup", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Client/CategoryGroup'},'Features':[{'Cardinality':'One','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/CategoryGroup'},'Features':[{'EntitySetName':'CategoryGroups'}]}}]}")]
         [TestCase("CustomerIntelligence/ConceptualModel/Client/Contacts", MetadataKind.Identity | MetadataKind.Features, Result = "{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/Client/Contacts'},'Features':[{'Cardinality':'Many','Target':{'Identity':{'Id':'erm://metadata/Querying/CustomerIntelligence/ConceptualModel/ClientContact'},'Features':[]}}]}")]
@@ -89,7 +79,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         [TestCase("CustomerIntelligence/ConceptualModel/ClientContact")]
         [TestCase("CustomerIntelligence/ConceptualModel/Firm")]
         [TestCase("CustomerIntelligence/ConceptualModel/FirmBalance")]
-        [TestCase("CustomerIntelligence/ConceptualModel/FirmCategory")]
+        [TestCase("CustomerIntelligence/ConceptualModel/FirmCategory1")]
+        [TestCase("CustomerIntelligence/ConceptualModel/FirmCategory2")]
+        [TestCase("CustomerIntelligence/ConceptualModel/FirmCategory3")]
         [TestCase("CustomerIntelligence/ConceptualModel/Project")]
         [TestCase("CustomerIntelligence/ConceptualModel/Category")]
         [TestCase("CustomerIntelligence/ConceptualModel/Territory")]
@@ -99,7 +91,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.ClientContact")]
         [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.FirmView")]
         [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.FirmBalance")]
-        [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.FirmCategory")]
+        [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.FirmCategory1")]
+        [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.FirmCategory2")]
+        [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.FirmCategory3")]
         [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.Project")]
         [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.ProjectCategory")]
         [TestCase("CustomerIntelligence/StoreModel/CustomerIntelligence.Territory")]
@@ -114,7 +108,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         private bool TryGetMetadata(string path, out IMetadataElement element)
         {
             var id = Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(path);
-            return _provider.TryGetMetadata(id, out element);
+            return TestMetadataProvider.Instance.TryGetMetadata(id, out element);
         }
     }
 }

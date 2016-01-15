@@ -1,4 +1,4 @@
--- create schema
+﻿-- create schema
 if not exists (select * from sys.schemas where name = 'Transport') exec('create schema Transport')
 
 -- drop tables

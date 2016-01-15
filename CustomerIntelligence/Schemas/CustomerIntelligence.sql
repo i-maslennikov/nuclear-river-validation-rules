@@ -1,4 +1,4 @@
--- create schema
+﻿-- create schema
 if not exists (select * from sys.schemas where name = 'CustomerIntelligence') exec('create schema CustomerIntelligence')
 
 -- drop tables
@@ -9,13 +9,14 @@ if object_id('CustomerIntelligence.Territory') is not null drop table CustomerIn
 if object_id('CustomerIntelligence.Firm') is not null drop table CustomerIntelligence.Firm
 if object_id('CustomerIntelligence.FirmBalance') is not null drop table CustomerIntelligence.FirmBalance
 if object_id('CustomerIntelligence.FirmActivity') is not null drop table CustomerIntelligence.FirmActivity
-if object_id('CustomerIntelligence.FirmTerritory') is not null drop table CustomerIntelligence.FirmTerritory
-if object_id('CustomerIntelligence.FirmCategoryPartFirm') is not null drop table CustomerIntelligence.FirmCategoryPartFirm
 if object_id('CustomerIntelligence.Client') is not null drop table CustomerIntelligence.Client
 if object_id('CustomerIntelligence.Contact') is not null drop table CustomerIntelligence.Contact
 if object_id('CustomerIntelligence.ClientContact') is not null drop table CustomerIntelligence.ClientContact
-if object_id('CustomerIntelligence.FirmCategoryPartProject') is not null drop table CustomerIntelligence.FirmCategoryPartProject
-if object_id('CustomerIntelligence.FirmCategory') is not null drop table CustomerIntelligence.FirmCategory
+if object_id('CustomerIntelligence.FirmCategory') is not null drop table CustomerIntelligence.FirmCategory -- удалить после релиза
+if object_id('BIT.FirmCategory', 'view') is not null drop view BIT.FirmCategory -- удалить после релиза
+if object_id('CustomerIntelligence.FirmCategory1') is not null drop table CustomerIntelligence.FirmCategory1
+if object_id('CustomerIntelligence.FirmCategory2') is not null drop table CustomerIntelligence.FirmCategory2
+if object_id('CustomerIntelligence.FirmCategory3') is not null drop table CustomerIntelligence.FirmCategory3
 if object_id('CustomerIntelligence.FirmTerritory') is not null drop table CustomerIntelligence.FirmTerritory
 if object_id('CustomerIntelligence.FirmView', 'view') is not null drop view CustomerIntelligence.FirmView
 
@@ -96,15 +97,33 @@ create table CustomerIntelligence.FirmBalance(
 )
 go
 
--- FirmCategory
-create table CustomerIntelligence.FirmCategory(
+-- FirmCategory1
+create table CustomerIntelligence.FirmCategory1(
 	FirmId bigint not null
 	, CategoryId bigint not null
-    , Hits int null
-    , Shows int null
-    , FirmCount int null
-    , AdvertisersShare float null
-    , constraint PK_FirmCategoryPartFirm primary key (FirmId, CategoryId)
+    , constraint PK_FirmCategory1 primary key (FirmId, CategoryId)
+)
+go
+
+-- FirmCategory2
+create table CustomerIntelligence.FirmCategory2(
+	FirmId bigint not null
+	, CategoryId bigint not null
+    , constraint PK_FirmCategory2 primary key (FirmId, CategoryId)
+)
+go
+
+-- FirmCategory3
+create table CustomerIntelligence.FirmCategory3(
+	ProjectId bigint not null
+	, FirmId bigint not null
+	, CategoryId bigint not null
+	, Name nvarchar(256) not null
+    , Hits int not null
+    , Shows int not null
+    , FirmCount int not null
+    , AdvertisersShare float not null
+    , constraint PK_FirmCategory3 primary key (FirmId, CategoryId)
 )
 go
 
@@ -145,7 +164,7 @@ from CustomerIntelligence.Firm
 go
 
 
--- ������ ��� �������
+-- Идексы для клиента
 create nonclustered index IX_Quering_1
 on CustomerIntelligence.Firm (ProjectId,OwnerId,CreatedOn)
 include (Id)

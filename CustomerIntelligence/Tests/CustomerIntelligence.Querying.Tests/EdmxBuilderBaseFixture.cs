@@ -12,11 +12,9 @@ using Moq;
 
 using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.AdvancedSearch.Common.Metadata.Identities;
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
-using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Querying.EntityFramework.Building;
@@ -41,15 +39,12 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             }
         }
 
-        protected static IMetadataSource AdvancedSearchMetadataSource
+        protected DbModel CreateModel()
         {
-            get
-            {
-                return new QueryingMetadataSource();
-            }
+            return BuildModel(TestMetadataProvider.Instance, CustomerIntelligenceTypeProvider);
         }
 
-        protected static ITypeProvider CustomerIntelligenceTypeProvider
+        private static ITypeProvider CustomerIntelligenceTypeProvider
         {
             get
             {
@@ -59,7 +54,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
                     typeof(ClientContact),
                     typeof(Firm),
                     typeof(FirmBalance),
-                    typeof(FirmCategory),
+                    typeof(FirmCategory1),
+                    typeof(FirmCategory2),
+                    typeof(FirmCategory3),
                     typeof(FirmTerritory),
                     typeof(Project),
                     typeof(Category),
@@ -84,27 +81,11 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             typeProvider.Setup(x => x.Resolve(It.Is<EntityElement>(el => el.ResolveName() == type.Name))).Returns(type);
         }
 
-        protected static DbModel BuildModel(IMetadataProvider metadataProvider, ITypeProvider typeProvider = null)
+        private static DbModel BuildModel(IMetadataProvider metadataProvider, ITypeProvider typeProvider = null)
         {
             var builder = CreateBuilder(metadataProvider, typeProvider);
             var contextId = BuildContextId();
             return builder.Build(EffortProvider, contextId);
-        }
-
-        protected static DbModel BuildModel(IMetadataSource source, ITypeProvider typeProvider = null)
-        {
-            return BuildModel(CreateMetadataProvider(source),  typeProvider);
-        }
-
-        protected static DbModel BuildModel(BoundedContextElement context, ITypeProvider typeProvider = null)
-        {
-            var builder = CreateBuilder(CreateMetadataProvider(MockSource(context)), typeProvider);
-            var contextId = context.Identity.Id;
-            var model = builder.Build(EffortProvider, contextId);
-
-            model.Dump();
-
-            return model;
         }
 
         // NOTE: Assembly name CANNOT start with digits, for example, 2GIS.Assembly.Name. It should be just, for example, Assembly.Name or DoubleGIS.Assembly.Name
@@ -124,23 +105,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
                 : new EdmxModelBuilder(metadataProvider, typeProvider);
         }
 
-        protected static Uri BuildContextId()
+        private static Uri BuildContextId()
         {
             return QueryingMetadataIdentity.Instance.Id.WithRelative(new Uri("CustomerIntelligence", UriKind.Relative));
-        }
-
-        protected static IMetadataProvider CreateMetadataProvider(params IMetadataSource[] sources)
-        {
-            return new MetadataProvider(sources, new IMetadataProcessor[0]);
-        }
-
-        private static IMetadataSource MockSource(IMetadataElement context)
-        {
-            var source = new Mock<IMetadataSource>();
-            source.Setup(x => x.Kind).Returns(new QueryingMetadataIdentity());
-            source.Setup(x => x.Metadata).Returns(new Dictionary<Uri, IMetadataElement> { { Metadata.Id.For<QueryingMetadataIdentity>(), context } });
-
-            return source.Object;
         }
     }
 }

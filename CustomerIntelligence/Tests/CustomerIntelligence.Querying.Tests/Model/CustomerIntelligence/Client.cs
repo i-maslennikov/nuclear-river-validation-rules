@@ -2,7 +2,7 @@
 
 namespace NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence
 {
-    public class Client
+    public sealed class Client
     {
         public long Id { get; set; }
         public string Name { get; set; }
