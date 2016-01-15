@@ -66,7 +66,7 @@ StructuralModelElement.Config
 	            ).AsMany().AsContainment()));
 ```
 
-Data model for that bounded context can be desctibed by the following:
+Data model for that bounded context can be described by the following:
 
 ```c#
 StructuralModelElementBuilder StoreModel =
@@ -85,7 +85,7 @@ StructuralModelElement.Config.Elements(
 		.Property(EntityPropertyElement.Config.Name("SalesModel").OfType(ElementaryTypeKind.Int32))
 		.Relation(EntityRelationElement.Config.Name("ProjectId").DirectTo(EntityElement.Config.Name(TableName.Project)).AsOne()),
 	EntityElement.Config
-		.Name(ViewName.Firm)
+		.Name(TableName.Firm)
 		.HasKey("Id")
 		.Property(EntityPropertyElement.Config.Name("Id").OfType(ElementaryTypeKind.Int64))
 		.Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
@@ -107,4 +107,18 @@ StructuralModelElement.Config.Elements(
 		.Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
 		.Property(EntityPropertyElement.Config.Name("AdvertisersShare").OfType(ElementaryTypeKind.Double))
 		.Relation(EntityRelationElement.Config.Name("FirmId").DirectTo(EntityElement.Config.Name(TableName.Firm)).AsOne());
+```
+
+So, the Metadata description for the bounded context inself looks like this:
+
+```c#
+BoundedContextElement Context =
+	BoundedContextElement.Config.Name("CustomerIntelligence")
+		.ConceptualModel(ConceptualModel)
+		.StoreModel(StoreModel)
+		.Map(EntityName.Project, TableName.Project)
+		.Map(EntityName.Category, TableName.ProjectCategory)
+		.Map(EntityName.Firm, ViewName.Firm)
+		.Map(EntityName.FirmBalance, TableName.FirmBalance)
+		.Map(EntityName.FirmCategory, TableName.FirmCategory);
 ```
