@@ -37,4 +37,4 @@ There are some important terms here:
 
 See [Terms](terms.md) chapter for details.
 
-High-level design of NuClear River described in [the next chapter](desing-overview\README.md).
+High-level design of NuClear River described in [the next chapter](desing-overview/README.md).
