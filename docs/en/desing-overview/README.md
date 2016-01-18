@@ -53,6 +53,7 @@ StructuralModelElement.Config
 	                	.Name(EntityName.FirmBalance)
 	                    .HasKey("AccountId")
 	                    .Property(EntityPropertyElement.Config.Name("AccountId").OfType(ElementaryTypeKind.Int64))
+	                    .Property(EntityPropertyElement.Config.Name("ProjectId").OfType(ElementaryTypeKind.Int64))
 	                    .Property(EntityPropertyElement.Config.Name("Balance").OfType(ElementaryTypeKind.Decimal))
 	            ).AsMany())
  	        .Relation(EntityRelationElement.Config.Name("Categories")
