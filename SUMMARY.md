@@ -1,4 +1,4 @@
 # Summary
 
-* Introduction
+* [Terms](docs/en/terms.md)
 
