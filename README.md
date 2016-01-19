@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/2gis/nuclear-river.png?label=ready&title=Ready)](https://waffle.io/2gis/nuclear-river)
 ![NuClear](/media/nuclear-logo.png)
 # NuClear River
 
