@@ -4,11 +4,11 @@
     "plugins": [
         "28msec",
         "richquotes",
-        "image-captions",
+        "-image-captions",
         "printlinks",
         "video",
         "prism",
-        "-highlight",
+        "highlight",
         "github",
         "edit-link",
         "anchors"

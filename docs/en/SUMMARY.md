@@ -6,3 +6,4 @@
  * [Metadata descriptions](desing-overview/metadata-descriptions.md)
  * [Querying](desing-overview/querying-design.md)
  * [Replication](desing-overview/replication-design.md)
+ * [State initialization](desing-overview/state-initialization.md)

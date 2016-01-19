@@ -1,6 +1,6 @@
 **NuClear River** platform consists of two components: [Querying](../terms.md) and [Replication](../terms.md). Technically, they are independent from each other. But metadata descriptions used for both to describe a specific bounded context should be coordinated.
 
-Let's take a look at **Querying**. It's a very simple application that exposed API throught **HTTP** in terms of [**OData**](http://www.odata.org/) protocol. This application built on ASP.NET Web API and uses [Microsoft.AspNet.OData](https://www.nuget.org/packages/Microsoft.AspNet.OData/) and [EntityFramework](https://www.nuget.org/packages/EntityFramework) libraries.
+Let's take a look at **Querying** first. It's a very simple application that exposed API throught **HTTP** in terms of [**OData**](http://www.odata.org/) protocol. This application built on ASP.NET Web API and uses [Microsoft.AspNet.OData](https://www.nuget.org/packages/Microsoft.AspNet.OData/) and [EntityFramework](https://www.nuget.org/packages/EntityFramework) libraries.
 
 So, OData protocol usage gives us two main profits:
 
@@ -11,16 +11,16 @@ OData service uses an abstract data model called **Entity Data Model (EDM)** to 
 
 It's important that Metadata descriptions describe not only EDM model, but the API of **Querying** too. Hense, you just need to create metadata for your bounded context and **Querying** component in will start to use it to execute queries for Read Model.
 
-Here is the example. Bounded context looks like this:
+Here is the example. Say, bounded context looks like this:
 
-![](../diagrams/conceptual-model-example.png)
+![image](../diagrams/conceptual-model-example.png)
 
 Here we have one aggregate - `Project`. It has two entities - `Category` and `Firm`, and two value objects - `FirmBalance` and `FirmCategory` that related to `Firm` entity.
 
 So, it's implementation using Metadata descriptions will be the following:
 
 
-```c#
+```csharp
 StructuralModelElementBuilder ConceptualModel =
 StructuralModelElement.Config
     .Elements(
@@ -67,9 +67,9 @@ StructuralModelElement.Config
 	            ).AsMany().AsContainment()));
 ```
 
-Data model for that bounded context can be described by the following:
+Data model (store model) for relational DB for that bounded context can be described by the following:
 
-```c#
+```csharp
 StructuralModelElementBuilder StoreModel =
 StructuralModelElement.Config.Elements(
 	EntityElement.Config
@@ -112,7 +112,7 @@ StructuralModelElement.Config.Elements(
 
 So, the Metadata description for the bounded context inself looks like this:
 
-```c#
+```csharp
 BoundedContextElement Context =
 	BoundedContextElement.Config.Name("CustomerIntelligence")
 		.ConceptualModel(ConceptualModel)
@@ -123,3 +123,10 @@ BoundedContextElement Context =
 		.Map(EntityName.FirmBalance, TableName.FirmBalance)
 		.Map(EntityName.FirmCategory, TableName.FirmCategory);
 ```
+
+As you can see here, all descriptions are very straightforward. In conceptual level we have relations among objects, at store level - relations among DB tables. 
+
+These descriptions is the main thing that you need to configure **Querying** component and customize its behaivour for your bounded context. There is some more detais about DI and data storage connections configuration, you can find them in [Querying design](querying-design.md) article.
+
+Now, let's take a look at **Replication** component. It's a bit more complicated.
+First of all, it consists at least of parts - _primary_ and _final_.

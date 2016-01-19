@@ -10,8 +10,8 @@ High-level NuClear River platform component responsible for serving client's que
 High-level NuClear River platform component responsible for external events processing to sync the data in Read Model's storage with the data of the origin source system
 
 #### Metadata descriptions
-Usage of DSL based on C# for configuration descriptions. This is the way to customize NuClear River behaviour for a specific [bounded context](http://martinfowler.com/bliki/BoundedContext.html). Here is the sample:
-```c#
+DSL based on C# for configuration descriptions. This is the way to customize NuClear River behaviour for a specific [bounded context](http://martinfowler.com/bliki/BoundedContext.html). Here is the sample:
+```csharp
 HierarchyMetadata aggregateConstructionMetadataRoot =
     HierarchyMetadata
         .Config
