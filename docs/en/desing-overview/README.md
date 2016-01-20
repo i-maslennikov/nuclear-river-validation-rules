@@ -128,5 +128,18 @@ As you can see here, all descriptions are very straightforward. In conceptual le
 
 These descriptions is the main thing that you need to configure **Querying** component and customize its behaivour for your bounded context. There is some more detais about DI and data storage connections configuration, you can find them in [Querying design](querying-design.md) article.
 
-Now, let's take a look at **Replication** component. It's a bit more complicated.
-First of all, it consists at least of parts - _primary_ and _final_.
+Now, let's take a look at **Replication** component. It's a bit more complicated. 
+
+First of all, it's important to know that it's control flow consists at least of two parts/stages - _primary_ and _final_. These terms also come from the [NuClear.Operations* libraries](../dependencies/nuclear-operations-libraries.md) used for extenal events processing.
+
+Main things we need to understand here are:
+* The _primary_ stage used for for extenal events receiving and processing. The main goal here is to sync [_facts storage_](../terms.md) with storage of the source system and generate events to be processed on the next stage
+* The _final_ stage is responsible for receiving and processing of events comes from the _primary_ stage to construct [aggregates](../terms.md) using _facts storage_
+
+In fact, these stages can be perceived as [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)-pipeline. We extract data at _primary_ stage and then transform and load data at _final_ stage.
+
+So, as far as _primary_ stage needed for data extraction, we can plug many source systems to **NuClear River** to compose data of bounded context from many sources.
+
+Similar technique used at _final_ stage. We can design aggregates in a way they consist of _mandatory_ and _optional_ objects. Mandatory objects is the set of entities and value object that define the meaning of the aggregate. Optional objects are value objects that supplement aggregate. So, we can have many _final_ stages for the same aggregate - one to deal with mandatory objects and others (_main flow_) - to optional objects (_additional flows_). 
+
+To get more details on **Replication** see [Replication design](replication-design.md) article.
