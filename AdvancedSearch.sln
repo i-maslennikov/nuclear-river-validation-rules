@@ -61,6 +61,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{8A6466
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomerIntelligence", "CustomerIntelligence", "{C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}"
+	ProjectSection(SolutionItems) = preProject
+		CustomerIntelligence\README.md = CustomerIntelligence\README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{02A5AF22-F311-46F6-A155-D022430BD529}"
 	ProjectSection(SolutionItems) = preProject
@@ -114,6 +117,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A9028F36-80AC-4111-B38B-D40DA3CD43B8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ValidationRules", "ValidationRules", "{8C2CFAF4-1282-494F-A7BB-2653593839DF}"
+	ProjectSection(SolutionItems) = preProject
+		ValidationRules\README.md = ValidationRules\README.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{1F115A52-C900-4C2E-9B83-375E1A71C831}"
 	ProjectSection(SolutionItems) = preProject
