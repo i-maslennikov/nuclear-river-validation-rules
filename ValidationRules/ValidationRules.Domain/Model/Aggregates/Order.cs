@@ -6,5 +6,6 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
     public class Order
     {
         public long Id { get; set; }
+        public long FirmId { get; set; }
     }
 }

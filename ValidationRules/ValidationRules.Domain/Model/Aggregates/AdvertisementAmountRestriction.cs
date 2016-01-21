@@ -7,5 +7,7 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
     {
         public long PriceId { get; set; }
         public long PositionId { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
     }
 }

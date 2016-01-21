@@ -12,6 +12,7 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
     public class Period
     {
         public long Id { get; set; }
+        public long ProjectId { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
     }

@@ -31,7 +31,8 @@ create table PriceAggregate.MasterPosition(
 go
 
 create table PriceAggregate.[Order](
-    Id bigint NOT NULL
+    Id bigint NOT NULL,
+    FirmId bigint NOT NULL
 )
 go
 
@@ -58,6 +59,7 @@ go
 
 create table PriceAggregate.Period(
     Id bigint NOT NULL,
+    ProjectId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
     [End] datetime2(2) NOT NULL
 )
@@ -80,8 +82,10 @@ create table PriceAggregate.PricePeriod(
 )
 go
 
-create table PriceAggregate.PricePosition(
+create table PriceAggregate.AdvertisementAmountRestriction(
     PriceId bigint NOT NULL,
     PositionId bigint NOT NULL
+    [Min] int NOT NULL,
+    [Max] int NOT NULL
 )
 go
