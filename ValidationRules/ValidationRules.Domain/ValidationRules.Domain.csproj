@@ -76,7 +76,7 @@
     <Compile Include="Model\Aggregates\Position.cs" />
     <Compile Include="Model\Aggregates\Price.cs" />
     <Compile Include="Model\Aggregates\PricePeriod.cs" />
-    <Compile Include="Model\Aggregates\PricePosition.cs" />
+    <Compile Include="Model\Aggregates\AdvertisementAmountRestriction.cs" />
     <Compile Include="Model\Facts\GlobalAssociatedPosition.cs" />
     <Compile Include="Model\Facts\GlobalDeniedPosition.cs" />
     <Compile Include="Model\IConfigFactObject.cs" />
