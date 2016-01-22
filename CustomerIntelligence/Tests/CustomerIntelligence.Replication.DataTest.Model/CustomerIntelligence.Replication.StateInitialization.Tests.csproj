@@ -72,6 +72,7 @@
     <Compile Include="Keys.cs" />
     <Compile Include="MappedConnectionStringSettings.cs" />
     <Compile Include="TestCaseMetadataSource.CategoryDictionary.cs" />
+    <Compile Include="TestCaseMetadataSource.Client.cs" />
     <Compile Include="TestCaseMetadataSource.Territory.cs" />
     <Compile Include="TestCaseMetadataSource.CategoryGroupDictionary.cs" />
     <Compile Include="TestCaseMetadataSource.IgnoredEntities.cs" />
