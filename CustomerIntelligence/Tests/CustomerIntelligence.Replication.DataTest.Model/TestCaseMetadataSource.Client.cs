@@ -52,7 +52,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                                            new CI::CategoryGroup { Id = 1, Rate = 1 },
                                                            new CI::CategoryGroup { Id = 2, Rate = 2 },
                                                            new CI::FirmActivity { FirmId = 1 },
-                                                           new CI::FirmActivity { FirmId = 2},
+                                                           new CI::FirmActivity { FirmId = 2 },
                                                            new CI::FirmTerritory { FirmId = 1, FirmAddressId = 1 },
                                                            new CI::FirmTerritory { FirmId = 2, FirmAddressId = 2 })
                                      .Fact(new Facts::Client { Id = 1, Name = "ClientName" },
@@ -70,6 +70,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                            new Facts::FirmAddress { Id = 2, FirmId = 2 },
                                            new Facts::CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 2 },
                                            new Facts::CategoryOrganizationUnit { Id = 2, CategoryGroupId = 2, CategoryId = 2, OrganizationUnitId = 1 },
-                                           new Facts::CategoryGroup { Id = 2, Rate = 2f });
+                                           new Facts::CategoryGroup { Id = 2, Rate = 2f })
+                                     .Ignored();
     }
 }
