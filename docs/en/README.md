@@ -29,12 +29,12 @@ There are some keywords here:
 
 * Source system
 * [Bounded context](http://martinfowler.com/bliki/BoundedContext.html)
-* [Metadata descriptions](desing-overview/metadata-descriptions.md)
-* [Querying](desing-overview/querying-design.md)
-* [Replication](desing-overview/replication-design.md)
+* [Metadata descriptions](design-overview/metadata-descriptions.md)
+* [Querying](design-overview/querying-design.md)
+* [Replication](design-overview/replication-design.md)
 * Events (UseCases) processing
 * Specification pattern
 
 See [Terms](terms.md) chapter for detailed definitions.
 
-High-level design of **NuClear River** described in [the next chapter](desing-overview/README.md).
+High-level design of **NuClear River** described in [the next chapter](design-overview/README.md).

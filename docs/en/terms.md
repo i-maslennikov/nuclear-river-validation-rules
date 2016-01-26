@@ -3,10 +3,10 @@ Here are definitions for terms that actively used in docs
 #### Source system
 The system where commands are executing. That leads to changes in a specific source [bounded context](http://martinfowler.com/bliki/BoundedContext.html) and the data in it's storage
 
-#### [Querying](desing-overview/querying-design.md)
+#### [Querying](design-overview/querying-design.md)
 High-level **NuClear River** platform component responsible for serving client's queries to Read Model
 
-#### [Replication](desing-overview/replication-design.md) 
+#### [Replication](design-overview/replication-design.md) 
 High-level **NuClear River** platform component responsible for external events processing to sync the data in Read Model's storage with the data of the origin source system
 
 #### Metadata descriptions

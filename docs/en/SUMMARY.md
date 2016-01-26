@@ -1,11 +1,11 @@
 # Summary
 
 * [Introduction](README.md)
-* [High-level design overview](desing-overview/README.md)
- * [Metadata descriptions](desing-overview/metadata-descriptions.md)
- * [Querying](desing-overview/querying-design.md)
- * [Replication](desing-overview/replication-design.md)
- * [State initialization](desing-overview/state-initialization.md)
+* [High-level design overview](design-overview/README.md)
+ * [Metadata descriptions](design-overview/metadata-descriptions.md)
+ * [Querying](design-overview/querying-design.md)
+ * [Replication](design-overview/replication-design.md)
+ * [State initialization](design-overview/state-initialization.md)
 * Dependencies
  * [NuClear.Operations* libraries](dependencies/nuclear-operations-libraries.md)
  * [NuClear.Storage library](dependencies/nuclear-storage-library.md)
