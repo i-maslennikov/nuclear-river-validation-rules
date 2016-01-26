@@ -7,7 +7,7 @@ The system where commands are executing. That leads to changes in a specific sou
 High-level **NuClear River** platform component responsible for serving client's queries to Read Model
 
 #### [Replication](design-overview/replication-design.md) 
-High-level **NuClear River** platform component responsible for external events processing to sync the data in Read Model's storage with the data of the origin source system
+High-level **NuClear River** platform component responsible for external events processing to sync the data in Read Model's storage with the data of the source system
 
 #### Metadata descriptions
 Descriptions on DSL based on C# for configuration. This is the way to customize **NuClear River** behaviour for a specific [bounded context](http://martinfowler.com/bliki/BoundedContext.html). Here is the sample:
@@ -46,7 +46,7 @@ UseCases is an another name for [Domain Events](http://martinfowler.com/eaaDev/D
 [Specifications](https://en.wikipedia.org/wiki/Specification_pattern) makes it possible to use expressions as objects. It gives high level code reuse possibility and makes **NuClear River** customizable. See [NuClear Aggregates Layer project docs](https://github.com/2gis/nuclear-aggregates-layer) for details
 
 #### Facts storage
-Storage used in Replication component that store data from source system. Usually, it use the same storage type and similar data schema as source system. The data storing here is used for aggregates costruction so it is the subset of data of the source system that needed for specific bounded context only
+Storage used in Replication component that store data from source system. Usually, it use the same storage type and similar data schema as source system. The data stored here is used for aggregates costruction so it is the subset of data of the source system that needed for specific bounded context only
 
 #### Aggregates (storage)
 Term used for objects from bounded context's description in sense of [Domain-Driven Design, DDD](https://en.wikipedia.org/wiki/Domain-driven_design). [Aggregates](http://martinfowler.com/bliki/DDD_Aggregate.html) is a cluster of domain objects that can be treated as a single unit. _Aggregates storage_ is the storage within Replication component to store aggregates

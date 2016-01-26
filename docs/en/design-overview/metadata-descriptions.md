@@ -19,7 +19,7 @@ For example, let's take an entities area and create metadata descriptions for it
 * `EntityPropertyElement`
 * `EntityRelationElement`
 
-For simplicity, let's `EntityElement` will look like this:
+For simplicity, let `EntityElement` will look like this:
 
 ```csharp
 public sealed class EntityElement : MetadataElement
@@ -191,7 +191,7 @@ StructuralModelElement.Config
             .Property(EntityPropertyElement.Config.Name("HasPhone").OfType(ElementaryTypeKind.Boolean));
 ```
 
-Next, you can use this description in your code with `IMetadataProvider`. Everything you need to get it from provider is appropriate metadata kind identity type instance:
+Next, you can use this description in your code with `IMetadataProvider`. Everything you need to get it from provider is appropriate `IMetadataElementIdentity` instance:
 
 ```csharp
 public sealed class QueryingMetadataIdentity : MetadataKindIdentityBase<QueryingMetadataIdentity>

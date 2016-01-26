@@ -7,7 +7,7 @@ So, OData protocol usage gives us two main profits:
 * OData metadata, a machine-readable description of the data model of the APIs
 * An opportunity to client to construct an arbitrary query based on OData metadata
 
-OData service uses an abstract data model called **Entity Data Model (EDM)** to describe the exposed data in the service. To construct EDM model **Querying** component uses [Metadata descriptions](../terms.md). Moreover, concept of bounded contexts is fully supported, so you can have as many EDM models as you need. From OData side, bounded contexts are implemented with [Entity containers](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part3-csdl/odata-v4.0-errata02-os-part3-csdl-complete.html#_Toc406398024).
+OData service uses an abstract data model called [**Entity Data Model (EDM)**](https://msdn.microsoft.com/library/ee382825.aspx) to describe the exposed data in the service. To construct EDM model **Querying** component uses [Metadata descriptions](../terms.md). Moreover, concept of bounded contexts is fully supported, so you can have as many EDM models as you need. From OData side, bounded contexts are implemented with [Entity containers](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part3-csdl/odata-v4.0-errata02-os-part3-csdl-complete.html#_Toc406398024).
 
 It's important that Metadata descriptions describe not only EDM model, but the API of **Querying** too. Hense, you just need to create metadata for your bounded context and **Querying** component in will start to use it to execute queries for Read Model.
 
@@ -15,7 +15,7 @@ Here is the example. Say, bounded context looks like this:
 
 ![image](../diagrams/conceptual-model-example.png)
 
-Here we have one aggregate - `Project`. It has two entities - `Category` and `Firm`, and two value objects - `FirmBalance` and `FirmCategory` that related to `Firm` entity.
+Here we have one aggregate - `Project`. It has two entities besides aggregate root - `Category` and `Firm`, and two value objects - `FirmBalance` and `FirmCategory` that related to `Firm` entity.
 
 So, it's implementation using Metadata descriptions will be the following:
 
@@ -133,7 +133,7 @@ Now, let's take a look at **Replication** component. It's a bit more complicated
 First of all, it's important to know that it's control flow consists at least of two parts/stages - _primary_ and _final_. These terms also come from the [NuClear.Operations* libraries](../dependencies/nuclear-operations-libraries.md) used for extenal events processing.
 
 Main things we need to understand here are:
-* The _primary_ stage used for for extenal events receiving and processing. The main goal here is to sync [_facts storage_](../terms.md) with storage of the source system and generate events to be processed on the next stage
+* The _primary_ stage used for extenal events receiving and processing. The main goal here is to sync [_facts storage_](../terms.md) with storage of the source system and generate events to be processed on the next stage
 * The _final_ stage is responsible for receiving and processing of events comes from the _primary_ stage to construct [aggregates](../terms.md) using _facts storage_
 
 In fact, these stages can be perceived as [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)-pipeline. We extract data at _primary_ stage and then transform and load data at _final_ stage.
