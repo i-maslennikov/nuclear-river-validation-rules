@@ -123,7 +123,6 @@
     <Compile Include="Final\AggregateOperationAccumulator.cs" />
     <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
     <Compile Include="Final\StatisticsAggregatableMessageHandler.cs" />
-    <Compile Include="Final\StatisticsOperationAccumulator.cs" />
     <Compile Include="Identities\Flows\AggregatesFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromBitFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />

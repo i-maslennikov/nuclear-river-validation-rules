@@ -6,7 +6,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
 {
     public static class PredicateProperty
     {
-        public static readonly PredicateProperty<string> Id = new PredicateProperty<string>("id");
+        public static readonly PredicateProperty<string> Type = new PredicateProperty<string>("type");
         public static readonly PredicateProperty<int> EntityType = new PredicateProperty<int>("entityType");
         public static readonly PredicateProperty<long> EntityId = new PredicateProperty<long>("entityId");
         public static readonly PredicateProperty<long> ProjectId = new PredicateProperty<long>("projectId");

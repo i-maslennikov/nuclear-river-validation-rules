@@ -9,7 +9,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
         public static Predicate EntityById(IEntityType entityType, long id)
         {
             var properties = new Dictionary<string, string>();
-            PredicateProperty.Id.SetValue(properties, "byId");
+            PredicateProperty.Type.SetValue(properties, Type.ById);
             PredicateProperty.EntityId.SetValue(properties, id);
             PredicateProperty.EntityType.SetValue(properties, entityType.Id);
 
@@ -19,7 +19,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
         public static Predicate StatisticsByProject(long projectId)
         {
             var properties = new Dictionary<string, string>();
-            PredicateProperty.Id.SetValue(properties, "byProjectReference");
+            PredicateProperty.Type.SetValue(properties, Type.ByProject);
             PredicateProperty.ProjectId.SetValue(properties, projectId);
 
             return new Predicate(properties, new Predicate[0]);
@@ -28,11 +28,19 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
         public static Predicate StatisticsByProjectAndCategory(long projectId, long categoryId)
         {
             var properties = new Dictionary<string, string>();
-            PredicateProperty.Id.SetValue(properties, "byProjectCategoryReference");
+            PredicateProperty.Type.SetValue(properties, Type.ByProjectCategory);
             PredicateProperty.ProjectId.SetValue(properties, projectId);
             PredicateProperty.CategoryId.SetValue(properties, categoryId);
 
             return new Predicate(properties, new Predicate[0]);
+        }
+
+        // todo: можно подумать о "PredicateIdentity" и вынести туда
+        public static class Type
+        {
+            public const string ById = "byId";
+            public const string ByProject = "byProject";
+            public const string ByProjectCategory = "byProjectCategory";
         }
     }
 }
