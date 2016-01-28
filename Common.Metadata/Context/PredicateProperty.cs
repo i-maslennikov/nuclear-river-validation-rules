@@ -29,7 +29,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
             string value;
             if (!p.Properties.TryGetValue(Name, out value))
             {
-                throw new ArgumentException($"Property {Name} is missing in predicate {p.Id}");
+                throw new ArgumentException($"Property {Name} is missing in predicate");
             }
 
             return (T)Convert.ChangeType(value, typeof(T), CultureInfo.InvariantCulture);

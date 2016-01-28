@@ -11,7 +11,6 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
             Childs = childs;
         }
 
-        public string Id => Properties["id"];
         public IReadOnlyDictionary<string, string> Properties { get; }
         public IReadOnlyCollection<Predicate> Childs { get; }
 
