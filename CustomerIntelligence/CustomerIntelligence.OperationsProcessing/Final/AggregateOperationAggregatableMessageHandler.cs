@@ -17,14 +17,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
     public sealed class AggregateOperationAggregatableMessageHandler : IMessageProcessingHandler
     {
         private readonly IAggregatesConstructor _aggregatesConstructor;
-        private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
+        private readonly ITracer _tracer;
 
-        public AggregateOperationAggregatableMessageHandler(IAggregatesConstructor aggregatesConstructor, ITracer tracer, ITelemetryPublisher telemetryPublisher)
+        public AggregateOperationAggregatableMessageHandler(IAggregatesConstructor aggregatesConstructor, ITelemetryPublisher telemetryPublisher, ITracer tracer)
         {
             _aggregatesConstructor = aggregatesConstructor;
-            _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
+            _tracer = tracer;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)

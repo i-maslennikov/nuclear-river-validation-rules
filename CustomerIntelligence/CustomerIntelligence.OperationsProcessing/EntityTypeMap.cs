@@ -1,7 +1,7 @@
 ﻿using System;
 
+using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
-using NuClear.CustomerIntelligence.OperationsProcessing.Identities.EntityTypes;
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
 

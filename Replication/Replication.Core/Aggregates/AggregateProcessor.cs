@@ -28,9 +28,9 @@ namespace NuClear.Replication.Core.Aggregates
             _valueObjectProcessors = _metadata.Elements.OfType<IValueObjectMetadataElement>().Select(valueObjectProcessorFactory.Create).ToArray();
         }
 
-        public void Initialize(IReadOnlyCollection<long> ids)
+        public void Initialize(AggregateProcessorSlice slice)
         {
-            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(ids), EqualityComparer<long>.Default);
+            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(slice.AggregateIds), EqualityComparer<long>.Default);
 
             var createFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Difference.ToArray());
 
@@ -38,14 +38,14 @@ namespace NuClear.Replication.Core.Aggregates
 
             _repository.Create(aggregatesToCreate);
 
-            ApplyChangesToValueObjects(ids);
+            ApplyChangesToValueObjects(slice.AggregateIds);
         }
 
-        public void Recalculate(IReadOnlyCollection<long> ids)
+        public void Recalculate(AggregateProcessorSlice slice)
         {
-            ApplyChangesToValueObjects(ids);
+            ApplyChangesToValueObjects(slice.AggregateIds);
 
-            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(ids), EqualityComparer<long>.Default);
+            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(slice.AggregateIds), EqualityComparer<long>.Default);
 
             var createFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Difference.ToArray());
             var updateFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Intersection.ToArray());
@@ -60,11 +60,11 @@ namespace NuClear.Replication.Core.Aggregates
             _repository.Update(aggregatesToUpdate);
         }
 
-        public void Destroy(IReadOnlyCollection<long> ids)
+        public void Destroy(AggregateProcessorSlice slice)
         {
-            ApplyChangesToValueObjects(ids);
+            ApplyChangesToValueObjects(slice.AggregateIds);
 
-            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(ids), EqualityComparer<long>.Default);
+            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(slice.AggregateIds), EqualityComparer<long>.Default);
 
             var deleteFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Complement.ToArray());
 

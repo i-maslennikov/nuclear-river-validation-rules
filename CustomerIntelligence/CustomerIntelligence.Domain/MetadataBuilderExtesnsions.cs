@@ -4,6 +4,7 @@ using System.Linq;
 
 using NuClear.AdvancedSearch.Common.Metadata;
 using NuClear.AdvancedSearch.Common.Metadata.Builders;
+using NuClear.AdvancedSearch.Common.Metadata.Context;
 using NuClear.AdvancedSearch.Common.Metadata.Features;
 using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
@@ -22,11 +23,10 @@ namespace NuClear.CustomerIntelligence.Domain
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => provider.Invoke(specification)
                                                   .Map(q)
-                                                  .Select(tuple => new RecalculateStatisticsOperation
-                                                      {
-                                                          ProjectId = tuple.Item1,
-                                                          CategoryId = tuple.Item2
-                                                      }));
+                                                  .Select(tuple => tuple.Item2.HasValue
+                                                      ? PredicateFactory.StatisticsByProjectAndCategory(tuple.Item1, tuple.Item2.Value)
+                                                      : PredicateFactory.StatisticsByProject(tuple.Item1))
+                                                  .Select(predicate => new RecalculateStatisticsOperation(predicate)));
 
             return builder.WithFeatures(new DependentStatisticsFeature<T>(mapSpecificationProvider));
         }
@@ -34,7 +34,12 @@ namespace NuClear.CustomerIntelligence.Domain
         public static ImportStatisticsMetadataBuilder<T, TDto> LeadsToProjectStatisticsCalculation<T, TDto>(this ImportStatisticsMetadataBuilder<T, TDto> builder)
             where TDto : IBitDto
         {
-            Func<TDto, IReadOnlyCollection<IOperation>> projector = x => new [] { new RecalculateStatisticsOperation { ProjectId = x.ProjectId } };
+            Func<TDto, IReadOnlyCollection<IOperation>> projector =
+                x =>
+                    {
+                        var predicate = PredicateFactory.StatisticsByProject(x.ProjectId);
+                        return new[] { new RecalculateStatisticsOperation(predicate) };
+                    };
             var specification = new MapSpecification<TDto, IReadOnlyCollection<IOperation>>(projector);
             var feature = new MapSpecificationFeature<TDto, IReadOnlyCollection<IOperation>>(specification);
             return builder.WithFeatures(feature);

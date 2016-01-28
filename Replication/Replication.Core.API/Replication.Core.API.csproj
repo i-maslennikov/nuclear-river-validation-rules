@@ -74,6 +74,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregates\AggregateProcessorSlice.cs" />
     <Compile Include="Aggregates\IAggregateProcessor.cs" />
     <Compile Include="Aggregates\IAggregateProcessorFactory.cs" />
     <Compile Include="Aggregates\IAggregatesConstructor.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Aggregates\IStatisticsRecalculator.cs" />
     <Compile Include="Aggregates\IValueObjectProcessor.cs" />
     <Compile Include="Aggregates\IValueObjectProcessorFactory.cs" />
+    <Compile Include="Aggregates\StatisticsProcessorSlice.cs" />
     <Compile Include="Facts\IFactDependencyProcessor.cs" />
     <Compile Include="Facts\IFactDependencyProcessorFactory.cs" />
     <Compile Include="Facts\IFactProcessor.cs" />

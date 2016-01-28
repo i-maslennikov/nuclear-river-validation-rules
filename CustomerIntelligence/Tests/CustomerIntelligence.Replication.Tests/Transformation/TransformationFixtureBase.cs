@@ -1,4 +1,6 @@
-﻿using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
+﻿using NuClear.AdvancedSearch.Common.Metadata.Context;
+using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
+using NuClear.Model.Common.Entities;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {
@@ -14,19 +16,19 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
         protected static class Aggregate
         {
-            public static AggregateOperation Initialize<T>(long entityId)
+            public static AggregateOperation Initialize(IEntityType entityType, long entityId)
             {
-                return new InitializeAggregate(typeof(T), entityId);
+                return new InitializeAggregate(PredicateFactory.EntityById(entityType, entityId));
             }
 
-            public static AggregateOperation Recalculate<T>(long entityId)
+            public static AggregateOperation Recalculate(IEntityType entityType, long entityId)
             {
-                return new RecalculateAggregate(typeof(T), entityId);
+                return new RecalculateAggregate(PredicateFactory.EntityById(entityType, entityId));
             }
 
-            public static AggregateOperation Destroy<T>(long entityId)
+            public static AggregateOperation Destroy(IEntityType entityType, long entityId)
             {
-                return new DestroyAggregate(typeof(T), entityId);
+                return new DestroyAggregate(PredicateFactory.EntityById(entityType, entityId));
             }
         }
 
@@ -34,7 +36,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             public static RecalculateStatisticsOperation Operation(long projectId, long? categoryId = null)
             {
-                return new RecalculateStatisticsOperation { ProjectId = projectId, CategoryId = categoryId };
+                return new RecalculateStatisticsOperation(categoryId.HasValue
+                    ? PredicateFactory.StatisticsByProjectAndCategory(projectId, categoryId.Value)
+                    : PredicateFactory.StatisticsByProject(projectId));
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
+using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Messaging.API.Flows;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Storage.API.Writings;
@@ -9,31 +9,29 @@ using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
 {
-    public sealed class SqlStoreSender<TOperation, TFlow> : IOperationSender<TOperation>
-        where TOperation : IOperation
-        where TFlow : MessageFlowBase<TFlow>, new()
+    public sealed class SqlStoreSender : IOperationSender
     {
         private readonly IIdentityGenerator _identityGenerator;
         private readonly IRepository<PerformedOperationFinalProcessing> _repository;
-        private readonly IOperationSerializer<TOperation> _serializer;
-        private readonly TFlow _targetFlow;
+        private readonly IOperationSerializer<AggregateOperation> _serializer;
 
         public SqlStoreSender(
             IIdentityGenerator identityGenerator,
             IRepository<PerformedOperationFinalProcessing> repository,
-            IOperationSerializer<TOperation> serializer)
+            IOperationSerializer<AggregateOperation> serializer)
         {
             _identityGenerator = identityGenerator;
             _repository = repository;
             _serializer = serializer;
-            _targetFlow = MessageFlowBase<TFlow>.Instance;
         }
 
-        public void Push(IEnumerable<TOperation> operations)
+        public void Push<TOperation, TFlow>(IEnumerable<TOperation> operations, TFlow targetFlow)
+            where TFlow : MessageFlowBase<TFlow>, new()
+            where TOperation : AggregateOperation
         {
             using (Probe.Create($"Send {typeof(TOperation).Name}"))
             {
-                var transportMessages = operations.Select(operation => _serializer.Serialize(operation, _targetFlow));
+                var transportMessages = operations.Select(operation => _serializer.Serialize(operation, targetFlow));
                 Save(transportMessages.ToArray());
             }
         }

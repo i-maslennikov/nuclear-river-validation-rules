@@ -1,11 +1,11 @@
-﻿using System;
+﻿using NuClear.AdvancedSearch.Common.Metadata.Context;
 
 namespace NuClear.AdvancedSearch.Common.Metadata.Model.Operations
 {
     public sealed class InitializeAggregate : AggregateOperation
     {
-        public InitializeAggregate(Type aggregateType, long aggregateId)
-            : base(aggregateType, aggregateId)
+        public InitializeAggregate(Predicate context)
+            : base(context)
         {
         }
     }

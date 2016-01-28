@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
+using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
+using NuClear.Messaging.API.Flows;
 
 namespace NuClear.Replication.OperationsProcessing.Transports
 {
-    public interface IOperationSender<in TOperation>
-        where TOperation : IOperation
+    public interface IOperationSender
     {
-        void Push(IEnumerable<TOperation> operations);
+        void Push<TOperation, TFlow>(IEnumerable<TOperation> operations, TFlow targetFlow)
+            where TFlow : MessageFlowBase<TFlow>, new()
+            where TOperation : AggregateOperation;
     }
 }

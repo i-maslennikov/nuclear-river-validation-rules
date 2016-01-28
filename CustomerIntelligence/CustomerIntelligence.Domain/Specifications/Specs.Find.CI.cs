@@ -54,7 +54,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                         return new FindSpecification<Model.Statistics.FirmCategory3>(x => x.ProjectId == projectId);
                     }
 
-                    public static FindSpecification<Model.Statistics.FirmCategory3> ByProjectAndCategories(long projectId, IReadOnlyCollection<long?> categoryIds)
+                    public static FindSpecification<Model.Statistics.FirmCategory3> ByProjectAndCategories(long projectId, IReadOnlyCollection<long> categoryIds)
                     {
                         return new FindSpecification<Model.Statistics.FirmCategory3>(x => x.ProjectId == projectId && categoryIds.Contains(x.CategoryId));
                     }

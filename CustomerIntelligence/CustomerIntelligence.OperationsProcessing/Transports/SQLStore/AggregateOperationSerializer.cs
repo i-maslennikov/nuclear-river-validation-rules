@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
+using NuClear.AdvancedSearch.Common.Metadata.Context;
 using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
-using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.Messaging.API.Flows;
-using NuClear.Model.Common.Entities;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing.Identities.Operations;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
@@ -14,22 +14,23 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
 {
     public sealed class AggregateOperationSerializer : IOperationSerializer<AggregateOperation>
     {
-        private readonly IEntityTypeMappingRegistry<CustomerIntelligenceSubDomain> _registry;
+        private readonly IPredicateXmlSerializer _predicateXmlSerializer;
 
         private static readonly Dictionary<Guid, Type> OperationIdRegistry =
             new Dictionary<Guid, Type>
             {
                 { InitializeAggregateOperationIdentity.Instance.Guid, typeof(InitializeAggregate) },
                 { RecalculateAggregateOperationIdentity.Instance.Guid, typeof(RecalculateAggregate) },
-                { DestroyAggregateOperationIdentity.Instance.Guid, typeof(DestroyAggregate) }
+                { DestroyAggregateOperationIdentity.Instance.Guid, typeof(DestroyAggregate) },
+                { StatisticsOperationIdentity.Instance.Guid, typeof(RecalculateStatisticsOperation) }
             };
 
         private static readonly Dictionary<Type, Guid> OperationTypeRegistry =
             OperationIdRegistry.ToDictionary(x => x.Value, x => x.Key);
 
-        public AggregateOperationSerializer(IEntityTypeMappingRegistry<CustomerIntelligenceSubDomain> registry)
+        public AggregateOperationSerializer(IPredicateXmlSerializer predicateXmlSerializer)
         {
-            _registry = registry;
+            _predicateXmlSerializer = predicateXmlSerializer;
         }
 
         public AggregateOperation Deserialize(PerformedOperationFinalProcessing operation)
@@ -40,24 +41,16 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
                 throw new ArgumentException($"Unknown operation id {operation.OperationId}", nameof(operation));
             }
 
-            IEntityType entityName;
-            if (!_registry.TryParse(operation.EntityTypeId, out entityName))
-            {
-                throw new ArgumentException($"Unknown entity id {operation.EntityTypeId}", nameof(operation));
-            }
-
-            return (AggregateOperation)Activator.CreateInstance(operationType, _registry.GetEntityType(entityName), operation.EntityId);
+            return (AggregateOperation)Activator.CreateInstance(operationType, _predicateXmlSerializer.Deserialize(XElement.Parse(operation.Context)));
         }
 
         public PerformedOperationFinalProcessing Serialize(AggregateOperation operation, IMessageFlow targetFlow)
         {
-            var entityType = _registry.GetEntityName(operation.AggregateType);
             return new PerformedOperationFinalProcessing
             {
                 CreatedOn = DateTime.UtcNow,
                 MessageFlowId = targetFlow.Id,
-                EntityId = operation.AggregateId,
-                EntityTypeId = entityType.Id,
+                Context = _predicateXmlSerializer.Serialize(operation.Context).ToString(SaveOptions.DisableFormatting),
                 OperationId = GetIdentity(operation),
             };
         }

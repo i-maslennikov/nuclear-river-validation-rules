@@ -9,23 +9,24 @@ using NuClear.Replication.OperationsProcessing;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
+    // todo: удалить
     public sealed class StatisticsOperationAccumulator<TMessageFlow> :
-        MessageProcessingContextAccumulatorBase<TMessageFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<RecalculateStatisticsOperation>>
+        MessageProcessingContextAccumulatorBase<TMessageFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<AggregateOperation>>
         where TMessageFlow : class, IMessageFlow, new()
     {
-        private readonly StatisticsOperationSerializer _serializer;
+        private readonly AggregateOperationSerializer _serializer;
 
-        public StatisticsOperationAccumulator(StatisticsOperationSerializer serializer)
+        public StatisticsOperationAccumulator(AggregateOperationSerializer serializer)
         {
             _serializer = serializer;
         }
 
-        protected override OperationAggregatableMessage<RecalculateStatisticsOperation> Process(PerformedOperationsFinalProcessingMessage message)
+        protected override OperationAggregatableMessage<AggregateOperation> Process(PerformedOperationsFinalProcessingMessage message)
         {
             var operations = message.FinalProcessings.Select(x => _serializer.Deserialize(x)).ToArray();
             var oldestOperation = message.FinalProcessings.Min(x => x.CreatedOn);
 
-            return new OperationAggregatableMessage<RecalculateStatisticsOperation>
+            return new OperationAggregatableMessage<AggregateOperation>
             {
                 TargetFlow = MessageFlow,
                 Operations = operations,

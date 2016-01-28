@@ -13,7 +13,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
     {
         private MapToObjectsSpecProvider<T, T> _mapSpecificationProviderForSource;
         private MapToObjectsSpecProvider<T, T> _mapSpecificationProviderForTarget;
-        private Func<long, IReadOnlyCollection<long?>, FindSpecification<T>> _findSpecificationProvider;
+        private Func<long, IReadOnlyCollection<long>, FindSpecification<T>> _findSpecificationProvider;
 
         protected override StatisticsRecalculationMetadata<T> Create()
         {
@@ -36,7 +36,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
             return this;
         }
 
-        public StatisticsRecalculationMetadataBuilder<T> HasFilter(Func<long, IReadOnlyCollection<long?>, FindSpecification<T>> findSpecificationProvider)
+        public StatisticsRecalculationMetadataBuilder<T> HasFilter(Func<long, IReadOnlyCollection<long>, FindSpecification<T>> findSpecificationProvider)
         {
             _findSpecificationProvider = findSpecificationProvider;
             return this;
