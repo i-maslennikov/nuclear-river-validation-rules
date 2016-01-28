@@ -1,4 +1,6 @@
-**Metadata descriptions** are descriptions that could be used for configuration of **NuClear River** components. It's a DSL based on C#.This is the way to customize **NuClear River** behaviour for a specific [bounded context](http://martinfowler.com/bliki/BoundedContext.html). 
+#Metadata descriptions 
+
+_Metadata descriptions_ are descriptions that could be used for configuration of **NuClear River** components. It's a DSL based on C#.This is the way to customize **NuClear River** behaviour for a specific [bounded context](http://martinfowler.com/bliki/BoundedContext.html). 
 
 Let's take a short tour on main parts of metadata descriptions. Yon can find all classes and interfaces discussed here in [2GIS.NuClear.Metamodeling](#) library.
 
@@ -191,7 +193,7 @@ StructuralModelElement.Config
             .Property(EntityPropertyElement.Config.Name("HasPhone").OfType(ElementaryTypeKind.Boolean));
 ```
 
-Next, you can use this description in your code with `IMetadataProvider`. Everything you need to get it from provider is appropriate `IMetadataElementIdentity` instance:
+Next, you can use this description in your code with `IMetadataProvider`. Everything you need to get it from provider is appropriate `IMetadataElementIdentity` type:
 
 ```csharp
 public sealed class QueryingMetadataIdentity : MetadataKindIdentityBase<QueryingMetadataIdentity>

@@ -1,3 +1,5 @@
+#High-level design overview
+
 **NuClear River** platform consists of two components: [Querying](../terms.md) and [Replication](../terms.md). Technically, they are independent from each other. But metadata descriptions used for both to describe a specific bounded context should be coordinated.
 
 Let's take a look at **Querying** first. It's a very simple application that exposed API throught **HTTP** in terms of [**OData**](http://www.odata.org/) protocol. This application built on ASP.NET Web API and uses [Microsoft.AspNet.OData](https://www.nuget.org/packages/Microsoft.AspNet.OData/) and [EntityFramework](https://www.nuget.org/packages/EntityFramework) libraries.
