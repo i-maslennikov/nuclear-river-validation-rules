@@ -46,14 +46,16 @@ function Run-DataTests ($Projects, $entryPointMetadataKey){
     $isTeamCity = Test-Path 'Env:\TEAMCITY_VERSION'
     $isJenkins = Test-Path 'Env:\JENKINS_HOME'
     if($isTeamCity) {
-        & $RunnerPath $assemblies --teamcity=true
+        $argumentList = ($assemblies, '--teamcity=true')
     } elseif($isJenkins) {
         $ouputFile = Join-Path $Metadata.Common.Dir.TempPersist "DataTest.xml"
-        & $RunnerPath $assemblies --nunit25-output=$ouputFile
-        Write-Host "Results (nunit2.5) saved as $ouputFile"
+        $argumentList = ($assemblies, "--nunit25-output=$ouputFile")
+        Write-Host "Results (nunit2.5) will be saved as $ouputFile"
     } else {
-        & $RunnerPath $assemblies
+        $argumentList = ($assemblies)
     }
+
+    & $RunnerPath $argumentList
 
     if ($lastExitCode -ne 0) {
         throw "Command failed with exit code $lastExitCode"
