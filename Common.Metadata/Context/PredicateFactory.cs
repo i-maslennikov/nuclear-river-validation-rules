@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 
 using NuClear.Model.Common.Entities;
 
@@ -35,7 +35,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
             return new Predicate(properties, new Predicate[0]);
         }
 
-        // todo: можно подумать о "PredicateIdentity" и вынести туда
+        // todo: РјРѕР¶РЅРѕ РїРѕРґСѓРјР°С‚СЊ Рѕ "PredicateIdentity" Рё РІС‹РЅРµСЃС‚Рё С‚СѓРґР°
         public static class Type
         {
             public const string ById = "byId";

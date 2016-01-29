@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Linq;
 
 namespace NuClear.AdvancedSearch.Common.Metadata.Context
@@ -44,14 +44,14 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
         private bool Equals(Predicate other)
         {
             return Childs.Count == other.Childs.Count
-                   && Childs.Zip(other.Childs, Equals).All(x => x) // Для дочерних предикатов в общем случае порядок важен
+                   && Childs.Zip(other.Childs, Equals).All(x => x) // Р”Р»СЏ РґРѕС‡РµСЂРЅРёС… РїСЂРµРґРёРєР°С‚РѕРІ РІ РѕР±С‰РµРј СЃР»СѓС‡Р°Рµ РїРѕСЂСЏРґРѕРє РІР°Р¶РµРЅ
                    && Properties.Count == other.Properties.Count
                    && Properties.All(pair =>
                                          {
                                              string otherValue;
                                              other.Properties.TryGetValue(pair.Key, out otherValue);
                                              return Equals(pair.Value, otherValue);
-                                         }); // Для свойств порядок не важен
+                                         }); // Р”Р»СЏ СЃРІРѕР№СЃС‚РІ РїРѕСЂСЏРґРѕРє РЅРµ РІР°Р¶РµРЅ
         }
     }
 }

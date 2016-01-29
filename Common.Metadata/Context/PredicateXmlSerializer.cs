@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 
 namespace NuClear.AdvancedSearch.Common.Metadata.Context
