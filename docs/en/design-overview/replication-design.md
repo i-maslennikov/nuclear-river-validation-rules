@@ -18,10 +18,10 @@ HierarchyMetadata factsReplicationMetadataRoot =
         .Config
         .Id.Is(Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.Facts))
         .Childs(
-            FactMetadata<Account>
+            FactMetadata<Territory>
                 .Config
-                .HasSource(Specs.Map.Erm.ToFacts.Accounts)
-                .HasDependentAggregate<CI::Firm>(Specs.Map.Facts.ToFirmAggregate.ByAccount),
+                .HasSource(Specs.Map.Erm.ToFacts.Territories)
+                .HasMatchedAggregate<CI::Territory>(),
 
             FactMetadata<Category>
                 .Config
@@ -42,7 +42,7 @@ HierarchyMetadata factsReplicationMetadataRoot =
                 .HasDependentAggregate<CI::Client>(Specs.Map.Facts.ToClientAggregate.ByFirm));
 ```
 
-Here we have hierarchical descriptions of objects in the facts storage. For every such object we define [specification][terms] (e.g. `HasSource(Specs.Map.Erm.ToFacts.Accounts)` method call) that should be used to get a data from the source system storage and one or more [specifications][terms] (e.g. `HasDependentAggregate<CI::Firm>(Specs.Map.Facts.ToFirmAggregate.ByAccount)` method call) that should be used to determine types and identities of [aggregates][terms] that we need to deal with on the next stage. Using this information and the information about changes in facts storage, we generate commands to initialize/recalculate/destroy a corresponding aggregate.
+Here we have hierarchical descriptions of objects in the facts storage. For every such object we define [specification][terms] (e.g. `HasSource(Specs.Map.Erm.ToFacts.Accounts)` method call) that should be used to get a data from the source system storage, and one or more [specifications][terms] (e.g. `HasDependentAggregate<CI::Firm>(Specs.Map.Facts.ToFirmAggregate.ByAccount)` method call) that should be used to determine types and identities of [aggregates][terms] that we need to deal with on the next stage. Using this information and the information about changes in the facts storage, we generate commands to initialize/recalculate/destroy a corresponding aggregate.
 
 Next, we need to configure an interaction with source system. **NuClear River** uses very pluggable library from the [NuClear.Operations*][nuclear-operations-libraries] set for that purpose. 
 
@@ -58,7 +58,7 @@ public sealed class InputEventFlow : MessageFlowBase<InputEventFlow>
 
     public override string Description
     {
-        get { return "Example input event flow"; }
+        get { return "Events flow"; }
     }
 }
 ```
@@ -85,9 +85,9 @@ public sealed class InputEventAccumulator :
 }
 ```
 
-Responsibility of this class is to see on input events and make decisions about them. It is the place where event can be skipped.
+Responsibility of this class is to get them from the transport level (e.g. deserialize), see on input events and make decisions about them. It is the place where event can be skipped.
 
-Next, create a class derived from `IMessageProcessingHandler`:
+Next, an implementation of `IMessageProcessingHandler` should be created to handle accumulated events. But as end users we don't need to implement this interface by our own, **NuClear River** already have an appropriate implementation. Let's take a look at the following code, just to understand the whole idea: 
 
 ```csharp
 public sealed class InputEventHandler : IMessageProcessingHandler
@@ -111,7 +111,191 @@ public sealed class InputEventHandler : IMessageProcessingHandler
     }
 }
 ```
-At the end, create a class derived from `MetadataSourceBase<MetadataMessageFlowsIdentity>` to describe how to "connect" all parts together:
+
+That's almost everything you need to customize the _primary_ stage of **Replication** component. Now, you'll be able to consume events from source system and sync the stage of facts storage of **NuClear River**.
+
+Here is more details on how everything works under the hood. We have a simple abstraction `IFactsReplicator` in `NuClear.Replication.Core.API.Facts` namespace:
+
+```csharp
+public interface IFactsReplicator
+{
+    IReadOnlyCollection<IOperation> Replicate(IEnumerable<FactOperation> operations);
+}
+```
+
+It takes source system's event descriptors (`IEnumerable<FactOperation>`) as input and a have a set of commands (`IReadOnlyCollection<IOperation>`) as output. It is used in `IMessageProcessingHandler` implementation to perform actual handling. 
+
+Implementation of `IFactsReplicator` is in `NuClear.Replication.Core.Facts` namespace and looks like this:
+
+```csharp
+public class FactsReplicator : IFactsReplicator
+{
+    private readonly IMetadataProvider _metadataProvider;
+    private readonly IFactProcessorFactory _factProcessorFactory;
+
+    public FactsReplicator(
+        IMetadataProvider metadataProvider,
+        IFactProcessorFactory factProcessorFactory)
+    {
+        _metadataProvider = metadataProvider;
+        _factProcessorFactory = factProcessorFactory;
+    }
+
+    public IReadOnlyCollection<IOperation> Replicate(IEnumerable<FactOperation> operations)
+    {
+        var result = Enumerable.Empty<IOperation>();
+
+        var slices = operations.GroupBy(operation => new { operation.FactType });
+        foreach (var slice in slices)
+        {   
+            var factType = slice.Key.FactType;
+
+            // Take metadata descriptions for a particular fact type
+            IMetadataElement factMetadata;
+            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri(string.Format("Facts/{0}", factType.Name), UriKind.Relative));
+            if (!_metadataProvider.TryGetMetadata(metadataId, out factMetadata))
+            {
+                throw new NotSupportedException(string.Format("The fact of type '{0}' is not supported.", factType));
+            }
+
+            // Create facts processor based on metadata descriptions
+            var processor = _factProcessorFactory.Create(factMetadata);
+
+            var factIds = slice.Select(x => x.FactId);
+            foreach (var batch in factIds.CreateBatches())
+            {
+                // Sync the state of facts storage
+                var aggregateOperations = processor.ApplyChanges(batch);
+
+                result = result.Concat(aggregateOperations);
+            }
+        }
+
+        // Pass commands to the next stage
+        return result.ToArray();
+    }
+}
+```
+
+The actual impementation of `IFactsReplicator` is [here](https://github.com/2gis/nuclear-river/blob/master/Replication/Replication.Core/Facts/FactsReplicator.cs).
+
+### Final stage
+
+The design of the _final_ stage is very similar. But the key difference here - we have a set of **commands** as the input on that stage. Commands cannot be skipped, we need to process them in any case - change an aggregate state or throw an exception.
+
+To configure _final_ stage, we need to start from metadata descriptions to define aggregates:
+
+```csharp
+HierarchyMetadata aggregateConstructionMetadataRoot =
+    HierarchyMetadata
+        .Config
+        .Id.Is(Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.Aggregates))
+        .Childs(AggregateMetadata<Firm>
+                    .Config
+                    .HasSource(Specs.Map.Facts.ToCI.Firms)
+                    .HasValueObject(Specs.Map.Facts.ToCI.FirmTerritories, Specs.Find.CI.FirmTerritories),
+
+                AggregateMetadata<Client>
+                    .Config
+                    .HasSource(Specs.Map.Facts.ToCI.Clients)
+                    .HasValueObject(Specs.Map.Facts.ToCI.ClientContacts, Specs.Find.CI.ClientContacts),
+
+                AggregateMetadata<Territory>
+                    .Config
+                    .HasSource(Specs.Map.Facts.ToCI.Territories);
+```
+
+Here again we have hierarchical descriptions, but at this time, descriptions of aggregates. For every such aggregate we define [specification][terms] (e.g. `HasSource(Specs.Map.Facts.ToCI.Firms)` method call) that should be used to get a data from the facts storage, and one or more [specifications][terms] (e.g. `HasValueObject(Specs.Map.Facts.ToCI.FirmTerritories, Specs.Find.CI.FirmTerritories)` method call) that should be used to rebuild aggregate structure, it's value objects.
+
+Next, we need to do exactly the same we did at _primary_ stage.
+
+Create a class derived from `MessageFlowBase<T>`. It needed to configure the flow which will be used for _commands_ consuming.
+
+```csharp
+public sealed class AggregatesFlow : MessageFlowBase<AggregatesFlow>
+{
+    public override Guid Id
+    {
+        get { return new Guid("96F17B1A-4CC8-40CC-9A92-16D87733C39F"); }
+    }
+
+    public override string Description
+    {
+        get { return "Commands flow"; }
+    }
+}
+```
+
+Create a class derived from `MessageProcessingContextAccumulatorBase<TMessageFlow, TMessage, TProcessingResult>`:
+
+```csharp
+public sealed class AggregateOperationAccumulator<TMessageFlow> :
+    MessageProcessingContextAccumulatorBase<TMessageFlow, 
+                                            PerformedOperationsFinalProcessingMessage, 
+                                            OperationAggregatableMessage<AggregateOperation>>
+    where TMessageFlow : class, IMessageFlow, new()
+{
+    private readonly AggregateOperationSerializer _serializer;
+
+    public AggregateOperationAccumulator(AggregateOperationSerializer serializer)
+    {
+        _serializer = serializer;
+    }
+
+    protected override OperationAggregatableMessage<AggregateOperation> Process(
+        PerformedOperationsFinalProcessingMessage message)
+    {
+        var operations = message.FinalProcessings.Select(x => _serializer.Deserialize(x)).ToArray();
+        var oldestOperation = message.FinalProcessings.Min(x => x.CreatedOn);
+
+        return new OperationAggregatableMessage<AggregateOperation>
+        {
+            TargetFlow = MessageFlow,
+            Operations = operations,
+            OperationTime = oldestOperation,
+        };
+    }
+}
+```
+
+Again, we don't have to create an implemention of `IMessageProcessingHandler`, because **NuClear River** already have it:
+
+```csharp
+public sealed class AggregateOperationAggregatableMessageHandler : IMessageProcessingHandler
+{
+    private readonly IAggregatesConstructor _aggregatesConstructor;
+    
+    public AggregateOperationAggregatableMessageHandler(IAggregatesConstructor aggregatesConstructor)
+    {
+        _aggregatesConstructor = aggregatesConstructor;
+    }
+
+    public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
+    {
+        return processingResultsMap.Select(pair => Handle(pair.Key, pair.Value));
+    }
+
+    private StageResult Handle(Guid bucketId, IEnumerable<IAggregatableMessage> messages)
+    {
+        try
+        {
+            foreach (var message in messages.OfType<OperationAggregatableMessage<AggregateOperation>>())
+            {
+                _aggregatesConstructor.Construct(message.Operations);
+            }
+
+            return MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded();
+        }
+        catch (Exception ex)
+        {
+            _tracer.Error(ex, "Error when calculating aggregates");
+            return MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex);
+        }
+    }
+}
+```
+
+At the end, create a class derived from `MetadataSourceBase<MetadataMessageFlowsIdentity>` to describe how to "connect" all parts together, including _primary_ and _final_ stages:
 
 ```csharp
 public sealed class InputEventFlowMetadataSource : MetadataSourceBase<MetadataMessageFlowsIdentity>
@@ -150,74 +334,7 @@ public sealed class InputEventFlowMetadataSource : MetadataSourceBase<MetadataMe
 }
 ```
 
-That's almost everything you need to customize the _primary_ stage of **Replication** component. Now, you'll be able to consume events from source system and sync the stage of facts storage of **NuClear River**.
-
-Here is more details on how everything works under the hood. We have a simple abstraction `IFactsReplicator` in `NuClear.Replication.Core.API.Facts` namespace:
-
-```csharp
-public interface IFactsReplicator
-{
-    IReadOnlyCollection<IOperation> Replicate(IEnumerable<FactOperation> operations);
-}
-```
-
-It takes source system's event descriptors (`IEnumerable<FactOperation>`) as input and a have a set of commands (`IReadOnlyCollection<IOperation>`) as output. It should be used in `IMessageProcessingHandler` implementation to perform actual handling. 
-
-Implementation of `IFactsReplicator` is in `NuClear.Replication.Core.Facts` namespace and looks like this:
-
-```csharp
-public class FactsReplicator : IFactsReplicator
-{
-    private readonly IMetadataProvider _metadataProvider;
-    private readonly IFactProcessorFactory _factProcessorFactory;
-
-    public FactsReplicator(
-        IMetadataProvider metadataProvider,
-        IFactProcessorFactory factProcessorFactory)
-    {
-        _metadataProvider = metadataProvider;
-        _factProcessorFactory = factProcessorFactory;
-    }
-
-    public IReadOnlyCollection<IOperation> Replicate(IEnumerable<FactOperation> operations)
-    {
-        var result = Enumerable.Empty<IOperation>();
-
-        foreach (var operation in operations)
-        {   
-            var factType = operation.Key.FactType;
-
-            // Take metadata descriptions for a particular fact type
-            IMetadataElement factMetadata;
-            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri(string.Format("Facts/{0}", factType.Name), UriKind.Relative));
-            if (!_metadataProvider.TryGetMetadata(metadataId, out factMetadata))
-            {
-                throw new NotSupportedException(string.Format("The fact of type '{0}' is not supported.", factType));
-            }
-
-            // Create facts processor
-            var processor = _factProcessorFactory.Create(factMetadata);
-
-            foreach (var batch in factIds.CreateBatches(_replicationSettings.ReplicationBatchSize))
-            {
-                // Sync the state of facts storage
-                var aggregateOperations = processor.ApplyChanges(batch);
-
-                result = result.Concat(aggregateOperations);
-            }
-        }
-
-        // Pass commands to the next stage
-        return result.ToArray();
-    }
-}
-```
-
-The actual impementation of `IFactsReplicator` is [here](https://github.com/2gis/nuclear-river/blob/master/Replication/Replication.Core/Facts/FactsReplicator.cs)
-
-### Final stage
-
-The design of the _final_ stage is very similar. But the key difference here - we have a set of **commands** as the input to that stage. Commands cannot be skipped, we need to process them in any case - change an aggregate stage or throw an exception.
+The last thing needed to be covered here is `IAggregatesConstructor` abstraction. 
 
 [terms]: ../terms.md
 [nuclear-operations-libraries]: ../dependencies/nuclear-operations-libraries.md

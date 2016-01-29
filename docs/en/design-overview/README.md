@@ -135,8 +135,8 @@ Now, let's take a look at **Replication** component. It's a bit more complicated
 First of all, it's important to know that it's control flow consists at least of two parts/stages - _primary_ and _final_. These terms also come from the [NuClear.Operations* libraries](../dependencies/nuclear-operations-libraries.md) used for extenal events processing.
 
 Main things we need to understand here are:
-* The _primary_ stage used for extenal events receiving and processing. The main goal here is to sync [_facts storage_](../terms.md) with storage of the source system and generate events to be processed on the next stage
-* The _final_ stage is responsible for receiving and processing of events comes from the _primary_ stage to construct [aggregates](../terms.md) using _facts storage_
+* The _primary_ stage used for extenal events receiving and processing. The main goal here is to sync [_facts storage_](../terms.md) with storage of the source system and generate commands to be processed on the next stage
+* The _final_ stage is responsible for receiving and processing of commands comes from the _primary_ stage to construct [aggregates](../terms.md) using _facts storage_
 
 In fact, these stages can be perceived as [ETL](https://en.wikipedia.org/wiki/Extract,_transform,_load)-pipeline. We extract data at _primary_ stage and then transform and load data at _final_ stage.
 
