@@ -50,6 +50,7 @@ function Run-DataTests ($Projects, $entryPointMetadataKey){
     } elseif($isJenkins) {
         $ouputFile = Join-Path $Metadata.Common.Dir.TempPersist "DataTest.xml"
         & $RunnerPath $assemblies --nunit25-output=$ouputFile
+        Write-Host "Results (nunit2.5) saved as $ouputFile"
     } else {
         & $RunnerPath $assemblies
     }
