@@ -1,5 +1,3 @@
-using System;
-using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -10,7 +8,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
         public XElement Serialize(Predicate predicate)
         {
             return new XElement("predicate",
-                                predicate.Properties.Select(prop => new XAttribute(prop.Key, Convert.ToString(prop.Value, CultureInfo.InvariantCulture))),
+                                predicate.Properties.Select(prop => new XAttribute(prop.Key, prop.Value)),
                                 predicate.Childs.Select(Serialize));
         }
 
