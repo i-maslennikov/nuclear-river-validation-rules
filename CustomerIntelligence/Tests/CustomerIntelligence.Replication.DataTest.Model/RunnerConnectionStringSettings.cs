@@ -22,11 +22,11 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
         private static IReadOnlyDictionary<IConnectionStringIdentity, string> CreateConnectionStringMappings(ConnectionStringSettingsCollection configuration) =>
             new Dictionary<IConnectionStringIdentity, string>
             {
-                { ErmTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Erm].ConnectionString },
-                { FactsTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Facts].ConnectionString },
-                { CustomerIntelligenceTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.CustomerIntelligence].ConnectionString },
-                { BitTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Bit].ConnectionString },
-                { StatisticsTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Statistics].ConnectionString },
+                { ErmTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Erm].ConnectionString.ProtectSqlConnectionString() },
+                { FactsTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Facts].ConnectionString.ProtectSqlConnectionString() },
+                { CustomerIntelligenceTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.CustomerIntelligence].ConnectionString.ProtectSqlConnectionString() },
+                { BitTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Bit].ConnectionString.ProtectSqlConnectionString() },
+                { StatisticsTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Statistics].ConnectionString.ProtectSqlConnectionString() },
 
                 { ErmMasterConnectionStringIdentity.Instance, configuration[ConnectionStringName.ErmMaster].ConnectionString },
             };
