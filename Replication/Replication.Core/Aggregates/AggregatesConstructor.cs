@@ -37,10 +37,10 @@ namespace NuClear.Replication.Core.Aggregates
                     var aggregateType = slice.Key.AggregateType;
 
                     IMetadataElement aggregateMetadata;
-                    var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri(string.Format("Aggregates/{0}", aggregateType.Name), UriKind.Relative));
+                    var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregateType.Name}", UriKind.Relative));
                     if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
                     {
-                        throw new NotSupportedException(string.Format("The aggregate of type '{0}' is not supported.", aggregateType));
+                        throw new NotSupportedException($"The aggregate of type '{aggregateType}' is not supported.");
                     }
 
                     var aggregateIds = slice.Select(x => x.AggregateId).Distinct().ToArray();
@@ -55,15 +55,17 @@ namespace NuClear.Replication.Core.Aggregates
                             {
                                 processor.Initialize(aggregateIds);
                             }
-
-                            if (operation == typeof(RecalculateAggregate))
+                            else if (operation == typeof(RecalculateAggregate))
                             {
                                 processor.Recalculate(aggregateIds);
                             }
-
-                            if (operation == typeof(DestroyAggregate))
+                            else if (operation == typeof(DestroyAggregate))
                             {
                                 processor.Destroy(aggregateIds);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException($"The command of type {operation.Name} is not supported");
                             }
                         }
 

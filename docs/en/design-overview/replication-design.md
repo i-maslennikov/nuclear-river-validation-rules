@@ -4,9 +4,9 @@ As it was mentioned in [high-level overview article](README.md), **Replication**
 
 ### Primary stage
 
-On the _primary_ stage you have a set of events from the [source system][terms] that needed to be processed. Based on your knowledge about business cases that executed in source system, you can distinguish events that you're interested in for particular bounded context. All other events can be safely skipped.
+On the _primary_ stage you have a set of events from the [source system][terms] that needed to be processed. Based on your knowledge about business cases that executed in a source system, you can distinguish events that you're interested in for particular bounded context. All other events can be safely skipped.
 
-The main goal at _primary_ stage is to sync [facts storage][terms] with storage of the source system. So, processing input events leads to changes in facts storage, but not only. At this stage we also need to generate commands to be executed on the next stage. 
+The main goal at _primary_ stage is to sync [facts storage][terms] with storage of the source system. So, processing of input events leads to changes in facts storage, but not only. At this stage we also need to generate commands to be executed on the next stage. 
 
 Now it's time to deep dive into implementation detais. Let's see what we need to do to customize the _primary_ stage to support a new bounded context. We assume that the domain analysis is already carried out.
 
@@ -85,7 +85,7 @@ public sealed class InputEventAccumulator :
 }
 ```
 
-Responsibility of this class is to get them from the transport level (e.g. deserialize), see on input events and make decisions about them. It is the place where event can be skipped.
+Responsibility of this class is to get events from a transport level (e.g. deserialize), analyze input events and make decisions about them. It is the place where inessential events can be skipped.
 
 Next, an implementation of `IMessageProcessingHandler` should be created to handle accumulated events. But as end users we don't need to implement this interface by our own, **NuClear River** already have an appropriate implementation. Let's take a look at the following code, just to understand the whole idea: 
 
@@ -123,7 +123,7 @@ public interface IFactsReplicator
 }
 ```
 
-It takes source system's event descriptors (`IEnumerable<FactOperation>`) as input and a have a set of commands (`IReadOnlyCollection<IOperation>`) as output. It is used in `IMessageProcessingHandler` implementation to perform actual handling. 
+It takes source system's event descriptors (of type `IEnumerable<FactOperation>`) as input and have a set of commands (of type `IReadOnlyCollection<IOperation>`) as output. It is used in `IMessageProcessingHandler` implementation to perform actual handling. 
 
 Implementation of `IFactsReplicator` is in `NuClear.Replication.Core.Facts` namespace and looks like this:
 
@@ -207,7 +207,7 @@ HierarchyMetadata aggregateConstructionMetadataRoot =
 
 Here again we have hierarchical descriptions, but at this time, descriptions of aggregates. For every such aggregate we define [specification][terms] (e.g. `HasSource(Specs.Map.Facts.ToCI.Firms)` method call) that should be used to get a data from the facts storage, and one or more [specifications][terms] (e.g. `HasValueObject(Specs.Map.Facts.ToCI.FirmTerritories, Specs.Find.CI.FirmTerritories)` method call) that should be used to rebuild aggregate structure, it's value objects.
 
-Next, we need to do exactly the same we did at _primary_ stage.
+Next, we need to do exactly the same we did at the _primary_ stage.
 
 Create a class derived from `MessageFlowBase<T>`. It needed to configure the flow which will be used for _commands_ consuming.
 
@@ -334,7 +334,89 @@ public sealed class InputEventFlowMetadataSource : MetadataSourceBase<MetadataMe
 }
 ```
 
-The last thing needed to be covered here is `IAggregatesConstructor` abstraction. 
+The last thing needed to be covered here is `IAggregatesConstructor` abstraction:
+
+```csharp
+public interface IAggregatesConstructor
+{
+    void Construct(IEnumerable<AggregateOperation> operations);
+}
+```
+
+It takes commands generated at the _primary_ stage (of type `IEnumerable<AggregateOperation> operations`) as input and have nothing as output, so it just changes aggregates storage state. It is used in `IMessageProcessingHandler` implementation to perform actual handling. 
+
+The implementation of `IAggregatesConstructor` looks like this:
+
+```csharp
+ public sealed class AggregatesConstructor : IAggregatesConstructor
+{
+    private readonly IMetadataProvider _metadataProvider;
+    private readonly IAggregateProcessorFactory _aggregateProcessorFactory;
+
+    public AggregatesConstructor(
+        IMetadataProvider metadataProvider, 
+        IAggregateProcessorFactory aggregateProcessorFactory)
+    {
+        _metadataProvider = metadataProvider;
+        _aggregateProcessorFactory = aggregateProcessorFactory;
+    }
+
+    public void Construct(IEnumerable<AggregateOperation> operations)
+    {
+        using (Probe.Create("ETL2 Transforming"))
+        {
+            var slices = operations.GroupBy(x => new { Operation = x.GetType(), x.AggregateType })
+                                   .OrderByDescending(x => x.Key.Operation, new AggregateOperationPriorityComparer());
+
+            foreach (var slice in slices)
+            {
+                var operation = slice.Key.Operation;
+                var aggregateType = slice.Key.AggregateType;
+
+                IMetadataElement aggregateMetadata;
+                var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri(string.Format("Aggregates/{0}", aggregateType.Name), UriKind.Relative));
+                if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
+                {
+                    throw new NotSupportedException(string.Format("The aggregate of type '{0}' is not supported.", aggregateType));
+                }
+
+                var aggregateIds = slice.Select(x => x.AggregateId).Distinct().ToArray();
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+                                                              new TransactionOptions
+                                                              {
+                                                                    IsolationLevel = IsolationLevel.ReadCommitted, 
+                                                                    Timeout = TimeSpan.Zero 
+                                                              }))
+                {
+                    using (Probe.Create("ETL2 Transforming", aggregateType.Name))
+                    {
+                        var processor = _aggregateProcessorFactory.Create(aggregateMetadata);
+
+                        if (operation == typeof(InitializeAggregate))
+                        {
+                            processor.Initialize(aggregateIds);
+                        }
+                        else if (operation == typeof(RecalculateAggregate))
+                        {
+                            processor.Recalculate(aggregateIds);
+                        }
+                        else if (operation == typeof(DestroyAggregate))
+                        {
+                            processor.Destroy(aggregateIds);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"The command of type {operation.Name} is not supported");
+                        }
+                    }
+
+                    transaction.Complete();
+                }
+            }
+        }
+    }
+}
+```
 
 [terms]: ../terms.md
 [nuclear-operations-libraries]: ../dependencies/nuclear-operations-libraries.md
