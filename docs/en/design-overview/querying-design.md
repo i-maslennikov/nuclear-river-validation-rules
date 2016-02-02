@@ -1,1 +1,117 @@
-#Details on Querying component
+# Details on Querying component
+
+We started to explore **Querying** component in [high-level overview article](README.md) with the following bounded context:
+
+![image](../diagrams/conceptual-model-example.png)
+
+Just to remind, it's conceptual model's description looks like this::
+
+```csharp
+StructuralModelElementBuilder ConceptualModel =
+StructuralModelElement.Config
+    .Elements(
+        EntityElement.Config.Name(EntityName.Project).EntitySetName("Projects")
+            .HasKey("Id")
+            .Property(EntityPropertyElement.Config.Name("Id").OfType(ElementaryTypeKind.Int64))
+            .Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
+            .Relation(EntityRelationElement.Config.Name("Categories").DirectTo(EntityElement.Config.Name(EntityName.Category)).AsMany().AsContainment())
+            .Relation(EntityRelationElement.Config.Name("Firms").DirectTo(EntityElement.Config.Name(EntityName.Firm)).AsMany().AsContainment()),
+
+        EntityElement.Config
+            .Name(EntityName.Category).EntitySetName("Categories")
+            .HasKey("CategoryId")
+            .Property(EntityPropertyElement.Config.Name("CategoryId").OfType(ElementaryTypeKind.Int64))
+            .Property(EntityPropertyElement.Config.Name("ProjectId").OfType(ElementaryTypeKind.Int64))
+            .Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
+            .Property(EntityPropertyElement.Config.Name("Level").OfType(ElementaryTypeKind.Int32)),
+
+         EntityElement.Config
+            .Name(EntityName.Firm).EntitySetName("Firms")
+            .HasKey("Id")
+            .Property(EntityPropertyElement.Config.Name("Id").OfType(ElementaryTypeKind.Int64))
+            .Property(EntityPropertyElement.Config.Name("ProjectId").OfType(ElementaryTypeKind.Int64))
+            .Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
+            .Property(EntityPropertyElement.Config.Name("CreatedOn").OfType(ElementaryTypeKind.DateTimeOffset))
+            .Property(EntityPropertyElement.Config.Name("HasPhone").OfType(ElementaryTypeKind.Boolean))
+            .Relation(EntityRelationElement.Config.Name("Balances")
+                .DirectTo(
+                    EntityElement.Config
+                        .Name(EntityName.FirmBalance)
+                        .HasKey("AccountId")
+                        .Property(EntityPropertyElement.Config.Name("AccountId").OfType(ElementaryTypeKind.Int64))
+                        .Property(EntityPropertyElement.Config.Name("ProjectId").OfType(ElementaryTypeKind.Int64))
+                        .Property(EntityPropertyElement.Config.Name("Balance").OfType(ElementaryTypeKind.Decimal))
+                ).AsMany())
+            .Relation(EntityRelationElement.Config.Name("Categories")
+                .DirectTo(
+                    EntityElement.Config
+                        .Name(EntityName.FirmCategory)
+                        .HasKey("CategoryId")
+                        .Property(EntityPropertyElement.Config.Name("CategoryId").OfType(ElementaryTypeKind.Int64))
+                        .Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
+                        .Property(EntityPropertyElement.Config.Name("AdvertisersShare").OfType(ElementaryTypeKind.Double))
+                ).AsMany().AsContainment()));
+```
+
+Next, we need to describe it's structure in data storage. The current version of **NuClear River** works with relational DBs only. But other storage types can be also supported in the future. Community contributions are welcomed on this point as well.
+
+So, data model (store model) for relational DB for that bounded context can be described by the following:
+
+```csharp
+StructuralModelElementBuilder StoreModel =
+StructuralModelElement.Config.Elements(
+    EntityElement.Config
+        .Name(TableName.Project)
+        .HasKey("Id")
+        .Property(EntityPropertyElement.Config.Name("Id").OfType(ElementaryTypeKind.Int64))
+        .Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String)),
+    EntityElement.Config
+        .Name(TableName.ProjectCategory)
+        .HasKey("ProjectId", "CategoryId")
+        .Property(EntityPropertyElement.Config.Name("CategoryId").OfType(ElementaryTypeKind.Int64))
+        .Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
+        .Property(EntityPropertyElement.Config.Name("Level").OfType(ElementaryTypeKind.Int32))
+        .Property(EntityPropertyElement.Config.Name("SalesModel").OfType(ElementaryTypeKind.Int32))
+        .Relation(EntityRelationElement.Config.Name("ProjectId").DirectTo(EntityElement.Config.Name(TableName.Project)).AsOne()),
+    EntityElement.Config
+        .Name(TableName.Firm)
+        .HasKey("Id")
+        .Property(EntityPropertyElement.Config.Name("Id").OfType(ElementaryTypeKind.Int64))
+        .Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
+        .Property(EntityPropertyElement.Config.Name("CreatedOn").OfType(ElementaryTypeKind.DateTimeOffset))
+        .Property(EntityPropertyElement.Config.Name("HasPhone").OfType(ElementaryTypeKind.Boolean))
+        .Relation(EntityRelationElement.Config.Name("ProjectId").DirectTo(EntityElement.Config.Name(TableName.Project)).AsOne()),
+    EntityElement.Config
+        .Name(TableName.FirmBalance)
+        .HasKey("FirmId", "AccountId")
+        .Property(EntityPropertyElement.Config.Name("AccountId").OfType(ElementaryTypeKind.Int64))
+        .Property(EntityPropertyElement.Config.Name("ProjectId").OfType(ElementaryTypeKind.Int64))
+        .Property(EntityPropertyElement.Config.Name("Balance").OfType(ElementaryTypeKind.Decimal))
+        .Relation(EntityRelationElement.Config.Name("FirmId").DirectTo(EntityElement.Config.Name(TableName.Firm)).AsOne()),
+    EntityElement.Config
+        .Name(TableName.FirmCategory)
+        .HasKey("FirmId", "CategoryId")
+        .Property(EntityPropertyElement.Config.Name("FirmId").OfType(ElementaryTypeKind.Int64))
+        .Property(EntityPropertyElement.Config.Name("CategoryId").OfType(ElementaryTypeKind.Int64))
+        .Property(EntityPropertyElement.Config.Name("Name").OfType(ElementaryTypeKind.String))
+        .Property(EntityPropertyElement.Config.Name("AdvertisersShare").OfType(ElementaryTypeKind.Double))
+        .Relation(EntityRelationElement.Config.Name("FirmId").DirectTo(EntityElement.Config.Name(TableName.Firm)).AsOne());
+```
+
+The last thing we need to do here is to map conceptual model to store model. The resulted bounded context description will look like this:
+
+```csharp
+BoundedContextElement Context =
+    BoundedContextElement.Config.Name("CustomerIntelligence")
+        .ConceptualModel(ConceptualModel)
+        .StoreModel(StoreModel)
+        .Map(EntityName.Project, TableName.Project)
+        .Map(EntityName.Category, TableName.ProjectCategory)
+        .Map(EntityName.Firm, ViewName.Firm)
+        .Map(EntityName.FirmBalance, TableName.FirmBalance)
+        .Map(EntityName.FirmCategory, TableName.FirmCategory);
+```
+
+As you can see here, all descriptions are very straightforward. In conceptual level we have relations among objects, at store level - relations among DB tables. 
+
+Now, let's see under the hood of **Querying** component to understand how it works.
