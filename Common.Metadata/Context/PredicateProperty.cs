@@ -6,14 +6,19 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
 {
     public static class PredicateProperty
     {
-        public static readonly PredicateProperty<string> Type = new PredicateProperty<string>("type");
-        public static readonly PredicateProperty<int> EntityType = new PredicateProperty<int>("entityType");
-        public static readonly PredicateProperty<long> EntityId = new PredicateProperty<long>("entityId");
-        public static readonly PredicateProperty<long> ProjectId = new PredicateProperty<long>("projectId");
-        public static readonly PredicateProperty<long> CategoryId = new PredicateProperty<long>("categoryId");
+        public static readonly IPredicateProperty<string> Type = new PredicateProperty<string>("type");
+        public static readonly IPredicateProperty<int> EntityType = new PredicateProperty<int>("entityType");
+        public static readonly IPredicateProperty<long> EntityId = new PredicateProperty<long>("entityId");
+        public static readonly IPredicateProperty<long> ProjectId = new PredicateProperty<long>("projectId");
+        public static readonly IPredicateProperty<long> CategoryId = new PredicateProperty<long>("categoryId");
     }
 
-    public sealed class PredicateProperty<T>
+    /// <summary>
+    /// Поддерживает только примитивные типы, 
+    /// для поддержки нестандартного типа требуется реализация IPredicateProperty
+    /// </summary>
+    public sealed class PredicateProperty<T> : IPredicateProperty<T>
+        // where T: IConvertible - interface is missing in portable class library Profile151
     {
         public PredicateProperty(string name)
         {
@@ -37,6 +42,11 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Context
 
         public void SetValue(IDictionary<string, string> properties, T value)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             properties[Name] = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
     }
