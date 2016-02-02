@@ -14,45 +14,51 @@ $RunnerPath = Join-Path $RunnerPackageInfo.VersionedDir "tools\2Gis.NuClear.Data
 
 function Run-DataTests ($Projects, $entryPointMetadataKey){
 
-	if ($Projects -eq $null){
-		return
-	}
+    if ($Projects -eq $null){
+        return
+    }
 
-	$testLocations = @{}
+    $testLocations = @{}
 
-	foreach($project in $Projects){
+    foreach($project in $Projects){
 
-		$projectName = [System.IO.Path]::GetFileNameWithoutExtension($Project.Name)
-		$outDir = Join-Path $Metadata.Common.Dir.TempPersist "$entryPointMetadataKey\$projectName"
+        $projectName = [System.IO.Path]::GetFileNameWithoutExtension($Project.Name)
+        $outDir = Join-Path $Metadata.Common.Dir.TempPersist "$entryPointMetadataKey\$projectName"
 
-		$buildFileName = Create-BuildFile $project.FullName -Properties @{
-			'OutDir' = $outDir
-		}
-		Add-MSBuildQueue $buildFileName $outDir $entryPointMetadataKey
+        $buildFileName = Create-BuildFile $project.FullName -Properties @{
+            'OutDir' = $outDir
+        }
+        Add-MSBuildQueue $buildFileName $outDir $entryPointMetadataKey
 
-		$testLocations[$projectName] = $outDir
-	}
+        $testLocations[$projectName] = $outDir
+    }
 
-	Invoke-MSBuildQueue -PublishArtifacts $false
+    Invoke-MSBuildQueue -PublishArtifacts $false
 
-	$assemblies = @()
-	foreach($testLocation in $testLocations.GetEnumerator()){
-		$testAssemblies = Get-ChildItem $testLocation.Value -Filter "*$($testLocation.Key)*.dll"
-		foreach($testAssembly in $testAssemblies){
-			$assemblies += $testAssembly.FullName
-		}
-	}
-	
-    $isTeamCity = Test-Path 'Env:\TEAMCITY_VERSION'
-    $isJenkins = Test-Path 'Env:\JENKINS_HOME'
-    if($isTeamCity) {
-        $argumentList = ($assemblies, '--teamcity=true')
-    } elseif($isJenkins) {
-        $ouputFile = Join-Path $Metadata.Common.Dir.TempPersist "DataTest.xml"
-        $argumentList = ($assemblies, "--nunit25-output=$ouputFile")
-        Write-Host "Results (nunit2.5) will be saved as $ouputFile"
-    } else {
-        $argumentList = ($assemblies)
+    $assemblies = @()
+    foreach($testLocation in $testLocations.GetEnumerator()){
+        $testAssemblies = Get-ChildItem $testLocation.Value -Filter "*$($testLocation.Key)*.dll"
+        foreach($testAssembly in $testAssemblies){
+            $assemblies += $testAssembly.FullName
+        }
+    }
+    
+    $buildSystem = $Metadata['BuildSystem']
+    switch($buildSystem) {
+        'TeamCity' {
+            $argumentList = ($assemblies, '--teamcity=true')
+        }
+        'Jenkins' {
+            $ouputFile = Join-Path $Metadata.Common.Dir.TempPersist "DataTest.xml"
+            $argumentList = ($assemblies, "--nunit25-output=$ouputFile")
+            Write-Host "Results (nunit2.5) will be saved as $ouputFile"
+        }
+        default {
+            if($buildSystem) {
+                Write-Host "WARNING: unknown build system '$buildSystem' running datatests as local"
+            }
+            $argumentList = ($assemblies)
+        }
     }
 
     & $RunnerPath $argumentList
