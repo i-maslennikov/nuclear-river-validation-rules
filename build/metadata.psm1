@@ -77,12 +77,22 @@ function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 
 function Parse-EnvironmentMetadata ($Properties) {
 
+    $buildSystem = 'Local'
+    if($Properties['BuildSystem']) {
+        $buildSystem = $Properties.BuildSystem
+    }
+
 	$environmentName = $Properties['EnvironmentName']
 	if (!$environmentName){
-		return @{}
+		return @{'BuildSystem' = $buildSystem}
 	}
 
-	$environmentMetadata = @{ 'Common' = @{ 'EnvironmentName' =  $environmentName } }
+    $environmentMetadata = @{
+        'BuildSystem' = $buildSystem;
+        'Common' = @{ 
+            'EnvironmentName' = $environmentName
+        } 
+    }
 
 	$context = $AllEnvironments[$environmentName]
 	if ($context -eq $null){

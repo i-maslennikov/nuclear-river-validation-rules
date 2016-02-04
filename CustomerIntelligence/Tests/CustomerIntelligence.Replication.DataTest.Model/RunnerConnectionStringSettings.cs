@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 
 using NuClear.CustomerIntelligence.Replication.StateInitialization.Tests.Identitites.Connections;
 using NuClear.Storage.API.ConnectionStrings;
@@ -8,6 +10,8 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {
     public sealed class RunnerConnectionStringSettings : ConnectionStringSettingsAspect
     {
+        private static readonly string DatabaseNamePostfix = Guid.NewGuid().ToString("N");
+
         public RunnerConnectionStringSettings()
             : base(CreateConnectionStringMappings(GetTestAssemblyConnectionStrings()))
         {
@@ -22,13 +26,20 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
         private static IReadOnlyDictionary<IConnectionStringIdentity, string> CreateConnectionStringMappings(ConnectionStringSettingsCollection configuration) =>
             new Dictionary<IConnectionStringIdentity, string>
             {
-                { ErmTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Erm].ConnectionString },
-                { FactsTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Facts].ConnectionString },
-                { CustomerIntelligenceTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.CustomerIntelligence].ConnectionString },
-                { BitTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Bit].ConnectionString },
-                { StatisticsTestConnectionStringIdentity.Instance, configuration[ConnectionStringName.Statistics].ConnectionString },
+                { ErmTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.Erm].ConnectionString) },
+                { FactsTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.Facts].ConnectionString) },
+                { CustomerIntelligenceTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.CustomerIntelligence].ConnectionString) },
+                { BitTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.Bit].ConnectionString) },
+                { StatisticsTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.Statistics].ConnectionString) },
 
                 { ErmMasterConnectionStringIdentity.Instance, configuration[ConnectionStringName.ErmMaster].ConnectionString },
             };
+
+        private static string MakeUniqueSqlConnectionString(string connectionString)
+        {
+            var builder = new SqlConnectionStringBuilder(connectionString);
+            builder.InitialCatalog = builder.InitialCatalog + DatabaseNamePostfix;
+            return builder.ToString();
+        }
     }
 }
