@@ -86,15 +86,6 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                        join project in q.For<Facts::Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
                                        join client in q.For<Facts::Client>() on firm.ClientId equals client.Id into clients
                                        from client in clients.DefaultIfEmpty(new Facts::Client())
-                                       let rates = from firmAddress in q.For<Facts::FirmAddress>()
-                                                   where firmAddress.FirmId == firm.Id
-                                                   join categoryFirmAddress in q.For<Facts::CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
-                                                   join categoryOrganizationUnit in q.For<Facts::CategoryOrganizationUnit>() on
-                                                       new { categoryFirmAddress.CategoryId, firm.OrganizationUnitId } equals
-                                                       new { categoryOrganizationUnit.CategoryId, categoryOrganizationUnit.OrganizationUnitId }
-                                                   join categoryGroup in q.For<Facts::CategoryGroup>() on categoryOrganizationUnit.CategoryGroupId equals categoryGroup.Id
-                                                   orderby categoryGroup.Rate descending
-                                                   select categoryGroup.Id
                                        select new Firm
                                               {
                                                   Id = firm.Id,
@@ -109,7 +100,15 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                   HasPhone = firmsHavingPhone.Contains(firm.Id) || client.HasPhone || clientsHavingPhone.Contains(firm.ClientId),
                                                   HasWebsite = firmsHavingWebsite.Contains(firm.Id) || client.HasWebsite || clientsHavingWebsite.Contains(firm.ClientId),
                                                   AddressCount = q.For<Facts::FirmAddress>().Count(fa => fa.FirmId == firm.Id),
-                                                  CategoryGroupId = rates.FirstOrDefault(),
+                                                  CategoryGroupId = (from firmAddress in q.For<Facts::FirmAddress>()
+                                                                     where firmAddress.FirmId == firm.Id
+                                                                     join categoryFirmAddress in q.For<Facts::CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
+                                                                     join categoryOrganizationUnit in q.For<Facts::CategoryOrganizationUnit>() on
+                                                                         new { categoryFirmAddress.CategoryId, firm.OrganizationUnitId } equals
+                                                                         new { categoryOrganizationUnit.CategoryId, categoryOrganizationUnit.OrganizationUnitId }
+                                                                     join categoryGroup in q.For<Facts::CategoryGroup>() on categoryOrganizationUnit.CategoryGroupId equals categoryGroup.Id
+                                                                     orderby categoryGroup.Rate descending
+                                                                     select categoryGroup.Id).FirstOrDefault(),
                                                   ClientId = firm.ClientId,
                                                   ProjectId = project.Id,
                                                   OwnerId = firm.OwnerId
