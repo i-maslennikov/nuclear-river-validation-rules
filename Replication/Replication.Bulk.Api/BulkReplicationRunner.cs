@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
-using NuClear.Replication.Bulk.Api.Factories;
 using NuClear.Replication.Bulk.Metadata;
-using NuClear.Replication.Bulk.Api.Storage;
+using NuClear.Replication.Bulk.API.Factories;
+using NuClear.Replication.Bulk.API.Storage;
 
-namespace NuClear.Replication.Bulk.Api
+namespace NuClear.Replication.Bulk.API
 {
     public sealed class BulkReplicationRunner
     {

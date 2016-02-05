@@ -10,11 +10,11 @@ using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Replication.Bulk.Api;
-using NuClear.Replication.Bulk.Api.Storage;
+using NuClear.Replication.Bulk.API;
+using NuClear.Replication.Bulk.API.Storage;
 using NuClear.Storage.API.ConnectionStrings;
 
-using DataConnectionFactory = NuClear.Replication.Bulk.Api.Factories.DataConnectionFactory;
+using DataConnectionFactory = NuClear.Replication.Bulk.API.Factories.DataConnectionFactory;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {

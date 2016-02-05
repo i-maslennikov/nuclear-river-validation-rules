@@ -53,7 +53,7 @@ StructuralModelElement.Config
                 ).AsMany().AsContainment()));
 ```
 
-Next, we need to describe it's structure in data storage. The current version of **NuClear River** works with relational DBs only. But other storage types can be also supported in the future. Community contributions are welcomed on this point as well.
+Next, we need to describe it's structure in data storage. The current version of **NuClear River** works with relational DBs only, but other storage types can be also supported in the future. Community contributions are welcomed on this point as well.
 
 So, data model (store model) for relational DB for that bounded context can be described by the following:
 
@@ -115,3 +115,38 @@ BoundedContextElement Context =
 As you can see here, all descriptions are very straightforward. In conceptual level we have relations among objects, at store level - relations among DB tables. 
 
 Now, let's see under the hood of **Querying** component to understand how it works.
+
+As it was mentioned in [high-level overview article](README.md), **Querying** built on top of ASP.NET Web API. So, it exposes it's API through controllers.
+
+The first thing to highlight here is `DynamicControllersRegistrar` class in `NuClear.Querying.Web.OData.DynamicControllers` namespace. It's responsible for controllers creation (emitting) in runtime using metadata descriptions:
+
+```csharp
+public sealed class DynamicControllersRegistrar
+{
+    public DynamicControllersRegistrar(
+        IMetadataProvider metadataProvider, 
+        IDynamicAssembliesRegistry registry)
+    {
+        _metadataProvider = metadataProvider;
+        _registry = registry;
+    }
+
+    public void RegisterDynamicControllers(Uri uri)
+    {
+        BoundedContextElement boundedContextElement;
+        if (!_metadataProvider.TryGetMetadata(uri, out boundedContextElement))
+        {
+            throw new ArgumentException();
+        }
+
+        var dynamicAssembly = CreateDynamicControllersAssembly(boundedContextElement);
+        _registry.RegisterDynamicAssembly(dynamicAssembly);
+    }
+
+    // Implementation details ommited for readability
+}
+
+```
+
+The actual code with implementation details is [here](https://github.com/2gis/nuclear-river/blob/master/Querying/Querying.Web.OData/DynamicControllers/DynamicControllersRegistrar.cs).
+

@@ -12,6 +12,9 @@ using NuClear.Querying.Web.OData.Settings;
 
 using Owin;
 
+using Swashbuckle.Application;
+using Swashbuckle.OData;
+
 [assembly: OwinStartup(typeof(Startup))]
 
 namespace NuClear.Querying.Web.OData
@@ -33,6 +36,14 @@ namespace NuClear.Querying.Web.OData
             // default web api
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
+
+            // swaggler
+            config.EnableSwagger(c =>
+                                     {
+                                         c.SingleApiVersion("v1", "NuClear River API reference");
+                                         c.CustomProvider(defaultProvider => new ODataSwaggerProvider(defaultProvider, c, config));
+                                     })
+                  .EnableSwaggerUi();
 
             // configure entity framework
             DbConfiguration.SetConfiguration(new ODataDbConfiguration());

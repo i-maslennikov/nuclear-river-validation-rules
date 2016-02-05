@@ -14,13 +14,13 @@ using NuClear.Querying.Web.OData.Controllers;
 
 namespace NuClear.Querying.Web.OData.DynamicControllers
 {
-    public sealed class DynamicControllersRegistrator
+    public sealed class DynamicControllersRegistrar
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly ITypeProvider _typeProvider;
         private readonly IDynamicAssembliesRegistry _registry;
 
-        public DynamicControllersRegistrator(IMetadataProvider metadataProvider, ITypeProvider typeProvider, IDynamicAssembliesRegistry registry)
+        public DynamicControllersRegistrar(IMetadataProvider metadataProvider, ITypeProvider typeProvider, IDynamicAssembliesRegistry registry)
         {
             _metadataProvider = metadataProvider;
             _typeProvider = typeProvider;

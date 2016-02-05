@@ -5,11 +5,11 @@ using ProtoBuf;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
 {
-    internal sealed class EntityTypeSurrogate
+    internal sealed class EntityTypeSurrogate<TSubDomain> where TSubDomain : ISubDomain
     {
-        private readonly IEntityTypeMappingRegistry<ISubDomain> _entityTypeMappingRegistry;
+        private readonly IEntityTypeMappingRegistry<TSubDomain> _entityTypeMappingRegistry;
 
-        public EntityTypeSurrogate(IEntityTypeMappingRegistry<ISubDomain> entityTypeMappingRegistry)
+        public EntityTypeSurrogate(IEntityTypeMappingRegistry<TSubDomain> entityTypeMappingRegistry)
         {
             _entityTypeMappingRegistry = entityTypeMappingRegistry;
         }
@@ -17,7 +17,7 @@ namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
         public int Id { get; set; }
 
         [ProtoConverter]
-        public static IEntityType From(EntityTypeSurrogate value)
+        public static IEntityType From(EntityTypeSurrogate<TSubDomain> value)
         {
             if (value == null)
             {
@@ -44,14 +44,14 @@ namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
         }
 
         [ProtoConverter]
-        public static EntityTypeSurrogate To(IEntityType value)
+        public static EntityTypeSurrogate<TSubDomain> To(IEntityType value)
         {
             if (value == null)
             {
                 return null;
             }
 
-            var surrogate = SurrogateFactory<EntityTypeSurrogate>.Factory();
+            var surrogate = SurrogateFactory<EntityTypeSurrogate<TSubDomain>>.Factory();
             surrogate.Id = value.Id;
 
             return surrogate;

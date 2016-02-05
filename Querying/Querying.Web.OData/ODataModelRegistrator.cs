@@ -21,13 +21,13 @@ namespace NuClear.Querying.Web.OData
         private static readonly ConfigureHttpRequest ConfigureHttpRequest = Bootstrapper.ConfigureHttpRequest;
 
         private readonly IMetadataProvider _metadataProvider;
-        private readonly DynamicControllersRegistrator _dynamicControllersRegistrator;
+        private readonly DynamicControllersRegistrar _dynamicControllersRegistrar;
         private readonly EdmModelWithClrTypesBuilder _edmModelWithClrTypesBuilder;
 
-        public ODataModelRegistrator(IMetadataProvider metadataProvider, DynamicControllersRegistrator dynamicControllersRegistrator, EdmModelWithClrTypesBuilder edmModelWithClrTypesBuilder)
+        public ODataModelRegistrator(IMetadataProvider metadataProvider, DynamicControllersRegistrar dynamicControllersRegistrar, EdmModelWithClrTypesBuilder edmModelWithClrTypesBuilder)
         {
             _metadataProvider = metadataProvider;
-            _dynamicControllersRegistrator = dynamicControllersRegistrator;
+            _dynamicControllersRegistrar = dynamicControllersRegistrar;
             _edmModelWithClrTypesBuilder = edmModelWithClrTypesBuilder;
         }
 
@@ -48,7 +48,7 @@ namespace NuClear.Querying.Web.OData
                 var routePrefix = contextId.Segments.Last();
                 MapRoute(routePrefix, edmModel, httpServer, ConfigureHttpRequest);
 
-                _dynamicControllersRegistrator.RegisterDynamicControllers(contextId);
+                _dynamicControllersRegistrar.RegisterDynamicControllers(contextId);
             }
         }
 
