@@ -84,7 +84,7 @@ go
 
 create table PriceAggregate.AdvertisementAmountRestriction(
     PriceId bigint NOT NULL,
-    PositionId bigint NOT NULL
+    PositionId bigint NOT NULL,
     [Min] int NOT NULL,
     [Max] int NOT NULL
 )

@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                   .Select(Transform.AssociatedPositionsGroup));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Category>> Category =
-                        new MapSpecification<IQuery, IQueryable<Facts.Category>>(
+                        new MapSpecification<IQuery, IQueryable<Facts::Category>>(
                             q => q.For<Erm::Category>()
                                   .Where(entity => entity.IsActive && !entity.IsDeleted)
                                   .Select(Transform.Category));

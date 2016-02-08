@@ -7,6 +7,7 @@ using NuClear.ValidationRules.Storage;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Replication.Bulk.Metadata;
+using NuClear.ValidationRules.Domain;
 using NuClear.ValidationRules.Domain.Dto;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
 
@@ -21,13 +22,19 @@ namespace NuClear.ValidationRules.StateInitialization
                                               .CommandlineKey("-facts")
                                               .From(ErmConnectionStringIdentity.Instance, Schema.Erm)
                                               .To(FactsConnectionStringIdentity.Instance, Schema.Facts)
-                                              .UsingMetadataOfKind<ReplicationMetadataIdentity>("PriceContext.Facts"),
+                                              .UsingMetadataOfKind<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextFacts),
 
                 BulkReplicationMetadataElement.Config
                                               .CommandlineKey("-config")
                                               .From(OrderValidationConfigIdentity.Instance, typeof(OrderValidationConfigParser))
                                               .To(FactsConnectionStringIdentity.Instance, Schema.Facts)
-                                              .UsingMetadataOfKind<ImportStatisticsMetadataIdentity>("PriceContext.Config"),
+                                              .UsingMetadataOfKind<ImportStatisticsMetadataIdentity>(ReplicationMetadataName.PriceContextConfig),
+
+                BulkReplicationMetadataElement.Config
+                                              .CommandlineKey("-aggs")
+                                              .From(FactsConnectionStringIdentity.Instance, Schema.Facts)
+                                              .To(AggsConnectionStringIdentity.Instance, Schema.Aggregates)
+                                              .UsingMetadataOfKind<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates),
 
             }.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);
 
