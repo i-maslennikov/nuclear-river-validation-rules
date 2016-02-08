@@ -1,4 +1,5 @@
-﻿using NuClear.CustomerIntelligence.Domain;
+﻿using NuClear.AdvancedSearch.Common.Metadata;
+using NuClear.CustomerIntelligence.Domain;
 using NuClear.Model.Common.Entities;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Identities.EntityTypes
