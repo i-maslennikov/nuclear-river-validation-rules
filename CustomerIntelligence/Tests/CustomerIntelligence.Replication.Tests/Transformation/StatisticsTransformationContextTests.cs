@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {
     using Bit = NuClear.CustomerIntelligence.Domain.Model.Bit;
+    using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
     using Statistics = NuClear.CustomerIntelligence.Domain.Model.Statistics;
 
     [TestFixture, SetCulture("")]
@@ -17,48 +18,69 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldFillCategoriesWithoutStatisticsWithZeros()
         {
-            SourceDb.Has(new Bit::FirmCategory { FirmId = 1, CategoryId = 1, ProjectId = 1 }); // Фирма без статистики
-            SourceDb.Has(new Bit::FirmCategory { FirmId = 2, CategoryId = 1, ProjectId = 1 }); // Фирма со статистикой
+            SourceDb.Has(new Facts::Project { Id = 1})
+                    .Has(new Facts::Firm { Id = 1},
+                         new Facts::Firm { Id = 2})
+                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 },
+                         new Facts::FirmAddress { Id = 2, FirmId = 2 })
+                    .Has(new Facts::Category { Id = 1 },
+                         new Facts::Category { Id = 2 })
+                    .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 1 },
+                         new Facts::CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 1 });
+
             SourceDb.Has(new Bit::FirmCategoryStatistics { FirmId = 2, CategoryId = 1, ProjectId = 1, Hits = 100, Shows = 200 });
             SourceDb.Has(new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 1, AdvertisersCount = 1 });
 
             Transformation.Create(Query)
                           .VerifyTransform(
-                              x => Specs.Map.Facts.ToStatistics.FirmCategoryStatistics.Map(x),
+                              x => Specs.Map.Facts.ToStatistics.FirmCategory3.Map(x),
                               Inquire(
-                                  new Statistics::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 0, Shows = 0 },
-                                  new Statistics::FirmCategoryStatistics { FirmId = 2, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 100, Shows = 200 }));
+                                  new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 0, Shows = 0 },
+                                  new Statistics::FirmCategory3 { FirmId = 2, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 100, Shows = 200 }));
         }
 
         [Test]
         public void ShouldTransformFirmCategoryStatistics()
         {
-            SourceDb.Has(new Bit::FirmCategory { FirmId = 1, CategoryId = 1, ProjectId = 1 },
-                         new Bit::FirmCategory { FirmId = 2, CategoryId = 1, ProjectId = 1 },
-                         new Bit::FirmCategory { FirmId = 2, CategoryId = 2, ProjectId = 1 })
-                    .Has(new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, ProjectId = 1, Hits = 10000, Shows = 20000 })
+            SourceDb.Has(new Facts::Project { Id = 1})
+                    .Has(new Facts::Firm { Id = 1},
+                         new Facts::Firm { Id = 2})
+                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 },
+                         new Facts::FirmAddress { Id = 2, FirmId = 2 })
+                    .Has(new Facts::Category { Id = 1 },
+                         new Facts::Category { Id = 2 })
+                    .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 1 },
+                         new Facts::CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 1 },
+                         new Facts::CategoryFirmAddress { Id = 3, FirmAddressId = 2, CategoryId = 2 });
+
+            SourceDb.Has(new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, ProjectId = 1, Hits = 10000, Shows = 20000 })
                     .Has(new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 1, AdvertisersCount = 1 });
 
             Transformation.Create(Query)
                           .VerifyTransform(
-                              x => Specs.Map.Facts.ToStatistics.FirmCategoryStatistics.Map(x),
+                              x => Specs.Map.Facts.ToStatistics.FirmCategory3.Map(x),
                               Inquire(
-                                  new Statistics::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 10000, Shows = 20000 },
-                                  new Statistics::FirmCategoryStatistics { FirmId = 2, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 0, Shows = 0 },
-                                  new Statistics::FirmCategoryStatistics { FirmId = 2, CategoryId = 2, ProjectId = 1, AdvertisersShare = 0f, FirmCount = 1, Hits = 0, Shows = 0 }));
+                                  new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 10000, Shows = 20000 },
+                                  new Statistics::FirmCategory3 { FirmId = 2, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 0, Shows = 0 },
+                                  new Statistics::FirmCategory3 { FirmId = 2, CategoryId = 2, ProjectId = 1, AdvertisersShare = 0f, FirmCount = 1, Hits = 0, Shows = 0 }));
         }
 
         [Test]
         public void AdvertisersShareShouldNotBeMoreThanOne()
         {
-            SourceDb.Has(new Bit::FirmCategory { FirmId = 1, CategoryId = 1, ProjectId = 1 })
-                    .Has(new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, ProjectId = 1, Hits = 10000, Shows = 20000 })
+            SourceDb.Has(new Facts::Project { Id = 1 })
+                    .Has(new Facts::Firm { Id = 1})
+                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
+                    .Has(new Facts::Category { Id = 1 })
+                    .Has(new Facts::CategoryFirmAddress { FirmAddressId = 1, CategoryId = 1 });
+
+            SourceDb.Has(new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, ProjectId = 1, Hits = 10000, Shows = 20000 })
                     .Has(new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 1, AdvertisersCount = 5 });
 
             Transformation.Create(Query)
                           .VerifyTransform(
-                              x => Specs.Map.Facts.ToStatistics.FirmCategoryStatistics.Map(x),
-                              Inquire(new Statistics::FirmCategoryStatistics { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 1f, FirmCount = 1, Hits = 10000, Shows = 20000 }));
+                              x => Specs.Map.Facts.ToStatistics.FirmCategory3.Map(x),
+                              Inquire(new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 1f, FirmCount = 1, Hits = 10000, Shows = 20000 }));
         }
 
         private class Transformation

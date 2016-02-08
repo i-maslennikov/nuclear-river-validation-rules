@@ -1,0 +1,26 @@
+{
+    "title": "NuClear River Documentation",
+    "description": "NuClear River Documentation",
+    "plugins": [
+        "28msec",
+        "clicky",
+        "richquotes",
+        "image-captions",
+        "printlinks",
+        "video",
+        "prism",
+        "-highlight",
+        "github",
+        "edit-link",
+        "anchors"
+    ],
+    "pluginsConfig": {
+        "github": {
+          "url": "https://github.com/2gis/nuclear-river"
+        },
+        "edit-link": {
+          "base": "https://github.com/2gis/nuclear-river/tree/master/docs",
+          "label": "Edit This Page"
+        },
+    }
+}

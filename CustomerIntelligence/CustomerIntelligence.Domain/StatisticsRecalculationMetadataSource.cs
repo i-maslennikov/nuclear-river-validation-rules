@@ -19,30 +19,25 @@ namespace NuClear.CustomerIntelligence.Domain
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1115:ParameterMustFollowComma", Justification = "Reviewed. Suppression is OK here.")]
     public class StatisticsRecalculationMetadataSource : MetadataSourceBase<StatisticsRecalculationMetadataIdentity>
     {
-        private readonly IReadOnlyDictionary<Uri, IMetadataElement> _metadata;
-
         public StatisticsRecalculationMetadataSource()
         {
             HierarchyMetadata statisticsRecalculationMetadataRoot =
                 HierarchyMetadata
                     .Config
                     .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<StatisticsRecalculationMetadataIdentity>())
-                    .Childs(StatisticsRecalculationMetadata<Statistics::FirmCategoryStatistics>
+                    .Childs(StatisticsRecalculationMetadata<Statistics::FirmCategory3>
                                 .Config
-                                .HasSource(Specs.Map.Facts.ToStatistics.FirmCategoryStatistics)
-                                .HasTarget(Specs.Map.CI.ToStatistics.FirmCategoryStatistics)
+                                .HasSource(Specs.Map.Facts.ToStatistics.FirmCategory3)
+                                .HasTarget(Specs.Map.CI.ToStatistics.FirmCategory3)
                                 .HasFilter(
                                     (projectId, categoryIds) =>
                                     categoryIds.Contains(null)
-                                        ? Specs.Find.CI.FirmCategoryStatistics.ByProject(projectId)
-                                        : Specs.Find.CI.FirmCategoryStatistics.ByProjectAndCategories(projectId, categoryIds)));
+                                        ? Specs.Find.CI.FirmCategory3.ByProject(projectId)
+                                        : Specs.Find.CI.FirmCategory3.ByProjectAndCategories(projectId, categoryIds)));
 
-            _metadata = new Dictionary<Uri, IMetadataElement> { { statisticsRecalculationMetadataRoot.Identity.Id, statisticsRecalculationMetadataRoot } };
+            Metadata = new Dictionary<Uri, IMetadataElement> { { statisticsRecalculationMetadataRoot.Identity.Id, statisticsRecalculationMetadataRoot } };
         }
 
-        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata
-        {
-            get { return _metadata; }
-        }
+        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }
     }
 }

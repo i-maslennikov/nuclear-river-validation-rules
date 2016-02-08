@@ -48,7 +48,8 @@
     <Compile Include="Model\CI\Firm.cs" />
     <Compile Include="Model\CI\FirmActivity.cs" />
     <Compile Include="Model\CI\FirmBalance.cs" />
-    <Compile Include="Model\CI\FirmCategory.cs" />
+    <Compile Include="Model\CI\FirmCategory1.cs" />
+    <Compile Include="Model\CI\FirmCategory2.cs" />
     <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\ICustomerIntelligenceAggregatePart.cs" />
@@ -57,7 +58,7 @@
     <Compile Include="Model\IErmObject.cs" />
     <Compile Include="Model\IErmValueObject.cs" />
     <Compile Include="Model\IBitDto.cs" />
-    <Compile Include="Model\Statistics\FirmCategoryStatistics.cs" />
+    <Compile Include="Model\Statistics\FirmCategory3.cs" />
     <Compile Include="Model\CI\FirmTerritory.cs" />
     <Compile Include="Model\CI\Project.cs" />
     <Compile Include="Model\CI\ProjectCategory.cs" />
@@ -92,7 +93,6 @@
     <Compile Include="Model\CustomerIntelligenceFactTypePriorityComparer.cs" />
     <Compile Include="Model\Facts\Firm.cs" />
     <Compile Include="Model\Facts\FirmAddress.cs" />
-    <Compile Include="Model\Bit\FirmCategory.cs" />
     <Compile Include="Model\Bit\FirmCategoryStatistics.cs" />
     <Compile Include="Model\Facts\FirmContact.cs" />
     <Compile Include="Model\Facts\LegalPerson.cs" />

@@ -10,11 +10,7 @@ using Microsoft.OData.Edm.Validation;
 
 using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.AdvancedSearch.Common.Metadata.Identities;
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.Metamodeling.Elements.Identities.Builder;
-using NuClear.Metamodeling.Processors;
-using NuClear.Metamodeling.Provider;
-using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Querying.OData.Building;
 
 using NUnit.Framework;
@@ -27,25 +23,19 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         [Test]
         public void ShouldBuildValidModelForCustomerIntelligenceContext()
         {
-            var provider = CreateProvider(new QueryingMetadataSource());
             var contextId = Metadata.Id.For<QueryingMetadataIdentity>("CustomerIntelligence");
 
             BoundedContextElement boundedContext;
-            provider.TryGetMetadata(contextId, out boundedContext);
+            TestMetadataProvider.Instance.TryGetMetadata(contextId, out boundedContext);
 
-            var model = BuildModel(provider, contextId);
+            var model = BuildModel(contextId);
 
             Assert.That(model, Is.Not.Null.And.Matches(ModelConstraints.IsValid));
         }
 
-        private static IMetadataProvider CreateProvider(params IMetadataSource[] sources)
+        private static IEdmModel BuildModel(Uri contextId)
         {
-            return new MetadataProvider(sources, new IMetadataProcessor[0]);
-        }
-
-        private static IEdmModel BuildModel(IMetadataProvider provider, Uri contextId)
-        {
-            var builder = new EdmModelBuilder(provider);
+            var builder = new EdmModelBuilder(TestMetadataProvider.Instance);
             var model = builder.Build(contextId);
 
             model.Dump();

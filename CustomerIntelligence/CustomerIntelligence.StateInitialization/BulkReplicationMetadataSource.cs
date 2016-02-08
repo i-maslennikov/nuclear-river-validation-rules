@@ -33,7 +33,6 @@ namespace NuClear.CustomerIntelligence.StateInitialization
                                               .From(ConnectionString.Facts, Schema.Facts)
                                               .To(ConnectionString.CustomerIntelligence, Schema.CustomerIntelligence)
                                               .UsingMetadataOfKind<StatisticsRecalculationMetadataIdentity>()
-                                              .EssentialView("bit.firmcategory")
             }.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);
 
         public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata => Elements;
