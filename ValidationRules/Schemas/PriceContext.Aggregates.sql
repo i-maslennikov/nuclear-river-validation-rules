@@ -25,7 +25,7 @@ create table PriceAggregate.MasterPosition(
     PositionId bigint NOT NULL,
     MasterPositionId bigint NOT NULL,
     PriceId bigint NULL,
-    GroupId bigint NOT NULL,
+    GroupId bigint NULL,
     ObjectBindingType int NOT NULL
 )
 go

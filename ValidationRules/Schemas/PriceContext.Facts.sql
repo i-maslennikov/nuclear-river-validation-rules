@@ -65,8 +65,8 @@ create table PriceContext.OrderPositionAdvertisement(
     Id bigint not null,
     OrderPositionId bigint not null,
     PositionId bigint not null,
-    CategoryId bigint not null,
-    FirmAddressId bigint not null
+    CategoryId bigint null,
+    FirmAddressId bigint null
 )
 go
 

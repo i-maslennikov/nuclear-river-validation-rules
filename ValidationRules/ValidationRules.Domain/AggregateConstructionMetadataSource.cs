@@ -20,53 +20,26 @@ namespace NuClear.ValidationRules.Domain
         public AggregateConstructionMetadataSource()
         {
             var metadata = (HierarchyMetadata)HierarchyMetadata.Config
-                                        .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates))
-                                        .Childs(
-                AggregateMetadata<Price>
-                .Config
+                .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates))
+                .Childs(
+
+                AggregateMetadata<Price>.Config
                 .HasSource(Specs.Map.Facts.ToAggregates.Prices)
                 .HasValueObject(Specs.Map.Facts.ToAggregates.DeniedPositions, Specs.Find.Aggs.DeniedPositions)
+                .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions, Specs.Find.Aggs.MasterPositions)
+                .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions, Specs.Find.Aggs.AdvertisementAmountRestrictions),
 
-                );
+                AggregateMetadata<Order>.Config
+                .HasSource(Specs.Map.Facts.ToAggregates.Orders)
+                .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPositions, Specs.Find.Aggs.OrderPositions)
+                .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPrices, Specs.Find.Aggs.OrderPrices),
+
+                AggregateMetadata<Position>.Config
+                .HasSource(Specs.Map.Facts.ToAggregates.Positions)
+            );
 
             Metadata = new Dictionary<Uri, IMetadataElement> { { metadata.Identity.Id, metadata} };
         }
-
-        //public AggregateConstructionMetadataSource()
-        //{
-        //    HierarchyMetadata aggregateConstructionMetadataRoot =
-        //        HierarchyMetadata
-        //            .Config
-        //            .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.Aggregates))
-        //            .Childs(AggregateMetadata<Firm>
-        //                        .Config
-        //                        .HasSource(Specs.Map.Facts.ToCI.Firms)
-        //                        .HasValueObject(Specs.Map.Facts.ToCI.FirmActivities, Specs.Find.CI.FirmActivities)
-        //                        .HasValueObject(Specs.Map.Facts.ToCI.FirmBalances, Specs.Find.CI.FirmBalances)
-        //                        .HasValueObject(Specs.Map.Facts.ToCI.FirmCategories1, Specs.Find.CI.FirmCategories1)
-        //                        .HasValueObject(Specs.Map.Facts.ToCI.FirmCategories2, Specs.Find.CI.FirmCategories2)
-        //                        .HasValueObject(Specs.Map.Facts.ToCI.FirmTerritories, Specs.Find.CI.FirmTerritories),
-
-        //                    AggregateMetadata<Client>
-        //                        .Config
-        //                        .HasSource(Specs.Map.Facts.ToCI.Clients)
-        //                        .HasValueObject(Specs.Map.Facts.ToCI.ClientContacts, Specs.Find.CI.ClientContacts),
-
-        //                    AggregateMetadata<Project>
-        //                        .Config
-        //                        .HasSource(Specs.Map.Facts.ToCI.Projects)
-        //                        .HasValueObject(Specs.Map.Facts.ToCI.ProjectCategories, Specs.Find.CI.ProjectCategories),
-
-        //                    AggregateMetadata<Territory>
-        //                        .Config
-        //                        .HasSource(Specs.Map.Facts.ToCI.Territories),
-
-        //                    AggregateMetadata<CategoryGroup>
-        //                        .Config
-        //                        .HasSource(Specs.Map.Facts.ToCI.CategoryGroups));
-
-        //    Metadata = new Dictionary<Uri, IMetadataElement> { { aggregateConstructionMetadataRoot.Identity.Id, aggregateConstructionMetadataRoot } };
-        //}
 
         public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }
     }

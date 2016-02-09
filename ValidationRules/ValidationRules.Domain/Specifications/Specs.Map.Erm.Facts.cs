@@ -7,14 +7,14 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.ValidationRules.Domain.Specifications
 {
-    using Erm = ValidationRules.Domain.Model.Erm;
-    using Facts = ValidationRules.Domain.Model.Facts;
+    using Erm = Model.Erm;
+    using Facts = Model.Facts;
 
     public static partial class Specs
     {
         public static partial class Map
         {
-            public static partial class Erm
+            public static class Erm
             {
                 public static class ToFacts
                 {

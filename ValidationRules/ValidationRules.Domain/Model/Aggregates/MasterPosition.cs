@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
         /// <summary>
         /// Признак группы. В каждой группе должна быть в наличии хотя бы одна MasterPositionId.
         /// </summary>
-        public long GroupId { get; set; }
+        public long? GroupId { get; set; }
 
         public int ObjectBindingType { get; set; }
     }
