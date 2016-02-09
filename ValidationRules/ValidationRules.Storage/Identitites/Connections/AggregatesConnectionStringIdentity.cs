@@ -3,7 +3,7 @@ using NuClear.Storage.API.ConnectionStrings;
 
 namespace NuClear.ValidationRules.Storage.Identitites.Connections
 {
-    public sealed class AggsConnectionStringIdentity : IdentityBase<AggsConnectionStringIdentity>, IConnectionStringIdentity
+    public sealed class AggregatesConnectionStringIdentity : IdentityBase<AggregatesConnectionStringIdentity>, IConnectionStringIdentity
     {
         public override int Id
         {

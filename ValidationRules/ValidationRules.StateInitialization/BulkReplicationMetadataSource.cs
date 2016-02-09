@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.StateInitialization
                 BulkReplicationMetadataElement.Config
                                               .CommandlineKey("-aggs")
                                               .From(FactsConnectionStringIdentity.Instance, Schema.Facts)
-                                              .To(AggsConnectionStringIdentity.Instance, Schema.Aggregates)
+                                              .To(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates)
                                               .UsingMetadataOfKind<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates),
 
             }.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);
