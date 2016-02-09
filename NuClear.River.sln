@@ -141,6 +141,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Replication
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "build", "build\build.csproj", "{8D547BD0-0127-4FC4-AD50-ECDD7BB17152}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Replication.StateInitialization.Tests", "ValidationRules\Tests\ValidationRules.Replication.StateInitialization.Tests\ValidationRules.Replication.StateInitialization.Tests.csproj", "{70926221-57BA-4FBC-949F-2BFABA903480}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -279,6 +281,10 @@ Global
 		{8D547BD0-0127-4FC4-AD50-ECDD7BB17152}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D547BD0-0127-4FC4-AD50-ECDD7BB17152}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D547BD0-0127-4FC4-AD50-ECDD7BB17152}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70926221-57BA-4FBC-949F-2BFABA903480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70926221-57BA-4FBC-949F-2BFABA903480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70926221-57BA-4FBC-949F-2BFABA903480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70926221-57BA-4FBC-949F-2BFABA903480}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -324,6 +330,7 @@ Global
 		{6AB1908A-A1C0-4568-8A76-73030B2A0B5D} = {8C2CFAF4-1282-494F-A7BB-2653593839DF}
 		{0AC56434-B3DA-48FB-B896-96E45D3122CE} = {6AB1908A-A1C0-4568-8A76-73030B2A0B5D}
 		{8D547BD0-0127-4FC4-AD50-ECDD7BB17152} = {D0CF69C9-AB27-4062-8B7A-D7391C65EFE3}
+		{70926221-57BA-4FBC-949F-2BFABA903480} = {6AB1908A-A1C0-4568-8A76-73030B2A0B5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.ServiceBus.6.0.1304.0\lib\NET45

@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{70926221-57BA-4FBC-949F-2BFABA903480}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NuClear.ValidationRules.Replication.StateInitialization.Tests</RootNamespace>
+    <AssemblyName>ValidationRules.Replication.StateInitialization.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="2GIS.NuClear.DataTest.Metamodel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\2GIS.NuClear.DataTest.0.14.0-prerelea-099523-0940\lib\net46\2GIS.NuClear.DataTest.Metamodel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\2GIS.NuClear.Metamodeling.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Metamodeling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Model.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Settings.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\2GIS.NuClear.Settings.API.1.1.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.API.1.2.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Utils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\2GIS.NuClear.Utils.1.0.3\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="linq2db, Version=1.0.7.3, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\linq2db.1.0.7.4-beta2\lib\net45\linq2db.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArrangeMetadataElementBuilderExtensions.cs" />
+    <Compile Include="BulkReplicationAdapter.cs" />
+    <Compile Include="ConnectionStringName.cs" />
+    <Compile Include="ContextName.cs" />
+    <Compile Include="Identitites\Connections\AggregatesTestConnectionStringIdentity.cs" />
+    <Compile Include="Identitites\Connections\ErmTestConnectionStringIdentity.cs" />
+    <Compile Include="Identitites\Connections\FactsTestConnectionStringIdentity.cs" />
+    <Compile Include="Keys.cs" />
+    <Compile Include="MappedConnectionStringSettings.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunnerConnectionStringSettings.cs" />
+    <Compile Include="SchemaMetadataSource.cs" />
+    <Compile Include="TestCaseMetadataSource.Period.cs" />
+    <Compile Include="TestCaseMetadataSource.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
+      <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
+      <Name>Common.Metadata</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Replication\Replication.Bulk.Api\Replication.Bulk.Api.csproj">
+      <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
+      <Name>Replication.Bulk.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ValidationRules.Domain\ValidationRules.Domain.csproj">
+      <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
+      <Name>ValidationRules.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ValidationRules.StateInitialization\ValidationRules.StateInitialization.csproj">
+      <Project>{9E9B56F6-6CE7-4134-8FEA-7D7D0D0D0C7F}</Project>
+      <Name>ValidationRules.StateInitialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ValidationRules.Storage\ValidationRules.Storage.csproj">
+      <Project>{E799A2EE-408F-467A-8B50-FC729E92D3F3}</Project>
+      <Name>ValidationRules.Storage</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

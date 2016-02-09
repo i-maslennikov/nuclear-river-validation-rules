@@ -31,7 +31,7 @@ namespace NuClear.Replication.Bulk.Api
             var id = Metamodeling.Elements.Identities.Builder.Metadata.Id.For<BulkReplicationMetadataKindIdentity>(mode).Build().AsIdentity();
             if (!_metadataProvider.TryGetMetadata(id.Id, out bulkReplicationMetadata))
             {
-                throw new NotSupportedException("Bulk replication metadata cannot be found");
+                throw new NotSupportedException($"Bulk replication metadata for key {mode} cannot be found");
             }
 
             var storageDescriptor = bulkReplicationMetadata.Features.OfType<StorageDescriptorFeature>().Single(x => x.Direction == ReplicationDirection.To);
