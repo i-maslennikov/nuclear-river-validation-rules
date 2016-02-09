@@ -18,6 +18,8 @@ namespace NuClear.ValidationRules.Domain.Specifications
             {
                 public static class ToFacts
                 {
+                    private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::AssociatedPosition>> AssociatedPosition =
                         new MapSpecification<IQuery, IQueryable<Facts::AssociatedPosition>>(
                             q => q.For<Erm::AssociatedPosition>()
@@ -134,7 +136,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                     SourceOrganizationUnitId = x.SourceOrganizationUnitId,
                                     WorkflowStepId = x.WorkflowStepId,
                                     BeginDistributionDate = x.BeginDistributionDate,
-                                    EndDistributionDateFact = x.EndDistributionDateFact,
+                                    EndDistributionDateFact = x.EndDistributionDateFact + OneSecond,
                                     BeginReleaseNumber = x.BeginReleaseNumber,
                                     EndReleaseNumberPlan = x.EndReleaseNumberPlan,
                                     EndReleaseNumberFact = x.EndReleaseNumberFact,
