@@ -8,12 +8,12 @@
 Did you ever had following issues?
 
 * Data of your appication(s) is properly structured for create/update/delete commands, but read queries are (very) complicated
-* You have different sets of read queries for one data structure to solve bussiness tasks in different fields. Or even more, you have different systems solving their own tasks reading the same data
+* You have different sets of read queries for one data structure to solve business tasks in different fields. Or even more, you have different systems solving their own tasks reading the same data
 * Read queries execution is slow
 * Data structure changing often, so you have to update both read and write scenarios, even if you still have to read the same data
 * You always need to find a balance between read and write queries when trying to optimize interactions with a data storage (e.g. indexes for SQL storages)
 
-If the answer is yes, then you may find it useful to apply CQRS implementation pattern. **NuClear River** is the platform that makes your life with "Q" letter in CQRS abbreviation much easer.
+If the answer is yes, then you may find it useful to apply CQRS implementation pattern. **NuClear River** is the platform that makes your life with "Q" letter in CQRS abbreviation (**C**ommands and **Q**uery **R**esponsibility **S**egregation) much easer.
 
 Here is the big picture how **NuClear River** can be used in your environment:
 
