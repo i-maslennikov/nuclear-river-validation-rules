@@ -1,7 +1,7 @@
-# Этапы (Stages)
-Репликация может происходить в один или несколько этапов. Структура каждого этапа унифицирована и состоит из следующих шагов: _получение_ сообщения из транспорта, _преобразование_, _накопление_ и _обработка_.
+# Pipeline phases
+Replication in **NuClear River** implemented in a pipeline-based way. The structure of that pipeline is unified and consists of the following phases: _receiving_ message from the transport level, _transforming_, _accumulating_ and _handling_.
 
-### Получение сообщения из транспорта
+### Receiving message from the transport level
 ```csharp
 public interface IMessageReceiver
 {
@@ -10,13 +10,13 @@ public interface IMessageReceiver
 }
 ```
 
-Метод `Peek` должен получать сообщения из транспорта, но не удалять из него (на случай сбоя обработки).
+`Peek` method is used to receive messages from the transport, but without deleting them in transport infrastructure to be able to restore them in case of fail.
 
-Метод `Complete` должен удалить из транспорта сообщения `successfullyProcessedMessages` и может обработать сообщения, которые не удалось принять.
+`Complete` method is used to acknowledge `successfullyProcessedMessages` and delete them from the transport. It also restores `failedProcessedMessages` that gives an ability to handle them in the next loop.
 
-Абстрактный класс `MessageReceiverBase` призван упростить реализацию.
+Abstract class `MessageReceiverBase` is here to simplify many things.
 
-### Преобразование
+### Transforming
 ```csharp
 public interface IMessageTransformer
 {
@@ -25,15 +25,15 @@ public interface IMessageTransformer
 }
 ```
 
-Метод `CanTransform` должен определить, может ли быть сообщение обработано данным экземпляром. Если в наличии несколько - будут опрошены все последовательно (последовательность не определена), до первого, способного обработать.
+`CanTransform` method is used to determine if that instance can deal with the particular message. If there are many transformers, they will be iterated through to find the first who returns `true`.
 
-Метод `Transform` должен выполнить преобразование сообщения из сериализованного представления (принятого из транспорта) в представление, пригодное для использования на следующих этапах.
+`Transform` method is used to execute the transformation of messages from a serialized form to the form that is convenient to the later usage.
 
-Если преобразование не требуется, то требуется пустая реализация этого интерфейса. Её отсутствие приведёт к ошибке.
+If no transformation needed, then the Null-pattern can be used. At least one transformer should be configured.
 
-Абстрактный класс `MessageTransformerBase` призван упростить реализацию.
+Abstract class `MessageTransformerBase` is here to simplify many things.
 
-### Накопление
+### Accumulating
 ```csharp
 public interface IMessageProcessingContextAccumulator
 {
@@ -42,34 +42,33 @@ public interface IMessageProcessingContextAccumulator
 }
 ```
 
-Метод `CanProcess` должен определить, может ли быть сообщение обработано данным экземпляром. Если в наличии несколько - будут опрошены все последовательно (последовательность не определена), до первого, способного обработать.
+`CanProcess` method is used to determine if that instance can deal with the particular message. If there are many transformers, they will be iterated through to find the first who returns `true`.
 
-Метод `Process` может выполнить некоторые дополнительные преобразование сообщения, кроме того, управляя значением Id возвращаемого `IAggregatableMessage`, возможно, разложить сообщения по нескольким корзинам. Если его не менять, то все сообщения попадут в одну корзину.
+`Process` method is used to spread input messages to a one or many buckets. Value of the `Id` property of type `Guid` of returned `IAggregatableMessage` object is used to archieve this. Messages with the same `Id` will be "packed" to the same bucket.
 
-Абстрактный класс `MessageProcessingContextAccumulatorBase` призван упростить реализацию.
+Abstract class `MessageProcessingContextAccumulatorBase` is here to simplify many things.
 
-### Обработка
+### Handling
 ```csharp
 public interface IMessageProcessingHandler
 {
     IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap);
 }
 ```
-Метод `Handle` должен уже окончательно обработать сообщения и пометить их как успешно обработанные или зафейленные. Сообщения передаются в сгруппированном по Id виде - одна или несколько корзин, сформированных на предыдущем шаге.
 
-Если этот этап должен генерировать команды/события для других этапов, их требуется сформировать и отправить тоже в методе `Handle`.
+`Handle` is used to process messages and mark them as handled or failed. Messages passed to that method are grouped in a one or many buckets by 'Id'.
 
-После его завершения будет вызван `Complete` приёмника для обработанных сообщений.
+If you need to start an another one pipeline, method `Handle` is the point where you can generate events and create create commands that should be send futher using transport infrastructure.
 
-### Соединение шагов внутри одного этапа
-* Требуется реализовать `IMessageFlowReceiverResolveStrategy` и зарегистрировать в DI-контейнере. Реализация должна возвращать тип, реализующий `IMessageReceiver` в ответ на запрос с `messageFlowMetadata`.
-* Требуется реализовать `IMessageTransformerResolveStrategy` и зарегистрировать в DI-контейнере. Реализация должна возвращать тип, реализующий `IMessageTransformer` в ответ на запрос с `messageFlowMetadata`.
-* Требуется связать идентификатор потока, реализацию `IMessageProcessingContextAccumulator` и реализацию `IMessageProcessingHandler` в метаданных.
+Just to highlight, `Complete` method of the `IMessageReceiver` instance should be called here.
 
-> **Замечание:**
-> На самом деле, всё определяется `IMessageProcessingStagesFactory`, `IMessageTransformerFactory` и рядом других, которые используются в реализации `IMessageFlowProcessor` и `IMessageProcessingTopology`, которые определяется посредством регистрации `IMessageFlowProcessorResolveStrategy`, которая регистриуется в контейнере... 
+### Connecting phases with each other
+* You need to implement `IMessageFlowReceiverResolveStrategy` and register that type in DI-container. Implementation should return an instance of type that implements `IMessageReceiver` based on a value of parameter of type `MessageFlowMetadata`.
+* You need to implement `IMessageTransformerResolveStrategy` and register that type in DI-container. Implementation should return an instance of type that implements `IMessageTransformer` based on a value of parameter of type `MessageFlowMetadata`.
+* You need to connect the message flow with `IMessageProcessingContextAccumulator` implementation and `IMessageProcessingHandler` implementation by flow's identifier using [metadata descriptions](../terms.md). See for an example in [this article](replication-design.md).
 
-### Соединение этапов
-На самом деле достаточно условный процесс, поскольку единственный способ соединить два этапа - это переслать сообщения, сгенерированные одним, к другому. А эта задача в настоящий момент лежит вне компетеции платформы **NuClear River**. Вам потребуется некоторая реализация, способная отправлять сообщения в тот поток, который читает слудующий (следующие) этапы.
+> **Note:**
+> In fact, there is also some other dependencies of `IMessageFlowProcessor` implementation to make all things work together. For details, see an article about [NuClear.Operations* libraries](dependencies/nuclear-operations-libraries.md) that are used by **NuClear.River**.
 
-Но на всякий случай соединение потоков добавляется в тот же самый элемент метаданных, в котором соединены `IMessageProcessingContextAccumulator` и `IMessageProcessingHandler`.
+### Connecting replication stages (two or more pipelines)
+All you need here is to send messages (events or commands) in `IMessageProcessingHandler.Handle` method using the transport level and specify the flow for them. Then, you need to configure **NuClear River** to execute all pipelines and transport-level infrastructure with flows you needed.
