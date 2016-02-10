@@ -1,6 +1,6 @@
 # Details on Replication component
 
-As it was mentioned in [high-level overview article](README.md), **Replication** component's control flow consists at least of two parts/stages - _primary_ and _final_, so it's a pipeline-based engine. 
+As it was mentioned in [high-level overview article](README.md), **Replication** component's control flow consists at least of two parts/stages - _primary_ and _final_, so it's a pipeline-based engine. Read about the pipeline abstractions and responsibilities [here](replication-pipeline.md).
 
 ### Primary stage
 
