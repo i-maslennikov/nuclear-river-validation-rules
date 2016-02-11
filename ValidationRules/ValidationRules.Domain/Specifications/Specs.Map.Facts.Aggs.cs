@@ -112,10 +112,11 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                 {
                                     var opas = from opa in q.For<Facts::OrderPositionAdvertisement>()
                                                join orderPosition in q.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
+                                               join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                                                select new Aggregates::OrderPosition
                                                    {
                                                        OrderId = orderPosition.OrderId,
-                                                       PackagePositionId = null,
+                                                       PackagePositionId = pricePosition.PositionId,
                                                        ItemPositionId = opa.PositionId,
                                                        CategoryId = opa.CategoryId,
                                                        FirmAddressId = opa.FirmAddressId
@@ -128,8 +129,8 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                                select new Aggregates::OrderPosition
                                                    {
                                                        OrderId = orderPosition.OrderId,
-                                                       PackagePositionId = position.Id,
-                                                       ItemPositionId = position.Id,
+                                                       PackagePositionId = pricePosition.PositionId,
+                                                       ItemPositionId = pricePosition.PositionId,
                                                        CategoryId = null,
                                                        FirmAddressId = null
                                                    };
