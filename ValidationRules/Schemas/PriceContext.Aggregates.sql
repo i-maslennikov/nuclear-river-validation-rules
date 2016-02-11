@@ -59,7 +59,7 @@ go
 
 create table PriceAggregate.Period(
     Id bigint NOT NULL,
-    ProjectId bigint NOT NULL,
+    OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
     [End] datetime2(2) NOT NULL
 )

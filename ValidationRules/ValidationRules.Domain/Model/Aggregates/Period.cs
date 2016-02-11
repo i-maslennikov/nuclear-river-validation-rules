@@ -1,5 +1,7 @@
 ﻿using System;
 
+using NuClear.AdvancedSearch.Common.Metadata.Model;
+
 namespace NuClear.ValidationRules.Domain.Model.Aggregates
 {
     /// <summary>
@@ -9,10 +11,10 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
     /// 
     /// Должен соблюдаться инвариант: сумма всех периодов заказа/прайс-диста - неразрывна.
     /// </summary>
-    public class Period
+    public class Period : IAggregateRoot
     {
         public long Id { get; set; }
-        public long ProjectId { get; set; }
+        public long OrganizationUnitId { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
     }

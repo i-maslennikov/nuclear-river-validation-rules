@@ -8,6 +8,7 @@ namespace NuClear.ValidationRules.Storage
     {
         private const string Erm = "Erm";
         private const string Facts = "Facts";
+        private const string Aggregates = "Aggregates";
         private const string Transport = "Transport";
 
         public string Resolve(Type objType)
@@ -20,6 +21,11 @@ namespace NuClear.ValidationRules.Storage
             if (objType.Namespace.Contains(Facts))
             {
                 return Facts;
+            }
+
+            if (objType.Namespace.Contains(Aggregates))
+            {
+                return Aggregates;
             }
 
             if (objType.Name == "PerformedOperationFinalProcessing")

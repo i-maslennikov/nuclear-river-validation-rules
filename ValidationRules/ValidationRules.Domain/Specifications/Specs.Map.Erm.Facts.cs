@@ -182,7 +182,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                 {
                                     Id = x.Id,
                                     BeginDate = x.BeginDate,
-                                    IsPublished = x.IsPublished,
+                                    IsPublished = x.IsPublished, // зачем нам неопубликованные прайсы?
                                     OrganizationUnitId = x.OrganizationUnitId,
                                 };
 

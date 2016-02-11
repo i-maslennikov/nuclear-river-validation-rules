@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
-using NuClear.ValidationRules.Domain.Model.Erm;
 
 namespace NuClear.ValidationRules.Domain.Specifications
 {
@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                     public static readonly MapSpecification<IQuery, IQueryable<Aggs::Price>> Prices = new MapSpecification<IQuery, IQueryable<Aggs::Price>>(q =>
                         q.For<Facts::Price>().Select(x => new Aggs::Price
                         {
-                                Id = x.Id
+                            Id = x.Id
                         }));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggs::DeniedPosition>> DeniedPositions = new MapSpecification<IQuery, IQueryable<Aggs::DeniedPosition>>(q =>
@@ -99,47 +99,47 @@ namespace NuClear.ValidationRules.Domain.Specifications
                         }));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggs::OrderPosition>> OrderPositions = new MapSpecification<IQuery, IQueryable<Aggs::OrderPosition>>(q =>
-                    {
-                        var opas = from opa in q.For<Facts::OrderPositionAdvertisement>()
-                                   join orderPosition in q.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
-                                   select new Aggs::OrderPosition
-                                   {
-                                        OrderId = orderPosition.OrderId,
-                                        PackagePositionId = null,
-                                        ItemPositionId = opa.PositionId,
-                                        CategoryId = opa.CategoryId,
-                                        FirmAddressId = opa.FirmAddressId
-                                   };
+                                {
+                                    var opas = from opa in q.For<Facts::OrderPositionAdvertisement>()
+                                               join orderPosition in q.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
+                                               select new Aggs::OrderPosition
+                                               {
+                                                   OrderId = orderPosition.OrderId,
+                                                   PackagePositionId = null,
+                                                   ItemPositionId = opa.PositionId,
+                                                   CategoryId = opa.CategoryId,
+                                                   FirmAddressId = opa.FirmAddressId
+                                               };
 
-                        var pkgs = from orderPosition in q.For<Facts::OrderPosition>()
-                                   join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
-                                   join position in q.For<Facts::Position>() on pricePosition.PositionId equals position.Id
-                                   where position.IsComposite
-                                   select new Aggs::OrderPosition
-                                   {
-                                        OrderId = orderPosition.OrderId,
-                                        PackagePositionId = position.Id,
-                                        ItemPositionId = position.Id,
-                                        CategoryId = null,
-                                        FirmAddressId = null
-                                   };
+                                    var pkgs = from orderPosition in q.For<Facts::OrderPosition>()
+                                               join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                                               join position in q.For<Facts::Position>() on pricePosition.PositionId equals position.Id
+                                               where position.IsComposite
+                                               select new Aggs::OrderPosition
+                                               {
+                                                   OrderId = orderPosition.OrderId,
+                                                   PackagePositionId = position.Id,
+                                                   ItemPositionId = position.Id,
+                                                   CategoryId = null,
+                                                   FirmAddressId = null
+                                               };
 
-                        return opas.Union(pkgs);
-                    });
+                                    return opas.Union(pkgs);
+                                });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggs::OrderPrice>> OrderPrices = new MapSpecification<IQuery, IQueryable<Aggs::OrderPrice>>(q =>
-                    {
-                        var orderPrices = from order in q.For<Facts::Order>()
-                                          join orderPosition in q.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                                          join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
-                                          select new Aggs::OrderPrice
-                                          {
-                                              OrderId = order.Id,
-                                              PriceId = pricePosition.PriceId
-                                          };
+                            {
+                                var orderPrices = from order in q.For<Facts::Order>()
+                                                  join orderPosition in q.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                                                  join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                                                  select new Aggs::OrderPrice
+                                                  {
+                                                      OrderId = order.Id,
+                                                      PriceId = pricePosition.PriceId
+                                                  };
 
-                        return orderPrices.Distinct();
-                    });
+                                return orderPrices.Distinct();
+                            });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggs::Position>> Positions = new MapSpecification<IQuery, IQueryable<Aggs::Position>>(q =>
                         q.For<Facts::Position>().Select(x => new Aggs::Position
@@ -147,6 +147,26 @@ namespace NuClear.ValidationRules.Domain.Specifications
                             Id = x.Id,
                             PositionCategoryId = x.PositionCategoryId
                         }));
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggs::Period>> Periods = new MapSpecification<IQuery, IQueryable<Aggs::Period>>(
+                        q =>
+                            {
+                                var dates = q.For<Facts::Order>()
+                                             .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                             .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                             .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, OrganizationUnitId = x.OrganizationUnitId }))
+                                             .Select(x => new { x.Date, x.OrganizationUnitId })
+                                             .OrderBy(x => x.Date)
+                                             .Distinct();
+
+                                return dates.Select(x => new { start = x, end = dates.FirstOrDefault(y => y.Date > x.Date && y.OrganizationUnitId == x.OrganizationUnitId) })
+                                            .Select(x => new Aggs::Period
+                                            {
+                                                Start = x.start.Date,
+                                                End = x.end != null ? x.end.Date : DateTime.MaxValue,
+                                                OrganizationUnitId = x.start.OrganizationUnitId
+                                            });
+                            });
                 }
             }
         }
