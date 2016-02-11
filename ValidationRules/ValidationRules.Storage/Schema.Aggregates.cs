@@ -17,14 +17,10 @@ namespace NuClear.ValidationRules.Storage
                 var config = schema.GetFluentMappingBuilder();
 
                 config.Entity<DeniedPosition>()
-                      .HasSchemaName(PriceAggregateSchema)
-                      .HasPrimaryKey(x => x.PositionId)
-                      .HasPrimaryKey(x => x.DeniedPositionId);
+                      .HasSchemaName(PriceAggregateSchema);
 
                 config.Entity<MasterPosition>()
-                      .HasSchemaName(PriceAggregateSchema)
-                      .HasPrimaryKey(x => x.PositionId)
-                      .HasPrimaryKey(x => x.MasterPositionId);
+                      .HasSchemaName(PriceAggregateSchema);
 
                 config.Entity<Order>()
                       .HasSchemaName(PriceAggregateSchema)
@@ -36,9 +32,7 @@ namespace NuClear.ValidationRules.Storage
                       .HasPrimaryKey(x => x.PeriodId);
 
                 config.Entity<OrderPosition>()
-                      .HasSchemaName(PriceAggregateSchema)
-                      .HasPrimaryKey(x => x.OrderId)
-                      .HasPrimaryKey(x => x.ItemPositionId);
+                      .HasSchemaName(PriceAggregateSchema);
 
                 config.Entity<OrderPrice>()
                       .HasSchemaName(PriceAggregateSchema)

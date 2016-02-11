@@ -77,8 +77,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunnerConnectionStringSettings.cs" />
     <Compile Include="SchemaMetadataSource.cs" />
-    <Compile Include="TestCaseMetadataSource.Period.cs" />
     <Compile Include="TestCaseMetadataSource.cs" />
+    <Compile Include="TestCaseMetadataSource.Order.cs" />
+    <Compile Include="TestCaseMetadataSource.Period.cs" />
+    <Compile Include="TestCaseMetadataSource.Price.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
