@@ -17,32 +17,30 @@ namespace NuClear.ValidationRules.Domain
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1115:ParameterMustFollowComma", Justification = "Reviewed. Suppression is OK here.")]
     public class AggregateConstructionMetadataSource : MetadataSourceBase<ReplicationMetadataIdentity>
     {
+        private readonly HierarchyMetadata _metadata =
+            HierarchyMetadata.Config
+                             .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates))
+                             .Childs(
+                                     AggregateMetadata<Price>.Config
+                                                             .HasSource(Specs.Map.Facts.ToAggregates.Prices)
+                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.DeniedPositions,Specs.Find.Aggs.DeniedPositions)
+                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions,Specs.Find.Aggs.MasterPositions)
+                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions,Specs.Find.Aggs.AdvertisementAmountRestrictions),
+
+                                     AggregateMetadata<Order>.Config
+                                                             .HasSource(Specs.Map.Facts.ToAggregates.Orders)
+                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPositions, Specs.Find.Aggs.OrderPositions)
+                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPrices, Specs.Find.Aggs.OrderPrices),
+
+                                     AggregateMetadata<Position>.Config
+                                                                .HasSource(Specs.Map.Facts.ToAggregates.Positions),
+
+                                     AggregateMetadata<Period>.Config
+                                         .HasSource(Specs.Map.Facts.ToAggregates.Periods));
+
         public AggregateConstructionMetadataSource()
         {
-            var metadata = (HierarchyMetadata)HierarchyMetadata.Config
-                                 .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates))
-                                 .Childs(
-
-                                         AggregateMetadata<Price>.Config
-                                             .HasSource(Specs.Map.Facts.ToAggregates.Prices)
-                                             .HasValueObject(Specs.Map.Facts.ToAggregates.DeniedPositions, Specs.Find.Aggs.DeniedPositions)
-                                             .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions, Specs.Find.Aggs.MasterPositions)
-                                             .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions, Specs.Find.Aggs.AdvertisementAmountRestrictions),
-
-                                         AggregateMetadata<Order>.Config
-                                             .HasSource(Specs.Map.Facts.ToAggregates.Orders)
-                                             .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPositions, Specs.Find.Aggs.OrderPositions)
-                                             .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPrices, Specs.Find.Aggs.OrderPrices),
-
-                                         AggregateMetadata<Position>.Config
-                                             .HasSource(Specs.Map.Facts.ToAggregates.Positions),
-
-                                         AggregateMetadata<Period>
-                                             .Config
-                                             .HasSource(Specs.Map.Facts.ToAggregates.Periods)
-                    );
-
-            Metadata = new Dictionary<Uri, IMetadataElement> { { metadata.Identity.Id, metadata} };
+            Metadata = new Dictionary<Uri, IMetadataElement> { { _metadata.Identity.Id, _metadata } };
         }
 
         public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }
