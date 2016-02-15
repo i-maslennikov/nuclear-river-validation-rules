@@ -52,7 +52,6 @@ using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
-using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
@@ -213,7 +212,6 @@ namespace NuClear.Replication.EntryPoint.DI
             container.RegisterTypeWithDependencies(typeof(CorporateBusOperationsReceiver), Lifetime.PerScope, null)
                      .RegisterTypeWithDependencies(typeof(ServiceBusOperationsReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
-                     .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, TrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
                      .RegisterType<IOperationSender<AggregateOperation>, SqlStoreSender<AggregateOperation, AggregatesFlow>>(Lifetime.PerScope)
                      .RegisterType<IOperationSender<RecalculateStatisticsOperation>, SqlStoreSender<RecalculateStatisticsOperation, StatisticsFlow>>(Lifetime.PerScope)

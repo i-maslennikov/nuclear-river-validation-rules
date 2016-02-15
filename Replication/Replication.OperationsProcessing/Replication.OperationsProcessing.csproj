@@ -202,7 +202,6 @@
     <Compile Include="Transports\CorporateBus\CorporateBusOperationsReceiver.cs" />
     <Compile Include="Transports\SQLStore\IOperationSerializer.cs" />
     <Compile Include="Transports\ServiceBus\ServiceBusOperationsReceiverTelemetryDecorator.cs" />
-    <Compile Include="Transports\ServiceBus\TrackedUseCaseConfigurator.cs" />
     <Compile Include="Transports\ServiceBus\UnknownEntityType.cs" />
     <Compile Include="Transports\SQLStore\IdentityGenerator.cs" />
     <Compile Include="Transports\SQLStore\IIdentityGenerator.cs" />
