@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NuClear.CustomerIntelligence.StateInitialization.EntryPoint</RootNamespace>
     <AssemblyName>2GIS.NuClear.CustomerIntelligence.StateInitialization.EntryPoint</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -71,9 +71,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Replication\Replication.Bulk.Api\Replication.Bulk.Api.csproj">
+    <ProjectReference Include="..\..\Replication\Replication.Bulk.Api\Replication.Bulk.API.csproj">
       <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
-      <Name>Replication.Bulk.Api</Name>
+      <Name>Replication.Bulk.API</Name>
     </ProjectReference>
     <ProjectReference Include="..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
       <Project>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</Project>
