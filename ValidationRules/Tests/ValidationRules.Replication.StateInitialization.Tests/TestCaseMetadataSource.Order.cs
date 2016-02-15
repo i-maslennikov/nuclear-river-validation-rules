@@ -28,12 +28,20 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             new Facts::OrderPosition { Id = 3, PricePositionId = 3 },
             new Facts::PricePosition { Id = 3, PositionId = 4 },
             new Facts::OrderPositionAdvertisement {Id = 3, PositionId = 5, CategoryId = 10, FirmAddressId = 11, OrderPositionId = 3 },
-            new Facts::Position { Id = 4, IsComposite = true }
+            new Facts::Position { Id = 4, IsComposite = true },
+
+            // OrderPositionAdvertisement & Category1
+            new Facts::OrderPosition { Id = 4, PricePositionId = 4 },
+            new Facts::PricePosition { Id = 4 },
+            new Facts::OrderPositionAdvertisement { Id = 4, CategoryId = 3, OrderPositionId = 4 },
+            new Facts::Category { Id = 3, ParentId = 2 },
+            new Facts::Category { Id = 2, ParentId = 1 },
+            new Facts::Category { Id = 1 }
 
             )
         .Aggregate(
             // OrderPositionAdvertisement
-            new Aggs::OrderPosition { PackagePositionId = 2, ItemPositionId = 3, CategoryId = 10, FirmAddressId = 11 },
+            new Aggs::OrderPosition { PackagePositionId = 2, ItemPositionId = 3, Category3Id = 10, FirmAddressId = 11 },
             new Aggs::AdvertisementAmountRestriction { PositionId = 2 },
 
             // OrderPosition
@@ -42,11 +50,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             new Aggs::Position { Id = 3 },
 
             // OrderPositionAdvertisement & OrderPosition
-            new Aggs::OrderPosition { PackagePositionId = 4, ItemPositionId = 5, CategoryId = 10, FirmAddressId = 11 },
+            new Aggs::OrderPosition { PackagePositionId = 4, ItemPositionId = 5, Category3Id = 10, FirmAddressId = 11 },
             new Aggs::OrderPosition { PackagePositionId = 4, ItemPositionId = 4 },
             new Aggs::AdvertisementAmountRestriction { PositionId = 4 },
-            new Aggs::Position { Id = 4 }
+            new Aggs::Position { Id = 4 },
 
+            // OrderPositionAdvertisement & Category1
+            new Aggs::OrderPosition { Category3Id = 3, Category1Id = 1 },
+            new Aggs::AdvertisementAmountRestriction()
             );
 
         // ReSharper disable once UnusedMember.Local

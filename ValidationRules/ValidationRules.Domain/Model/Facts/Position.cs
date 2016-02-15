@@ -6,6 +6,7 @@ namespace NuClear.ValidationRules.Domain.Model.Facts
         public long PositionCategoryId { get; set; }
         public bool IsControlledByAmount { get; set; }
         public bool IsComposite { get; set; }
+        public int CompareMode { get; set; }
         public string Name { get; set; }
     }
 }

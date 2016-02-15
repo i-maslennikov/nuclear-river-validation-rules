@@ -103,6 +103,7 @@ create table PriceContext.Position(
     PositionCategoryId bigint not null, -- в erm назван CategoryId
     IsControlledByAmount bit not null,
     IsComposite bit not null,
+	CompareMode int not null,
     Name nvarchar(max) not null
 )
 go
