@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Features;
+using NuClear.River.Common.Metadata.Identities;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Builders
+namespace NuClear.River.Common.Metadata.Builders
 {
     public sealed class BoundedContextElementBuilder : MetadataElementBuilder<BoundedContextElementBuilder, BoundedContextElement>
     {

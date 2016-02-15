@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates

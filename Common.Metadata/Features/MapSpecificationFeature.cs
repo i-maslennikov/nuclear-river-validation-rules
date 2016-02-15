@@ -1,7 +1,7 @@
 ﻿using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Features
+namespace NuClear.River.Common.Metadata.Features
 {
     public class MapSpecificationFeature<TSource, TTarget> : IMetadataFeature
     {

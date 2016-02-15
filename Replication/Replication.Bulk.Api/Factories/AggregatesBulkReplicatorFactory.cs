@@ -4,10 +4,10 @@ using System.Linq;
 
 using LinqToDB.Data;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Bulk.API.Replicators;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Bulk.API.Factories

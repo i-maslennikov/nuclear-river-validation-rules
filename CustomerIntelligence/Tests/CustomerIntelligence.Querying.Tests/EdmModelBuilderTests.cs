@@ -8,10 +8,10 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Querying.OData.Building;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
 
 using NUnit.Framework;
 using NUnit.Framework.Constraints;

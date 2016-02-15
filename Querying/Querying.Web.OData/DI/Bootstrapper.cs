@@ -6,8 +6,6 @@ using System.Web.OData.Extensions;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.AdvancedSearch.Common.Identities.Connections;
-using NuClear.AdvancedSearch.Common.Settings;
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.DI.Unity.Config;
 using NuClear.Metamodeling.Processors;
@@ -17,6 +15,8 @@ using NuClear.Querying.EntityFramework.Building;
 using NuClear.Querying.EntityFramework.Emit;
 using NuClear.Querying.Web.OData.DataAccess;
 using NuClear.Querying.Web.OData.DynamicControllers;
+using NuClear.River.Common.Identities.Connections;
+using NuClear.River.Common.Settings;
 using NuClear.Settings.API;
 using NuClear.Settings.Unity;
 using NuClear.Storage.API.ConnectionStrings;

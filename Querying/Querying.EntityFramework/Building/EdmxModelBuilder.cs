@@ -7,9 +7,9 @@ using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.EntityFramework.Emit;
+using NuClear.River.Common.Metadata.Elements;
 
 namespace NuClear.Querying.EntityFramework.Building
 {

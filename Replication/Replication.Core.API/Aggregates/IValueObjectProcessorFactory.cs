@@ -1,4 +1,4 @@
-﻿using NuClear.AdvancedSearch.Common.Metadata.Elements;
+﻿using NuClear.River.Common.Metadata.Elements;
 
 namespace NuClear.Replication.Core.API.Aggregates
 {

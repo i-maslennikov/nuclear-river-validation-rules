@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata;
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Equality;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.River.Common.Metadata;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Equality;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.Aggregates

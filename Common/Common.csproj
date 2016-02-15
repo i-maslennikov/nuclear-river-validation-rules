@@ -7,8 +7,8 @@
     <ProjectGuid>{D4238D0C-3315-4449-B1AE-80F716D58D04}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuClear.AdvancedSearch.Common</RootNamespace>
-    <AssemblyName>2GIS.NuClear.AdvancedSearch.Common</AssemblyName>
+    <RootNamespace>NuClear.River.Common</RootNamespace>
+    <AssemblyName>2GIS.NuClear.River.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

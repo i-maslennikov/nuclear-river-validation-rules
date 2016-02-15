@@ -7,9 +7,9 @@ using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Values;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Provider;
+using NuClear.River.Common.Metadata.Elements;
 
 namespace NuClear.Querying.OData.Building
 {

@@ -2,7 +2,7 @@
 
 using NuClear.Metamodeling.Elements;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     public static class MetadataElementExtensions
     {

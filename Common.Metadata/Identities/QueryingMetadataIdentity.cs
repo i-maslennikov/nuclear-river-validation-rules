@@ -3,7 +3,7 @@
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Kinds;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Identities
+namespace NuClear.River.Common.Metadata.Identities
 {
     public sealed class QueryingMetadataIdentity : MetadataKindIdentityBase<QueryingMetadataIdentity>
     {

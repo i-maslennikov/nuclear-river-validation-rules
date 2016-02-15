@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.Metamodeling.Elements;
+using NuClear.River.Common.Metadata.Elements;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Builders
+namespace NuClear.River.Common.Metadata.Builders
 {
     public class StatisticsRecalculationMetadataBuilder<T> : MetadataElementBuilder<StatisticsRecalculationMetadataBuilder<T>, StatisticsRecalculationMetadata<T>>
     {

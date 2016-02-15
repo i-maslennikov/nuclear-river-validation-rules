@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Model.Operations
+namespace NuClear.River.Common.Metadata.Model.Operations
 {
     public sealed class InitializeAggregate : AggregateOperation
     {

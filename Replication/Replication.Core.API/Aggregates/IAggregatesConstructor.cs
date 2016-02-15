@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.API.Aggregates
 {

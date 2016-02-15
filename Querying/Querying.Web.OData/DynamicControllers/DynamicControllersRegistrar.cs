@@ -5,12 +5,12 @@ using System.Reflection.Emit;
 using System.Web.Http;
 using System.Web.OData;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.EntityFramework.Building;
 using NuClear.Querying.Web.OData.Controllers;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Features;
 
 namespace NuClear.Querying.Web.OData.DynamicControllers
 {

@@ -7,9 +7,6 @@ using LinqToDB.Mapping;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.AdvancedSearch.Common.Identities.Connections;
-using NuClear.AdvancedSearch.Common.Metadata.Equality;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.Assembling.TypeProcessing;
 using NuClear.CustomerIntelligence.Domain;
@@ -76,6 +73,9 @@ using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.River.Common.Identities.Connections;
+using NuClear.River.Common.Metadata.Equality;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Security;
 using NuClear.Security.API;
 using NuClear.Security.API.UserContext;

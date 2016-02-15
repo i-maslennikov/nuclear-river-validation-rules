@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata
+namespace NuClear.River.Common.Metadata
 {
     public static class Specs
     {
