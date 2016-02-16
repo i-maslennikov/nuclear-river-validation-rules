@@ -23,8 +23,9 @@ namespace NuClear.Querying.OData.Building
         {
             if (metadataProvider == null)
             {
-                throw new ArgumentNullException("metadataProvider");
+                throw new ArgumentNullException(nameof(metadataProvider));
             }
+
             _metadataProvider = metadataProvider;
         }
 
@@ -32,12 +33,12 @@ namespace NuClear.Querying.OData.Building
         {
             if (contextUrl == null)
             {
-                throw new ArgumentNullException("contextUrl");
+                throw new ArgumentNullException(nameof(contextUrl));
             }
 
             BoundedContextElement boundedContextElement;
             _metadataProvider.TryGetMetadata(contextUrl, out boundedContextElement);
-            if (boundedContextElement == null || boundedContextElement.ConceptualModel == null)
+            if (boundedContextElement?.ConceptualModel == null)
             {
                 return null;
             }
@@ -49,7 +50,7 @@ namespace NuClear.Querying.OData.Building
         {
             if (context == null)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
 
             if (context.ConceptualModel == null)
@@ -108,15 +109,9 @@ namespace NuClear.Querying.OData.Building
                 _registeredTypes = new Dictionary<string, IEdmSchemaType>();
             }
 
-            public string NamespaceName { get; private set; }
+            public string NamespaceName { get; }
 
-            public IEnumerable<IEdmSchemaType> RegisteredTypes
-            {
-                get
-                {
-                    return _registeredTypes.Values;
-                }
-            }
+            public IEnumerable<IEdmSchemaType> RegisteredTypes => _registeredTypes.Values;
 
             public IEdmStructuredType ResolveComplexType(EntityElement entityElement)
             {
@@ -144,7 +139,7 @@ namespace NuClear.Querying.OData.Building
                 if (!_registeredTypes.TryGetValue(typeName, out enumType))
                 {
                     _registeredTypes.Add(typeName, enumType = BuildEnumType(typeName, enumTypeElement));
-                    
+
                     AnnotateElement(enumType, enumTypeElement.Identity.Id);
                 }
 
@@ -197,7 +192,7 @@ namespace NuClear.Querying.OData.Building
             {
                 var entityType = new EdmEntityType(NamespaceName, typeName);
                 var keyIds = new HashSet<IMetadataElementIdentity>(entityElement.KeyProperties.Select(x => x.Identity));
-                
+
                 foreach (var propertyElement in entityElement.Properties)
                 {
                     var propertyName = propertyElement.ResolveName();
@@ -313,7 +308,7 @@ namespace NuClear.Querying.OData.Building
                         return EdmPrimitiveTypeKind.String;
 
                     default:
-                        throw new ArgumentOutOfRangeException("typeKind");
+                        throw new ArgumentOutOfRangeException(nameof(typeKind));
                 }
             }
 
@@ -328,7 +323,7 @@ namespace NuClear.Querying.OData.Building
                     case EntityRelationCardinality.Many:
                         return EdmMultiplicity.Many;
                     default:
-                        throw new ArgumentOutOfRangeException("cardinality");
+                        throw new ArgumentOutOfRangeException(nameof(cardinality));
                 }
             }
         }

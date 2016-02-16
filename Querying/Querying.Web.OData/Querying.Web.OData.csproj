@@ -239,7 +239,7 @@
     <Compile Include="EdmModelWithClrTypesBuilder.cs" />
     <Compile Include="DataAccess\ODataConnectionFactory.cs" />
     <Compile Include="DataAccess\ODataDbContext.cs" />
-    <Compile Include="ODataModelRegistrator.cs" />
+    <Compile Include="ODataModelRegistratrar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

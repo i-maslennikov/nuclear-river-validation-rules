@@ -16,7 +16,7 @@ using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Querying.Web.OData
 {
-    internal sealed class ODataModelRegistrator
+    public sealed class ODataModelRegistratrar
     {
         private static readonly ConfigureHttpRequest ConfigureHttpRequest = Bootstrapper.ConfigureHttpRequest;
 
@@ -24,7 +24,7 @@ namespace NuClear.Querying.Web.OData
         private readonly DynamicControllersRegistrar _dynamicControllersRegistrar;
         private readonly EdmModelWithClrTypesBuilder _edmModelWithClrTypesBuilder;
 
-        public ODataModelRegistrator(IMetadataProvider metadataProvider, DynamicControllersRegistrar dynamicControllersRegistrar, EdmModelWithClrTypesBuilder edmModelWithClrTypesBuilder)
+        public ODataModelRegistratrar(IMetadataProvider metadataProvider, DynamicControllersRegistrar dynamicControllersRegistrar, EdmModelWithClrTypesBuilder edmModelWithClrTypesBuilder)
         {
             _metadataProvider = metadataProvider;
             _dynamicControllersRegistrar = dynamicControllersRegistrar;

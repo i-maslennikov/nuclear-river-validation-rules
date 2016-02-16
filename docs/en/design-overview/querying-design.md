@@ -148,9 +148,58 @@ public sealed class DynamicControllersRegistrar
 
 ```
 
-As you can see here, `DynamicControllersRegistrar` creates separate assemblies with controller types for diffent bounded contexts.
+As you can see here, `DynamicControllersRegistrar` creates separate assemblies with controller types for different bounded contexts.
 
 The actual code with implementation details is [here](https://github.com/2gis/nuclear-river/blob/master/Querying/Querying.Web.OData/DynamicControllers/DynamicControllersRegistrar.cs).
 
-Then `` type comes into play.
+Then `ODataModelRegistratrar` type comes into play. It registers all provided bounded contexts with `System.Web.Http.HttpServer` instance and creates a pipeline of HTTP request handling:
 
+```csharp
+public sealed class ODataModelRegistratrar
+{
+    public ODataModelRegistratrar(
+        IMetadataProvider metadataProvider, 
+        DynamicControllersRegistrar dynamicControllersRegistrar, 
+        EdmModelWithClrTypesBuilder edmModelWithClrTypesBuilder)
+    {
+            _metadataProvider = metadataProvider;
+            _dynamicControllersRegistrar = dynamicControllersRegistrar;
+            _edmModelWithClrTypesBuilder = edmModelWithClrTypesBuilder;
+    }
+
+    public void RegisterModels(HttpServer httpServer)
+    {
+        MetadataSet metadataSet;
+        if (!_metadataProvider.TryGetMetadata<QueryingMetadataIdentity>(out metadataSet))
+        {
+            return;
+        }
+
+        var contexts = metadataSet.Metadata.Values.OfType<BoundedContextElement>();
+        foreach (var context in contexts)
+        {
+            var contextId = context.Identity.Id;
+            var edmModel = _edmModelWithClrTypesBuilder.Build(contextId);
+
+            var routePrefix = contextId.Segments.Last();
+            MapRoute(routePrefix, edmModel, httpServer, ConfigureHttpRequest);
+
+            _dynamicControllersRegistrar.RegisterDynamicControllers(contextId);
+        }
+    }    
+
+    // Implementation details ommited for readability
+}
+```
+
+The actual code with implementation details is [here](https://github.com/2gis/nuclear-river/blob/master/Querying/Querying.Web.OData/ODataModelRegistratrar.cs).
+
+The last important thing to notice here is `EdmModelWithClrTypesBuilder` and it's dependencies. `EdmModelWithClrTypesBuilder` type is just a facade that executes the following tasks:
+
+* builds [EDM](https://msdn.microsoft.com/library/ee382825.aspx) model with `EdmModelBuilder` class instance
+* builds Entity Framework model ([DbModel](https://msdn.microsoft.com/en-us/library/system.data.entity.infrastructure.dbmodel.aspx)) with `EdmxModelBuilder` class instance
+* annotates EDM model's types with CLR types from DbModel
+
+As the result, we obtain consistent instance of type `IEdmModel` that will be used to configure OData middleware from `Microsoft.AspNet.OData` package. 
+
+It's also need to be notices, that we use the same bounded context's metadata descriptions through all stages, so changes in these descriptions leads to controllers, CLR types and models updating respectivetely without having to write additional code. 
