@@ -20,6 +20,7 @@ using NuClear.River.Common.Settings;
 using NuClear.Settings.API;
 using NuClear.Settings.Unity;
 using NuClear.Storage.API.ConnectionStrings;
+using NuClear.Storage.API.Readings;
 using NuClear.Tracing.API;
 using NuClear.Tracing.Environment;
 using NuClear.Tracing.Log4Net;
@@ -110,7 +111,7 @@ namespace NuClear.Querying.Web.OData.DI
             var edmModel = request.ODataProperties().Model;
 
             return container
-                .RegisterType<IFinder, ODataFinder>(Lifetime.PerScope)
+                .RegisterType<IQuery, ODataQuery>(Lifetime.PerScope)
                 .RegisterInstance(edmModel, Lifetime.PerScope);
         }
     }

@@ -7,23 +7,16 @@ namespace NuClear.River.Common.Metadata.Features
 {
     public sealed class ElementMappingFeature : IUniqueMetadataFeature
     {
-        private readonly IMetadataElement _mappedElement;
-
         public ElementMappingFeature(IMetadataElement mappedElement)
         {
             if (mappedElement == null)
             {
-                throw new ArgumentNullException("mappedElement");
+                throw new ArgumentNullException(nameof(mappedElement));
             }
-            _mappedElement = mappedElement;
+
+            MappedElement = mappedElement;
         }
 
-        public IMetadataElement MappedElement
-        {
-            get
-            {
-                return _mappedElement;
-            }
-        }
+        public IMetadataElement MappedElement { get; }
     }
 }

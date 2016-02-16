@@ -221,6 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\VersionController.cs" />
+    <Compile Include="DataAccess\Specs.cs" />
     <Compile Include="Log4NetWebApiExceptionLogger.cs" />
     <Compile Include="DataAccess\QueryableExtensions.cs" />
     <Compile Include="DataAccess\ODataDbConfiguration.cs" />
@@ -228,7 +229,7 @@
     <Compile Include="Settings\WebApplicationSettings.cs" />
     <Compile Include="DynamicControllers\EntityElementIdAttribute.cs" />
     <Compile Include="Controllers\EnableQueryAttributeProvider.cs" />
-    <Compile Include="DataAccess\ODataFinder.cs" />
+    <Compile Include="DataAccess\ODataQuery.cs" />
     <Compile Include="DynamicControllers\DynamicAssembliesRegistry.cs" />
     <Compile Include="DynamicControllers\DynamicControllersRegistrar.cs" />
     <Compile Include="Controllers\GenericODataController.cs" />
