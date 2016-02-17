@@ -24,35 +24,35 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
     {
         private static readonly object[] data =
             {
-                new Facts::Project{ Id = 1, OrganizationUnitId = 1},
-                new Facts::Project{ Id = 2, OrganizationUnitId = 2},
-                new Facts::Project{ Id = 3, OrganizationUnitId = 3},
+                new Facts::Project { Id = 1, OrganizationUnitId = 1 },
+                new Facts::Project { Id = 2, OrganizationUnitId = 2 },
+                new Facts::Project { Id = 3, OrganizationUnitId = 3 },
 
-                new Facts::Firm { Id = 10, OrganizationUnitId = 1},
-                new Facts::Firm { Id = 11, OrganizationUnitId = 1},
-                new Facts::Firm { Id = 12, OrganizationUnitId = 2},
-                new Facts::Firm { Id = 13, OrganizationUnitId = 3},
+                new Facts::Firm { Id = 10, OrganizationUnitId = 1 },
+                new Facts::Firm { Id = 11, OrganizationUnitId = 1 },
+                new Facts::Firm { Id = 12, OrganizationUnitId = 2 },
+                new Facts::Firm { Id = 13, OrganizationUnitId = 3 },
 
-                new Facts::FirmAddress{ Id = 10, FirmId = 10},
-                new Facts::FirmAddress{ Id = 11, FirmId = 11},
-                new Facts::FirmAddress{ Id = 12, FirmId = 12},
-                new Facts::FirmAddress{ Id = 13, FirmId = 13},
+                new Facts::FirmAddress { Id = 10, FirmId = 10 },
+                new Facts::FirmAddress { Id = 11, FirmId = 11 },
+                new Facts::FirmAddress { Id = 12, FirmId = 12 },
+                new Facts::FirmAddress { Id = 13, FirmId = 13 },
 
-                new Facts::Category{ Id = 100 },
-                new Facts::Category{ Id = 101 },
-                new Facts::Category{ Id = 102 },
+                new Facts::Category { Id = 100 },
+                new Facts::Category { Id = 101 },
+                new Facts::Category { Id = 102 },
 
-                new Facts::CategoryFirmAddress{ FirmAddressId = 10, CategoryId = 100},
-                new Facts::CategoryFirmAddress{ FirmAddressId = 10, CategoryId = 101},
-                new Facts::CategoryFirmAddress{ FirmAddressId = 10, CategoryId = 102},
+                new Facts::CategoryFirmAddress { FirmAddressId = 10, CategoryId = 100 },
+                new Facts::CategoryFirmAddress { FirmAddressId = 10, CategoryId = 101 },
+                new Facts::CategoryFirmAddress { FirmAddressId = 10, CategoryId = 102 },
 
-                new Facts::CategoryFirmAddress{ FirmAddressId = 11, CategoryId = 100},
-                new Facts::CategoryFirmAddress{ FirmAddressId = 11, CategoryId = 101},
+                new Facts::CategoryFirmAddress { FirmAddressId = 11, CategoryId = 100 },
+                new Facts::CategoryFirmAddress { FirmAddressId = 11, CategoryId = 101 },
 
-                new Facts::CategoryFirmAddress{ FirmAddressId = 12, CategoryId = 100},
+                new Facts::CategoryFirmAddress { FirmAddressId = 12, CategoryId = 100 },
 
-                new Facts::CategoryFirmAddress{ FirmAddressId = 13, CategoryId = 100},
-                new Facts::CategoryFirmAddress{ FirmAddressId = 13, CategoryId = 101},
+                new Facts::CategoryFirmAddress { FirmAddressId = 13, CategoryId = 100 },
+                new Facts::CategoryFirmAddress { FirmAddressId = 13, CategoryId = 101 },
 
                 new Bit::FirmCategoryStatistics { ProjectId = 1, FirmId = 10, CategoryId = 100, },
                 new Bit::FirmCategoryStatistics { ProjectId = 1, FirmId = 10, CategoryId = 101, },
@@ -75,14 +75,14 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
                 new CI::Firm { Id = 12, ProjectId = 2, },
                 new CI::Firm { Id = 13, ProjectId = 3, },
 
-                new Statistics::FirmCategory3 { FirmId = 10, CategoryId = 100, },
-                new Statistics::FirmCategory3 { FirmId = 10, CategoryId = 101, },
-                new Statistics::FirmCategory3 { FirmId = 10, CategoryId = 102, },
-                new Statistics::FirmCategory3 { FirmId = 11, CategoryId = 100, },
-                new Statistics::FirmCategory3 { FirmId = 11, CategoryId = 101, },
-                new Statistics::FirmCategory3 { FirmId = 12, CategoryId = 100, },
-                new Statistics::FirmCategory3 { FirmId = 13, CategoryId = 100, Shows = 2, Hits = 1, AdvertisersShare = 1f, FirmCount = 1 },
-                new Statistics::FirmCategory3 { FirmId = 13, CategoryId = 101, },
+                new Statistics::FirmCategory3 { ProjectId = 1, FirmId = 10, CategoryId = 100, },
+                new Statistics::FirmCategory3 { ProjectId = 1, FirmId = 10, CategoryId = 101, },
+                new Statistics::FirmCategory3 { ProjectId = 1, FirmId = 10, CategoryId = 102, },
+                new Statistics::FirmCategory3 { ProjectId = 1, FirmId = 11, CategoryId = 100, },
+                new Statistics::FirmCategory3 { ProjectId = 1, FirmId = 11, CategoryId = 101, },
+                new Statistics::FirmCategory3 { ProjectId = 2, FirmId = 12, CategoryId = 100, },
+                new Statistics::FirmCategory3 { ProjectId = 3, FirmId = 13, CategoryId = 100, Shows = 2, Hits = 1, AdvertisersShare = 1f, FirmCount = 1 },
+                new Statistics::FirmCategory3 { ProjectId = 3, FirmId = 13, CategoryId = 101, },
             };
 
         [Test]
