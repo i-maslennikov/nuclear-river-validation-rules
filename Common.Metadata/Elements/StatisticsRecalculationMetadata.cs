@@ -16,7 +16,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Elements
         public StatisticsRecalculationMetadata(
              MapToObjectsSpecProvider<T, T> mapSpecificationProviderForSource,
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget,
-            Func<long, IReadOnlyCollection<long?>, FindSpecification<T>> findSpecificationProvider,
+            Func<long, IReadOnlyCollection<long>, FindSpecification<T>> findSpecificationProvider,
             IEnumerable<IMetadataFeature> features) : base(features)
         {
             MapSpecificationProviderForSource = mapSpecificationProviderForSource;
@@ -38,6 +38,6 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Elements
 
         public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForTarget { get; private set; }
 
-        public Func<long, IReadOnlyCollection<long?>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
+        public Func<long, IReadOnlyCollection<long>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
     }
 }

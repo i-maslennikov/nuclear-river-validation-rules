@@ -1,23 +1,15 @@
-﻿using System;
+﻿using NuClear.AdvancedSearch.Common.Metadata.Context;
 
 namespace NuClear.AdvancedSearch.Common.Metadata.Model.Operations
 {
     public abstract class AggregateOperation : IOperation
     {
-        protected AggregateOperation(Type aggregateType, long aggregateId)
+        protected AggregateOperation(Predicate context)
         {
-            if (aggregateType == null)
-            {
-                throw new ArgumentNullException("aggregateType");
-            }
-
-            AggregateType = aggregateType;
-            AggregateId = aggregateId;
+            Context = context;
         }
 
-        public Type AggregateType { get; private set; }
-
-        public long AggregateId { get; private set; }
+        public Predicate Context { get; }
 
         public override bool Equals(object obj)
         {
@@ -25,10 +17,12 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Model.Operations
             {
                 return false;
             }
+
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
+
             if (GetType() != obj.GetType())
             {
                 return false;
@@ -39,22 +33,13 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Model.Operations
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = (AggregateType != null ? AggregateType.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ AggregateId.GetHashCode();
-                return hashCode;
-            }
+            return Context.GetHashCode();
         }
 
         private bool Equals(AggregateOperation other)
         {
-            return AggregateType == other.AggregateType && AggregateId == other.AggregateId;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0}<{1}>({2})", GetType().Name, AggregateType.Name, AggregateId);
+            // Тип уже проверен
+            return Context.Equals(other.Context);
         }
     }
 }

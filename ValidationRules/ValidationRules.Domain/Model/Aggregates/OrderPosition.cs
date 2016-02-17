@@ -1,9 +1,11 @@
+using NuClear.AdvancedSearch.Common.Metadata.Model;
+
 namespace NuClear.ValidationRules.Domain.Model.Aggregates
 {
     /// <summary>
     /// Связь заказа с номенклатурной позицией, импортируется из ERM.OrderPosition + ERM.OrderPositionAdv
     /// </summary>
-    public class OrderPosition
+    public sealed class OrderPosition : IAggregateValueObject
     {
         public long OrderId { get; set; }
         public long ItemPositionId { get; set; }

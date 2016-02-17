@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using Microsoft.Practices.Unity;
 
 using NuClear.AdvancedSearch.Common.Identities.Connections;
+using NuClear.AdvancedSearch.Common.Metadata.Context;
 using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Assembling.TypeProcessing;
-using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.OperationsProcessing;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Final;
-using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
-using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.DI.Unity.Config;
 using NuClear.DI.Unity.Config.RegistrationResolvers;
@@ -41,8 +39,6 @@ using NuClear.Messaging.Transports.CorporateBus.API;
 using NuClear.Messaging.Transports.ServiceBus;
 using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.Messaging.Transports.ServiceBus.LockRenewer;
-using NuClear.Metamodeling.Provider;
-using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
@@ -70,6 +66,7 @@ using NuClear.Settings.Unity;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.OperationsProcessing.Contexts;
 using NuClear.WCF.Client;
 using NuClear.WCF.Client.Config;
 
@@ -169,10 +166,8 @@ namespace NuClear.Replication.EntryPoint.DI
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator>(Lifetime.Singleton)
                      .RegisterValidationRulesTrackedUseCaseConfigurator()
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
-                     .RegisterType<IOperationSender<AggregateOperation>, SqlStoreSender<AggregateOperation, AggregatesFlow>>(Lifetime.PerScope)
-                     .RegisterType<IOperationSender<RecalculateStatisticsOperation>, SqlStoreSender<RecalculateStatisticsOperation, StatisticsFlow>>(Lifetime.PerScope)
-                     .RegisterValidationRulesAggregateOperationSerializer()
-                     .RegisterType<IOperationSerializer<RecalculateStatisticsOperation>, StatisticsOperationSerializer>();
+                     .RegisterType<IOperationSender, SqlStoreSender>(Lifetime.PerScope)
+                     .RegisterType<IOperationSerializer<AggregateOperation>, AggregateOperationSerializer>();
 
             // final
             container.RegisterTypeWithDependencies(typeof(SqlStoreReceiverTelemetryDecorator), Lifetime.PerScope, null)
@@ -202,15 +197,16 @@ namespace NuClear.Replication.EntryPoint.DI
 
                             .RegisterOne2ManyTypesPerTypeUniqueness<IMessageTransformerResolveStrategy, PrimaryMessageTransformerResolveStrategy>(Lifetime.PerScope)
                             .RegisterType<IMessageProcessingHandlerFactory, UnityMessageProcessingHandlerFactory>(Lifetime.PerScope)
-                            .RegisterType<IMessageProcessingContextAccumulatorFactory, UnityMessageProcessingContextAccumulatorFactory>(Lifetime.PerScope);
+                            .RegisterType<IMessageProcessingContextAccumulatorFactory, UnityMessageProcessingContextAccumulatorFactory>(Lifetime.PerScope)
+                            .RegisterType<IPredicateXmlSerializer, PredicateXmlSerializer>(Lifetime.Singleton);
         }
 
         private static IUnityContainer ConfigureReplication(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
         {
             return container
                 .RegisterValidationRulesFactsReplicator(entryPointSpecificLifetimeManagerFactory)
+                .RegisterValidationRulesAggregatesConstructor(entryPointSpecificLifetimeManagerFactory)
                 .RegisterType<IStatisticsImporterFactory, UnityStatisticsImporterFactory>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IAggregatesConstructor, AggregatesConstructor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStatisticsRecalculator, StatisticsRecalculator>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IFactDependencyProcessorFactory, UnityFactDependencyProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
@@ -227,6 +223,7 @@ namespace NuClear.Replication.EntryPoint.DI
                     { Scope.Erm, ErmConnectionStringIdentity.Instance },
                     { Scope.Facts, FactsConnectionStringIdentity.Instance },
                     { Scope.CustomerIntelligence, CustomerIntelligenceConnectionStringIdentity.Instance },
+                    { Scope.Aggregates, CustomerIntelligenceConnectionStringIdentity.Instance },
                     { Scope.Transport, TransportConnectionStringIdentity.Instance }
                 };
 
@@ -234,6 +231,7 @@ namespace NuClear.Replication.EntryPoint.DI
                 {
                     { Scope.Facts, FactsConnectionStringIdentity.Instance },
                     { Scope.CustomerIntelligence, CustomerIntelligenceConnectionStringIdentity.Instance },
+                    { Scope.Aggregates, CustomerIntelligenceConnectionStringIdentity.Instance },
                     { Scope.Transport, TransportConnectionStringIdentity.Instance }
                 };
 
@@ -245,6 +243,7 @@ namespace NuClear.Replication.EntryPoint.DI
             public const string Erm = "Erm";
             public const string Facts = "Facts";
             public const string CustomerIntelligence = "CustomerIntelligence";
+            public const string Aggregates = "Aggregates";
             public const string Transport = "Transport";
         }
     }

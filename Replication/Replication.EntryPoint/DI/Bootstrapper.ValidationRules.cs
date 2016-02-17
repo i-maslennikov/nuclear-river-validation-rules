@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Transactions;
 
 using LinqToDB.Mapping;
@@ -7,10 +8,9 @@ using LinqToDB.Mapping;
 using Microsoft.Practices.Unity;
 
 using NuClear.AdvancedSearch.Common.Metadata.Equality;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.CustomerIntelligence.Domain.Model;
-using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
+using NuClear.CustomerIntelligence.Storage;
 using NuClear.DI.Unity.Config;
 using NuClear.Metamodeling.Domain.Processors.Concrete;
 using NuClear.Metamodeling.Processors;
@@ -21,12 +21,13 @@ using NuClear.Metamodeling.Validators;
 using NuClear.Model.Common.Entities;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.Replication.Core;
+using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.API.Settings;
 using NuClear.Replication.Core.Facts;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 using NuClear.Storage.Core;
@@ -64,6 +65,7 @@ namespace NuClear.Replication.EntryPoint.DI
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(PerformedOperationsMessageFlowsMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(ImportOrderValidationConfigMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(FactsReplicationMetadataSource), Lifetime.Singleton);
+            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(AggregateConstructionMetadataSource), Lifetime.Singleton);
 
             return container;
         }
@@ -80,6 +82,7 @@ namespace NuClear.Replication.EntryPoint.DI
                                 {
                                     { Scope.Erm, Schema.Erm },
                                     { Scope.Facts, Schema.Facts },
+                                    { Scope.Aggregates, Schema.Aggregates },
                                     { Scope.Transport, OperationsProcessing.Transports.SQLStore.Schema.Transport },
                                 };
 
@@ -95,8 +98,8 @@ namespace NuClear.Replication.EntryPoint.DI
                 .RegisterType<IProcessingContext, ProcessingContext>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterInstance<ILinqToDbModelFactory>(
                     new LinqToDbModelFactory(schemaMapping, transactionOptions, storageSettings.SqlCommandTimeout), Lifetime.Singleton)
-                //.RegisterInstance<IObjectPropertyProvider>(
-                //    new LinqToDbPropertyProvider(schemaMapping.Values.ToArray()), Lifetime.Singleton)
+                .RegisterInstance<IObjectPropertyProvider>(
+                    new LinqToDbPropertyProvider(schemaMapping.Values.ToArray()), Lifetime.Singleton)
                 .RegisterType<IWritingStrategyFactory, WritingStrategyFactory>()
                 .RegisterType<IReadableDomainContextFactory, LinqToDBDomainContextFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IModifiableDomainContextFactory, LinqToDBDomainContextFactory>(entryPointSpecificLifetimeManagerFactory())
@@ -111,7 +114,8 @@ namespace NuClear.Replication.EntryPoint.DI
         private static IUnityContainer RegisterValidationRulesContexts(this IUnityContainer container)
         {
             return container.RegisterInstance(EntityTypeMap.CreateErmContext())
-                            .RegisterInstance(EntityTypeMap.CreateFactsContext());
+                            .RegisterInstance(EntityTypeMap.CreateFactsContext())
+                            .RegisterInstance(EntityTypeMap.CreateAggregateContext());
         }
 
         private static IUnityContainer RegisterValidationRulesTrackedUseCaseConfigurator(this IUnityContainer container)
@@ -119,12 +123,6 @@ namespace NuClear.Replication.EntryPoint.DI
             return container.RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, TrackedUseCaseConfigurator>(
                          Lifetime.Singleton,
                          new InjectionFactory(x => x.Resolve<TrackedUseCaseConfigurator>(new DependencyOverride<IEntityTypeMappingRegistry<ISubDomain>>(new ResolvedParameter(typeof(IEntityTypeMappingRegistry<ErmSubDomain>))))));
-        }
-
-        private static IUnityContainer RegisterValidationRulesAggregateOperationSerializer(this IUnityContainer container)
-        {
-            var factory = new InjectionFactory(x => new AggregateOperationSerializer(x.Resolve<IEntityTypeMappingRegistry<ErmSubDomain>>()));
-            return container.RegisterType<IOperationSerializer<AggregateOperation>, AggregateOperationSerializer>(factory);
         }
 
         private static IUnityContainer RegisterValidationRulesFactsReplicator(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
@@ -137,6 +135,17 @@ namespace NuClear.Replication.EntryPoint.DI
                                                                                                            c.Resolve<IFactProcessorFactory>(),
                                                                                                            new CustomerIntelligenceFactTypePriorityComparer(),
                                                                                                            new FactMetadataUriProvider())));
+        }
+
+        private static IUnityContainer RegisterValidationRulesAggregatesConstructor(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
+        {
+            return container.RegisterType<IAggregatesConstructor, AggregatesConstructor<AggregateSubDomain>>(entryPointSpecificLifetimeManagerFactory(),
+                                                                             new InjectionFactory(c => new AggregatesConstructor<AggregateSubDomain>(
+                                                                                                           c.Resolve<IMetadataProvider>(),
+                                                                                                           c.Resolve<IAggregateProcessorFactory>(),
+                                                                                                           c.Resolve<IEntityTypeMappingRegistry<AggregateSubDomain>>(),
+                                                                                                           new AggregateMetadataUriProvider()
+                                                                                                           )));
         }
     }
 }

@@ -3,7 +3,7 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
     /// <summary>
     /// Описание позиции, основной к данной.
     /// </summary>
-    public class MasterPosition
+    public sealed class MasterPosition
     {
         public long PositionId { get; set; }
         public long MasterPositionId { get; set; }

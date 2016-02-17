@@ -11,18 +11,19 @@ using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Primary
 {
     public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
     {
         private readonly IFactsReplicator _factsReplicator;
-        private readonly IOperationSender<AggregateOperation> _aggregateSender;
+        private readonly IOperationSender _aggregateSender;
         private readonly ITracer _tracer;
 
         public ImportFactsFromErmHandler(
             IFactsReplicator factsReplicator,
-            IOperationSender<AggregateOperation> aggregateSender,
+            IOperationSender aggregateSender,
             ITracer tracer)
         {
             _aggregateSender = aggregateSender;
@@ -59,7 +60,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
                 _tracer.Debug("Pushing events for aggregates recalculation");
-                _aggregateSender.Push(aggregates);
+                _aggregateSender.Push(aggregates, AggregatesFlow.Instance);
 
                 pushTransaction.Complete();
             }

@@ -1,9 +1,11 @@
+using NuClear.AdvancedSearch.Common.Metadata.Model;
+
 namespace NuClear.ValidationRules.Domain.Model.Aggregates
 {
     /// <summary>
     /// Связь прайс-листа с номеклатурной позицией, импортируется из ERM
     /// </summary>
-    public class AdvertisementAmountRestriction
+    public sealed class AdvertisementAmountRestriction : IAggregateValueObject
     {
         public long PriceId { get; set; }
         public long PositionId { get; set; }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Transactions;
 
 using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
+using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
@@ -19,23 +20,20 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
     public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
     {
         private readonly IFactsReplicator _factsReplicator;
-        private readonly IOperationSender<AggregateOperation> _aggregateSender;
-        private readonly IOperationSender<RecalculateStatisticsOperation> _statisticsSender;
+        private readonly IOperationSender _aggregateSender;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromErmHandler(
             IFactsReplicator factsReplicator,
-            IOperationSender<AggregateOperation> aggregateSender,
-            IOperationSender<RecalculateStatisticsOperation> statisticsSender, 
-            ITracer tracer,
-            ITelemetryPublisher telemetryPublisher)
+            IOperationSender aggregateSender,
+            ITelemetryPublisher telemetryPublisher,
+            ITracer tracer)
         {
             _aggregateSender = aggregateSender;
-            _statisticsSender = statisticsSender;
-            _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
             _factsReplicator = factsReplicator;
+            _tracer = tracer;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -68,18 +66,18 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(operations.Count);
 
             var statistics = result.OfType<RecalculateStatisticsOperation>().ToArray();
-            var aggregates = result.OfType<AggregateOperation>().ToArray();
+            var aggregates = result.OfType<AggregateOperation>().Except(statistics).ToArray();
 
             // We always need to use different transaction scope to operate with operation sender because it has its own store
             using (var pushTransaction = new TransactionScope(TransactionScopeOption.RequiresNew,
                                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
                 _tracer.Debug("Pushing events for statistics recalculation");
-                _statisticsSender.Push(statistics);
+                _aggregateSender.Push(statistics, StatisticsFlow.Instance);
                 _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(statistics.Length);
 
                 _tracer.Debug("Pushing events for aggregates recalculation");
-                _aggregateSender.Push(aggregates);
+                _aggregateSender.Push(aggregates, AggregatesFlow.Instance);
                 _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(aggregates.Length);
 
                 pushTransaction.Complete();

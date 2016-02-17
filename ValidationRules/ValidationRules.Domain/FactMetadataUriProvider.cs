@@ -13,4 +13,12 @@ namespace NuClear.ValidationRules.Domain
             return ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"{ReplicationMetadataName.PriceContextFacts}/{type.Name}", UriKind.Relative));
         }
     }
+
+    public sealed class AggregateMetadataUriProvider : IMetadataUriProvider
+    {
+        public Uri GetFor(Type type)
+        {
+            return ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"{ReplicationMetadataName.PriceContextAggregates}/{type.Name}", UriKind.Relative));
+        }
+    }
 }

@@ -1,4 +1,4 @@
-namespace NuClear.AdvancedSearch.Common.Metadata.Model
+﻿namespace NuClear.AdvancedSearch.Common.Metadata.Model
 {
     public interface IAggregateValueObject : IAggregatePart
     {

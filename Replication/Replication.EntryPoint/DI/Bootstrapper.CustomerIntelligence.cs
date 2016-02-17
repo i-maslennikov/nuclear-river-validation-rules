@@ -8,13 +8,11 @@ using LinqToDB.Mapping;
 using Microsoft.Practices.Unity;
 
 using NuClear.AdvancedSearch.Common.Metadata.Equality;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.OperationsProcessing;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
-using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.DI.Unity.Config;
 using NuClear.Metamodeling.Domain.Processors.Concrete;
@@ -26,12 +24,13 @@ using NuClear.Metamodeling.Validators;
 using NuClear.Model.Common.Entities;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.Replication.Core;
+using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.API.Settings;
 using NuClear.Replication.Core.Facts;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 using NuClear.Storage.Core;
@@ -125,12 +124,6 @@ namespace NuClear.Replication.EntryPoint.DI
                          new InjectionFactory(x => x.Resolve<TrackedUseCaseConfigurator>(new DependencyOverride<IEntityTypeMappingRegistry<ISubDomain>>(new ResolvedParameter(typeof(IEntityTypeMappingRegistry<ErmSubDomain>))))));
         }
 
-        private static IUnityContainer RegisterCustomerIntelligenceAggregateOperationSerializer(this IUnityContainer container)
-        {
-            var factory = new InjectionFactory(x => new AggregateOperationSerializer(x.Resolve<IEntityTypeMappingRegistry<CustomerIntelligenceSubDomain>>()));
-            return container.RegisterType<IOperationSerializer<AggregateOperation>, AggregateOperationSerializer>(factory);
-        }
-
         private static IUnityContainer RegisterCustomerIntelligenceFactsReplicator(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
         {
             return container.RegisterType<IFactsReplicator, FactsReplicator>(entryPointSpecificLifetimeManagerFactory(),
@@ -141,6 +134,17 @@ namespace NuClear.Replication.EntryPoint.DI
                                                                                                            c.Resolve<IFactProcessorFactory>(),
                                                                                                            new CustomerIntelligenceFactTypePriorityComparer(),
                                                                                                            new FactMetadataUriProvider())));
+        }
+
+        private static IUnityContainer RegisterCustomerIntelligenceAggregatesConstructor(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
+        {
+            return container.RegisterType<IAggregatesConstructor, AggregatesConstructor<CustomerIntelligenceSubDomain>>(entryPointSpecificLifetimeManagerFactory(),
+                                                                             new InjectionFactory(c => new AggregatesConstructor<CustomerIntelligenceSubDomain>(
+                                                                                                           c.Resolve<IMetadataProvider>(),
+                                                                                                           c.Resolve<IAggregateProcessorFactory>(),
+                                                                                                           c.Resolve<IEntityTypeMappingRegistry<CustomerIntelligenceSubDomain>>(),
+                                                                                                           new AggregateMetadataUriProvider()
+                                                                                                           )));
         }
     }
 }

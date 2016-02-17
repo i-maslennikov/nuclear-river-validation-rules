@@ -36,9 +36,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         {
             try
             {
-                foreach (var message in messages.OfType<OperationAggregatableMessage<RecalculateStatisticsOperation>>())
+                foreach (var message in messages.OfType<OperationAggregatableMessage<AggregateOperation>>())
                 {
-                    _statisticsRecalculator.Recalculate(message.Operations);
+                    _statisticsRecalculator.Recalculate(message.Operations.OfType<RecalculateStatisticsOperation>());
                     _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(message.Operations.Count);
 
                     _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);

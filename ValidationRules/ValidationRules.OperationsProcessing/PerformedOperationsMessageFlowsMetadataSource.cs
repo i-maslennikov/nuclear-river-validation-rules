@@ -8,6 +8,8 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
+using NuClear.Replication.OperationsProcessing.Final;
+using NuClear.ValidationRules.OperationsProcessing.Final;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -20,12 +22,20 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                    MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
                                                       .Accumulator<ImportFactsFromErmAccumulator>()
                                                       .Handler<ImportFactsFromErmHandler>()
-                                                      .To.Primary().Flow<ImportFactsFromErmFlow>().Connect(),
+                                                      .To.Primary().Flow<ImportFactsFromErmFlow>().Connect()
+                                                      .To.Final().Flow<AggregatesFlow>().Connect(),
 
                                    MessageFlowMetadata.Config.For<ImportFactsFromOrderValidationConfigFlow>()
                                                       .Accumulator<ImportFactsFromOrderValidationConfigAccumulator>()
                                                       .Handler<ImportFactsFromOrderValidationConfigHandler>()
-                                                      .To.Primary().Flow<ImportFactsFromOrderValidationConfigFlow>().Connect());
+                                                      .To.Primary().Flow<ImportFactsFromOrderValidationConfigFlow>().Connect()
+                                )
+                                .Final(
+                                   MessageFlowMetadata.Config.For<AggregatesFlow>()
+                                                      .Accumulator<AggregateOperationAccumulator<AggregatesFlow>>()
+                                                      .Handler<AggregateOperationAggregatableMessageHandler>()
+                                                      .To.Final().Flow<AggregatesFlow>().Connect()
+                                );
 
         public PerformedOperationsMessageFlowsMetadataSource()
         {

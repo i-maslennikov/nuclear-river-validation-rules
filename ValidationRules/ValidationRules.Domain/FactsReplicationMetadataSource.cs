@@ -8,13 +8,12 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider.Sources;
+using NuClear.ValidationRules.Domain.EntityTypes;
 using NuClear.ValidationRules.Domain.Model.Facts;
 using NuClear.ValidationRules.Domain.Specifications;
 
 namespace NuClear.ValidationRules.Domain
 {
-    using Aggregates = Model.Aggregates;
-
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "Reviewed. Suppression is OK here.")]
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1115:ParameterMustFollowComma", Justification = "Reviewed. Suppression is OK here.")]
     public class FactsReplicationMetadataSource : MetadataSourceBase<ReplicationMetadataIdentity>
@@ -28,18 +27,18 @@ namespace NuClear.ValidationRules.Domain
                     .Childs(FactMetadata<AssociatedPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.AssociatedPosition)
-                                .HasDependentAggregate<Aggregates::Price>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPosition)
-                                .HasDependentAggregate<Aggregates::Position>(Specs.Map.Facts.ToPositionAggregate.ByAssociatedPosition),
+                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPosition)
+                                .HasDependentAggregate<EntityTypePosition>(Specs.Map.Facts.ToPositionAggregate.ByAssociatedPosition),
 
                             FactMetadata<AssociatedPositionsGroup>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.AssociatedPositionsGroup)
-                                .HasDependentAggregate<Aggregates::Price>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPositionGroup),
+                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPositionGroup),
 
                             FactMetadata<Category>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Category)
-                                .HasDependentAggregate<Aggregates::Order>(Specs.Map.Facts.ToOrderAggregate.ByCategory),
+                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByCategory),
 
                             FactMetadata<DeniedPosition>
                                 .Config
@@ -51,17 +50,17 @@ namespace NuClear.ValidationRules.Domain
                             FactMetadata<Order>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Order)
-                                .HasMatchedAggregate<Aggregates::Order>(),
+                                .HasMatchedAggregate<EntityTypeOrder>(),
 
                             FactMetadata<OrderPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.OrderPosition)
-                                .HasDependentAggregate<Aggregates::Order>(Specs.Map.Facts.ToOrderAggregate.ByOrderPosition),
+                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByOrderPosition),
 
                             FactMetadata<OrderPositionAdvertisement>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.OrderPositionAdvertisement)
-                                .HasDependentAggregate<Aggregates::Order>(Specs.Map.Facts.ToOrderAggregate.ByOrderPositionAdvertisement),
+                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByOrderPositionAdvertisement),
 
                             // TODO: period
                             FactMetadata<OrganizationUnit>
@@ -71,18 +70,18 @@ namespace NuClear.ValidationRules.Domain
                             FactMetadata<Position>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Position)
-                                .HasMatchedAggregate<Aggregates::Position>()
-                                .HasDependentAggregate<Aggregates::Order>(Specs.Map.Facts.ToOrderAggregate.ByPosition),
+                                .HasMatchedAggregate<EntityTypePosition>()
+                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByPosition),
 
                             FactMetadata<Price>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Price)
-                                .HasMatchedAggregate<Aggregates::Price>(),
+                                .HasMatchedAggregate<EntityTypePrice>(),
 
                             FactMetadata<PricePosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.PricePosition)
-                                .HasDependentAggregate<Aggregates::Price>(Specs.Map.Facts.ToPriceAggregate.ByPricePosition),
+                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByPricePosition),
 
                             // TODO: period
                             FactMetadata<Project>

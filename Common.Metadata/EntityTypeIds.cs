@@ -49,5 +49,8 @@
         public const int FirmCategory1 = 10007;
         public const int FirmCategory2 = 10008;
         public const int FirmCategory3 = 10009;
+
+        // Значения, первоисточником которых является VR
+        public const int Period = 10101;
     }
 }

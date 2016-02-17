@@ -31,7 +31,7 @@ namespace NuClear.CustomerIntelligence.Domain
                                 .HasTarget(Specs.Map.CI.ToStatistics.FirmCategory3)
                                 .HasFilter(
                                     (projectId, categoryIds) =>
-                                    categoryIds.Contains(null)
+                                    categoryIds == null
                                         ? Specs.Find.CI.FirmCategory3.ByProject(projectId)
                                         : Specs.Find.CI.FirmCategory3.ByProjectAndCategories(projectId, categoryIds)));
 

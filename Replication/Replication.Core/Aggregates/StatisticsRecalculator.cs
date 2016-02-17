@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.AdvancedSearch.Common.Metadata.Context;
 using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Metamodeling.Provider;
@@ -14,14 +15,29 @@ namespace NuClear.Replication.Core.Aggregates
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly IStatisticsProcessorFactory _statisticsProcessorFactory;
+        private readonly ISlicer<StatisticsProcessorSlice> _slicer;
 
         public StatisticsRecalculator(IMetadataProvider metadataProvider, IStatisticsProcessorFactory statisticsProcessorFactory)
         {
             _metadataProvider = metadataProvider;
             _statisticsProcessorFactory = statisticsProcessorFactory;
+            _slicer = new StatisticsRecalculationSlicer();
         }
 
         public void Recalculate(IEnumerable<RecalculateStatisticsOperation> operations)
+        {
+            var processor = CreateProcessor();
+
+            using (Probe.Create("Recalculate Statistics Operations"))
+            {
+                foreach (var slice in _slicer.Slice(operations.Select(o => o.Context)))
+                {
+                    processor.RecalculateStatistics(slice);
+                }
+            }
+        }
+
+        private IStatisticsProcessor CreateProcessor()
         {
             MetadataSet metadataSet;
             if (!_metadataProvider.TryGetMetadata<StatisticsRecalculationMetadataIdentity>(out metadataSet))
@@ -30,14 +46,17 @@ namespace NuClear.Replication.Core.Aggregates
             }
 
             var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).Single();
-            var processor = _statisticsProcessorFactory.Create(metadata);
+            return _statisticsProcessorFactory.Create(metadata);
+        }
 
-            using (Probe.Create("Recalculate Statistics Operations"))
+        public sealed class StatisticsRecalculationSlicer : ISlicer<StatisticsProcessorSlice>
+        {
+            public IEnumerable<StatisticsProcessorSlice> Slice(IEnumerable<Predicate> predicates)
             {
-                foreach (var batch in operations.GroupBy(x => x.ProjectId, x => x.CategoryId))
-                {
-                    processor.RecalculateStatistics(batch.Key, batch.Distinct().ToArray());
-                }
+                return predicates.GroupBy(p => PredicateProperty.ProjectId.GetValue(p))
+                                 .Select(group => group.Any(p => PredicateProperty.Type.GetValue(p) == PredicateFactory.Type.ByProject)
+                                                      ? new StatisticsProcessorSlice { ProjectId = group.Key, CategoryIds = default(IReadOnlyCollection<long>) }
+                                                      : new StatisticsProcessorSlice { ProjectId = group.Key, CategoryIds = group.Select(p => PredicateProperty.CategoryId.GetValue(p)).Distinct().ToArray() });
             }
         }
     }

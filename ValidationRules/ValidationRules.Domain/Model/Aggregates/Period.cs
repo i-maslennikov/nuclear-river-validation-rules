@@ -11,7 +11,7 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
     /// 
     /// Должен соблюдаться инвариант: сумма всех периодов заказа/прайс-диста - неразрывна.
     /// </summary>
-    public class Period : IAggregateRoot
+    public sealed class Period : IAggregateRoot
     {
         public long Id { get; set; }
         public long OrganizationUnitId { get; set; }

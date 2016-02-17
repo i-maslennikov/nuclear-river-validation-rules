@@ -9,6 +9,7 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
+using NuClear.Replication.OperationsProcessing.Final;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing
 {
@@ -39,7 +40,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                                                       .To.Final().Flow<AggregatesFlow>().Connect(),
 
                                    MessageFlowMetadata.Config.For<StatisticsFlow>()
-                                                      .Accumulator<StatisticsOperationAccumulator<StatisticsFlow>>()
+                                                      .Accumulator<AggregateOperationAccumulator<StatisticsFlow>>()
                                                       .Handler<StatisticsAggregatableMessageHandler>()
                                                       .To.Final().Flow<StatisticsFlow>().Connect()
 

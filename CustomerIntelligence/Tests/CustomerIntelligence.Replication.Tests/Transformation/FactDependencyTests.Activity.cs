@@ -2,11 +2,11 @@
 
 using NuClear.AdvancedSearch.Common.Metadata;
 using NuClear.CustomerIntelligence.Domain;
+using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.Domain.Model.Erm;
 
 using NUnit.Framework;
 
-using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
 using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
@@ -33,8 +33,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Activity>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI::Firm>(3),
-                                          Aggregate.Recalculate<CI::Firm>(4));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3),
+                                          Aggregate.Recalculate(EntityTypeFirm.Instance, 4));
         }
 
         [Test]
@@ -51,8 +51,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Activity>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI::Firm>(3),
-                                          Aggregate.Recalculate<CI::Firm>(4));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3),
+                                          Aggregate.Recalculate(EntityTypeFirm.Instance, 4));
         }
         [Test]
         public void ShouldRecalculateFirmsIfActivityDeleted()
@@ -65,8 +65,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Activity>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI::Firm>(3),
-                                          Aggregate.Recalculate<CI::Firm>(4));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3),
+                                          Aggregate.Recalculate(EntityTypeFirm.Instance, 4));
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
+using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
@@ -18,15 +19,15 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
     public sealed class ImportFactsFromBitHandler : IMessageProcessingHandler
     {
         private readonly IStatisticsImporterFactory _statisticsImporterFactory;
-        private readonly IOperationSender<RecalculateStatisticsOperation> _sender;
+        private readonly IOperationSender _sender;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromBitHandler(
             IStatisticsImporterFactory statisticsImporterFactory,
-            IOperationSender<RecalculateStatisticsOperation> sender, 
-            ITracer tracer, 
-            ITelemetryPublisher telemetryPublisher)
+            IOperationSender sender,
+            ITelemetryPublisher telemetryPublisher,
+            ITracer tracer)
         {
             _statisticsImporterFactory = statisticsImporterFactory;
             _sender = sender;
@@ -49,11 +50,11 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                     {
                         foreach (var importer in _statisticsImporterFactory.Create(dto.GetType()))
                         {
-                            var opertaions = importer.Import(dto);
-                            _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(1);
-                            _sender.Push(opertaions.Cast<RecalculateStatisticsOperation>());
-                        }
+                        var opertaions = importer.Import(dto);
+                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(1);
+                        _sender.Push(opertaions.Cast<RecalculateStatisticsOperation>(), StatisticsFlow.Instance);
                     }
+                }
                 }
 
                 return MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded();

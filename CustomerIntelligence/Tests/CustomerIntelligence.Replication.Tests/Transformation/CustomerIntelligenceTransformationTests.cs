@@ -438,17 +438,17 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             public Transformation Initialize<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
             {
-                return Do<TAggregate>(x => x.Initialize(ids));
+                return Do<TAggregate>(x => x.Initialize(new AggregateProcessorSlice { AggregateIds = ids }));
             }
 
             public Transformation Recalculate<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
             {
-                return Do<TAggregate>(x => x.Recalculate(ids));
+                return Do<TAggregate>(x => x.Recalculate(new AggregateProcessorSlice { AggregateIds = ids }));
             }
 
             public Transformation Destroy<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
             {
-                return Do<TAggregate>(x => x.Destroy(ids));
+                return Do<TAggregate>(x => x.Destroy(new AggregateProcessorSlice { AggregateIds = ids }));
             }
 
             public Transformation Verify<T>(Expression<Action<IRepository<T>>> expression)
