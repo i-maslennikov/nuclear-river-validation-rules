@@ -2,9 +2,9 @@
 
 _Metadata descriptions_ are descriptions that could be used for configuration of **NuClear River** components. It's a DSL based on C#.This is the way to customize **NuClear River** behaviour for a specific [bounded context](http://martinfowler.com/bliki/BoundedContext.html). 
 
-Let's take a short tour on main parts of metadata descriptions. Yon can find all classes and interfaces discussed here in [2GIS.NuClear.Metamodeling](#) library.
+Let's take a short tour on main parts of metadata descriptions. You can find all classes and interfaces discussed here in [2GIS.NuClear.Metamodeling](#) library.
 
-> **Note** Code of **2GIS.NuClear.Metamodeling** library is in a progress of opensourcing. The detailed documentation would be found there.
+> **Note** Code of **2GIS.NuClear.Metamodeling** library is in a progress of opensourcing. The detailed documentation would be found [there](#).
 
 At first, you need to put an attention on `MetadataElement` abstract class. When you need to describe some valuable thing in you domain, you'll derive from this class. Every `MetadataElement` has an `Identity` of `IMetadataElementIdentity` type:
 
@@ -36,7 +36,7 @@ public sealed class EntityElement : MetadataElement
     {
         get
         {
-            return ResolveFeature<EntityIdentityFeature, IEnumerable<EntityPropertyElement>>(
+            return ResolveFeature<EntityIdentityFeature, IEnumerable<EnittyPropertyElement>>(
         		f => f.IdentifyingProperties, Enumerable.Empty<EntityPropertyElement>());
         }
     }

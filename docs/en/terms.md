@@ -46,7 +46,7 @@ UseCases is an another name for [Domain Events](http://martinfowler.com/eaaDev/D
 [Specifications](https://en.wikipedia.org/wiki/Specification_pattern) makes it possible to use expressions as objects. It gives high level code reuse possibility and makes **NuClear River** customizable. See [NuClear Aggregates Layer project docs](https://github.com/2gis/nuclear-aggregates-layer) for details
 
 #### Facts storage
-Storage used in Replication component that store data from source system. Usually, it use the same storage type and similar data schema as source system. The data stored here is used for aggregates costruction so it is the subset of data of the source system that needed for specific bounded context only
+Storage used in Replication component that store data from source system. Usually, it use the same storage type and similar data schema as source system. The data stored here is used to track changes in the source system for further aggregates costruction. It's a subset of the data of the source system that needed for specific bounded context only
 
 #### Aggregates (storage)
 Term used for objects from bounded context's description in sense of [Domain-Driven Design, DDD](https://en.wikipedia.org/wiki/Domain-driven_design). [Aggregates](http://martinfowler.com/bliki/DDD_Aggregate.html) is a cluster of domain objects that can be treated as a single unit. _Aggregates storage_ is the storage within Replication component to store aggregates

@@ -112,7 +112,7 @@ public sealed class InputEventHandler : IMessageProcessingHandler
 }
 ```
 
-That's almost everything you need to customize the _primary_ stage of **Replication** component. Now, you'll be able to consume events from source system and sync the stage of facts storage of **NuClear River**.
+That's almost everything you need to know about how to customize the _primary_ stage of **Replication** component. Now, you'll be able to consume events from source system and sync the stage of facts storage of **NuClear River**.
 
 Here is more details on how everything works under the hood. We have a simple abstraction `IFactsReplicator` in `NuClear.Replication.Core.API.Facts` namespace:
 
@@ -205,7 +205,7 @@ HierarchyMetadata aggregateConstructionMetadataRoot =
                     .HasSource(Specs.Map.Facts.ToCI.Territories);
 ```
 
-Here again we have hierarchical descriptions, but at this time, descriptions of aggregates. For every such aggregate we define [specification][terms] (e.g. `HasSource(Specs.Map.Facts.ToCI.Firms)` method call) that should be used to get a data from the facts storage, and one or more [specifications][terms] (e.g. `HasValueObject(Specs.Map.Facts.ToCI.FirmTerritories, Specs.Find.CI.FirmTerritories)` method call) that should be used to rebuild aggregate structure, it's value objects.
+Here again we have hierarchical descriptions, but at this time, descriptions of aggregates. For every such aggregate we define [specification][terms] (e.g. `HasSource(Specs.Map.Facts.ToCI.Firms)` method call) that should be used to get a data from the facts storage, and one or more [specifications][terms] (e.g. `HasValueObject(Specs.Map.Facts.ToCI.FirmTerritories, Specs.Find.CI.FirmTerritories)` method call) that should be used to rebuild aggregate structure (it's value objects).
 
 Next, we need to do exactly the same we did at the _primary_ stage.
 
