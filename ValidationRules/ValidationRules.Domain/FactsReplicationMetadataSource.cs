@@ -46,6 +46,7 @@ namespace NuClear.ValidationRules.Domain
                                 .HasSource(Specs.Map.Erm.ToFacts.DeniedPosition),
 
                             // TODO: что с GlobalAssociatedPositions и GlobalDeniedPositions ? по-хорошему надо в Price
+                            // дождаться выхода задачи ERM-8801 в ERM
 
                             FactMetadata<Order>
                                 .Config
@@ -62,7 +63,7 @@ namespace NuClear.ValidationRules.Domain
                                 .HasSource(Specs.Map.Erm.ToFacts.OrderPositionAdvertisement)
                                 .HasDependentAggregate<Aggregates::Order>(Specs.Map.Facts.ToOrderAggregate.ByOrderPositionAdvertisement),
 
-                            // ???
+                            // TODO: period
                             FactMetadata<OrganizationUnit>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.OrganizationUnit),
@@ -83,7 +84,7 @@ namespace NuClear.ValidationRules.Domain
                                 .HasSource(Specs.Map.Erm.ToFacts.PricePosition)
                                 .HasDependentAggregate<Aggregates::Price>(Specs.Map.Facts.ToPriceAggregate.ByPricePosition),
 
-                            // ???
+                            // TODO: period
                             FactMetadata<Project>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Project)

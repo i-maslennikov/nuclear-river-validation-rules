@@ -73,11 +73,10 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                   select pricePosition.PriceId).Distinct()
                         );
                     }
-                    public static MapSpecification<IQuery, IEnumerable<long>> ByPricePosition(FindSpecification<Facts::AssociatedPositionsGroup> specification)
+                    public static MapSpecification<IQuery, IEnumerable<long>> ByPricePosition(FindSpecification<Facts::PricePosition> specification)
                     {
                         return new MapSpecification<IQuery, IEnumerable<long>>(
-                            q => (from associatedPositionsGroup in q.For(specification)
-                                  join pricePosition in q.For<Facts::PricePosition>() on associatedPositionsGroup.PricePositionId equals pricePosition.Id
+                            q => (from pricePosition in q.For(specification)
                                   select pricePosition.PriceId).Distinct()
                         );
                     }
