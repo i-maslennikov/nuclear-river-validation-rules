@@ -6,7 +6,11 @@ As it was mentioned in [high-level overview article](README.md), **Replication**
 
 On the _primary_ stage you have a set of events from the [source system][terms] that needed to be processed. Based on your knowledge about business cases that executed in a source system, you can distinguish events that you're interested in for particular bounded context. All other events can be safely skipped.
 
-The main goal at _primary_ stage is to sync [facts storage][terms] with storage of the source system. So, processing of input events leads to changes in facts storage, but not only. At this stage we also need to generate commands to be executed on the next stage. 
+The _primary_ stage has two goals:
+* sync [facts storage][terms] with storage of the source system
+* send commands to a next stage
+
+So, processing of input events leads to changes in facts storage, but not only. At this stage we also need to generate commands to be executed on a next stage. 
 
 Now it's time to deep dive into implementation detais. Let's see what we need to do to customize the _primary_ stage to support a new bounded context. We assume that the domain analysis is already carried out.
 
