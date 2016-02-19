@@ -13,12 +13,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
         {
             public static Expression<Func<T, bool>> ById<T>(long id) where T : IIdentifiable
             {
-                return item => item.Id == id;
-            }
-
-            public static Expression<Func<IEnumerable<T>, bool>> ByIds<T>(IEnumerable<long> ids) where T : IIdentifiable
-            {
-                return items => items.ToArray().Zip(ids, (item, id) => item.Id == id).All(x => x);
+                return DefaultIdentity.Instance.Create<T>(id);
             }
 
             public static Expression<Func<T, bool>> Match<T>(T expected)

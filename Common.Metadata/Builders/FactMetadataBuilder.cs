@@ -37,8 +37,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
 
         public FactMetadataBuilder<T> HasDependentAggregate<TAggregate>(
             Func<FindSpecification<T>, MapSpecification<IQuery, IEnumerable<long>>> dependentAggregateSpecProvider)
-            
-            where TAggregate : class, IIdentifiable 
+            where TAggregate : class, IIdentifiable
         {
             // FIXME {all, 03.09.2015}: TAggregate заменить на идентификатор типа
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider =
@@ -51,25 +50,25 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
         }
 
         public FactMetadataBuilder<T> HasMatchedAggregate<TAggregate>()
-            where TAggregate : class, IIdentifiable 
+            where TAggregate : class, IIdentifiable
         {
             // FIXME {all, 03.09.2015}: TAggregate заменить на идентификатор типа
             // FIXME {all, 04.09.2015}: Слабое место - внутри спецификации идентификаторы, затем идём в базу за идентификаторами. Если достать их из спецификации в бузу хдить не потребуется.
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnCreate =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(x => x.Id)
+                                           .Select(DefaultIdentity.Instance.ExtractIdentity<T>())
                                            .Select(id => new InitializeAggregate(typeof(TAggregate), id)));
 
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnUpdate =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(x => x.Id)
+                                           .Select(DefaultIdentity.Instance.ExtractIdentity<T>())
                                            .Select(id => new RecalculateAggregate(typeof(TAggregate), id)));
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnDelete =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(x => x.Id)
+                                           .Select(DefaultIdentity.Instance.ExtractIdentity<T>())
                                            .Select(id => new DestroyAggregate(typeof(TAggregate), id)));
 
             AddFeatures(new DirectlyDependentAggregateFeature<T>(mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));

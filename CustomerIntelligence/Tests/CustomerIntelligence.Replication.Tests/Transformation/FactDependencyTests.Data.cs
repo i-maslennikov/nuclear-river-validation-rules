@@ -109,7 +109,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             where TSource : class, IIdentifiable, new()
             where TTarget : class, IIdentifiable, IFactObject, new()
         {
-            var entityId = sourceObject.Id;
+            var entityId = DefaultIdentity.Instance.GetId(sourceObject);
             ermDb.Has(sourceObject);
 
             var factory = new VerifiableRepositoryFactory();
@@ -131,10 +131,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             var factory = new VerifiableRepositoryFactory();
             Transformation.Create(query, factory)
-                          .ApplyChanges<TTarget>(targetObject.Id);
+                          .ApplyChanges<TTarget>(DefaultIdentity.Instance.GetId(targetObject));
 
             factory.Verify<TTarget>(
-                x => x.Update(It.Is(Predicate.ById<TTarget>(targetObject.Id))),
+                x => x.Update(It.Is(Predicate.ById<TTarget>(DefaultIdentity.Instance.GetId(targetObject)))),
                 Times.Once,
                 string.Format("The {0} element was not updated.", typeof(TTarget).Name));
         }
@@ -146,10 +146,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             var factory = new VerifiableRepositoryFactory();
             Transformation.Create(query, factory)
-                          .ApplyChanges<TTarget>(targetObject.Id);
+                          .ApplyChanges<TTarget>(DefaultIdentity.Instance.GetId(targetObject));
 
             factory.Verify<TTarget>(
-                x => x.Delete(It.Is(Predicate.ById<TTarget>(targetObject.Id))),
+                x => x.Delete(It.Is(Predicate.ById<TTarget>(DefaultIdentity.Instance.GetId(targetObject)))),
                 Times.Once,
                 string.Format("The {0} element was not deleted.", typeof(TTarget).Name));
         }

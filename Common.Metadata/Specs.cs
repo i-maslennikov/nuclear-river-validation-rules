@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.AdvancedSearch.Common.Metadata.Model;
@@ -12,16 +13,20 @@ namespace NuClear.AdvancedSearch.Common.Metadata
         {
             public static FindSpecification<T> ByIds<T>(IReadOnlyCollection<long> ids) where T : IIdentifiable
             {
-                return new FindSpecification<T>(x => ids.Contains(x.Id));
+                return new FindSpecification<T>(DefaultIdentity.Instance.Create<T>(ids));
             }
         }
 
         public static class Map
         {
+            // Какое-то Г. зачем T[] => int[], когда есть T => int?
+            // Тем более, что используется Func, а не Expression, а значит, все вычисления на стороне приложения
             public static MapSpecification<IEnumerable<T>, IEnumerable<long>> ToIds<T>()
                 where T : IIdentifiable
             {
-                return new MapSpecification<IEnumerable<T>, IEnumerable<long>>(x => x.Select(y => y.Id));
+                Func<T, long> identityProjector = DefaultIdentity.Instance.ExtractIdentity<T>().Compile();
+                Func<IEnumerable<T>, IEnumerable<long>> projector = item => item.Select(identityProjector);
+                return new MapSpecification<IEnumerable<T>, IEnumerable<long>>(projector);
             }
 
             public static MapSpecification<IEnumerable<T>, IEnumerable<T>> ZeroMapping<T>()
