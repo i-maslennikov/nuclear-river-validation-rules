@@ -23,9 +23,9 @@ namespace NuClear.ValidationRules.Domain
                              .Childs(
                                      AggregateMetadata<Price>.Config
                                                              .HasSource(Specs.Map.Facts.ToAggregates.Prices)
+                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions, Specs.Find.Aggs.AdvertisementAmountRestrictions)
                                                              .HasValueObject(Specs.Map.Facts.ToAggregates.DeniedPositions,Specs.Find.Aggs.DeniedPositions)
-                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions,Specs.Find.Aggs.MasterPositions)
-                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions,Specs.Find.Aggs.AdvertisementAmountRestrictions),
+                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions,Specs.Find.Aggs.MasterPositions),
 
                                      AggregateMetadata<Order>.Config
                                                              .HasSource(Specs.Map.Facts.ToAggregates.Orders)
@@ -33,10 +33,10 @@ namespace NuClear.ValidationRules.Domain
                                                              .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPrices, Specs.Find.Aggs.OrderPrices),
 
                                      AggregateMetadata<Position>.Config
-                                                                .HasSource(Specs.Map.Facts.ToAggregates.Positions),
+                                                             .HasSource(Specs.Map.Facts.ToAggregates.Positions),
 
                                      AggregateMetadata<Period>.Config
-                                         .HasSource(Specs.Map.Facts.ToAggregates.Periods));
+                                                             .HasSource(Specs.Map.Facts.ToAggregates.Periods));
 
         public AggregateConstructionMetadataSource()
         {

@@ -44,9 +44,6 @@ namespace NuClear.ValidationRules.Domain
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.DeniedPosition),
 
-                            // TODO: что с GlobalAssociatedPositions и GlobalDeniedPositions ? по-хорошему надо в Price
-                            // дождаться выхода задачи ERM-8801 в ERM
-
                             FactMetadata<Order>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Order)
@@ -62,10 +59,14 @@ namespace NuClear.ValidationRules.Domain
                                 .HasSource(Specs.Map.Erm.ToFacts.OrderPositionAdvertisement)
                                 .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByOrderPositionAdvertisement),
 
-                            // TODO: period
-                            FactMetadata<OrganizationUnit>
+                            FactMetadata<Position>
                                 .Config
-                                .HasSource(Specs.Map.Erm.ToFacts.OrganizationUnit),
+                                .HasSource(Specs.Map.Erm.ToFacts.Position)
+                                .HasMatchedAggregate<EntityTypePosition>()
+                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByPosition),
+
+                            // TODO: что с GlobalAssociatedPositions и GlobalDeniedPositions ? по-хорошему надо в Price
+                            // дождаться выхода задачи ERM-8801 в ERM
 
                             FactMetadata<Position>
                                 .Config
@@ -83,7 +84,10 @@ namespace NuClear.ValidationRules.Domain
                                 .HasSource(Specs.Map.Erm.ToFacts.PricePosition)
                                 .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByPricePosition),
 
-                            // TODO: period
+                            // TODO: attach to period aggregate
+                            FactMetadata<OrganizationUnit>
+                                .Config
+                                .HasSource(Specs.Map.Erm.ToFacts.OrganizationUnit),
                             FactMetadata<Project>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Project)
