@@ -96,6 +96,13 @@ Next, an implementation of `IMessageProcessingHandler` should be created to hand
 ```csharp
 public sealed class InputEventHandler : IMessageProcessingHandler
 {
+    private readonly IFactsReplicator _factsReplicator;
+
+    public InputEventHandler(IFactsReplicator factsReplicator)
+    {
+        _factsReplicator = factsReplicator
+    }
+
     public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
     {
         try
@@ -104,6 +111,7 @@ public sealed class InputEventHandler : IMessageProcessingHandler
             // Typical scenario is to access to source system's data (throught the event context or 
             // by grab it directly from the storage), sync a state of facts storage and generate commands
             // to be executed on the next stage
+            // In this case _factsReplicator dependency should be used
             return processingResultsMap.Keys.Select(
                 bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
         }
