@@ -11,7 +11,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata
     {
         public static class Find
         {
-            public static FindSpecification<T> ByIds<T>(IReadOnlyCollection<long> ids) where T : IIdentifiable
+            public static FindSpecification<T> ByIds<T>(IReadOnlyCollection<long> ids) where T : IIdentifiable<DefaultIdentity, long>
             {
                 return new FindSpecification<T>(DefaultIdentity.Instance.Create<T>(ids));
             }
@@ -22,7 +22,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata
             // Какое-то Г. зачем T[] => int[], когда есть T => int?
             // Тем более, что используется Func, а не Expression, а значит, все вычисления на стороне приложения
             public static MapSpecification<IEnumerable<T>, IEnumerable<long>> ToIds<T>()
-                where T : IIdentifiable
+                where T : IIdentifiable<DefaultIdentity, long>
             {
                 Func<T, long> identityProjector = DefaultIdentity.Instance.ExtractIdentity<T>().Compile();
                 Func<IEnumerable<T>, IEnumerable<long>> projector = item => item.Select(identityProjector);

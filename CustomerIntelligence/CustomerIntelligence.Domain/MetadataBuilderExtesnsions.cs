@@ -16,7 +16,7 @@ namespace NuClear.CustomerIntelligence.Domain
     public static class MetadataBuilderExtesnsions
     {
         public static FactMetadataBuilder<T> LeadsToStatisticsCalculation<T>(this FactMetadataBuilder<T> builder, Func<FindSpecification<T>, MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>>> provider)
-            where T : class, IIdentifiable
+            where T : class, IIdentifiable<DefaultIdentity, long>
         {
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(

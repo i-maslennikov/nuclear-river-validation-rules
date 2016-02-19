@@ -12,19 +12,19 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Model
     public static class IdentityExtensions
     {
         public static Expression<Func<T, bool>> Create<T>(this DefaultIdentity identity, long id)
-            where T : IIdentifiable
+            where T : IIdentifiable<DefaultIdentity, long>
         {
             return CreateExpression<T, DefaultIdentity, long>(identity, new[] { id });
         }
 
         public static Expression<Func<T, bool>> Create<T>(this DefaultIdentity identity, IEnumerable<long> ids)
-            where T : IIdentifiable
+            where T : IIdentifiable<DefaultIdentity, long>
         {
             return CreateExpression<T, DefaultIdentity, long>(identity, ids ?? Enumerable.Empty<long>());
         }
 
         public static long GetId<T>(this DefaultIdentity identity, T instance)
-            where T : IIdentifiable
+            where T : IIdentifiable<DefaultIdentity, long>
         {
             var func = identity.ExtractIdentity<T>().Compile();
             return func.Invoke(instance);

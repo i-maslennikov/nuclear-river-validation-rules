@@ -436,17 +436,17 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 return new Transformation(query);
             }
 
-            public Transformation Initialize<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
+            public Transformation Initialize<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<DefaultIdentity, long>
             {
                 return Do<TAggregate>(x => x.Initialize(ids));
             }
 
-            public Transformation Recalculate<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
+            public Transformation Recalculate<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<DefaultIdentity, long>
             {
                 return Do<TAggregate>(x => x.Recalculate(ids));
             }
 
-            public Transformation Destroy<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
+            public Transformation Destroy<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<DefaultIdentity, long>
             {
                 return Do<TAggregate>(x => x.Destroy(ids));
             }
@@ -471,7 +471,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             private Transformation Do<TAggregate>(Action<AggregateProcessor<TAggregate>> action)
-                where TAggregate : class, IIdentifiable
+                where TAggregate : class, IIdentifiable<DefaultIdentity, long>
             {
                 var aggregateType = typeof(TAggregate);
 
@@ -489,7 +489,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             private class Factory<TAggregate> : IAggregateProcessorFactory, IValueObjectProcessorFactory
-                where TAggregate : class, IIdentifiable
+                where TAggregate : class, IIdentifiable<DefaultIdentity, long>
             {
                 private readonly IQuery _query;
                 private readonly IRepositoryFactory _repositoryFactory;

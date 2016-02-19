@@ -12,7 +12,7 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Bulk.Api.Factories
 {
-    public class AggregatesBulkReplicatorFactory<T> : IBulkReplicatorFactory where T : class, IIdentifiable
+    public class AggregatesBulkReplicatorFactory<T> : IBulkReplicatorFactory where T : class, IIdentifiable<DefaultIdentity, long>
     {
         private readonly IQuery _query;
         private readonly DataConnection _dataConnection;

@@ -6,7 +6,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.AdvancedSearch.Common.Metadata.Features
 {
-    public class IndirectlyDependentAggregateFeature<T> : IIndirectFactDependencyFeature, IFactDependencyFeature<T> where T : IIdentifiable
+    public class IndirectlyDependentAggregateFeature<T> : IIndirectFactDependencyFeature, IFactDependencyFeature<T> where T : IIdentifiable<DefaultIdentity, long>
     {
         public IndirectlyDependentAggregateFeature(MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider)
         {

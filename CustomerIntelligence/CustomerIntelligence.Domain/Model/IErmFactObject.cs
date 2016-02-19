@@ -2,7 +2,7 @@
 
 namespace NuClear.CustomerIntelligence.Domain.Model
 {
-    public interface IErmFactObject : IFactObject, IIdentifiable
+    public interface IErmFactObject : IFactObject, IIdentifiable<DefaultIdentity, long>
     {
     }
 }

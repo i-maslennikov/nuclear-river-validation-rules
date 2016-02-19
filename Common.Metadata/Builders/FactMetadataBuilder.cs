@@ -13,7 +13,7 @@ using NuClear.Storage.API.Specifications;
 namespace NuClear.AdvancedSearch.Common.Metadata.Builders
 {
     public class FactMetadataBuilder<T> : MetadataElementBuilder<FactMetadataBuilder<T>, FactMetadata<T>>
-        where T : class, IIdentifiable
+        where T : class, IIdentifiable<DefaultIdentity, long>
     {
         private MapSpecification<IQuery, IQueryable<T>> _sourceMappingSpecification;
 
@@ -37,7 +37,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
 
         public FactMetadataBuilder<T> HasDependentAggregate<TAggregate>(
             Func<FindSpecification<T>, MapSpecification<IQuery, IEnumerable<long>>> dependentAggregateSpecProvider)
-            where TAggregate : class, IIdentifiable
+            where TAggregate : class, IIdentifiable<DefaultIdentity, long>
         {
             // FIXME {all, 03.09.2015}: TAggregate заменить на идентификатор типа
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider =
@@ -50,7 +50,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
         }
 
         public FactMetadataBuilder<T> HasMatchedAggregate<TAggregate>()
-            where TAggregate : class, IIdentifiable
+            where TAggregate : class, IIdentifiable<DefaultIdentity, long>
         {
             // FIXME {all, 03.09.2015}: TAggregate заменить на идентификатор типа
             // FIXME {all, 04.09.2015}: Слабое место - внутри спецификации идентификаторы, затем идём в базу за идентификаторами. Если достать их из спецификации в бузу хдить не потребуется.

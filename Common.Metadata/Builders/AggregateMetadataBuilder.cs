@@ -11,7 +11,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.AdvancedSearch.Common.Metadata.Builders
 {
-    public class AggregateMetadataBuilder<T> : MetadataElementBuilder<AggregateMetadataBuilder<T>, AggregateMetadata<T>> where T : class, IIdentifiable
+    public class AggregateMetadataBuilder<T> : MetadataElementBuilder<AggregateMetadataBuilder<T>, AggregateMetadata<T>> where T : class, IIdentifiable<DefaultIdentity, long>
     {
         private MapSpecification<IQuery, IQueryable<T>> _mapToSourceSpec;
 

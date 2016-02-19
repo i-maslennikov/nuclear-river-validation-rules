@@ -9,11 +9,4 @@
         where TIdentity : IIdentity<TKey>
     {
     }
-
-    /// <summary>
-    /// Позволяет изменить проект, не меняя каждый файл
-    /// </summary>
-    public interface IIdentifiable : IIdentifiable<DefaultIdentity, long>
-    {
-    }
 }
