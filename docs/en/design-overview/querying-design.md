@@ -152,12 +152,12 @@ As you can see here, `DynamicControllersRegistrar` creates separate assemblies w
 
 The actual code with implementation details is [here](https://github.com/2gis/nuclear-river/blob/master/Querying/Querying.Web.OData/DynamicControllers/DynamicControllersRegistrar.cs).
 
-Then `ODataModelRegistratrar` type comes into play. It registers all provided bounded contexts with `System.Web.Http.HttpServer` instance and creates a pipeline of HTTP request handling:
+Then `ODataModelRegistrar` type comes into play. It registers all provided bounded contexts with `System.Web.Http.HttpServer` instance and creates a pipeline of HTTP request handling:
 
 ```csharp
-public sealed class ODataModelRegistratrar
+public sealed class ODataModelRegistrar
 {
-    public ODataModelRegistratrar(
+    public ODataModelRegistrar(
         IMetadataProvider metadataProvider, 
         DynamicControllersRegistrar dynamicControllersRegistrar, 
         EdmModelWithClrTypesBuilder edmModelWithClrTypesBuilder)
@@ -192,7 +192,7 @@ public sealed class ODataModelRegistratrar
 }
 ```
 
-The actual code with implementation details is [here](https://github.com/2gis/nuclear-river/blob/master/Querying/Querying.Web.OData/ODataModelRegistratrar.cs).
+The actual code with implementation details is [here](https://github.com/2gis/nuclear-river/blob/master/Querying/Querying.Web.OData/ODataModelRegistrar.cs).
 
 The last important thing to notice here is `EdmModelWithClrTypesBuilder` and it's dependencies. `EdmModelWithClrTypesBuilder` type is just a facade that executes the following tasks:
 

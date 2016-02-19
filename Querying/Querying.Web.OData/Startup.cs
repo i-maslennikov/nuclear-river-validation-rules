@@ -50,7 +50,7 @@ namespace NuClear.Querying.Web.OData
 
             // register odata models
             var httpServer = new HttpServer(config);
-            var modelRegistrator = container.Resolve<ODataModelRegistratrar>();
+            var modelRegistrator = container.Resolve<ODataModelRegistrar>();
             modelRegistrator.RegisterModels(httpServer);
 
             appBuilder.UseWebApi(httpServer);
