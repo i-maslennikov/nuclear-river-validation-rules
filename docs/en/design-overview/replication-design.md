@@ -91,7 +91,7 @@ public sealed class InputEventAccumulator :
 
 Responsibility of this class is to get events from a transport level (e.g. deserialize), analyze input events and make decisions about them. It is the place where inessential events can be skipped.
 
-Next, an implementation of `IMessageProcessingHandler` should be created to handle accumulated events. But as end users we don't need to implement this interface by our own, **NuClear River** already have an appropriate implementation. Let's take a look at the following code, just to understand the whole idea: 
+Next, an implementation of `IMessageProcessingHandler` should be created to handle accumulated events. Current version of **NuClear River** assumes that every bounded context have it's own appropriate implementation of `IMessageProcessingHandler`. Let's take a look at the following code, just to understand the whole idea: 
 
 ```csharp
 public sealed class InputEventHandler : IMessageProcessingHandler
@@ -262,7 +262,7 @@ public sealed class AggregateOperationAccumulator<TMessageFlow> :
 }
 ```
 
-Again, we don't have to create an implemention of `IMessageProcessingHandler`, because **NuClear River** already have it:
+Again, an implemention of `IMessageProcessingHandler` should be created. It will look like this:
 
 ```csharp
 public sealed class AggregateOperationAggregatableMessageHandler : IMessageProcessingHandler
