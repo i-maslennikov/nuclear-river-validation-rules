@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.Domain.Model.Facts;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 using NUnit.Framework;
 
@@ -23,7 +23,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                        };
 
             var sortedData = data.OrderByDescending(x => x.GetType(), comparer).ToArray();
-            
+
             Assert.That(sortedData[0], Is.InstanceOf<DestroyAggregate>());
             Assert.That(sortedData[1], Is.InstanceOf<InitializeAggregate>());
             Assert.That(sortedData[2], Is.InstanceOf<RecalculateAggregate>());

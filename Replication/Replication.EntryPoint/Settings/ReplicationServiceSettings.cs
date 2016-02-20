@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 
-using NuClear.AdvancedSearch.Common.Identities.Connections;
-using NuClear.AdvancedSearch.Common.Settings;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.IdentityService.Client.Settings;
 using NuClear.OperationsLogging.Transports.ServiceBus;
 using NuClear.Replication.Core.API.Settings;
+using NuClear.River.Common.Identities.Connections;
+using NuClear.River.Common.Settings;
 using NuClear.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;

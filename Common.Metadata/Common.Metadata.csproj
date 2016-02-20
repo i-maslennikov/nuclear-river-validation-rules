@@ -8,8 +8,8 @@
     <ProjectGuid>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuClear.AdvancedSearch.Common.Metadata</RootNamespace>
-    <AssemblyName>2GIS.NuClear.AdvancedSearch.Common.Metadata</AssemblyName>
+    <RootNamespace>NuClear.River.Common.Metadata</RootNamespace>
+    <AssemblyName>2GIS.NuClear.River.Common.Metadata</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -112,15 +112,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Settings.API.1.1.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Settings.API.1.2.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.API.1.2.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Storage.API.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Utils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Utils.1.0.10\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Utils.1.0.12\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

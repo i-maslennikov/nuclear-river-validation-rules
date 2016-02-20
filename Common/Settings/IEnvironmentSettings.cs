@@ -1,6 +1,6 @@
 ﻿using NuClear.Settings.API;
 
-namespace NuClear.AdvancedSearch.Common.Settings
+namespace NuClear.River.Common.Settings
 {
     public interface IEnvironmentSettings : ISettings
     {

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.Messaging.API.Flows;
 using NuClear.Model.Common.Entities;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing.Identities.Operations;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
 {

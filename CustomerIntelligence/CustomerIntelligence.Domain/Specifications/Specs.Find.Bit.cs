@@ -1,5 +1,4 @@
-﻿using NuClear.AdvancedSearch.Common.Metadata.Model;
-using NuClear.CustomerIntelligence.Domain.Model;
+﻿using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.Storage.API.Specifications;
 
 using Bit = NuClear.CustomerIntelligence.Domain.Model.Bit;

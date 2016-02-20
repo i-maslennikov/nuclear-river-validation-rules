@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity.Infrastructure;
 using System.Reflection;
@@ -10,14 +9,12 @@ using Effort.Provider;
 
 using Moq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence;
-using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
-using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Querying.EntityFramework.Building;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
 
 using NUnit.Framework;
 

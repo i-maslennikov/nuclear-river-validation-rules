@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.Messaging.API;
 using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.API.Processing;
+using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.Replication.OperationsProcessing
 {

@@ -7,11 +7,11 @@ using System.Reflection;
 using LinqToDB;
 using LinqToDB.Data;
 
-using NuClear.Replication.Bulk.Api.Storage;
+using NuClear.Replication.Bulk.API.Storage;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.Replication.Bulk.Api.Replicators
+namespace NuClear.Replication.Bulk.API.Replicators
 {
     public class UpdatesBulkReplicator<T> : IBulkReplicator where T : class
     {

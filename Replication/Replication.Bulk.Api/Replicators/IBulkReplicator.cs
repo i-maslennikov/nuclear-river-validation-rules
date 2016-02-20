@@ -1,4 +1,4 @@
-﻿namespace NuClear.Replication.Bulk.Api.Replicators
+﻿namespace NuClear.Replication.Bulk.API.Replicators
 {
     public interface IBulkReplicator
     {

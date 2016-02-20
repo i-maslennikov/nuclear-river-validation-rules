@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Builders;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
+using NuClear.River.Common.Metadata.Builders;
+using NuClear.River.Common.Metadata.Features;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     public sealed class EntityElement : BaseMetadataElement<EntityElement, EntityElementBuilder>
     {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates
@@ -37,10 +37,10 @@ namespace NuClear.Replication.Core.Aggregates
                     var aggregateType = slice.Key.AggregateType;
 
                     IMetadataElement aggregateMetadata;
-                    var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri(string.Format("Aggregates/{0}", aggregateType.Name), UriKind.Relative));
+                    var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregateType.Name}", UriKind.Relative));
                     if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
                     {
-                        throw new NotSupportedException(string.Format("The aggregate of type '{0}' is not supported.", aggregateType));
+                        throw new NotSupportedException($"The aggregate of type '{aggregateType}' is not supported.");
                     }
 
                     var aggregateIds = slice.Select(x => x.AggregateId).Distinct().ToArray();
@@ -55,15 +55,17 @@ namespace NuClear.Replication.Core.Aggregates
                             {
                                 processor.Initialize(aggregateIds);
                             }
-
-                            if (operation == typeof(RecalculateAggregate))
+                            else if (operation == typeof(RecalculateAggregate))
                             {
                                 processor.Recalculate(aggregateIds);
                             }
-
-                            if (operation == typeof(DestroyAggregate))
+                            else if (operation == typeof(DestroyAggregate))
                             {
                                 processor.Destroy(aggregateIds);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException($"The command of type {operation.Name} is not supported");
                             }
                         }
 

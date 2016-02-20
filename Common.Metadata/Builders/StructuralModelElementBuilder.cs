@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities;
+using NuClear.River.Common.Metadata.Elements;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Builders
+namespace NuClear.River.Common.Metadata.Builders
 {
     public sealed class StructuralModelElementBuilder : MetadataElementBuilder<StructuralModelElementBuilder, StructuralModelElement>
     {

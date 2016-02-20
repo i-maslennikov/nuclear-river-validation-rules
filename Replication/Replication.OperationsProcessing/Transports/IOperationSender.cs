@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.Replication.OperationsProcessing.Transports
 {

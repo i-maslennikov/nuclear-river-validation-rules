@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Builders;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
+using NuClear.River.Common.Metadata.Builders;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     public class StatisticsRecalculationMetadata<T> : MetadataElement<StatisticsRecalculationMetadata<T>, StatisticsRecalculationMetadataBuilder<T>>
     {

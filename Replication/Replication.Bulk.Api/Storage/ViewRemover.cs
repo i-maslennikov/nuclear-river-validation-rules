@@ -9,7 +9,7 @@ using Microsoft.SqlServer.Management.Smo;
 
 using NuClear.Storage.API.ConnectionStrings;
 
-namespace NuClear.Replication.Bulk.Api.Storage
+namespace NuClear.Replication.Bulk.API.Storage
 {
     public sealed class ViewRemover
     {

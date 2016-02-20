@@ -3,14 +3,14 @@ using System.Linq.Expressions;
 
 using Moq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 

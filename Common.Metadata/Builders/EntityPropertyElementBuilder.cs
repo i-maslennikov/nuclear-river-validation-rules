@@ -1,11 +1,11 @@
 ﻿using System;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Features;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Builders
+namespace NuClear.River.Common.Metadata.Builders
 {
     public sealed class EntityPropertyElementBuilder : MetadataElementBuilder<EntityPropertyElementBuilder, EntityPropertyElement>
     {

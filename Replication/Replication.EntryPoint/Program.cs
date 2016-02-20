@@ -6,11 +6,11 @@ using System.ServiceProcess;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.AdvancedSearch.Common.Identities.Connections;
-using NuClear.AdvancedSearch.Common.Settings;
 using NuClear.Jobs.Schedulers;
 using NuClear.Replication.EntryPoint.DI;
 using NuClear.Replication.EntryPoint.Settings;
+using NuClear.River.Common.Identities.Connections;
+using NuClear.River.Common.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Tracing.API;

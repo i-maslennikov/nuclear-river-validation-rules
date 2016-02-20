@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.API.Settings;
+using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 

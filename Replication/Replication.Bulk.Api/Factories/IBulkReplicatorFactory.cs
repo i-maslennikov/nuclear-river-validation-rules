@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 using NuClear.Metamodeling.Elements;
-using NuClear.Replication.Bulk.Api.Replicators;
+using NuClear.Replication.Bulk.API.Replicators;
 
-namespace NuClear.Replication.Bulk.Api.Factories
+namespace NuClear.Replication.Bulk.API.Factories
 {
     public interface IBulkReplicatorFactory : IDisposable
     {

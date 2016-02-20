@@ -7,9 +7,6 @@ using LinqToDB.Mapping;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.AdvancedSearch.Common.Identities.Connections;
-using NuClear.AdvancedSearch.Common.Metadata.Equality;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.Assembling.TypeProcessing;
 using NuClear.CustomerIntelligence.Domain;
@@ -55,7 +52,6 @@ using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
-using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
@@ -76,10 +72,13 @@ using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.River.Common.Identities.Connections;
+using NuClear.River.Common.Metadata.Equality;
+using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.Security;
 using NuClear.Security.API;
 using NuClear.Security.API.UserContext;
 using NuClear.Security.API.UserContext.Identity;
-using NuClear.Security;
 using NuClear.Settings.API;
 using NuClear.Settings.Unity;
 using NuClear.Storage.API.ConnectionStrings;
@@ -90,7 +89,6 @@ using NuClear.Storage.LinqToDB;
 using NuClear.Storage.LinqToDB.Connections;
 using NuClear.Storage.LinqToDB.Writings;
 using NuClear.Storage.Readings;
-using NuClear.Storage.UseCases;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.WCF.Client;
@@ -213,10 +211,7 @@ namespace NuClear.Replication.EntryPoint.DI
             // primary
             container.RegisterTypeWithDependencies(typeof(CorporateBusOperationsReceiver), Lifetime.PerScope, null)
                      .RegisterTypeWithDependencies(typeof(ServiceBusOperationsReceiverTelemetryDecorator), Lifetime.PerScope, null)
-                     .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator>(Lifetime.Singleton)
-                     .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, TrackedUseCaseConfigurator>(
-                         Lifetime.Singleton,
-                         new InjectionFactory(x => x.Resolve<TrackedUseCaseConfigurator>(new DependencyOverride<IEntityTypeMappingRegistry<ISubDomain>>(new ResolvedParameter(typeof(IEntityTypeMappingRegistry<ErmSubDomain>))))))
+                     .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
                      .RegisterType<IOperationSender<AggregateOperation>, SqlStoreSender<AggregateOperation, AggregatesFlow>>(Lifetime.PerScope)
                      .RegisterType<IOperationSender<RecalculateStatisticsOperation>, SqlStoreSender<RecalculateStatisticsOperation, StatisticsFlow>>(Lifetime.PerScope)
@@ -277,7 +272,6 @@ namespace NuClear.Replication.EntryPoint.DI
                 .RegisterType<IDomainContextScope, DomainContextScope>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<ScopedDomainContextsStore>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IReadableDomainContext, CachingReadableDomainContext>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IProcessingContext, ProcessingContext>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterInstance<ILinqToDbModelFactory>(
                     new LinqToDbModelFactory(schemaMapping, transactionOptions, storageSettings.SqlCommandTimeout), Lifetime.Singleton)
                 .RegisterInstance<IObjectPropertyProvider>(
