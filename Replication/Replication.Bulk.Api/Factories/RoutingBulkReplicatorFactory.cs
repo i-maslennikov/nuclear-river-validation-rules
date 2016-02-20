@@ -19,7 +19,7 @@ namespace NuClear.Replication.Bulk.Api.Factories
             new Dictionary<Type, Type>
             {
                 { typeof(FactMetadata<>), typeof(FactBulkReplicatorFactory<>) },
-                { typeof(AggregateMetadata<>), typeof(AggregatesBulkReplicatorFactory<>) },
+                { typeof(AggregateMetadata<,>), typeof(AggregatesBulkReplicatorFactory<,>) },
                 { typeof(ValueObjectMetadataElement<>), typeof(ValueObjectsBulkReplicatorFactory<>) },
                 { typeof(StatisticsRecalculationMetadata<>), typeof(StatisticsBulkReplicatorFactory<>) }
             };
@@ -40,8 +40,8 @@ namespace NuClear.Replication.Bulk.Api.Factories
                 throw new NotSupportedException($"Bulk replication is not supported for the mode described with {metadataElement}");
             }
 
-            var objType = metadataElementType.GenericTypeArguments[0];
-            var factory = (IBulkReplicatorFactory)Activator.CreateInstance(factoryType.MakeGenericType(objType), new LinqToDbQuery(_sourceDataConnection), _targetDataConnection);
+            var concreteFactoryType = factoryType.MakeGenericType(metadataElementType.GenericTypeArguments);
+            var factory = (IBulkReplicatorFactory)Activator.CreateInstance(concreteFactoryType, new LinqToDbQuery(_sourceDataConnection), _targetDataConnection);
             return factory.Create(metadataElement);
         }
 

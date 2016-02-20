@@ -14,7 +14,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata
             public static FindSpecification<T> ByIds<T>(IReadOnlyCollection<long> ids)
                 where T : IIdentifiable<long>
             {
-                return new FindSpecification<T>(DefaultIdentityProvider.Instance.Create<T>(ids));
+                return new FindSpecification<T>(DefaultIdentityProvider.Instance.Create<T, long>(ids));
             }
         }
 

@@ -504,7 +504,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
                 public IAggregateProcessor Create(IMetadataElement aggregateMetadata)
                 {
-                    return new AggregateProcessor<TAggregate>((AggregateMetadata<TAggregate>)aggregateMetadata, this, _query, _repositoryFactory.Create<TAggregate>());
+                    return new AggregateProcessor<TAggregate>((AggregateMetadata<TAggregate, long>)aggregateMetadata, this, _query, _repositoryFactory.Create<TAggregate>());
                 }
 
                 public IValueObjectProcessor Create(IValueObjectMetadataElement metadata)

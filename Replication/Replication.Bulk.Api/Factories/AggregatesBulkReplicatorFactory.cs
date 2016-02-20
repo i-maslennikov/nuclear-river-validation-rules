@@ -12,8 +12,8 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Bulk.Api.Factories
 {
-    public class AggregatesBulkReplicatorFactory<T> : IBulkReplicatorFactory
-        where T : class, IIdentifiable<long>
+    public class AggregatesBulkReplicatorFactory<T, TKey> : IBulkReplicatorFactory
+        where T : class, IIdentifiable<TKey>
     {
         private readonly IQuery _query;
         private readonly DataConnection _dataConnection;
@@ -26,7 +26,7 @@ namespace NuClear.Replication.Bulk.Api.Factories
 
         public IReadOnlyCollection<IBulkReplicator> Create(IMetadataElement metadataElement)
         {
-            var aggregateMetadata = (AggregateMetadata<T>)metadataElement;
+            var aggregateMetadata = (AggregateMetadata<T, TKey>)metadataElement;
 
             return new IBulkReplicator[] { new InsertsBulkReplicator<T>(_query, _dataConnection, aggregateMetadata.MapSpecificationProviderForSource.Invoke(Specs.Find.All<T>())) }
                 .Concat(aggregateMetadata.Elements

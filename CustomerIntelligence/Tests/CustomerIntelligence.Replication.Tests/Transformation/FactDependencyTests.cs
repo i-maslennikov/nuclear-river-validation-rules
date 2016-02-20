@@ -808,7 +808,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
                 public IFactDependencyProcessor Create(IFactDependencyFeature metadata)
                 {
-                    return new FactDependencyProcessor<TFact>((IFactDependencyFeature<TFact>)metadata, _query);
+                    return new FactDependencyProcessor<TFact>((IFactDependencyFeature<TFact, long>)metadata, _query);
                 }
             }
         }

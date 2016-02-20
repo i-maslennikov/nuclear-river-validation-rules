@@ -26,7 +26,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget = 
                 specification => new MapSpecification<IQuery, IEnumerable<T>>(q => targetMappingSpecification.Map(q).Where(specification));
 
-            return new FactMetadata<T>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, Specs.Find.ByIds<T>, Features);
+            return new FactMetadata<T>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, DefaultIdentityProvider.Instance, Features);
         }
 
         public FactMetadataBuilder<T> HasSource(MapSpecification<IQuery, IQueryable<T>> sourceMappingSpecification)
@@ -41,11 +41,13 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
         {
             // FIXME {all, 03.09.2015}: TAggregate заменить на идентификатор типа
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider =
-                specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(q => dependentAggregateSpecProvider
-                                                                                                .Invoke(specification)
-                                                                                                .Map(q)
-                                                                                                .Select(id => new RecalculateAggregate(typeof(TAggregate), id)));
-            AddFeatures(new IndirectlyDependentAggregateFeature<T>(mapSpecificationProvider));
+                specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
+                                     q => dependentAggregateSpecProvider
+                                              .Invoke(specification)
+                                              .Map(q)
+                                              .Select(id => new RecalculateAggregate(typeof(TAggregate), id)));
+
+            AddFeatures(new IndirectlyDependentAggregateFeature<T, long>(DefaultIdentityProvider.Instance, mapSpecificationProvider));
             return this;
         }
 
@@ -71,7 +73,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
                                            .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
                                            .Select(id => new DestroyAggregate(typeof(TAggregate), id)));
 
-            AddFeatures(new DirectlyDependentAggregateFeature<T>(mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));
+            AddFeatures(new DirectlyDependentAggregateFeature<T, long>(DefaultIdentityProvider.Instance, mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));
             return this;
         }
     }

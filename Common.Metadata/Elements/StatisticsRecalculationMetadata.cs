@@ -38,6 +38,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Elements
 
         public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForTarget { get; private set; }
 
+        // todo: заменить пару (long, IReadOnlyCollection<long?>) на TKey с целью унификации контрактов XXXRecalculationMetadata
         public Func<long, IReadOnlyCollection<long?>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
     }
 }

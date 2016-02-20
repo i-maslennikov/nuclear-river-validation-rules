@@ -18,13 +18,13 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Elements
         public FactMetadata(
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForSource,
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget,
-            Func<IReadOnlyCollection<long>, FindSpecification<T>> findSpecificationProvider,
+            IIdentityProvider<long> identityProvider,
             IEnumerable<IMetadataFeature> features)
             : base(features)
         {
             MapSpecificationProviderForSource = mapSpecificationProviderForSource;
             MapSpecificationProviderForTarget = mapSpecificationProviderForTarget;
-            FindSpecificationProvider = findSpecificationProvider;
+            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, long>(keys));
         }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)

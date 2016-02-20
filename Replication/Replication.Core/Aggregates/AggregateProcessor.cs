@@ -15,11 +15,11 @@ namespace NuClear.Replication.Core.Aggregates
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<T> _repository;
-        private readonly AggregateMetadata<T> _metadata;
+        private readonly AggregateMetadata<T, long> _metadata;
         private readonly DataChangesDetector<T, T> _aggregateChangesDetector;
         private readonly IReadOnlyCollection<IValueObjectProcessor> _valueObjectProcessors;
 
-        public AggregateProcessor(AggregateMetadata<T> metadata, IValueObjectProcessorFactory valueObjectProcessorFactory, IQuery query, IBulkRepository<T> repository)
+        public AggregateProcessor(AggregateMetadata<T, long> metadata, IValueObjectProcessorFactory valueObjectProcessorFactory, IQuery query, IBulkRepository<T> repository)
         {
             _metadata = metadata;
             _query = query;

@@ -10,13 +10,13 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
         public static IEnumerable<T> ById<T>(this IQueryable<T> queryable, params long[] ids)
             where T: IIdentifiable<long>
         {
-            return queryable.Where(DefaultIdentityProvider.Instance.Create<T>(ids));
+            return queryable.Where(DefaultIdentityProvider.Instance.Create<T, long>(ids));
         }
 
         public static IEnumerable<T> ById<T>(this IQueryable<T> queryable, IEnumerable<long> ids)
             where T : IIdentifiable<long>
         {
-            return queryable.Where(DefaultIdentityProvider.Instance.Create<T>(ids));
+            return queryable.Where(DefaultIdentityProvider.Instance.Create<T, long>(ids));
         }
     }
 }
