@@ -36,7 +36,7 @@ public sealed class EntityElement : MetadataElement
     {
         get
         {
-            return ResolveFeature<EntityIdentityFeature, IEnumerable<EnittyPropertyElement>>(
+            return ResolveFeature<EntityIdentityFeature, IEnumerable<EntityPropertyElement>>(
         		f => f.IdentifyingProperties, Enumerable.Empty<EntityPropertyElement>());
         }
     }
