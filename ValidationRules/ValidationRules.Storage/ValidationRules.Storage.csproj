@@ -86,7 +86,7 @@
       <Name>Common.Metadata</Name>
     </ProjectReference>
     <ProjectReference Include="..\ValidationRules.Domain\ValidationRules.Domain.csproj">
-      <Project>{855b881b-8af1-4e7d-9cb4-9bd8232aafbc}</Project>
+      <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
       <Name>ValidationRules.Domain</Name>
     </ProjectReference>
   </ItemGroup>

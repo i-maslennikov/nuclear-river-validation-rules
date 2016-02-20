@@ -42,10 +42,10 @@ namespace NuClear.ValidationRules.Domain
                                          .HasSource(Specs.Map.Facts.ToAggregates.Positions)
                                          .HasIdentityProvider(DefaultIdentityProvider.Instance),
 
-                                     AggregateMetadata<Period, long>
+                                     AggregateMetadata<Period, PeriodId>
                                          .Config
                                          .HasSource(Specs.Map.Facts.ToAggregates.Periods)
-                                         .HasIdentityProvider(DefaultIdentityProvider.Instance));
+                                         .HasIdentityProvider(PeriodIdentityProvider.Instance));
 
         public AggregateConstructionMetadataSource()
         {

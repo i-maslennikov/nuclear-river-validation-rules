@@ -41,7 +41,9 @@ namespace NuClear.ValidationRules.Storage
 
                 config.Entity<Period>()
                       .HasSchemaName(PriceAggregateSchema)
-                      .HasPrimaryKey(x => x.Id);
+                      .HasPrimaryKey(x => x.Start)
+                      .HasPrimaryKey(x => x.End)
+                      .HasPrimaryKey(x => x.OrganizationUnitId);
 
                 config.Entity<Position>()
                       .HasSchemaName(PriceAggregateSchema)

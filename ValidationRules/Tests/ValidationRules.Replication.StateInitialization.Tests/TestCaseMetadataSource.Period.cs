@@ -17,13 +17,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                      .Aggregate(
                                                 new Aggregates::Period
                                                     {
-                                                        Id = 1,
                                                         Start = DateTime.Parse("2011-01-01T00:00:00"),
                                                         End = DateTime.Parse("2011-05-01T00:00:00"),
                                                     },
                                                 new Aggregates::Period
                                                     {
-                                                        Id = 2,
                                                         Start = DateTime.Parse("2011-05-01T00:00:00"),
                                                         End = DateTime.MaxValue,
                                                     })
@@ -40,7 +38,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                      .Aggregate(
                                                 new Aggregates::Period
                                                 {
-                                                    Id = 1,
                                                     Start = DateTime.Parse("2011-01-01T00:00:00"),
                                                     End = DateTime.MaxValue,
                                                 })

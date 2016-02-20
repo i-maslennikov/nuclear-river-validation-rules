@@ -113,6 +113,7 @@
     <Compile Include="Model\Operations\InitializeAggregate.cs" />
     <Compile Include="Model\Operations\RecalculateAggregate.cs" />
     <Compile Include="Model\Operations\RecalculateStatisticsOperation.cs" />
+    <Compile Include="Model\PropertyAutomapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Specs.cs" />
   </ItemGroup>
