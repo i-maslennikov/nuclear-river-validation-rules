@@ -8,6 +8,7 @@ using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.ValidationRules.Domain.Model.Aggregates;
 using NuClear.ValidationRules.Domain.Specifications;
 
@@ -21,22 +22,30 @@ namespace NuClear.ValidationRules.Domain
             HierarchyMetadata.Config
                              .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates))
                              .Childs(
-                                     AggregateMetadata<Price, long>.Config
-                                                             .HasSource(Specs.Map.Facts.ToAggregates.Prices)
-                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions, Specs.Find.Aggs.AdvertisementAmountRestrictions)
-                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.DeniedPositions,Specs.Find.Aggs.DeniedPositions)
-                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions,Specs.Find.Aggs.MasterPositions),
+                                     AggregateMetadata<Price, long>
+                                         .Config
+                                         .HasSource(Specs.Map.Facts.ToAggregates.Prices)
+                                         .HasIdentityProvider(DefaultIdentityProvider.Instance)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions, Specs.Find.Aggs.AdvertisementAmountRestrictions)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.DeniedPositions, Specs.Find.Aggs.DeniedPositions)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions, Specs.Find.Aggs.MasterPositions),
 
-                                     AggregateMetadata<Order, long>.Config
-                                                             .HasSource(Specs.Map.Facts.ToAggregates.Orders)
-                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPositions, Specs.Find.Aggs.OrderPositions)
-                                                             .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPrices, Specs.Find.Aggs.OrderPrices),
+                                     AggregateMetadata<Order, long>
+                                         .Config
+                                         .HasSource(Specs.Map.Facts.ToAggregates.Orders)
+                                         .HasIdentityProvider(DefaultIdentityProvider.Instance)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPositions, Specs.Find.Aggs.OrderPositions)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPrices, Specs.Find.Aggs.OrderPrices),
 
-                                     AggregateMetadata<Position, long>.Config
-                                                             .HasSource(Specs.Map.Facts.ToAggregates.Positions),
+                                     AggregateMetadata<Position, long>
+                                         .Config
+                                         .HasSource(Specs.Map.Facts.ToAggregates.Positions)
+                                         .HasIdentityProvider(DefaultIdentityProvider.Instance),
 
-                                     AggregateMetadata<Period, long>.Config
-                                                             .HasSource(Specs.Map.Facts.ToAggregates.Periods));
+                                     AggregateMetadata<Period, long>
+                                         .Config
+                                         .HasSource(Specs.Map.Facts.ToAggregates.Periods)
+                                         .HasIdentityProvider(DefaultIdentityProvider.Instance));
 
         public AggregateConstructionMetadataSource()
         {
