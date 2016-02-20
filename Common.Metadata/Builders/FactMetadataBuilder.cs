@@ -13,7 +13,7 @@ using NuClear.Storage.API.Specifications;
 namespace NuClear.AdvancedSearch.Common.Metadata.Builders
 {
     public class FactMetadataBuilder<T> : MetadataElementBuilder<FactMetadataBuilder<T>, FactMetadata<T>>
-        where T : class, IIdentifiable<DefaultIdentity, long>
+        where T : class, IIdentifiable<long>
     {
         private MapSpecification<IQuery, IQueryable<T>> _sourceMappingSpecification;
 
@@ -37,7 +37,7 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
 
         public FactMetadataBuilder<T> HasDependentAggregate<TAggregate>(
             Func<FindSpecification<T>, MapSpecification<IQuery, IEnumerable<long>>> dependentAggregateSpecProvider)
-            where TAggregate : class, IIdentifiable<DefaultIdentity, long>
+            where TAggregate : class, IIdentifiable<long>
         {
             // FIXME {all, 03.09.2015}: TAggregate заменить на идентификатор типа
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider =
@@ -50,25 +50,25 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
         }
 
         public FactMetadataBuilder<T> HasMatchedAggregate<TAggregate>()
-            where TAggregate : class, IIdentifiable<DefaultIdentity, long>
+            where TAggregate : class, IIdentifiable<long>
         {
             // FIXME {all, 03.09.2015}: TAggregate заменить на идентификатор типа
             // FIXME {all, 04.09.2015}: Слабое место - внутри спецификации идентификаторы, затем идём в базу за идентификаторами. Если достать их из спецификации в бузу хдить не потребуется.
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnCreate =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(DefaultIdentity.Instance.ExtractIdentity<T>())
+                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
                                            .Select(id => new InitializeAggregate(typeof(TAggregate), id)));
 
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnUpdate =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(DefaultIdentity.Instance.ExtractIdentity<T>())
+                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
                                            .Select(id => new RecalculateAggregate(typeof(TAggregate), id)));
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnDelete =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(DefaultIdentity.Instance.ExtractIdentity<T>())
+                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
                                            .Select(id => new DestroyAggregate(typeof(TAggregate), id)));
 
             AddFeatures(new DirectlyDependentAggregateFeature<T>(mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));

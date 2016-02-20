@@ -1,11 +1,11 @@
 ﻿namespace NuClear.AdvancedSearch.Common.Metadata.Model
 {
     /// <summary>
-    /// Предосталяет упрощённый доступ к экземпляру IIdentity
+    /// Предосталяет упрощённый доступ к экземпляру IIdentityProvider
     /// Необязательный базовый класс.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class IdentityBase<T>
+    public abstract class IdentityProviderBase<T>
         where T : new()
     {
         public static T Instance { get; } = new T();

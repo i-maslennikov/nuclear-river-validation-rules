@@ -81,8 +81,8 @@
     <Compile Include="Identities\ReplicationMetadataIdentity.cs" />
     <Compile Include="Identities\StatisticsRecalculationMetadataIdentity.cs" />
     <Compile Include="MapToObjectsSpecProvider.cs" />
-    <Compile Include="Model\IdentityBase.cs" />
-    <Compile Include="Model\DefaultIdentity.cs" />
+    <Compile Include="Model\IdentityProviderBase.cs" />
+    <Compile Include="Model\DefaultIdentityProvider.cs" />
     <Compile Include="Model\IAggregateEntity.cs" />
     <Compile Include="Model\IAggregatePart.cs" />
     <Compile Include="Model\IAggregateRoot.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="Model\IdentityExtensions.cs" />
     <Compile Include="Model\IFactObject.cs" />
     <Compile Include="Model\IIdentifiable.cs" />
-    <Compile Include="Model\IIdentity.cs" />
+    <Compile Include="Model\IIdentityProvider.cs" />
     <Compile Include="Model\IObject.cs" />
     <Compile Include="Model\IOperation.cs" />
     <Compile Include="Model\Operations\AggregateOperation.cs" />

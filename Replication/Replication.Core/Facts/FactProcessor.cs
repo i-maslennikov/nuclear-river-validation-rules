@@ -11,8 +11,8 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.Facts
 {
-    public class FactProcessor<TFact> : IFactProcessor 
-        where TFact : class, IIdentifiable<DefaultIdentity, long>
+    public class FactProcessor<TFact> : IFactProcessor
+        where TFact : class, IIdentifiable<long>
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<TFact> _repository;

@@ -11,7 +11,7 @@ using NuClear.Storage.API.Specifications;
 namespace NuClear.AdvancedSearch.Common.Metadata.Elements
 {
     public class AggregateMetadata<T> : MetadataElement<AggregateMetadata<T>, AggregateMetadataBuilder<T>> 
-        where T : class, IIdentifiable<DefaultIdentity, long>
+        where T : class, IIdentifiable<long>
     {
         private IMetadataElementIdentity _identity = new Uri(typeof(T).Name, UriKind.Relative).AsIdentity();
 

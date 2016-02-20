@@ -7,8 +7,9 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Model
     /// Предосталяет метод для установления связи между сущностью и её идентификатором.
     /// </summary>
     /// <typeparam name="TKey">Тип идентификатора</typeparam>
-    public interface IIdentity<TKey>
+    public interface IIdentityProvider<TKey>
     {
-        Expression<Func<TIdentifiable, TKey>> ExtractIdentity<TIdentifiable>();
+        Expression<Func<TIdentifiable, TKey>> ExtractIdentity<TIdentifiable>()
+            where TIdentifiable : IIdentifiable<TKey>;
     }
 }

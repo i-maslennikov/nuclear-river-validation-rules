@@ -52,8 +52,8 @@
     <Compile Include="Model\CI\FirmCategory2.cs" />
     <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
-    <Compile Include="Model\ICustomerIntelligenceAggregatePart.cs" />
     <Compile Include="Model\IBitFactObject.cs" />
+    <Compile Include="Model\ICustomerIntelligenceAggregatePart.cs" />
     <Compile Include="Model\IErmFactObject.cs" />
     <Compile Include="Model\IErmObject.cs" />
     <Compile Include="Model\IErmValueObject.cs" />

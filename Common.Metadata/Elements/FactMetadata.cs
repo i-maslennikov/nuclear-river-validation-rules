@@ -10,8 +10,8 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.AdvancedSearch.Common.Metadata.Elements
 {
-    public class FactMetadata<T> : MetadataElement<FactMetadata<T>, FactMetadataBuilder<T>> 
-        where T : class, IIdentifiable<DefaultIdentity, long>
+    public class FactMetadata<T> : MetadataElement<FactMetadata<T>, FactMetadataBuilder<T>>
+        where T : class, IIdentifiable<long>
     {
         private IMetadataElementIdentity _identity = new Uri(typeof(T).Name, UriKind.Relative).AsIdentity();
 

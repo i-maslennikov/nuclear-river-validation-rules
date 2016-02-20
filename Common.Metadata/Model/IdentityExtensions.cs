@@ -11,28 +11,28 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Model
     /// </summary>
     public static class IdentityExtensions
     {
-        public static Expression<Func<T, bool>> Create<T>(this DefaultIdentity identity, long id)
-            where T : IIdentifiable<DefaultIdentity, long>
+        public static Expression<Func<T, bool>> Create<T>(this DefaultIdentityProvider identityProvider, long id)
+            where T : IIdentifiable<long>
         {
-            return CreateExpression<T, DefaultIdentity, long>(identity, new[] { id });
+            return CreateExpression<T, DefaultIdentityProvider, long>(identityProvider, new[] { id });
         }
 
-        public static Expression<Func<T, bool>> Create<T>(this DefaultIdentity identity, IEnumerable<long> ids)
-            where T : IIdentifiable<DefaultIdentity, long>
+        public static Expression<Func<T, bool>> Create<T>(this DefaultIdentityProvider identityProvider, IEnumerable<long> ids)
+            where T : IIdentifiable<long>
         {
-            return CreateExpression<T, DefaultIdentity, long>(identity, ids ?? Enumerable.Empty<long>());
+            return CreateExpression<T, DefaultIdentityProvider, long>(identityProvider, ids ?? Enumerable.Empty<long>());
         }
 
-        public static long GetId<T>(this DefaultIdentity identity, T instance)
-            where T : IIdentifiable<DefaultIdentity, long>
+        public static long GetId<T>(this DefaultIdentityProvider identityProvider, T instance)
+            where T : IIdentifiable<long>
         {
-            var func = identity.ExtractIdentity<T>().Compile();
+            var func = identityProvider.ExtractIdentity<T>().Compile();
             return func.Invoke(instance);
         }
 
         private static Expression<Func<TEntity, bool>> CreateExpression<TEntity, TIdentity, TKey>(TIdentity identity, IEnumerable<TKey> keys)
-            where TEntity : IIdentifiable<TIdentity, TKey>
-            where TIdentity : IIdentity<TKey>, new()
+            where TEntity : IIdentifiable<TKey>
+            where TIdentity : IIdentityProvider<TKey>, new()
         {
             var expression = identity.ExtractIdentity<TEntity>();
             var containsMethod = GetMethodInfo<TKey>(Enumerable.Contains);

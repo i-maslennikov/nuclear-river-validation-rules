@@ -11,7 +11,7 @@ using NuClear.Storage.API.Readings;
 namespace NuClear.Replication.Core.Aggregates
 {
     public sealed class AggregateProcessor<T> : IAggregateProcessor
-        where T : class, IIdentifiable<DefaultIdentity, long>
+        where T : class, IIdentifiable<long>
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<T> _repository;
