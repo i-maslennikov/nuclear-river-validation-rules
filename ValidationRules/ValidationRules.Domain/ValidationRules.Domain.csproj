@@ -80,6 +80,8 @@
     <Compile Include="FactMetadataUriProvider.cs" />
     <Compile Include="ImportOrderValidationConfigMetadataSource.cs" />
     <Compile Include="MetadataBuilderExtesnsions.cs" />
+    <Compile Include="Model\PeriodId.cs" />
+    <Compile Include="Model\PeriodIdentityProvider.cs" />
     <Compile Include="Model\Enums\CompareMode.cs" />
     <Compile Include="Model\Aggregates\DeniedPosition.cs" />
     <Compile Include="Model\Aggregates\MasterPosition.cs" />

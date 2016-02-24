@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 
 using NuClear.River.Common.Metadata.Model;
 
@@ -17,26 +16,5 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
         public long OrganizationUnitId { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-    }
-
-    public sealed class PeriodId
-    {
-        public long OrganizationUnitId { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
-    }
-
-    /// <summary>
-    /// Описывает идентификацию по составному ключу ComplexKey
-    /// </summary>
-    public class PeriodIdentityProvider : IdentityProviderBase<PeriodIdentityProvider>, IIdentityProvider<PeriodId>
-    {
-        private static readonly PropertyAutomapper<PeriodId> x;
-
-        public Expression<Func<TIdentifiable, PeriodId>> ExtractIdentity<TIdentifiable>() 
-            where TIdentifiable : IIdentifiable<PeriodId>
-        {
-            return x.ExtractIdentity<TIdentifiable>();
-        }
     }
 }

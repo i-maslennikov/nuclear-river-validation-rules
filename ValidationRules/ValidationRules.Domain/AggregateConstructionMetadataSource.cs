@@ -9,6 +9,7 @@ using NuClear.Metamodeling.Provider.Sources;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
 using NuClear.River.Common.Metadata.Model;
+using NuClear.ValidationRules.Domain.Model;
 using NuClear.ValidationRules.Domain.Model.Aggregates;
 using NuClear.ValidationRules.Domain.Specifications;
 

@@ -15,6 +15,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                                      .Name(nameof(SingleOrderPeriod))
                                      .Aggregate(
+                                                new Aggregates::Order(),
                                                 new Aggregates::Period
                                                     {
                                                         Start = DateTime.Parse("2011-01-01T00:00:00"),
@@ -32,10 +33,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                    EndDistributionDateFact = DateTime.Parse("2011-05-01T00:00:00")
                                                });
 
+        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement SinglePricePeriod
             => ArrangeMetadataElement.Config
                                      .Name(nameof(SinglePricePeriod))
                                      .Aggregate(
+                                                new Aggregates::Price(),
                                                 new Aggregates::Period
                                                 {
                                                     Start = DateTime.Parse("2011-01-01T00:00:00"),
