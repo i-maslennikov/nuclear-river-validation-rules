@@ -21,7 +21,6 @@ create table PriceContext.Price(
     Id bigint not null,
     OrganizationUnitId bigint not null,
     BeginDate datetime2(2) not null,
-    IsPublished bit not null, -- проверить https://github.com/linq2db/linq2db/issues/313
 	constraint PK_Price primary key (Id)
 )
 go

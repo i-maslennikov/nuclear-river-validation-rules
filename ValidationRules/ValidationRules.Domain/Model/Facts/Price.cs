@@ -7,6 +7,5 @@ namespace NuClear.ValidationRules.Domain.Model.Facts
         public long Id { get; set; }
         public long OrganizationUnitId { get; set; }
         public DateTime BeginDate { get; set; }
-        public bool IsPublished { get; set; }
     }
 }

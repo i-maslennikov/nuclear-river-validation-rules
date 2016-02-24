@@ -77,7 +77,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Price>> Price =
                         new MapSpecification<IQuery, IQueryable<Facts::Price>>(
                             q => q.For<Erm::Price>()
-                                  .Where(entity => entity.IsActive && !entity.IsDeleted)
+                                  .Where(entity => entity.IsActive && !entity.IsDeleted && entity.IsPublished)
                                   .Select(Transform.Price));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::PricePosition>> PricePosition =
@@ -203,7 +203,6 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                 {
                                     Id = x.Id,
                                     BeginDate = x.BeginDate,
-                                    IsPublished = x.IsPublished, // зачем нам неопубликованные прайсы?
                                     OrganizationUnitId = x.OrganizationUnitId,
                                 };
 
