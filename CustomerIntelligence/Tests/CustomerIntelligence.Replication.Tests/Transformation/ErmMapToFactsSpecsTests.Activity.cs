@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata;
-using NuClear.CustomerIntelligence.Domain;
+using NuClear.River.Common.Metadata;
 
 using NUnit.Framework;
 

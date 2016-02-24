@@ -6,14 +6,14 @@ using System.Web.OData;
 
 using Microsoft.OData.Edm;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.EntityFramework.Emit;
 using NuClear.Querying.OData.Building;
 using NuClear.Querying.QueryExecution;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
 
 using NUnit.Framework;
 

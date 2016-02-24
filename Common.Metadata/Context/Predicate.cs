@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Context
+namespace NuClear.River.Common.Metadata.Context
 {
     public class Predicate
     {

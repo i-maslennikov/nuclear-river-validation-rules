@@ -31,10 +31,16 @@ namespace NuClear.Querying.QueryExecution
             foreach (var element in model.SchemaElements)
             {
                 var entityId = model.GetAnnotationValue<Uri>(element, AnnotationNamespace, AnnotationAttribute);
-                if (entityId == null) continue;
+                if (entityId == null)
+                {
+                    continue;
+                }
 
                 var type = resolver(entityId);
-                if (type == null) continue;
+                if (type == null)
+                {
+                    continue;
+                }
 
                 model.SetAnnotationValue(element, new ClrTypeAnnotation(type));
             }
@@ -80,7 +86,7 @@ namespace NuClear.Querying.QueryExecution
         {
             if (id == null)
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(id));
             }
 
             return id.GetComponents(UriComponents.Path, UriFormat.Unescaped);

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.Metamodeling.Elements;
+using NuClear.River.Common.Metadata.Elements;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Builders
+namespace NuClear.River.Common.Metadata.Builders
 {
     public class ImportStatisticsMetadataBuilder<T, TDto> : MetadataElementBuilder<ImportStatisticsMetadataBuilder<T, TDto>, ImportStatisticsMetadata<T, TDto>>
     {

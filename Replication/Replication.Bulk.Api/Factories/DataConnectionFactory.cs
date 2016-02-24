@@ -3,12 +3,12 @@
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 
-using NuClear.AdvancedSearch.Common.Metadata;
 using NuClear.Replication.Bulk.Api.Storage;
 using NuClear.Replication.Bulk.Metadata;
+using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.ConnectionStrings;
 
-namespace NuClear.Replication.Bulk.Api.Factories
+namespace NuClear.Replication.Bulk.API.Factories
 {
     public class DataConnectionFactory
     {

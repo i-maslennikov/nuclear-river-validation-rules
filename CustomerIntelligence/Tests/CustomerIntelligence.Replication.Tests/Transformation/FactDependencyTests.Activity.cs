@@ -1,9 +1,8 @@
 ﻿using System;
 
-using NuClear.AdvancedSearch.Common.Metadata;
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.Domain.Model.Erm;
+using NuClear.River.Common.Metadata;
 
 using NUnit.Framework;
 

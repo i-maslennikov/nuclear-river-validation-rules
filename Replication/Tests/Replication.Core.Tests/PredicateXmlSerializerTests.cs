@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Context;
+using NuClear.River.Common.Metadata.Context;
 
 using NUnit.Framework;
 

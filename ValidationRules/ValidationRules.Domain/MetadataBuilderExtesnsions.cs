@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata;
-using NuClear.AdvancedSearch.Common.Metadata.Builders;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
-using NuClear.Storage.API.Readings;
+using NuClear.River.Common.Metadata.Builders;
+using NuClear.River.Common.Metadata.Features;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.ValidationRules.Domain

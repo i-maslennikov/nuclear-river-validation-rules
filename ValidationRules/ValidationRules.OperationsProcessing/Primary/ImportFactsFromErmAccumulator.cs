@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Model.Common.Entities;
 using NuClear.OperationsTracking.API.Changes;
 using NuClear.OperationsTracking.API.UseCases;
 using NuClear.Replication.OperationsProcessing;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 

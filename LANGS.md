@@ -1,1 +1,3 @@
-* [English](docs/en/)
+* [English](docs/en)
+* [Русский](docs/ru)
+* [Media](media)

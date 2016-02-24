@@ -7,9 +7,9 @@ using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.EntityFramework.Emit;
+using NuClear.River.Common.Metadata.Elements;
 
 namespace NuClear.Querying.EntityFramework.Building
 {
@@ -29,11 +29,11 @@ namespace NuClear.Querying.EntityFramework.Building
         {
             if (metadataProvider == null)
             {
-                throw new ArgumentNullException("metadataProvider");
+                throw new ArgumentNullException(nameof(metadataProvider));
             }
             if (typeProvider == null)
             {
-                throw new ArgumentNullException("typeProvider");
+                throw new ArgumentNullException(nameof(typeProvider));
             }
 
             _metadataProvider = metadataProvider;
@@ -44,11 +44,11 @@ namespace NuClear.Querying.EntityFramework.Building
         {
             if (providerInfo == null)
             {
-                throw new ArgumentNullException("providerInfo");
+                throw new ArgumentNullException(nameof(providerInfo));
             }
             if (contextUrl == null)
             {
-                throw new ArgumentNullException("contextUrl");
+                throw new ArgumentNullException(nameof(contextUrl));
             }
 
             var boundedContextElement = LookupContext(contextUrl);
@@ -66,11 +66,11 @@ namespace NuClear.Querying.EntityFramework.Building
         {
             if (connection == null)
             {
-                throw new ArgumentNullException("connection");
+                throw new ArgumentNullException(nameof(connection));
             }
             if (contextUrl == null)
             {
-                throw new ArgumentNullException("contextUrl");
+                throw new ArgumentNullException(nameof(contextUrl));
             }
 
             var boundedContextElement = LookupContext(contextUrl);
@@ -88,10 +88,11 @@ namespace NuClear.Querying.EntityFramework.Building
         {
             BoundedContextElement boundedContextElement;
             _metadataProvider.TryGetMetadata(contextUrl, out boundedContextElement);
-            if (boundedContextElement == null || boundedContextElement.ConceptualModel == null)
+            if (boundedContextElement?.ConceptualModel == null)
             {
                 return null;
             }
+
             return boundedContextElement;
         }
 
@@ -168,11 +169,11 @@ namespace NuClear.Querying.EntityFramework.Building
         {
             if (tableName == null)
             {
-                throw new ArgumentNullException("tableName");
+                throw new ArgumentNullException(nameof(tableName));
             }
 
             schemaName = null;
-            
+
             var index = tableName.IndexOf('.');
             if (index >= 0)
             {
@@ -194,7 +195,7 @@ namespace NuClear.Querying.EntityFramework.Building
 
             // add custom conventions
             builder.Conventions.Add(new ForeignKeyMappingConvention(metadata));
-            
+
             return builder;
         }
 

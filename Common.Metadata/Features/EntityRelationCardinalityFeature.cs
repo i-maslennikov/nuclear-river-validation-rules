@@ -1,7 +1,7 @@
-﻿using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.Metamodeling.Elements.Aspects.Features;
+﻿using NuClear.Metamodeling.Elements.Aspects.Features;
+using NuClear.River.Common.Metadata.Elements;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Features
+namespace NuClear.River.Common.Metadata.Features
 {
     public sealed class EntityRelationCardinalityFeature : IUniqueMetadataFeature
     {

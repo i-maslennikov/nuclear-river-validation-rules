@@ -1,6 +1,6 @@
-﻿using NuClear.AdvancedSearch.Common.Metadata.Context;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
-using NuClear.Model.Common.Entities;
+﻿using NuClear.Model.Common.Entities;
+using NuClear.River.Common.Metadata.Context;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {

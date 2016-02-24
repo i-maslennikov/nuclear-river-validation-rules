@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Context
+namespace NuClear.River.Common.Metadata.Context
 {
     public interface ISlicer<out TSlice>
     {

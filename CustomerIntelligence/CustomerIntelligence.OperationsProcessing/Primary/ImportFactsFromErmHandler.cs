@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
@@ -12,6 +11,7 @@ using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 

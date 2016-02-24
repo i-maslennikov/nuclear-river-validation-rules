@@ -1,6 +1,4 @@
-﻿using NuClear.AdvancedSearch.Common.Metadata.Model;
-
-namespace NuClear.CustomerIntelligence.Domain.Model.Facts
+﻿namespace NuClear.CustomerIntelligence.Domain.Model.Facts
 {
     public sealed class Territory : IErmFactObject
     {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
-using NuClear.AdvancedSearch.Common.Metadata.Context;
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.River.Common.Metadata.Context;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates
@@ -47,36 +47,38 @@ namespace NuClear.Replication.Core.Aggregates
         }
 
         private void Construct(Type operation, IEnumerable<Predicate> operations)
-        {
+                    {
             foreach (var slice in _slicer.Slice(operations))
             {
                 var aggregateType = ParseAggregateType(slice.AggregateTypeId);
                 var processor = CreateProcessor(aggregateType);
 
-                using (var transaction = new TransactionScope(TransactionScopeOption.Required,
-                                                              new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
-                {
-                    using (Probe.Create("ETL2 Transforming", aggregateType.Name))
+                    using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+                                                                  new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
                     {
-
-                        if (operation == typeof(InitializeAggregate))
+                        using (Probe.Create("ETL2 Transforming", aggregateType.Name))
                         {
+
+                            if (operation == typeof(InitializeAggregate))
+                            {
                             processor.Initialize(slice);
-                        }
-
-                        if (operation == typeof(RecalculateAggregate))
-                        {
+                            }
+                            else if (operation == typeof(RecalculateAggregate))
+                            {
                             processor.Recalculate(slice);
-                        }
-
-                        if (operation == typeof(DestroyAggregate))
-                        {
+                            }
+                            else if (operation == typeof(DestroyAggregate))
+                            {
                             processor.Destroy(slice);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException($"The command of type {operation.Name} is not supported");
+                            }
                         }
-                    }
 
-                    transaction.Complete();
-                }
+                        transaction.Complete();
+                    }
             }
         }
 
@@ -103,7 +105,7 @@ namespace NuClear.Replication.Core.Aggregates
             }
 
             return _aggregateProcessorFactory.Create(aggregateMetadata);
-        }
+                }
 
         public sealed class AggregateRecalculationSlicer : ISlicer<AggregateProcessorSlice>
         {

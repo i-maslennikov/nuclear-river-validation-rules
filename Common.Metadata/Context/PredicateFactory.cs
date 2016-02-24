@@ -2,7 +2,7 @@
 
 using NuClear.Model.Common.Entities;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Context
+namespace NuClear.River.Common.Metadata.Context
 {
     public static class PredicateFactory
     {

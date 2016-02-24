@@ -1,4 +1,4 @@
-﻿namespace NuClear.AdvancedSearch.Common.Metadata
+﻿namespace NuClear.River.Common.Metadata
 {
     public static class EntityTypeIds
     {

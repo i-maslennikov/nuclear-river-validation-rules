@@ -4,11 +4,11 @@ using System.Linq;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
+using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {

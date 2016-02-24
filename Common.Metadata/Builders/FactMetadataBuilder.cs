@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Context;
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Metamodeling.Elements;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Features;
+using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Model.Common.Entities;
+using NuClear.River.Common.Metadata.Context;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Builders
+namespace NuClear.River.Common.Metadata.Builders
 {
     public class FactMetadataBuilder<T> : MetadataElementBuilder<FactMetadataBuilder<T>, FactMetadata<T>>
         where T : class, IIdentifiable
@@ -44,8 +44,8 @@ namespace NuClear.AdvancedSearch.Common.Metadata.Builders
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => dependentAggregateSpecProvider
-                                              .Invoke(specification)
-                                              .Map(q)
+                                                                                                .Invoke(specification)
+                                                                                                .Map(q)
                                               .Select(id => PredicateFactory.EntityById(EntityTypeBase<TAggregate>.Instance, id))
                                               .Select(predicate => new RecalculateAggregate(predicate)));
             AddFeatures(new IndirectlyDependentAggregateFeature<T>(mapSpecificationProvider));

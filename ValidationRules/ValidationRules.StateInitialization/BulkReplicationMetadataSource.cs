@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.ValidationRules.Storage;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Replication.Bulk.Metadata;
+using NuClear.River.Common.Metadata.Identities;
 using NuClear.ValidationRules.Domain;
 using NuClear.ValidationRules.Domain.Dto;
 using NuClear.ValidationRules.Storage.Identitites.Connections;

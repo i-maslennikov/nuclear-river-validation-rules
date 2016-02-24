@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Builders;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
+using NuClear.River.Common.Metadata.Builders;
+using NuClear.River.Common.Metadata.Features;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     public class ImportStatisticsMetadata<T, TDto> : MetadataElement<ImportStatisticsMetadata<T, TDto>, ImportStatisticsMetadataBuilder<T, TDto>>
     {

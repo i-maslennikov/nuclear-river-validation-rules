@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NuClear.CustomerIntelligence.Replication.StateInitialization.Tests</RootNamespace>
     <AssemblyName>2GIS.NuClear.CustomerIntelligence.Replication.StateInitialization.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -44,15 +44,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.Settings.API.1.1.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.Settings.API.1.2.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.API.1.2.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.API.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Utils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.Utils.1.0.3\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.Utils.1.0.12\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="linq2db, Version=1.0.7.3, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
@@ -77,7 +77,11 @@
     <Compile Include="Keys.cs" />
     <Compile Include="MappedConnectionStringSettings.cs" />
     <Compile Include="TestCaseMetadataSource.CategoryDictionary.cs" />
+    <Compile Include="TestCaseMetadataSource.Client.cs" />
+    <Compile Include="TestCaseMetadataSource.Territory.cs" />
     <Compile Include="TestCaseMetadataSource.CategoryGroupDictionary.cs" />
+    <Compile Include="TestCaseMetadataSource.IgnoredEntities.cs" />
+    <Compile Include="TestCaseMetadataSource.CategoryGroup.cs" />
     <Compile Include="TestCaseMetadataSource.Project.cs" />
     <Compile Include="TestCaseMetadataSource.Firm.cs" />
     <Compile Include="TestCaseMetadataSource.Directions.cs" />
@@ -100,9 +104,9 @@
       <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
       <Name>Common.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Replication\Replication.Bulk.Api\Replication.Bulk.Api.csproj">
+    <ProjectReference Include="..\..\..\Replication\Replication.Bulk.Api\Replication.Bulk.API.csproj">
       <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
-      <Name>Replication.Bulk.Api</Name>
+      <Name>Replication.Bulk.API</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>

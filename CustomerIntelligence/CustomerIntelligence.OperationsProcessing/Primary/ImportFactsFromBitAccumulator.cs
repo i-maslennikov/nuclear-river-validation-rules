@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Xml.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.CustomerIntelligence.Domain.DTO;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Messaging.Transports.CorporateBus.API;
 using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Tracing.API;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary

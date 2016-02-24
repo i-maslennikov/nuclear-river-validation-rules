@@ -4,8 +4,8 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-using NuClear.AdvancedSearch.Common.Metadata;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
+using NuClear.River.Common.Metadata;
+using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.ValidationRules.Domain.Dto
 {

@@ -5,22 +5,22 @@ using System.Reflection.Emit;
 using System.Web.Http;
 using System.Web.OData;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.EntityFramework.Building;
 using NuClear.Querying.Web.OData.Controllers;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Features;
 
 namespace NuClear.Querying.Web.OData.DynamicControllers
 {
-    public sealed class DynamicControllersRegistrator
+    public sealed class DynamicControllersRegistrar
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly ITypeProvider _typeProvider;
         private readonly IDynamicAssembliesRegistry _registry;
 
-        public DynamicControllersRegistrator(IMetadataProvider metadataProvider, ITypeProvider typeProvider, IDynamicAssembliesRegistry registry)
+        public DynamicControllersRegistrar(IMetadataProvider metadataProvider, ITypeProvider typeProvider, IDynamicAssembliesRegistry registry)
         {
             _metadataProvider = metadataProvider;
             _typeProvider = typeProvider;

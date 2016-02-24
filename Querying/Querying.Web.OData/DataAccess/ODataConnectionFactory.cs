@@ -2,9 +2,9 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.Metamodeling.Provider;
+using NuClear.River.Common.Metadata.Elements;
 
 using IConnectionStringSettings = NuClear.Storage.API.ConnectionStrings.IConnectionStringSettings;
 

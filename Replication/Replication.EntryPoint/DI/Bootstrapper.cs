@@ -3,13 +3,8 @@ using System.Collections.Generic;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.AdvancedSearch.Common.Identities.Connections;
-using NuClear.AdvancedSearch.Common.Metadata.Context;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Assembling.TypeProcessing;
 using NuClear.CustomerIntelligence.OperationsProcessing;
-using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
-using NuClear.CustomerIntelligence.OperationsProcessing.Final;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.DI.Unity.Config;
 using NuClear.DI.Unity.Config.RegistrationResolvers;
@@ -46,7 +41,6 @@ using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.API.Settings;
-using NuClear.Replication.Core.Facts;
 using NuClear.Replication.EntryPoint.Factories;
 using NuClear.Replication.EntryPoint.Factories.Messaging.Processor;
 using NuClear.Replication.EntryPoint.Factories.Messaging.Receiver;
@@ -57,16 +51,20 @@ using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.File;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.River.Common.Identities.Connections;
+using NuClear.River.Common.Metadata.Context;
+using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.Security;
 using NuClear.Security.API;
 using NuClear.Security.API.UserContext;
 using NuClear.Security.API.UserContext.Identity;
-using NuClear.Security;
 using NuClear.Settings.API;
 using NuClear.Settings.Unity;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
+using NuClear.ValidationRules.OperationsProcessing.Final;
 using NuClear.WCF.Client;
 using NuClear.WCF.Client.Config;
 
@@ -151,7 +149,7 @@ namespace NuClear.Replication.EntryPoint.DI
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
             container.RegisterType<IOperationIdentityRegistry, OperationIdentityRegistry>(Lifetime.Singleton,
-                new InjectionConstructor(OperationIdentityMetadata.AllOperationIdentities));
+                new InjectionConstructor(OperationIdentityMetadata.AllOperationIdentities)); // todo: взять сущности из контекста
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);
@@ -163,8 +161,7 @@ namespace NuClear.Replication.EntryPoint.DI
             container.RegisterTypeWithDependencies(typeof(CorporateBusOperationsReceiver), Lifetime.PerScope, null)
                      .RegisterTypeWithDependencies(typeof(FileReceiver), Lifetime.PerScope, null)
                      .RegisterTypeWithDependencies(typeof(ServiceBusOperationsReceiverTelemetryDecorator), Lifetime.PerScope, null)
-                     .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator>(Lifetime.Singleton)
-                     .RegisterValidationRulesTrackedUseCaseConfigurator()
+                     .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
                      .RegisterType<IOperationSender, SqlStoreSender>(Lifetime.PerScope)
                      .RegisterType<IOperationSerializer<AggregateOperation>, AggregateOperationSerializer>();

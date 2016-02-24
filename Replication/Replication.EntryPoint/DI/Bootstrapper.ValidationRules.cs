@@ -7,7 +7,6 @@ using LinqToDB.Mapping;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.AdvancedSearch.Common.Metadata.Equality;
 using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.Storage;
@@ -19,7 +18,6 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
 using NuClear.Model.Common.Entities;
-using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API;
@@ -27,7 +25,7 @@ using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.API.Settings;
 using NuClear.Replication.Core.Facts;
-using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
+using NuClear.River.Common.Metadata.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 using NuClear.Storage.Core;
@@ -35,7 +33,6 @@ using NuClear.Storage.LinqToDB;
 using NuClear.Storage.LinqToDB.Connections;
 using NuClear.Storage.LinqToDB.Writings;
 using NuClear.Storage.Readings;
-using NuClear.Storage.UseCases;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Domain;
 using NuClear.ValidationRules.OperationsProcessing;
@@ -95,7 +92,6 @@ namespace NuClear.Replication.EntryPoint.DI
                 .RegisterType<IDomainContextScope, DomainContextScope>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<ScopedDomainContextsStore>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IReadableDomainContext, CachingReadableDomainContext>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IProcessingContext, ProcessingContext>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterInstance<ILinqToDbModelFactory>(
                     new LinqToDbModelFactory(schemaMapping, transactionOptions, storageSettings.SqlCommandTimeout), Lifetime.Singleton)
                 .RegisterInstance<IObjectPropertyProvider>(
@@ -116,13 +112,6 @@ namespace NuClear.Replication.EntryPoint.DI
             return container.RegisterInstance(EntityTypeMap.CreateErmContext())
                             .RegisterInstance(EntityTypeMap.CreateFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateAggregateContext());
-        }
-
-        private static IUnityContainer RegisterValidationRulesTrackedUseCaseConfigurator(this IUnityContainer container)
-        {
-            return container.RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, TrackedUseCaseConfigurator>(
-                         Lifetime.Singleton,
-                         new InjectionFactory(x => x.Resolve<TrackedUseCaseConfigurator>(new DependencyOverride<IEntityTypeMappingRegistry<ISubDomain>>(new ResolvedParameter(typeof(IEntityTypeMappingRegistry<ErmSubDomain>))))));
         }
 
         private static IUnityContainer RegisterValidationRulesFactsReplicator(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)

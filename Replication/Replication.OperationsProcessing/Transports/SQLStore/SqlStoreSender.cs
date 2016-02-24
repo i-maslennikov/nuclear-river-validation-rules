@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Messaging.API.Flows;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Writings;
 using NuClear.Telemetry.Probing;
 

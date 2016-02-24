@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Transactions;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.Facts

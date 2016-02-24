@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Context
+namespace NuClear.River.Common.Metadata.Context
 {
     public static class PredicateProperty
     {

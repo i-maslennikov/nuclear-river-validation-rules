@@ -1,5 +1,6 @@
 ﻿using LinqToDB.Data;
 
+using NuClear.Replication.Bulk.API.Storage;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Bulk.Api.Storage

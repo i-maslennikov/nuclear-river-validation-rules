@@ -1,6 +1,6 @@
-﻿using NuClear.AdvancedSearch.Common.Metadata.Context;
+﻿using NuClear.River.Common.Metadata.Context;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Model.Operations
+namespace NuClear.River.Common.Metadata.Model.Operations
 {
     public sealed class RecalculateAggregate : AggregateOperation
     {

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model;
 
-namespace NuClear.AdvancedSearch.Common.Metadata
+namespace NuClear.River.Common.Metadata
 {
     public interface IConfigParser
     {

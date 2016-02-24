@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Context
+namespace NuClear.River.Common.Metadata.Context
 {
     public interface IPredicateXmlSerializer
     {

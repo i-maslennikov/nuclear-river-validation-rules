@@ -1,4 +1,4 @@
-using NuClear.AdvancedSearch.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.ValidationRules.Domain.Model.Aggregates
 {

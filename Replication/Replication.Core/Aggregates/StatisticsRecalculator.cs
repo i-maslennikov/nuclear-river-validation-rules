@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Context;
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Metamodeling.Provider;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.River.Common.Metadata.Context;
+using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates
@@ -50,9 +50,9 @@ namespace NuClear.Replication.Core.Aggregates
         }
 
         public sealed class StatisticsRecalculationSlicer : ISlicer<StatisticsProcessorSlice>
-        {
-            public IEnumerable<StatisticsProcessorSlice> Slice(IEnumerable<Predicate> predicates)
             {
+            public IEnumerable<StatisticsProcessorSlice> Slice(IEnumerable<Predicate> predicates)
+                {
                 return predicates.GroupBy(p => PredicateProperty.ProjectId.GetValue(p))
                                  .Select(group => group.Any(p => PredicateProperty.Type.GetValue(p) == PredicateFactory.Type.ByProject)
                                                       ? new StatisticsProcessorSlice { ProjectId = group.Key, CategoryIds = default(IReadOnlyCollection<long>) }

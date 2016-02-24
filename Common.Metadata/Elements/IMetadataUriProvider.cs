@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     public interface IMetadataUriProvider
     {
