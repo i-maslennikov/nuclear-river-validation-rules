@@ -10,7 +10,8 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Bulk.API.Factories
 {
-    public class FactBulkReplicatorFactory<T> : IBulkReplicatorFactory where T : class, IIdentifiable
+    public class FactBulkReplicatorFactory<T> : IBulkReplicatorFactory
+        where T : class, IIdentifiable<long>
     {
         private readonly IQuery _query;
         private readonly DataConnection _dataConnection;

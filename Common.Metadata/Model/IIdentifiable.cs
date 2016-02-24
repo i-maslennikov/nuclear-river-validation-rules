@@ -1,7 +1,10 @@
 ﻿namespace NuClear.River.Common.Metadata.Model
 {
-    public interface IIdentifiable
+    /// <summary>
+    /// Маркерный интерфейс, означающий, сущность может быть сопосталена с идентификатором.
+    /// </summary>
+    /// <typeparam name="TKey">Тип ключа, используемый для помеченной маркером сущности</typeparam>
+    public interface IIdentifiable<TKey>
     {
-        long Id { get; }
     }
 }

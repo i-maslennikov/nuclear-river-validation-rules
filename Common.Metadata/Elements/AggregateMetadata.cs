@@ -10,20 +10,20 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Elements
 {
-    public class AggregateMetadata<T> : MetadataElement<AggregateMetadata<T>, AggregateMetadataBuilder<T>> 
-        where T : class, IIdentifiable
+    public class AggregateMetadata<T, TKey> : MetadataElement<AggregateMetadata<T, TKey>, AggregateMetadataBuilder<T, TKey>>
+        where T : class, IIdentifiable<TKey>
     {
         private IMetadataElementIdentity _identity = new Uri(typeof(T).Name, UriKind.Relative).AsIdentity();
 
         public AggregateMetadata(
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForSource,
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget,
-            Func<IReadOnlyCollection<long>, FindSpecification<T>> findSpecificationProvider,
+            IIdentityProvider<TKey> identityProvider,
             IEnumerable<IMetadataFeature> features) : base(features)
         {
             MapSpecificationProviderForSource = mapSpecificationProviderForSource;
             MapSpecificationProviderForTarget = mapSpecificationProviderForTarget;
-            FindSpecificationProvider = findSpecificationProvider;
+            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, TKey>(keys));
         }
 
         public override IMetadataElementIdentity Identity
@@ -35,7 +35,7 @@ namespace NuClear.River.Common.Metadata.Elements
 
         public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForTarget { get; private set; }
 
-        public Func<IReadOnlyCollection<long>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
+        public Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)
         {

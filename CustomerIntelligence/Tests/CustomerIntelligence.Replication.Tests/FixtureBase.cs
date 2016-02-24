@@ -11,14 +11,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
     {
         protected static class Predicate
         {
-            public static Expression<Func<T, bool>> ById<T>(long id) where T : IIdentifiable
+            public static Expression<Func<T, bool>> ById<T>(long id) where T : IIdentifiable<long>
             {
-                return item => item.Id == id;
-            }
-
-            public static Expression<Func<IEnumerable<T>, bool>> ByIds<T>(IEnumerable<long> ids) where T : IIdentifiable
-            {
-                return items => items.ToArray().Zip(ids, (item, id) => item.Id == id).All(x => x);
+                return DefaultIdentityProvider.Instance.Create<T, long>(id);
             }
 
             public static Expression<Func<T, bool>> Match<T>(T expected)

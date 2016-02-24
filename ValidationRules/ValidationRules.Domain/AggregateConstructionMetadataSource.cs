@@ -21,21 +21,21 @@ namespace NuClear.ValidationRules.Domain
             HierarchyMetadata.Config
                              .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates))
                              .Childs(
-                                     AggregateMetadata<Price>.Config
+                                     AggregateMetadata<Price, long>.Config
                                                              .HasSource(Specs.Map.Facts.ToAggregates.Prices)
                                                              .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions, Specs.Find.Aggs.AdvertisementAmountRestrictions)
                                                              .HasValueObject(Specs.Map.Facts.ToAggregates.DeniedPositions,Specs.Find.Aggs.DeniedPositions)
                                                              .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions,Specs.Find.Aggs.MasterPositions),
 
-                                     AggregateMetadata<Order>.Config
+                                     AggregateMetadata<Order, long>.Config
                                                              .HasSource(Specs.Map.Facts.ToAggregates.Orders)
                                                              .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPositions, Specs.Find.Aggs.OrderPositions)
                                                              .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPrices, Specs.Find.Aggs.OrderPrices),
 
-                                     AggregateMetadata<Position>.Config
+                                     AggregateMetadata<Position, long>.Config
                                                              .HasSource(Specs.Map.Facts.ToAggregates.Positions),
 
-                                     AggregateMetadata<Period>.Config
+                                     AggregateMetadata<Period, long>.Config
                                                              .HasSource(Specs.Map.Facts.ToAggregates.Periods));
 
         public AggregateConstructionMetadataSource()

@@ -7,11 +7,12 @@ using NuClear.Storage.API.Specifications;
 namespace NuClear.River.Common.Metadata.Features
 {
     // TODO {all, 15.09.2015}: Подумать о правильном поядке вызова при создании/обновлении/удалении факта (до/после - аналогично *DependentAggregateFeature или должен отличаться?)
-    public class DependentStatisticsFeature<T> : IIndirectFactDependencyFeature, IFactDependencyFeature<T> where T : IIdentifiable
+    public class DependentStatisticsFeature<T, TKey> : IIndirectFactDependencyFeature, IFactDependencyFeature<T, TKey>
+        where T : IIdentifiable<TKey>
     {
-        public DependentStatisticsFeature(MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider)
+        public DependentStatisticsFeature(MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider, IIdentityProvider<TKey> identityProvider)
         {
-            FindSpecificationProvider = Specs.Find.ByIds<T>;
+            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, TKey>(keys));
 
             MapSpecificationProviderOnCreate
                 = MapSpecificationProviderOnUpdate
@@ -27,6 +28,6 @@ namespace NuClear.River.Common.Metadata.Features
         public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnCreate { get; private set; }
         public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnUpdate { get; private set; }
         public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnDelete { get; private set; }
-        public Func<IReadOnlyCollection<long>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
+        public Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
     }
 }

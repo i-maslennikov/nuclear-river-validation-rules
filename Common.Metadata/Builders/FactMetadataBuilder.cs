@@ -15,7 +15,7 @@ using NuClear.Storage.API.Specifications;
 namespace NuClear.River.Common.Metadata.Builders
 {
     public class FactMetadataBuilder<T> : MetadataElementBuilder<FactMetadataBuilder<T>, FactMetadata<T>>
-        where T : class, IIdentifiable
+        where T : class, IIdentifiable<long>
     {
         private MapSpecification<IQuery, IQueryable<T>> _sourceMappingSpecification;
 
@@ -28,7 +28,7 @@ namespace NuClear.River.Common.Metadata.Builders
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget = 
                 specification => new MapSpecification<IQuery, IEnumerable<T>>(q => targetMappingSpecification.Map(q).Where(specification));
 
-            return new FactMetadata<T>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, Specs.Find.ByIds<T>, Features);
+            return new FactMetadata<T>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, DefaultIdentityProvider.Instance, Features);
         }
 
         public FactMetadataBuilder<T> HasSource(MapSpecification<IQuery, IQueryable<T>> sourceMappingSpecification)
@@ -48,7 +48,8 @@ namespace NuClear.River.Common.Metadata.Builders
                                                                                                 .Map(q)
                                               .Select(id => PredicateFactory.EntityById(EntityTypeBase<TAggregate>.Instance, id))
                                               .Select(predicate => new RecalculateAggregate(predicate)));
-            AddFeatures(new IndirectlyDependentAggregateFeature<T>(mapSpecificationProvider));
+
+            AddFeatures(new IndirectlyDependentAggregateFeature<T, long>(DefaultIdentityProvider.Instance, mapSpecificationProvider));
             return this;
         }
 
@@ -59,25 +60,25 @@ namespace NuClear.River.Common.Metadata.Builders
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnCreate =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(x => x.Id)
+                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
                                            .Select(id => PredicateFactory.EntityById(EntityTypeBase<TAggregate>.Instance, id))
                                            .Select(predicate => new InitializeAggregate(predicate)));
 
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnUpdate =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(x => x.Id)
+                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
                                            .Select(id => PredicateFactory.EntityById(EntityTypeBase<TAggregate>.Instance, id))
                                            .Select(predicate => new RecalculateAggregate(predicate)));
 
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnDelete =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(x => x.Id)
+                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
                                            .Select(id => PredicateFactory.EntityById(EntityTypeBase<TAggregate>.Instance, id))
                                            .Select(predicate => new DestroyAggregate(predicate)));
 
-            AddFeatures(new DirectlyDependentAggregateFeature<T>(mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));
+            AddFeatures(new DirectlyDependentAggregateFeature<T, long>(DefaultIdentityProvider.Instance, mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));
             return this;
         }
     }

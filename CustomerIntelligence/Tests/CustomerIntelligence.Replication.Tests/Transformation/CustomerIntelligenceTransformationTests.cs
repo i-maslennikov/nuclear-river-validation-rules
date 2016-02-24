@@ -436,17 +436,17 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 return new Transformation(query);
             }
 
-            public Transformation Initialize<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
+            public Transformation Initialize<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
                 return Do<TAggregate>(x => x.Initialize(new AggregateProcessorSlice { AggregateIds = ids }));
             }
 
-            public Transformation Recalculate<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
+            public Transformation Recalculate<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
                 return Do<TAggregate>(x => x.Recalculate(new AggregateProcessorSlice { AggregateIds = ids }));
             }
 
-            public Transformation Destroy<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable
+            public Transformation Destroy<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
                 return Do<TAggregate>(x => x.Destroy(new AggregateProcessorSlice { AggregateIds = ids }));
             }
@@ -471,7 +471,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             private Transformation Do<TAggregate>(Action<AggregateProcessor<TAggregate>> action)
-                where TAggregate : class, IIdentifiable
+                where TAggregate : class, IIdentifiable<long>
             {
                 var aggregateType = typeof(TAggregate);
 
@@ -489,7 +489,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             private class Factory<TAggregate> : IAggregateProcessorFactory, IValueObjectProcessorFactory
-                where TAggregate : class, IIdentifiable
+                where TAggregate : class, IIdentifiable<long>
             {
                 private readonly IQuery _query;
                 private readonly IRepositoryFactory _repositoryFactory;
@@ -504,7 +504,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
                 public IAggregateProcessor Create(IMetadataElement aggregateMetadata)
                 {
-                    return new AggregateProcessor<TAggregate>((AggregateMetadata<TAggregate>)aggregateMetadata, this, _query, _repositoryFactory.Create<TAggregate>());
+                    return new AggregateProcessor<TAggregate>((AggregateMetadata<TAggregate, long>)aggregateMetadata, this, _query, _repositoryFactory.Create<TAggregate>());
                 }
 
                 public IValueObjectProcessor Create(IValueObjectMetadataElement metadata)

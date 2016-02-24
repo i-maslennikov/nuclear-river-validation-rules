@@ -18,7 +18,7 @@ namespace NuClear.Replication.Bulk.API.Factories
             new Dictionary<Type, Type>
             {
                 { typeof(FactMetadata<>), typeof(FactBulkReplicatorFactory<>) },
-                { typeof(AggregateMetadata<>), typeof(AggregatesBulkReplicatorFactory<>) },
+                { typeof(AggregateMetadata<,>), typeof(AggregatesBulkReplicatorFactory<,>) },
                 { typeof(ValueObjectMetadataElement<>), typeof(ValueObjectsBulkReplicatorFactory<>) },
                 { typeof(StatisticsRecalculationMetadata<>), typeof(StatisticsBulkReplicatorFactory<>) },
                 { typeof(ImportStatisticsMetadata<,>), typeof(ImportStatisticsBulkReplicatorFactory<,>) },

@@ -13,9 +13,9 @@ namespace NuClear.Replication.Core.Facts
     public class FactDependencyProcessor<TFact> : IFactDependencyProcessor
     {
         private readonly IQuery _query;
-        private readonly IFactDependencyFeature<TFact> _metadata;
+        private readonly IFactDependencyFeature<TFact, long> _metadata;
 
-        public FactDependencyProcessor(IFactDependencyFeature<TFact> metadata, IQuery query)
+        public FactDependencyProcessor(IFactDependencyFeature<TFact, long> metadata, IQuery query)
         {
             _query = query;
             _metadata = metadata;

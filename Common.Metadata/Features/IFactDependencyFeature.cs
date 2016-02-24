@@ -15,13 +15,13 @@ namespace NuClear.River.Common.Metadata.Features
     public interface IIndirectFactDependencyFeature : IFactDependencyFeature
     {
     }
-    
-    public interface IFactDependencyFeature<T> : IFactDependencyFeature
+
+    public interface IFactDependencyFeature<T, TKey> : IFactDependencyFeature
     {
         MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnCreate { get; }
         MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnUpdate { get; }
         MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnDelete { get; }
 
-        Func<IReadOnlyCollection<long>, FindSpecification<T>> FindSpecificationProvider { get; }
+        Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; }
     }
 }

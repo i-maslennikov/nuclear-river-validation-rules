@@ -17,7 +17,7 @@ namespace NuClear.CustomerIntelligence.Domain
     public static class MetadataBuilderExtesnsions
     {
         public static FactMetadataBuilder<T> LeadsToStatisticsCalculation<T>(this FactMetadataBuilder<T> builder, Func<FindSpecification<T>, MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>>> provider)
-            where T : class, IIdentifiable
+            where T : class, IIdentifiable<long>
         {
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
@@ -28,7 +28,7 @@ namespace NuClear.CustomerIntelligence.Domain
                                                       : PredicateFactory.StatisticsByProject(tuple.Item1))
                                                   .Select(predicate => new RecalculateStatisticsOperation(predicate)));
 
-            return builder.WithFeatures(new DependentStatisticsFeature<T>(mapSpecificationProvider));
+            return builder.WithFeatures(new DependentStatisticsFeature<T, long>(mapSpecificationProvider, DefaultIdentityProvider.Instance));
         }
 
         public static ImportStatisticsMetadataBuilder<T, TDto> LeadsToProjectStatisticsCalculation<T, TDto>(this ImportStatisticsMetadataBuilder<T, TDto> builder)

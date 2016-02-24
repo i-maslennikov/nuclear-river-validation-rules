@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.River.Common.Metadata.Model;
@@ -10,18 +11,23 @@ namespace NuClear.River.Common.Metadata
     {
         public static class Find
         {
-            public static FindSpecification<T> ByIds<T>(IReadOnlyCollection<long> ids) where T : IIdentifiable
+            public static FindSpecification<T> ByIds<T>(IReadOnlyCollection<long> ids)
+                where T : IIdentifiable<long>
             {
-                return new FindSpecification<T>(x => ids.Contains(x.Id));
+                return new FindSpecification<T>(DefaultIdentityProvider.Instance.Create<T, long>(ids));
             }
         }
 
         public static class Map
         {
+            // Какое-то Г. зачем T[] => int[], когда есть T => int?
+            // Тем более, что используется Func, а не Expression, а значит, все вычисления на стороне приложения
             public static MapSpecification<IEnumerable<T>, IEnumerable<long>> ToIds<T>()
-                where T : IIdentifiable
+                where T : IIdentifiable<long>
             {
-                return new MapSpecification<IEnumerable<T>, IEnumerable<long>>(x => x.Select(y => y.Id));
+                Func<T, long> identityProjector = DefaultIdentityProvider.Instance.ExtractIdentity<T>().Compile();
+                Func<IEnumerable<T>, IEnumerable<long>> projector = item => item.Select(identityProjector);
+                return new MapSpecification<IEnumerable<T>, IEnumerable<long>>(projector);
             }
 
             public static MapSpecification<IEnumerable<T>, IEnumerable<T>> ZeroMapping<T>()

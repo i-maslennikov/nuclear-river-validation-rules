@@ -763,7 +763,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             public Transformation ApplyChanges<TFact>(params long[] ids)
-                where TFact : class, IIdentifiable, IFactObject
+                where TFact : class, IIdentifiable<long>, IFactObject
             {
                 var factType = typeof(TFact);
 
@@ -793,7 +793,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             private class Factory<TFact> : IFactProcessorFactory, IFactDependencyProcessorFactory
-                where TFact : class, IIdentifiable, IFactObject
+                where TFact : class, IIdentifiable<long>, IFactObject
             {
                 private readonly IQuery _query;
                 private readonly IBulkRepository<TFact> _repository;
@@ -811,7 +811,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
                 public IFactDependencyProcessor Create(IFactDependencyFeature metadata)
                 {
-                    return new FactDependencyProcessor<TFact>((IFactDependencyFeature<TFact>)metadata, _query);
+                    return new FactDependencyProcessor<TFact>((IFactDependencyFeature<TFact, long>)metadata, _query);
                 }
             }
         }

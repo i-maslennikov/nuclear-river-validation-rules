@@ -91,6 +91,8 @@
     <Compile Include="Identities\StatisticsRecalculationMetadataIdentity.cs" />
     <Compile Include="IConfigParser.cs" />
     <Compile Include="MapToObjectsSpecProvider.cs" />
+    <Compile Include="Model\IdentityProviderBase.cs" />
+    <Compile Include="Model\DefaultIdentityProvider.cs" />
     <Compile Include="Model\IAggregateEntity.cs" />
     <Compile Include="Model\IAggregatePart.cs" />
     <Compile Include="Model\IAggregateRoot.cs" />
@@ -98,8 +100,10 @@
     <Compile Include="Model\IDataTransferObject.cs" />
     <Compile Include="Equality\IObjectPropertyProvider.cs" />
     <Compile Include="Equality\IEqualityComparerFactory.cs" />
+    <Compile Include="Model\IdentityExtensions.cs" />
     <Compile Include="Model\IFactObject.cs" />
     <Compile Include="Model\IIdentifiable.cs" />
+    <Compile Include="Model\IIdentityProvider.cs" />
     <Compile Include="Model\IObject.cs" />
     <Compile Include="Model\IOperation.cs" />
     <Compile Include="Model\Operations\AggregateOperation.cs" />

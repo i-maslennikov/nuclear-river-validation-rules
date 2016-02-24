@@ -10,21 +10,21 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Elements
 {
-    public class FactMetadata<T> : MetadataElement<FactMetadata<T>, FactMetadataBuilder<T>> 
-        where T : class, IIdentifiable
+    public class FactMetadata<T> : MetadataElement<FactMetadata<T>, FactMetadataBuilder<T>>
+        where T : class, IIdentifiable<long>
     {
         private IMetadataElementIdentity _identity = new Uri(typeof(T).Name, UriKind.Relative).AsIdentity();
 
         public FactMetadata(
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForSource,
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget,
-            Func<IReadOnlyCollection<long>, FindSpecification<T>> findSpecificationProvider,
+            IIdentityProvider<long> identityProvider,
             IEnumerable<IMetadataFeature> features)
             : base(features)
         {
             MapSpecificationProviderForSource = mapSpecificationProviderForSource;
             MapSpecificationProviderForTarget = mapSpecificationProviderForTarget;
-            FindSpecificationProvider = findSpecificationProvider;
+            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, long>(keys));
         }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)
