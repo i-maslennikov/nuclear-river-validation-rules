@@ -31,7 +31,7 @@ namespace NuClear.Replication.EntryPoint
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.ServiceName = "2GIS.NuClear.AdvancedSearch.ReplicationService";
+            this.ServiceName = "2GIS.NuClear.River.ReplicationService";
         }
 
         #endregion
