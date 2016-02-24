@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Transactions;
 
-using NuClear.AdvancedSearch.Common.Metadata;
 using NuClear.Replication.Core.API;
+using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 

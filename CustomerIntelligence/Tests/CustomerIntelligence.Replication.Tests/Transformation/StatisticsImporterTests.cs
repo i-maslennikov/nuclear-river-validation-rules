@@ -3,12 +3,11 @@ using System.Linq;
 
 using Moq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.DTO;
 using NuClear.Metamodeling.Elements;
-using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.Facts;
+using NuClear.River.Common.Metadata.Elements;
 
 using NUnit.Framework;
 

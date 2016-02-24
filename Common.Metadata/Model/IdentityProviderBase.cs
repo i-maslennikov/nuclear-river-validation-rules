@@ -1,4 +1,4 @@
-﻿namespace NuClear.AdvancedSearch.Common.Metadata.Model
+﻿namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
     /// Предосталяет упрощённый доступ к экземпляру IIdentityProvider

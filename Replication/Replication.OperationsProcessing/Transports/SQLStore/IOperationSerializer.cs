@@ -1,6 +1,6 @@
-﻿using NuClear.AdvancedSearch.Common.Metadata.Model;
-using NuClear.Messaging.API.Flows;
+﻿using NuClear.Messaging.API.Flows;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
+using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
 {

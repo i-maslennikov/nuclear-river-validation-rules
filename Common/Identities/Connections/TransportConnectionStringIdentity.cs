@@ -1,18 +1,12 @@
 ﻿using NuClear.Model.Common;
 using NuClear.Storage.API.ConnectionStrings;
 
-namespace NuClear.AdvancedSearch.Common.Identities.Connections
+namespace NuClear.River.Common.Identities.Connections
 {
     public class TransportConnectionStringIdentity : IdentityBase<TransportConnectionStringIdentity>, IConnectionStringIdentity
     {
-        public override int Id
-        {
-            get { return 3; }
-        }
+        public override int Id => 3;
 
-        public override string Description
-        {
-            get { return "Operations transport DB connection string identity"; }
-        }
+        public override string Description => "Operations transport DB connection string identity";
     }
 }

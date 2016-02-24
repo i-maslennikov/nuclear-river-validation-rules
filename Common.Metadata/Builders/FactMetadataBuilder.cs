@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.Metamodeling.Elements;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Features;
+using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Builders
+namespace NuClear.River.Common.Metadata.Builders
 {
     public class FactMetadataBuilder<T> : MetadataElementBuilder<FactMetadataBuilder<T>, FactMetadata<T>>
         where T : class, IIdentifiable<long>

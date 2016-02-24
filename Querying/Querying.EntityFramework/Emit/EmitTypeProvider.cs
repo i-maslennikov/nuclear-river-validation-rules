@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Reflection.Emit;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Querying.EntityFramework.Building;
+using NuClear.River.Common.Metadata.Elements;
 
 namespace NuClear.Querying.EntityFramework.Emit
 {
@@ -21,22 +21,16 @@ namespace NuClear.Querying.EntityFramework.Emit
         public EmitTypeProvider()
         {
             _assemblyBuilder = new Lazy<AssemblyBuilder>(() => EmitHelper.DefineAssembly(CustomCodeName));
-            _moduleBuilder = new Lazy<ModuleBuilder>(() => AssemblyBuilder.DefineModule(CustomCodeName));
+            _moduleBuilder = new Lazy<ModuleBuilder>(() => _assemblyBuilder.Value.DefineModule(CustomCodeName));
         }
 
-        public IReadOnlyDictionary<IMetadataElementIdentity, Type> RegisteredTypes
-        {
-            get
-            {
-                return new ReadOnlyDictionary<IMetadataElementIdentity, Type>(_typesById);
-            }
-        }
+        public IReadOnlyDictionary<IMetadataElementIdentity, Type> RegisteredTypes => new ReadOnlyDictionary<IMetadataElementIdentity, Type>(_typesById);
 
         public Type Resolve(EntityElement entityElement)
         {
             if (entityElement == null)
             {
-                throw new ArgumentNullException("entityElement");
+                throw new ArgumentNullException(nameof(entityElement));
             }
 
             Type type;
@@ -44,37 +38,21 @@ namespace NuClear.Querying.EntityFramework.Emit
             {
                 _typesById.Add(entityElement.Identity, type = CreateType(entityElement));
             }
-            
+
             return type;
-        }
-
-        private AssemblyBuilder AssemblyBuilder
-        {
-            get
-            {
-                return _assemblyBuilder.Value;
-            }
-        }
-
-        private ModuleBuilder ModuleBuilder
-        {
-            get
-            {
-                return _moduleBuilder.Value;
-            }
         }
 
         private Type CreateType(EntityElement entityElement)
         {
             var typeName = entityElement.ResolveFullName();
-            var tableTypeBuilder = ModuleBuilder.DefineType(typeName, TypeAttributes.Public);
+            var typeBuilder = _moduleBuilder.Value.DefineType(typeName, TypeAttributes.Public);
 
             foreach (var propertyElement in entityElement.Properties)
             {
                 var propertyName = propertyElement.ResolveName();
                 var propertyType = ResolveType(propertyElement);
 
-                tableTypeBuilder.DefineProperty(propertyName, propertyType);
+                typeBuilder.DefineProperty(propertyName, propertyType);
             }
 
             foreach (var relationElement in entityElement.Relations)
@@ -85,10 +63,10 @@ namespace NuClear.Querying.EntityFramework.Emit
                 var propertyName = relationElement.ResolveName();
                 var propertyType = CreateRelationType(Resolve(relationTarget), relationCardinality);
 
-                tableTypeBuilder.DefineProperty(propertyName, propertyType);
+                typeBuilder.DefineProperty(propertyName, propertyType);
             }
 
-            return tableTypeBuilder.CreateType();
+            return typeBuilder.CreateType();
         }
 
         private Type ResolveType(EntityPropertyElement propertyElement)
@@ -125,7 +103,7 @@ namespace NuClear.Querying.EntityFramework.Emit
             var typeName = element.ResolveName();
             var underlyingType = ConvertType(element.UnderlyingType);
 
-            var typeBuilder = ModuleBuilder.DefineEnum(typeName, underlyingType);
+            var typeBuilder = _moduleBuilder.Value.DefineEnum(typeName, underlyingType);
 
             foreach (var member in element.Members)
             {
@@ -159,7 +137,7 @@ namespace NuClear.Querying.EntityFramework.Emit
                 case ElementaryTypeKind.DateTimeOffset:
                     return typeof(DateTimeOffset);
                 default:
-                    throw new ArgumentOutOfRangeException("propertyType");
+                    throw new ArgumentOutOfRangeException(nameof(propertyType));
             }
         }
 
@@ -173,7 +151,7 @@ namespace NuClear.Querying.EntityFramework.Emit
                 case EntityRelationCardinality.Many:
                     return typeof(ICollection<>).MakeGenericType(entityType);
                 default:
-                    throw new ArgumentOutOfRangeException("cardinality");
+                    throw new ArgumentOutOfRangeException(nameof(cardinality));
             }
         }
     }

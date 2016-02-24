@@ -8,26 +8,26 @@ using System.Web.OData.Routing;
 
 using Microsoft.OData.Edm;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.Web.OData.DI;
 using NuClear.Querying.Web.OData.DynamicControllers;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Querying.Web.OData
 {
-    internal sealed class ODataModelRegistrator
+    public sealed class ODataModelRegistrar
     {
         private static readonly ConfigureHttpRequest ConfigureHttpRequest = Bootstrapper.ConfigureHttpRequest;
 
         private readonly IMetadataProvider _metadataProvider;
-        private readonly DynamicControllersRegistrator _dynamicControllersRegistrator;
+        private readonly DynamicControllersRegistrar _dynamicControllersRegistrar;
         private readonly EdmModelWithClrTypesBuilder _edmModelWithClrTypesBuilder;
 
-        public ODataModelRegistrator(IMetadataProvider metadataProvider, DynamicControllersRegistrator dynamicControllersRegistrator, EdmModelWithClrTypesBuilder edmModelWithClrTypesBuilder)
+        public ODataModelRegistrar(IMetadataProvider metadataProvider, DynamicControllersRegistrar dynamicControllersRegistrar, EdmModelWithClrTypesBuilder edmModelWithClrTypesBuilder)
         {
             _metadataProvider = metadataProvider;
-            _dynamicControllersRegistrator = dynamicControllersRegistrator;
+            _dynamicControllersRegistrar = dynamicControllersRegistrar;
             _edmModelWithClrTypesBuilder = edmModelWithClrTypesBuilder;
         }
 
@@ -48,7 +48,7 @@ namespace NuClear.Querying.Web.OData
                 var routePrefix = contextId.Segments.Last();
                 MapRoute(routePrefix, edmModel, httpServer, ConfigureHttpRequest);
 
-                _dynamicControllersRegistrator.RegisterDynamicControllers(contextId);
+                _dynamicControllersRegistrar.RegisterDynamicControllers(contextId);
             }
         }
 

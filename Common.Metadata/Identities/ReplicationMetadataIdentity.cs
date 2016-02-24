@@ -5,7 +5,7 @@ using NuClear.Metamodeling.Kinds;
 
 using MetadataBuilder = NuClear.Metamodeling.Elements.Identities.Builder.Metadata;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Identities
+namespace NuClear.River.Common.Metadata.Identities
 {
     public class ReplicationMetadataIdentity : MetadataKindIdentityBase<ReplicationMetadataIdentity>
     {

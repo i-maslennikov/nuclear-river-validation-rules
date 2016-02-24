@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Model.Operations
+namespace NuClear.River.Common.Metadata.Model.Operations
 {
     public sealed class AggregateOperationPriorityComparer : IComparer<Type>
     {

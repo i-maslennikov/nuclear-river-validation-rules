@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.Metamodeling.Elements.Aspects.Features;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Features
+namespace NuClear.River.Common.Metadata.Features
 {
     public interface IFactDependencyFeature : IMetadataFeature
     {

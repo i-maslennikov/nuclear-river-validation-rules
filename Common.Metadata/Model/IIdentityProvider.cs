@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Model
+namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
     /// Предосталяет метод для установления связи между сущностью и её идентификатором.

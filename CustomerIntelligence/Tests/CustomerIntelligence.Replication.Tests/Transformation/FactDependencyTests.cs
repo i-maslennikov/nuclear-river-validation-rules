@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
-using NuClear.AdvancedSearch.Common.Metadata.Model.Operations;
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Features;
+using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 
 using NUnit.Framework;

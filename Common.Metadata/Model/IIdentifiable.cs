@@ -1,4 +1,4 @@
-﻿namespace NuClear.AdvancedSearch.Common.Metadata.Model
+﻿namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
     /// Маркерный интерфейс, означающий, сущность может быть сопосталена с идентификатором.

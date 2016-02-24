@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Model
+namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
     /// Описывает идентификацию по единственному свойству Id типа int

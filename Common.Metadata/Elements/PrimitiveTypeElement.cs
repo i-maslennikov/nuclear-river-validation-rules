@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
+using NuClear.River.Common.Metadata.Identities;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     public sealed class PrimitiveTypeElement : MetadataElement, IStructuralModelTypeElement
     {

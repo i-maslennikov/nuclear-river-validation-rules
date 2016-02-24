@@ -3,7 +3,7 @@ using System.Linq;
 
 using NuClear.Metamodeling.Elements.Identities;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     internal static class MetadataElementIdentityExtensions
     {

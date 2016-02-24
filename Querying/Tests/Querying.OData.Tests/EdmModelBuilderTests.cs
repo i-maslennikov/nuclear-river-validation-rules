@@ -7,15 +7,15 @@ using Microsoft.OData.Edm.Library;
 
 using Moq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Builders;
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Identities;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Querying.OData.Building;
+using NuClear.River.Common.Metadata.Builders;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
 
 using NUnit.Framework;
 

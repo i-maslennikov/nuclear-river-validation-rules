@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Model
+namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
     /// Расширяемый набор функционала, использующего идентифицируемость сущностей.

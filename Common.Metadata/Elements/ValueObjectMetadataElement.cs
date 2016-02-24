@@ -7,7 +7,7 @@ using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     public class ValueObjectMetadataElement<T> : MetadataElement, IValueObjectMetadataElement
     {

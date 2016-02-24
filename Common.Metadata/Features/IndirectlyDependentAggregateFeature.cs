@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Features
+namespace NuClear.River.Common.Metadata.Features
 {
     public class IndirectlyDependentAggregateFeature<T, TKey> : IIndirectFactDependencyFeature, IFactDependencyFeature<T, TKey>
         where T : IIdentifiable<TKey>

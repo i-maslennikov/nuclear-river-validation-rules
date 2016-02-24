@@ -7,9 +7,9 @@ using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Replication.Bulk.Api;
-using NuClear.Replication.Bulk.Api.Factories;
-using NuClear.Replication.Bulk.Api.Storage;
+using NuClear.Replication.Bulk.API;
+using NuClear.Replication.Bulk.API.Factories;
+using NuClear.Replication.Bulk.API.Storage;
 
 namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
 {

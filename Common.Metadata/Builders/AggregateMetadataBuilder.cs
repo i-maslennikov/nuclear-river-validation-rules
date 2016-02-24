@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.AdvancedSearch.Common.Metadata.Elements;
-using NuClear.AdvancedSearch.Common.Metadata.Features;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.Metamodeling.Elements;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Builders
+namespace NuClear.River.Common.Metadata.Builders
 {
     public class AggregateMetadataBuilder<T, TKey> : MetadataElementBuilder<AggregateMetadataBuilder<T, TKey>, AggregateMetadata<T, TKey>>
         where T : class, IIdentifiable<TKey>

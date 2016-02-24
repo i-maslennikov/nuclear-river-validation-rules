@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.AdvancedSearch.Common.Metadata.Builders;
-using NuClear.AdvancedSearch.Common.Metadata.Model;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
+using NuClear.River.Common.Metadata.Builders;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Elements
+namespace NuClear.River.Common.Metadata.Elements
 {
     public class FactMetadata<T> : MetadataElement<FactMetadata<T>, FactMetadataBuilder<T>>
         where T : class, IIdentifiable<long>
