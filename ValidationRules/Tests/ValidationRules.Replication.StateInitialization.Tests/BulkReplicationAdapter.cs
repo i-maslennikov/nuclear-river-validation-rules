@@ -12,6 +12,7 @@ using NuClear.Storage.API.ConnectionStrings;
 using NuClear.ValidationRules.Domain;
 using NuClear.ValidationRules.StateInitialization;
 
+using DataConnectionFactory = NuClear.Replication.Bulk.API.Factories.DataConnectionFactory;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {

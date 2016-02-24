@@ -15,9 +15,9 @@ using LinqToDB.Expressions;
 using LinqToDB.Mapping;
 using LinqToDB.SqlQuery;
 
+using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.Replication.Tests.Data;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Storage.Core;
 using NuClear.Storage.LinqToDB;
@@ -49,7 +49,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
         private static readonly Lazy<Type[]> Tables = new Lazy<Type[]>(
             () =>
             {
-                var accessor = typeof(EntityTypeIds);
+                var accessor = typeof(ICustomerIntelligenceAggregatePart);
                 return accessor.Assembly.GetTypes()
                                .Where(t => t.IsClass && !t.Namespace.IsNullOrEmpty() && t.Namespace.Contains("Model"))
                                .ToArray();

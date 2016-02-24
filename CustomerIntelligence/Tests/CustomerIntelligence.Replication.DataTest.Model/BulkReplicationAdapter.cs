@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.StateInitialization;
