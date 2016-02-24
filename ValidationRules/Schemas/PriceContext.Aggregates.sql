@@ -21,7 +21,7 @@ go
 
 create table PriceAggregate.Price(
     Id bigint NOT NULL,
-	constraint PK_Price primary key (Id)
+    constraint PK_Price primary key (Id)
 )
 go
 
@@ -57,17 +57,17 @@ go
 create table PriceAggregate.[Order](
     Id bigint NOT NULL,
     FirmId bigint NOT NULL,
-	constraint PK_Order primary key (Id)
+    constraint PK_Order primary key (Id)
 )
 go
 
 create table PriceAggregate.OrderPosition(
     OrderId bigint NOT NULL,
-	CompareMode int NOT NULL,
+    CompareMode int NOT NULL,
     PackagePositionId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,
     Category3Id bigint NULL,
-	Category1Id bigint NULL,
+    Category1Id bigint NULL,
     FirmAddressId bigint NULL
 )
 create index IX_OrderPosition_OrderId ON PriceAggregate.OrderPosition (OrderId)
@@ -86,7 +86,7 @@ create table PriceAggregate.Period(
     OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
     [End] datetime2(2) NOT NULL,
-	constraint PK_Period primary key (Id)
+    constraint PK_Period primary key (Id)
 )
 go
 
@@ -110,6 +110,6 @@ go
 create table PriceAggregate.Position(
     Id bigint NOT NULL,
     PositionCategoryId bigint NOT NULL,
-	constraint PK_Position primary key (Id)
+    constraint PK_Position primary key (Id)
 )
 go
