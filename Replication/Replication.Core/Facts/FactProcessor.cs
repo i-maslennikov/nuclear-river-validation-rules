@@ -24,10 +24,9 @@ namespace NuClear.Replication.Core.Facts
         private readonly DataChangesDetector<TFact, TFact> _changesDetector;
         private readonly EqualityComparer<long> _equalityProvider;
         private readonly Func<IEnumerable<long>, FindSpecification<TFact>> _findSpecificationProvider;
-        private readonly DefaultIdentityProvider _factIdentityProvider;
         private readonly Func<TFact, long> _identityProvider;
 
-        public FactProcessor(FactMetadata<TFact> factMetadata, IFactDependencyProcessorFactory dependencyProcessorFactory, IQuery query, IBulkRepository<TFact> repository)
+        public FactProcessor(IIdentityProvider<long> factIdentityProvider, FactMetadata<TFact> factMetadata, IFactDependencyProcessorFactory dependencyProcessorFactory, IQuery query, IBulkRepository<TFact> repository)
         {
             _query = query;
             _repository = repository;
@@ -36,9 +35,8 @@ namespace NuClear.Replication.Core.Facts
             _indirectDepencencyProcessors = _factMetadata.Features.OfType<IIndirectFactDependencyFeature>().Select(dependencyProcessorFactory.Create).ToArray();
             _changesDetector = new DataChangesDetector<TFact, TFact>(_factMetadata.MapSpecificationProviderForSource, _factMetadata.MapSpecificationProviderForTarget, _query);
             _equalityProvider = EqualityComparer<long>.Default;
-            _factIdentityProvider = DefaultIdentityProvider.Instance;
-            _findSpecificationProvider = ids => new FindSpecification<TFact>(_factIdentityProvider.Create<TFact, long>(ids));
-            _identityProvider = _factIdentityProvider.ExtractIdentity<TFact>().Compile();
+            _findSpecificationProvider = ids => new FindSpecification<TFact>(factIdentityProvider.Create<TFact, long>(ids));
+            _identityProvider = factIdentityProvider.ExtractIdentity<TFact>().Compile();
         }
 
         public IReadOnlyCollection<IOperation> ApplyChanges(IReadOnlyCollection<long> ids)

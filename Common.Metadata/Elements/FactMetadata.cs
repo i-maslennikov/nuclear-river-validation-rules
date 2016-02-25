@@ -6,7 +6,6 @@ using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.River.Common.Metadata.Builders;
 using NuClear.River.Common.Metadata.Model;
-using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Elements
 {
@@ -18,13 +17,11 @@ namespace NuClear.River.Common.Metadata.Elements
         public FactMetadata(
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForSource,
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget,
-            IIdentityProvider<long> identityProvider,
             IEnumerable<IMetadataFeature> features)
             : base(features)
         {
             MapSpecificationProviderForSource = mapSpecificationProviderForSource;
             MapSpecificationProviderForTarget = mapSpecificationProviderForTarget;
-            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, long>(keys));
         }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)
@@ -40,7 +37,5 @@ namespace NuClear.River.Common.Metadata.Elements
         public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForSource { get; private set; }
 
         public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForTarget { get; private set; }
-
-        public Func<IReadOnlyCollection<long>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
     }
 }

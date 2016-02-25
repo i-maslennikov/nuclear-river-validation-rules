@@ -26,7 +26,7 @@ namespace NuClear.River.Common.Metadata.Builders
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget = 
                 specification => new MapSpecification<IQuery, IEnumerable<T>>(q => targetMappingSpecification.Map(q).Where(specification));
 
-            return new FactMetadata<T>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, DefaultIdentityProvider.Instance, Features);
+            return new FactMetadata<T>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, Features);
         }
 
         public FactMetadataBuilder<T> HasSource(MapSpecification<IQuery, IQueryable<T>> sourceMappingSpecification)
