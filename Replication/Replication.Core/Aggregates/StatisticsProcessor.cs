@@ -2,7 +2,6 @@
 
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
-using NuClear.River.Common.Metadata;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Equality;
 using NuClear.Storage.API.Readings;
@@ -31,7 +30,7 @@ namespace NuClear.Replication.Core.Aggregates
 
             // Сначала сравниением получаем различающиеся записи,
             // затем получаем те из различающихся, которые совпадают по идентификатору.
-            var intermediateResult = _changesDetector.DetectChanges(Specs.Map.ZeroMapping<T>(), filter, _equalityComparerFactory.CreateCompleteComparer<T>());
+            var intermediateResult = _changesDetector.DetectChanges(x => x, filter, _equalityComparerFactory.CreateCompleteComparer<T>());
             var changes = MergeTool.Merge(intermediateResult.Difference, intermediateResult.Complement, _equalityComparerFactory.CreateIdentityComparer<T>());
 
             _repository.Delete(changes.Complement);

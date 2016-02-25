@@ -2,7 +2,6 @@
 
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
-using NuClear.River.Common.Metadata;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Equality;
 using NuClear.River.Common.Metadata.Model;
@@ -10,7 +9,7 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class ValueObjectProcessor<T> : IValueObjectProcessor 
+    public sealed class ValueObjectProcessor<T> : IValueObjectProcessor
         where T : class, IObject
     {
         private readonly IBulkRepository<T> _repository;
@@ -27,9 +26,9 @@ namespace NuClear.Replication.Core.Aggregates
             _changesDetector = new DataChangesDetector<T, T>(_metadata.MapSpecificationProviderForSource, _metadata.MapSpecificationProviderForTarget, query);
         }
 
-        public void ApplyChanges(IReadOnlyCollection<long> ids)
+        public void ApplyChanges(IReadOnlyCollection<long> aggregateIds)
         {
-            var mergeResult = _changesDetector.DetectChanges(Specs.Map.ZeroMapping<T>(), _metadata.FindSpecificationProvider.Invoke(ids), _equalityComparerFactory.CreateIdentityComparer<T>());
+            var mergeResult = _changesDetector.DetectChanges(x => x, _metadata.FindSpecificationProvider.Invoke(aggregateIds), _equalityComparerFactory.CreateIdentityComparer<T>());
 
             _repository.Delete(mergeResult.Complement);
             _repository.Create(mergeResult.Difference);

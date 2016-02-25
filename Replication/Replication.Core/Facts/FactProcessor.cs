@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
-using NuClear.River.Common.Metadata;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
+using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Facts
 {
@@ -21,6 +22,10 @@ namespace NuClear.Replication.Core.Facts
         private readonly IReadOnlyCollection<IFactDependencyProcessor> _depencencyProcessors;
         private readonly IReadOnlyCollection<IFactDependencyProcessor> _indirectDepencencyProcessors;
         private readonly DataChangesDetector<TFact, TFact> _changesDetector;
+        private readonly EqualityComparer<long> _equalityProvider;
+        private readonly Func<IEnumerable<long>, FindSpecification<TFact>> _findSpecificationProvider;
+        private readonly DefaultIdentityProvider _factIdentityProvider;
+        private readonly Func<TFact, long> _identityProvider;
 
         public FactProcessor(FactMetadata<TFact> factMetadata, IFactDependencyProcessorFactory dependencyProcessorFactory, IQuery query, IBulkRepository<TFact> repository)
         {
@@ -30,11 +35,15 @@ namespace NuClear.Replication.Core.Facts
             _depencencyProcessors = _factMetadata.Features.OfType<IFactDependencyFeature>().Select(dependencyProcessorFactory.Create).ToArray();
             _indirectDepencencyProcessors = _factMetadata.Features.OfType<IIndirectFactDependencyFeature>().Select(dependencyProcessorFactory.Create).ToArray();
             _changesDetector = new DataChangesDetector<TFact, TFact>(_factMetadata.MapSpecificationProviderForSource, _factMetadata.MapSpecificationProviderForTarget, _query);
+            _equalityProvider = EqualityComparer<long>.Default;
+            _factIdentityProvider = DefaultIdentityProvider.Instance;
+            _findSpecificationProvider = ids => new FindSpecification<TFact>(_factIdentityProvider.Create<TFact, long>(ids));
+            _identityProvider = _factIdentityProvider.ExtractIdentity<TFact>().Compile();
         }
 
         public IReadOnlyCollection<IOperation> ApplyChanges(IReadOnlyCollection<long> ids)
         {
-            var changes = _changesDetector.DetectChanges(Specs.Map.ToIds<TFact>(), _factMetadata.FindSpecificationProvider.Invoke(ids), EqualityComparer<long>.Default);
+            var changes = _changesDetector.DetectChanges(_identityProvider, _findSpecificationProvider.Invoke(ids), _equalityProvider);
             var result = new List<IOperation>();
 
             var idsToCreate = changes.Difference.ToArray();
@@ -59,22 +68,22 @@ namespace NuClear.Replication.Core.Facts
 
         private void CreateFact(IReadOnlyCollection<long> ids)
         {
-            var spec = _factMetadata.FindSpecificationProvider.Invoke(ids);
+            var spec = _findSpecificationProvider.Invoke(ids);
             var sourceQueryable = _factMetadata.MapSpecificationProviderForSource.Invoke(spec).Map(_query);
             _repository.Create(sourceQueryable);
         }
 
         private void UpdateFact(IReadOnlyCollection<long> ids)
         {
-            var spec = _factMetadata.FindSpecificationProvider.Invoke(ids);
-            var sourceQueryable = _factMetadata.MapSpecificationProviderForSource(spec).Map(_query);
+            var spec = _findSpecificationProvider.Invoke(ids);
+            var sourceQueryable = _factMetadata.MapSpecificationProviderForSource.Invoke(spec).Map(_query);
             _repository.Update(sourceQueryable);
         }
 
         private void DeleteFact(IReadOnlyCollection<long> ids)
         {
-            var spec = _factMetadata.FindSpecificationProvider.Invoke(ids);
-            var targetQueryable = _factMetadata.MapSpecificationProviderForTarget(spec).Map(_query);
+            var spec = _findSpecificationProvider.Invoke(ids);
+            var targetQueryable = _factMetadata.MapSpecificationProviderForTarget.Invoke(spec).Map(_query);
             _repository.Delete(targetQueryable);
         }
     }

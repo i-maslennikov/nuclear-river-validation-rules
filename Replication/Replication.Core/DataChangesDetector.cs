@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
@@ -25,16 +26,19 @@ namespace NuClear.Replication.Core
             _query = query;
         }
 
-        public MergeResult<TCompared> DetectChanges<TCompared>(MapSpecification<IEnumerable<TOutput>, IEnumerable<TCompared>> mapSpec, FindSpecification<TFilter> specification, IEqualityComparer<TCompared> comparer)
+        public MergeResult<TKey> DetectChanges<TKey>(Func<TOutput, TKey> mapping, FindSpecification<TFilter> specification, IEqualityComparer<TKey> comparer)
         {
+            // Заметка: и сейчас, без mapSecification, и ранее идентификаторы извлекались из материализованных сущностей.
+            // Можно взять задачу на оптимизацию поведения - не выбирать из БД избыточные данные, материализовывать не TOutput, а сразу TKey
+            // Для этого потребуется переделать MapToObjectsSpecProvider так, чтобы в нйм вместо IEnumerable был IQueryable и использовать не делегат, а выражение.
             using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
             {
                 var sourceObjects = _sourceProvider.Invoke(specification).Map(_query);
                 var targetObjects = _targetProvider.Invoke(specification).Map(_query);
 
                 var result = MergeTool.Merge(
-                    mapSpec.Map(sourceObjects).ToArray(),
-                    mapSpec.Map(targetObjects).ToArray(), 
+                    sourceObjects.Select(mapping).ToArray(),
+                    targetObjects.Select(mapping).ToArray(),
                     comparer);
 
                 scope.Complete();

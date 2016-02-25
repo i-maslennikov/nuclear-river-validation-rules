@@ -35,6 +35,7 @@ namespace NuClear.River.Common.Metadata.Elements
 
         public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForTarget { get; private set; }
 
+        // todo: не используется, удалить
         public Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)
