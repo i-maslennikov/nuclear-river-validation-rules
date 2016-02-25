@@ -47,7 +47,7 @@ namespace NuClear.River.Common.Metadata.Builders
                                               .Map(q)
                                               .Select(id => new RecalculateAggregate(typeof(TAggregate), id)));
 
-            AddFeatures(new IndirectlyDependentAggregateFeature<T, long>(DefaultIdentityProvider.Instance, mapSpecificationProvider));
+            AddFeatures(new IndirectlyDependentAggregateFeature<T>(mapSpecificationProvider));
             return this;
         }
 
@@ -73,7 +73,7 @@ namespace NuClear.River.Common.Metadata.Builders
                                            .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
                                            .Select(id => new DestroyAggregate(typeof(TAggregate), id)));
 
-            AddFeatures(new DirectlyDependentAggregateFeature<T, long>(DefaultIdentityProvider.Instance, mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));
+            AddFeatures(new DirectlyDependentAggregateFeature<T>(mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));
             return this;
         }
     }

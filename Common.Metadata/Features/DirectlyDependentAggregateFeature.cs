@@ -1,34 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using NuClear.River.Common.Metadata.Model;
-using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Features
 {
-    public class DirectlyDependentAggregateFeature<T, TKey> : IFactDependencyFeature<T, TKey>
-        where T : class, IIdentifiable<TKey>
+    public class DirectlyDependentAggregateFeature<TFact> : IFactDependencyFeature<TFact>
+        where TFact : class, IIdentifiable<long>
     {
         public DirectlyDependentAggregateFeature(
-            IIdentityProvider<TKey> identityProvider,
-            MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnCreate,
-            MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnUpdate,
-            MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnDelete)
+            MapToObjectsSpecProvider<TFact, IOperation> mapSpecificationProviderOnCreate,
+            MapToObjectsSpecProvider<TFact, IOperation> mapSpecificationProviderOnUpdate,
+            MapToObjectsSpecProvider<TFact, IOperation> mapSpecificationProviderOnDelete)
 
         {
             MapSpecificationProviderOnCreate = mapSpecificationProviderOnCreate;
             MapSpecificationProviderOnUpdate = mapSpecificationProviderOnUpdate;
             MapSpecificationProviderOnDelete = mapSpecificationProviderOnDelete;
-            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, TKey>(keys));
         }
 
-        public Type DependancyType
-        {
-            get { return typeof(T); }
-        }
-        public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnCreate { get; private set; }
-        public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnUpdate { get; private set; }
-        public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnDelete { get; private set; }
-        public Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
+        public Type DependencyType => typeof(TFact);
+
+        public MapToObjectsSpecProvider<TFact, IOperation> MapSpecificationProviderOnCreate { get; }
+        public MapToObjectsSpecProvider<TFact, IOperation> MapSpecificationProviderOnUpdate { get; }
+        public MapToObjectsSpecProvider<TFact, IOperation> MapSpecificationProviderOnDelete { get; }
     }
 }

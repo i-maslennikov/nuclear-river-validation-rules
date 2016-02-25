@@ -1,32 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using NuClear.River.Common.Metadata.Model;
-using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Features
 {
-    public class IndirectlyDependentAggregateFeature<T, TKey> : IIndirectFactDependencyFeature, IFactDependencyFeature<T, TKey>
-        where T : IIdentifiable<TKey>
+    public class IndirectlyDependentAggregateFeature<TFact> : IIndirectFactDependencyFeature, IFactDependencyFeature<TFact>
+        where TFact : IIdentifiable<long>
     {
-        public IndirectlyDependentAggregateFeature(IIdentityProvider<TKey> identityProvider, MapToObjectsSpecProvider<T, IOperation> mapSpecificationProvider)
+        public IndirectlyDependentAggregateFeature(MapToObjectsSpecProvider<TFact, IOperation> mapSpecificationProvider)
         {
-            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, TKey>(keys));
-
             MapSpecificationProviderOnCreate
                 = MapSpecificationProviderOnUpdate
                   = MapSpecificationProviderOnDelete
                     = mapSpecificationProvider;
         }
 
-        public Type DependancyType
-        {
-            get { return typeof(T); }
-        }
+        public Type DependencyType => typeof(TFact);
 
-        public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnCreate { get; private set; }
-        public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnUpdate { get; private set; }
-        public MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnDelete { get; private set; }
-        public Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
+        public MapToObjectsSpecProvider<TFact, IOperation> MapSpecificationProviderOnCreate { get; }
+        public MapToObjectsSpecProvider<TFact, IOperation> MapSpecificationProviderOnUpdate { get; }
+        public MapToObjectsSpecProvider<TFact, IOperation> MapSpecificationProviderOnDelete { get; }
     }
 }

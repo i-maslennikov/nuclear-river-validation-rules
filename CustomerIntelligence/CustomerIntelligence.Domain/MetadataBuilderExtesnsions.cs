@@ -28,7 +28,7 @@ namespace NuClear.CustomerIntelligence.Domain
                                                           CategoryId = tuple.Item2
                                                       }));
 
-            return builder.WithFeatures(new DependentStatisticsFeature<T, long>(mapSpecificationProvider, DefaultIdentityProvider.Instance));
+            return builder.WithFeatures(new DependentStatisticsFeature<T>(mapSpecificationProvider));
         }
 
         public static ImportStatisticsMetadataBuilder<T, TDto> LeadsToProjectStatisticsCalculation<T, TDto>(this ImportStatisticsMetadataBuilder<T, TDto> builder)

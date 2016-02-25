@@ -9,19 +9,17 @@ namespace NuClear.River.Common.Metadata.Features
 {
     public interface IFactDependencyFeature : IMetadataFeature
     {
-        Type DependancyType { get; }
+        Type DependencyType { get; }
     }
 
     public interface IIndirectFactDependencyFeature : IFactDependencyFeature
     {
     }
 
-    public interface IFactDependencyFeature<T, TKey> : IFactDependencyFeature
+    public interface IFactDependencyFeature<T> : IFactDependencyFeature
     {
         MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnCreate { get; }
         MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnUpdate { get; }
         MapToObjectsSpecProvider<T, IOperation> MapSpecificationProviderOnDelete { get; }
-
-        Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; }
     }
 }
