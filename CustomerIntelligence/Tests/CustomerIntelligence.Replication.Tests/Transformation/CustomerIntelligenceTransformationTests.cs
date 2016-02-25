@@ -79,7 +79,6 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                           .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 2 }))))
                           .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 3 }))))
                           .Verify<CI::ClientContact>(m => m.Add(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 1, ContactId = 1 }))))
-                          .Verify<CI::ClientContact>(m => m.Update(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 2, ContactId = 2 }))))
                           .Verify<CI::ClientContact>(m => m.Delete(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 3, ContactId = 3 }))));
         }
 
@@ -187,8 +186,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 2, ClientId = 2, ProjectId = 1 }))))
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 3, ProjectId = 1 }))))
                           .Verify<CI::FirmBalance>(m => m.Add(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 1, AccountId = 1, ProjectId = 1, Balance = 123 }))))
-                          .Verify<CI::FirmBalance>(m => m.Update(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 456 }))))
-                          .Verify<CI::FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 3, ProjectId = 1, Balance = 123 }))));
+                          .Verify<CI::FirmBalance>(m => m.Add(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 456 }))))
+                          .Verify<CI::FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 3, ProjectId = 1, Balance = 123 }))))
+                          .Verify<CI::FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 123 }))));
         }
 
         [Test]
@@ -264,8 +264,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new CI::FirmTerritory { FirmId = 1, TerritoryId = 3 });
 
             Transformation.Create(Query)
-                .Recalculate<CI::Firm>(1)
-                .Verify<CI::FirmTerritory>(m => m.Update(It.Is(Predicate.Match(new CI::FirmTerritory { FirmId = 1, TerritoryId = 2 }))));
+                          .Recalculate<CI::Firm>(1)
+                          .Verify<CI::FirmTerritory>(m => m.Add(It.Is(Predicate.Match(new CI::FirmTerritory { FirmId = 1, TerritoryId = 2 }))))
+                          .Verify<CI::FirmTerritory>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmTerritory { FirmId = 1, TerritoryId = 3 }))));
         }
 
         [Test]

@@ -28,11 +28,10 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void ApplyChanges(IReadOnlyCollection<long> aggregateIds)
         {
-            var mergeResult = _changesDetector.DetectChanges(x => x, _metadata.FindSpecificationProvider.Invoke(aggregateIds), _equalityComparerFactory.CreateIdentityComparer<T>());
+            var mergeResult = _changesDetector.DetectChanges(x => x, _metadata.FindSpecificationProvider.Invoke(aggregateIds), _equalityComparerFactory.CreateCompleteComparer<T>());
 
             _repository.Delete(mergeResult.Complement);
             _repository.Create(mergeResult.Difference);
-            _repository.Update(mergeResult.Intersection);
         }
     }
 }
