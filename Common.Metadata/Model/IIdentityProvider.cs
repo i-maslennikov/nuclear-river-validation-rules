@@ -1,12 +1,12 @@
-using System;
+п»їusing System;
 using System.Linq.Expressions;
 
 namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
-    /// Предосталяет метод для установления связи между сущностью и её идентификатором.
+    /// РџСЂРµРґРѕСЃС‚Р°Р»СЏРµС‚ РјРµС‚РѕРґ РґР»СЏ СѓСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ СЃРІСЏР·Рё РјРµР¶РґСѓ СЃСѓС‰РЅРѕСЃС‚СЊСЋ Рё РµС‘ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј.
     /// </summary>
-    /// <typeparam name="TKey">Тип идентификатора</typeparam>
+    /// <typeparam name="TKey">РўРёРї РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР°</typeparam>
     public interface IIdentityProvider<TKey>
     {
         Expression<Func<TIdentifiable, TKey>> ExtractIdentity<TIdentifiable>()

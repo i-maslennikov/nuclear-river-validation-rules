@@ -1,11 +1,11 @@
-using System;
+п»їusing System;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
-    /// Описывает идентификацию по единственному свойству Id типа int
+    /// РћРїРёСЃС‹РІР°РµС‚ РёРґРµРЅС‚РёС„РёРєР°С†РёСЋ РїРѕ РµРґРёРЅСЃС‚РІРµРЅРЅРѕРјСѓ СЃРІРѕР№СЃС‚РІСѓ Id С‚РёРїР° int
     /// </summary>
     public class DefaultIdentityProvider : IdentityProviderBase<DefaultIdentityProvider>, IIdentityProvider<long>
     {

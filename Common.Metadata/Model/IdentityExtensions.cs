@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,7 +7,7 @@ using System.Reflection;
 namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
-    /// Расширяемый набор функционала, использующего идентифицируемость сущностей.
+    /// Р Р°СЃС€РёСЂСЏРµРјС‹Р№ РЅР°Р±РѕСЂ С„СѓРЅРєС†РёРѕРЅР°Р»Р°, РёСЃРїРѕР»СЊР·СѓСЋС‰РµРіРѕ РёРґРµРЅС‚РёС„РёС†РёСЂСѓРµРјРѕСЃС‚СЊ СЃСѓС‰РЅРѕСЃС‚РµР№.
     /// </summary>
     public static class IdentityExtensions
     {
