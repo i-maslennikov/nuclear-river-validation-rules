@@ -217,24 +217,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\VersionController.cs" />
-    <Compile Include="DataAccess\Specs.cs" />
     <Compile Include="Log4NetWebApiExceptionLogger.cs" />
-    <Compile Include="DataAccess\QueryableExtensions.cs" />
-    <Compile Include="DataAccess\ODataDbConfiguration.cs" />
     <Compile Include="DI\ConfigureHttpRequest.cs" />
     <Compile Include="Settings\WebApplicationSettings.cs" />
     <Compile Include="DynamicControllers\EntityElementIdAttribute.cs" />
     <Compile Include="Controllers\EnableQueryAttributeProvider.cs" />
-    <Compile Include="DataAccess\ODataQuery.cs" />
     <Compile Include="DynamicControllers\DynamicAssembliesRegistry.cs" />
     <Compile Include="DynamicControllers\DynamicControllersRegistrar.cs" />
     <Compile Include="Controllers\GenericODataController.cs" />
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="DI\UnityResolver.cs" />
     <Compile Include="DynamicControllers\DynamicControllerTypeResolver.cs" />
-    <Compile Include="EdmModelWithClrTypesBuilder.cs" />
-    <Compile Include="DataAccess\ODataConnectionFactory.cs" />
-    <Compile Include="DataAccess\ODataDbContext.cs" />
     <Compile Include="ODataModelRegistrar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -256,17 +249,13 @@
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>
       <Name>CustomerIntelligence.Storage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Querying.EntityFramework\Querying.EntityFramework.csproj">
-      <Project>{B6A84D45-6C11-4175-86F5-20CC5879FB01}</Project>
-      <Name>Querying.EntityFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Querying.OData\Querying.OData.csproj">
-      <Project>{c651141a-0c01-4e0a-94f2-c1f11cf77bd6}</Project>
-      <Name>Querying.OData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Querying.QueryExecution\Querying.QueryExecution.csproj">
+    <ProjectReference Include="..\Querying.QueryExecution\Querying.Edm.csproj">
       <Project>{135ef4b2-e97c-44b5-a6ac-6e97b103de55}</Project>
-      <Name>Querying.QueryExecution</Name>
+      <Name>Querying.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Querying.Storage\Querying.Storage.csproj">
+      <Project>{a16c1eb8-1575-4eab-8e4d-891bb5c55150}</Project>
+      <Name>Querying.Storage</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

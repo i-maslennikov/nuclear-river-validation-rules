@@ -11,9 +11,9 @@ using NuClear.DI.Unity.Config;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Querying.EntityFramework.Building;
-using NuClear.Querying.EntityFramework.Emit;
-using NuClear.Querying.Web.OData.DataAccess;
+using NuClear.Querying.Edm.Edmx;
+using NuClear.Querying.Edm.Emit;
+using NuClear.Querying.Storage;
 using NuClear.Querying.Web.OData.DynamicControllers;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.River.Common.Settings;
@@ -80,7 +80,7 @@ namespace NuClear.Querying.Web.OData.DI
         {
             var metadataSources = new IMetadataSource[]
             {
-                new QueryingMetadataSource() 
+                new QueryingMetadataSource()
             };
 
             var metadataProcessors = new IMetadataProcessor[] { };

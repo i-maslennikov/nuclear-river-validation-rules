@@ -9,9 +9,8 @@ using Microsoft.OData.Edm;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
-using NuClear.Querying.EntityFramework.Emit;
-using NuClear.Querying.OData.Building;
-using NuClear.Querying.QueryExecution;
+using NuClear.Querying.Edm;
+using NuClear.Querying.Edm.Emit;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
 
@@ -86,7 +85,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
         private static Type LookupClrType(IEdmModel model, string name)
         {
-            var @namespace = model.DeclaredNamespaces.SingleOrDefault<string>();
+            var @namespace = model.DeclaredNamespaces.SingleOrDefault();
             var fullName = (string.IsNullOrEmpty(@namespace) ? "" : @namespace + ".") + name;
 
             var edmType = model.FindDeclaredType(fullName);
@@ -117,7 +116,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
                 if (context != null)
                 {
                     var clrTypes = EmitClrTypes(context);
-                    var model = builder.Build(identity).AnnotateByClrTypes(elementId => clrTypes[MetadataIdUtils.AsIdentity(elementId)]);
+                    var model = builder.Build(identity, clrTypes.Values);
 
                     models.Add(identity, model);
                 }

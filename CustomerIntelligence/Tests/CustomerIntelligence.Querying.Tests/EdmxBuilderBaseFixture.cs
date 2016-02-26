@@ -12,7 +12,7 @@ using Moq;
 using NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
-using NuClear.Querying.EntityFramework.Building;
+using NuClear.Querying.Edm.Edmx;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
 

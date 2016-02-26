@@ -5,7 +5,7 @@ using System.Web.OData.Query;
 
 using Microsoft.OData.Edm;
 
-namespace NuClear.Querying.QueryExecution.Tests
+namespace NuClear.Querying.Edm.Tests
 {
     public static class TestHelper
     {

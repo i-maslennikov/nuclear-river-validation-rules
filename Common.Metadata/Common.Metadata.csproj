@@ -57,7 +57,6 @@
     <Compile Include="Elements\ImportStatisticsMetadata.cs" />
     <Compile Include="Elements\IStructuralModelTypeElement.cs" />
     <Compile Include="Elements\MetadataElementExtensions.cs" />
-    <Compile Include="Elements\MetadataElementIdentityExtensions.cs" />
     <Compile Include="Elements\PrimitiveTypeElement.cs" />
     <Compile Include="Elements\StatisticsRecalculationMetadata.cs" />
     <Compile Include="Elements\StructuralModelElement.cs" />

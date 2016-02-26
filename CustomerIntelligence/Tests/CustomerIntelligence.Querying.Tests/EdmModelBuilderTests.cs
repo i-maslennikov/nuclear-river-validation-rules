@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -9,7 +10,7 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
 using NuClear.Metamodeling.Elements.Identities.Builder;
-using NuClear.Querying.OData.Building;
+using NuClear.Querying.Edm;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
 
@@ -36,7 +37,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         private static IEdmModel BuildModel(Uri contextId)
         {
             var builder = new EdmModelBuilder(TestMetadataProvider.Instance);
-            var model = builder.Build(contextId);
+            var model = builder.Build(contextId, Enumerable.Empty<Type>());
 
             model.Dump();
 

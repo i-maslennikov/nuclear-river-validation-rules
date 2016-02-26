@@ -10,32 +10,18 @@ namespace NuClear.River.Common.Metadata.Elements
 {
     public sealed class StructuralModelElement : BaseMetadataElement<StructuralModelElement, StructuralModelElementBuilder>
     {
-        private readonly IEnumerable<EntityElement> _rootEntities;
-
         internal StructuralModelElement(IMetadataElementIdentity identity, IEnumerable<EntityElement> rootEntities, IEnumerable<IMetadataFeature> features)
             : base(identity, features)
         {
             if (rootEntities == null)
             {
-                throw new ArgumentNullException("rootEntities");
+                throw new ArgumentNullException(nameof(rootEntities));
             }
-            _rootEntities = rootEntities;
+            RootEntities = rootEntities;
         }
 
-        public IEnumerable<EntityElement> RootEntities
-        {
-            get
-            {
-                return _rootEntities;
-            }
-        }
+        public IEnumerable<EntityElement> RootEntities { get; }
 
-        public IEnumerable<EntityElement> Entities
-        {
-            get
-            {
-                return Elements.OfType<EntityElement>();
-            }
-        }
+        public IEnumerable<EntityElement> Entities => Elements.OfType<EntityElement>();
     }
 }

@@ -41,7 +41,7 @@ namespace NuClear.River.Common.Metadata.Builders
 
         public BoundedContextElementBuilder Map(string conceptualEntityName, string storeEntityName)
         {
-            _entityMap.Add(UriExtensions.AsUri(conceptualEntityName), UriExtensions.AsUri(storeEntityName));
+            _entityMap.Add(conceptualEntityName.AsUri(), storeEntityName.AsUri());
             return this;
         }
 

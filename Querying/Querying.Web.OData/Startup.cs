@@ -5,8 +5,8 @@ using System.Web.Http.Cors;
 using Microsoft.Owin;
 using Microsoft.Practices.Unity;
 
+using NuClear.Querying.Storage;
 using NuClear.Querying.Web.OData;
-using NuClear.Querying.Web.OData.DataAccess;
 using NuClear.Querying.Web.OData.DI;
 using NuClear.Querying.Web.OData.Settings;
 
@@ -46,7 +46,7 @@ namespace NuClear.Querying.Web.OData
                   .EnableSwaggerUi();
 
             // configure entity framework
-            DbConfiguration.SetConfiguration(new ODataDbConfiguration());
+            DbConfiguration.SetConfiguration(new SqlServerConfiguration());
 
             // register odata models
             var httpServer = new HttpServer(config);

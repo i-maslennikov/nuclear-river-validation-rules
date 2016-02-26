@@ -2,7 +2,7 @@
 using System.Web.OData;
 using System.Web.OData.Query;
 
-using NuClear.Querying.Web.OData.DataAccess;
+using NuClear.Querying.Storage;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Querying.Web.OData.Controllers

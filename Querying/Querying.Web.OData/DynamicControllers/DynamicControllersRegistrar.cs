@@ -7,7 +7,7 @@ using System.Web.OData;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
-using NuClear.Querying.EntityFramework.Building;
+using NuClear.Querying.Edm.Edmx;
 using NuClear.Querying.Web.OData.Controllers;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Features;
