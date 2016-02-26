@@ -21,8 +21,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             var factType = factMetadata.GetType().GenericTypeArguments[0];
             var processorType = typeof(FactProcessor<>).MakeGenericType(factType);
             var processor = _unityContainer.Resolve(processorType,
-                new DependencyOverride(factMetadata.GetType(), factMetadata),
-                new DependencyOverride(typeof(IIdentityProvider<long>), DefaultIdentityProvider.Instance));
+                new DependencyOverride(factMetadata.GetType(), factMetadata));
             return (IFactProcessor)processor;
         }
     }

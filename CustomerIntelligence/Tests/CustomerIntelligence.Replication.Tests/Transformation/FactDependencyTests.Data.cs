@@ -109,7 +109,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             where TSource : class, IIdentifiable<long>, new()
             where TTarget : class, IIdentifiable<long>, IFactObject, new()
         {
-            var entityId = DefaultIdentityProvider.Instance.GetId(sourceObject);
+            var entityId = new DefaultIdentityProvider().GetId(sourceObject);
             ermDb.Has(sourceObject);
 
             var factory = new VerifiableRepositoryFactory();
@@ -131,10 +131,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             var factory = new VerifiableRepositoryFactory();
             Transformation.Create(query, factory)
-                          .ApplyChanges<TTarget>(DefaultIdentityProvider.Instance.GetId(targetObject));
+                          .ApplyChanges<TTarget>(new DefaultIdentityProvider().GetId(targetObject));
 
             factory.Verify<TTarget>(
-                x => x.Update(It.Is(Predicate.ById<TTarget>(DefaultIdentityProvider.Instance.GetId(targetObject)))),
+                x => x.Update(It.Is(Predicate.ById<TTarget>(new DefaultIdentityProvider().GetId(targetObject)))),
                 Times.Once,
                 string.Format("The {0} element was not updated.", typeof(TTarget).Name));
         }
@@ -146,10 +146,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             var factory = new VerifiableRepositoryFactory();
             Transformation.Create(query, factory)
-                          .ApplyChanges<TTarget>(DefaultIdentityProvider.Instance.GetId(targetObject));
+                          .ApplyChanges<TTarget>(new DefaultIdentityProvider().GetId(targetObject));
 
             factory.Verify<TTarget>(
-                x => x.Delete(It.Is(Predicate.ById<TTarget>(DefaultIdentityProvider.Instance.GetId(targetObject)))),
+                x => x.Delete(It.Is(Predicate.ById<TTarget>(new DefaultIdentityProvider().GetId(targetObject)))),
                 Times.Once,
                 string.Format("The {0} element was not deleted.", typeof(TTarget).Name));
         }

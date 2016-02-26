@@ -803,12 +803,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
                 public IFactProcessor Create(IMetadataElement factMetadata)
                 {
-                    return new FactProcessor<TFact>(DefaultIdentityProvider.Instance, (FactMetadata<TFact>)factMetadata, this, _query, _repository);
+                    return new FactProcessor<TFact>(new DefaultIdentityProvider(), (FactMetadata<TFact>)factMetadata, this, _query, _repository);
                 }
 
                 public IFactDependencyProcessor Create(IFactDependencyFeature metadata)
                 {
-                    return new FactDependencyProcessor<TFact>(DefaultIdentityProvider.Instance, (IFactDependencyFeature<TFact>)metadata, _query);
+                    return new FactDependencyProcessor<TFact>(new DefaultIdentityProvider(), (IFactDependencyFeature<TFact>)metadata, _query);
                 }
             }
         }

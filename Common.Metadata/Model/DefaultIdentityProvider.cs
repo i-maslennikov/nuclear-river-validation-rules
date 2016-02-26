@@ -7,7 +7,7 @@ namespace NuClear.River.Common.Metadata.Model
     /// <summary>
     /// Описывает идентификацию по единственному свойству Id типа int
     /// </summary>
-    public class DefaultIdentityProvider : IdentityProviderBase<DefaultIdentityProvider>, IIdentityProvider<long>
+    public class DefaultIdentityProvider : IIdentityProvider<long>
     {
         private const string IdPropertyName = "Id";
 

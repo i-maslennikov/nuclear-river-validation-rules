@@ -59,18 +59,18 @@ namespace NuClear.River.Common.Metadata.Builders
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnCreate =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
+                                           .Select(new DefaultIdentityProvider().ExtractIdentity<T>())
                                            .Select(id => new InitializeAggregate(typeof(TAggregate), id)));
 
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnUpdate =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
+                                           .Select(new DefaultIdentityProvider().ExtractIdentity<T>())
                                            .Select(id => new RecalculateAggregate(typeof(TAggregate), id)));
             MapToObjectsSpecProvider<T, IOperation> mapSpecificationProviderOnDelete =
                 specification => new MapSpecification<IQuery, IEnumerable<IOperation>>(
                                      q => q.For(specification)
-                                           .Select(DefaultIdentityProvider.Instance.ExtractIdentity<T>())
+                                           .Select(new DefaultIdentityProvider().ExtractIdentity<T>())
                                            .Select(id => new DestroyAggregate(typeof(TAggregate), id)));
 
             AddFeatures(new DirectlyDependentAggregateFeature<T>(mapSpecificationProviderOnCreate, mapSpecificationProviderOnUpdate, mapSpecificationProviderOnDelete));

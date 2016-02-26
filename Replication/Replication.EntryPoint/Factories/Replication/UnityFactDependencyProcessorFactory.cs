@@ -3,7 +3,6 @@
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
 using NuClear.River.Common.Metadata.Features;
-using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
@@ -20,8 +19,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
         {
             var processorType = typeof(FactDependencyProcessor<>).MakeGenericType(metadata.DependencyType);
             var metadataDependency = new DependencyOverride(typeof(IFactDependencyFeature<>).MakeGenericType(metadata.DependencyType), metadata);
-            var identityProviderDependency = new DependencyOverride(typeof(IIdentityProvider<long>), DefaultIdentityProvider.Instance);
-            var processor = _unityContainer.Resolve(processorType, metadataDependency, identityProviderDependency);
+            var processor = _unityContainer.Resolve(processorType, metadataDependency);
             return (IFactDependencyProcessor)processor;
         }
     }
