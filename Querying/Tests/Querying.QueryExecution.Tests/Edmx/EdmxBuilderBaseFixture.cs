@@ -44,7 +44,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
         {
             var builder = CreateBuilder(CreateMetadataProvider(MockSource(context)), typeProvider);
             var contextId = context.Identity.Id;
-            var model = builder.Build(EffortProvider, contextId);
+            var model = builder.Build(contextId, EffortProvider);
 
             model.Dump();
 

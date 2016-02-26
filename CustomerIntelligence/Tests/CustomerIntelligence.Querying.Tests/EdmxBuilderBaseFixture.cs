@@ -82,7 +82,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         {
             var builder = CreateBuilder(metadataProvider, typeProvider);
             var contextId = BuildContextId();
-            return builder.Build(EffortProvider, contextId);
+            return builder.Build(contextId, EffortProvider);
         }
 
         // NOTE: Assembly name CANNOT start with digits, for example, 2GIS.Assembly.Name. It should be just, for example, Assembly.Name or DoubleGIS.Assembly.Name

@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.SqlServer;
+using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
@@ -19,6 +22,8 @@ namespace NuClear.Querying.Web.OData
 {
     public sealed class ODataModelRegistrar
     {
+        private const string SqlServerProviderManifestToken = "2012";
+
         private static readonly ConfigureHttpRequest ConfigureHttpRequest = Bootstrapper.ConfigureHttpRequest;
 
         private readonly IMetadataProvider _metadataProvider;
@@ -44,7 +49,7 @@ namespace NuClear.Querying.Web.OData
             foreach (var context in contexts)
             {
                 var contextId = context.Identity.Id;
-                var edmModel = _edmModelWithClrTypesBuilder.Build(contextId);
+                var edmModel = _edmModelWithClrTypesBuilder.Build(contextId, new DbProviderInfo(SqlProviderServices.ProviderInvariantName, SqlServerProviderManifestToken));
 
                 var routePrefix = contextId.Segments.Last();
                 MapRoute(routePrefix, edmModel, httpServer, ConfigureHttpRequest);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
@@ -40,15 +39,16 @@ namespace NuClear.Querying.Edm.Edmx
             _typeProvider = typeProvider;
         }
 
-        public DbModel Build(DbProviderInfo providerInfo, Uri contextUrl)
+        public DbModel Build(Uri contextUrl, DbProviderInfo providerInfo)
         {
-            if (providerInfo == null)
-            {
-                throw new ArgumentNullException(nameof(providerInfo));
-            }
             if (contextUrl == null)
             {
                 throw new ArgumentNullException(nameof(contextUrl));
+            }
+
+            if (providerInfo == null)
+            {
+                throw new ArgumentNullException(nameof(providerInfo));
             }
 
             var boundedContextElement = LookupContext(contextUrl);
@@ -60,29 +60,6 @@ namespace NuClear.Querying.Edm.Edmx
             var modelBuilder = SetupBuilder(boundedContextElement);
 
             return modelBuilder.Build(providerInfo);
-        }
-
-        public DbModel Build(DbConnection connection, Uri contextUrl)
-        {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
-
-            if (contextUrl == null)
-            {
-                throw new ArgumentNullException(nameof(contextUrl));
-            }
-
-            var boundedContextElement = LookupContext(contextUrl);
-            if (boundedContextElement == null)
-            {
-                return null;
-            }
-
-            var modelBuilder = SetupBuilder(boundedContextElement);
-
-            return modelBuilder.Build(connection);
         }
 
         private BoundedContextElement LookupContext(Uri contextUrl)

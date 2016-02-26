@@ -92,8 +92,7 @@ namespace NuClear.Querying.Web.OData.DI
         {
             return container
                 .RegisterType<ITypeProvider, EmitTypeProvider>(Lifetime.Singleton)
-                .RegisterType<EdmxModelBuilder>(Lifetime.Singleton, new InjectionConstructor(typeof(IMetadataProvider), typeof(ITypeProvider)))
-                .RegisterType<ODataConnectionFactory>(Lifetime.Singleton);
+                .RegisterType<EdmxModelBuilder>(Lifetime.Singleton, new InjectionConstructor(typeof(IMetadataProvider), typeof(ITypeProvider)));
         }
 
         public static IUnityContainer ConfigureWebApiOData(this IUnityContainer container)

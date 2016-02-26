@@ -90,7 +90,6 @@
     <Compile Include="Emit\EmitTypeProvider.cs" />
     <Compile Include="Edmx\ITypeProvider.cs" />
     <Compile Include="BoundedContextIdentityAnnotation.cs" />
-    <Compile Include="IDbConnectionFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

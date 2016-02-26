@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 using Microsoft.OData.Edm;
@@ -15,19 +16,16 @@ namespace NuClear.Querying.Edm
 
         private readonly EdmModelBuilder _edmModelBuilder;
         private readonly EdmxModelBuilder _edmxModelBuilder;
-        private readonly IDbConnectionFactory _connectionFactory;
 
-        public EdmModelWithClrTypesBuilder(EdmModelBuilder edmModelBuilder, EdmxModelBuilder edmxModelBuilder, IDbConnectionFactory connectionFactory)
+        public EdmModelWithClrTypesBuilder(EdmModelBuilder edmModelBuilder, EdmxModelBuilder edmxModelBuilder)
         {
             _edmModelBuilder = edmModelBuilder;
             _edmxModelBuilder = edmxModelBuilder;
-            _connectionFactory = connectionFactory;
         }
 
-        public IEdmModel Build(Uri uri)
+        public IEdmModel Build(Uri uri, DbProviderInfo providerInfo)
         {
-            var connection = _connectionFactory.CreateConnection(uri);
-            var edmxModel = _edmxModelBuilder.Build(connection, uri);
+            var edmxModel = _edmxModelBuilder.Build(uri, providerInfo);
 
             return _edmModelBuilder.Build(uri, GetClrTypes(edmxModel.ConceptualModel)/*, edmxModel.Compile()*/);
         }
