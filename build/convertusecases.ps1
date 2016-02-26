@@ -10,47 +10,43 @@ Import-Module "$BuildToolsRoot\modules\servicebus.psm1" -DisableNameChecking
 
 Task Build-ConvertUseCasesService -Precondition { $Metadata['ConvertUseCasesService'] -and $Metadata['UseCaseRoute'] } {
 
-	$tempDir = Get-ConvertUseCasesServiceTempDir
-
-	$configFileName = Join-Path $tempDir '2GIS.NuClear.AdvancedSearch.Tools.ConvertTrackedUseCases.exe.config'
-	$transformedConfig = Get-TransformedConfig $configFileName 'ConvertUseCasesService'
-	$transformedConfig.Save($configFileName)
+	$сonfig = Get-ConvertUseCasesServiceConfig 'ConvertUseCasesService'
 
 	if ($Metadata.UseCaseRoute.RouteName -match 'ERMProduction'){
-		Apply-ProductionConnectionString $configFileName
+
+		# дополнительная трансформация connection string для production source
+		$connectionStringName = 'Source'
+
+		$xmlNode = $сonfig.SelectSingleNode("configuration/connectionStrings/add[@name = '$connectionStringName']")
+		if ($xmlNode -eq $null){
+			throw "Could not find connection string '$ConnectionStringName'"
+		}
+
+		$productionConfig = Get-ConvertUseCasesServiceConfig 'ConvertUseCasesServiceProduction'
+		$productionConnectionString = Get-ConnectionString $productionConfig $connectionStringName
+
+		$xmlNode.connectionString = $productionConnectionString
 	}
+
+	$tempDir = Copy-ConvertUseCasesServiceToTempDir
+
+	$configFileName = Join-Path $tempDir '2GIS.NuClear.AdvancedSearch.Tools.ConvertTrackedUseCases.exe.config'
+	$сonfig.Save($configFileName)
 
 	Publish-Artifacts $tempDir 'ConvertUseCasesService'
 }
 
-function Apply-ProductionConnectionString ($configFileName) {
+function Get-ConvertUseCasesServiceConfig ($metadataKey) {
+	$packageInfo = Get-PackageInfo '2GIS.NuClear.AdvancedSearch.Tools.ConvertTrackedUseCases'
+	$toolsDir = Join-Path $packageInfo.VersionedDir 'tools'
 
-	$connectionString = Get-ProductionConnectionString
+	$configFileName = Join-Path $toolsDir '2GIS.NuClear.AdvancedSearch.Tools.ConvertTrackedUseCases.exe.config'
+	$transformedConfig = Get-TransformedConfig $configFileName $metadataKey
 
-	$transformXml = @"
-<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-	<connectionStrings>
-	    <add name="Source" connectionString="$connectionString"
-			   xdt:Transform="SetAttributes" xdt:Locator="Match(name)"/>
-	</connectionStrings>
-</configuration>
-"@
-	$transformXmlFileName = Join-Path $Metadata.Common.Dir.Temp 'ConvertUseCases.Source.transform.config'
-	Set-Content $transformXmlFileName $transformXml -Encoding UTF8
-
-	$transformedConfig = Apply-XdtTransform $configFileName $transformXmlFileName
-	$transformedConfig.Save($configFileName)
+	return $transformedConfig
 }
 
-function Get-ProductionConnectionString {
-	$configFileName = Join-Path $Metadata.Common.Dir.Solution 'Environments\ConvertUseCases.Production.Russia.config'
-	[xml]$config = Get-Content $configFileName -Raw
-
-	$connectionString = Get-ConnectionString $config 'Source'
-	return $connectionString
-}
-
-function Get-ConvertUseCasesServiceTempDir  {
+function Copy-ConvertUseCasesServiceToTempDir  {
 	$packageInfo = Get-PackageInfo '2GIS.NuClear.AdvancedSearch.Tools.ConvertTrackedUseCases'
 	$toolsDir = Join-Path $packageInfo.VersionedDir 'tools'
 
@@ -69,7 +65,10 @@ Task Create-Topics -Precondition { $Metadata['ConvertUseCasesService'] -and $Met
 	$useCaseRouteMetadata = $Metadata.UseCaseRoute
 
 	if ($useCaseRouteMetadata.RouteName -notmatch 'ERMProduction'){
-		$productionConnectionString = Get-ProductionConnectionString
+
+		$productionConfig = Get-ConvertUseCasesServiceConfig 'ConvertUseCasesServiceProduction'
+		$productionConnectionString = Get-ConnectionString $productionConfig 'Source'
+
 		$productionRouteMetadata = $Metadata.ProductionUseCaseRoute
 		Delete-Subscription $productionConnectionString $productionRouteMetadata.SourceTopic $productionRouteMetadata.SourceSubscription
 	}

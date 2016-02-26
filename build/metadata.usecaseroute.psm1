@@ -35,23 +35,9 @@ function AllUseCaseRoutes($Context) {
 		'ERMProduction' = @{
 			'SourceTopic' = 'topic.performedoperations.export'
 			'SourceSubscription' = $Context.EnvironmentName.ToLowerInvariant()
-			'DestTopic' = 'topic.performedoperations.production.russia.import'
+			'DestTopic' = "topic.performedoperations.production.$($Context.Country).import".ToLowerInvariant()
 			'DestSubscription' = '9F2C5A2A-924C-485A-9790-9066631DB307'
 			'Transform' = 'None'
-		}
-		'ERMBeforeFPE' = @{
-			'SourceTopic' = 'topic.performedoperations'
-			'SourceSubscription' = '9F2C5A2A-924C-485A-9790-9066631DB307'
-			'DestTopic' = "topic.performedoperations.$($Context.EnvironmentName).import".ToLowerInvariant()
-			'DestSubscription' = '9F2C5A2A-924C-485A-9790-9066631DB307'
-			'Transform' = 'FPE'
-		}
-		'ERMProductionBeforeFPE' = @{
-			'SourceTopic' = 'topic.performedoperations.export'
-			'SourceSubscription' = $Context.EnvironmentName.ToLowerInvariant()
-			'DestTopic' = 'topic.performedoperations.production.russia.import'
-			'DestSubscription' = '9F2C5A2A-924C-485A-9790-9066631DB307'
-			'Transform' = 'FPE'
 		}
 	}
 }

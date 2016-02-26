@@ -16,6 +16,8 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	# конвертер нужен всегда, чтобы из него подтянуть connection strings для Create-Topics
 	$Context.EntryPoint = 'ConvertUseCasesService'
 	$entryPointsMetadata += Get-TaskServiceMetadata $Context
+	$Context.EntryPoint = 'ConvertUseCasesServiceProduction'
+	$entryPointsMetadata += Get-TaskServiceMetadata $Context
 
 	switch ($EntryPoints){
 		'Web.OData' {
