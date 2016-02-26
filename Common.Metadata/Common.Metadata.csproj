@@ -74,8 +74,8 @@
     <Compile Include="Features\EntitySetFeature.cs" />
     <Compile Include="Features\IFactDependencyFeature.cs" />
     <Compile Include="Features\IndirectlyDependentAggregateFeature.cs" />
-    <Compile Include="Elements\IValueObjectMetadataElement.cs" />
-    <Compile Include="Elements\ValueObjectMetadataElement.cs" />
+    <Compile Include="Elements\IValueObjectMetadata.cs" />
+    <Compile Include="Elements\ValueObjectMetadata.cs" />
     <Compile Include="Identities\QueryingMetadataIdentity.cs" />
     <Compile Include="Identities\ImportStatisticsMetadataIdentity.cs" />
     <Compile Include="Identities\ReplicationMetadataIdentity.cs" />

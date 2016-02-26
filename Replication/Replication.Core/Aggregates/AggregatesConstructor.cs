@@ -24,55 +24,62 @@ namespace NuClear.Replication.Core.Aggregates
             _aggregateProcessorFactory = aggregateProcessorFactory;
         }
 
-        public void Construct(IEnumerable<AggregateOperation> operations)
+        public void Execute(IEnumerable<AggregateOperation> commands)
         {
             using (Probe.Create("ETL2 Transforming"))
             {
-                var slices = operations.GroupBy(x => new { Operation = x.GetType(), x.AggregateType })
-                                       .OrderByDescending(x => x.Key.Operation, new AggregateOperationPriorityComparer());
+                var slices = commands.GroupBy(x => new { Operation = x.GetType(), x.AggregateType })
+                                     .OrderByDescending(x => x.Key.Operation, new AggregateOperationPriorityComparer());
 
                 foreach (var slice in slices)
                 {
-                    var operation = slice.Key.Operation;
-                    var aggregateType = slice.Key.AggregateType;
-
-                    IMetadataElement aggregateMetadata;
-                    var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregateType.Name}", UriKind.Relative));
-                    if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
-                    {
-                        throw new NotSupportedException($"The aggregate of type '{aggregateType}' is not supported.");
-                    }
-
-                    var aggregateIds = slice.Select(x => x.AggregateId).Distinct().ToArray();
-                    using (var transaction = new TransactionScope(TransactionScopeOption.Required,
-                                                                  new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
-                    {
-                        using (Probe.Create("ETL2 Transforming", aggregateType.Name))
-                        {
-                            var processor = _aggregateProcessorFactory.Create(aggregateMetadata);
-
-                            if (operation == typeof(InitializeAggregate))
-                            {
-                                processor.Initialize(aggregateIds);
-                            }
-                            else if (operation == typeof(RecalculateAggregate))
-                            {
-                                processor.Recalculate(aggregateIds);
-                            }
-                            else if (operation == typeof(DestroyAggregate))
-                            {
-                                processor.Destroy(aggregateIds);
-                            }
-                            else
-                            {
-                                throw new InvalidOperationException($"The command of type {operation.Name} is not supported");
-                            }
-                        }
-
-                        transaction.Complete();
-                    }
+                    Execute(slice.Key.Operation, slice.Key.AggregateType, slice);
                 }
             }
+        }
+
+        private void Execute(Type command, Type aggregate, IEnumerable<AggregateOperation> commands)
+        {
+            var processor = CreateProcessor(aggregate);
+
+            using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+                                                          new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
+            {
+                using (Probe.Create($"ETL2 {command.Name} {aggregate.Name}"))
+                {
+                    if (command == typeof(InitializeAggregate))
+                    {
+                        processor.Initialize(commands.Cast<InitializeAggregate>().ToArray());
+                    }
+                    else if (command == typeof(RecalculateAggregate))
+                    {
+                        processor.Recalculate(commands.Cast<RecalculateAggregate>().ToArray());
+                    }
+                    else if (command == typeof(DestroyAggregate))
+                    {
+                        processor.Destroy(commands.Cast<DestroyAggregate>().ToArray());
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"The command of type {command.Name} is not supported");
+                    }
+                }
+
+                transaction.Complete();
+            }
+        }
+
+        private IAggregateProcessor CreateProcessor(Type aggregate)
+        {
+            IMetadataElement aggregateMetadata;
+            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregate.Name}", UriKind.Relative));
+            if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
+            {
+                throw new NotSupportedException($"The aggregate of type '{aggregate.Name}' is not supported.");
+            }
+
+            var processor = _aggregateProcessorFactory.Create(aggregateMetadata);
+            return processor;
         }
     }
 }

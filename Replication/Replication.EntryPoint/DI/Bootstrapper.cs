@@ -74,6 +74,7 @@ using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.River.Common.Metadata.Equality;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Security;
 using NuClear.Security.API;
@@ -124,7 +125,8 @@ namespace NuClear.Replication.EntryPoint.DI
                      .ConfigureWcf()
                      .ConfigureOperationsProcessing()
                      .ConfigureStorage(storageSettings, EntryPointSpecificLifetimeManagerFactory)
-                     .ConfigureReplication(EntryPointSpecificLifetimeManagerFactory);
+                     .ConfigureReplication(EntryPointSpecificLifetimeManagerFactory)
+                     .ConfigureDomain();
 
             ReplicationRoot.Instance.PerformTypesMassProcessing(massProcessors, true, typeof(object));
 
@@ -195,6 +197,11 @@ namespace NuClear.Replication.EntryPoint.DI
         {
             return container.RegisterType<IIdentityGenerator, IdentityGenerator>(Lifetime.Singleton)
                             .RegisterType<IIdentityServiceClient, IdentityServiceClient>(Lifetime.Singleton);
+        }
+
+        private static IUnityContainer ConfigureDomain(this IUnityContainer container)
+        {
+            return container.RegisterInstance<IIdentityProvider<long>>(new DefaultIdentityProvider());
         }
 
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)

@@ -30,12 +30,12 @@ namespace NuClear.Replication.Bulk.API.Factories
 
             return new IBulkReplicator[] { new InsertsBulkReplicator<T>(_query, _dataConnection, aggregateMetadata.MapSpecificationProviderForSource.Invoke(Specs.Find.All<T>())) }
                 .Concat(aggregateMetadata.Elements
-                                         .OfType<IValueObjectMetadataElement>()
-                                         .SelectMany(valueObjectMetadata =>
+                                         .OfType<IValueObjectMetadata>()
+                                         .SelectMany(metadata =>
                                                      {
-                                                         var factoryType = typeof(ValueObjectsBulkReplicatorFactory<>).MakeGenericType(valueObjectMetadata.ValueObjectType);
+                                                         var factoryType = typeof(ValueObjectsBulkReplicatorFactory<,>).MakeGenericType(metadata.ValueObjectType, metadata.EntityKeyType);
                                                          var factory = (IBulkReplicatorFactory)Activator.CreateInstance(factoryType, _query, _dataConnection);
-                                                         return factory.Create(valueObjectMetadata);
+                                                         return factory.Create(metadata);
                                                      }))
                 .ToArray();
         }

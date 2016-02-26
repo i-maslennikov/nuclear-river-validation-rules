@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.River.Common.Metadata.Model.Operations;
+
 namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IAggregateProcessor
     {
-        void Initialize(IReadOnlyCollection<long> ids);
-        void Recalculate(IReadOnlyCollection<long> ids);
-        void Destroy(IReadOnlyCollection<long> ids);
+        void Initialize(IReadOnlyCollection<InitializeAggregate> commands);
+        void Recalculate(IReadOnlyCollection<RecalculateAggregate> commands);
+        void Destroy(IReadOnlyCollection<DestroyAggregate> commands);
     }
 }

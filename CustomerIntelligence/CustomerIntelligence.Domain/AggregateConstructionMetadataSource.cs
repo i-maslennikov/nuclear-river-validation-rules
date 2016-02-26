@@ -28,7 +28,6 @@ namespace NuClear.CustomerIntelligence.Domain
                     .Childs(AggregateMetadata<Firm, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Firms)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmActivities, Specs.Find.CI.FirmActivities)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmBalances, Specs.Find.CI.FirmBalances)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmCategories1, Specs.Find.CI.FirmCategories1)
@@ -38,24 +37,20 @@ namespace NuClear.CustomerIntelligence.Domain
                             AggregateMetadata<Client, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Clients)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                 .HasValueObject(Specs.Map.Facts.ToCI.ClientContacts, Specs.Find.CI.ClientContacts),
 
                             AggregateMetadata<Project, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Projects)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                 .HasValueObject(Specs.Map.Facts.ToCI.ProjectCategories, Specs.Find.CI.ProjectCategories),
 
                             AggregateMetadata<Territory, long>
                                 .Config
-                                .HasSource(Specs.Map.Facts.ToCI.Territories)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance),
+                                .HasSource(Specs.Map.Facts.ToCI.Territories),
 
                             AggregateMetadata<CategoryGroup, long>
                                 .Config
-                                .HasSource(Specs.Map.Facts.ToCI.CategoryGroups)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance));
+                                .HasSource(Specs.Map.Facts.ToCI.CategoryGroups));
 
             Metadata = new Dictionary<Uri, IMetadataElement> { { aggregateConstructionMetadataRoot.Identity.Id, aggregateConstructionMetadataRoot } };
         }

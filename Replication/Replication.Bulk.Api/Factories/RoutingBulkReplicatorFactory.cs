@@ -20,7 +20,7 @@ namespace NuClear.Replication.Bulk.API.Factories
             {
                 { typeof(FactMetadata<>), typeof(FactBulkReplicatorFactory<>) },
                 { typeof(AggregateMetadata<,>), typeof(AggregatesBulkReplicatorFactory<,>) },
-                { typeof(ValueObjectMetadataElement<>), typeof(ValueObjectsBulkReplicatorFactory<>) },
+                { typeof(ValueObjectMetadata<,>), typeof(ValueObjectsBulkReplicatorFactory<,>) },
                 { typeof(StatisticsRecalculationMetadata<>), typeof(StatisticsBulkReplicatorFactory<>) }
             };
 

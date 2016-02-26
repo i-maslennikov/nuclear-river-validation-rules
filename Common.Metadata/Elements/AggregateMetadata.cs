@@ -6,37 +6,28 @@ using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.River.Common.Metadata.Builders;
 using NuClear.River.Common.Metadata.Model;
-using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Elements
 {
-    public class AggregateMetadata<T, TKey> : MetadataElement<AggregateMetadata<T, TKey>, AggregateMetadataBuilder<T, TKey>>
-        where T : class, IIdentifiable<TKey>
+    public class AggregateMetadata<TEntity, TKey> : MetadataElement<AggregateMetadata<TEntity, TKey>, AggregateMetadataBuilder<TEntity, TKey>>
+        where TEntity : class, IIdentifiable<TKey>
     {
-        private IMetadataElementIdentity _identity = new Uri(typeof(T).Name, UriKind.Relative).AsIdentity();
+        private IMetadataElementIdentity _identity = new Uri(typeof(TEntity).Name, UriKind.Relative).AsIdentity();
 
         public AggregateMetadata(
-            MapToObjectsSpecProvider<T, T> mapSpecificationProviderForSource,
-            MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget,
-            IIdentityProvider<TKey> identityProvider,
+            MapToObjectsSpecProvider<TEntity, TEntity> mapSpecificationProviderForSource,
+            MapToObjectsSpecProvider<TEntity, TEntity> mapSpecificationProviderForTarget,
             IEnumerable<IMetadataFeature> features) : base(features)
         {
             MapSpecificationProviderForSource = mapSpecificationProviderForSource;
             MapSpecificationProviderForTarget = mapSpecificationProviderForTarget;
-            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, TKey>(keys));
         }
 
-        public override IMetadataElementIdentity Identity
-        {
-            get { return _identity; }
-        }
+        public override IMetadataElementIdentity Identity => _identity;
 
-        public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForSource { get; private set; }
+        public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForSource { get; private set; }
 
-        public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForTarget { get; private set; }
-
-        // todo: не используется, удалить
-        public Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
+        public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForTarget { get; private set; }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)
         {
