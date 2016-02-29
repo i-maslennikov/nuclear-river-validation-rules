@@ -37,7 +37,7 @@ namespace NuClear.Querying.Web.OData
             config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
 
-            // swaggler
+            // swagger
             config.EnableSwagger(c =>
                                      {
                                          c.SingleApiVersion("v1", "NuClear River API reference");

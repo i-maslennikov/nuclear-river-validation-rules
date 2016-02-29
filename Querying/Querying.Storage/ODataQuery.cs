@@ -28,7 +28,7 @@ namespace NuClear.Querying.Storage
 
         public IQueryable<T> For<T>(FindSpecification<T> findSpecification) where T : class
         {
-            return SpecificationExtensions.Where(_context.Set<T>(), findSpecification).AsNoTracking();
+            return _context.Set<T>().Where(findSpecification).AsNoTracking();
         }
 
         public void Dispose()
