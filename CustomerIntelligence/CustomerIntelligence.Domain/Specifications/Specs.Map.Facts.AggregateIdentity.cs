@@ -366,10 +366,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                     {
                         return new MapSpecification<IQuery, IEnumerable<StatisticsKey>>(
                             q => from project in q.For(specification)
-                                 // todo: сомнительное место, зачем пересчитывать весь проект, если в нём нет рубрик?
-                                 from projectCategory in q.For<CategoryOrganizationUnit>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId).DefaultIfEmpty()
-                                 //join projectCategory in q.For<CategoryOrganizationUnit>() on project.OrganizationUnitId equals projectCategory.OrganizationUnitId
-                                 select new StatisticsKey { ProjectId = project.Id, CategoryId = projectCategory.CategoryId });
+                                 select new StatisticsKey { ProjectId = project.Id, CategoryId = null });
                     }
                 }
             }

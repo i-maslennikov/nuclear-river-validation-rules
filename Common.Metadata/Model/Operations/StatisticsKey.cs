@@ -3,7 +3,7 @@
     public sealed class StatisticsKey
     {
         public long ProjectId { get; set; }
-        public long? CategoryId { get; set; } // todo: хак, чтобы очистить, нужен запрос на ProjectCategory после импорта статистики
+        public long? CategoryId { get; set; } // todo: старый хак, если нужно избавиться от - нужна задача
 
         private bool Equals(StatisticsKey other)
         {
