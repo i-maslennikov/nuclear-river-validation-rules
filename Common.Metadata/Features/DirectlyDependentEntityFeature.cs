@@ -16,7 +16,5 @@ namespace NuClear.River.Common.Metadata.Features
         public Type FactType { get; }
 
         public Type EntityType { get; }
-
-        public DependencyType DependencyType => DependencyType.Direct;
     }
 }

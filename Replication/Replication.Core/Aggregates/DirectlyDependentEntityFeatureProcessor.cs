@@ -22,6 +22,8 @@ namespace NuClear.Replication.Core.Aggregates
             _metadata = metadata;
         }
 
+        public DependencyType DependencyType => DependencyType.Direct;
+
         public IEnumerable<IOperation> ProcessCreation(IReadOnlyCollection<long> factIds)
         {
             return factIds.Select(id => new InitializeAggregate(_metadata.EntityType, id));

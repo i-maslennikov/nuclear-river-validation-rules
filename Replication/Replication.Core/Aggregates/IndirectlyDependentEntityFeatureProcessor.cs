@@ -30,6 +30,8 @@ namespace NuClear.Replication.Core.Aggregates
             _findSpecificationProvider = new FindSpecificationProvider<TFact, long>(identityProvider);
         }
 
+        public DependencyType DependencyType => DependencyType.Indirect;
+
         public IEnumerable<IOperation> ProcessCreation(IReadOnlyCollection<long> factIds)
         {
             return Process(factIds);

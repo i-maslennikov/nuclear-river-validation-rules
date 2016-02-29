@@ -18,7 +18,5 @@ namespace NuClear.River.Common.Metadata.Features
         public Type EntityType { get; }
 
         public MapToObjectsSpecProvider<TFact, TEntityKey> DependentAggregateSpecProvider { get; }
-
-        public DependencyType DependencyType => DependencyType.Indirect;
     }
 }

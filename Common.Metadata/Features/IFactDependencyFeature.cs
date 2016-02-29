@@ -8,6 +8,5 @@ namespace NuClear.River.Common.Metadata.Features
     {
         Type FactType { get; }
         Type EntityType { get; }
-        DependencyType DependencyType { get; }
     }
 }

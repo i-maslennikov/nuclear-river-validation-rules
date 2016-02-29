@@ -6,6 +6,6 @@ namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IValueObjectProcessor
     {
-        void ApplyChanges(IReadOnlyCollection<AggregateOperation> commands);
+        void Execute(IReadOnlyCollection<AggregateOperation> commands);
     }
 }
