@@ -11,7 +11,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.Telemetry.Probing;
 
-namespace NuClear.Replication.Core.Facts
+namespace NuClear.Replication.Core.Aggregates
 {
     /// <summary>
     /// Выполняет обработку прямой зависимости между фактом и сущностью.

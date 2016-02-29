@@ -6,7 +6,7 @@ using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 
-namespace NuClear.Replication.Core.Facts
+namespace NuClear.Replication.Core.Aggregates
 {
     /// <summary>
     /// Выполняет обработку прямой зависимости между фактом и сущностью.

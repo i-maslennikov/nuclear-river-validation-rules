@@ -33,17 +33,19 @@ namespace NuClear.River.Common.Metadata.Builders
             return this;
         }
 
-        public FactMetadataBuilder<TFact> HasDependentAggregate<TEntity, TKey>(MapToObjectsSpecProvider<TFact, TKey> dependentAggregateSpecProvider)
+        // FIXME {all, 03.09.2015}: TEntity заменить на идентификатор типа
+        public FactMetadataBuilder<TFact> HasDependentEntity<TEntity, TKey>(MapToObjectsSpecProvider<TFact, TKey> dependentAggregateSpecProvider)
             where TEntity : class, IIdentifiable<TKey>
         {
             AddFeatures(new IndirectlyDependentEntityFeature<TFact, TKey>(typeof(TEntity), dependentAggregateSpecProvider));
             return this;
         }
 
-        public FactMetadataBuilder<TFact> HasMatchedAggregate<TAggregate>()
-            where TAggregate : class, IIdentifiable<long>
+        // FIXME {all, 03.09.2015}: TEntity заменить на идентификатор типа
+        public FactMetadataBuilder<TFact> HasMatchedEntity<TEntity>()
+            where TEntity : class, IIdentifiable<long>
         {
-            AddFeatures(new DirectlyDependentEntityFeature<TFact>(typeof(TAggregate)));
+            AddFeatures(new DirectlyDependentEntityFeature<TFact>(typeof(TEntity)));
             return this;
         }
     }
