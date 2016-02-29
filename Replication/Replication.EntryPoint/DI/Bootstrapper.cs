@@ -10,6 +10,7 @@ using Microsoft.Practices.Unity;
 using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.Assembling.TypeProcessing;
 using NuClear.CustomerIntelligence.Domain;
+using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.OperationsProcessing;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
@@ -201,7 +202,9 @@ namespace NuClear.Replication.EntryPoint.DI
 
         private static IUnityContainer ConfigureDomain(this IUnityContainer container)
         {
-            return container.RegisterInstance<IIdentityProvider<long>>(new DefaultIdentityProvider());
+            return container.RegisterInstance<IIdentityProvider<long>>(new DefaultIdentityProvider())
+                            .RegisterInstance<ICommandFactory<long>>(new RecalculateAggregateCommandFactory())
+                            .RegisterInstance<ICommandFactory<StatisticsKey>>(new RecalculateStatisticsCommandFactory());
         }
 
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)

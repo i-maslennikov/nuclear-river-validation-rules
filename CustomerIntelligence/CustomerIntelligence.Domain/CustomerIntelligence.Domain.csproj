@@ -36,6 +36,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AggregateConstructionMetadataSource.cs" />
+    <Compile Include="Commands\RecalculateAggregateCommandFactory.cs" />
+    <Compile Include="Commands\RecalculateStatisticsCommandFactory.cs" />
+    <Compile Include="Model\StatisticsKey.cs" />
     <Compile Include="DTO\CategoryStatisticsDto.cs" />
     <Compile Include="DTO\FirmStatisticsDto.cs" />
     <Compile Include="EntityTypeIds.cs" />
@@ -50,10 +53,11 @@
     <Compile Include="Model\CI\FirmBalance.cs" />
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
+    <Compile Include="Model\CI\Statistics.cs" />
     <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
-    <Compile Include="Model\IBitFactObject.cs" />
     <Compile Include="Model\ICustomerIntelligenceAggregatePart.cs" />
+    <Compile Include="Model\IBitFactObject.cs" />
     <Compile Include="Model\IErmFactObject.cs" />
     <Compile Include="Model\IErmObject.cs" />
     <Compile Include="Model\IErmValueObject.cs" />
@@ -148,6 +152,7 @@
       <Name>Common.Metadata</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain;
+using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
@@ -769,7 +770,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 {
                     throw new NotSupportedException(string.Format("The fact of type '{0}' is not supported.", factType));
                 }
-                
+
                 var repository = _repositoryFactory.Create<TFact>();
                 var factory = new Factory<TFact>(_query, repository);
                 var processor = factory.Create(factMetadata);
@@ -808,7 +809,23 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
                 public IFactDependencyProcessor Create(IFactDependencyFeature metadata)
                 {
-                    return new FactDependencyProcessor<TFact>(new DefaultIdentityProvider(), (IFactDependencyFeature<TFact>)metadata, _query);
+                    if (metadata.GetType().GetGenericTypeDefinition() == typeof(DirectlyDependentEntityFeature<>))
+                    {
+                        var processorType = typeof(DirectlyDependentEntityFeatureProcessor<>).MakeGenericType(metadata.GetType().GetGenericArguments());
+                        return (IFactDependencyProcessor)Activator.CreateInstance(processorType, metadata);
+                    }
+
+                    if (metadata.GetType().GetGenericTypeDefinition() == typeof(IndirectlyDependentEntityFeature<,>))
+                    {
+                        var processorType = typeof(IndirectlyDependentEntityFeatureProcessor<,>).MakeGenericType(metadata.GetType().GetGenericArguments());
+                        var factory = metadata.GetType().GetGenericArguments()[1] == typeof(long)
+                                          ? (object)new RecalculateAggregateCommandFactory()
+                                          : (object)new RecalculateStatisticsCommandFactory();
+
+                        return (IFactDependencyProcessor)Activator.CreateInstance(processorType, metadata, _query, new DefaultIdentityProvider(), factory);
+                    }
+
+                    throw new ArgumentException($"No processor for feature type {metadata.GetType().Name}");
                 }
             }
         }

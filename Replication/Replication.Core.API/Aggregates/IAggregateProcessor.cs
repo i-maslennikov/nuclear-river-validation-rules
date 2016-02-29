@@ -4,6 +4,7 @@ using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.API.Aggregates
 {
+    // todo: разбить на обработчики команд
     public interface IAggregateProcessor
     {
         void Initialize(IReadOnlyCollection<InitializeAggregate> commands);

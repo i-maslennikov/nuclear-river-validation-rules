@@ -26,13 +26,15 @@ namespace NuClear.Replication.Core.Facts
         private readonly Func<IEnumerable<long>, FindSpecification<TFact>> _findSpecificationProvider;
         private readonly Func<TFact, long> _identityProvider;
 
+        // todo: уменьшить число зависимостей
         public FactProcessor(IIdentityProvider<long> factIdentityProvider, FactMetadata<TFact> factMetadata, IFactDependencyProcessorFactory dependencyProcessorFactory, IQuery query, IBulkRepository<TFact> repository)
         {
             _query = query;
             _repository = repository;
             _factMetadata = factMetadata;
             _depencencyProcessors = _factMetadata.Features.OfType<IFactDependencyFeature>().Select(dependencyProcessorFactory.Create).ToArray();
-            _indirectDepencencyProcessors = _factMetadata.Features.OfType<IIndirectFactDependencyFeature>().Select(dependencyProcessorFactory.Create).ToArray();
+            _indirectDepencencyProcessors = _factMetadata.Features.OfType<IFactDependencyFeature>().Where(x => x.DependencyType == DependencyType.Indirect)
+                                                         .Select(dependencyProcessorFactory.Create).ToArray();
             _changesDetector = new DataChangesDetector<TFact, TFact>(_factMetadata.MapSpecificationProviderForSource, _factMetadata.MapSpecificationProviderForTarget, _query);
             _equalityProvider = EqualityComparer<long>.Default;
             _findSpecificationProvider = ids => new FindSpecification<TFact>(factIdentityProvider.Create<TFact, long>(ids));
