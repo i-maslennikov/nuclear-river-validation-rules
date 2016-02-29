@@ -21,10 +21,10 @@ namespace NuClear.Replication.Bulk.API.Factories
             _dataConnection = dataConnection;
         }
 
-        public IReadOnlyCollection<IBulkReplicator> Create(IMetadataElement metadataElement)
+        public IReadOnlyCollection<IBulkReplicator> Create(IMetadataElement metadata)
         {
-            var statisticsRecalculationMetadata = (ValueObjectMetadata<TValueObject, TKey>)metadataElement;
-            return new[] { new InsertsBulkReplicator<TValueObject>(_query, _dataConnection, statisticsRecalculationMetadata.MapSpecificationProviderForSource.Invoke(Specs.Find.All<TValueObject>())) };
+            var valueObjectMetadata = (ValueObjectMetadata<TValueObject, TKey>)metadata;
+            return new[] { new InsertsBulkReplicator<TValueObject>(_query, _dataConnection, valueObjectMetadata.MapSpecificationProviderForSource.Invoke(Specs.Find.All<TValueObject>())) };
         }
 
         public void Dispose()

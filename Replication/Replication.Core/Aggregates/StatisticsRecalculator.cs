@@ -34,9 +34,9 @@ namespace NuClear.Replication.Core.Aggregates
 
             using (Probe.Create("Recalculate Statistics Operations"))
             {
-                foreach (var batch in operations.GroupBy(x => x.ProjectId, x => x.CategoryId))
+                foreach (var batch in operations.GroupBy(x => x.EntityId.ProjectId))
                 {
-                    processor.RecalculateStatistics(batch.Key, batch.Distinct().ToArray());
+                    processor.Execute(batch.ToArray());
                 }
             }
         }

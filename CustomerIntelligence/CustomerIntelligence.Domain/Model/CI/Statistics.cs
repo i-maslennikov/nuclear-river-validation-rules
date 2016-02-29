@@ -1,4 +1,5 @@
 using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.Domain.Model.CI
 {

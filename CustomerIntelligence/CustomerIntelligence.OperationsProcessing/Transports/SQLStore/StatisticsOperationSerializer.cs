@@ -26,11 +26,11 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
         {
             var context = XElement.Parse(operation.Context);
 
-            return new RecalculateStatisticsOperation
-            {
-                ProjectId = (long)context.Attribute("Project"),
-                CategoryId = (long?)context.Attribute("Category"),
-            };
+            return new RecalculateStatisticsOperation(new StatisticsKey
+                {
+                    ProjectId = (long)context.Attribute("Project"),
+                    CategoryId = (long?)context.Attribute("Category"),
+                });
         }
 
         public PerformedOperationFinalProcessing Serialize(RecalculateStatisticsOperation operation, IMessageFlow targetFlow)
@@ -47,8 +47,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
         private static XElement Serialize(RecalculateStatisticsOperation operation)
         {
             return new XElement("RecalulateStatistics",
-                                new XAttribute("Project", operation.ProjectId),
-                                operation.CategoryId.HasValue ? new XAttribute("Category", operation.CategoryId) : null);
+                                new XAttribute("Project", operation.EntityId.ProjectId),
+                                operation.EntityId.CategoryId.HasValue ? new XAttribute("Category", operation.EntityId.CategoryId) : null);
         }
 
         private static Guid GetIdentity(RecalculateStatisticsOperation operation)
