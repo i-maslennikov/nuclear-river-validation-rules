@@ -37,10 +37,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{D0CF69C9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environments", "Environments", "{8F3C0046-1F47-4C8E-8B03-D35E96686C6F}"
 	ProjectSection(SolutionItems) = preProject
-		Environments\ConvertUseCases.Business.Russia.config = Environments\ConvertUseCases.Business.Russia.config
-		Environments\ConvertUseCases.Edu.Russia.config = Environments\ConvertUseCases.Edu.Russia.config
+		Environments\ConvertUseCases.Business.MultiCulture.config = Environments\ConvertUseCases.Business.MultiCulture.config
+		Environments\ConvertUseCases.Edu.MultiCulture.config = Environments\ConvertUseCases.Edu.MultiCulture.config
 		Environments\ConvertUseCases.Production.MultiCulture.config = Environments\ConvertUseCases.Production.MultiCulture.config
 		Environments\Erm.Business.Russia.config = Environments\Erm.Business.Russia.config
+		Environments\Erm.Edu.Czech.config = Environments\Erm.Edu.Czech.config
 		Environments\Erm.Edu.Russia.config = Environments\Erm.Edu.Russia.config
 		Environments\Erm.Production.Czech.config = Environments\Erm.Production.Czech.config
 		Environments\Erm.Production.Russia.config = Environments\Erm.Production.Russia.config
