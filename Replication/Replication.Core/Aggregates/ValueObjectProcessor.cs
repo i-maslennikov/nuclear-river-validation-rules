@@ -21,7 +21,7 @@ namespace NuClear.Replication.Core.Aggregates
             _findSpecificationProvider = findSpecificationProvider;
         }
 
-        public void ApplyChanges(IReadOnlyCollection<AggregateOperation> commands)
+        public void Execute(IReadOnlyCollection<AggregateOperation> commands)
         {
             var spec = _findSpecificationProvider.Create(commands);
             var mergeResult = _changesDetector.DetectChanges(spec);

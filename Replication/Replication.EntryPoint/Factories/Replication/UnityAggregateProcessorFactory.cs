@@ -59,8 +59,9 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             var aggregateKeyType = metadata.GetType().GenericTypeArguments[1];
             var metadataOverride = new DependencyOverride(metadata.GetType(), metadata);
 
-            return new DependencyOverride(typeof(IFindSpecificationProvider<>).MakeGenericType(aggregateType),
-                                          _unityContainer.Resolve(typeof(AggregateFindSpecificationProvider<,>).MakeGenericType(aggregateType, aggregateKeyType), metadataOverride));
+            return new DependencyOverride(
+                typeof(IFindSpecificationProvider<>).MakeGenericType(aggregateType),
+                _unityContainer.Resolve(typeof(AggregateFindSpecificationProvider<,>).MakeGenericType(aggregateType, aggregateKeyType), metadataOverride));
         }
 
         interface IAggregateDataChangesDetectorFactory

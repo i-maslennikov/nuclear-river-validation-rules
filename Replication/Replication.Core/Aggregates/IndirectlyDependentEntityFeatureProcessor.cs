@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core.API.Facts;
-using NuClear.River.Common.Metadata;
 using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
-using NuClear.Storage.API.Specifications;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates
@@ -23,37 +20,37 @@ namespace NuClear.Replication.Core.Aggregates
         private readonly IQuery _query;
         private readonly ICommandFactory<TEntityKey> _commandFactory;
         private readonly IndirectlyDependentEntityFeature<TFact, TEntityKey> _metadata;
-        private readonly Func<IEnumerable<long>, FindSpecification<TFact>> _filterProvider;
+        private readonly FindSpecificationProvider<TFact, long> _findSpecificationProvider;
 
         public IndirectlyDependentEntityFeatureProcessor(IndirectlyDependentEntityFeature<TFact, TEntityKey> metadata, IQuery query, IIdentityProvider<long> identityProvider, ICommandFactory<TEntityKey> commandFactory)
         {
             _query = query;
             _metadata = metadata;
             _commandFactory = commandFactory;
-            _filterProvider = ids => new FindSpecification<TFact>(identityProvider.Create<TFact, long>(ids));
+            _findSpecificationProvider = new FindSpecificationProvider<TFact, long>(identityProvider);
         }
 
         public IEnumerable<IOperation> ProcessCreation(IReadOnlyCollection<long> factIds)
         {
-            return Process(factIds, _metadata.DependentAggregateSpecProvider);
+            return Process(factIds);
         }
 
         public IEnumerable<IOperation> ProcessUpdating(IReadOnlyCollection<long> factIds)
         {
-            return Process(factIds, _metadata.DependentAggregateSpecProvider);
+            return Process(factIds);
         }
 
         public IEnumerable<IOperation> ProcessDeletion(IReadOnlyCollection<long> factIds)
         {
-            return Process(factIds, _metadata.DependentAggregateSpecProvider);
+            return Process(factIds);
         }
 
-        private IEnumerable<IOperation> Process(IReadOnlyCollection<long> factIds, MapToObjectsSpecProvider<TFact, TEntityKey> operationFactory)
+        private IEnumerable<IOperation> Process(IReadOnlyCollection<long> factIds)
         {
             using (Probe.Create("Querying dependent entities"))
             {
-                var filter = _filterProvider.Invoke(factIds);
-                return operationFactory.Invoke(filter).Map(_query).Select(key => _commandFactory.Create(_metadata.EntityType, key)).ToArray();
+                var filter = _findSpecificationProvider.Create(factIds);
+                return _metadata.DependentAggregateSpecProvider.Invoke(filter).Map(_query).Select(key => _commandFactory.Create(_metadata.EntityType, key)).ToArray();
             }
         }
     }

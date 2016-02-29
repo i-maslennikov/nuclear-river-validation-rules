@@ -4,12 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace NuClear.River.Common.Metadata.Model
+using NuClear.River.Common.Metadata.Model;
+
+namespace NuClear.CustomerIntelligence.Replication.Tests
 {
-    /// <summary>
-    /// Расширяемый набор функционала, использующего идентифицируемость сущностей.
-    /// </summary>
-    public static class IdentityExtensions
+    internal static class IdentityExtensions
     {
         public static Expression<Func<T, bool>> Create<T, TKey>(this IIdentityProvider<TKey> identityProvider, TKey id)
             where T : IIdentifiable<TKey>

@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicMock.cs" />
+    <Compile Include="IdentityExtensions.cs" />
     <Compile Include="MockLinqToDbDataBuilder.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="SqliteDomainContextFactory.cs" />

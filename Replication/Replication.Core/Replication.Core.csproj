@@ -99,6 +99,7 @@
     <Compile Include="Facts\FactsReplicator.cs" />
     <Compile Include="Aggregates\IndirectlyDependentEntityFeatureProcessor.cs" />
     <Compile Include="Facts\StatisticsImporter.cs" />
+    <Compile Include="FindSpecificationProvider.cs" />
     <Compile Include="IFindSpecificationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

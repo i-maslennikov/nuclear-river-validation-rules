@@ -59,7 +59,7 @@ namespace NuClear.Replication.Core.Aggregates
         {
             foreach (var processor in _valueObjectProcessors)
             {
-                processor.ApplyChanges(commands);
+                processor.Execute(commands);
             }
         }
     }

@@ -8,7 +8,6 @@ using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
-using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Facts
 {
@@ -23,7 +22,7 @@ namespace NuClear.Replication.Core.Facts
         private readonly IReadOnlyCollection<IFactDependencyProcessor> _indirectDepencencyProcessors;
         private readonly DataChangesDetector<TFact, TFact> _changesDetector;
         private readonly EqualityComparer<long> _equalityProvider;
-        private readonly Func<IEnumerable<long>, FindSpecification<TFact>> _findSpecificationProvider;
+        private readonly FindSpecificationProvider<TFact, long> _findSpecificationProvider;
         private readonly Func<TFact, long> _identityProvider;
 
         // todo: уменьшить число зависимостей
@@ -37,13 +36,13 @@ namespace NuClear.Replication.Core.Facts
                                                          .Select(dependencyProcessorFactory.Create).ToArray();
             _changesDetector = new DataChangesDetector<TFact, TFact>(_factMetadata.MapSpecificationProviderForSource, _factMetadata.MapSpecificationProviderForTarget, _query);
             _equalityProvider = EqualityComparer<long>.Default;
-            _findSpecificationProvider = ids => new FindSpecification<TFact>(factIdentityProvider.Create<TFact, long>(ids));
+            _findSpecificationProvider = new FindSpecificationProvider<TFact, long>(factIdentityProvider);
             _identityProvider = factIdentityProvider.ExtractIdentity<TFact>().Compile();
         }
 
         public IReadOnlyCollection<IOperation> ApplyChanges(IReadOnlyCollection<long> ids)
         {
-            var changes = _changesDetector.DetectChanges(_identityProvider, _findSpecificationProvider.Invoke(ids), _equalityProvider);
+            var changes = _changesDetector.DetectChanges(_identityProvider, _findSpecificationProvider.Create(ids), _equalityProvider);
             var result = new List<IOperation>();
 
             var idsToCreate = changes.Difference.ToArray();
@@ -68,21 +67,21 @@ namespace NuClear.Replication.Core.Facts
 
         private void CreateFact(IReadOnlyCollection<long> ids)
         {
-            var spec = _findSpecificationProvider.Invoke(ids);
+            var spec = _findSpecificationProvider.Create(ids);
             var sourceQueryable = _factMetadata.MapSpecificationProviderForSource.Invoke(spec).Map(_query);
             _repository.Create(sourceQueryable);
         }
 
         private void UpdateFact(IReadOnlyCollection<long> ids)
         {
-            var spec = _findSpecificationProvider.Invoke(ids);
+            var spec = _findSpecificationProvider.Create(ids);
             var sourceQueryable = _factMetadata.MapSpecificationProviderForSource.Invoke(spec).Map(_query);
             _repository.Update(sourceQueryable);
         }
 
         private void DeleteFact(IReadOnlyCollection<long> ids)
         {
-            var spec = _findSpecificationProvider.Invoke(ids);
+            var spec = _findSpecificationProvider.Create(ids);
             var targetQueryable = _factMetadata.MapSpecificationProviderForTarget.Invoke(spec).Map(_query);
             _repository.Delete(targetQueryable);
         }

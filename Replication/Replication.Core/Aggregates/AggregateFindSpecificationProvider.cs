@@ -10,17 +10,17 @@ namespace NuClear.Replication.Core.Aggregates
     public sealed class AggregateFindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T>
         where T : IIdentifiable<TKey>
     {
-        private readonly IIdentityProvider<TKey> _identityProvider;
+        private readonly FindSpecificationProvider<T, TKey> _specificationProvider;
 
         public AggregateFindSpecificationProvider(IIdentityProvider<TKey> identityProvider)
         {
-            _identityProvider = identityProvider;
+            _specificationProvider = new FindSpecificationProvider<T, TKey>(identityProvider);
         }
 
         public FindSpecification<T> Create(IEnumerable<AggregateOperation> commands)
         {
-            // todo: вот если бы была возможность из комманды получить TKey... (см. задачу "унификаци€ контекста")
-            return new FindSpecification<T>(_identityProvider.Create<T, TKey>(commands.Select(c => c.AggregateId).Distinct().Cast<TKey>()));
+            // todo: хак, TKey должен быть long. ј вот если бы была возможность из команды получить TKey... (см. задачу "унификаци€ контекста")
+            return _specificationProvider.Create(commands.Select(c => c.AggregateId).Distinct().Cast<TKey>());
         }
     }
 }
