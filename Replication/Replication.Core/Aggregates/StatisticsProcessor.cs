@@ -15,7 +15,7 @@ namespace NuClear.Replication.Core.Aggregates
     {
         private readonly IBulkRepository<T> _repository;
         private readonly StatisticsRecalculationMetadata<T, StatisticsKey> _metadata;
-        private readonly DataChangesDetector<T, T> _changesDetector;
+        private readonly DataChangesDetector<T> _changesDetector;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public StatisticsProcessor(StatisticsRecalculationMetadata<T, StatisticsKey> metadata, IQuery query, IBulkRepository<T> repository, IEqualityComparerFactory equalityComparerFactory)
@@ -23,7 +23,7 @@ namespace NuClear.Replication.Core.Aggregates
             _repository = repository;
             _metadata = metadata;
             _equalityComparerFactory = equalityComparerFactory;
-            _changesDetector = new DataChangesDetector<T, T>(_metadata.MapSpecificationProviderForSource, _metadata.MapSpecificationProviderForTarget, query);
+            _changesDetector = new DataChangesDetector<T>(_metadata.MapSpecificationProviderForSource, _metadata.MapSpecificationProviderForTarget, _equalityComparerFactory.CreateCompleteComparer<T>(), query);
         }
 
         public void Execute(IReadOnlyCollection<RecalculateStatisticsOperation> commands)
@@ -32,7 +32,7 @@ namespace NuClear.Replication.Core.Aggregates
 
             // Сначала сравниением получаем различающиеся записи,
             // затем получаем те из различающихся, которые совпадают по идентификатору.
-            var intermediateResult = _changesDetector.DetectChanges(x => x, filter, _equalityComparerFactory.CreateCompleteComparer<T>());
+            var intermediateResult = _changesDetector.DetectChanges(filter);
             var changes = MergeTool.Merge(intermediateResult.Difference, intermediateResult.Complement, _equalityComparerFactory.CreateIdentityComparer<T>());
 
             _repository.Delete(changes.Complement);
