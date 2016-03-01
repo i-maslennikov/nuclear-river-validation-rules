@@ -42,6 +42,8 @@
     <Compile Include="FactsReplicationMetadataSource.cs" />
     <Compile Include="ImportStatisticsMetadataSource.cs" />
     <Compile Include="MetadataBuilderExtesnsions.cs" />
+    <Compile Include="Model\Bit\FirmCategoryForecast.cs" />
+    <Compile Include="Model\Bit\FirmForecast.cs" />
     <Compile Include="Model\CI\CategoryGroup.cs" />
     <Compile Include="Model\CI\Client.cs" />
     <Compile Include="Model\CI\ClientContact.cs" />
