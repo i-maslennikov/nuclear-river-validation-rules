@@ -10,15 +10,15 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.Facts
 {
-    public class StatisticsFactImporter<T, TDto> : IStatisticsImporter
-        where T : class
+    public class StatisticsFactImporter<TFact, TDto> : IStatisticsImporter
+        where TFact : class
         where TDto : class
     {
-        private readonly ImportStatisticsMetadata<T, TDto> _importStatisticsMetadata;
+        private readonly ImportStatisticsMetadata<TFact, TDto> _importStatisticsMetadata;
         private readonly IQuery _query;
-        private readonly IBulkRepository<T> _repository;
+        private readonly IBulkRepository<TFact> _repository;
 
-        public StatisticsFactImporter(ImportStatisticsMetadata<T, TDto> importStatisticsMetadata, IQuery query, IBulkRepository<T> repository)
+        public StatisticsFactImporter(ImportStatisticsMetadata<TFact, TDto> importStatisticsMetadata, IQuery query, IBulkRepository<TFact> repository)
         {
             _importStatisticsMetadata = importStatisticsMetadata;
             _query = query;
