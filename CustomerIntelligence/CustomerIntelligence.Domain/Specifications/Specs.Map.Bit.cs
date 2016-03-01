@@ -47,6 +47,44 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                           .ToArray();
                             });
                 }
+
+                public static IMapSpecification<FirmForecastDto, IReadOnlyCollection<Bit::FirmCategoryForecast>> FirmCategoryForecasts()
+                {
+                    return new MapSpecification<FirmForecastDto, IReadOnlyCollection<Bit::FirmCategoryForecast>>(
+                        dto =>
+                            {
+                                var forecasts = from firm in dto.Firms
+                                                from category in firm.Categories
+                                                select new Bit::FirmCategoryForecast
+                                                    {
+                                                        ProjectId = dto.ProjectId,
+                                                        FirmId = firm.Id,
+                                                        CategoryId = category.Id,
+                                                        ForecastClick = category.ForecastClick,
+                                                        ForecastAmount = category.ForecastAmount,
+                                                    };
+
+                                return forecasts.ToArray();
+                            });
+                }
+
+                public static IMapSpecification<FirmForecastDto, IReadOnlyCollection<Bit::FirmForecast>> FirmForecasts()
+                {
+                    return new MapSpecification<FirmForecastDto, IReadOnlyCollection<Bit::FirmForecast>>(
+                        dto =>
+                        {
+                            var forecasts = from firm in dto.Firms
+                                            select new Bit::FirmForecast
+                                            {
+                                                ProjectId = dto.ProjectId,
+                                                FirmId = firm.Id,
+                                                ForecastClick = firm.ForecastClick,
+                                                ForecastAmount = firm.ForecastAmount,
+                                            };
+
+                            return forecasts.ToArray();
+                        });
+                }
             }
         }
     }

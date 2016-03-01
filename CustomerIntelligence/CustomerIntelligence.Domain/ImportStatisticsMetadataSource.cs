@@ -27,14 +27,26 @@ namespace NuClear.CustomerIntelligence.Domain
                     .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ImportStatisticsMetadataIdentity>())
                     .Childs(ImportStatisticsMetadata<Bit::FirmCategoryStatistics, FirmStatisticsDto>
                                 .Config
-                                .HasSource<FirmStatisticsDto>(Specs.Map.Bit.FirmCategoryStatistics())
+                                .HasSource(Specs.Map.Bit.FirmCategoryStatistics())
                                 .Aggregated(Specs.Find.Bit.FirmCategoryStatistics.ByBitDto)
                                 .LeadsToProjectStatisticsCalculation(),
 
                             ImportStatisticsMetadata<Bit::ProjectCategoryStatistics, CategoryStatisticsDto>
                                 .Config
-                                .HasSource<CategoryStatisticsDto>(Specs.Map.Bit.ProjectCategoryStatistics())
+                                .HasSource(Specs.Map.Bit.ProjectCategoryStatistics())
                                 .Aggregated(Specs.Find.Bit.ProjectCategoryStatistics.ByBitDto)
+                                .LeadsToProjectStatisticsCalculation(),
+
+                            ImportStatisticsMetadata<Bit::FirmCategoryForecast, FirmForecastDto>
+                                .Config
+                                .HasSource(Specs.Map.Bit.FirmCategoryForecasts())
+                                .Aggregated(Specs.Find.Bit.FirmCategoryForecast.ByBitDto)
+                                .LeadsToProjectStatisticsCalculation(),
+
+                            ImportStatisticsMetadata<Bit::FirmForecast, FirmForecastDto>
+                                .Config
+                                .HasSource(Specs.Map.Bit.FirmForecasts())
+                                .Aggregated(Specs.Find.Bit.FirmForecast.ByBitDto)
                                 .LeadsToProjectStatisticsCalculation());
 
             _metadata = new Dictionary<Uri, IMetadataElement> { { importStatisticsMetadataRoot.Identity.Id, importStatisticsMetadataRoot } };
