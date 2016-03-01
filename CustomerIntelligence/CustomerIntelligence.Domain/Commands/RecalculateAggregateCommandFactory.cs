@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;

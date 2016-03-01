@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Specifications;

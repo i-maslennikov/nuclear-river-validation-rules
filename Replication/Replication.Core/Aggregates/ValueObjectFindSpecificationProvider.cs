@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.River.Common.Metadata.Elements;
@@ -18,7 +18,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         public FindSpecification<T> Create(IEnumerable<AggregateOperation> commands)
         {
-            // todo: âîò åñëè áû áûëà âîçìîæíîñòü èç êîììàíäû ïîëó÷èòü TKey... (ñì. çàäà÷ó "óíèôèêàöèÿ êîíòåêñòà")
+            // todo: Ð²Ð¾Ñ‚ ÐµÑÐ»Ð¸ Ð±Ñ‹ Ð±Ñ‹Ð»Ð° Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ Ð¸Ð· ÐºÐ¾Ð¼Ð¼Ð°Ð½Ð´Ñ‹ Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ TKey... (ÑÐ¼. Ð·Ð°Ð´Ð°Ñ‡Ñƒ "ÑƒÐ½Ð¸Ñ„Ð¸ÐºÐ°Ñ†Ð¸Ñ ÐºÐ¾Ð½Ñ‚ÐµÐºÑÑ‚Ð°")
             return _metadata.FindSpecificationProvider.Invoke(commands.Select(c => c.AggregateId).Cast<TKey>().ToArray());
         }
     }

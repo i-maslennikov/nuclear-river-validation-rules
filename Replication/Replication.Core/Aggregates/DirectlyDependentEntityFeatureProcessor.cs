@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core.API.Facts;
@@ -9,8 +9,8 @@ using NuClear.River.Common.Metadata.Model.Operations;
 namespace NuClear.Replication.Core.Aggregates
 {
     /// <summary>
-    /// Выполняет обработку прямой зависимости между фактом и сущностью.
-    /// Приямая зависимость означет, что идентификатор факта является идентиифкатором сущности.
+    /// Р’С‹РїРѕР»РЅСЏРµС‚ РѕР±СЂР°Р±РѕС‚РєСѓ РїСЂСЏРјРѕР№ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РјРµР¶РґСѓ С„Р°РєС‚РѕРј Рё СЃСѓС‰РЅРѕСЃС‚СЊСЋ.
+    /// РџСЂРёСЏРјР°СЏ Р·Р°РІРёСЃРёРјРѕСЃС‚СЊ РѕР·РЅР°С‡РµС‚, С‡С‚Рѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ С„Р°РєС‚Р° СЏРІР»СЏРµС‚СЃСЏ РёРґРµРЅС‚РёРёС„РєР°С‚РѕСЂРѕРј СЃСѓС‰РЅРѕСЃС‚Рё.
     /// </summary>
     public class DirectlyDependentEntityFeatureProcessor<TFact> : IFactDependencyProcessor
         where TFact : class, IIdentifiable<long>
