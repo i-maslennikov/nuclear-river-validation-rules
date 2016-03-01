@@ -62,8 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateConstructionMetadataSource.cs" />
-    <Compile Include="Dto\OrderValidationConfig.cs" />
-    <Compile Include="Dto\OrderValidationConfigParser.cs" />
+    <Compile Include="EntityTypes\EntityTypeGlobalDeniedPosition.cs" />
+    <Compile Include="EntityTypes\EntityTypeGlobalAssociatedPosition.cs" />
     <Compile Include="EntityTypes\EntityTypeOrderPeriod.cs" />
     <Compile Include="EntityTypes\EntityTypeAssociatedPosition.cs" />
     <Compile Include="EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
@@ -74,17 +74,21 @@
     <Compile Include="EntityTypes\EntityTypeOrderPositionAdvertisement.cs" />
     <Compile Include="EntityTypes\EntityTypeOrganizationUnit.cs" />
     <Compile Include="EntityTypes\EntityTypePosition.cs" />
+    <Compile Include="EntityTypes\EntityTypeRuleset.cs" />
     <Compile Include="EntityTypes\EntityTypePrice.cs" />
     <Compile Include="EntityTypes\EntityTypePricePosition.cs" />
     <Compile Include="EntityTypes\EntityTypeProject.cs" />
     <Compile Include="FactMetadataUriProvider.cs" />
-    <Compile Include="ImportOrderValidationConfigMetadataSource.cs" />
-    <Compile Include="MetadataBuilderExtesnsions.cs" />
+    <Compile Include="Model\Aggregates\RulesetDeniedPosition.cs" />
+    <Compile Include="Model\Aggregates\RulesetAssociatedPosition.cs" />
+    <Compile Include="Model\Aggregates\Ruleset.cs" />
+    <Compile Include="Model\Erm\GlobalDeniedPosition.cs" />
+    <Compile Include="Model\Erm\GlobalAssociatedPosition.cs" />
     <Compile Include="Model\PeriodId.cs" />
     <Compile Include="Model\PeriodIdentityProvider.cs" />
     <Compile Include="Model\Enums\CompareMode.cs" />
-    <Compile Include="Model\Aggregates\DeniedPosition.cs" />
-    <Compile Include="Model\Aggregates\MasterPosition.cs" />
+    <Compile Include="Model\Aggregates\PriceDeniedPosition.cs" />
+    <Compile Include="Model\Aggregates\PriceAssociatedPosition.cs" />
     <Compile Include="Model\Aggregates\Order.cs" />
     <Compile Include="Model\Aggregates\OrderPeriod.cs" />
     <Compile Include="Model\Aggregates\OrderPosition.cs" />
@@ -96,7 +100,6 @@
     <Compile Include="Model\Aggregates\AdvertisementAmountRestriction.cs" />
     <Compile Include="Model\Facts\GlobalAssociatedPosition.cs" />
     <Compile Include="Model\Facts\GlobalDeniedPosition.cs" />
-    <Compile Include="Model\IConfigFactObject.cs" />
     <Compile Include="Model\IErmFactObject.cs" />
     <Compile Include="FactsReplicationMetadataSource.cs" />
     <Compile Include="Model\Erm\AssociatedPosition.cs" />
@@ -126,7 +129,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplicationMetadataName.cs" />
     <Compile Include="Specifications\Specs.Find.Aggs.cs" />
-    <Compile Include="Specifications\Specs.Map.Config.Facts.cs" />
     <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.AggsIdentity.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.Aggs.cs" />

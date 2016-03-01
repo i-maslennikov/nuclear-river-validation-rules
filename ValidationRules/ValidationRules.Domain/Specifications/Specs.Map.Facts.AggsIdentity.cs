@@ -73,6 +73,14 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                   select pricePosition.PriceId).Distinct()
                         );
                     }
+                    public static MapSpecification<IQuery, IEnumerable<long>> ByDeniedPosition(FindSpecification<Facts::DeniedPosition> specification)
+                    {
+                        return new MapSpecification<IQuery, IEnumerable<long>>(
+                            q => (from deniedPosition in q.For(specification)
+                                  select deniedPosition.PriceId).Distinct()
+                        );
+                    }
+
                     public static MapSpecification<IQuery, IEnumerable<long>> ByPricePosition(FindSpecification<Facts::PricePosition> specification)
                     {
                         return new MapSpecification<IQuery, IEnumerable<long>>(
@@ -82,13 +90,20 @@ namespace NuClear.ValidationRules.Domain.Specifications
                     }
                 }
 
-                public static class ToPositionAggregate
+                public static class ToRulesetAggregate
                 {
-                    public static MapSpecification<IQuery, IEnumerable<long>> ByAssociatedPosition(FindSpecification<Facts::AssociatedPosition> specification)
+                    public static MapSpecification<IQuery, IEnumerable<long>> ByGlobalAssociatedPosition(FindSpecification<Facts::GlobalAssociatedPosition> specification)
                     {
                         return new MapSpecification<IQuery, IEnumerable<long>>(
-                            q => (from associatedPosition in q.For(specification)
-                                  select associatedPosition.PositionId).Distinct()
+                            q => (from globalAssociatedPosition in q.For(specification)
+                                  select globalAssociatedPosition.RulesetId).Distinct()
+                        );
+                    }
+                    public static MapSpecification<IQuery, IEnumerable<long>> ByGlobalDeniedPosition(FindSpecification<Facts::GlobalDeniedPosition> specification)
+                    {
+                        return new MapSpecification<IQuery, IEnumerable<long>>(
+                            q => (from globalDeniedPosition in q.For(specification)
+                                  select globalDeniedPosition.RulesetId).Distinct()
                         );
                     }
                 }

@@ -28,8 +28,15 @@ namespace NuClear.ValidationRules.Domain
                                          .HasSource(Specs.Map.Facts.ToAggregates.Prices)
                                          .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions, Specs.Find.Aggs.AdvertisementAmountRestrictions)
-                                         .HasValueObject(Specs.Map.Facts.ToAggregates.DeniedPositions, Specs.Find.Aggs.DeniedPositions)
-                                         .HasValueObject(Specs.Map.Facts.ToAggregates.MasterPositions, Specs.Find.Aggs.MasterPositions),
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.PriceDeniedPositions, Specs.Find.Aggs.PriceDeniedPositions)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.PriceAssociatedPositions, Specs.Find.Aggs.PriceAssociatedPositions),
+
+                                     AggregateMetadata<Ruleset, long>
+                                         .Config
+                                         .HasSource(Specs.Map.Facts.ToAggregates.Rulesets)
+                                         .HasIdentityProvider(DefaultIdentityProvider.Instance)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.RulesetDeniedPositions, Specs.Find.Aggs.RulesetDeniedPositions)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.RulesetAssociatedPositions, Specs.Find.Aggs.RulesetAssociatedPositions),
 
                                      AggregateMetadata<Order, long>
                                          .Config

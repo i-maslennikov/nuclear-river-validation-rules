@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using LinqToDB.Mapping;
 
@@ -25,12 +24,6 @@ namespace NuClear.Replication.Bulk.Metadata
         public BulkReplicationMetadataBuilder From(IConnectionStringIdentity connectionString, MappingSchema mappingSchema)
         {
             AddFeatures(new StorageDescriptorFeature(ReplicationDirection.From, connectionString, mappingSchema));
-            return this;
-        }
-
-        public BulkReplicationMetadataBuilder From(IConnectionStringIdentity connectionString, Type parserType)
-        {
-            AddFeatures(new ConfigStorageDescriptorFeature(ReplicationDirection.From, connectionString, parserType));
             return this;
         }
 

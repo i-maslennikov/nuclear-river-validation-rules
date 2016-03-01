@@ -16,10 +16,29 @@ namespace NuClear.ValidationRules.Storage
                 var schema = new MappingSchema(new SqlServerMappingSchema());
                 var config = schema.GetFluentMappingBuilder();
 
-                config.Entity<DeniedPosition>()
+                config.Entity<Price>()
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.Id);
+
+                config.Entity<PriceDeniedPosition>()
                       .HasSchemaName(PriceAggregateSchema);
 
-                config.Entity<MasterPosition>()
+                config.Entity<PriceAssociatedPosition>()
+                      .HasSchemaName(PriceAggregateSchema);
+
+                config.Entity<AdvertisementAmountRestriction>()
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.PriceId)
+                      .HasPrimaryKey(x => x.PositionId);
+
+                config.Entity<Ruleset>()
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.Id);
+
+                config.Entity<RulesetDeniedPosition>()
+                      .HasSchemaName(PriceAggregateSchema);
+
+                config.Entity<RulesetAssociatedPosition>()
                       .HasSchemaName(PriceAggregateSchema);
 
                 config.Entity<Order>()
@@ -49,19 +68,10 @@ namespace NuClear.ValidationRules.Storage
                       .HasSchemaName(PriceAggregateSchema)
                       .HasPrimaryKey(x => x.Id);
 
-                config.Entity<Price>()
-                      .HasSchemaName(PriceAggregateSchema)
-                      .HasPrimaryKey(x => x.Id);
-
                 config.Entity<PricePeriod>()
                       .HasSchemaName(PriceAggregateSchema)
                       .HasPrimaryKey(x => x.PriceId)
                       .HasPrimaryKey(x => x.PeriodId);
-
-                config.Entity<AdvertisementAmountRestriction>()
-                      .HasSchemaName(PriceAggregateSchema)
-                      .HasPrimaryKey(x => x.PriceId)
-                      .HasPrimaryKey(x => x.PositionId);
 
                 return schema;
             }

@@ -25,67 +25,33 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                     Id = x.Id
                                 }));
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::DeniedPosition>> DeniedPositions
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::DeniedPosition>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::PriceDeniedPosition>> PriceDeniedPositions
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::PriceDeniedPosition>>(
+                            q => q.For<Facts::DeniedPosition>().Select(x => new Aggregates::PriceDeniedPosition
+                            {
+                                PriceId = x.PriceId,
+                                DeniedPositionId = x.PositionDeniedId,
+                                PrincipalPositionId = x.PositionId,
+                                ObjectBindingType = x.ObjectBindingType,
+                            }));
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::PriceAssociatedPosition>> PriceAssociatedPositions
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::PriceAssociatedPosition>>(
                             q =>
                                 {
-                                    var deniedPositions = q.For<Facts::DeniedPosition>().Select(x => new
-                                        {
-                                            x.PositionId,
-                                            DeniedPositionId = x.PositionDeniedId,
-                                            x.ObjectBindingType,
-                                            PriceId = (long?)x.PriceId,
-                                        });
-
-                                    var globalDeniedPositions = q.For<Facts::GlobalDeniedPosition>().Select(x => new
-                                        {
-                                            PositionId = x.MasterPositionId,
-                                            x.DeniedPositionId,
-                                            x.ObjectBindingType,
-                                            PriceId = (long?)null,
-                                        });
-
-                                    var aggs = deniedPositions.Union(globalDeniedPositions).Select(x => new Aggregates::DeniedPosition
-                                        {
-                                            PositionId = x.PositionId,
-                                            DeniedPositionId = x.DeniedPositionId,
-                                            PriceId = x.PriceId,
-                                            ObjectBindingType = x.ObjectBindingType
-                                        });
-
+                                    var aggs = from associatedPosition in q.For<Facts::AssociatedPosition>()
+                                                join associatedPositionGroup in q.For<Facts::AssociatedPositionsGroup>() on associatedPosition.AssociatedPositionsGroupId equals associatedPositionGroup.Id
+                                                join pricePosition in q.For<Facts::PricePosition>() on associatedPositionGroup.PricePositionId equals pricePosition.Id
+                                                join price in q.For<Facts::Price>() on pricePosition.PriceId equals price.Id
+                                                select new Aggregates::PriceAssociatedPosition
+                                                {
+                                                    PriceId = price.Id,
+                                                    AssociatedPositionId = pricePosition.PositionId,
+                                                    PrincipalPositionId = associatedPosition.PositionId,
+                                                    ObjectBindingType = associatedPosition.ObjectBindingType,
+                                                    GroupId = associatedPositionGroup.Id
+                                                };
                                     return aggs;
-                                });
-
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::MasterPosition>> MasterPositions
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::MasterPosition>>(
-                            q =>
-                                {
-                                    var masterPositions = from associatedPosition in q.For<Facts::AssociatedPosition>()
-                                                          join associatedPositionGroup in q.For<Facts::AssociatedPositionsGroup>() on associatedPosition.AssociatedPositionsGroupId
-                                                              equals associatedPositionGroup.Id
-                                                          join pricePosition in q.For<Facts::PricePosition>() on associatedPositionGroup.PricePositionId equals pricePosition.Id
-                                                          join price in q.For<Facts::Price>() on pricePosition.PriceId equals price.Id
-                                                          select new Aggregates::MasterPosition
-                                                              {
-                                                                  PositionId = pricePosition.PositionId,
-                                                                  MasterPositionId = associatedPosition.PositionId,
-                                                                  ObjectBindingType = associatedPosition.ObjectBindingType,
-
-                                                                  PriceId = price.Id,
-                                                                  GroupId = associatedPositionGroup.Id
-                                                              };
-
-                                    var globalMasterPositions = q.For<Facts::GlobalAssociatedPosition>().Select(x => new Aggregates::MasterPosition
-                                        {
-                                            PositionId = x.AssociatedPositionId,
-                                            MasterPositionId = x.MasterPositionId,
-                                            ObjectBindingType = x.ObjectBindingType,
-
-                                            PriceId = null,
-                                            GroupId = null
-                                        });
-
-                                    return masterPositions.Union(globalMasterPositions);
                                 });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::AdvertisementAmountRestriction>> AdvertisementAmountRestrictions
@@ -97,6 +63,39 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                     Max = x.MaxAdvertisementAmount,
                                     Min = x.MinAdvertisementAmount
                                 }));
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>> Rulesets
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>>(
+                            q =>
+                            {
+                                var associated = q.For<Facts::GlobalAssociatedPosition>().Select(x => x.RulesetId);
+                                var denied = q.For<Facts::GlobalDeniedPosition>().Select(x => x.RulesetId);
+
+                                return associated.Union(denied).Select(x => new Aggregates::Ruleset
+                                {
+                                    Id = x
+                                });
+                            });
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::RulesetDeniedPosition>> RulesetDeniedPositions
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::RulesetDeniedPosition>>(
+                            q => q.For<Facts::GlobalDeniedPosition>().Select(x => new Aggregates::RulesetDeniedPosition
+                            {
+                                RulesetId = x.RulesetId,
+                                DeniedPositionId = x.DeniedPositionId,
+                                PrincipalPositionId = x.PrincipalPositionId,
+                                ObjectBindingType = x.ObjectBindingType,
+                            }));
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::RulesetAssociatedPosition>> RulesetAssociatedPositions
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::RulesetAssociatedPosition>>(
+                            q => q.For<Facts::GlobalAssociatedPosition>().Select(x => new Aggregates::RulesetAssociatedPosition
+                            {
+                                RulesetId = x.RulesetId,
+                                AssociatedPositionId = x.AssociatedPositionId,
+                                PrincipalPositionId = x.PrincipalPositionId,
+                                ObjectBindingType = x.ObjectBindingType,
+                            }));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Order>> Orders
                         = new MapSpecification<IQuery, IQueryable<Aggregates::Order>>(

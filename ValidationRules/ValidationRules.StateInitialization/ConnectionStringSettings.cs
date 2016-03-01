@@ -22,7 +22,6 @@ namespace NuClear.ValidationRules.StateInitialization
                         {
                             { "Erm", ErmConnectionStringIdentity.Instance },
                             { "Facts", FactsConnectionStringIdentity.Instance },
-                            { "OrderValidationConfig", OrderValidationConfigIdentity.Instance },
                             { "Aggs", AggregatesConnectionStringIdentity.Instance },
                         };
 

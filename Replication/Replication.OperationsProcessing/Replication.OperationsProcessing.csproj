@@ -185,8 +185,6 @@
     <Compile Include="Primary\CorporateBusAggregatableMessage.cs" />
     <Compile Include="Transports\CorporateBus\CorporateBusMessage.cs" />
     <Compile Include="Transports\CorporateBus\CorporateBusOperationsReceiver.cs" />
-    <Compile Include="Transports\File\FileContentMessage.cs" />
-    <Compile Include="Transports\File\FileReceiver.cs" />
     <Compile Include="Transports\SQLStore\AggregateOperationSerializer.cs" />
     <Compile Include="Transports\SQLStore\IOperationSerializer.cs" />
     <Compile Include="Transports\ServiceBus\ServiceBusOperationsReceiverTelemetryDecorator.cs" />

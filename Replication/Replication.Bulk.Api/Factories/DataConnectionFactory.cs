@@ -5,7 +5,6 @@ using LinqToDB.DataProvider.SqlServer;
 
 using NuClear.Replication.Bulk.Api.Storage;
 using NuClear.Replication.Bulk.Metadata;
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.ConnectionStrings;
 
 namespace NuClear.Replication.Bulk.API.Factories
@@ -30,13 +29,6 @@ namespace NuClear.Replication.Bulk.API.Factories
             if (db != null)
             {
                 return new DatabaseStorage(CreateConnection(db));
-            }
-
-            var config = storageDescriptorFeature as ConfigStorageDescriptorFeature;
-            if (config != null)
-            {
-                var path = _connectionStringSettings.GetConnectionString(config.PathIdentity);
-                return new FileStorage(path, (IConfigParser)Activator.CreateInstance(config.ParcerType));
             }
 
             throw new ArgumentException($"Unsupported storage descriptor type {storageDescriptorFeature.GetType().Name}", nameof(storageDescriptorFeature));

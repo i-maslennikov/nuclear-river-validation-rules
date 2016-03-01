@@ -68,7 +68,6 @@
     <Compile Include="DefaultEntityContainerNameResolver.cs" />
     <Compile Include="Identitites\Connections\ErmConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\AggregatesConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\OrderValidationConfigIdentity.cs" />
     <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.Aggregates.cs" />

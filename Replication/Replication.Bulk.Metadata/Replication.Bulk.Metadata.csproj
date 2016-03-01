@@ -62,7 +62,6 @@
     <Compile Include="BulkReplicationMetadataBuilder.cs" />
     <Compile Include="BulkReplicationMetadataElement.cs" />
     <Compile Include="BulkReplicationMetadataKindIdentity.cs" />
-    <Compile Include="ConfigStorageDescriptorFeature.cs" />
     <Compile Include="IStorageDescriptorFeature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplicationDirection.cs" />

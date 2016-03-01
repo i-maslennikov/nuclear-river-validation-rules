@@ -23,12 +23,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                                       .Accumulator<ImportFactsFromErmAccumulator>()
                                                       .Handler<ImportFactsFromErmHandler>()
                                                       .To.Primary().Flow<ImportFactsFromErmFlow>().Connect()
-                                                      .To.Final().Flow<AggregatesFlow>().Connect(),
-
-                                   MessageFlowMetadata.Config.For<ImportFactsFromOrderValidationConfigFlow>()
-                                                      .Accumulator<ImportFactsFromOrderValidationConfigAccumulator>()
-                                                      .Handler<ImportFactsFromOrderValidationConfigHandler>()
-                                                      .To.Primary().Flow<ImportFactsFromOrderValidationConfigFlow>().Connect()
+                                                      .To.Final().Flow<AggregatesFlow>().Connect()
                                 )
                                 .Final(
                                    MessageFlowMetadata.Config.For<AggregatesFlow>()

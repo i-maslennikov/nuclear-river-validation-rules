@@ -96,14 +96,10 @@
     <Compile Include="EntityTypeMap.cs" />
     <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
     <Compile Include="Identities\Flows\AggregatesFlow.cs" />
-    <Compile Include="Identities\Flows\ImportFactsFromOrderValidationConfigFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
-    <Compile Include="Identities\Telemetry\AggregateEnqueuedOperationCountIdentity.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="Primary\ImportFactsFromErmAccumulator.cs" />
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
-    <Compile Include="Primary\ImportFactsFromOrderValidationConfigAccumulator.cs" />
-    <Compile Include="Primary\ImportFactsFromOrderValidationConfigHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

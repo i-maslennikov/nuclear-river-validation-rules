@@ -20,6 +20,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                 public static class ToFacts
                 {
                     private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+                    private const long DraftRulesetId = 0;
 
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::AssociatedPosition>> AssociatedPosition =
                         new MapSpecification<IQuery, IQueryable<Facts::AssociatedPosition>>(
@@ -33,17 +34,29 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                   .Where(entity => entity.IsActive && !entity.IsDeleted)
                                   .Select(Transform.AssociatedPositionsGroup));
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Facts::Category>> Category =
-                        new MapSpecification<IQuery, IQueryable<Facts::Category>>(
-                            q => q.For<Erm::Category>()
-                                  .Where(entity => entity.IsActive && !entity.IsDeleted)
-                                  .Select(Transform.Category));
-
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::DeniedPosition>> DeniedPosition =
                         new MapSpecification<IQuery, IQueryable<Facts::DeniedPosition>>(
                             q => q.For<Erm::DeniedPosition>()
                                   .Where(entity => entity.IsActive && !entity.IsDeleted)
                                   .Select(Transform.DeniedPosition));
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Facts::GlobalAssociatedPosition>> GlobalAssociatedPosition =
+                        new MapSpecification<IQuery, IQueryable<Facts::GlobalAssociatedPosition>>(
+                            q => q.For<Erm::GlobalAssociatedPosition>()
+                                  .Where(entity => entity.RulesetId != DraftRulesetId && !entity.IsDeleted)
+                                  .Select(Transform.GlobalAssociatedPosition));
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Facts::GlobalDeniedPosition>> GlobalDeniedPosition =
+                        new MapSpecification<IQuery, IQueryable<Facts::GlobalDeniedPosition>>(
+                            q => q.For<Erm::GlobalDeniedPosition>()
+                                  .Where(entity => entity.RulesetId != DraftRulesetId && !entity.IsDeleted)
+                                  .Select(Transform.GlobalDeniedPosition));
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Facts::Category>> Category =
+                        new MapSpecification<IQuery, IQueryable<Facts::Category>>(
+                            q => q.For<Erm::Category>()
+                                  .Where(entity => entity.IsActive && !entity.IsDeleted)
+                                  .Select(Transform.Category));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Order>> Order =
                         new MapSpecification<IQuery, IQueryable<Facts::Order>>(
@@ -110,13 +123,6 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                     PricePositionId = x.PricePositionId,
                                 };
 
-                        public static readonly Expression<Func<Erm::Category, Facts::Category>> Category =
-                            x => new Facts::Category
-                                {
-                                    Id = x.Id,
-                                    ParentId = x.ParentId
-                                };
-
                         public static readonly Expression<Func<Erm::DeniedPosition, Facts::DeniedPosition>> DeniedPosition =
                             x => new Facts::DeniedPosition
                                 {
@@ -126,6 +132,33 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                     PositionId = x.PositionId,
                                     ObjectBindingType = x.ObjectBindingType,
                                 };
+
+                        public static readonly Expression<Func<Erm::GlobalAssociatedPosition, Facts::GlobalAssociatedPosition>> GlobalAssociatedPosition =
+                            x => new Facts::GlobalAssociatedPosition
+                            {
+                                Id = x.Id,
+                                RulesetId = x.RulesetId,
+                                AssociatedPositionId = x.AssociatedPositionId,
+                                PrincipalPositionId = x.PrincipalPositionId,
+                                ObjectBindingType = x.ObjectBindingType,
+                            };
+
+                        public static readonly Expression<Func<Erm::GlobalDeniedPosition, Facts::GlobalDeniedPosition>> GlobalDeniedPosition =
+                            x => new Facts::GlobalDeniedPosition
+                            {
+                                Id = x.Id,
+                                RulesetId = x.RulesetId,
+                                DeniedPositionId = x.DeniedPositionId,
+                                PrincipalPositionId = x.PrincipalPositionId,
+                                ObjectBindingType = x.ObjectBindingType,
+                            };
+
+                        public static readonly Expression<Func<Erm::Category, Facts::Category>> Category =
+                            x => new Facts::Category
+                            {
+                                Id = x.Id,
+                                ParentId = x.ParentId
+                            };
 
                         public static readonly Expression<Func<Erm::Order, Facts::Order>> Order =
                             x => new Facts::Order

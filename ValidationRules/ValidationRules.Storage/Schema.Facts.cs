@@ -52,15 +52,12 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<Category>()
                       .HasSchemaName(PriceContextSchema)
                       .HasPrimaryKey(x => x.Id);
-
                 config.Entity<GlobalAssociatedPosition>()
                       .HasSchemaName(PriceContextSchema)
-                      .HasPrimaryKey(x => x.AssociatedPositionId)
-                      .HasPrimaryKey(x => x.MasterPositionId);
+                      .HasPrimaryKey(x => x.Id);
                 config.Entity<GlobalDeniedPosition>()
                       .HasSchemaName(PriceContextSchema)
-                      .HasPrimaryKey(x => x.DeniedPositionId)
-                      .HasPrimaryKey(x => x.MasterPositionId);
+                      .HasPrimaryKey(x => x.Id);
 
                 return schema;
             }

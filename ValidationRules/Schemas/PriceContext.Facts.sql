@@ -34,7 +34,7 @@ create table PriceContext.Position(
     Name nvarchar(max) not null,
     constraint PK_Position primary key (Id)
 )
-create index IX_Position_IsComposite ON PriceContext.Position (IsComposite)
+create index IX_IsComposite ON PriceContext.Position (IsComposite)
 go
 
 create table PriceContext.PricePosition(
@@ -45,8 +45,8 @@ create table PriceContext.PricePosition(
     MaxAdvertisementAmount int not null,
     constraint PK_PricePosition primary key (Id)
 )
-create index IX_PricePosition_PriceId ON PriceContext.PricePosition (PriceId)
-create index IX_PricePosition_PositionId ON PriceContext.PricePosition (PositionId)
+create index IX_PriceId ON PriceContext.PricePosition (PriceId)
+create index IX_PositionId ON PriceContext.PricePosition (PositionId)
 go
 
 create table PriceContext.AssociatedPositionsGroup(
@@ -54,7 +54,7 @@ create table PriceContext.AssociatedPositionsGroup(
     PricePositionId bigint not null,
     constraint PK_AssociatedPositionsGroup primary key (Id)
 )
-create index IX_AssociatedPositionsGroup_PricePositionId ON PriceContext.AssociatedPositionsGroup (PricePositionId)
+create index IX_PricePositionId ON PriceContext.AssociatedPositionsGroup (PricePositionId)
 go
 
 create table PriceContext.AssociatedPosition(
@@ -64,7 +64,7 @@ create table PriceContext.AssociatedPosition(
     ObjectBindingType int not null,
     constraint PK_AssociatedPosition primary key (Id)
 )
-create index IX_AssociatedPosition_AssociatedPositionsGroupId ON PriceContext.AssociatedPosition (AssociatedPositionsGroupId)
+create index IX_AssociatedPositionsGroupId ON PriceContext.AssociatedPosition (AssociatedPositionsGroupId)
 go
 
 create table PriceContext.DeniedPosition(
@@ -100,8 +100,8 @@ create table PriceContext.OrderPosition(
     PricePositionId bigint not null,
     constraint PK_OrderPosition primary key (Id)
 )
-create index IX_OrderPosition_OrderId ON PriceContext.OrderPosition (OrderId)
-create index IX_OrderPosition_PricePositionId ON PriceContext.OrderPosition (PricePositionId)
+create index IX_OrderId ON PriceContext.OrderPosition (OrderId)
+create index IX_PricePositionId ON PriceContext.OrderPosition (PricePositionId)
 go
 
 create table PriceContext.OrderPositionAdvertisement(
@@ -112,8 +112,8 @@ create table PriceContext.OrderPositionAdvertisement(
     FirmAddressId bigint null,
     constraint PK_OrderPositionAdvertisement primary key (Id)
 )
-create index IX_OrderPositionAdvertisement_OrderPositionId ON PriceContext.OrderPositionAdvertisement (OrderPositionId)
-create index IX_OrderPositionAdvertisement_PositionId ON PriceContext.OrderPositionAdvertisement (PositionId)
+create index IX_OrderPositionId ON PriceContext.OrderPositionAdvertisement (OrderPositionId)
+create index IX_PositionId ON PriceContext.OrderPositionAdvertisement (PositionId)
 go
 
 create table PriceContext.OrganizationUnit(
@@ -134,19 +134,25 @@ create table PriceContext.Category(
     ParentId bigint not null,
     constraint PK_Category primary key (Id)
 )
-create index IX_Category_ParentId ON PriceContext.Category (ParentId)
+create index IX_ParentId ON PriceContext.Category (ParentId)
 go
 
 create table PriceContext.GlobalAssociatedPosition(
-    MasterPositionId bigint not null,
+	Id bigint not null,
+	RulesetId bigint not null,
     AssociatedPositionId bigint not null,
-    ObjectBindingType int not null
+    PrincipalPositionId bigint not null,
+    ObjectBindingType int not null,
+	constraint PK_GlobalAssociatedPosition primary key (Id)
 )
 go
 
 create table PriceContext.GlobalDeniedPosition(
-    MasterPositionId bigint not null,
+	Id bigint not null,
+	RulesetId bigint not null,
     DeniedPositionId bigint not null,
-    ObjectBindingType int not null
+    PrincipalPositionId bigint not null,
+    ObjectBindingType int not null,
+	constraint PK_GlobalDeniedPosition primary key (Id)
 )
 go

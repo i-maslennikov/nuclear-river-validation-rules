@@ -27,22 +27,32 @@ namespace NuClear.ValidationRules.Domain
                     .Childs(FactMetadata<AssociatedPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.AssociatedPosition)
-                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPosition)
-                                .HasDependentAggregate<EntityTypePosition>(Specs.Map.Facts.ToPositionAggregate.ByAssociatedPosition),
+                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPosition),
 
                             FactMetadata<AssociatedPositionsGroup>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.AssociatedPositionsGroup)
                                 .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPositionGroup),
 
+                            FactMetadata<DeniedPosition>
+                                .Config
+                                .HasSource(Specs.Map.Erm.ToFacts.DeniedPosition)
+                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByDeniedPosition),
+
+                            FactMetadata<GlobalAssociatedPosition>
+                                .Config
+                                .HasSource(Specs.Map.Erm.ToFacts.GlobalAssociatedPosition)
+                                .HasDependentAggregate<EntityTypeRuleset>(Specs.Map.Facts.ToRulesetAggregate.ByGlobalAssociatedPosition),
+
+                            FactMetadata<GlobalDeniedPosition>
+                                .Config
+                                .HasSource(Specs.Map.Erm.ToFacts.GlobalDeniedPosition)
+                                .HasDependentAggregate<EntityTypeRuleset>(Specs.Map.Facts.ToRulesetAggregate.ByGlobalDeniedPosition),
+
                             FactMetadata<Category>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Category)
                                 .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByCategory),
-
-                            FactMetadata<DeniedPosition>
-                                .Config
-                                .HasSource(Specs.Map.Erm.ToFacts.DeniedPosition),
 
                             FactMetadata<Order>
                                 .Config
@@ -64,9 +74,6 @@ namespace NuClear.ValidationRules.Domain
                                 .HasSource(Specs.Map.Erm.ToFacts.Position)
                                 .HasMatchedAggregate<EntityTypePosition>()
                                 .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByPosition),
-
-                            // TODO: что с GlobalAssociatedPositions и GlobalDeniedPositions ? по-хорошему надо в Price
-                            // дождаться выхода задачи ERM-8801 в ERM
 
                             FactMetadata<Position>
                                 .Config

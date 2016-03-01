@@ -14,6 +14,9 @@
         public const int Firm = 146;
         public const int FirmAddress = 164;
         public const int FirmContact = 165;
+        public const int GlobalAssociatedPosition = 278;
+        public const int GlobalDeniedPosition = 279;
+        public const int Ruleset = 280;
         public const int LegalPerson = 147;
         public const int Order = 151;
         public const int OrderPositionAdvertisement = 216;

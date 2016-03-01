@@ -25,7 +25,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         new BulkReplicationMetadataSource(),
                         new FactsReplicationMetadataSource(),
-                        new ImportOrderValidationConfigMetadataSource(),
                         new AggregateConstructionMetadataSource()
                     },
                 new IMetadataProcessor[] { new ReferencesEvaluatorProcessor() });
