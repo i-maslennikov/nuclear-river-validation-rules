@@ -1,0 +1,7 @@
+<RubricPopularity>
+  <Branch Code="112" />
+  <Rubrics>
+    <Rubric Priority="36363" Code="116" WeightAll="100002" FirmCount="18" AdvFirmCount="0" AdvFirmShare="0.00" />
+    <Rubric Priority="307692" Code="122" WeightAll="100004" FirmCount="8" AdvFirmCount="0" AdvFirmShare="0.00" />
+  </Rubrics>
+</RubricPopularity>
