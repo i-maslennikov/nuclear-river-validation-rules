@@ -20,12 +20,11 @@ namespace NuClear.River.Common.Metadata.Elements
         private IMetadataElementIdentity _identity;
 
         public ImportStatisticsMetadata(
-            Type statisticsDtoType,
             Func<TDto, FindSpecification<T>> findSpecificationProvider,
             IMapSpecification<TDto, IReadOnlyCollection<T>> mapSpecification,
             IEnumerable<IMetadataFeature> features) : base(features)
         {
-            _identity = new Uri(statisticsDtoType.Name, UriKind.Relative).AsIdentity();
+            _identity = new Uri($"{typeof(TDto).Name}/{typeof(T).Name}", UriKind.Relative).AsIdentity();
             _findSpecificationProvider = findSpecificationProvider;
             _mapSpecification = mapSpecification;
         }

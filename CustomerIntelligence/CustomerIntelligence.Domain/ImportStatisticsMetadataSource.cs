@@ -14,7 +14,6 @@ using Specs = NuClear.CustomerIntelligence.Domain.Specifications.Specs;
 
 namespace NuClear.CustomerIntelligence.Domain
 {
-
     public class ImportStatisticsMetadataSource : MetadataSourceBase<ImportStatisticsMetadataIdentity>
     {
         private readonly IReadOnlyDictionary<Uri, IMetadataElement> _metadata;

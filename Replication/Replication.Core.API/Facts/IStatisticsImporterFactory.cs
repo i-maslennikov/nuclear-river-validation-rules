@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NuClear.Replication.Core.API.Facts
 {
     public interface IStatisticsImporterFactory
     {
-        IStatisticsImporter Create(Type statisticsDtoType);
+        IReadOnlyCollection<IStatisticsImporter> Create(Type statisticsDtoType);
     }
 }

@@ -24,8 +24,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
         public ImportFactsFromBitHandler(
             IStatisticsImporterFactory statisticsImporterFactory,
-            IOperationSender<RecalculateStatisticsOperation> sender, 
-            ITracer tracer, 
+            IOperationSender<RecalculateStatisticsOperation> sender,
+            ITracer tracer,
             ITelemetryPublisher telemetryPublisher)
         {
             _statisticsImporterFactory = statisticsImporterFactory;
@@ -47,10 +47,12 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                 {
                     foreach (var dto in message.Dtos)
                     {
-                        var importer = _statisticsImporterFactory.Create(dto.GetType());
-                        var opertaions = importer.Import(dto);
-                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(1);
-                        _sender.Push(opertaions.Cast<RecalculateStatisticsOperation>());
+                        foreach (var importer in _statisticsImporterFactory.Create(dto.GetType()))
+                        {
+                            var opertaions = importer.Import(dto);
+                            _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(1);
+                            _sender.Push(opertaions.Cast<RecalculateStatisticsOperation>());
+                        }
                     }
                 }
 

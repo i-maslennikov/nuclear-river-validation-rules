@@ -25,9 +25,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             // Arrange
             var repositoryFactory = new VerifiableRepositoryFactory();
             var dto = new FirmStatisticsDto
-                      {
-                          ProjectId = 1,
-                          Firms = new[]
+            {
+                ProjectId = 1,
+                Firms = new[]
                                   {
                                       new FirmStatisticsDto.FirmDto
                                       {
@@ -43,14 +43,15 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                                             }
                                       }
                                   }
-                      };
+            };
 
             SourceDb.Has(new Bit::FirmCategoryStatistics { ProjectId = 1, FirmId = 7 },
                          new Bit::FirmCategoryStatistics { ProjectId = 2, FirmId = 8 });
 
             var metadataSource = new ImportStatisticsMetadataSource();
+            var identity = new Uri($"{typeof(FirmStatisticsDto).Name}/{typeof(Bit::FirmCategoryStatistics).Name}", UriKind.Relative);
             IMetadataElement importStatisticsMetadata;
-            if (!metadataSource.Metadata.Values.TryGetElementById(new Uri(typeof(FirmStatisticsDto).Name, UriKind.Relative), out importStatisticsMetadata))
+            if (!metadataSource.Metadata.Values.TryGetElementById(identity, out importStatisticsMetadata))
             {
                 throw new NotSupportedException($"The aggregate of type '{typeof(FirmStatisticsDto).Name}' is not supported.");
             }
@@ -94,8 +95,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new Bit::ProjectCategoryStatistics { ProjectId = 2, CategoryId = 7 });
 
             var metadataSource = new ImportStatisticsMetadataSource();
+            var identity = new Uri($"{typeof(CategoryStatisticsDto).Name}/{typeof(Bit::ProjectCategoryStatistics).Name}", UriKind.Relative);
             IMetadataElement importStatisticsMetadata;
-            if (!metadataSource.Metadata.Values.TryGetElementById(new Uri(typeof(CategoryStatisticsDto).Name, UriKind.Relative), out importStatisticsMetadata))
+            if (!metadataSource.Metadata.Values.TryGetElementById(identity, out importStatisticsMetadata))
             {
                 throw new NotSupportedException($"The aggregate of type '{typeof(CategoryStatisticsDto).Name}' is not supported.");
             }
