@@ -71,6 +71,26 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
 
                                     return categories3;
                                 });
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmForecast>> FirmForecast =
+                        new MapSpecification<IQuery, IQueryable<Statistics::FirmForecast>>(
+                            q =>
+                                {
+                                    var firmDtos = from firm in q.For<Facts::Firm>()
+                                                   join project in q.For<Facts::Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
+                                                   from forecast in q.For<Bit::FirmForecast>()
+                                                                     .Where(x => x.FirmId == firm.Id)
+                                                                     .DefaultIfEmpty()
+                                                   select new Statistics::FirmForecast
+                                                       {
+                                                           ProjectId = project.Id,
+                                                           FirmId = firm.Id,
+                                                           ForecastClick = forecast.ForecastClick,
+                                                           ForecastAmount = forecast.ForecastAmount
+                                                       };
+
+                                    return firmDtos;
+                                });
                 }
             }
         }

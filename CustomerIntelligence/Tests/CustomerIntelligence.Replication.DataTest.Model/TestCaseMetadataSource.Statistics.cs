@@ -43,6 +43,22 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                     // Наличие или отсутствие статистики или прогнозов не должно влиять на второй компонент.
                     new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 2, ProjectId = 1, Hits = 10, Shows = 100, AdvertisersShare = 1, FirmCount = 1, ForecastClick = null, ForecastAmount = null },
                     new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 3, ProjectId = 1, Hits = 0, Shows = 0, AdvertisersShare = 1, FirmCount = 1, ForecastClick = 10, ForecastAmount = 999.9999m },
-                    new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 4, ProjectId = 1, Hits = 10, Shows = 100, AdvertisersShare = 0, FirmCount = 1, ForecastClick = 10, ForecastAmount = 999.9999m });
+                    new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 4, ProjectId = 1, Hits = 10, Shows = 100, AdvertisersShare = 0, FirmCount = 1, ForecastClick = 10, ForecastAmount = 999.9999m },
+                    new Statistics::FirmForecast { FirmId = 1, ProjectId = 1 });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement FirmForecasts
+            => ArrangeMetadataElement.Config
+                .Name(nameof(FirmForecasts))
+                .Fact(
+                    new Facts::Firm { Id = 1, OrganizationUnitId = 1 },
+                    new Facts::Firm { Id = 2, OrganizationUnitId = 1 },
+                    new Facts::Project { Id = 1, OrganizationUnitId = 1 })
+                .Bit(
+                    new Bit::FirmForecast { FirmId = 1, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m },
+                    new Bit::FirmForecast { FirmId = 3, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m })
+                .Statistics(
+                    new Statistics::FirmForecast { FirmId = 1, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m },
+                    new Statistics::FirmForecast { FirmId = 2, ProjectId = 1, ForecastClick = null, ForecastAmount = null });
     }
 }

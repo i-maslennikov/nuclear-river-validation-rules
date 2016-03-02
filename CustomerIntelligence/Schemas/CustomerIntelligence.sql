@@ -129,6 +129,16 @@ create table CustomerIntelligence.FirmCategory3(
 )
 go
 
+-- FirmForecast
+create table CustomerIntelligence.FirmForecast(
+    ProjectId bigint not null
+    , FirmId bigint not null
+    , ForecastClick int null
+    , ForecastAmount decimal(19,4) null
+    , constraint PK_FirmForecast primary key (FirmId)
+)
+go
+
 -- FirmTerritory
 create table CustomerIntelligence.FirmTerritory(
 	FirmId bigint not null

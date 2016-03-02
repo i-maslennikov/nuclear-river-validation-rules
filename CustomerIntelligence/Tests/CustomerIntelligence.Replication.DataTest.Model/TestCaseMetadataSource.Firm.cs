@@ -41,7 +41,8 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                     new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 3, ProjectId = 1, Hits = 10, Shows = 20 })
                 .Statistics(
                     new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 3, ProjectId = 1, Name = "Category 3 level 3", Hits = 10, Shows = 20, AdvertisersShare = 1, FirmCount = 1 },
-                    new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 4, ProjectId = 1, Name = "Category 4 level 3", Hits = 0, Shows = 0, AdvertisersShare = 0, FirmCount = 1 });
+                    new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 4, ProjectId = 1, Name = "Category 4 level 3", Hits = 0, Shows = 0, AdvertisersShare = 0, FirmCount = 1 },
+                    new Statistics::FirmForecast { FirmId = 1, ProjectId = 1 });
 
         // ReSharper disable once UnusedMember.Local
 
