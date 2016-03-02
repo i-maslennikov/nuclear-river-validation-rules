@@ -115,14 +115,16 @@ go
 
 -- FirmCategory3
 create table CustomerIntelligence.FirmCategory3(
-	ProjectId bigint not null
-	, FirmId bigint not null
-	, CategoryId bigint not null
-	, Name nvarchar(256) not null
+    ProjectId bigint not null
+    , FirmId bigint not null
+    , CategoryId bigint not null
+    , Name nvarchar(256) not null
     , Hits int not null
     , Shows int not null
     , FirmCount int not null
     , AdvertisersShare float not null
+    , ForecastClick int null
+    , ForecastAmount decimal(19,4) null
     , constraint PK_FirmCategory3 primary key (FirmId, CategoryId)
 )
 go

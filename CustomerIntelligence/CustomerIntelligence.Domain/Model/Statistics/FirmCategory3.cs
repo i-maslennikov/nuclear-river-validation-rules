@@ -19,5 +19,9 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
         public float AdvertisersShare { get; set; }
 
         public int FirmCount { get; set; }
+
+        public int? ForecastClick { get; set; }
+
+        public decimal? ForecastAmount { get; set; }
     }
 }

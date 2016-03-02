@@ -52,6 +52,9 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                       from categoryStatistics in q.For<Bit::ProjectCategoryStatistics>()
                                                                                   .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
                                                                                   .DefaultIfEmpty()
+                                                      from forecast in q.For<Bit::FirmCategoryForecast>()
+                                                                                  .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
+                                                                                  .DefaultIfEmpty()
                                                       select new Statistics::FirmCategory3
                                                       {
                                                           ProjectId = firmDto.ProjectId,
@@ -61,7 +64,9 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                           Hits = firmStatistics == null ? 0 : firmStatistics.Hits,
                                                           Shows = firmStatistics == null ? 0 : firmStatistics.Shows,
                                                           FirmCount = firmCount.Count,
-                                                          AdvertisersShare = categoryStatistics == null ? 0 : Math.Min(1, (float)categoryStatistics.AdvertisersCount / firmCount.Count)
+                                                          AdvertisersShare = categoryStatistics == null ? 0 : Math.Min(1, (float)categoryStatistics.AdvertisersCount / firmCount.Count),
+                                                          ForecastClick = forecast.ForecastClick,
+                                                          ForecastAmount = forecast.ForecastAmount
                                                       };
 
                                     return categories3;
