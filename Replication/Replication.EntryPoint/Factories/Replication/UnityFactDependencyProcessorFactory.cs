@@ -18,7 +18,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
         public IFactDependencyProcessor Create(IFactDependencyFeature metadata)
         {
             var processorType = typeof(FactDependencyProcessor<>).MakeGenericType(metadata.DependancyType);
-            var metadataDependency = new DependencyOverride(typeof(IFactDependencyFeature<,>).MakeGenericType(metadata.DependancyType), metadata);
+            var metadataDependency = new DependencyOverride(typeof(IFactDependencyFeature<,>).MakeGenericType(metadata.GetType().GetGenericArguments()), metadata);
             var processor = _unityContainer.Resolve(processorType, metadataDependency);
             return (IFactDependencyProcessor)processor;
         }

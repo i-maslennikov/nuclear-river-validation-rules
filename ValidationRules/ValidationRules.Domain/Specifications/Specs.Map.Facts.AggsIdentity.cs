@@ -94,15 +94,17 @@ namespace NuClear.ValidationRules.Domain.Specifications
                 {
                     public static MapSpecification<IQuery, IEnumerable<long>> ByGlobalAssociatedPosition(FindSpecification<Facts::GlobalAssociatedPosition> specification)
                     {
+                        // always recalculate all rulesets
                         return new MapSpecification<IQuery, IEnumerable<long>>(
-                            q => (from globalAssociatedPosition in q.For(specification)
+                            q => (from globalAssociatedPosition in q.For<Facts::GlobalAssociatedPosition>()
                                   select globalAssociatedPosition.RulesetId).Distinct()
                         );
                     }
                     public static MapSpecification<IQuery, IEnumerable<long>> ByGlobalDeniedPosition(FindSpecification<Facts::GlobalDeniedPosition> specification)
                     {
+                        // always recalculate all rulesets
                         return new MapSpecification<IQuery, IEnumerable<long>>(
-                            q => (from globalDeniedPosition in q.For(specification)
+                            q => (from globalDeniedPosition in q.For<Facts::GlobalDeniedPosition>()
                                   select globalDeniedPosition.RulesetId).Distinct()
                         );
                     }

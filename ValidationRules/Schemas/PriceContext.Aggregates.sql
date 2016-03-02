@@ -14,6 +14,11 @@ if object_id('PriceAggregate.PriceDeniedPosition') is not null drop table PriceA
 if object_id('PriceAggregate.PriceAssociatedPosition') is not null drop table PriceAggregate.PriceAssociatedPosition
 if object_id('PriceAggregate.AdvertisementAmountRestriction') is not null drop table PriceAggregate.AdvertisementAmountRestriction
 if object_id('PriceAggregate.Price') is not null drop table PriceAggregate.Price
+
+if object_id('PriceAggregate.RulesetDeniedPosition') is not null drop table PriceAggregate.RulesetDeniedPosition
+if object_id('PriceAggregate.RulesetAssociatedPosition') is not null drop table PriceAggregate.RulesetAssociatedPosition
+if object_id('PriceAggregate.Ruleset') is not null drop table PriceAggregate.Ruleset
+
 go
 
 
@@ -31,7 +36,7 @@ create table PriceAggregate.PriceDeniedPosition(
     PrincipalPositionId bigint NOT NULL,
     ObjectBindingType int NOT NULL
 )
-create index IX_PriceId ON PriceAggregate.PriceDeniedPosition (PriceId)
+create index IX_PriceDeniedPosition_PriceId ON PriceAggregate.PriceDeniedPosition (PriceId)
 go
 
 create table PriceAggregate.PriceAssociatedPosition(
@@ -41,7 +46,7 @@ create table PriceAggregate.PriceAssociatedPosition(
     ObjectBindingType int NOT NULL,
 	GroupId bigint NOT NULL
 )
-create index IX_PriceId ON PriceAggregate.PriceAssociatedPosition (PriceId)
+create index IX_PriceAssociatedPosition_PriceId ON PriceAggregate.PriceAssociatedPosition (PriceId)
 go
 
 create table PriceAggregate.AdvertisementAmountRestriction(
@@ -50,7 +55,7 @@ create table PriceAggregate.AdvertisementAmountRestriction(
     [Min] int NOT NULL,
     [Max] int NOT NULL
 )
-create index IX_PriceId ON PriceAggregate.AdvertisementAmountRestriction (PriceId)
+create index IX_AdvertisementAmountRestriction_PriceId ON PriceAggregate.AdvertisementAmountRestriction (PriceId)
 go
 
 -- ruleset aggregate
@@ -66,7 +71,7 @@ create table PriceAggregate.RulesetDeniedPosition(
     PrincipalPositionId bigint NOT NULL,
     ObjectBindingType int NOT NULL
 )
-create index IX_RulesetId ON PriceAggregate.RulesetDeniedPosition (RulesetId)
+create index IX_RulesetDeniedPosition_RulesetId ON PriceAggregate.RulesetDeniedPosition (RulesetId)
 go
 
 create table PriceAggregate.RulesetAssociatedPosition(
@@ -75,7 +80,7 @@ create table PriceAggregate.RulesetAssociatedPosition(
     PrincipalPositionId bigint NOT NULL,
     ObjectBindingType int NOT NULL
 )
-create index IX_RulesetId ON PriceAggregate.RulesetAssociatedPosition (RulesetId)
+create index IX_RulesetAssociatedPosition_RulesetId ON PriceAggregate.RulesetAssociatedPosition (RulesetId)
 go
 
 -- order aggregate
@@ -95,14 +100,14 @@ create table PriceAggregate.OrderPosition(
     Category1Id bigint NULL,
     FirmAddressId bigint NULL
 )
-create index IX_OrderId ON PriceAggregate.OrderPosition (OrderId)
+create index IX_OrderPosition_OrderId ON PriceAggregate.OrderPosition (OrderId)
 go
 
 create table PriceAggregate.OrderPrice(
     OrderId bigint NOT NULL,
     PriceId bigint NOT NULL
 )
-create index IX_OrderId ON PriceAggregate.OrderPrice (OrderId)
+create index IX_OrderPrice_OrderId ON PriceAggregate.OrderPrice (OrderId)
 go
 
 -- period aggregate
@@ -117,16 +122,16 @@ create table PriceAggregate.OrderPeriod(
     OrderId bigint NOT NULL,
     PeriodId bigint NOT NULL
 )
-create index IX_OrderId ON PriceAggregate.OrderPeriod (OrderId)
-create index IX_PeriodId ON PriceAggregate.OrderPeriod (PeriodId)
+create index IX_OrderPeriod_OrderId ON PriceAggregate.OrderPeriod (OrderId)
+create index IX_OrderPeriod_PeriodId ON PriceAggregate.OrderPeriod (PeriodId)
 go
 
 create table PriceAggregate.PricePeriod(
     PriceId bigint NOT NULL,
     PeriodId bigint NOT NULL
 )
-create index IX_PriceId ON PriceAggregate.PricePeriod (PriceId)
-create index IX_PeriodId ON PriceAggregate.PricePeriod (PeriodId)
+create index IX_PricePeriod_PriceId ON PriceAggregate.PricePeriod (PriceId)
+create index IX_PricePeriod_PeriodId ON PriceAggregate.PricePeriod (PeriodId)
 go
 
 -- position aggregate

@@ -1,9 +1,11 @@
+using NuClear.River.Common.Metadata.Model;
+
 namespace NuClear.ValidationRules.Domain.Model.Aggregates
 {
     /// <summary>
     /// Описание позиции, основной к данной.
     /// </summary>
-    public sealed class PriceAssociatedPosition
+    public sealed class PriceAssociatedPosition : IAggregateValueObject
     {
         public long PriceId { get; set; }
 

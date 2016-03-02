@@ -21,10 +21,16 @@ namespace NuClear.ValidationRules.Storage
                       .HasPrimaryKey(x => x.Id);
 
                 config.Entity<PriceDeniedPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.PriceId)
+                      .HasPrimaryKey(x => x.DeniedPositionId)
+                      .HasPrimaryKey(x => x.PrincipalPositionId);
 
                 config.Entity<PriceAssociatedPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.PriceId)
+                      .HasPrimaryKey(x => x.AssociatedPositionId)
+                      .HasPrimaryKey(x => x.PrincipalPositionId);
 
                 config.Entity<AdvertisementAmountRestriction>()
                       .HasSchemaName(PriceAggregateSchema)
@@ -36,10 +42,16 @@ namespace NuClear.ValidationRules.Storage
                       .HasPrimaryKey(x => x.Id);
 
                 config.Entity<RulesetDeniedPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.RulesetId)
+                      .HasPrimaryKey(x => x.DeniedPositionId)
+                      .HasPrimaryKey(x => x.PrincipalPositionId);
 
                 config.Entity<RulesetAssociatedPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.RulesetId)
+                      .HasPrimaryKey(x => x.AssociatedPositionId)
+                      .HasPrimaryKey(x => x.PrincipalPositionId);
 
                 config.Entity<Order>()
                       .HasSchemaName(PriceAggregateSchema)
@@ -51,7 +63,10 @@ namespace NuClear.ValidationRules.Storage
                       .HasPrimaryKey(x => x.PeriodId);
 
                 config.Entity<OrderPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.OrderId)
+                      .HasPrimaryKey(x => x.ItemPositionId)
+                      .HasPrimaryKey(x => x.PackagePositionId);
 
                 config.Entity<OrderPrice>()
                       .HasSchemaName(PriceAggregateSchema)

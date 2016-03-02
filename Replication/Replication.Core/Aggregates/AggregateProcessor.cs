@@ -51,9 +51,9 @@ namespace NuClear.Replication.Core.Aggregates
             var updateFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Intersection.ToArray());
             var deleteFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Complement.ToArray());
 
-            var aggregatesToCreate = _metadata.MapSpecificationProviderForSource.Invoke(createFilter).Map(_query).ToArray();
-            var aggregatesToUpdate = _metadata.MapSpecificationProviderForSource.Invoke(updateFilter).Map(_query).ToArray();
-            var aggregatesToDelete = _metadata.MapSpecificationProviderForTarget.Invoke(deleteFilter).Map(_query).ToArray();
+            var aggregatesToCreate = _metadata.MapSpecificationProviderForSource.Invoke(createFilter).Map(_query);
+            var aggregatesToUpdate = _metadata.MapSpecificationProviderForSource.Invoke(updateFilter).Map(_query);
+            var aggregatesToDelete = _metadata.MapSpecificationProviderForTarget.Invoke(deleteFilter).Map(_query);
 
             _repository.Delete(aggregatesToDelete);
             _repository.Create(aggregatesToCreate);

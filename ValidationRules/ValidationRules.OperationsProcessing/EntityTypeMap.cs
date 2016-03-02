@@ -36,6 +36,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypeAssociatedPositionsGroup, Facts::AssociatedPositionsGroup>()
                 .AddMapping<EntityTypeCategory, Facts::Category>()
                 .AddMapping<EntityTypeDeniedPosition, Facts::DeniedPosition>()
+                .AddMapping<EntityTypeGlobalAssociatedPosition, Facts::GlobalAssociatedPosition>()
+                .AddMapping<EntityTypeGlobalDeniedPosition, Facts::GlobalDeniedPosition>()
                 .AddMapping<EntityTypeOrder, Facts::Order>()
                 .AddMapping<EntityTypeOrderPosition, Facts::OrderPosition>()
                 .AddMapping<EntityTypeOrderPositionAdvertisement, Facts::OrderPositionAdvertisement>()
@@ -49,6 +51,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
             = builder => builder
                 .AddMapping<EntityTypeOrder, Aggregates::Order>()
                 .AddMapping<EntityTypePrice, Aggregates::Price>()
+                .AddMapping<EntityTypeRuleset, Aggregates::Ruleset>()
                 .AddMapping<EntityTypePosition, Aggregates::Position>()
                 .AddMapping<EntityTypePeriod, Aggregates::Period>()
                 .AddAsPersistenceOnly(typeof(Aggregates::AdvertisementAmountRestriction))

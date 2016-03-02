@@ -15,11 +15,11 @@ namespace NuClear.ValidationRules.Domain.Specifications
             {
                 public static FindSpecification<Aggregates::PriceDeniedPosition> PriceDeniedPositions(IReadOnlyCollection<long> aggregateIds)
                 {
-                    return new FindSpecification<Aggregates::PriceDeniedPosition>(x => aggregateIds.Cast<long?>().Contains(x.PriceId));
+                    return new FindSpecification<Aggregates::PriceDeniedPosition>(x => aggregateIds.Contains(x.PriceId));
                 }
                 public static FindSpecification<Aggregates::PriceAssociatedPosition> PriceAssociatedPositions(IReadOnlyCollection<long> aggregateIds)
                 {
-                    return new FindSpecification<Aggregates::PriceAssociatedPosition>(x => aggregateIds.Cast<long?>().Contains(x.PriceId));
+                    return new FindSpecification<Aggregates::PriceAssociatedPosition>(x => aggregateIds.Contains(x.PriceId));
                 }
                 public static FindSpecification<Aggregates::AdvertisementAmountRestriction> AdvertisementAmountRestrictions(IReadOnlyCollection<long> aggregateIds)
                 {
@@ -28,11 +28,11 @@ namespace NuClear.ValidationRules.Domain.Specifications
 
                 public static FindSpecification<Aggregates::RulesetDeniedPosition> RulesetDeniedPositions(IReadOnlyCollection<long> aggregateIds)
                 {
-                    return new FindSpecification<Aggregates::RulesetDeniedPosition>(x => aggregateIds.Cast<long?>().Contains(x.RulesetId));
+                    return new FindSpecification<Aggregates::RulesetDeniedPosition>(x => aggregateIds.Contains(x.RulesetId));
                 }
                 public static FindSpecification<Aggregates::RulesetAssociatedPosition> RulesetAssociatedPositions(IReadOnlyCollection<long> aggregateIds)
                 {
-                    return new FindSpecification<Aggregates::RulesetAssociatedPosition>(x => aggregateIds.Cast<long?>().Contains(x.RulesetId));
+                    return new FindSpecification<Aggregates::RulesetAssociatedPosition>(x => aggregateIds.Contains(x.RulesetId));
                 }
 
                 public static FindSpecification<Aggregates::OrderPosition> OrderPositions(IReadOnlyCollection<long> aggregateIds)

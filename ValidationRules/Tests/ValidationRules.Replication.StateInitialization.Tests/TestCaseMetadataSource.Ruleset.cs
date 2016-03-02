@@ -12,13 +12,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
         .Name(nameof(RulesetDeniedPositionTests))
         .Fact(
-            // denied
-            new Facts::GlobalDeniedPosition { PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, RulesetId = 4, Id = 1}
+            new Facts::GlobalDeniedPosition { RulesetId = 1, Id = 1 },
+            new Facts::GlobalDeniedPosition { RulesetId = 2, PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, Id = 2}
             )
         .Aggregate(
-            // denied
-            new Aggs::RulesetDeniedPosition { PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, RulesetId = 4},
-            new Aggs::Ruleset { Id = 4 }
+            new Aggs::RulesetDeniedPosition { RulesetId = 2, PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3},
+            new Aggs::Ruleset { Id = 2 }
             );
 
         // ReSharper disable once UnusedMember.Local
@@ -26,13 +25,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
         .Name(nameof(RulesetAssociatedPositionTests))
         .Fact(
-            // associated
-            new Facts::GlobalAssociatedPosition { PrincipalPositionId = 1, AssociatedPositionId = 2, ObjectBindingType = 3, RulesetId = 4, Id = 1 }
+            new Facts::GlobalAssociatedPosition { RulesetId = 1, Id = 1 },
+            new Facts::GlobalAssociatedPosition { RulesetId = 2, PrincipalPositionId = 1, AssociatedPositionId = 2, ObjectBindingType = 3, Id = 2 }
             )
         .Aggregate(
-            // associated
-            new Aggs::RulesetAssociatedPosition { PrincipalPositionId = 1, AssociatedPositionId = 2, ObjectBindingType = 3, RulesetId = 4 },
-            new Aggs::Ruleset { Id = 4 }
+            new Aggs::RulesetAssociatedPosition { RulesetId = 2, PrincipalPositionId = 1, AssociatedPositionId = 2, ObjectBindingType = 3 },
+            new Aggs::Ruleset { Id = 2 }
             );
     }
 }

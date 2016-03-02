@@ -1,9 +1,11 @@
+using NuClear.River.Common.Metadata.Model;
+
 namespace NuClear.ValidationRules.Domain.Model.Aggregates
 {
     /// <summary>
     /// Описание пары запрещённых друг к другу позиций.
     /// </summary>
-    public sealed class PriceDeniedPosition
+    public sealed class PriceDeniedPosition : IAggregateValueObject
     {
         public long PriceId { get; set; }
 
