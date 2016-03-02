@@ -28,16 +28,16 @@ function AllUseCaseRoutes($Context) {
 	return @{
 		'ERM' = @{
 			'SourceTopic' = 'topic.performedoperations'
-			'SourceSubscription' = '9F2C5A2A-924C-485A-9790-9066631DB307'
+			'SourceSubscription' = '6A75B8B4-74A6-4523-9388-84E4DFFD5B06'
 			'DestTopic' = 'topic.performedoperations'
-			'DestSubscription' = '9F2C5A2A-924C-485A-9790-9066631DB307'
+			'DestSubscription' = '6A75B8B4-74A6-4523-9388-84E4DFFD5B06'
 			'Transform' = 'None'
 		}
 		'ERMProduction' = @{
 			'SourceTopic' = 'topic.performedoperations.export'
 			'SourceSubscription' = $Context.EnvironmentName.ToLowerInvariant()
 			'DestTopic' = "topic.performedoperations.production.$($Context.Country).import".ToLowerInvariant()
-			'DestSubscription' = '9F2C5A2A-924C-485A-9790-9066631DB307'
+			'DestSubscription' = '6A75B8B4-74A6-4523-9388-84E4DFFD5B06'
 			'Transform' = 'None'
 		}
 	}
