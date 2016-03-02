@@ -1,5 +1,6 @@
 ﻿Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+#Requires –Version 3.0
 #------------------------------
 
 Import-Module "$PSScriptRoot\metadata.web.psm1" -DisableNameChecking
@@ -73,7 +74,7 @@ function Get-TargetHostsMetadata ($Context){
 				'Replication.EntryPoint'{
 					return @{ 'TargetHosts' = @('uk-erm-sb01', 'uk-erm-sb03', 'uk-erm-sb04') }
 				}
-				'ConvertUseCasesService'{
+				{ @('ConvertUseCasesService', 'ConvertUseCasesServiceProduction') -contains $_ } {
 					return @{ 'TargetHosts' = @('uk-erm-sb01') }
 				}
 				default {
@@ -103,7 +104,7 @@ function Get-ServiceNameMetadata ($Context) {
 				'ServiceDisplayName' = '2GIS ERM AdvancedSearch Replication Service'
 			}
 		}
-		'ConvertUseCasesService' {
+		{ @('ConvertUseCasesService', 'ConvertUseCasesServiceProduction') -contains $_ } {
 			return @{
 				'ServiceName' = 'ConvertUseCases'
 				'ServiceDisplayName' = '2GIS ERM AdvancedSearch Convert UseCases Service'

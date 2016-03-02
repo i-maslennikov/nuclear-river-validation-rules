@@ -1,4 +1,5 @@
 ﻿param([string[]]$TaskList = @(), [hashtable]$Properties = @{})
+#Requires –Version 3.0
 
 if ($TaskList.Count -eq 0){
 	$TaskList = @('Build-Packages')
@@ -19,7 +20,6 @@ $ErrorActionPreference = 'Stop'
 #------------------------------
 cls
 
-$Properties.SemanticVersion = '0.2.0'
 $Properties.SolutionDir = Join-Path $PSScriptRoot '..'
 $Properties.BuildFile = Join-Path $PSScriptRoot 'default.ps1'
 
@@ -36,7 +36,7 @@ $Properties.BuildFile = Join-Path $PSScriptRoot 'default.ps1'
 	& $NugetPath @('restore', $solution.FullName, '-NonInteractive', '-Verbosity', 'quiet')
 }
 
-Import-Module "$($Properties.SolutionDir)\packages\2GIS.NuClear.BuildTools.0.2.30\tools\buildtools.psm1" -DisableNameChecking -Force
+Import-Module "${env:UserProfile}\.nuget\packages\2GIS.NuClear.BuildTools\0.2.36\tools\buildtools.psm1" -DisableNameChecking -Force
 Import-Module "$PSScriptRoot\metadata.psm1" -DisableNameChecking -Force
 
 Add-Metadata (Parse-EnvironmentMetadata $Properties)

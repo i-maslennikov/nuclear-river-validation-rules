@@ -1,5 +1,6 @@
 ﻿Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+#Requires –Version 3.0
 #------------------------------
 
 Import-Module "$BuildToolsRoot\modules\entrypoint.psm1" -DisableNameChecking
