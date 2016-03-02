@@ -1,5 +1,6 @@
 ﻿Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+#Requires –Version 3.0
 #------------------------------
 
 Import-Module "$BuildToolsRoot\modules\msbuild.psm1" -DisableNameChecking

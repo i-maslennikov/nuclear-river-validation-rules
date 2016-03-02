@@ -1,5 +1,6 @@
 ﻿Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+#Requires –Version 3.0
 #------------------------------
 
 # TODO Это временное решение, правильное решение - это создание отдельного сервиса инфраструктуры, общего для advanced search и для ERM
@@ -15,6 +16,8 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	
 	# конвертер нужен всегда, чтобы из него подтянуть connection strings для Create-Topics
 	$Context.EntryPoint = 'ConvertUseCasesService'
+	$entryPointsMetadata += Get-TaskServiceMetadata $Context
+	$Context.EntryPoint = 'ConvertUseCasesServiceProduction'
 	$entryPointsMetadata += Get-TaskServiceMetadata $Context
 
 	switch ($EntryPoints){

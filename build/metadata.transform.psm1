@@ -1,5 +1,6 @@
 ﻿Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+#Requires –Version 3.0
 #------------------------------
 
 Import-Module "$PSScriptRoot\metadata.usecaseroute.psm1" -DisableNameChecking
@@ -12,12 +13,15 @@ function Get-XdtMetadata($Context){
 		'ConvertUseCasesService' {
 			switch($Context.EnvType){
 				'Test' {
-					$xdt += @("Templates\ConvertUseCases.Test.$($Context.Country).config")
+					$xdt += @("Templates\ConvertUseCases.$($Context.EnvType).MultiCulture.config")
 				}
 				default {
-					$xdt += @("ConvertUseCases.$($Context.EnvType).$($Context.Country).config")
+					$xdt += @("ConvertUseCases.$($Context.EnvType).MultiCulture.config")
 				}
 			}
+		}
+		'ConvertUseCasesServiceProduction' {
+			$xdt += @("ConvertUseCases.Production.MultiCulture.config")
 		}
 		default {
 			$xdt += @(
@@ -27,7 +31,7 @@ function Get-XdtMetadata($Context){
 
 			switch($Context.EnvType){
 				'Test' {
-					$xdt += @("Templates\Erm.Test.$($Context.Country).config")
+					$xdt += @("Templates\Erm.$($Context.EnvType).$($Context.Country).config")
 				}
 				default {
 					$xdt += @("Erm.$($Context.EnvType).$($Context.Country).config")
@@ -45,6 +49,9 @@ function Get-RegexMetadata($Context){
 
 	if ($Context['Index']){
 		$regex += @{ '{EnvNum}' = $Context['Index'] }
+	}
+	if ($Context['Country']){
+		$regex += @{ '{Country}' = $Context['Country'] }
 	}
 
 	$useCaseRouteMetadata = Get-UseCaseRouteMetadata $Context
