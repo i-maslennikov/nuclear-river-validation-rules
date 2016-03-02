@@ -15,7 +15,8 @@ namespace NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence
         public bool HasPhone { get; set; }
         public bool HasWebsite { get; set; }
         public int AddressCount { get; set; }
-
+        public int? ForecastClick { get; set; }
+        public decimal? ForecastAmount { get; set; }
         public long OwnerId { get; set; }
 
         public ICollection<FirmBalance> Balances { get; set; }

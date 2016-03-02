@@ -51,6 +51,8 @@ namespace NuClear.CustomerIntelligence.Domain
                                     .Property(EntityPropertyElement.Config.Name("HasPhone").OfType(ElementaryTypeKind.Boolean))
                                     .Property(EntityPropertyElement.Config.Name("HasWebsite").OfType(ElementaryTypeKind.Boolean))
                                     .Property(EntityPropertyElement.Config.Name("AddressCount").OfType(ElementaryTypeKind.Int32))
+                                    .Property(EntityPropertyElement.Config.Name("ForecastClick").OfType(ElementaryTypeKind.Int32).Nullable())
+                                    .Property(EntityPropertyElement.Config.Name("ForecastAmount").OfType(ElementaryTypeKind.Decimal).Nullable())
                                     .Relation(EntityRelationElement.Config.Name("Balances")
                                         .DirectTo(
                                             EntityElement.Config.Name(EntityName.FirmBalance)
@@ -81,6 +83,8 @@ namespace NuClear.CustomerIntelligence.Domain
                                                 .Property(EntityPropertyElement.Config.Name("FirmCount").OfType(ElementaryTypeKind.Int32))
                                                 .Property(EntityPropertyElement.Config.Name("Hits").OfType(ElementaryTypeKind.Int32))
                                                 .Property(EntityPropertyElement.Config.Name("Shows").OfType(ElementaryTypeKind.Int32))
+                                                .Property(EntityPropertyElement.Config.Name("ForecastClick").OfType(ElementaryTypeKind.Int32).Nullable())
+                                                .Property(EntityPropertyElement.Config.Name("ForecastAmount").OfType(ElementaryTypeKind.Decimal).Nullable())
                                         ).AsMany().AsContainment())
                         .Relation(EntityRelationElement.Config.Name("Territories")
                             .DirectTo(
@@ -166,6 +170,8 @@ namespace NuClear.CustomerIntelligence.Domain
                                  .Property(EntityPropertyElement.Config.Name("HasWebsite").OfType(ElementaryTypeKind.Boolean))
                                  .Property(EntityPropertyElement.Config.Name("AddressCount").OfType(ElementaryTypeKind.Int32))
                                  .Property(EntityPropertyElement.Config.Name("OwnerId").OfType(ElementaryTypeKind.Int64))
+                                 .Property(EntityPropertyElement.Config.Name("ForecastClick").OfType(ElementaryTypeKind.Int32).Nullable())
+                                 .Property(EntityPropertyElement.Config.Name("ForecastAmount").OfType(ElementaryTypeKind.Decimal).Nullable())
                                  .Relation(EntityRelationElement.Config.Name("CategoryGroupId").DirectTo(EntityElement.Config.Name(TableName.CategoryGroup)).AsOne())
                                  .Relation(EntityRelationElement.Config.Name("ProjectId").DirectTo(EntityElement.Config.Name(TableName.Project)).AsOne())
                                  .Relation(EntityRelationElement.Config.Name("ClientId").DirectTo(EntityElement.Config.Name(TableName.Client)).AsOneOptionally()),
@@ -194,6 +200,8 @@ namespace NuClear.CustomerIntelligence.Domain
                                  .Property(EntityPropertyElement.Config.Name("FirmCount").OfType(ElementaryTypeKind.Int32))
                                  .Property(EntityPropertyElement.Config.Name("Hits").OfType(ElementaryTypeKind.Int32))
                                  .Property(EntityPropertyElement.Config.Name("Shows").OfType(ElementaryTypeKind.Int32))
+                                 .Property(EntityPropertyElement.Config.Name("ForecastClick").OfType(ElementaryTypeKind.Int32).Nullable())
+                                 .Property(EntityPropertyElement.Config.Name("ForecastAmount").OfType(ElementaryTypeKind.Decimal).Nullable())
                                  .Relation(EntityRelationElement.Config.Name("FirmId").DirectTo(EntityElement.Config.Name(ViewName.Firm)).AsOne()),
                     EntityElement.Config.Name(TableName.FirmTerritory)
                                  .HasKey("FirmId", "FirmAddressId")
