@@ -1,0 +1,13 @@
+﻿{
+  "frameworks": {
+    "net461": {}
+  },
+  "dependencies": {
+    "2GIS.NuClear.AdvancedSearch.Tools.ConvertTrackedUseCases": "0.1.7",
+    "2GIS.NuClear.BuildTools": "0.2.36",
+    "2GIS.NuClear.DataTest": "0.14.0-prerelea-099523-0940"
+  },
+  "runtimes": {
+    "win": {}
+  }
+}
