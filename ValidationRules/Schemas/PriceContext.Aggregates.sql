@@ -120,18 +120,18 @@ go
 
 create table PriceAggregate.OrderPeriod(
     OrderId bigint NOT NULL,
-    PeriodId bigint NOT NULL
+    OrganizationUnitId bigint NOT NULL,
+    Start datetime2(2) NOT NULL,
+    [End] datetime2(2) NOT NULL,
 )
-create index IX_OrderPeriod_OrderId ON PriceAggregate.OrderPeriod (OrderId)
-create index IX_OrderPeriod_PeriodId ON PriceAggregate.OrderPeriod (PeriodId)
 go
 
 create table PriceAggregate.PricePeriod(
     PriceId bigint NOT NULL,
-    PeriodId bigint NOT NULL
+    OrganizationUnitId bigint NOT NULL,
+    Start datetime2(2) NOT NULL,
+    [End] datetime2(2) NOT NULL,
 )
-create index IX_PricePeriod_PriceId ON PriceAggregate.PricePeriod (PriceId)
-create index IX_PricePeriod_PeriodId ON PriceAggregate.PricePeriod (PeriodId)
 go
 
 -- position aggregate

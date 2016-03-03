@@ -60,7 +60,9 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<OrderPeriod>()
                       .HasSchemaName(PriceAggregateSchema)
                       .HasPrimaryKey(x => x.OrderId)
-                      .HasPrimaryKey(x => x.PeriodId);
+                      .HasPrimaryKey(x => x.OrganizationUnitId)
+                      .HasPrimaryKey(x => x.Start)
+                      .HasPrimaryKey(x => x.End);
 
                 config.Entity<OrderPosition>()
                       .HasSchemaName(PriceAggregateSchema)
@@ -86,7 +88,9 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<PricePeriod>()
                       .HasSchemaName(PriceAggregateSchema)
                       .HasPrimaryKey(x => x.PriceId)
-                      .HasPrimaryKey(x => x.PeriodId);
+                      .HasPrimaryKey(x => x.OrganizationUnitId)
+                      .HasPrimaryKey(x => x.Start)
+                      .HasPrimaryKey(x => x.End);
 
                 return schema;
             }
