@@ -8,12 +8,12 @@ namespace NuClear.Querying.Web.OData.DynamicControllers
         ICollection<Assembly> GetDynamicAssemblies();
     }
 
-    public interface IDynamicAssembliesRegistry : IDynamicAssembliesResolver
+    public interface IDynamicAssembliesRegistry
     {
         void RegisterDynamicAssembly(Assembly assembly);
     }
 
-    public sealed class DynamicAssembliesRegistry : IDynamicAssembliesRegistry
+    public sealed class DynamicAssembliesRegistry : IDynamicAssembliesRegistry, IDynamicAssembliesResolver
     {
         private readonly List<Assembly> _dynamicAssemblies = new List<Assembly>();
 

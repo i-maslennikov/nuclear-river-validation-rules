@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
@@ -6,52 +7,42 @@ using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 
+using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
-using NuClear.Querying.Edm.Emit;
+using NuClear.Querying.Edm.EF;
 using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
+using NuClear.Storage.EntityFramework;
 
-namespace NuClear.Querying.Edm.Edmx
+namespace NuClear.Querying.Storage
 {
-    public sealed class EdmxModelBuilder
+    public class DbModelFactory : IEFDbModelFactory
     {
         private const string AnnotationKey = "EntityId";
 
         private readonly IMetadataProvider _metadataProvider;
-        private readonly ITypeProvider _typeProvider;
+        private readonly IClrTypeProvider _clrTypeProvider;
 
-        public EdmxModelBuilder(IMetadataProvider metadataProvider)
-            : this(metadataProvider, new EmitTypeProvider())
-        {
-        }
-
-        public EdmxModelBuilder(IMetadataProvider metadataProvider, ITypeProvider typeProvider)
+        public DbModelFactory(IMetadataProvider metadataProvider, IClrTypeProvider clrTypeProvider)
         {
             if (metadataProvider == null)
             {
                 throw new ArgumentNullException(nameof(metadataProvider));
             }
-            if (typeProvider == null)
+            if (clrTypeProvider == null)
             {
-                throw new ArgumentNullException(nameof(typeProvider));
+                throw new ArgumentNullException(nameof(clrTypeProvider));
             }
 
             _metadataProvider = metadataProvider;
-            _typeProvider = typeProvider;
+            _clrTypeProvider = clrTypeProvider;
         }
 
-        public DbModel Build(Uri contextUrl, DbProviderInfo providerInfo)
+        public DbCompiledModel Create(string containerName, DbConnection connection)
         {
-            if (contextUrl == null)
-            {
-                throw new ArgumentNullException(nameof(contextUrl));
-            }
+            Uri contextId = Metadata.Id.For<QueryingMetadataIdentity>(containerName);
 
-            if (providerInfo == null)
-            {
-                throw new ArgumentNullException(nameof(providerInfo));
-            }
-
-            var boundedContextElement = LookupContext(contextUrl);
+            var boundedContextElement = LookupContext(contextId);
             if (boundedContextElement == null)
             {
                 return null;
@@ -59,7 +50,8 @@ namespace NuClear.Querying.Edm.Edmx
 
             var modelBuilder = SetupBuilder(boundedContextElement);
 
-            return modelBuilder.Build(providerInfo);
+            var dbModel = modelBuilder.Build(connection);
+            return dbModel.Compile();
         }
 
         private BoundedContextElement LookupContext(Uri contextUrl)
@@ -88,7 +80,7 @@ namespace NuClear.Querying.Edm.Edmx
 
         private void ProcessEntity(DbModelBuilder builder, EntityElement entityElement)
         {
-            var entityType = _typeProvider.Resolve(entityElement);
+            var entityType = _clrTypeProvider.Get(entityElement.Identity);
             if (entityType == null)
             {
                 return;

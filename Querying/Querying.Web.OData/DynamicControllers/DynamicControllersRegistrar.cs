@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -7,36 +8,41 @@ using System.Web.OData;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
-using NuClear.Querying.Edm.Edmx;
+using NuClear.Querying.Edm.EF;
 using NuClear.Querying.Web.OData.Controllers;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Features;
+using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Querying.Web.OData.DynamicControllers
 {
     public sealed class DynamicControllersRegistrar
     {
         private readonly IMetadataProvider _metadataProvider;
-        private readonly ITypeProvider _typeProvider;
+        private readonly IClrTypeProvider _clrTypeProvider;
         private readonly IDynamicAssembliesRegistry _registry;
 
-        public DynamicControllersRegistrar(IMetadataProvider metadataProvider, ITypeProvider typeProvider, IDynamicAssembliesRegistry registry)
+        public DynamicControllersRegistrar(IMetadataProvider metadataProvider, IClrTypeProvider clrTypeProvider, IDynamicAssembliesRegistry registry)
         {
             _metadataProvider = metadataProvider;
-            _typeProvider = typeProvider;
+            _clrTypeProvider = clrTypeProvider;
             _registry = registry;
         }
 
-        public void RegisterDynamicControllers(Uri uri)
+        public void Register()
         {
-            BoundedContextElement boundedContextElement;
-            if (!_metadataProvider.TryGetMetadata(uri, out boundedContextElement))
+            MetadataSet metadataSet;
+            if (!_metadataProvider.TryGetMetadata<QueryingMetadataIdentity>(out metadataSet))
             {
-                throw new ArgumentException();
+                return;
             }
 
-            var dynamicAssembly = CreateDynamicControllersAssembly(boundedContextElement);
-            _registry.RegisterDynamicAssembly(dynamicAssembly);
+            var contexts = metadataSet.Metadata.Values.OfType<BoundedContextElement>();
+            foreach (var context in contexts)
+            {
+                var dynamicAssembly = CreateDynamicControllersAssembly(context);
+                _registry.RegisterDynamicAssembly(dynamicAssembly);
+            }
         }
 
         private static void AddParentConstructor(TypeBuilder typeBuilder, Type parentType)
@@ -133,7 +139,7 @@ namespace NuClear.Querying.Web.OData.DynamicControllers
 
             foreach (var entity in entities)
             {
-                var entityType = _typeProvider.Resolve(entity);
+                var entityType = _clrTypeProvider.Get(entity.Identity);
                 var parentType = typeof(GenericODataController<>).MakeGenericType(entityType);
 
                 var controllerTypeName = entity.EntitySetName + "Controller";

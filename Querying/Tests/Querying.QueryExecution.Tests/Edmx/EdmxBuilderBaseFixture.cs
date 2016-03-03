@@ -13,7 +13,7 @@ using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Querying.Edm.Edmx;
+using NuClear.Querying.Edm.EF;
 using NuClear.River.Common.Metadata.Builders;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
@@ -40,9 +40,9 @@ namespace NuClear.Querying.Edm.Tests.Edmx
             }
         }
 
-        protected static DbModel BuildModel(BoundedContextElement context, ITypeProvider typeProvider = null)
+        protected static DbModel BuildModel(BoundedContextElement context, IClrTypeBuilder clrTypeBuilder = null)
         {
-            var builder = CreateBuilder(CreateMetadataProvider(MockSource(context)), typeProvider);
+            var builder = CreateBuilder(CreateMetadataProvider(MockSource(context)), clrTypeBuilder);
             var contextId = context.Identity.Id;
             var model = builder.Build(contextId, EffortProvider);
 
@@ -217,11 +217,11 @@ namespace NuClear.Querying.Edm.Tests.Edmx
 
         #region Utils
 
-        private static EdmxModelBuilder CreateBuilder(IMetadataProvider metadataProvider, ITypeProvider typeProvider = null)
+        private static EdmxModelBuilder CreateBuilder(IMetadataProvider metadataProvider, IClrTypeBuilder clrTypeBuilder = null)
         {
-            return typeProvider == null 
+            return clrTypeBuilder == null 
                 ? new EdmxModelBuilder(metadataProvider)
-                : new EdmxModelBuilder(metadataProvider, typeProvider);
+                : new EdmxModelBuilder(metadataProvider, clrTypeBuilder);
         }
 
         protected static IMetadataProvider CreateMetadataProvider(params IMetadataSource[] sources)

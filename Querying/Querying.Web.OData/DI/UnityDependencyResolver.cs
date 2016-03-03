@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web.Http.Dependencies;
 
 using Microsoft.Practices.Unity;
 
 namespace NuClear.Querying.Web.OData.DI
 {
-    internal sealed class UnityResolver : IDependencyResolver
+    internal sealed class UnityDependencyResolver : IDependencyResolver
     {
         private readonly IUnityContainer _container;
 
-        public UnityResolver(IUnityContainer container)
+        public UnityDependencyResolver(IUnityContainer container)
         {
             if (container == null)
             {
-                throw new ArgumentNullException("container");
+                throw new ArgumentNullException(nameof(container));
             }
 
             _container = container;
@@ -50,30 +47,12 @@ namespace NuClear.Querying.Web.OData.DI
         public IDependencyScope BeginScope()
         {
             var child = _container.CreateChildContainer();
-            return new UnityResolver(child);
+            return new UnityDependencyResolver(child);
         }
 
         public void Dispose()
         {
             _container.Dispose();
-        }
-
-        public sealed class PerRequestResolver : DelegatingHandler
-        {
-            private readonly ConfigureHttpRequest _configureHttpRequest;
-
-            public PerRequestResolver(ConfigureHttpRequest configureHttpRequest)
-            {
-                _configureHttpRequest = configureHttpRequest;
-            }
-
-            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-            {
-                var scope = (UnityResolver)request.GetDependencyScope();
-                _configureHttpRequest(scope._container, request);
-
-                return base.SendAsync(request, cancellationToken);
-            }
         }
     }
 }

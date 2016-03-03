@@ -12,7 +12,7 @@ using Moq;
 using NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
-using NuClear.Querying.Edm.Edmx;
+using NuClear.Querying.Edm.EF;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
 
@@ -38,10 +38,10 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
         protected DbModel CreateModel()
         {
-            return BuildModel(TestMetadataProvider.Instance, CustomerIntelligenceTypeProvider);
+            return BuildModel(TestMetadataProvider.Instance, CustomerIntelligenceTypeResolver);
         }
 
-        private static ITypeProvider CustomerIntelligenceTypeProvider
+        private static IClrTypeBuilder CustomerIntelligenceTypeResolver
         {
             get
             {
@@ -61,9 +61,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             }
         }
 
-        private static ITypeProvider MockTypeProvider(params Type[] types)
+        private static IClrTypeBuilder MockTypeProvider(params Type[] types)
         {
-            var typeProvider = new Mock<ITypeProvider>();
+            var typeProvider = new Mock<IClrTypeBuilder>();
 
             foreach (var type in types)
             {
@@ -73,14 +73,14 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             return typeProvider.Object;
         }
 
-        private static void RegisterType(Mock<ITypeProvider> typeProvider, Type type)
+        private static void RegisterType(Mock<IClrTypeBuilder> typeProvider, Type type)
         {
             typeProvider.Setup(x => x.Resolve(It.Is<EntityElement>(el => el.ResolveName() == type.Name))).Returns(type);
         }
 
-        private static DbModel BuildModel(IMetadataProvider metadataProvider, ITypeProvider typeProvider = null)
+        private static DbModel BuildModel(IMetadataProvider metadataProvider, IClrTypeBuilder clrTypeBuilder = null)
         {
-            var builder = CreateBuilder(metadataProvider, typeProvider);
+            var builder = CreateBuilder(metadataProvider, clrTypeBuilder);
             var contextId = BuildContextId();
             return builder.Build(contextId, EffortProvider);
         }
@@ -95,11 +95,11 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             return DbConnectionFactory.CreateTransient(cachingLoader);
         }
 
-        private static EdmxModelBuilder CreateBuilder(IMetadataProvider metadataProvider, ITypeProvider typeProvider = null)
+        private static EdmxModelBuilder CreateBuilder(IMetadataProvider metadataProvider, IClrTypeBuilder clrTypeBuilder = null)
         {
-            return typeProvider == null
+            return clrTypeBuilder == null
                 ? new EdmxModelBuilder(metadataProvider)
-                : new EdmxModelBuilder(metadataProvider, typeProvider);
+                : new EdmxModelBuilder(metadataProvider, clrTypeBuilder);
         }
 
         private static Uri BuildContextId()

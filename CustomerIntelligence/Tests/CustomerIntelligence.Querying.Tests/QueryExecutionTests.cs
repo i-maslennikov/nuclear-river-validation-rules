@@ -75,10 +75,10 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
         private static IReadOnlyDictionary<IMetadataElementIdentity,Type> EmitClrTypes(BoundedContextElement context)
         {
-            var typeProvider = new EmitTypeProvider();
+            var typeProvider = new EmitClrTypeResolver();
             foreach (var element in context.ConceptualModel.Entities)
             {
-                typeProvider.Resolve(element);
+                typeProvider.BuildType(element);
             }
             return typeProvider.RegisteredTypes;
         }

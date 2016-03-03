@@ -1,38 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
 using NuClear.Metamodeling.Elements.Identities;
-using NuClear.Querying.Edm.Edmx;
+using NuClear.Metamodeling.Provider;
+using NuClear.Querying.Edm.EF;
 using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Querying.Edm.Emit
 {
-    public sealed class EmitTypeProvider : ITypeProvider
+    public sealed class EmitClrTypeResolver : IClrTypeBuilder, IClrTypeProvider
     {
+        private readonly IMetadataProvider _metadataProvider;
         private const string CustomCodeName = "CustomCode";
 
         private readonly Lazy<AssemblyBuilder> _assemblyBuilder;
         private readonly Lazy<ModuleBuilder> _moduleBuilder;
         private readonly Dictionary<IMetadataElementIdentity, Type> _typesById = new Dictionary<IMetadataElementIdentity, Type>();
 
-        public EmitTypeProvider()
+        public EmitClrTypeResolver(IMetadataProvider metadataProvider)
         {
+            _metadataProvider = metadataProvider;
             _assemblyBuilder = new Lazy<AssemblyBuilder>(() => EmitHelper.DefineAssembly(CustomCodeName));
             _moduleBuilder = new Lazy<ModuleBuilder>(() => _assemblyBuilder.Value.DefineModule(CustomCodeName));
         }
 
         public IReadOnlyDictionary<IMetadataElementIdentity, Type> RegisteredTypes => new ReadOnlyDictionary<IMetadataElementIdentity, Type>(_typesById);
 
-        public Type Resolve(EntityElement entityElement)
+        public void Build()
         {
-            if (entityElement == null)
+            MetadataSet metadataSet;
+            if (!_metadataProvider.TryGetMetadata<QueryingMetadataIdentity>(out metadataSet))
             {
-                throw new ArgumentNullException(nameof(entityElement));
+                return;
             }
 
+            var contexts = metadataSet.Metadata.Values.OfType<BoundedContextElement>();
+            foreach (var entityElement in contexts.SelectMany(x => x.ConceptualModel.Entities))
+            {
+                BuildType(entityElement);
+            }
+        }
+
+        public Type BuildType(EntityElement entityElement)
+        {
             Type type;
             if (!_typesById.TryGetValue(entityElement.Identity, out type))
             {
@@ -40,6 +55,12 @@ namespace NuClear.Querying.Edm.Emit
             }
 
             return type;
+        }
+
+        public Type Get(IMetadataElementIdentity elementIdentity)
+        {
+            Type type;
+            return _typesById.TryGetValue(elementIdentity, out type) ? type : null;
         }
 
         private Type CreateType(EntityElement entityElement)
@@ -61,7 +82,7 @@ namespace NuClear.Querying.Edm.Emit
                 var relationCardinality = relationElement.Cardinality;
 
                 var propertyName = relationElement.ResolveName();
-                var propertyType = CreateRelationType(Resolve(relationTarget), relationCardinality);
+                var propertyType = CreateRelationType(BuildType(relationTarget), relationCardinality);
 
                 typeBuilder.DefineProperty(propertyName, propertyType);
             }

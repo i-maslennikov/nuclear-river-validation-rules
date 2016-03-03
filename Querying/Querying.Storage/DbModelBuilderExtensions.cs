@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Configuration;
 
-namespace NuClear.Querying.Edm.Edmx
+namespace NuClear.Querying.Storage
 {
     internal static class DbModelBuilderExtensions
     {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Web.OData;
 
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
@@ -12,67 +10,57 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Provider;
 using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Querying.Edm
 {
-    public sealed class EdmModelBuilder
+    public sealed class EdmModelBuilder : IEdmModelBuilder
     {
         private const string DefaultContainerName = "DefaultContainer";
-        private const string AnnotationNamespace = "http://schemas.2gis.ru/2015/02/edm/customannotation";
-        private const string AnnotationAttribute = "EntityId";
 
         private readonly IMetadataProvider _metadataProvider;
+        private readonly IEdmModelAnnotator _edmModelAnnotator;
 
-        public EdmModelBuilder(IMetadataProvider metadataProvider)
+        public EdmModelBuilder(IMetadataProvider metadataProvider, IEdmModelAnnotator edmModelAnnotator)
         {
-            if (metadataProvider == null)
-            {
-                throw new ArgumentNullException(nameof(metadataProvider));
-            }
-
             _metadataProvider = metadataProvider;
+            _edmModelAnnotator = edmModelAnnotator;
         }
 
-        public IEdmModel Build(Uri contextIdentity, IEnumerable<Type> clrTypes/*, DbCompiledModel dbCompiledModel*/)
+        public IReadOnlyDictionary<Uri, IEdmModel> Build()
         {
-            if (contextIdentity == null)
+            var result = new Dictionary<Uri, IEdmModel>();
+
+            MetadataSet metadataSet;
+            if (!_metadataProvider.TryGetMetadata<QueryingMetadataIdentity>(out metadataSet))
             {
-                throw new ArgumentNullException(nameof(contextIdentity));
+                return result;
             }
 
-            BoundedContextElement boundedContextElement;
-            _metadataProvider.TryGetMetadata(contextIdentity, out boundedContextElement);
-            if (boundedContextElement?.ConceptualModel == null)
+            var contexts = metadataSet.Metadata.Values.OfType<BoundedContextElement>();
+            foreach (var context in contexts)
             {
-                return null;
+                var model = Build(context);
+                _edmModelAnnotator.Annotate(context, model, model);
+
+                result.Add(context.Identity.Id, model);
             }
 
-            var model = Build(boundedContextElement, clrTypes);
-            model.SetAnnotationValue(model, new BoundedContextIdentityAnnotation(contextIdentity));
-            //model.SetAnnotationValue(model, new DbCompiledModelAnnotation(dbCompiledModel));
-
-            return model;
+            return result;
         }
 
-        private static IEdmModel Build(BoundedContextElement context, IEnumerable<Type> clrTypes)
+        private IEdmModel Build(BoundedContextElement context)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
             if (context.ConceptualModel == null)
             {
                 throw new InvalidOperationException("The conceptual model is not specified.");
             }
 
-            return BuildModel(context.ResolveFullName(), context.ConceptualModel, clrTypes);
+            return BuildModel(context.ResolveFullName(), context.ConceptualModel);
         }
 
-        private static IEdmModel BuildModel(string namespaceName, StructuralModelElement conceptualModelElement, IEnumerable<Type> clrTypes)
+        private IEdmModel BuildModel(string namespaceName, StructuralModelElement conceptualModelElement)
         {
-            var types = clrTypes.ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase);
-
             var model = new EdmModel();
 
             var container = new EdmEntityContainer(namespaceName, DefaultContainerName);
@@ -81,15 +69,12 @@ namespace NuClear.Querying.Edm
             var typeBuilder = new TypeBuilder(namespaceName);
             BuildEntitySets(container, conceptualModelElement.RootEntities, typeBuilder);
 
-            var enumTypes = conceptualModelElement.Entities.SelectMany(x => x.Properties).Select(x => x.PropertyType).OfType<EnumTypeElement>();
-            BuildTypes(model, enumTypes, types, typeBuilder);
-
-            BuildTypes(model, conceptualModelElement.Entities, types, typeBuilder);
+            BuildTypes(model, conceptualModelElement.Entities, typeBuilder);
 
             return model;
         }
 
-        private static void BuildEntitySets(EdmEntityContainer container, IEnumerable<EntityElement> rootElements, TypeBuilder typeBuilder)
+        private void BuildEntitySets(EdmEntityContainer container, IEnumerable<EntityElement> rootElements, TypeBuilder typeBuilder)
         {
             foreach (var rootEntity in rootElements)
             {
@@ -100,24 +85,21 @@ namespace NuClear.Querying.Edm
             }
         }
 
-        private static void BuildTypes(EdmModel model, IEnumerable<IMetadataElement> metadataElements, IDictionary<string, Type> clrTypes, TypeBuilder typeBuilder)
+        private void BuildTypes(EdmModel model, IEnumerable<EntityElement> entityElements, TypeBuilder typeBuilder)
         {
-            foreach (var metadataElement in metadataElements)
+            foreach (var entityElement in entityElements)
             {
-                var schemaType = typeBuilder.BuildSchemaType(metadataElement);
-                RegisterType(model, schemaType, metadataElement.Identity, clrTypes);
-            }
-        }
+                var entityType = typeBuilder.BuildSchemaType(entityElement);
+                model.AddElement(entityType);
+                _edmModelAnnotator.Annotate(entityElement, entityType, model);
 
-        private static void RegisterType(EdmModel model, IEdmSchemaElement schemaElement, IMetadataElementIdentity identity, IDictionary<string, Type> clrTypes)
-        {
-            model.AddElement(schemaElement);
-            model.SetAnnotationValue(schemaElement, AnnotationNamespace, AnnotationAttribute, identity.Id);
-
-            Type clrType;
-            if (clrTypes.TryGetValue(schemaElement.Name, out clrType))
-            {
-                model.SetAnnotationValue(schemaElement, new ClrTypeAnnotation(clrType));
+                var enumTypeElements = entityElement.Properties.Select(x => x.PropertyType).OfType<EnumTypeElement>();
+                foreach (var enumTypeElement in enumTypeElements)
+                {
+                    var enumType = typeBuilder.BuildSchemaType(enumTypeElement);
+                    model.AddElement(enumType);
+                    _edmModelAnnotator.Annotate(enumTypeElement, enumType, model);
+                }
             }
         }
 
@@ -336,16 +318,6 @@ namespace NuClear.Querying.Edm
                         throw new ArgumentOutOfRangeException(nameof(cardinality));
                 }
             }
-        }
-
-        private sealed class DbCompiledModelAnnotation
-        {
-            public DbCompiledModelAnnotation(DbCompiledModel value)
-            {
-                Value = value;
-            }
-
-            public DbCompiledModel Value { get; }
         }
     }
 }

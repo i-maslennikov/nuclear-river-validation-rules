@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
@@ -6,12 +7,16 @@ using System.Web.OData.Extensions;
 
 using Microsoft.Practices.Unity;
 
+using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.CustomerIntelligence.Domain;
+using NuClear.CustomerIntelligence.Storage;
+using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.DI.Unity.Config;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Querying.Edm.Edmx;
+using NuClear.Querying.Edm;
+using NuClear.Querying.Edm.EF;
 using NuClear.Querying.Edm.Emit;
 using NuClear.Querying.Storage;
 using NuClear.Querying.Web.OData.DynamicControllers;
@@ -20,7 +25,11 @@ using NuClear.River.Common.Settings;
 using NuClear.Settings.API;
 using NuClear.Settings.Unity;
 using NuClear.Storage.API.ConnectionStrings;
+using NuClear.Storage.API.Feedback;
 using NuClear.Storage.API.Readings;
+using NuClear.Storage.Core;
+using NuClear.Storage.EntityFramework;
+using NuClear.Storage.Readings;
 using NuClear.Tracing.API;
 using NuClear.Tracing.Environment;
 using NuClear.Tracing.Log4Net;
@@ -33,23 +42,28 @@ namespace NuClear.Querying.Web.OData.DI
         public static IUnityContainer ConfigureUnity(ISettingsContainer settingsContainer)
         {
             var container = new UnityContainer()
+                .ConfigureTracer(settingsContainer.AsSettings<IEnvironmentSettings>(), settingsContainer.AsSettings<IConnectionStringSettings>())
                 .ConfigureSettingsAspects(settingsContainer)
                 .ConfigureMetadata()
-                .ConfigureStoreModel()
-                .ConfigureWebApiOData()
-                .ConfigureTracer(settingsContainer.AsSettings<IEnvironmentSettings>(), settingsContainer.AsSettings<IConnectionStringSettings>())
-                .ConfigureWebApiTracer();
+                .ConfigureEdmModels()
+                .ConfigureStorage(EntryPointSpecificLifetimeManagerFactory)
+                .ConfigureWebApiOData();
 
             return container;
         }
 
-        public static IUnityContainer ConfigureTracer(
-            this IUnityContainer container, 
-            IEnvironmentSettings environmentSettings, 
+        private static LifetimeManager EntryPointSpecificLifetimeManagerFactory()
+        {
+            return Lifetime.PerScope;
+        }
+
+        private static IUnityContainer ConfigureTracer(
+            this IUnityContainer container,
+            IEnvironmentSettings environmentSettings,
             IConnectionStringSettings connectionStringSettings)
         {
             var tracerContextEntryProviders =
-                    new ITracerContextEntryProvider[] 
+                    new ITracerContextEntryProvider[]
                     {
                         new TracerContextConstEntryProvider(TracerContextKeys.Required.Environment, environmentSettings.EnvironmentName),
                         new TracerContextConstEntryProvider(TracerContextKeys.Required.EntryPoint, environmentSettings.EntryPointName),
@@ -66,17 +80,11 @@ namespace NuClear.Querying.Web.OData.DI
                                              .Build;
 
             return container.RegisterInstance(tracer)
-                            .RegisterInstance(tracerContextManager);
+                            .RegisterInstance(tracerContextManager)
+                            .RegisterType<IExceptionLogger, Log4NetWebApiExceptionLogger>("log4net", Lifetime.Singleton);
         }
 
-        public static IUnityContainer ConfigureWebApiTracer(this IUnityContainer container)
-        {
-            return container
-                .RegisterType<IExceptionLogger, Log4NetWebApiExceptionLogger>("log4net", Lifetime.Singleton);
-        }
-
-
-        public static IUnityContainer ConfigureMetadata(this IUnityContainer container)
+        private static IUnityContainer ConfigureMetadata(this IUnityContainer container)
         {
             var metadataSources = new IMetadataSource[]
             {
@@ -88,14 +96,50 @@ namespace NuClear.Querying.Web.OData.DI
             return container.RegisterType<IMetadataProvider, MetadataProvider>(Lifetime.Singleton, new InjectionConstructor(metadataSources, metadataProcessors));
         }
 
-        public static IUnityContainer ConfigureStoreModel(this IUnityContainer container)
+        private static IUnityContainer ConfigureEdmModels(this IUnityContainer container)
         {
-            return container
-                .RegisterType<ITypeProvider, EmitTypeProvider>(Lifetime.Singleton)
-                .RegisterType<EdmxModelBuilder>(Lifetime.Singleton, new InjectionConstructor(typeof(IMetadataProvider), typeof(ITypeProvider)));
+            return container.RegisterType<IEdmModelAnnotator, EdmModelAnnotator>(Lifetime.Singleton)
+                            .RegisterType<IEdmModelBuilder, EdmModelBuilder>(Lifetime.Singleton)
+                            .RegisterType<IClrTypeBuilder, EmitClrTypeResolver>(Lifetime.Singleton)
+                            .RegisterType<IClrTypeProvider, EmitClrTypeResolver>(Lifetime.Singleton);
         }
 
-        public static IUnityContainer ConfigureWebApiOData(this IUnityContainer container)
+        private static IUnityContainer ConfigureStorage(
+            this IUnityContainer container,
+            Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
+        {
+            return container
+                        .RegisterType<IPendingChangesHandlingStrategy, NullPendingChangesHandlingStrategy>(Lifetime.Singleton)
+                        .RegisterType<IDurationEstimator, NullDurationEstimator>(Lifetime.Singleton)
+                        .RegisterType<IProducedQueryLogAccessor, NullProducedQueryLogAccessor>(entryPointSpecificLifetimeManagerFactory())
+                        .RegisterType<IPersistedChangesTracker, NullPersistedChangesTracker>(Lifetime.Singleton)
+                        .RegisterType<IEFDbModelFactory, DbModelFactory>(Lifetime.Singleton)
+                        .RegisterType<IEntityContainerNameResolver, CustomerIntelligenceEntityContainerNameResolver>(Lifetime.Singleton)
+                        .RegisterType<IStorageMappingDescriptorProvider, StorageMappingDescriptorProvider>(Lifetime.Singleton)
+                        .RegisterType<IReadableDomainContextFactory, EFDomainContextFactory>(entryPointSpecificLifetimeManagerFactory())
+                        .RegisterType<IModifiableDomainContextFactory, EFDomainContextFactory>(entryPointSpecificLifetimeManagerFactory())
+                        .RegisterType<IReadableDomainContext, CachingReadableDomainContext>(entryPointSpecificLifetimeManagerFactory())
+
+                        .RegisterType<IDomainContextScope, DomainContextScope>(entryPointSpecificLifetimeManagerFactory())
+                        .RegisterType<IReadableDomainContextProvider, ReadableDomainContextProvider>(entryPointSpecificLifetimeManagerFactory())
+
+                        .RegisterType<IQuery, Query>(Lifetime.PerResolve)
+                        .ConfigureReadWriteModels();
+        }
+
+        private static IUnityContainer ConfigureReadWriteModels(this IUnityContainer container)
+        {
+            var readConnectionStringNameMap = new Dictionary<string, IConnectionStringIdentity>
+                {
+                    { CustomerIntelligenceEntityContainer.Name, CustomerIntelligenceConnectionStringIdentity.Instance },
+                };
+
+            var writeConnectionStringNameMap = new Dictionary<string, IConnectionStringIdentity>();
+
+            return container.RegisterInstance<IConnectionStringIdentityResolver>(new ConnectionStringIdentityResolver(readConnectionStringNameMap, writeConnectionStringNameMap));
+        }
+
+        private static IUnityContainer ConfigureWebApiOData(this IUnityContainer container)
         {
             return container
                 .RegisterType<IDynamicAssembliesRegistry, DynamicAssembliesRegistry>(Lifetime.Singleton)
@@ -103,15 +147,6 @@ namespace NuClear.Querying.Web.OData.DI
 
                 // custom IHttpControllerTypeResolver
                 .RegisterType<IHttpControllerTypeResolver, DynamicControllerTypeResolver>(Lifetime.Singleton);
-        }
-
-        public static IUnityContainer ConfigureHttpRequest(this IUnityContainer container, HttpRequestMessage request)
-        {
-            var edmModel = request.ODataProperties().Model;
-
-            return container
-                .RegisterType<IQuery, ODataQuery>(Lifetime.PerScope)
-                .RegisterInstance(edmModel, Lifetime.PerScope);
         }
     }
 }

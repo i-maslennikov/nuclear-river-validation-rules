@@ -13,12 +13,7 @@ namespace NuClear.Querying.Web.OData.Controllers
                 .Cast<AssemblyInformationalVersionAttribute>()
                 .FirstOrDefault();
 
-            if (assemblyFileVersion != null)
-            {
-                return assemblyFileVersion.InformationalVersion;
-            }
-
-            return null;
+            return assemblyFileVersion?.InformationalVersion;
         }
     }
 }
