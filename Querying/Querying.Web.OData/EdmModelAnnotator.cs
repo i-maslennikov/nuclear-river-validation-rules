@@ -23,11 +23,7 @@ namespace NuClear.Querying.Web.OData
 
         public void Annotate(IMetadataElement metadataElement, IEdmElement edmElement, IEdmModel edmModel)
         {
-            if (metadataElement is BoundedContextElement)
-            {
-                edmModel.SetAnnotationValue(edmModel, new BoundedContextIdentityAnnotation(metadataElement.Identity.Id));
-            }
-            else if (metadataElement is EntityElement || metadataElement is EnumTypeElement)
+            if (metadataElement is EntityElement || metadataElement is EnumTypeElement)
             {
                 edmModel.SetAnnotationValue(edmElement, AnnotationNamespace, AnnotationAttribute, metadataElement.Identity.Id);
 

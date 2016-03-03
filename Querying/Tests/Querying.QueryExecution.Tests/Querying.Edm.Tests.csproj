@@ -110,6 +110,7 @@
     <Compile Include="Edm\EdmModelExtensions.cs" />
     <Compile Include="Edm\ModelConstraints.cs" />
     <Compile Include="BaseFixture.cs" />
+    <Compile Include="Edm\NullEdmModelAnnotator.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestModelSource.cs" />

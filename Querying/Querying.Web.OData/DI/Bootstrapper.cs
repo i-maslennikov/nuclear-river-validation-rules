@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.ExceptionHandling;
-using System.Web.OData.Extensions;
 
 using Microsoft.Practices.Unity;
 

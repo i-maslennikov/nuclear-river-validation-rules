@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -15,9 +14,9 @@ namespace NuClear.Querying.Edm.Emit
 {
     public sealed class EmitClrTypeResolver : IClrTypeBuilder, IClrTypeProvider
     {
-        private readonly IMetadataProvider _metadataProvider;
         private const string CustomCodeName = "CustomCode";
 
+        private readonly IMetadataProvider _metadataProvider;
         private readonly Lazy<AssemblyBuilder> _assemblyBuilder;
         private readonly Lazy<ModuleBuilder> _moduleBuilder;
         private readonly Dictionary<IMetadataElementIdentity, Type> _typesById = new Dictionary<IMetadataElementIdentity, Type>();
@@ -28,8 +27,6 @@ namespace NuClear.Querying.Edm.Emit
             _assemblyBuilder = new Lazy<AssemblyBuilder>(() => EmitHelper.DefineAssembly(CustomCodeName));
             _moduleBuilder = new Lazy<ModuleBuilder>(() => _assemblyBuilder.Value.DefineModule(CustomCodeName));
         }
-
-        public IReadOnlyDictionary<IMetadataElementIdentity, Type> RegisteredTypes => new ReadOnlyDictionary<IMetadataElementIdentity, Type>(_typesById);
 
         public void Build()
         {
@@ -61,6 +58,48 @@ namespace NuClear.Querying.Edm.Emit
         {
             Type type;
             return _typesById.TryGetValue(elementIdentity, out type) ? type : null;
+        }
+
+        private static Type ConvertType(ElementaryTypeKind propertyType)
+        {
+            switch (propertyType)
+            {
+                case ElementaryTypeKind.Byte:
+                    return typeof(byte);
+                case ElementaryTypeKind.Int16:
+                case ElementaryTypeKind.Int32:
+                    return typeof(int);
+                case ElementaryTypeKind.Int64:
+                    return typeof(long);
+                case ElementaryTypeKind.Single:
+                    return typeof(float);
+                case ElementaryTypeKind.Double:
+                    return typeof(double);
+                case ElementaryTypeKind.Decimal:
+                    return typeof(decimal);
+                case ElementaryTypeKind.Boolean:
+                    return typeof(bool);
+                case ElementaryTypeKind.String:
+                    return typeof(string);
+                case ElementaryTypeKind.DateTimeOffset:
+                    return typeof(DateTimeOffset);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(propertyType));
+            }
+        }
+
+        private static Type CreateRelationType(Type entityType, EntityRelationCardinality cardinality)
+        {
+            switch (cardinality)
+            {
+                case EntityRelationCardinality.One:
+                case EntityRelationCardinality.OptionalOne:
+                    return entityType;
+                case EntityRelationCardinality.Many:
+                    return typeof(ICollection<>).MakeGenericType(entityType);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(cardinality));
+            }
         }
 
         private Type CreateType(EntityElement entityElement)
@@ -132,48 +171,6 @@ namespace NuClear.Querying.Edm.Emit
             }
 
             return typeBuilder.CreateType();
-        }
-
-        private static Type ConvertType(ElementaryTypeKind propertyType)
-        {
-            switch (propertyType)
-            {
-                case ElementaryTypeKind.Byte:
-                    return typeof(byte);
-                case ElementaryTypeKind.Int16:
-                case ElementaryTypeKind.Int32:
-                    return typeof(int);
-                case ElementaryTypeKind.Int64:
-                    return typeof(long);
-                case ElementaryTypeKind.Single:
-                    return typeof(float);
-                case ElementaryTypeKind.Double:
-                    return typeof(double);
-                case ElementaryTypeKind.Decimal:
-                    return typeof(decimal);
-                case ElementaryTypeKind.Boolean:
-                    return typeof(bool);
-                case ElementaryTypeKind.String:
-                    return typeof(string);
-                case ElementaryTypeKind.DateTimeOffset:
-                    return typeof(DateTimeOffset);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(propertyType));
-            }
-        }
-
-        private static Type CreateRelationType(Type entityType, EntityRelationCardinality cardinality)
-        {
-            switch (cardinality)
-            {
-                case EntityRelationCardinality.One:
-                case EntityRelationCardinality.OptionalOne:
-                    return entityType;
-                case EntityRelationCardinality.Many:
-                    return typeof(ICollection<>).MakeGenericType(entityType);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(cardinality));
-            }
         }
     }
 }

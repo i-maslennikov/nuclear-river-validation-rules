@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
@@ -23,6 +24,8 @@ namespace NuClear.Querying.Storage
         private readonly IMetadataProvider _metadataProvider;
         private readonly IClrTypeProvider _clrTypeProvider;
 
+        private readonly Dictionary<Uri, DbCompiledModel> _modelsCache = new Dictionary<Uri, DbCompiledModel>();
+
         public DbModelFactory(IMetadataProvider metadataProvider, IClrTypeProvider clrTypeProvider)
         {
             if (metadataProvider == null)
@@ -42,6 +45,12 @@ namespace NuClear.Querying.Storage
         {
             Uri contextId = Metadata.Id.For<QueryingMetadataIdentity>(containerName);
 
+            DbCompiledModel compiledModel;
+            if (_modelsCache.TryGetValue(contextId, out compiledModel))
+            {
+                return compiledModel;
+            }
+
             var boundedContextElement = LookupContext(contextId);
             if (boundedContextElement == null)
             {
@@ -50,8 +59,10 @@ namespace NuClear.Querying.Storage
 
             var modelBuilder = SetupBuilder(boundedContextElement);
 
-            var dbModel = modelBuilder.Build(connection);
-            return dbModel.Compile();
+            compiledModel = modelBuilder.Build(connection).Compile();
+            _modelsCache.Add(contextId, compiledModel);
+
+            return compiledModel;
         }
 
         private BoundedContextElement LookupContext(Uri contextUrl)

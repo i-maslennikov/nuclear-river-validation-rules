@@ -198,8 +198,8 @@ namespace NuClear.Querying.Edm.Tests.Edm
 
         private static IEdmModel BuildModel(IMetadataProvider provider, Uri contextId)
         {
-            var builder = new EdmModelBuilder(provider);
-            var model = builder.Build(contextId, Enumerable.Empty<Type>());
+            var builder = new EdmModelBuilder(provider, new NullEdmModelAnnotator());
+            var model = builder.Build()[contextId];
 
             model.Dump();
 
