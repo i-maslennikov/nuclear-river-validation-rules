@@ -35,7 +35,10 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                     new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 3, AdvertisersCount = 100 },
 
                     new Bit::FirmCategoryForecast { FirmId = 1, CategoryId = 3, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m },
-                    new Bit::FirmCategoryForecast { FirmId = 1, CategoryId = 4, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m })
+                    new Bit::FirmCategoryForecast { FirmId = 1, CategoryId = 4, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m },
+
+                    // Прогнозы, привязанные к неизвестным фирмам ни на что не влияют
+                    new Bit::FirmCategoryForecast { FirmId = 2, CategoryId = 2, ProjectId = 1, ForecastClick = 20, ForecastAmount = 1999.9999m })
                 .Statistics(
                     // При отсутствии данных, статистика подразумевается нулевой, а прогнозы должны явно указывать на это.
                     // При этом, если у фирмы есть рубрика - то запись должна быть обязательно.

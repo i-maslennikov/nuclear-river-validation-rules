@@ -53,7 +53,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                                                   .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
                                                                                   .DefaultIfEmpty()
                                                       from forecast in q.For<Bit::FirmCategoryForecast>()
-                                                                                  .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
+                                                                                  .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId && x.FirmId == firmDto.FirmId)
                                                                                   .DefaultIfEmpty()
                                                       select new Statistics::FirmCategory3
                                                       {
