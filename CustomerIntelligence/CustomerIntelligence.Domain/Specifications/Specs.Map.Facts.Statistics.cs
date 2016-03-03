@@ -65,8 +65,8 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                           Shows = firmStatistics == null ? 0 : firmStatistics.Shows,
                                                           FirmCount = firmCount.Count,
                                                           AdvertisersShare = categoryStatistics == null ? 0 : Math.Min(1, (float)categoryStatistics.AdvertisersCount / firmCount.Count),
-                                                          ForecastClick = forecast.ForecastClick,
-                                                          ForecastAmount = forecast.ForecastAmount
+                                                          ForecastClick = forecast == null ? null : (int?)forecast.ForecastClick,
+                                                          ForecastAmount = forecast == null ? null : (decimal?)forecast.ForecastAmount
                                                       };
 
                                     return categories3;
@@ -85,8 +85,8 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                        {
                                                            ProjectId = project.Id,
                                                            FirmId = firm.Id,
-                                                           ForecastClick = forecast.ForecastClick,
-                                                           ForecastAmount = forecast.ForecastAmount
+                                                           ForecastClick = forecast == null ? null : (int?)forecast.ForecastClick,
+                                                           ForecastAmount = forecast == null ? null : (decimal?)forecast.ForecastAmount
                                                        };
 
                                     return firmDtos;
