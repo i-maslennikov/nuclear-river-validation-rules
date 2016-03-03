@@ -1,5 +1,6 @@
 ﻿Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+#Requires –Version 3.0
 #------------------------------
 
 # TODO Это временное решение, правильное решение - это создание отдельного сервиса инфраструктуры, общего для advanced search и для ERM
