@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Builders\OperationRegistryMetadataElementBuilder.cs" />
     <Compile Include="Builders\AggregateMetadataBuilder.cs" />
     <Compile Include="Builders\BoundedContextElementBuilder.cs" />
     <Compile Include="Builders\EntityElementBuilder.cs" />
@@ -44,6 +45,7 @@
     <Compile Include="Builders\ImportStatisticsMetadataBuilder.cs" />
     <Compile Include="Builders\StatisticsRecalculationMetadataBuilder.cs" />
     <Compile Include="Builders\StructuralModelElementBuilder.cs" />
+    <Compile Include="Elements\OperationRegistryMetadataElement.cs" />
     <Compile Include="Elements\AggregateMetadata.cs" />
     <Compile Include="Elements\BaseMetadataElement.cs" />
     <Compile Include="Elements\BoundedContextElement.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="Elements\ValueObjectMetadataElement.cs" />
     <Compile Include="Identities\QueryingMetadataIdentity.cs" />
     <Compile Include="Identities\ImportStatisticsMetadataIdentity.cs" />
+    <Compile Include="Identities\OperationRegistryMetadataIdentity.cs" />
     <Compile Include="Identities\ReplicationMetadataIdentity.cs" />
     <Compile Include="Identities\StatisticsRecalculationMetadataIdentity.cs" />
     <Compile Include="MapToObjectsSpecProvider.cs" />
