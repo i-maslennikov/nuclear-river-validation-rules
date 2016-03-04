@@ -9,7 +9,7 @@ using NuClear.Metamodeling.Elements.Identities;
 namespace NuClear.River.Common.Metadata.Elements
 {
     public abstract class BaseMetadataElement<TElement, TBuilder> : MetadataElement<TElement, TBuilder>
-        where TElement : MetadataElement<TElement, TBuilder> 
+        where TElement : MetadataElement<TElement, TBuilder>
         where TBuilder : MetadataElementBuilder<TBuilder, TElement>, new()
     {
         private IMetadataElementIdentity _identity;
@@ -20,13 +20,7 @@ namespace NuClear.River.Common.Metadata.Elements
             _identity = identity;
         }
 
-        public override IMetadataElementIdentity Identity
-        {
-            get
-            {
-                return _identity;
-            }
-        }
+        public override IMetadataElementIdentity Identity => _identity;
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)
         {
@@ -47,11 +41,11 @@ namespace NuClear.River.Common.Metadata.Elements
         {
             if (projector == null)
             {
-                throw new ArgumentNullException("projector");
+                throw new ArgumentNullException(nameof(projector));
             }
             if (getDefault == null)
             {
-                throw new ArgumentNullException("getDefault");
+                throw new ArgumentNullException(nameof(getDefault));
             }
             var feature = LookupFeature<TFeature>();
             return feature == null ? getDefault() : projector(feature);
