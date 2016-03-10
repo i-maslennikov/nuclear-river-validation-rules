@@ -15,13 +15,13 @@ namespace NuClear.River.Common.Metadata.Builders
         }
 
         /// <summary>
-        /// Добавляет описание импорта из документа в таблицу фактов
+        /// Add data import description from document to fact table.
         /// </summary>
         /// <typeparam name="TFact"></typeparam>
-        /// <param name="findSpecificationProvider">Определяет, какие факты должны быть удалены</param>
-        /// <param name="mapSpecification">Определяет, какие факты должны быть добавлены</param>
+        /// <param name="findSpecificationProvider">Defines facts to be removed</param>
+        /// <param name="mapSpecification">Defines facts to be created</param>
         /// <returns></returns>
-        public ImportDocumentMetadataBuilder<TDto> ImportToFact<TFact>(
+        public ImportDocumentMetadataBuilder<TDto> ImportToFacts<TFact>(
             Func<TDto, FindSpecification<TFact>> findSpecificationProvider,
             IMapSpecification<TDto, IReadOnlyCollection<TFact>> mapSpecification)
         {

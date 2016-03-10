@@ -25,18 +25,18 @@ namespace NuClear.CustomerIntelligence.Domain
                     .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ImportDocumentMetadataIdentity>())
                     .Childs(ImportDocumentMetadata<FirmStatisticsDto>
                                 .Config
-                                .ImportToFact(Specs.Find.Bit.FirmCategoryStatistics.ByBitDto, Specs.Map.Bit.FirmCategoryStatistics())
+                                .ImportToFacts(Specs.Find.Bit.FirmCategoryStatistics.ByBitDto, Specs.Map.Bit.FirmCategoryStatistics())
                                 .LeadsToProjectStatisticsCalculation(),
 
                             ImportDocumentMetadata<CategoryStatisticsDto>
                                 .Config
-                                .ImportToFact(Specs.Find.Bit.ProjectCategoryStatistics.ByBitDto, Specs.Map.Bit.ProjectCategoryStatistics())
+                                .ImportToFacts(Specs.Find.Bit.ProjectCategoryStatistics.ByBitDto, Specs.Map.Bit.ProjectCategoryStatistics())
                                 .LeadsToProjectStatisticsCalculation(),
 
                             ImportDocumentMetadata<FirmForecastDto>
                                 .Config
-                                .ImportToFact(Specs.Find.Bit.FirmCategoryForecast.ByBitDto, Specs.Map.Bit.FirmCategoryForecasts())
-                                .ImportToFact(Specs.Find.Bit.FirmForecast.ByBitDto, Specs.Map.Bit.FirmForecasts())
+                                .ImportToFacts(Specs.Find.Bit.FirmCategoryForecast.ByBitDto, Specs.Map.Bit.FirmCategoryForecasts())
+                                .ImportToFacts(Specs.Find.Bit.FirmForecast.ByBitDto, Specs.Map.Bit.FirmForecasts())
                                 .LeadsToProjectStatisticsCalculation());
 
             _metadata = new Dictionary<Uri, IMetadataElement> { { importStatisticsMetadataRoot.Identity.Id, importStatisticsMetadataRoot } };
