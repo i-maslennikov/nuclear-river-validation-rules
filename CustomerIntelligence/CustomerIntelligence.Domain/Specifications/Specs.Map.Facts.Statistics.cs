@@ -77,16 +77,13 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                             q =>
                                 {
                                     var firmDtos = from firm in q.For<Facts::Firm>()
-                                                   join project in q.For<Facts::Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
-                                                   from forecast in q.For<Bit::FirmForecast>()
-                                                                     .Where(x => x.FirmId == firm.Id)
-                                                                     .DefaultIfEmpty()
+                                                   join forecast in q.For<Bit::FirmForecast>() on firm.Id equals forecast.FirmId
                                                    select new Statistics::FirmForecast
                                                        {
-                                                           ProjectId = project.Id,
+                                                           ProjectId = forecast.ProjectId,
                                                            FirmId = firm.Id,
-                                                           ForecastClick = forecast == null ? null : (int?)forecast.ForecastClick,
-                                                           ForecastAmount = forecast == null ? null : (decimal?)forecast.ForecastAmount
+                                                           ForecastClick = forecast.ForecastClick,
+                                                           ForecastAmount = forecast.ForecastAmount
                                                        };
 
                                     return firmDtos;

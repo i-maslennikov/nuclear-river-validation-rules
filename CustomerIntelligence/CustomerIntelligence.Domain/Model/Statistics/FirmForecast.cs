@@ -8,8 +8,8 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
 
         public long FirmId { get; set; }
 
-        public int? ForecastClick { get; set; }
+        public int ForecastClick { get; set; }
 
-        public decimal? ForecastAmount { get; set; }
+        public decimal ForecastAmount { get; set; }
     }
 }

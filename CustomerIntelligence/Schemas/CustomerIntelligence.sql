@@ -133,8 +133,8 @@ go
 create table CustomerIntelligence.FirmForecast(
     ProjectId bigint not null
     , FirmId bigint not null
-    , ForecastClick int null
-    , ForecastAmount decimal(19,4) null
+    , ForecastClick int not null
+    , ForecastAmount decimal(19,4) not null
     , constraint PK_FirmForecast primary key (FirmId)
 )
 go
@@ -173,7 +173,7 @@ as
 select Firm.*, FirmActivity.LastActivityOn, FirmForecast.ForecastClick, FirmForecast.ForecastAmount
 from CustomerIntelligence.Firm
 	inner join CustomerIntelligence.FirmActivity on FirmActivity.FirmId = Firm.Id
-	inner join CustomerIntelligence.FirmForecast on FirmForecast.FirmId = Firm.Id
+	left join CustomerIntelligence.FirmForecast on FirmForecast.FirmId = Firm.Id
 go
 
 
