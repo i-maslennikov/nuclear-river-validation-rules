@@ -7,26 +7,25 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Builders
 {
-    public class ImportStatisticsMetadataBuilder<T, TDto> : MetadataElementBuilder<ImportStatisticsMetadataBuilder<T, TDto>, ImportStatisticsMetadata<T, TDto>>
+    public class ImportDocumentMetadataBuilder<TDto> : MetadataElementBuilder<ImportDocumentMetadataBuilder<TDto>, ImportDocumentMetadata<TDto>>
     {
-        private Func<TDto, FindSpecification<T>> _findSpecificationProvider;
-        private IMapSpecification<TDto, IReadOnlyCollection<T>> _mapSpecification;
-
-        protected override ImportStatisticsMetadata<T, TDto> Create()
+        protected override ImportDocumentMetadata<TDto> Create()
         {
-            return new ImportStatisticsMetadata<T, TDto>(_findSpecificationProvider, _mapSpecification, Features);
+            return new ImportDocumentMetadata<TDto>(Features);
         }
 
-        public ImportStatisticsMetadataBuilder<T, TDto> HasSource(IMapSpecification<TDto, IReadOnlyCollection<T>> mapSpecification)
+        /// <summary>
+        /// Добавляет описание импорта из документа в таблицу фактов
+        /// </summary>
+        /// <typeparam name="TFact"></typeparam>
+        /// <param name="findSpecificationProvider">Определяет, какие факты должны быть удалены</param>
+        /// <param name="mapSpecification">Определяет, какие факты должны быть добавлены</param>
+        /// <returns></returns>
+        public ImportDocumentMetadataBuilder<TDto> ImportToFact<TFact>(
+            Func<TDto, FindSpecification<TFact>> findSpecificationProvider,
+            IMapSpecification<TDto, IReadOnlyCollection<TFact>> mapSpecification)
         {
-            _mapSpecification = mapSpecification;
-            return this;
-        }
-
-        public ImportStatisticsMetadataBuilder<T, TDto> Aggregated(Func<TDto, FindSpecification<T>> findSpecificationProvider)
-        {
-            _findSpecificationProvider = findSpecificationProvider;
-            return this;
+            return this.WithFeatures(new ImportDocumentFeature<TDto, TFact>(findSpecificationProvider, mapSpecification));
         }
     }
 }

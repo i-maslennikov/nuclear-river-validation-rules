@@ -49,7 +49,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Bit::FirmCategoryStatistics { ProjectId = 1, FirmId = 7 },
                          new Bit::FirmCategoryStatistics { ProjectId = 2, FirmId = 8 });
 
-            var importer = CreateImporter<FirmStatisticsDto, Bit::FirmCategoryStatistics>(repositoryFactory);
+            var importer = CreateProcessor<FirmStatisticsDto, Bit::FirmCategoryStatistics>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
@@ -85,7 +85,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 7 },
                          new Bit::ProjectCategoryStatistics { ProjectId = 2, CategoryId = 7 });
 
-            var importer = CreateImporter<CategoryStatisticsDto, Bit::ProjectCategoryStatistics>(repositoryFactory);
+            var importer = CreateProcessor<CategoryStatisticsDto, Bit::ProjectCategoryStatistics>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
@@ -131,7 +131,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Bit::FirmForecast { ProjectId = 1, FirmId = 1 },
                          new Bit::FirmForecast { ProjectId = 2, FirmId = 2 });
 
-            var importer = CreateImporter<FirmForecastDto, Bit::FirmForecast>(repositoryFactory);
+            var importer = CreateProcessor<FirmForecastDto, Bit::FirmForecast>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
@@ -177,7 +177,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Bit::FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1 },
                          new Bit::FirmCategoryForecast { ProjectId = 2, FirmId = 2, CategoryId = 1 });
 
-            var importer = CreateImporter<FirmForecastDto, Bit::FirmCategoryForecast>(repositoryFactory);
+            var importer = CreateProcessor<FirmForecastDto, Bit::FirmCategoryForecast>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
@@ -192,24 +192,23 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 m => m.Add(It.Is(Predicate.Match(new Bit::FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1, ForecastClick = 1, ForecastAmount = 1 }))), Times.AtLeastOnce);
         }
 
-        private IStatisticsImporter CreateImporter<TDto, TFact>(IRepositoryFactory repositoryFactory)
+        private IImportDocumentMetadataProcessor CreateProcessor<TDto, TFact>(IRepositoryFactory repositoryFactory)
             where TFact : class
             where TDto : class
         {
-            var metadataSource = new ImportStatisticsMetadataSource();
-            var identity = new Uri($"{typeof(TDto).Name}/{typeof(TFact).Name}", UriKind.Relative);
-            IMetadataElement importStatisticsMetadata;
-            if (!metadataSource.Metadata.Values.TryGetElementById(identity, out importStatisticsMetadata))
+            var metadataSource = new ImportDocumentMetadataSource();
+            var identity = new Uri($"{typeof(TDto).Name}", UriKind.Relative);
+            IMetadataElement metadata;
+            if (!metadataSource.Metadata.Values.TryGetElementById(identity, out metadata))
             {
-                throw new NotSupportedException($"The aggregate of type '{typeof(CategoryStatisticsDto).Name}' is not supported.");
+                throw new NotSupportedException($"The aggregate of type '{typeof(TDto).Name}' is not supported.");
             }
 
-            var importer = new StatisticsFactImporter<TFact, TDto>(
-                (ImportStatisticsMetadata<TFact, TDto>)importStatisticsMetadata,
-                Query,
-                repositoryFactory.Create<TFact>());
+            var feature = metadata.Features.OfType<ImportDocumentFeature<TDto, TFact>>().Single();
+            var featureProcessor = new ImportDocumentFeatureProcessor<TDto, TFact>(feature, Query, repositoryFactory.Create<TFact>());
+            var processor = new ImportDocumentMetadataProcessor<TDto>((ImportDocumentMetadata<TDto>)metadata, new [] { featureProcessor });
 
-            return importer;
+            return processor;
         }
     }
 }

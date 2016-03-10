@@ -31,7 +31,7 @@ namespace NuClear.CustomerIntelligence.Domain
             return builder.WithFeatures(new DependentStatisticsFeature<T>(mapSpecificationProvider));
         }
 
-        public static ImportStatisticsMetadataBuilder<T, TDto> LeadsToProjectStatisticsCalculation<T, TDto>(this ImportStatisticsMetadataBuilder<T, TDto> builder)
+        public static ImportDocumentMetadataBuilder<TDto> LeadsToProjectStatisticsCalculation<TDto>(this ImportDocumentMetadataBuilder<TDto> builder)
             where TDto : IBitDto
         {
             Func<TDto, IReadOnlyCollection<IOperation>> projector = x => new [] { new RecalculateStatisticsOperation { ProjectId = x.ProjectId } };
