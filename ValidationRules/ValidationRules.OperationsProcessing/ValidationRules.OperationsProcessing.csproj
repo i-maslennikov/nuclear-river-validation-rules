@@ -97,15 +97,16 @@
     <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
     <Compile Include="Identities\Flows\AggregatesFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
+    <Compile Include="Identities\Operations\ManageGlobalAssociatedDeniedDraftRulesIdentity.cs" />
+    <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
+    <Compile Include="Identities\Operations\PublishGlobalAssociatedDeniedRulesIdentity.cs" />
     <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="Primary\ImportFactsFromErmAccumulator.cs" />
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Identities\Operations\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>

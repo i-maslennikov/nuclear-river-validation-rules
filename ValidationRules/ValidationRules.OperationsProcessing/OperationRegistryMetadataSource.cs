@@ -10,6 +10,7 @@ using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
 using NuClear.ValidationRules.Domain.EntityTypes;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
+using NuClear.ValidationRules.OperationsProcessing.Identities.Operations;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -35,9 +36,14 @@ namespace NuClear.ValidationRules.OperationsProcessing
                         DeleteIdentity.Instance.SpecificFor(EntityTypeOrderPosition.Instance),
 
                         AssignIdentity.Instance.SpecificFor(EntityTypeOrder.Instance),
+
+                        PublishGlobalAssociatedDeniedRulesIdentity.Instance.NonCoupled(),
+                    })
+                    .DisallowedOperationIdentities(new HashSet<StrictOperationIdentity>
+                    {
+                        ManageGlobalAssociatedDeniedDraftRulesIdentity.Instance.NonCoupled(),
                     })
                 };
-
 
             Metadata = metadataElements.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);
         }
