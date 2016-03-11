@@ -200,7 +200,7 @@ namespace NuClear.Replication.EntryPoint.DI
             return container
                 .RegisterValidationRulesFactsReplicator(entryPointSpecificLifetimeManagerFactory)
                 .RegisterValidationRulesAggregatesConstructor(entryPointSpecificLifetimeManagerFactory)
-                .RegisterType<IStatisticsImporterFactory, UnityStatisticsImporterFactory>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IImportDocumentMetadataProcessorFactory, UnityImportDocumentMetadataProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStatisticsRecalculator, StatisticsRecalculator>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IFactDependencyProcessorFactory, UnityFactDependencyProcessorFactory>(entryPointSpecificLifetimeManagerFactory())

@@ -1,4 +1,4 @@
-﻿FirmId,CategoryId,Name,Hits,Shows,AdvertisersShare,FirmCount
-"1","1","Category3","0","0","0","0"
-"2","4","Category3","0","0","0","0"
-"2","5","Category3","0","0","0","0"
+﻿FirmId,CategoryId,Name,Hits,Shows,AdvertisersShare,FirmCount,ForecastClick,ForecastAmount
+"1","1","Category3","0","0","0","0","1","100"
+"2","4","Category3","0","0","0","0",,"100"
+"2","5","Category3","0","0","0","0","1",

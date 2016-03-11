@@ -18,18 +18,18 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 {
     public sealed class ImportFactsFromBitHandler : IMessageProcessingHandler
     {
-        private readonly IStatisticsImporterFactory _statisticsImporterFactory;
+        private readonly IImportDocumentMetadataProcessorFactory _importDocumentMetadataProcessorFactory;
         private readonly IOperationSender _sender;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromBitHandler(
-            IStatisticsImporterFactory statisticsImporterFactory,
+            IImportDocumentMetadataProcessorFactory importDocumentMetadataProcessorFactory,
             IOperationSender sender,
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
-            _statisticsImporterFactory = statisticsImporterFactory;
+            _importDocumentMetadataProcessorFactory = importDocumentMetadataProcessorFactory;
             _sender = sender;
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
@@ -48,12 +48,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                 {
                     foreach (var dto in message.Dtos)
                     {
-                        foreach (var importer in _statisticsImporterFactory.Create(dto.GetType()))
-                        {
+                        var importer = _importDocumentMetadataProcessorFactory.Create(dto.GetType());
                         var opertaions = importer.Import(dto);
                         _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(1);
                         _sender.Push(opertaions.Cast<RecalculateStatisticsOperation>(), StatisticsFlow.Instance);
-                    }
                     }
                 }
 

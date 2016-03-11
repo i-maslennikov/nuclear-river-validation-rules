@@ -26,33 +26,36 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void Recalculate(IEnumerable<RecalculateStatisticsOperation> operations)
         {
-            var processor = CreateProcessor();
+            var processors = CreateProcessor();
 
             using (Probe.Create("Recalculate Statistics Operations"))
             {
                 foreach (var slice in _slicer.Slice(operations.Select(o => o.Context)))
                 {
-                    processor.RecalculateStatistics(slice);
+                    foreach (var processor in processors)
+                    {
+                        processor.RecalculateStatistics(slice);
+                    }
                 }
             }
         }
 
-        private IStatisticsProcessor CreateProcessor()
+        private IReadOnlyCollection<IStatisticsProcessor> CreateProcessor()
         {
             MetadataSet metadataSet;
             if (!_metadataProvider.TryGetMetadata<StatisticsRecalculationMetadataIdentity>(out metadataSet))
             {
-                throw new NotSupportedException(string.Format("Metadata for identity '{0}' cannot be found.", typeof(StatisticsRecalculationMetadataIdentity).Name));
+                throw new NotSupportedException($"Metadata for identity '{typeof(StatisticsRecalculationMetadataIdentity).Name}' cannot be found.");
             }
 
-            var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).Single();
-            return _statisticsProcessorFactory.Create(metadata);
+            var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).ToArray();
+            return metadata.Select(_statisticsProcessorFactory.Create).ToArray();
         }
 
         public sealed class StatisticsRecalculationSlicer : ISlicer<StatisticsProcessorSlice>
-            {
+        {
             public IEnumerable<StatisticsProcessorSlice> Slice(IEnumerable<Predicate> predicates)
-                {
+            {
                 return predicates.GroupBy(p => PredicateProperty.ProjectId.GetValue(p))
                                  .Select(group => group.Any(p => PredicateProperty.Type.GetValue(p) == PredicateFactory.Type.ByProject)
                                                       ? new StatisticsProcessorSlice { ProjectId = group.Key, CategoryIds = default(IReadOnlyCollection<long>) }

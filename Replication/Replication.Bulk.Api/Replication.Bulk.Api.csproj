@@ -94,7 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BulkReplicationRunner.cs" />
-    <Compile Include="Factories\ImportStatisticsBulkReplicatorFactory.cs" />
     <Compile Include="Storage\DatabaseStorage.cs" />
     <Compile Include="Factories\AggregatesBulkReplicatorFactory.cs" />
     <Compile Include="Factories\DataConnectionFactory.cs" />

@@ -172,7 +172,15 @@
     <Compile Include="Mocks\Processor\PrimaryProcessorResolveStrategy.cs" />
     <Compile Include="Mocks\Receiver\MockReceiverResolveStrategy.cs" />
     <Compile Include="Mocks\Receiver\MockMessageReceiver.cs" />
+    <Compile Include="Primary\Parsers\RubricPopularityCorporateBusMessageParserTests.cs" />
+    <Compile Include="Primary\Parsers\FirmPopularityCorporateBusMessageParserTests.cs" />
+    <Compile Include="Primary\Parsers\FirmForecastCorporateBusMessageParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="TrackedUsecases.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +190,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
+      <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
+      <Name>Common.Metadata</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
+      <Project>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</Project>
+      <Name>CustomerIntelligence.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.OperationsProcessing\CustomerIntelligence.OperationsProcessing.csproj">
       <Project>{794F43F6-E4F3-4A80-A2B0-195D3560CB35}</Project>
       <Name>CustomerIntelligence.OperationsProcessing</Name>
@@ -190,6 +206,22 @@
       <Project>{8E3D39D6-6BEE-4EDC-ACE0-8C24CA929164}</Project>
       <Name>Replication.OperationsProcessing</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\flowStatistics.FirmForecast.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\flowStatistics.RubricPopularity.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\flowStatistis.FirmPopularity.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

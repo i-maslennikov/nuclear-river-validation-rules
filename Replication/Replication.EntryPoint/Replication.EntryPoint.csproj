@@ -303,7 +303,7 @@
     <Compile Include="Factories\Messaging\Receiver\FinalReceiverResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Receiver\ServiceBusReceiverResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Transformer\PrimaryMessageTransformerResolveStrategy.cs" />
-    <Compile Include="Factories\Replication\UnityStatisticsImporterFactory.cs" />
+    <Compile Include="Factories\Replication\UnityImportDocumentMetadataProcessorFactory.cs" />
     <Compile Include="Factories\Replication\UnityAggregateProcessorFactory.cs" />
     <Compile Include="Factories\Replication\UnityFactDependencyProcessorFactory.cs" />
     <Compile Include="Factories\Replication\UnityStatisticsProcessorFactory.cs" />

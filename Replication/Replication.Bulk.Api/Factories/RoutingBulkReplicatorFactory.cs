@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using NuClear.Metamodeling.Elements;
-using NuClear.Replication.Bulk.Api.Factories;
 using NuClear.Replication.Bulk.Api.Storage;
 using NuClear.Replication.Bulk.API.Replicators;
 using NuClear.River.Common.Metadata.Elements;
@@ -21,7 +20,6 @@ namespace NuClear.Replication.Bulk.API.Factories
                 { typeof(AggregateMetadata<,>), typeof(AggregatesBulkReplicatorFactory<,>) },
                 { typeof(ValueObjectMetadataElement<>), typeof(ValueObjectsBulkReplicatorFactory<>) },
                 { typeof(StatisticsRecalculationMetadata<>), typeof(StatisticsBulkReplicatorFactory<>) },
-                { typeof(ImportStatisticsMetadata<,>), typeof(ImportStatisticsBulkReplicatorFactory<,>) },
             };
 
         public RoutingBulkReplicatorFactory(IStorage source, IStorage target)
