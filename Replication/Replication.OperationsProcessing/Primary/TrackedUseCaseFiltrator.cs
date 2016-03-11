@@ -13,29 +13,31 @@ namespace NuClear.Replication.OperationsProcessing.Primary
     {
         private readonly ITracer _tracer;
         private readonly IEntityTypeMappingRegistry<TSubDomain> _entityTypeRegistry;
+        private readonly IEntityTypeExplicitMapping _entityTypeExplicitMapping;
         private readonly OperationRegistry<TSubDomain> _operationsRegistry;
 
-        public TrackedUseCaseFiltrator(ITracer tracer, IEntityTypeMappingRegistry<TSubDomain> entityTypeRegistry, OperationRegistry<TSubDomain> operationsRegistry)
+        public TrackedUseCaseFiltrator(ITracer tracer, IEntityTypeMappingRegistry<TSubDomain> entityTypeRegistry, IEntityTypeExplicitMapping entityTypeExplicitMapping, OperationRegistry<TSubDomain> operationsRegistry)
         {
             _tracer = tracer;
             _entityTypeRegistry = entityTypeRegistry;
+            _entityTypeExplicitMapping = entityTypeExplicitMapping;
             _operationsRegistry = operationsRegistry;
         }
 
         public IReadOnlyDictionary<IEntityType, HashSet<long>> Filter(TrackedUseCase trackedUseCase)
         {
-            var filteredOperations = FilterByDisallowedOperations(trackedUseCase);
+            var filteredOperations = FilterByIgnoredOperations(trackedUseCase);
             var changes = FilterByEntityTypes(filteredOperations);
 
             return changes;
         }
 
-        private IEnumerable<OperationDescriptor> FilterByDisallowedOperations(TrackedUseCase message)
+        private IEnumerable<OperationDescriptor> FilterByIgnoredOperations(TrackedUseCase message)
         {
             var operations = (IEnumerable<OperationDescriptor>)message.Operations;
 
-            var disallowedOperations = operations.Where(x => _operationsRegistry.IsDisallowedOperation(x.OperationIdentity));
-            var operationIds = disallowedOperations.Aggregate(new HashSet<Guid>(), (hashSet, operation) =>
+            var ignoredOperations = operations.Where(x => _operationsRegistry.IsIgnoredOperation(x.OperationIdentity));
+            var operationIds = ignoredOperations.Aggregate(new HashSet<Guid>(), (hashSet, operation) =>
             {
                 hashSet.Add(operation.Id);
                 hashSet.UnionWith(message.GetNestedOperations(operation.Id).Select(x => x.Id));
@@ -56,11 +58,7 @@ namespace NuClear.Replication.OperationsProcessing.Primary
             {
                 x = operation.AffectedEntities.Changes.Aggregate(x, (y, change) =>
                 {
-                    IEntityType entityType;
-                    if (!_operationsRegistry.TryGetExplicitlyMappedEntityType(change.Key, out entityType))
-                    {
-                        entityType = change.Key;
-                    }
+                    var entityType = _entityTypeExplicitMapping.MapEntityType(change.Key);
 
                     if (!_entityTypeRegistry.EntityMapping.ContainsKey(entityType))
                     {

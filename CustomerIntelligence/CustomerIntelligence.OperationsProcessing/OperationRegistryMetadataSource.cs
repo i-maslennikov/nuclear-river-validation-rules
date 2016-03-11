@@ -8,7 +8,6 @@ using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Operations;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Model.Common.Entities;
-using NuClear.Model.Common.Operations.Identity;
 using NuClear.Model.Common.Operations.Identity.Generic;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
@@ -22,161 +21,149 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
             var metadataElements = new OperationRegistryMetadataElement[]
                 {
                     OperationRegistryMetadataElement
-                    .Config
-                    .For<FactsSubDomain>()
-                    .ExplicitEntityTypesMap(new Dictionary<IEntityType, IEntityType>
-                    {
-                        { EntityTypeAppointment.Instance,  EntityTypeActivity.Instance },
-                        { EntityTypePhonecall.Instance,  EntityTypeActivity.Instance },
-                        { EntityTypeTask.Instance, EntityTypeActivity.Instance },
-                        { EntityTypeLetter.Instance, EntityTypeActivity.Instance }
-                    })
-                    .AllowedOperationIdentities(new HashSet<StrictOperationIdentity>
-                    {
-                        CreateIdentity.Instance.SpecificFor(EntityTypeOrder.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeClient.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeContact.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeLegalPerson.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeOrderPosition.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeProject.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeTerritory.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeAccount.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeFirmAddress.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeFirmContact.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeLetter.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeTask.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypePhonecall.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeAppointment.Instance),
+                        .Config
+                        .For<FactsSubDomain>()
+                        .Allow<CreateIdentity, EntityTypeOrder>()
+                        .Allow<CreateIdentity, EntityTypeClient>()
+                        .Allow<CreateIdentity, EntityTypeContact>()
+                        .Allow<CreateIdentity, EntityTypeLegalPerson>()
+                        .Allow<CreateIdentity, EntityTypeOrderPosition>()
+                        .Allow<CreateIdentity, EntityTypeProject>()
+                        .Allow<CreateIdentity, EntityTypeTerritory>()
+                        .Allow<CreateIdentity, EntityTypeAccount>()
+                        .Allow<CreateIdentity, EntityTypeFirmAddress>()
+                        .Allow<CreateIdentity, EntityTypeFirmContact>()
+                        .Allow<CreateIdentity, EntityTypeLetter>()
+                        .Allow<CreateIdentity, EntityTypeTask>()
+                        .Allow<CreateIdentity, EntityTypePhonecall>()
+                        .Allow<CreateIdentity, EntityTypeAppointment>()
 
-                        BulkCreateIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
-                        BulkCreateIdentity.Instance.SpecificFor(EntityTypeFirmAddress.Instance),
-                        BulkCreateIdentity.Instance.SpecificFor(EntityTypeCategoryFirmAddress.Instance),
-                        BulkCreateIdentity.Instance.SpecificFor(EntityTypeSalesModelCategoryRestriction.Instance),
-                        BulkCreateIdentity.Instance.SpecificFor(EntityTypeLock.Instance),
+                        .Allow<BulkCreateIdentity, EntityTypeFirm>()
+                        .Allow<BulkCreateIdentity, EntityTypeFirmAddress>()
+                        .Allow<BulkCreateIdentity, EntityTypeCategoryFirmAddress>()
+                        .Allow<BulkCreateIdentity, EntityTypeSalesModelCategoryRestriction>()
+                        .Allow<BulkCreateIdentity, EntityTypeLock>()
 
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeOrder.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeAccount.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeTerritory.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeLegalPerson.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeClient.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeContact.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeFirmAddress.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeFirmContact.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeBuilding.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeOrderPosition.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeProject.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeCategoryOrganizationUnit.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeBill.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeLetter.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeTask.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypePhonecall.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeAppointment.Instance),
+                        .Allow<UpdateIdentity, EntityTypeOrder>()
+                        .Allow<UpdateIdentity, EntityTypeAccount>()
+                        .Allow<UpdateIdentity, EntityTypeTerritory>()
+                        .Allow<UpdateIdentity, EntityTypeLegalPerson>()
+                        .Allow<UpdateIdentity, EntityTypeClient>()
+                        .Allow<UpdateIdentity, EntityTypeContact>()
+                        .Allow<UpdateIdentity, EntityTypeFirm>()
+                        .Allow<UpdateIdentity, EntityTypeFirmAddress>()
+                        .Allow<UpdateIdentity, EntityTypeFirmContact>()
+                        .Allow<UpdateIdentity, EntityTypeBuilding>()
+                        .Allow<UpdateIdentity, EntityTypeOrderPosition>()
+                        .Allow<UpdateIdentity, EntityTypeProject>()
+                        .Allow<UpdateIdentity, EntityTypeCategoryOrganizationUnit>()
+                        .Allow<UpdateIdentity, EntityTypeBill>()
+                        .Allow<UpdateIdentity, EntityTypeLetter>()
+                        .Allow<UpdateIdentity, EntityTypeTask>()
+                        .Allow<UpdateIdentity, EntityTypePhonecall>()
+                        .Allow<UpdateIdentity, EntityTypeAppointment>()
 
-                        BulkUpdateIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
-                        BulkUpdateIdentity.Instance.SpecificFor(EntityTypeFirmContact.Instance),
-                        BulkUpdateIdentity.Instance.SpecificFor(EntityTypeCategoryFirmAddress.Instance),
+                        .Allow<BulkUpdateIdentity, EntityTypeFirm>()
+                        .Allow<BulkUpdateIdentity, EntityTypeFirmContact>()
+                        .Allow<BulkUpdateIdentity, EntityTypeCategoryFirmAddress>()
 
-                        DeleteIdentity.Instance.SpecificFor(EntityTypeLegalPerson.Instance),
-                        DeleteIdentity.Instance.SpecificFor(EntityTypeAccount.Instance),
-                        DeleteIdentity.Instance.SpecificFor(EntityTypeLegalPersonProfile.Instance),
-                        DeleteIdentity.Instance.SpecificFor(EntityTypeOrderPosition.Instance),
-                        DeleteIdentity.Instance.SpecificFor(EntityTypeCategoryFirmAddress.Instance),
-                        DeleteIdentity.Instance.SpecificFor(EntityTypeContact.Instance),
+                        .Allow<DeleteIdentity, EntityTypeLegalPerson>()
+                        .Allow<DeleteIdentity, EntityTypeAccount>()
+                        .Allow<DeleteIdentity, EntityTypeLegalPersonProfile>()
+                        .Allow<DeleteIdentity, EntityTypeOrderPosition>()
+                        .Allow<DeleteIdentity, EntityTypeCategoryFirmAddress>()
+                        .Allow<DeleteIdentity, EntityTypeContact>()
 
-                        BulkDeleteIdentity.Instance.SpecificFor(EntityTypeFirmContact.Instance),
-                        BulkDeleteIdentity.Instance.SpecificFor(EntityTypeSalesModelCategoryRestriction.Instance),
+                        .Allow<BulkDeleteIdentity, EntityTypeFirmContact>()
+                        .Allow<BulkDeleteIdentity, EntityTypeSalesModelCategoryRestriction>()
 
-                        ActivateIdentity.Instance.SpecificFor(EntityTypeLegalPerson.Instance),
+                        .Allow<ActivateIdentity, EntityTypeLegalPerson>()
 
-                        DeactivateIdentity.Instance.SpecificFor(EntityTypeLegalPerson.Instance),
-                        DeactivateIdentity.Instance.SpecificFor(EntityTypeTerritory.Instance),
-                        DeactivateIdentity.Instance.SpecificFor(EntityTypeClient.Instance),
+                        .Allow<DeactivateIdentity, EntityTypeLegalPerson>()
+                        .Allow<DeactivateIdentity, EntityTypeTerritory>()
+                        .Allow<DeactivateIdentity, EntityTypeClient>()
 
-                        BulkDeactivateIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
+                        .Allow<BulkDeactivateIdentity, EntityTypeFirm>()
 
-                        AppendIdentity.Instance.SpecificFor(EntityTypeClient.Instance, EntityTypeClient.Instance),
-                        DetachIdentity.Instance.SpecificFor(EntityTypeClient.Instance, EntityTypeFirm.Instance),
+                        .Allow<AppendIdentity, EntityTypeClient, EntityTypeClient>()
+                        .Allow<DetachIdentity, EntityTypeClient, EntityTypeFirm>()
 
-                        AssignIdentity.Instance.SpecificFor(EntityTypeClient.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeContact.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeLegalPerson.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeAccount.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeDeal.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeOrder.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeLetter.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeTask.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypePhonecall.Instance),
-                        AssignIdentity.Instance.SpecificFor(EntityTypeAppointment.Instance),
+                        .Allow<AssignIdentity, EntityTypeClient>()
+                        .Allow<AssignIdentity, EntityTypeContact>()
+                        .Allow<AssignIdentity, EntityTypeLegalPerson>()
+                        .Allow<AssignIdentity, EntityTypeAccount>()
+                        .Allow<AssignIdentity, EntityTypeFirm>()
+                        .Allow<AssignIdentity, EntityTypeDeal>()
+                        .Allow<AssignIdentity, EntityTypeOrder>()
+                        .Allow<AssignIdentity, EntityTypeLetter>()
+                        .Allow<AssignIdentity, EntityTypeTask>()
+                        .Allow<AssignIdentity, EntityTypePhonecall>()
+                        .Allow<AssignIdentity, EntityTypeAppointment>()
 
-                        CancelIdentity.Instance.SpecificFor(EntityTypeLetter.Instance),
-                        CancelIdentity.Instance.SpecificFor(EntityTypeTask.Instance),
-                        CancelIdentity.Instance.SpecificFor(EntityTypePhonecall.Instance),
-                        CancelIdentity.Instance.SpecificFor(EntityTypeAppointment.Instance),
+                        .Allow<CancelIdentity, EntityTypeLetter>()
+                        .Allow<CancelIdentity, EntityTypeTask>()
+                        .Allow<CancelIdentity, EntityTypePhonecall>()
+                        .Allow<CancelIdentity, EntityTypeAppointment>()
 
-                        CompleteIdentity.Instance.SpecificFor(EntityTypeLetter.Instance),
-                        CompleteIdentity.Instance.SpecificFor(EntityTypeTask.Instance),
-                        CompleteIdentity.Instance.SpecificFor(EntityTypePhonecall.Instance),
-                        CompleteIdentity.Instance.SpecificFor(EntityTypeAppointment.Instance),
+                        .Allow<CompleteIdentity, EntityTypeLetter>()
+                        .Allow<CompleteIdentity, EntityTypeTask>()
+                        .Allow<CompleteIdentity, EntityTypePhonecall>()
+                        .Allow<CompleteIdentity, EntityTypeAppointment>()
 
-                        ReopenIdentity.Instance.SpecificFor(EntityTypeLetter.Instance),
-                        ReopenIdentity.Instance.SpecificFor(EntityTypeTask.Instance),
-                        ReopenIdentity.Instance.SpecificFor(EntityTypePhonecall.Instance),
-                        ReopenIdentity.Instance.SpecificFor(EntityTypeAppointment.Instance),
+                        .Allow<ReopenIdentity, EntityTypeLetter>()
+                        .Allow<ReopenIdentity, EntityTypeTask>()
+                        .Allow<ReopenIdentity, EntityTypePhonecall>()
+                        .Allow<ReopenIdentity, EntityTypeAppointment>()
 
-                        MergeIdentity.Instance.SpecificFor(EntityTypeLegalPerson.Instance),
-                        MergeIdentity.Instance.SpecificFor(EntityTypeClient.Instance),
+                        .Allow<MergeIdentity, EntityTypeLegalPerson>()
+                        .Allow<MergeIdentity, EntityTypeClient>()
 
-                        QualifyIdentity.Instance.SpecificFor(EntityTypeClient.Instance),
-                        QualifyIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
+                        .Allow<QualifyIdentity, EntityTypeClient>()
+                        .Allow<QualifyIdentity, EntityTypeFirm>()
 
-                        DisqualifyIdentity.Instance.SpecificFor(EntityTypeClient.Instance),
-                        DisqualifyIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
+                        .Allow<DisqualifyIdentity, EntityTypeClient>()
+                        .Allow<DisqualifyIdentity, EntityTypeFirm>()
 
-                        ChangeTerritoryIdentity.Instance.SpecificFor(EntityTypeClient.Instance),
-                        ChangeTerritoryIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
+                        .Allow<ChangeTerritoryIdentity, EntityTypeClient>()
+                        .Allow<ChangeTerritoryIdentity, EntityTypeFirm>()
 
-                        ChangeClientIdentity.Instance.SpecificFor(EntityTypeDeal.Instance),
-                        ChangeClientIdentity.Instance.SpecificFor(EntityTypeFirm.Instance),
-                        ChangeClientIdentity.Instance.SpecificFor(EntityTypeLegalPerson.Instance),
-                        ChangeClientIdentity.Instance.SpecificFor(EntityTypeContact.Instance),
+                        .Allow<ChangeClientIdentity, EntityTypeDeal>()
+                        .Allow<ChangeClientIdentity, EntityTypeFirm>()
+                        .Allow<ChangeClientIdentity, EntityTypeLegalPerson>()
+                        .Allow<ChangeClientIdentity, EntityTypeContact>()
 
-                        ActualizeOrderAmountToWithdrawIdentity.Instance.NonCoupled(),
-                        SetInspectorIdentity.Instance.NonCoupled(),
-                        ChangeDealIdentity.Instance.NonCoupled(),
-                        CloseWithDenialIdentity.Instance.NonCoupled(),
-                        ChangeOrderLegalPersonProfileIdentity.Instance.NonCoupled(),
-                        CopyOrderIdentity.Instance.NonCoupled(),
-                        RepairOutdatedIdentity.Instance.NonCoupled(),
-                        ChangeRequisitesIdentity.Instance.NonCoupled(),
-                        RevertWithdrawFromAccountsIdentity.Instance.NonCoupled(),
-                        WithdrawFromAccountsIdentity.Instance.NonCoupled(),
-                        CreateClientByFirmIdentity.Instance.NonCoupled(),
-                        ApplyOrderDiscountIdentity.Instance.NonCoupled(),
-                        ChangeOrderAccountIdentity.Instance.NonCoupled(),
-                        ChangeOrderBargainIdentity.Instance.NonCoupled(),
-                        ChangeOrderLegalPersonIdentity.Instance.NonCoupled(),
-                        ClearOrderBargainIdentity.Instance.NonCoupled(),
-                        UpdateOrderFinancialPerformanceIdentity.Instance.NonCoupled(),
-                        CreateOrderBillsIdentity.Instance.NonCoupled(),
-                        DeleteOrderBillsIdentity.Instance.NonCoupled(),
-                        TransferLocksToAccountIdentity.Instance.NonCoupled(),
-                        ImportCategoryOrganizationUnitIdentity.Instance.NonCoupled(),
-                        SetMainFirmIdentity.Instance.NonCoupled(),
-                        ActualizeActiveLocksIdentity.Instance.NonCoupled(),
-                        ImportAdvModelInRubricInfoIdentity.Instance.NonCoupled(),
+                        .Allow<ActualizeOrderAmountToWithdrawIdentity>()
+                        .Allow<SetInspectorIdentity>()
+                        .Allow<ChangeDealIdentity>()
+                        .Allow<CloseWithDenialIdentity>()
+                        .Allow<ChangeOrderLegalPersonProfileIdentity>()
+                        .Allow<CopyOrderIdentity>()
+                        .Allow<RepairOutdatedIdentity>()
+                        .Allow<ChangeRequisitesIdentity>()
+                        .Allow<RevertWithdrawFromAccountsIdentity>()
+                        .Allow<WithdrawFromAccountsIdentity>()
+                        .Allow<CreateClientByFirmIdentity>()
+                        .Allow<ApplyOrderDiscountIdentity>()
+                        .Allow<ChangeOrderAccountIdentity>()
+                        .Allow<ChangeOrderBargainIdentity>()
+                        .Allow<ChangeOrderLegalPersonIdentity>()
+                        .Allow<ClearOrderBargainIdentity>()
+                        .Allow<UpdateOrderFinancialPerformanceIdentity>()
+                        .Allow<CreateOrderBillsIdentity>()
+                        .Allow<DeleteOrderBillsIdentity>()
+                        .Allow<TransferLocksToAccountIdentity>()
+                        .Allow<ImportCategoryOrganizationUnitIdentity>()
+                        .Allow<SetMainFirmIdentity>()
+                        .Allow<ActualizeActiveLocksIdentity>()
+                        .Allow<ImportAdvModelInRubricInfoIdentity>()
 
-                        // эти операции станут disallowed после того как фирмы будем брать из InfoRussia
-                        ImportCardForErmIdentity.Instance.NonCoupled(),
-                        ImportCardIdentity.Instance.NonCoupled(),
-                        ImportFirmIdentity.Instance.NonCoupled(),
-                    })
-                    .DisallowedOperationIdentities(new HashSet<StrictOperationIdentity>
-                    {
-                        ImportFirmPromisingIdentity.Instance.NonCoupled(),
-                        CalculateClientPromisingIdentity.Instance.NonCoupled(),
-                    })
+                        // эти операции станут ignored после того как фирмы будем брать из InfoRussia
+                        .Allow<ImportCardForErmIdentity>()
+                        .Allow<ImportCardIdentity>()
+                        .Allow<ImportFirmIdentity>()
+
+                        .Ignore<ImportFirmPromisingIdentity>()
+                        .Ignore<CalculateClientPromisingIdentity>()
                 };
 
 

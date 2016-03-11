@@ -7,7 +7,7 @@ namespace NuClear.Replication.OperationsProcessing.Primary
     public interface IOperationRegistry<TSubDomain>
     {
         bool IsAllowedOperation(StrictOperationIdentity operationIdentity);
-        bool IsDisallowedOperation(StrictOperationIdentity operationIdentity);
+        bool IsIgnoredOperation(StrictOperationIdentity operationIdentity);
 
         bool TryGetExplicitlyMappedEntityType(IEntityType entityType, out IEntityType mappedEntityType);
     }

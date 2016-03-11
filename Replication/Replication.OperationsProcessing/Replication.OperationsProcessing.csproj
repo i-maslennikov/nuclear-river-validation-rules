@@ -196,6 +196,8 @@
     <Compile Include="Identities\Telemetry\StatisticsProcessedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\StatisticsProcessingDelayIdentity.cs" />
     <Compile Include="OperationAggregatableMessage.cs" />
+    <Compile Include="Primary\IdentityEntityTypeMapping.cs" />
+    <Compile Include="Primary\IEntityTypeExplicitMapping.cs" />
     <Compile Include="Primary\IOperationRegistry.cs" />
     <Compile Include="Primary\OperationRegistry.cs" />
     <Compile Include="Primary\TrackedUseCaseFiltrator.cs" />

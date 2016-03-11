@@ -213,8 +213,8 @@ namespace NuClear.Replication.EntryPoint.DI
                 throw new ArgumentException();
             }
 
-            var operationIdentities = metadata.AllowedOperationIdentities.Select(x => x.OperationIdentity)
-                                    .Concat(metadata.DisallowedOperationIdentities.Select(x => x.OperationIdentity))
+            var operationIdentities = metadata.AllowedOperations.Select(x => x.OperationIdentity)
+                                    .Concat(metadata.IgnoredOperations.Select(x => x.OperationIdentity))
                                     .Where(x => x.IsNonCoupled())
                                     .Distinct();
 
@@ -223,9 +223,9 @@ namespace NuClear.Replication.EntryPoint.DI
 
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
-            container.RegisterType<IOperationIdentityRegistry, OperationIdentityRegistry>(Lifetime.Singleton,
-                new InjectionFactory(x => x.ResolveOperationIdentityRegistry()))
-                    .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton);
+            container.RegisterType<IOperationIdentityRegistry, OperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.ResolveOperationIdentityRegistry()))
+                    .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
+                    .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton);
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);
