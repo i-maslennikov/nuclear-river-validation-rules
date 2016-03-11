@@ -6,18 +6,10 @@ using MetadataBuilder = NuClear.Metamodeling.Elements.Identities.Builder.Metadat
 
 namespace NuClear.River.Common.Metadata.Identities
 {
-    public class ImportDocumentMetadataIdentity : MetadataKindIdentityBase<ImportDocumentMetadataIdentity>
+    public sealed class ImportDocumentMetadataIdentity : MetadataKindIdentityBase<ImportDocumentMetadataIdentity>
     {
-        private readonly Uri _id = new Uri(MetadataBuilder.Id.DefaultRoot, "ImportStatistics");
+        public override Uri Id { get; } = new Uri(MetadataBuilder.Id.DefaultRoot, "ImportStatistics");
 
-        public override Uri Id
-        {
-            get { return _id; }
-        }
-
-        public override string Description
-        {
-            get { return "Statistics import process descriptive metadata"; }
-        }
+        public override string Description => "Statistics import process descriptive metadata";
     }
 }

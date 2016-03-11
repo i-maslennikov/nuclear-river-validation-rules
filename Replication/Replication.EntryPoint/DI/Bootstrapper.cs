@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Practices.Unity;
 
@@ -34,6 +35,8 @@ using NuClear.Messaging.Transports.CorporateBus.API;
 using NuClear.Messaging.Transports.ServiceBus;
 using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.Messaging.Transports.ServiceBus.LockRenewer;
+using NuClear.Metamodeling.Elements.Identities.Builder;
+using NuClear.Metamodeling.Provider;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
@@ -52,6 +55,8 @@ using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.River.Common.Metadata.Context;
+using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Security;
 using NuClear.Security.API;
@@ -145,10 +150,29 @@ namespace NuClear.Replication.EntryPoint.DI
                             .RegisterType<IIdentityServiceClient, IdentityServiceClient>(Lifetime.Singleton);
         }
 
+        private static IOperationIdentityRegistry ResolveOperationIdentityRegistry(this IUnityContainer container)
+        {
+            var metadataProvider = container.Resolve<IMetadataProvider>();
+
+            var metadataId = OperationRegistryMetadataIdentity.Instance.Id.WithRelative(new Uri(typeof(FactsSubDomain).Name, UriKind.Relative));
+            OperationRegistryMetadataElement metadata;
+            if (!metadataProvider.TryGetMetadata(metadataId, out metadata))
+            {
+                throw new ArgumentException();
+            }
+
+            var operationIdentities = metadata.AllowedOperationIdentities.Select(x => x.OperationIdentity)
+                                    .Concat(metadata.DisallowedOperationIdentities.Select(x => x.OperationIdentity))
+                                    .Where(x => x.IsNonCoupled())
+                                    .Distinct();
+
+            return new OperationIdentityRegistry(operationIdentities);
+        }
+
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
             container.RegisterType<IOperationIdentityRegistry, OperationIdentityRegistry>(Lifetime.Singleton,
-                new InjectionConstructor(OperationIdentityMetadata.AllOperationIdentities)); // todo: взять сущности из контекста
+                new InjectionFactory(ResolveOperationIdentityRegistry)); // todo: взять сущности из контекста
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);

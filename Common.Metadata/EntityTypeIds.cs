@@ -6,6 +6,8 @@
         public const int Account = 142;
         public const int AssociatedPosition = 177;
         public const int AssociatedPositionsGroup = 176;
+        public const int BranchOfficeOrganizationUnit = 139;
+        public const int Category = 160;
         public const int CategoryFirmAddress = 166;
         public const int CategoryOrganizationUnit = 161;
         public const int Client = 200;
@@ -42,16 +44,6 @@
         public const int Bill = 188;
         public const int LegalPersonProfile = 219;
         public const int Lock = 159;
-
-        // Значения, первоисточником которых является CI
-        public const int BranchOfficeOrganizationUnit = 10001;
-        public const int Category = 10002;
-        public const int FirmBalance = 10003;
-        public const int FirmCategoryGroup = 10005;
-        public const int ProjectCategory = 10006;
-        public const int FirmCategory1 = 10007;
-        public const int FirmCategory2 = 10008;
-        public const int FirmCategory3 = 10009;
 
         // Значения, первоисточником которых является VR
         public const int Period = 10101;

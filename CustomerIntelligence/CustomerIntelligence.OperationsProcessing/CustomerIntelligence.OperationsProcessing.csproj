@@ -172,7 +172,7 @@
     <Compile Include="Identities\Telemetry\StatisticsEnqueuedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\StatisticsProcessedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\StatisticsProcessingDelayIdentity.cs" />
-    <Compile Include="OperationIdentityMetadata.cs" />
+    <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="Primary\Parsers\FirmForecastCorporateBusMessageParser.cs" />
     <Compile Include="Primary\Parsers\FirmPopularityCorporateBusMessageParser.cs" />

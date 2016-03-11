@@ -39,7 +39,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.DI
 
             var metadataProvider = new MetadataProvider(new IMetadataSource[]
             {
-                new PerformedOperationsMessageFlowsMetadataSource()
+                new PerformedOperationsMessageFlowsMetadataSource(),
+                new OperationRegistryMetadataSource()
             },
             new IMetadataProcessor[]
             {

@@ -63,19 +63,22 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                     .AddMapping<EntityTypeTerritory, Facts.Territory>()
                     .AddMapping<EntityTypeSalesModelCategoryRestriction, Facts.SalesModelCategoryRestriction>();
 
+        // only aggregates
         private static readonly Action<EntityTypeMappingRegistryBuilder> CustomerIntelligenceTypeMap
             = builder => builder
                     .AddMapping<EntityTypeCategoryGroup, CI.CategoryGroup>()
                     .AddMapping<EntityTypeClient, CI.Client>()
-                    .AddMapping<EntityTypeContact, CI.ClientContact>()
                     .AddMapping<EntityTypeFirm, CI.Firm>()
-                    .AddMapping<EntityTypeFirmBalance, CI.FirmBalance>()
-                    .AddMapping<EntityTypeFirmCategory1, CI.FirmCategory1>()
-                    .AddMapping<EntityTypeFirmCategory2, CI.FirmCategory2>()
-                    .AddMapping<EntityTypeFirmCategory3, Statistics.FirmCategory3>()
                     .AddMapping<EntityTypeProject, CI.Project>()
-                    .AddMapping<EntityTypeProjectCategory, CI.ProjectCategory>()
-                    .AddMapping<EntityTypeTerritory, CI.Territory>();
+                    .AddMapping<EntityTypeTerritory, CI.Territory>()
+                    .AddAsPersistenceOnly(typeof(CI.ClientContact))
+                    .AddAsPersistenceOnly(typeof(CI.ProjectCategory))
+                    .AddAsPersistenceOnly(typeof(CI.FirmActivity))
+                    .AddAsPersistenceOnly(typeof(CI.FirmBalance))
+                    .AddAsPersistenceOnly(typeof(CI.FirmCategory1))
+                    .AddAsPersistenceOnly(typeof(CI.FirmCategory2))
+                    .AddAsPersistenceOnly(typeof(CI.FirmTerritory))
+                    .AddAsPersistenceOnly(typeof(Statistics.FirmCategory3));
 
         public static IEntityTypeMappingRegistry<ErmSubDomain> CreateErmContext()
         {
