@@ -120,6 +120,7 @@
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
+    <Compile Include="ErmToFactsEntityTypeExplicitMapping.cs" />
     <Compile Include="Final\AggregateOperationAccumulator.cs" />
     <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
     <Compile Include="Final\StatisticsAggregatableMessageHandler.cs" />
@@ -139,11 +140,6 @@
     <Compile Include="Identities\EntityTypes\EntityTypeDeal.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirm.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirmAddress.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmBalance.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmCategory3.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmCategory2.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmCategory1.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmCategoryGroup.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirmContact.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeLegalPerson.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeLegalPersonProfile.cs" />
@@ -153,7 +149,6 @@
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePhonecall.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeProject.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeProjectCategory.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeSalesModelCategoryRestriction.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeTask.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeTerritory.cs" />
@@ -191,7 +186,7 @@
     <Compile Include="Identities\Operations\TransferLocksToAccountIdentity.cs" />
     <Compile Include="Identities\Operations\UpdateOrderFinancialPerfomanceIdentity.cs" />
     <Compile Include="Identities\Operations\WithdrawFromAccountsIdentity.cs" />
-    <Compile Include="OperationIdentityMetadata.cs" />
+    <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="Primary\Parsers\FirmForecastCorporateBusMessageParser.cs" />
     <Compile Include="Primary\Parsers\FirmPopularityCorporateBusMessageParser.cs" />
