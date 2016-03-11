@@ -95,7 +95,9 @@
     <Compile Include="Facts\FactDependencyProcessor.cs" />
     <Compile Include="Facts\FactProcessor.cs" />
     <Compile Include="Facts\FactsReplicator.cs" />
-    <Compile Include="Facts\StatisticsImporter.cs" />
+    <Compile Include="Facts\IImportDocumentFeatureProcessor.cs" />
+    <Compile Include="Facts\ImportDocumentMetadataProcessor.cs" />
+    <Compile Include="Facts\ImportImportDocumentFeatureProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

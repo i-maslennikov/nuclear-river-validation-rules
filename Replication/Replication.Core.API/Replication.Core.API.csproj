@@ -89,8 +89,8 @@
     <Compile Include="Facts\IFactProcessor.cs" />
     <Compile Include="Facts\IFactProcessorFactory.cs" />
     <Compile Include="Facts\IFactsReplicator.cs" />
-    <Compile Include="Facts\IStatisticsImporter.cs" />
-    <Compile Include="Facts\IStatisticsImporterFactory.cs" />
+    <Compile Include="Facts\IImportDocumentMetadataProcessor.cs" />
+    <Compile Include="Facts\IImportDocumentMetadataProcessorFactory.cs" />
     <Compile Include="IBulkRepository.cs" />
     <Compile Include="LinqExtensions.cs" />
     <Compile Include="MergeTool.cs" />

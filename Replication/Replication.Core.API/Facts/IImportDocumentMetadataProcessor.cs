@@ -4,7 +4,7 @@ using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.Replication.Core.API.Facts
 {
-    public interface IStatisticsImporter
+    public interface IImportDocumentMetadataProcessor
     {
         IReadOnlyCollection<IOperation> Import(IDataTransferObject dto);
     }

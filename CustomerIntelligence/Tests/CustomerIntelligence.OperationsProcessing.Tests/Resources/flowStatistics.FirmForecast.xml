@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FirmForecast BranchCode="1">
+  <Firms>
+    <Firm Code="141274359267368" ForecastClick="45" ForecastAmount="670.00">
+      <Rubrics>
+        <Rubric Code="110365" ForecastClick="23" ForecastAmount="230.00" />
+        <Rubric Code="10792" ForecastClick="22" ForecastAmount="440.00" />
+      </Rubrics>
+    </Firm>
+    <Firm Code="141274359267381" ForecastClick="55" ForecastAmount="1000.00">
+      <Rubrics>
+        <Rubric Code="110365" ForecastClick="10" ForecastAmount="100.00" />
+        <Rubric Code="10792" ForecastClick="45" ForecastAmount="900.00" />
+      </Rubrics>
+    </Firm>
+  </Firms>
+</FirmForecast>

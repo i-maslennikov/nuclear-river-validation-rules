@@ -37,11 +37,14 @@
   <ItemGroup>
     <Compile Include="AggregateConstructionMetadataSource.cs" />
     <Compile Include="DTO\CategoryStatisticsDto.cs" />
+    <Compile Include="DTO\FirmForecastDto.cs" />
     <Compile Include="DTO\FirmStatisticsDto.cs" />
     <Compile Include="EntityTypeIds.cs" />
     <Compile Include="FactsReplicationMetadataSource.cs" />
     <Compile Include="ImportStatisticsMetadataSource.cs" />
     <Compile Include="MetadataBuilderExtesnsions.cs" />
+    <Compile Include="Model\Bit\FirmCategoryForecast.cs" />
+    <Compile Include="Model\Bit\FirmForecast.cs" />
     <Compile Include="Model\CI\CategoryGroup.cs" />
     <Compile Include="Model\CI\Client.cs" />
     <Compile Include="Model\CI\ClientContact.cs" />
@@ -100,6 +103,7 @@
     <Compile Include="Model\Facts\Project.cs" />
     <Compile Include="Model\Bit\ProjectCategoryStatistics.cs" />
     <Compile Include="Model\Facts\Territory.cs" />
+    <Compile Include="Model\Statistics\FirmForecast.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryingMetadataSource.cs" />
     <Compile Include="QueryingMetadataSource.CustomerIntelligence.cs" />

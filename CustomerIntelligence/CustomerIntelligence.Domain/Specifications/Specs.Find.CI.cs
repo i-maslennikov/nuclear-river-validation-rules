@@ -47,7 +47,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                     return new FindSpecification<ProjectCategory>(x => aggregateIds.Contains(x.ProjectId));
                 }
 
-                public static partial class FirmCategory3
+                public static class FirmCategory3
                 {
                     public static FindSpecification<Model.Statistics.FirmCategory3> ByProject(long projectId)
                     {
@@ -57,6 +57,14 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                     public static FindSpecification<Model.Statistics.FirmCategory3> ByProjectAndCategories(long projectId, IReadOnlyCollection<long?> categoryIds)
                     {
                         return new FindSpecification<Model.Statistics.FirmCategory3>(x => x.ProjectId == projectId && categoryIds.Contains(x.CategoryId));
+                    }
+                }
+
+                public static class FirmForecast
+                {
+                    public static FindSpecification<Model.Statistics.FirmForecast> ByProject(long projectId)
+                    {
+                        return new FindSpecification<Model.Statistics.FirmForecast>(x => x.ProjectId == projectId);
                     }
                 }
             }
