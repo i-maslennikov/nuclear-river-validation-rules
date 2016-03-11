@@ -1,4 +1,3 @@
-using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
 
 namespace NuClear.Replication.OperationsProcessing.Primary
@@ -8,7 +7,5 @@ namespace NuClear.Replication.OperationsProcessing.Primary
     {
         bool IsAllowedOperation(StrictOperationIdentity operationIdentity);
         bool IsIgnoredOperation(StrictOperationIdentity operationIdentity);
-
-        bool TryGetExplicitlyMappedEntityType(IEntityType entityType, out IEntityType mappedEntityType);
     }
 }

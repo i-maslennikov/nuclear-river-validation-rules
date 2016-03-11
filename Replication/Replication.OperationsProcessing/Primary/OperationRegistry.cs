@@ -10,7 +10,7 @@ using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Replication.OperationsProcessing.Primary
 {
-    public sealed class OperationRegistry<TSubDomain>
+    public sealed class OperationRegistry<TSubDomain> : IOperationRegistry<TSubDomain>
         where TSubDomain : ISubDomain
     {
         private readonly OperationRegistryMetadataElement _metadata;
