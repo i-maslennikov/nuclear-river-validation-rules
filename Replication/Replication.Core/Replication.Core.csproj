@@ -97,8 +97,10 @@
     <Compile Include="Aggregates\DirectlyDependentEntityFeatureProcessor.cs" />
     <Compile Include="Facts\FactProcessor.cs" />
     <Compile Include="Facts\FactsReplicator.cs" />
+    <Compile Include="Facts\IImportDocumentFeatureProcessor.cs" />
+    <Compile Include="Facts\ImportDocumentMetadataProcessor.cs" />
+    <Compile Include="Facts\ImportImportDocumentFeatureProcessor.cs" />
     <Compile Include="Aggregates\IndirectlyDependentEntityFeatureProcessor.cs" />
-    <Compile Include="Facts\StatisticsImporter.cs" />
     <Compile Include="FindSpecificationProvider.cs" />
     <Compile Include="IFindSpecificationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -52,6 +52,9 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                       from categoryStatistics in q.For<Bit::ProjectCategoryStatistics>()
                                                                                   .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
                                                                                   .DefaultIfEmpty()
+                                                      from forecast in q.For<Bit::FirmCategoryForecast>()
+                                                                                  .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId && x.FirmId == firmDto.FirmId)
+                                                                                  .DefaultIfEmpty()
                                                       select new Statistics::FirmCategory3
                                                       {
                                                           ProjectId = firmDto.ProjectId,
@@ -61,10 +64,29 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                           Hits = firmStatistics == null ? 0 : firmStatistics.Hits,
                                                           Shows = firmStatistics == null ? 0 : firmStatistics.Shows,
                                                           FirmCount = firmCount.Count,
-                                                          AdvertisersShare = categoryStatistics == null ? 0 : Math.Min(1, (float)categoryStatistics.AdvertisersCount / firmCount.Count)
+                                                          AdvertisersShare = categoryStatistics == null ? 0 : Math.Min(1, (float)categoryStatistics.AdvertisersCount / firmCount.Count),
+                                                          ForecastClick = forecast == null ? null : (int?)forecast.ForecastClick,
+                                                          ForecastAmount = forecast == null ? null : (decimal?)forecast.ForecastAmount
                                                       };
 
                                     return categories3;
+                                });
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmForecast>> FirmForecast =
+                        new MapSpecification<IQuery, IQueryable<Statistics::FirmForecast>>(
+                            q =>
+                                {
+                                    var firmDtos = from firm in q.For<Facts::Firm>()
+                                                   join forecast in q.For<Bit::FirmForecast>() on firm.Id equals forecast.FirmId
+                                                   select new Statistics::FirmForecast
+                                                       {
+                                                           ProjectId = forecast.ProjectId,
+                                                           FirmId = firm.Id,
+                                                           ForecastClick = forecast.ForecastClick,
+                                                           ForecastAmount = forecast.ForecastAmount
+                                                       };
+
+                                    return firmDtos;
                                 });
                 }
             }

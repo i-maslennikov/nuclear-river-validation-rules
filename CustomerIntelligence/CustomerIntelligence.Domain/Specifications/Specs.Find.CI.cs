@@ -55,6 +55,12 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                         x => entityIds.Contains(new StatisticsKey { ProjectId = x.ProjectId, CategoryId = x.CategoryId })
                              || entityIds.Contains(new StatisticsKey { ProjectId = x.ProjectId, CategoryId = null }));
                 }
+
+                public static FindSpecification<FirmForecast> FirmForecast(IReadOnlyCollection<StatisticsKey> entityIds)
+                {
+                    return new FindSpecification<FirmForecast>(
+                        x => entityIds.Contains(new StatisticsKey { ProjectId = x.ProjectId, CategoryId = null }));
+                }
             }
         }
     }

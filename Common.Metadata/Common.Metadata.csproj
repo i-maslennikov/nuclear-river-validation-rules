@@ -54,6 +54,7 @@
     <Compile Include="Elements\EntityRelationElement.cs" />
     <Compile Include="Elements\EnumTypeElement.cs" />
     <Compile Include="Elements\FactMetadata.cs" />
+    <Compile Include="Elements\ImportDocumentFeature.cs" />
     <Compile Include="Elements\ImportStatisticsMetadata.cs" />
     <Compile Include="Elements\IStructuralModelTypeElement.cs" />
     <Compile Include="Elements\MetadataElementExtensions.cs" />

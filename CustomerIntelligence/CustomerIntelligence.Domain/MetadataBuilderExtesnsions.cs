@@ -12,7 +12,7 @@ namespace NuClear.CustomerIntelligence.Domain
 {
     public static class MetadataBuilderExtesnsions
     {
-        public static ImportStatisticsMetadataBuilder<T, TDto> LeadsToProjectStatisticsCalculation<T, TDto>(this ImportStatisticsMetadataBuilder<T, TDto> builder)
+        public static ImportDocumentMetadataBuilder<TDto> LeadsToProjectStatisticsCalculation<TDto>(this ImportDocumentMetadataBuilder<TDto> builder)
             where TDto : IBitDto
         {
             Func<TDto, IReadOnlyCollection<IOperation>> projector = x => new [] { new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = x.ProjectId }) };

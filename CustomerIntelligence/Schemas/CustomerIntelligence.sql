@@ -8,6 +8,7 @@ if object_id('CustomerIntelligence.ProjectCategory') is not null drop table Cust
 if object_id('CustomerIntelligence.Territory') is not null drop table CustomerIntelligence.Territory
 if object_id('CustomerIntelligence.Firm') is not null drop table CustomerIntelligence.Firm
 if object_id('CustomerIntelligence.FirmBalance') is not null drop table CustomerIntelligence.FirmBalance
+if object_id('CustomerIntelligence.FirmForecast') is not null drop table CustomerIntelligence.FirmForecast
 if object_id('CustomerIntelligence.FirmActivity') is not null drop table CustomerIntelligence.FirmActivity
 if object_id('CustomerIntelligence.Client') is not null drop table CustomerIntelligence.Client
 if object_id('CustomerIntelligence.Contact') is not null drop table CustomerIntelligence.Contact
@@ -19,7 +20,6 @@ if object_id('CustomerIntelligence.FirmCategory2') is not null drop table Custom
 if object_id('CustomerIntelligence.FirmCategory3') is not null drop table CustomerIntelligence.FirmCategory3
 if object_id('CustomerIntelligence.FirmTerritory') is not null drop table CustomerIntelligence.FirmTerritory
 if object_id('CustomerIntelligence.FirmView', 'view') is not null drop view CustomerIntelligence.FirmView
-
 go
 
 
@@ -115,15 +115,27 @@ go
 
 -- FirmCategory3
 create table CustomerIntelligence.FirmCategory3(
-	ProjectId bigint not null
-	, FirmId bigint not null
-	, CategoryId bigint not null
-	, Name nvarchar(256) not null
+    ProjectId bigint not null
+    , FirmId bigint not null
+    , CategoryId bigint not null
+    , Name nvarchar(256) not null
     , Hits int not null
     , Shows int not null
     , FirmCount int not null
     , AdvertisersShare float not null
+    , ForecastClick int null
+    , ForecastAmount decimal(19,4) null
     , constraint PK_FirmCategory3 primary key (FirmId, CategoryId)
+)
+go
+
+-- FirmForecast
+create table CustomerIntelligence.FirmForecast(
+    ProjectId bigint not null
+    , FirmId bigint not null
+    , ForecastClick int not null
+    , ForecastAmount decimal(19,4) not null
+    , constraint PK_FirmForecast primary key (FirmId)
 )
 go
 
@@ -158,9 +170,10 @@ go
 -- FirmView
 create view CustomerIntelligence.FirmView
 as
-select Firm.*, FirmActivity.LastActivityOn
+select Firm.*, FirmActivity.LastActivityOn, FirmForecast.ForecastClick, FirmForecast.ForecastAmount
 from CustomerIntelligence.Firm
 	inner join CustomerIntelligence.FirmActivity on FirmActivity.FirmId = Firm.Id
+	left join CustomerIntelligence.FirmForecast on FirmForecast.FirmId = Firm.Id
 go
 
 

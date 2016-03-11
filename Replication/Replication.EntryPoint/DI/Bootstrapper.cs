@@ -160,7 +160,7 @@ namespace NuClear.Replication.EntryPoint.DI
             // register matadata sources without massprocessor
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(PerformedOperationsMessageFlowsMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(FactsReplicationMetadataSource), Lifetime.Singleton);
-            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(ImportStatisticsMetadataSource), Lifetime.Singleton);
+            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(ImportDocumentMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(AggregateConstructionMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(StatisticsRecalculationMetadataSource), Lifetime.Singleton);
 
@@ -307,7 +307,7 @@ namespace NuClear.Replication.EntryPoint.DI
                                                                                                c.Resolve<IMetadataProvider>(),
                                                                                                c.Resolve<IFactProcessorFactory>(),
                                                                                                new CustomerIntelligenceFactTypePriorityComparer())))
-                .RegisterType<IStatisticsImporterFactory, UnityStatisticsImporterFactory>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IImportDocumentMetadataProcessorFactory, UnityImportDocumentMetadataProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregatesConstructor, AggregatesConstructor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStatisticsRecalculator, StatisticsRecalculator>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())

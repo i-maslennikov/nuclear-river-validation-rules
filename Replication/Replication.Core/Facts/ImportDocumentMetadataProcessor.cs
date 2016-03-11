@@ -2,27 +2,22 @@
 using System.Collections.Generic;
 using System.Transactions;
 
-using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Model;
-using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.Facts
 {
-    public class StatisticsFactImporter<T, TDto> : IStatisticsImporter
-        where T : class
+    public class ImportDocumentMetadataProcessor<TDto> : IImportDocumentMetadataProcessor
         where TDto : class
     {
-        private readonly ImportStatisticsMetadata<T, TDto> _importStatisticsMetadata;
-        private readonly IQuery _query;
-        private readonly IBulkRepository<T> _repository;
+        private readonly ImportDocumentMetadata<TDto> _metadata;
+        private readonly IReadOnlyCollection<IImportDocumentFeatureProcessor<TDto>> _featureProcessors;
 
-        public StatisticsFactImporter(ImportStatisticsMetadata<T, TDto> importStatisticsMetadata, IQuery query, IBulkRepository<T> repository)
+        public ImportDocumentMetadataProcessor(ImportDocumentMetadata<TDto> metadata, IReadOnlyCollection<IImportDocumentFeatureProcessor<TDto>> featureProcessors)
         {
-            _importStatisticsMetadata = importStatisticsMetadata;
-            _query = query;
-            _repository = repository;
+            _metadata = metadata;
+            _featureProcessors = featureProcessors;
         }
 
         public IReadOnlyCollection<IOperation> Import(IDataTransferObject dto)
@@ -46,13 +41,15 @@ namespace NuClear.Replication.Core.Facts
             using (var transaction = new TransactionScope(TransactionScopeOption.Required,
                                                           new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
-                _repository.Delete(_query.For(_importStatisticsMetadata.FindSpecificationProvider.Invoke(statisticsDto)));
-                _repository.Create(_importStatisticsMetadata.MapSpecification.Map(statisticsDto));
+                foreach (var importer in _featureProcessors)
+                {
+                    importer.Import(statisticsDto);
+                }
 
                 transaction.Complete();
             }
 
-            return _importStatisticsMetadata.RecalculationSpecification.Map(statisticsDto);
+            return _metadata.RecalculationSpecification.Map(statisticsDto);
         }
     }
 }

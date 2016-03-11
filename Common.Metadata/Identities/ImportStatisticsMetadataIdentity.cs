@@ -7,9 +7,9 @@ using MetadataBuilder = NuClear.Metamodeling.Elements.Identities.Builder.Metadat
 
 namespace NuClear.River.Common.Metadata.Identities
 {
-    public class ImportStatisticsMetadataIdentity : MetadataKindIdentityBase<ImportStatisticsMetadataIdentity>
+    public class ImportDocumentMetadataIdentity : MetadataKindIdentityBase<ImportDocumentMetadataIdentity>
     {
-        private readonly Uri _id = MetadataBuilder.Id.For(MetadataBuilder.Id.DefaultRoot, "ImportStatistics");
+        private readonly Uri _id = MetadataBuilder.Id.For(MetadataBuilder.Id.DefaultRoot, "ImportDocument");
 
         public override Uri Id
         {
