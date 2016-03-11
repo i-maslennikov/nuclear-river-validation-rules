@@ -54,15 +54,17 @@ namespace NuClear.Replication.OperationsProcessing.Primary
 
         private IReadOnlyDictionary<IEntityType, HashSet<long>> FilterByEntityTypes(IEnumerable<OperationDescriptor> operations)
         {
-            var changes = operations.Aggregate(new Dictionary<IEntityType, HashSet<long>>(), (x, operation) =>
+            var dictionary = new Dictionary<IEntityType, HashSet<long>>();
+
+            foreach (var operation in operations)
             {
-                x = operation.AffectedEntities.Changes.Aggregate(x, (y, change) =>
+                foreach (var change in operation.AffectedEntities.Changes)
                 {
                     var entityType = _entityTypeExplicitMapping.MapEntityType(change.Key);
 
                     if (!_entityTypeRegistry.EntityMapping.ContainsKey(entityType))
                     {
-                        return y;
+                        continue;
                     }
 
                     if (!_operationsRegistry.IsAllowedOperation(operation.OperationIdentity))
@@ -71,21 +73,17 @@ namespace NuClear.Replication.OperationsProcessing.Primary
                     }
 
                     HashSet<long> hashSet;
-                    if (!y.TryGetValue(entityType, out hashSet))
+                    if (!dictionary.TryGetValue(entityType, out hashSet))
                     {
                         hashSet = new HashSet<long>();
-                        y.Add(entityType, hashSet);
+                        dictionary.Add(entityType, hashSet);
                     }
 
                     hashSet.UnionWith(change.Value.Keys);
+                }
+            }
 
-                    return y;
-                });
-
-                return x;
-            });
-
-            return changes;
+            return dictionary;
         }
     }
 }
