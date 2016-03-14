@@ -33,7 +33,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
             {
                 return context.Attribute("categoryId") == null
                            ? new RecalculateStatisticsOperation((int)context.Attribute("projectId"))
-                           : new RecalculateStatisticsOperation((int)context.Attribute("projectId"), (long)context.Attribute("entityId"));
+                           : new RecalculateStatisticsOperation((int)context.Attribute("projectId"), (long)context.Attribute("categoryId"));
             }
 
             throw new ArgumentException($"Unknown operation id {operation.OperationId}", nameof(operation));
