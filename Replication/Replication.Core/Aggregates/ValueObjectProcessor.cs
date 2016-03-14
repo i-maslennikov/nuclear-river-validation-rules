@@ -12,9 +12,9 @@ namespace NuClear.Replication.Core.Aggregates
     {
         private readonly IBulkRepository<TValueObject> _repository;
         private readonly DataChangesDetector<TValueObject> _changesDetector;
-        private readonly IFindSpecificationProvider<TValueObject> _findSpecificationProvider;
+        private readonly IFindSpecificationProvider<TValueObject, AggregateOperation> _findSpecificationProvider;
 
-        public ValueObjectProcessor(DataChangesDetector<TValueObject> changesDetector, IBulkRepository<TValueObject> repository, IFindSpecificationProvider<TValueObject> findSpecificationProvider)
+        public ValueObjectProcessor(DataChangesDetector<TValueObject> changesDetector, IBulkRepository<TValueObject> repository, IFindSpecificationProvider<TValueObject, AggregateOperation> findSpecificationProvider)
         {
             _repository = repository;
             _changesDetector = changesDetector;

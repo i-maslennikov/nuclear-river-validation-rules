@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
@@ -14,21 +13,21 @@ namespace NuClear.Replication.Core.Aggregates
         where T : class
     {
         private readonly IBulkRepository<T> _repository;
-        private readonly StatisticsRecalculationMetadata<T, StatisticsKey> _metadata;
         private readonly DataChangesDetector<T> _changesDetector;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
+        private readonly IFindSpecificationProvider<T, RecalculateStatisticsOperation> _findSpecificationProvider;
 
-        public StatisticsProcessor(StatisticsRecalculationMetadata<T, StatisticsKey> metadata, IQuery query, IBulkRepository<T> repository, IEqualityComparerFactory equalityComparerFactory)
+        public StatisticsProcessor(StatisticsRecalculationMetadata<T, StatisticsKey> metadata, IQuery query, IBulkRepository<T> repository, IEqualityComparerFactory equalityComparerFactory, IFindSpecificationProvider<T, RecalculateStatisticsOperation> findSpecificationProvider)
         {
             _repository = repository;
-            _metadata = metadata;
             _equalityComparerFactory = equalityComparerFactory;
-            _changesDetector = new DataChangesDetector<T>(_metadata.MapSpecificationProviderForSource, _metadata.MapSpecificationProviderForTarget, _equalityComparerFactory.CreateCompleteComparer<T>(), query);
+            _findSpecificationProvider = findSpecificationProvider;
+            _changesDetector = new DataChangesDetector<T>(metadata.MapSpecificationProviderForSource, metadata.MapSpecificationProviderForTarget, _equalityComparerFactory.CreateCompleteComparer<T>(), query);
         }
 
         public void Execute(IReadOnlyCollection<RecalculateStatisticsOperation> commands)
         {
-            var filter = _metadata.FindSpecificationProvider.Invoke(commands.Select(c => new StatisticsKey { ProjectId = c.ProjectId, CategoryId = c.CategoryId }).ToArray());
+            var filter = _findSpecificationProvider.Create(commands);
 
             // Сначала сравниением получаем различающиеся записи,
             // затем получаем те из различающихся, которые совпадают по идентификатору.

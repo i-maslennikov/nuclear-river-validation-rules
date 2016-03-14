@@ -87,6 +87,7 @@
     <Compile Include="Aggregates\AggregateFindSpecificationProvider.cs" />
     <Compile Include="Aggregates\AggregateProcessor.cs" />
     <Compile Include="Aggregates\AggregatesConstructor.cs" />
+    <Compile Include="Aggregates\StatisticsFindSpecificationProvider.cs" />
     <Compile Include="Aggregates\StatisticsProcessor.cs" />
     <Compile Include="Aggregates\StatisticsRecalculator.cs" />
     <Compile Include="Aggregates\ValueObjectFindSpecificationProvider.cs" />

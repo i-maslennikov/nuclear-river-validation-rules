@@ -7,7 +7,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class ValueObjectFindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T>
+    public sealed class ValueObjectFindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T, AggregateOperation>
     {
         private readonly ValueObjectMetadata<T, TKey> _metadata;
 

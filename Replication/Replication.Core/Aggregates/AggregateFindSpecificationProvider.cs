@@ -7,7 +7,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class AggregateFindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T>
+    public sealed class AggregateFindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T, AggregateOperation>
         where T : IIdentifiable<TKey>
     {
         private readonly FindSpecificationProvider<T, TKey> _specificationProvider;
