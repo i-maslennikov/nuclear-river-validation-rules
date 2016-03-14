@@ -7,7 +7,7 @@ namespace NuClear.River.Common.Metadata.Identities
 {
     public sealed class QueryingMetadataIdentity : MetadataKindIdentityBase<QueryingMetadataIdentity>
     {
-        public override Uri Id { get; } = Metamodeling.Elements.Identities.Builder.Metadata.Id.For("Querying");
+        public override Uri Id => Metamodeling.Elements.Identities.Builder.Metadata.Id.For("Querying");
 
         public override string Description => "Advanced Search";
     }

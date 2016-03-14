@@ -28,22 +28,47 @@ namespace NuClear.River.Common.Metadata.Builders
             return this;
         }
 
-        public OperationRegistryMetadataElementBuilder AllowedOperationIdentities(IEnumerable<StrictOperationIdentity> allowedOperationIdentities)
+        public OperationRegistryMetadataElementBuilder Allow<TOperation>()
+            where TOperation : OperationIdentityBase<TOperation>, INonCoupledOperationIdentity, new()
         {
-            AddFeatures(new OperationRegistryMetadataElement.AllowedOperationIdentitiesFeature(allowedOperationIdentities));
+            var operationIdentity = OperationIdentityBase<TOperation>.Instance.NonCoupled();
+            AddFeatures(new OperationRegistryMetadataElement.AllowedOperationFeature(operationIdentity));
             return this;
         }
 
-
-        public OperationRegistryMetadataElementBuilder DisallowedOperationIdentities(IEnumerable<StrictOperationIdentity> disallowedOperationIdentities)
+        public OperationRegistryMetadataElementBuilder Allow<TOperation, TEntity>()
+           where TOperation : OperationIdentityBase<TOperation>, IEntitySpecificOperationIdentity, new()
+           where TEntity : EntityTypeBase<TEntity>, IEntityType, new()
         {
-            AddFeatures(new OperationRegistryMetadataElement.DisallowedOperationIdentitiesFeature(disallowedOperationIdentities));
+            var operationIdentity = OperationIdentityBase<TOperation>.Instance.SpecificFor(EntityTypeBase<TEntity>.Instance);
+            AddFeatures(new OperationRegistryMetadataElement.AllowedOperationFeature(operationIdentity));
             return this;
         }
 
-        public OperationRegistryMetadataElementBuilder ExplicitEntityTypesMap(IReadOnlyDictionary<IEntityType, IEntityType> dictionary)
+        public OperationRegistryMetadataElementBuilder Allow<TOperation, TEntity1, TEntity2>()
+           where TOperation : OperationIdentityBase<TOperation>, IEntitySpecificOperationIdentity, new()
+           where TEntity1 : EntityTypeBase<TEntity1>, IEntityType, new()
+           where TEntity2 : EntityTypeBase<TEntity2>, IEntityType, new()
         {
-            AddFeatures(new OperationRegistryMetadataElement.ExplicitEntityTypesMapFeature(dictionary));
+            var operationIdentity = OperationIdentityBase<TOperation>.Instance.SpecificFor(EntityTypeBase<TEntity1>.Instance, EntityTypeBase<TEntity2>.Instance);
+            AddFeatures(new OperationRegistryMetadataElement.AllowedOperationFeature(operationIdentity));
+            return this;
+        }
+
+        public OperationRegistryMetadataElementBuilder Ignore<TOperation, TEntity>()
+            where TOperation : OperationIdentityBase<TOperation>, IEntitySpecificOperationIdentity, new()
+            where TEntity : EntityTypeBase<TEntity>, IEntityType, new()
+        {
+            var operationIdentity = OperationIdentityBase<TOperation>.Instance.SpecificFor(EntityTypeBase<TEntity>.Instance);
+            AddFeatures(new OperationRegistryMetadataElement.IgnoredOperationFeature(operationIdentity));
+            return this;
+        }
+
+        public OperationRegistryMetadataElementBuilder Ignore<TOperation>()
+            where TOperation : OperationIdentityBase<TOperation>, INonCoupledOperationIdentity, new()
+        {
+            var operationIdentity = OperationIdentityBase<TOperation>.Instance.NonCoupled();
+            AddFeatures(new OperationRegistryMetadataElement.IgnoredOperationFeature(operationIdentity));
             return this;
         }
     }

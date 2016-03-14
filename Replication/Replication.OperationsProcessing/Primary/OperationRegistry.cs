@@ -10,7 +10,7 @@ using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Replication.OperationsProcessing.Primary
 {
-    public sealed class OperationRegistry<TSubDomain>
+    public sealed class OperationRegistry<TSubDomain> : IOperationRegistry<TSubDomain>
         where TSubDomain : ISubDomain
     {
         private readonly OperationRegistryMetadataElement _metadata;
@@ -24,19 +24,14 @@ namespace NuClear.Replication.OperationsProcessing.Primary
             }
         }
 
-        public bool TryGetExplicitlyMappedEntityType(IEntityType entityType, out IEntityType mappedEntityType)
-        {
-            return _metadata.ExplicitEntityTypesMap.TryGetValue(entityType, out mappedEntityType);
-        }
-
         public bool IsAllowedOperation(StrictOperationIdentity operationIdentity)
         {
-            return _metadata.AllowedOperationIdentities.Contains(operationIdentity);
+            return _metadata.AllowedOperations.Contains(operationIdentity);
         }
 
-        public bool IsDisallowedOperation(StrictOperationIdentity operationIdentity)
+        public bool IsIgnoredOperation(StrictOperationIdentity operationIdentity)
         {
-            return _metadata.DisallowedOperationIdentities.Contains(operationIdentity);
+            return _metadata.IgnoredOperations.Contains(operationIdentity);
         }
     }
 }

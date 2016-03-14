@@ -9,7 +9,7 @@ namespace NuClear.River.Common.Metadata.Identities
 {
     public sealed class ReplicationMetadataIdentity : MetadataKindIdentityBase<ReplicationMetadataIdentity>
     {
-        public override Uri Id { get; } = MetadataBuilder.Id.For(MetadataBuilder.Id.DefaultRoot, "Replication");
+        public override Uri Id => MetadataBuilder.Id.For(MetadataBuilder.Id.DefaultRoot, "Replication");
 
         public override string Description => "Replication system descriptive metadata";
     }

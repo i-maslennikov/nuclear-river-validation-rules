@@ -164,7 +164,9 @@
       <HintPath>..\..\packages\protobuf-net.2.0.0.669\lib\net35\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -181,6 +183,9 @@
     <Compile Include="Identities\Operations\StatisticsOperationIdentity.cs" />
     <Compile Include="Identities\Telemetry\ErmReceivedUseCaseCountIdentity.cs" />
     <Compile Include="OperationAggregatableMessage.cs" />
+    <Compile Include="Primary\IdentityEntityTypeMapping.cs" />
+    <Compile Include="Primary\IEntityTypeExplicitMapping.cs" />
+    <Compile Include="Primary\IOperationRegistry.cs" />
     <Compile Include="Primary\OperationRegistry.cs" />
     <Compile Include="Primary\TrackedUseCaseFiltrator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

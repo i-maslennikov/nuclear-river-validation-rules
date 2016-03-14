@@ -49,6 +49,7 @@ using NuClear.Replication.EntryPoint.Factories.Messaging.Processor;
 using NuClear.Replication.EntryPoint.Factories.Messaging.Receiver;
 using NuClear.Replication.EntryPoint.Factories.Messaging.Transformer;
 using NuClear.Replication.EntryPoint.Factories.Replication;
+using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
@@ -161,8 +162,8 @@ namespace NuClear.Replication.EntryPoint.DI
                 throw new ArgumentException();
             }
 
-            var operationIdentities = metadata.AllowedOperationIdentities.Select(x => x.OperationIdentity)
-                                    .Concat(metadata.DisallowedOperationIdentities.Select(x => x.OperationIdentity))
+            var operationIdentities = metadata.AllowedOperations.Select(x => x.OperationIdentity)
+                                    .Concat(metadata.IgnoredOperations.Select(x => x.OperationIdentity))
                                     .Where(x => x.IsNonCoupled())
                                     .Distinct();
 
@@ -171,8 +172,9 @@ namespace NuClear.Replication.EntryPoint.DI
 
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
-            container.RegisterType<IOperationIdentityRegistry, OperationIdentityRegistry>(Lifetime.Singleton,
-                new InjectionFactory(ResolveOperationIdentityRegistry)); // todo: взять сущности из контекста
+            container.RegisterType<IOperationIdentityRegistry, OperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.ResolveOperationIdentityRegistry()))
+                    .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
+                    .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton);
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);

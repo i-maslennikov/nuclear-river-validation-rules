@@ -4,7 +4,6 @@ using System.Linq;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Model.Common.Operations.Identity;
 using NuClear.Model.Common.Operations.Identity.Generic;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
@@ -23,26 +22,21 @@ namespace NuClear.ValidationRules.OperationsProcessing
                     OperationRegistryMetadataElement
                     .Config
                     .For<FactsSubDomain>()
-                    .AllowedOperationIdentities(new HashSet<StrictOperationIdentity>
-                    {
-                        CreateIdentity.Instance.SpecificFor(EntityTypeOrder.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeOrderPosition.Instance),
-                        CreateIdentity.Instance.SpecificFor(EntityTypeProject.Instance),
+                    .Allow<CreateIdentity, EntityTypeOrder>()
+                    .Allow<CreateIdentity, EntityTypeOrderPosition>()
+                    .Allow<CreateIdentity, EntityTypeProject>()
 
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeOrder.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeOrderPosition.Instance),
-                        UpdateIdentity.Instance.SpecificFor(EntityTypeProject.Instance),
+                    .Allow<UpdateIdentity, EntityTypeOrder>()
+                    .Allow<UpdateIdentity, EntityTypeOrderPosition>()
+                    .Allow<UpdateIdentity, EntityTypeProject>()
 
-                        DeleteIdentity.Instance.SpecificFor(EntityTypeOrderPosition.Instance),
+                    .Allow<DeleteIdentity, EntityTypeOrderPosition>()
 
-                        AssignIdentity.Instance.SpecificFor(EntityTypeOrder.Instance),
+                    .Allow<AssignIdentity, EntityTypeOrder>()
 
-                        PublishGlobalAssociatedDeniedRulesIdentity.Instance.NonCoupled(),
-                    })
-                    .DisallowedOperationIdentities(new HashSet<StrictOperationIdentity>
-                    {
-                        ManageGlobalAssociatedDeniedDraftRulesIdentity.Instance.NonCoupled(),
-                    })
+                    .Allow<PublishGlobalAssociatedDeniedRulesIdentity>()
+
+                    .Ignore<ManageGlobalAssociatedDeniedDraftRulesIdentity>()
                 };
 
             Metadata = metadataElements.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);

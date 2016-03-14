@@ -25,6 +25,7 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API;
 using NuClear.OperationsProcessing.API.Primary;
+using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
@@ -34,7 +35,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.DI
     {
         public static IUnityContainer ConfigureUnity(this IUnityContainer container, MockMessageReceiver receiver, MessageProcessingStage[] stages)
         {
-            
             var settings = new PerformedOperationsPrimaryFlowProcessorSettings { AppropriatedStages = stages };
 
             var metadataProvider = new MetadataProvider(new IMetadataSource[]
@@ -49,6 +49,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.DI
 
             return container
                         .RegisterContexts()
+                        .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
+                        .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton)
                         .RegisterInstance(Mock.Of<ITelemetryPublisher>())
                         .RegisterType<ITracer, NullTracer>()
                         .RegisterInstance<IMetadataProvider>(metadataProvider)

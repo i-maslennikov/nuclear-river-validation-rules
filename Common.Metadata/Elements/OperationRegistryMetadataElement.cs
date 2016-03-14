@@ -3,7 +3,6 @@ using System.Linq;
 
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
-using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.River.Common.Metadata.Builders;
 
@@ -13,45 +12,32 @@ namespace NuClear.River.Common.Metadata.Elements
     {
         public OperationRegistryMetadataElement(IMetadataElementIdentity identity, IEnumerable<IMetadataFeature> features) : base(identity, features)
         {
-            AllowedOperationIdentities = ResolveFeature<AllowedOperationIdentitiesFeature, IEnumerable<StrictOperationIdentity>>(x => x.AllowedOperationIdentities, Enumerable.Empty<StrictOperationIdentity>());
-            DisallowedOperationIdentities = ResolveFeature<DisallowedOperationIdentitiesFeature, IEnumerable<StrictOperationIdentity>>(x => x.DisallowedOperationIdentities, Enumerable.Empty<StrictOperationIdentity>());
-            ExplicitEntityTypesMap = ResolveFeature<ExplicitEntityTypesMapFeature, IReadOnlyDictionary<IEntityType, IEntityType>>(x => x.ExplicitEntityTypesMap, new Dictionary<IEntityType, IEntityType>());
+            AllowedOperations = new HashSet<StrictOperationIdentity>(Features.OfType<AllowedOperationFeature>().Select(f => f.OperationIdentity));
+            IgnoredOperations = new HashSet<StrictOperationIdentity>(Features.OfType<IgnoredOperationFeature>().Select(f => f.OperationIdentity));
         }
 
-        public IEnumerable<StrictOperationIdentity> AllowedOperationIdentities { get; }
+        public IEnumerable<StrictOperationIdentity> AllowedOperations { get; }
 
-        public IEnumerable<StrictOperationIdentity> DisallowedOperationIdentities { get; }
+        public IEnumerable<StrictOperationIdentity> IgnoredOperations { get; }
 
-        public IReadOnlyDictionary<IEntityType, IEntityType> ExplicitEntityTypesMap { get; }
-
-        public sealed class AllowedOperationIdentitiesFeature : IUniqueMetadataFeature
+        public sealed class AllowedOperationFeature : IMetadataFeature
         {
-            public AllowedOperationIdentitiesFeature(IEnumerable<StrictOperationIdentity> allowedOperationIdentities)
+            public AllowedOperationFeature(StrictOperationIdentity operationIdentity)
             {
-                AllowedOperationIdentities = allowedOperationIdentities;
+                OperationIdentity = operationIdentity;
             }
 
-            public IEnumerable<StrictOperationIdentity> AllowedOperationIdentities { get; }
+            public StrictOperationIdentity OperationIdentity { get; }
         }
 
-        public sealed class DisallowedOperationIdentitiesFeature : IUniqueMetadataFeature
+        public sealed class IgnoredOperationFeature : IMetadataFeature
         {
-            public DisallowedOperationIdentitiesFeature(IEnumerable<StrictOperationIdentity> disallowedOperationIdentities)
+            public IgnoredOperationFeature(StrictOperationIdentity operationIdentity)
             {
-                DisallowedOperationIdentities = disallowedOperationIdentities;
+                OperationIdentity = operationIdentity;
             }
 
-            public IEnumerable<StrictOperationIdentity> DisallowedOperationIdentities { get; }
-        }
-
-        public sealed class ExplicitEntityTypesMapFeature : IUniqueMetadataFeature
-        {
-            public ExplicitEntityTypesMapFeature(IReadOnlyDictionary<IEntityType, IEntityType> dictionary)
-            {
-                ExplicitEntityTypesMap = dictionary;
-            }
-
-            public IReadOnlyDictionary<IEntityType, IEntityType> ExplicitEntityTypesMap { get; }
+            public StrictOperationIdentity OperationIdentity { get; }
         }
     }
 }

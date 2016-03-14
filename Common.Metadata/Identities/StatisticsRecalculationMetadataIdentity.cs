@@ -9,7 +9,7 @@ namespace NuClear.River.Common.Metadata.Identities
 {
     public sealed class StatisticsRecalculationMetadataIdentity : MetadataKindIdentityBase<StatisticsRecalculationMetadataIdentity>
     {
-        public override Uri Id { get; } = MetadataBuilder.Id.For(MetadataBuilder.Id.DefaultRoot, "StatisticsRecalculation");
+        public override Uri Id => MetadataBuilder.Id.For(MetadataBuilder.Id.DefaultRoot, "StatisticsRecalculation");
 
         public override string Description => "Statistics recalculation process descriptive metadata";
     }
