@@ -12,6 +12,7 @@ namespace NuClear.River.Common.Metadata.Elements
 {
     // todo: идентичен ValueObjectMetadata, подумать об удалении
     public class StatisticsRecalculationMetadata<TStatisticsObject, TEntityKey> : MetadataElement<StatisticsRecalculationMetadata<TStatisticsObject, TEntityKey>, StatisticsRecalculationMetadataBuilder<TStatisticsObject, TEntityKey>>
+        where TStatisticsObject : class
     {
         private IMetadataElementIdentity _identity = new Uri(typeof(TStatisticsObject).Name, UriKind.Relative).AsIdentity();
 

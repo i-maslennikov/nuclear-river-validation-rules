@@ -28,13 +28,11 @@ namespace NuClear.CustomerIntelligence.Domain
                     .Childs(StatisticsRecalculationMetadata<Statistics::FirmCategory3, StatisticsKey>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToStatistics.FirmCategory3)
-                                .HasTarget(Specs.Map.CI.ToStatistics.FirmCategory3)
                                 .HasFilter(Specs.Find.CI.FirmCategory3),
 
                             StatisticsRecalculationMetadata<Statistics::FirmForecast, StatisticsKey>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToStatistics.FirmForecast)
-                                .HasTarget(Specs.Map.CI.ToStatistics.FirmForecast)
                                 .HasFilter(Specs.Find.CI.FirmForecast));
 
             Metadata = new Dictionary<Uri, IMetadataElement> { { statisticsRecalculationMetadataRoot.Identity.Id, statisticsRecalculationMetadataRoot } };
