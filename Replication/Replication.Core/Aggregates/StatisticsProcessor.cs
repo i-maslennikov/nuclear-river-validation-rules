@@ -28,7 +28,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void Execute(IReadOnlyCollection<RecalculateStatisticsOperation> commands)
         {
-            var filter = _metadata.FindSpecificationProvider.Invoke(commands.Select(c => c.EntityId).ToArray());
+            var filter = _metadata.FindSpecificationProvider.Invoke(commands.Select(c => new StatisticsKey { ProjectId = c.ProjectId, CategoryId = c.CategoryId }).ToArray());
 
             // Сначала сравниением получаем различающиеся записи,
             // затем получаем те из различающихся, которые совпадают по идентификатору.

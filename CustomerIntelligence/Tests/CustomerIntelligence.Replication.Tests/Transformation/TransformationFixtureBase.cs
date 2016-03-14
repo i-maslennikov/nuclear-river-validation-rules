@@ -1,4 +1,5 @@
-﻿using NuClear.River.Common.Metadata.Model.Operations;
+﻿using NuClear.Model.Common.Entities;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {
@@ -14,19 +15,19 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
         protected static class Aggregate
         {
-            public static AggregateOperation Initialize<T>(long entityId)
+            public static AggregateOperation Initialize(IEntityType entityType, long entityId)
             {
-                return new InitializeAggregate(typeof(T), entityId);
+                return new InitializeAggregate(entityType.Id, entityId);
             }
 
-            public static AggregateOperation Recalculate<T>(long entityId)
+            public static AggregateOperation Recalculate(IEntityType entityType, long entityId)
             {
-                return new RecalculateAggregate(typeof(T), entityId);
+                return new RecalculateAggregate(entityType.Id, entityId);
             }
 
-            public static AggregateOperation Destroy<T>(long entityId)
+            public static AggregateOperation Destroy(IEntityType entityType, long entityId)
             {
-                return new DestroyAggregate(typeof(T), entityId);
+                return new DestroyAggregate(entityType.Id, entityId);
             }
         }
 
@@ -34,7 +35,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             public static RecalculateStatisticsOperation Operation(long projectId, long? categoryId = null)
             {
-                return new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = projectId, CategoryId = categoryId });
+                return categoryId.HasValue
+                           ? new RecalculateStatisticsOperation(projectId, categoryId.Value)
+                           : new RecalculateStatisticsOperation(projectId);
             }
         }
     }

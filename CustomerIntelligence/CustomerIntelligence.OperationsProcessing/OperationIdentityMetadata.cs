@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.OperationsProcessing.Identities.EntityTypes;
+using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Operations;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.Model.Common.Operations.Identity.Generic;

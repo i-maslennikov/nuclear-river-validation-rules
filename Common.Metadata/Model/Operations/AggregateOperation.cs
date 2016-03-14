@@ -1,23 +1,16 @@
-﻿using System;
-
-namespace NuClear.River.Common.Metadata.Model.Operations
+﻿namespace NuClear.River.Common.Metadata.Model.Operations
 {
     public abstract class AggregateOperation : IOperation
     {
-        protected AggregateOperation(Type aggregateType, long aggregateId)
+        protected AggregateOperation(int entityTypeId, long entityId)
         {
-            if (aggregateType == null)
-            {
-                throw new ArgumentNullException("aggregateType");
-            }
-
-            AggregateType = aggregateType;
-            AggregateId = aggregateId;
+            EntityTypeId = entityTypeId;
+            EntityId = entityId;
         }
 
-        public Type AggregateType { get; private set; }
+        public int EntityTypeId { get; }
 
-        public long AggregateId { get; private set; }
+        public long EntityId { get; }
 
         public override bool Equals(object obj)
         {
@@ -41,20 +34,18 @@ namespace NuClear.River.Common.Metadata.Model.Operations
         {
             unchecked
             {
-                var hashCode = (AggregateType != null ? AggregateType.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ AggregateId.GetHashCode();
-                return hashCode;
+                return (EntityTypeId * 397) ^ EntityId.GetHashCode();
             }
         }
 
         private bool Equals(AggregateOperation other)
         {
-            return AggregateType == other.AggregateType && AggregateId == other.AggregateId;
+            return EntityTypeId == other.EntityTypeId && EntityId == other.EntityId;
         }
 
         public override string ToString()
         {
-            return string.Format("{0}<{1}>({2})", GetType().Name, AggregateType.Name, AggregateId);
+            return $"{GetType().Name}({EntityTypeId}, {EntityId})";
         }
     }
 }

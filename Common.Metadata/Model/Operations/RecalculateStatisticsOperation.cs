@@ -2,12 +2,20 @@
 {
     public sealed class RecalculateStatisticsOperation : IOperation
     {
-        public RecalculateStatisticsOperation(StatisticsKey entityId)
+        public RecalculateStatisticsOperation(long projectId)
         {
-            EntityId = entityId;
+            ProjectId = projectId;
+            CategoryId = null;
         }
 
-        public StatisticsKey EntityId { get; }
+        public RecalculateStatisticsOperation(long projectId, long categoryId)
+        {
+            ProjectId = projectId;
+            CategoryId = categoryId;
+        }
+
+        public long ProjectId { get; set; }
+        public long? CategoryId { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -31,17 +39,17 @@
 
         public override int GetHashCode()
         {
-            return (EntityId.CategoryId.GetHashCode() * 397) ^ EntityId.ProjectId.GetHashCode();
+            return (CategoryId.GetHashCode() * 397) ^ ProjectId.GetHashCode();
         }
 
         private bool Equals(RecalculateStatisticsOperation other)
         {
-            return EntityId.CategoryId == other.EntityId.CategoryId && EntityId.ProjectId == other.EntityId.ProjectId;
+            return CategoryId == other.CategoryId && ProjectId == other.ProjectId;
         }
 
         public override string ToString()
         {
-            return string.Format("{0}(Project:{1}, Category:{2})", GetType().Name, EntityId.ProjectId, EntityId.CategoryId);
+            return string.Format("{0}(Project:{1}, Category:{2})", GetType().Name, ProjectId, CategoryId);
         }
     }
 }

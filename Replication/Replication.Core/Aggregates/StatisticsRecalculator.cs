@@ -29,7 +29,7 @@ namespace NuClear.Replication.Core.Aggregates
                 throw new NotSupportedException($"Metadata for identity '{typeof(StatisticsRecalculationMetadataIdentity).Name}' cannot be found.");
             }
 
-            var batches = operations.GroupBy(x => x.EntityId.ProjectId).ToArray();
+            var batches = operations.GroupBy(x => x.ProjectId).ToArray();
             using (Probe.Create("Recalculate Statistics Operations"))
             {
                 var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).ToArray();

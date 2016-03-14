@@ -20,7 +20,7 @@ namespace NuClear.Replication.Core.Aggregates
         public FindSpecification<T> Create(IEnumerable<AggregateOperation> commands)
         {
             // todo: хак, TKey должен быть long. А вот если бы была возможность из команды получить TKey... (см. задачу "унификация контекста")
-            return _specificationProvider.Create(commands.Select(c => c.AggregateId).Distinct().Cast<TKey>());
+            return _specificationProvider.Create(commands.Select(c => c.EntityId).Distinct().Cast<TKey>());
         }
     }
 }

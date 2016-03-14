@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
@@ -18,15 +19,15 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
     public sealed class ImportFactsFromBitHandler : IMessageProcessingHandler
     {
         private readonly IImportDocumentMetadataProcessorFactory _importDocumentMetadataProcessorFactory;
-        private readonly IOperationSender<RecalculateStatisticsOperation> _sender;
+        private readonly IOperationSender _sender;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromBitHandler(
             IImportDocumentMetadataProcessorFactory importDocumentMetadataProcessorFactory,
-            IOperationSender<RecalculateStatisticsOperation> sender,
-            ITracer tracer,
-            ITelemetryPublisher telemetryPublisher)
+            IOperationSender sender,
+            ITelemetryPublisher telemetryPublisher,
+            ITracer tracer)
         {
             _importDocumentMetadataProcessorFactory = importDocumentMetadataProcessorFactory;
             _sender = sender;
@@ -50,7 +51,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                         var importer = _importDocumentMetadataProcessorFactory.Create(dto.GetType());
                         var opertaions = importer.Import(dto);
                         _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(1);
-                        _sender.Push(opertaions.Cast<RecalculateStatisticsOperation>());
+                        _sender.Push(opertaions.Cast<RecalculateStatisticsOperation>(), StatisticsFlow.Instance);
                     }
                 }
 

@@ -124,39 +124,6 @@
     <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
     <Compile Include="Final\StatisticsAggregatableMessageHandler.cs" />
     <Compile Include="Final\StatisticsOperationAccumulator.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeAccount.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeActivity.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeAppointment.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeBill.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeBranchOfficeOrganizationUnit.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeBuilding.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeCategory.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeCategoryFirmAddress.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeCategoryGroup.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeClient.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeContact.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeDeal.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirm.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmAddress.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmBalance.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmCategory3.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmCategory2.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmCategory1.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmCategoryGroup.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeFirmContact.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeLegalPerson.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeLegalPersonProfile.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeLetter.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeLock.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypePhonecall.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeProject.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeProjectCategory.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeSalesModelCategoryRestriction.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeTask.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeTerritory.cs" />
     <Compile Include="Identities\Flows\AggregatesFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromBitFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
@@ -202,7 +169,6 @@
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Primary\Parsers\RubricPopularityCorporateBusMessageParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transports\SQLStore\StatisticsOperationSerializer.cs" />
     <Compile Include="Transports\SQLStore\AggregateOperationSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -228,7 +194,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Identities\EntityTypes\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

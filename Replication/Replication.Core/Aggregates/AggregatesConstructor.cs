@@ -6,6 +6,7 @@ using System.Transactions;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
+using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Identities;
 using NuClear.River.Common.Metadata.Model.Operations;
@@ -13,27 +14,30 @@ using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class AggregatesConstructor : IAggregatesConstructor
+    public sealed class AggregatesConstructor<TSubDomain> : IAggregatesConstructor
+        where TSubDomain : ISubDomain
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly IAggregateProcessorFactory _aggregateProcessorFactory;
+        private readonly IEntityTypeMappingRegistry<TSubDomain> _entityTypeMappingRegistry;
 
-        public AggregatesConstructor(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory)
+        public AggregatesConstructor(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory, IEntityTypeMappingRegistry<TSubDomain> entityTypeMappingRegistry)
         {
             _metadataProvider = metadataProvider;
             _aggregateProcessorFactory = aggregateProcessorFactory;
+            _entityTypeMappingRegistry = entityTypeMappingRegistry;
         }
 
         public void Execute(IEnumerable<AggregateOperation> commands)
         {
             using (Probe.Create("ETL2 Transforming"))
             {
-                var slices = commands.GroupBy(x => new { Operation = x.GetType(), x.AggregateType })
+                var slices = commands.GroupBy(x => new { Operation = x.GetType(), x.EntityTypeId })
                                      .OrderByDescending(x => x.Key.Operation, new AggregateOperationPriorityComparer());
 
                 foreach (var slice in slices)
                 {
-                    Execute(slice.Key.Operation, slice.Key.AggregateType, slice);
+                    Execute(slice.Key.Operation, ParseEntityType(slice.Key.EntityTypeId), slice);
                 }
             }
         }
@@ -80,6 +84,19 @@ namespace NuClear.Replication.Core.Aggregates
 
             var processor = _aggregateProcessorFactory.Create(aggregateMetadata);
             return processor;
+        }
+
+        private Type ParseEntityType(int entityTypeId)
+        {
+            Type type;
+            IEntityType entityType;
+            if (_entityTypeMappingRegistry.TryParse(entityTypeId, out entityType) &&
+                _entityTypeMappingRegistry.TryGetEntityType(entityType, out type))
+            {
+                return type;
+            }
+
+            throw new ArgumentException($"unknown entity type id {entityTypeId}");
         }
     }
 }

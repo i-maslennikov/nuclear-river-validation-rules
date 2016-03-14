@@ -223,10 +223,8 @@ namespace NuClear.Replication.EntryPoint.DI
                      .RegisterTypeWithDependencies(typeof(ServiceBusOperationsReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
-                     .RegisterType<IOperationSender<AggregateOperation>, SqlStoreSender<AggregateOperation, AggregatesFlow>>(Lifetime.PerScope)
-                     .RegisterType<IOperationSender<RecalculateStatisticsOperation>, SqlStoreSender<RecalculateStatisticsOperation, StatisticsFlow>>(Lifetime.PerScope)
-                     .RegisterType<IOperationSerializer<AggregateOperation>, AggregateOperationSerializer>()
-                     .RegisterType<IOperationSerializer<RecalculateStatisticsOperation>, StatisticsOperationSerializer>();
+                     .RegisterType<IOperationSender, SqlStoreSender>(Lifetime.PerScope)
+                     .RegisterType<IOperationSerializer, XmlOperationSerializer>();
 
             // final
             container.RegisterTypeWithDependencies(typeof(SqlStoreReceiverTelemetryDecorator), Lifetime.PerScope, null)
@@ -308,14 +306,13 @@ namespace NuClear.Replication.EntryPoint.DI
                                                                                                c.Resolve<IFactProcessorFactory>(),
                                                                                                new CustomerIntelligenceFactTypePriorityComparer())))
                 .RegisterType<IImportDocumentMetadataProcessorFactory, UnityImportDocumentMetadataProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IAggregatesConstructor, AggregatesConstructor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IAggregatesConstructor, AggregatesConstructor<CustomerIntelligenceSubDomain>>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStatisticsRecalculator, StatisticsRecalculator>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IFactDependencyProcessorFactory, UnityFactDependencyProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStatisticsProcessorFactory, UnityStatisticsProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IValueObjectProcessorFactory, UnityValueObjectProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IFactProcessorFactory, UnityFactProcessorFactory>(entryPointSpecificLifetimeManagerFactory());
-
         }
 
         private static IUnityContainer ConfigureReadWriteModels(this IUnityContainer container)

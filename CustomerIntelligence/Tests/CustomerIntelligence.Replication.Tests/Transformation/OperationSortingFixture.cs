@@ -17,9 +17,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             var comparer = new AggregateOperationPriorityComparer();
             var data = new AggregateOperation[]
                        {
-                           new DestroyAggregate(typeof(object), 0),
-                           new InitializeAggregate(typeof(object), 0),
-                           new RecalculateAggregate(typeof(object), 0),
+                           new DestroyAggregate(0, 0),
+                           new InitializeAggregate(0, 0),
+                           new RecalculateAggregate(0, 0),
                        };
 
             var sortedData = data.OrderByDescending(x => x.GetType(), comparer).ToArray();

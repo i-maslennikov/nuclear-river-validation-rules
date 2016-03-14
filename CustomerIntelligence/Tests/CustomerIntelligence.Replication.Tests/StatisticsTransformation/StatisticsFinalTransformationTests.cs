@@ -92,7 +92,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
             Mock<IRepository<Statistics::FirmCategory3>> repository;
             var processor = StatisticsProcessor(data, out repository);
 
-            processor.Execute(new[] { new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = 1, CategoryId = 100 }) });
+            processor.Execute(new[] { new RecalculateStatisticsOperation(1, 100) });
 
             repository.Verify(x => x.Add(It.IsAny<Statistics::FirmCategory3>()), Times.Never);
             repository.Verify(x => x.Delete(It.IsAny<Statistics::FirmCategory3>()), Times.Never);
@@ -108,7 +108,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
             Mock<IRepository<Statistics::FirmCategory3>> repository;
             var processor = StatisticsProcessor(data, out repository);
 
-            processor.Execute(new[] { new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = 1, CategoryId = null }) });
+            processor.Execute(new[] { new RecalculateStatisticsOperation(1) });
 
             repository.Verify(x => x.Add(It.IsAny<Statistics::FirmCategory3>()), Times.Never);
             repository.Verify(x => x.Delete(It.IsAny<Statistics::FirmCategory3>()), Times.Never);
@@ -125,7 +125,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
             Mock<IRepository<Statistics::FirmCategory3>> repository;
             var processor = StatisticsProcessor(data, out repository);
 
-            processor.Execute(new[] { new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = 3, CategoryId = null }) });
+            processor.Execute(new[] { new RecalculateStatisticsOperation(3) });
 
             repository.Verify(x => x.Update(It.Is<Statistics::FirmCategory3>(y => y.CategoryId == 100)), Times.Never);
             repository.Verify(x => x.Update(It.Is<Statistics::FirmCategory3>(y => y.CategoryId == 101)), Times.Once);

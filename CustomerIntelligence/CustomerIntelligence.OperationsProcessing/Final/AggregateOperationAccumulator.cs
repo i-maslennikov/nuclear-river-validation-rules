@@ -13,16 +13,17 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         MessageProcessingContextAccumulatorBase<TMessageFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<AggregateOperation>>
         where TMessageFlow : class, IMessageFlow, new()
     {
-        private readonly AggregateOperationSerializer _serializer;
+        private readonly XmlOperationSerializer _serializer;
 
-        public AggregateOperationAccumulator(AggregateOperationSerializer serializer)
+        public AggregateOperationAccumulator(XmlOperationSerializer serializer)
         {
             _serializer = serializer;
         }
 
         protected override OperationAggregatableMessage<AggregateOperation> Process(PerformedOperationsFinalProcessingMessage message)
         {
-            var operations = message.FinalProcessings.Select(x => _serializer.Deserialize(x)).ToArray();
+            // todo: AggregateOperation -> IOperation
+            var operations = message.FinalProcessings.Select(x => _serializer.Deserialize(x)).Cast<AggregateOperation>().ToArray();
             var oldestOperation = message.FinalProcessings.Min(x => x.CreatedOn);
 
             return new OperationAggregatableMessage<AggregateOperation>

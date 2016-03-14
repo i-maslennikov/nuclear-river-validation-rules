@@ -1,76 +1,91 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Xml.Linq;
 
-using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
-using NuClear.Messaging.API.Flows;
-using NuClear.Model.Common.Entities;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing.Identities.Operations;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
 {
-    public sealed class AggregateOperationSerializer : IOperationSerializer<AggregateOperation>
+    public sealed class XmlOperationSerializer : IOperationSerializer
     {
-        private readonly IEntityTypeMappingRegistry<CustomerIntelligenceSubDomain> _registry;
-
-        private static readonly Dictionary<Guid, Type> OperationIdRegistry =
-            new Dictionary<Guid, Type>
-            {
-                { InitializeAggregateOperationIdentity.Instance.Guid, typeof(InitializeAggregate) },
-                { RecalculateAggregateOperationIdentity.Instance.Guid, typeof(RecalculateAggregate) },
-                { DestroyAggregateOperationIdentity.Instance.Guid, typeof(DestroyAggregate) }
-            };
-
-        private static readonly Dictionary<Type, Guid> OperationTypeRegistry =
-            OperationIdRegistry.ToDictionary(x => x.Value, x => x.Key);
-
-        public AggregateOperationSerializer(IEntityTypeMappingRegistry<CustomerIntelligenceSubDomain> registry)
+        public IOperation Deserialize(PerformedOperationFinalProcessing operation)
         {
-            _registry = registry;
-        }
-
-        public AggregateOperation Deserialize(PerformedOperationFinalProcessing operation)
-        {
-            Type operationType;
-            if (!OperationIdRegistry.TryGetValue(operation.OperationId, out operationType))
+            var context = XElement.Parse(operation.Context);
+            if (operation.OperationId == InitializeAggregateOperationIdentity.Instance.Guid)
             {
-                throw new ArgumentException($"Unknown operation id {operation.OperationId}", nameof(operation));
+                return new InitializeAggregate((int)context.Attribute("entityType"), (long)context.Attribute("entityId"));
             }
 
-            IEntityType entityName;
-            if (!_registry.TryParse(operation.EntityTypeId, out entityName))
+            if (operation.OperationId == RecalculateAggregateOperationIdentity.Instance.Guid)
             {
-                throw new ArgumentException($"Unknown entity id {operation.EntityTypeId}", nameof(operation));
+                return new RecalculateAggregate((int)context.Attribute("entityType"), (long)context.Attribute("entityId"));
             }
 
-            return (AggregateOperation)Activator.CreateInstance(operationType, _registry.GetEntityType(entityName), operation.EntityId);
+            if (operation.OperationId == DestroyAggregateOperationIdentity.Instance.Guid)
+            {
+                return new DestroyAggregate((int)context.Attribute("entityType"), (long)context.Attribute("entityId"));
+            }
+
+            if (operation.OperationId == StatisticsOperationIdentity.Instance.Guid)
+            {
+                return context.Attribute("categoryId") == null
+                           ? new RecalculateStatisticsOperation((int)context.Attribute("projectId"))
+                           : new RecalculateStatisticsOperation((int)context.Attribute("projectId"), (long)context.Attribute("entityId"));
+            }
+
+            throw new ArgumentException($"Unknown operation id {operation.OperationId}", nameof(operation));
         }
 
-        public PerformedOperationFinalProcessing Serialize(AggregateOperation operation, IMessageFlow targetFlow)
+        public PerformedOperationFinalProcessing Serialize(IOperation operation)
         {
-            var entityType = _registry.GetEntityName(operation.AggregateType);
+            var initializeAggregate = operation as InitializeAggregate;
+            if (initializeAggregate != null)
+            {
+                return CreatePbo(InitializeAggregateOperationIdentity.Instance.Guid,
+                                 new XAttribute("entityType", initializeAggregate.EntityTypeId),
+                                 new XAttribute("entityId", initializeAggregate.EntityId));
+            }
+
+            var recalculateAggregate = operation as RecalculateAggregate;
+            if (recalculateAggregate != null)
+            {
+                return CreatePbo(RecalculateAggregateOperationIdentity.Instance.Guid,
+                                 new XAttribute("entityType", recalculateAggregate.EntityTypeId),
+                                 new XAttribute("entityId", recalculateAggregate.EntityId));
+            }
+
+            var destroyAggregate = operation as DestroyAggregate;
+            if (destroyAggregate != null)
+            {
+                return CreatePbo(DestroyAggregateOperationIdentity.Instance.Guid,
+                                 new XAttribute("entityType", destroyAggregate.EntityTypeId),
+                                 new XAttribute("entityId", destroyAggregate.EntityId));
+            }
+
+            var recalculateStatisticsOperation = operation as RecalculateStatisticsOperation;
+            if (recalculateStatisticsOperation != null)
+            {
+                return recalculateStatisticsOperation.CategoryId.HasValue
+                           ? CreatePbo(StatisticsOperationIdentity.Instance.Guid,
+                                       new XAttribute("projectId", recalculateStatisticsOperation.ProjectId),
+                                       new XAttribute("categoryId", recalculateStatisticsOperation.CategoryId.Value))
+                           : CreatePbo(StatisticsOperationIdentity.Instance.Guid,
+                                       new XAttribute("projectId", recalculateStatisticsOperation.ProjectId));
+            }
+
+            throw new ArgumentException($"unsuppoted command {operation.GetType().Name}", nameof(operation));
+        }
+
+        private static PerformedOperationFinalProcessing CreatePbo(Guid operationId, params XAttribute[] attributes)
+        {
             return new PerformedOperationFinalProcessing
             {
-                CreatedOn = DateTime.UtcNow,
-                MessageFlowId = targetFlow.Id,
-                EntityId = operation.AggregateId,
-                EntityTypeId = entityType.Id,
-                OperationId = GetIdentity(operation),
+                OperationId = operationId,
+                Context = new XElement("params", attributes).ToString(SaveOptions.DisableFormatting)
             };
-        }
-
-        private static Guid GetIdentity(AggregateOperation operation)
-        {
-            Guid guid;
-            if (OperationTypeRegistry.TryGetValue(operation.GetType(), out guid))
-            {
-                return guid;
-            }
-
-            throw new ArgumentException($"Unknown operation type {operation.GetType().Name}", nameof(operation));
         }
     }
 }
