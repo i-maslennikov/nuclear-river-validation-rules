@@ -6,6 +6,6 @@ namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IStatisticsRecalculator
     {
-        void Recalculate(IReadOnlyCollection<IOperation> commands);
+        void Execute(IReadOnlyCollection<IOperation> commands);
     }
 }

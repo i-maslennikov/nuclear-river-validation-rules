@@ -14,8 +14,8 @@
             CategoryId = categoryId;
         }
 
-        public long ProjectId { get; set; }
-        public long? CategoryId { get; set; }
+        public long ProjectId { get; }
+        public long? CategoryId { get; }
 
         public override bool Equals(object obj)
         {

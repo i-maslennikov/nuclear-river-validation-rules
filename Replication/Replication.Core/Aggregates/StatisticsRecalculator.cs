@@ -23,7 +23,7 @@ namespace NuClear.Replication.Core.Aggregates
             _statisticsProcessorFactory = statisticsProcessorFactory;
         }
 
-        public void Recalculate(IReadOnlyCollection<IOperation> commands)
+        public void Execute(IReadOnlyCollection<IOperation> commands)
         {
             using (Probe.Create("Recalculate Statistics Operations"))
             {
