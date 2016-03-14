@@ -51,7 +51,7 @@ namespace NuClear.CustomerIntelligence.Domain
                             FactMetadata<CategoryFirmAddress>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.CategoryFirmAddresses)
-                                .HasDependentEntity(EntityTypeFirmCategory3.Instance, Specs.Map.Facts.ToStatistics.ByFirmAddressCategory)
+                                .HasDependentEntity(EntityTypeFirmCategoryStatistics.Instance, Specs.Map.Facts.ToStatistics.ByFirmAddressCategory)
                                 .HasDependentEntity(EntityTypeFirm.Instance, Specs.Map.Facts.ToFirmAggregate.ByCategoryFirmAddress)
                                 .HasDependentEntity(EntityTypeClient.Instance, Specs.Map.Facts.ToClientAggregate.ByCategoryFirmAddress),
 
@@ -85,13 +85,13 @@ namespace NuClear.CustomerIntelligence.Domain
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Firms)
                                 .HasMatchedEntity(EntityTypeFirm.Instance)
-                                .HasDependentEntity(EntityTypeFirmCategory3.Instance, Specs.Map.Facts.ToStatistics.ByFirm)
+                                .HasDependentEntity(EntityTypeFirmCategoryStatistics.Instance, Specs.Map.Facts.ToStatistics.ByFirm)
                                 .HasDependentEntity(EntityTypeClient.Instance, Specs.Map.Facts.ToClientAggregate.ByFirm),
 
                             FactMetadata<FirmAddress>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.FirmAddresses)
-                                .HasDependentEntity(EntityTypeFirmCategory3.Instance, Specs.Map.Facts.ToStatistics.ByFirmAddress)
+                                .HasDependentEntity(EntityTypeFirmCategoryStatistics.Instance, Specs.Map.Facts.ToStatistics.ByFirmAddress)
                                 .HasDependentEntity(EntityTypeFirm.Instance, Specs.Map.Facts.ToFirmAggregate.ByFirmAddress)
                                 .HasDependentEntity(EntityTypeClient.Instance, Specs.Map.Facts.ToClientAggregate.ByFirmAddress),
 
@@ -114,7 +114,7 @@ namespace NuClear.CustomerIntelligence.Domain
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Projects)
                                 .HasMatchedEntity(EntityTypeProject.Instance)
-                                .HasDependentEntity(EntityTypeFirmCategory3.Instance, Specs.Map.Facts.ToStatistics.ByProject)
+                                .HasDependentEntity(EntityTypeFirmCategoryStatistics.Instance, Specs.Map.Facts.ToStatistics.ByProject)
                                 .HasDependentEntity(EntityTypeTerritory.Instance, Specs.Map.Facts.ToTerritoryAggregate.ByProject)
                                 .HasDependentEntity(EntityTypeFirm.Instance, Specs.Map.Facts.ToFirmAggregate.ByProject),
 
