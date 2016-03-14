@@ -518,7 +518,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                                                             _query),
                         _repositoryFactory.Create<TAggregate>(),
                         metadata.Elements.OfType<IValueObjectMetadata>().Select(x => CreateFactory(x).Create(x)).ToArray(),
-                        new AggregateFindSpecificationProvider<TAggregate, long>(new DefaultIdentityProvider()));
+                        new AggregateFindSpecificationProvider<TAggregate>(new DefaultIdentityProvider()));
                 }
 
                 private IValueObjectProcessorFactory CreateFactory(IValueObjectMetadata metadata)
@@ -547,10 +547,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
                 public IValueObjectProcessor Create(IValueObjectMetadata metadata)
                 {
-                    return Create((ValueObjectMetadata<TValueObject, TEntityKey>)metadata);
+                    return Create((ValueObjectMetadata<TValueObject, long>)metadata);
                 }
 
-                private IValueObjectProcessor Create(ValueObjectMetadata<TValueObject, TEntityKey> metadata)
+                private IValueObjectProcessor Create(ValueObjectMetadata<TValueObject, long> metadata)
                 {
                     return new ValueObjectProcessor<TValueObject>(
                         new DataChangesDetector<TValueObject>(
@@ -559,7 +559,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                             _comparerFactory.CreateCompleteComparer<TValueObject>(),
                             _query),
                         _repositoryFactory.Create<TValueObject>(),
-                        new ValueObjectFindSpecificationProvider<TValueObject, TEntityKey>(metadata));
+                        new ValueObjectFindSpecificationProvider<TValueObject>(metadata));
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Practices.Unity;
@@ -60,9 +61,14 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             var aggregateKeyType = metadata.GetType().GenericTypeArguments[1];
             var metadataOverride = new DependencyOverride(metadata.GetType(), metadata);
 
+            if (aggregateKeyType != typeof(long))
+            {
+                throw new NotImplementedException("Требуется реализовать IFindSpecificationProvider, способный извлекать из параметров команды идентификатор, отличный от long");
+            }
+
             return new DependencyOverride(
                 typeof(IFindSpecificationProvider<,>).MakeGenericType(aggregateType, typeof(AggregateOperation)),
-                _unityContainer.Resolve(typeof(AggregateFindSpecificationProvider<,>).MakeGenericType(aggregateType, aggregateKeyType), metadataOverride));
+                _unityContainer.Resolve(typeof(AggregateFindSpecificationProvider<>).MakeGenericType(aggregateType), metadataOverride));
         }
 
         interface IAggregateDataChangesDetectorFactory

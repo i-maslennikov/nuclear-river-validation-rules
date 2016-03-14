@@ -45,7 +45,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
 
             return new DependencyOverride(
                 typeof(IFindSpecificationProvider<,>).MakeGenericType(metadata.ValueObjectType, typeof(AggregateOperation)),
-                _unityContainer.Resolve(typeof(ValueObjectFindSpecificationProvider<,>).MakeGenericType(metadata.ValueObjectType, metadata.EntityKeyType), metadatOverride));
+                _unityContainer.Resolve(typeof(ValueObjectFindSpecificationProvider<>).MakeGenericType(metadata.ValueObjectType), metadatOverride));
         }
 
         interface IValueObjectDataChangesDetectorFactory

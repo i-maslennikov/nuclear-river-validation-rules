@@ -7,19 +7,18 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class ValueObjectFindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T, AggregateOperation>
+    public sealed class ValueObjectFindSpecificationProvider<T> : IFindSpecificationProvider<T, AggregateOperation>
     {
-        private readonly ValueObjectMetadata<T, TKey> _metadata;
+        private readonly ValueObjectMetadata<T, long> _metadata;
 
-        public ValueObjectFindSpecificationProvider(ValueObjectMetadata<T, TKey> metadata)
+        public ValueObjectFindSpecificationProvider(ValueObjectMetadata<T, long> metadata)
         {
             _metadata = metadata;
         }
 
         public FindSpecification<T> Create(IEnumerable<AggregateOperation> commands)
         {
-            // todo: вот если бы была возможность из комманды получить TKey... (см. задачу "унификация контекста")
-            return _metadata.FindSpecificationProvider.Invoke(commands.Select(c => c.EntityId).Cast<TKey>().ToArray());
+            return _metadata.FindSpecificationProvider.Invoke(commands.Select(c => c.EntityId).ToArray());
         }
     }
 }

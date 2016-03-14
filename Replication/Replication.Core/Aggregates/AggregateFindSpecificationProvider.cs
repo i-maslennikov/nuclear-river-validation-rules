@@ -7,20 +7,19 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class AggregateFindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T, AggregateOperation>
-        where T : IIdentifiable<TKey>
+    public sealed class AggregateFindSpecificationProvider<T> : IFindSpecificationProvider<T, AggregateOperation>
+        where T : IIdentifiable<long>
     {
-        private readonly FindSpecificationProvider<T, TKey> _specificationProvider;
+        private readonly FindSpecificationProvider<T, long> _specificationProvider;
 
-        public AggregateFindSpecificationProvider(IIdentityProvider<TKey> identityProvider)
+        public AggregateFindSpecificationProvider(IIdentityProvider<long> identityProvider)
         {
-            _specificationProvider = new FindSpecificationProvider<T, TKey>(identityProvider);
+            _specificationProvider = new FindSpecificationProvider<T, long>(identityProvider);
         }
 
         public FindSpecification<T> Create(IEnumerable<AggregateOperation> commands)
         {
-            // todo: хак, TKey должен быть long. А вот если бы была возможность из команды получить TKey... (см. задачу "унификация контекста")
-            return _specificationProvider.Create(commands.Select(c => c.EntityId).Distinct().Cast<TKey>());
+            return _specificationProvider.Create(commands.Select(c => c.EntityId).Distinct());
         }
     }
 }
