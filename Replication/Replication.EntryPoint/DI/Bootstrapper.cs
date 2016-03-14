@@ -48,7 +48,6 @@ using NuClear.Messaging.Transports.ServiceBus;
 using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.Messaging.Transports.ServiceBus.LockRenewer;
 using NuClear.Metamodeling.Domain.Processors.Concrete;
-using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
@@ -70,13 +69,13 @@ using NuClear.Replication.EntryPoint.Factories.Messaging.Receiver;
 using NuClear.Replication.EntryPoint.Factories.Messaging.Transformer;
 using NuClear.Replication.EntryPoint.Factories.Replication;
 using NuClear.Replication.EntryPoint.Settings;
+using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Common.Identities.Connections;
-using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Equality;
 using NuClear.River.Common.Metadata.Identities;
 using NuClear.River.Common.Metadata.Model;
@@ -205,25 +204,6 @@ namespace NuClear.Replication.EntryPoint.DI
                             .RegisterType<IIdentityServiceClient, IdentityServiceClient>(Lifetime.Singleton);
         }
 
-        private static IOperationIdentityRegistry ResolveOperationIdentityRegistry(this IUnityContainer container)
-        {
-            var metadataProvider = container.Resolve<IMetadataProvider>();
-
-            var metadataId = OperationRegistryMetadataIdentity.Instance.Id.WithRelative(new Uri(typeof(FactsSubDomain).Name, UriKind.Relative));
-            OperationRegistryMetadataElement metadata;
-            if (!metadataProvider.TryGetMetadata(metadataId, out metadata))
-            {
-                throw new ArgumentException();
-            }
-
-            var operationIdentities = metadata.AllowedOperations.Select(x => x.OperationIdentity)
-                                    .Concat(metadata.IgnoredOperations.Select(x => x.OperationIdentity))
-                                    .Where(x => x.IsNonCoupled())
-                                    .Distinct();
-
-            return new OperationIdentityRegistry(operationIdentities);
-        }
-
         private static IUnityContainer ConfigureDomain(this IUnityContainer container)
         {
             return container.RegisterInstance<IIdentityProvider<long>>(new DefaultIdentityProvider())
@@ -233,7 +213,7 @@ namespace NuClear.Replication.EntryPoint.DI
 
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
-            container.RegisterType<IOperationIdentityRegistry, OperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.ResolveOperationIdentityRegistry()))
+            container.RegisterType<IOperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.Resolve<OperationIdentityRegistryFactory>().RegistryFor<FactsSubDomain>()))
                     .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
                     .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton);
 
