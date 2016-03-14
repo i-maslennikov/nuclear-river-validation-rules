@@ -5,12 +5,12 @@ using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public sealed class AggregateOperationAccumulator<TMessageFlow> :
-        MessageProcessingContextAccumulatorBase<TMessageFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<AggregateOperation>>
+        MessageProcessingContextAccumulatorBase<TMessageFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<IOperation>>
         where TMessageFlow : class, IMessageFlow, new()
     {
         private readonly XmlOperationSerializer _serializer;
@@ -20,13 +20,12 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             _serializer = serializer;
         }
 
-        protected override OperationAggregatableMessage<AggregateOperation> Process(PerformedOperationsFinalProcessingMessage message)
+        protected override OperationAggregatableMessage<IOperation> Process(PerformedOperationsFinalProcessingMessage message)
         {
-            // todo: AggregateOperation -> IOperation
-            var operations = message.FinalProcessings.Select(x => _serializer.Deserialize(x)).Cast<AggregateOperation>().ToArray();
+            var operations = message.FinalProcessings.Select(x => _serializer.Deserialize(x)).ToArray();
             var oldestOperation = message.FinalProcessings.Min(x => x.CreatedOn);
 
-            return new OperationAggregatableMessage<AggregateOperation>
+            return new OperationAggregatableMessage<IOperation>
             {
                 TargetFlow = MessageFlow,
                 Operations = operations,

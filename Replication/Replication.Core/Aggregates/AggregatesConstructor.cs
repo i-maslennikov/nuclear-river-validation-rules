@@ -9,6 +9,7 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
 
@@ -28,48 +29,76 @@ namespace NuClear.Replication.Core.Aggregates
             _entityTypeMappingRegistry = entityTypeMappingRegistry;
         }
 
-        public void Execute(IEnumerable<AggregateOperation> commands)
+        public void Execute(IReadOnlyCollection<IOperation> commands)
         {
             using (Probe.Create("ETL2 Transforming"))
             {
-                var slices = commands.GroupBy(x => new { Operation = x.GetType(), x.EntityTypeId })
-                                     .OrderByDescending(x => x.Key.Operation, new AggregateOperationPriorityComparer());
+                var commandsByType = commands.GroupBy(x => x.GetType()).OrderBy(x => x.Key, new AggregateOperationPriorityComparer());
 
-                foreach (var slice in slices)
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+                                                              new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
                 {
-                    Execute(slice.Key.Operation, ParseEntityType(slice.Key.EntityTypeId), slice);
+                    foreach (var group in commandsByType)
+                    {
+                        if (group.Key == typeof(InitializeAggregate))
+                        {
+                            Execute(group.Cast<InitializeAggregate>());
+                        }
+                        else if (group.Key == typeof(RecalculateAggregate))
+                        {
+                            Execute(group.Cast<RecalculateAggregate>());
+                        }
+                        else if (group.Key == typeof(DestroyAggregate))
+                        {
+                            Execute(group.Cast<DestroyAggregate>());
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"The command of type {group.Key.Name} is not supported");
+                        }
+                    }
+
+                    transaction.Complete();
                 }
             }
         }
 
-        private void Execute(Type command, Type aggregate, IEnumerable<AggregateOperation> commands)
+        private void Execute(IEnumerable<InitializeAggregate> enumerable)
         {
-            var processor = CreateProcessor(aggregate);
-
-            using (var transaction = new TransactionScope(TransactionScopeOption.Required,
-                                                          new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
+            foreach (var slice in enumerable.GroupBy(c => c.EntityTypeId))
             {
-                using (Probe.Create($"ETL2 {command.Name} {aggregate.Name}"))
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Initialize {type.Name}"))
                 {
-                    if (command == typeof(InitializeAggregate))
-                    {
-                        processor.Initialize(commands.Cast<InitializeAggregate>().ToArray());
-                    }
-                    else if (command == typeof(RecalculateAggregate))
-                    {
-                        processor.Recalculate(commands.Cast<RecalculateAggregate>().ToArray());
-                    }
-                    else if (command == typeof(DestroyAggregate))
-                    {
-                        processor.Destroy(commands.Cast<DestroyAggregate>().ToArray());
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException($"The command of type {command.Name} is not supported");
-                    }
+                    processor.Initialize(slice.ToArray());
                 }
+            }
+        }
 
-                transaction.Complete();
+        private void Execute(IEnumerable<RecalculateAggregate> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => c.EntityTypeId))
+            {
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Recalculate {type.Name}"))
+                {
+                    processor.Recalculate(slice.ToArray());
+                }
+            }
+        }
+
+        private void Execute(IEnumerable<DestroyAggregate> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => c.EntityTypeId))
+            {
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Destroy {type.Name}"))
+                {
+                    processor.Destroy(slice.ToArray());
+                }
             }
         }
 

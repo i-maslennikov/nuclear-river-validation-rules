@@ -39,7 +39,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                                                       .To.Final().Flow<AggregatesFlow>().Connect(),
 
                                    MessageFlowMetadata.Config.For<StatisticsFlow>()
-                                                      .Accumulator<StatisticsOperationAccumulator<StatisticsFlow>>()
+                                                      .Accumulator<AggregateOperationAccumulator<StatisticsFlow>>()
                                                       .Handler<StatisticsAggregatableMessageHandler>()
                                                       .To.Final().Flow<StatisticsFlow>().Connect()
 
