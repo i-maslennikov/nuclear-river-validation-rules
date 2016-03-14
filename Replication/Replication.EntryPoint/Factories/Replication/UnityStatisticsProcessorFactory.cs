@@ -59,7 +59,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
         }
 
         class DataChangesDetectorFactory<T> : IDataChangesDetectorFactory
-            where T : class, IIdentifiable<StatisticsKey>
+            where T : class
         {
             private readonly IQuery _query;
             private readonly StatisticsRecalculationMetadata<T, StatisticsKey> _metadata;

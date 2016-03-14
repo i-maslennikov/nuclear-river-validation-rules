@@ -2,10 +2,8 @@
 
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
-using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Equality;
 using NuClear.River.Common.Metadata.Model.Operations;
-using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.Aggregates
 {
@@ -17,12 +15,12 @@ namespace NuClear.Replication.Core.Aggregates
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IFindSpecificationProvider<T, RecalculateStatisticsOperation> _findSpecificationProvider;
 
-        public StatisticsProcessor(StatisticsRecalculationMetadata<T, StatisticsKey> metadata, IQuery query, IBulkRepository<T> repository, IEqualityComparerFactory equalityComparerFactory, IFindSpecificationProvider<T, RecalculateStatisticsOperation> findSpecificationProvider)
+        public StatisticsProcessor(DataChangesDetector<T> changesDetector, IBulkRepository<T> repository, IEqualityComparerFactory equalityComparerFactory, IFindSpecificationProvider<T, RecalculateStatisticsOperation> findSpecificationProvider)
         {
             _repository = repository;
             _equalityComparerFactory = equalityComparerFactory;
             _findSpecificationProvider = findSpecificationProvider;
-            _changesDetector = new DataChangesDetector<T>(metadata.MapSpecificationProviderForSource, metadata.MapSpecificationProviderForTarget, _equalityComparerFactory.CreateCompleteComparer<T>(), query);
+            _changesDetector = changesDetector;
         }
 
         public void Execute(IReadOnlyCollection<RecalculateStatisticsOperation> commands)

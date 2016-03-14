@@ -139,7 +139,15 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
             repository = new Mock<IRepository<T>>();
             var comparerFactory = new EqualityComparerFactory(new LinqToDbPropertyProvider(Schema.Erm, Schema.Facts, Schema.CustomerIntelligence));
 
-            return new StatisticsProcessor<T>(metadata, new MemoryMockQuery(data), new BulkRepository<T>(repository.Object), comparerFactory);
+            var changesDetector = new DataChangesDetector<T>(
+                metadata.MapSpecificationProviderForSource,
+                metadata.MapSpecificationProviderForTarget,
+                comparerFactory.CreateCompleteComparer<T>(),
+                new MemoryMockQuery(data));
+
+            var findSpecificationProvider = new StatisticsFindSpecificationProvider<T>(metadata);
+
+            return new StatisticsProcessor<T>(changesDetector, new BulkRepository<T>(repository.Object), comparerFactory, findSpecificationProvider);
         }
     }
 }
