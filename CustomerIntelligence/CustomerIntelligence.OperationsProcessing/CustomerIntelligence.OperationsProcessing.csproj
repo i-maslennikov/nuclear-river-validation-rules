@@ -120,6 +120,7 @@
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
+    <Compile Include="ErmToFactsEntityTypeExplicitMapping.cs" />
     <Compile Include="Final\AggregateOperationAccumulator.cs" />
     <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
     <Compile Include="Final\StatisticsAggregatableMessageHandler.cs" />
@@ -157,7 +158,7 @@
     <Compile Include="Identities\Operations\TransferLocksToAccountIdentity.cs" />
     <Compile Include="Identities\Operations\UpdateOrderFinancialPerfomanceIdentity.cs" />
     <Compile Include="Identities\Operations\WithdrawFromAccountsIdentity.cs" />
-    <Compile Include="OperationIdentityMetadata.cs" />
+    <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="Primary\Parsers\FirmForecastCorporateBusMessageParser.cs" />
     <Compile Include="Primary\Parsers\FirmPopularityCorporateBusMessageParser.cs" />
