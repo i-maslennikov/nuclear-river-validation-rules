@@ -11,8 +11,9 @@ using NuClear.Telemetry.Probing;
 namespace NuClear.Replication.Core.Aggregates
 {
     /// <summary>
-    /// Выполняет обработку прямой зависимости между фактом и сущностью.
-    /// Приямая зависимость означет, что идентификатор факта является идентиифкатором сущности.
+    /// Выполняет обработку косвенной зависимости между фактом и сущностью.
+    /// Косвенная зависимость означает, что факт флияет на сущность, но проецируется на неё один-в один.
+    /// Чаще всего он входит в состав агрегата в виде отдельных полей или объекта-значения.
     /// </summary>
     public class IndirectlyDependentEntityFeatureProcessor<TFact, TEntityKey> : IFactDependencyProcessor
         where TFact : class, IIdentifiable<long>
