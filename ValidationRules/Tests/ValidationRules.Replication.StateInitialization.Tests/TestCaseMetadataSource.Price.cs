@@ -9,37 +9,33 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
     public sealed partial class TestCaseMetadataSource
     {
+        // todo: по завршении работ с периодами добавить проверку связи прайса и города
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement PriceDeniedPositionTests
+        private static ArrangeMetadataElement Period
         => ArrangeMetadataElement.Config
-        .Name(nameof(PriceDeniedPositionTests))
+        .Name(nameof(Period))
         .Fact(
-            // denied
-            new Facts::DeniedPosition { PositionId = 1, PositionDeniedId = 2, ObjectBindingType = 3, PriceId = 4, Id = 1}
-            )
-        .Aggregate(
-            // denied
-            new Aggs::PriceDeniedPosition { PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, PriceId = 4}
-            );
+            new Facts::Price { Id = 1 },
+            new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 2, MinAdvertisementAmount = 100, MaxAdvertisementAmount = 500 },
 
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement PriceAssociatedPositionTests
-        => ArrangeMetadataElement.Config
-        .Name(nameof(PriceAssociatedPositionTests))
-        .Fact(
             // associated
             new Facts::AssociatedPosition { PositionId = 1, ObjectBindingType = 3, AssociatedPositionsGroupId = 1, Id = 1 },
             new Facts::AssociatedPositionsGroup { Id = 1, PricePositionId = 1},
-            new Facts::PricePosition { Id = 1, PositionId = 2, PriceId = 1 },
 
-            new Facts::Price { Id = 1 }
+            // denied
+            new Facts::DeniedPosition { PositionId = 1, PositionDeniedId = 2, ObjectBindingType = 3, PriceId = 1, Id = 1 }
             )
         .Aggregate(
-            // associated
-            new Aggs::PriceAssociatedPosition { PrincipalPositionId = 1 , AssociatedPositionId = 2, ObjectBindingType = 3, PriceId = 1, GroupId = 1},
-            new Aggs::AdvertisementAmountRestriction { PositionId = 2, PriceId = 1},
-
             new Aggs::Price { Id = 1 },
+            new Aggs::AdvertisementAmountRestriction { PositionId = 2, PriceId = 1, Min = 100, Max = 500 },
+
+            // associated
+            new Aggs::PriceAssociatedPosition { PrincipalPositionId = 1 , AssociatedPositionId = 2, ObjectBindingType = 3, PriceId = 1, GroupId = 1 },
+
+            // denied
+            new Aggs::PriceDeniedPosition { PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, PriceId = 1 },
+
+            // сопутствующий хлам
             new Aggs::Period { End = DateTime.MaxValue }
             );
     }
