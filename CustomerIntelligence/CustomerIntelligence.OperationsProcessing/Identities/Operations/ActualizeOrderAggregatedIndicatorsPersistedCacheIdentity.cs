@@ -1,4 +1,4 @@
-using System.Runtime.Serialization;
+п»їusing System.Runtime.Serialization;
 
 using NuClear.Model.Common.Operations.Identity;
 
@@ -18,7 +18,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Identities.Operation
         {
             get
             {
-                return "Актуализируем persistent cache по агрегированным показателям заказа";
+                return "РђРєС‚СѓР°Р»РёР·РёСЂСѓРµРј persistent cache РїРѕ Р°РіСЂРµРіРёСЂРѕРІР°РЅРЅС‹Рј РїРѕРєР°Р·Р°С‚РµР»СЏРј Р·Р°РєР°Р·Р°";
             }
         }
     }

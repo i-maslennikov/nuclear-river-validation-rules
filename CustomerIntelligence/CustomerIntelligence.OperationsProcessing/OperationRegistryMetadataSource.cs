@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -165,7 +165,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<ActualizeActiveLocksIdentity>()
                         .Allow<ImportAdvModelInRubricInfoIdentity>()
 
-                        // эти операции станут ignored после того как фирмы будем брать из InfoRussia
+                        // СЌС‚Рё РѕРїРµСЂР°С†РёРё СЃС‚Р°РЅСѓС‚ ignored РїРѕСЃР»Рµ С‚РѕРіРѕ РєР°Рє С„РёСЂРјС‹ Р±СѓРґРµРј Р±СЂР°С‚СЊ РёР· InfoRussia
                         .Allow<ImportCardForErmIdentity>()
                         .Allow<ImportCardIdentity>()
                         .Allow<ImportFirmIdentity>()

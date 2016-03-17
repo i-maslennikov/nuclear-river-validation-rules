@@ -1,4 +1,4 @@
-using System.Runtime.Serialization;
+п»їusing System.Runtime.Serialization;
 
 using NuClear.Model.Common.Operations.Identity;
 
@@ -14,7 +14,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Identities.Operation
 
         public override string Description
         {
-            get { return "Акуализировать платформозависимые атрибуты заказа"; }
+            get { return "РђРєСѓР°Р»РёР·РёСЂРѕРІР°С‚СЊ РїР»Р°С‚С„РѕСЂРјРѕР·Р°РІРёСЃРёРјС‹Рµ Р°С‚СЂРёР±СѓС‚С‹ Р·Р°РєР°Р·Р°"; }
         }
     }
 }
