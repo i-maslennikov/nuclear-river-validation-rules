@@ -93,6 +93,7 @@ namespace NuClear.ValidationRules.Replication.Tests
 
             public void Update(object obj)
             {
+                _data.Remove(obj);
                 _data.Add(obj);
             }
 

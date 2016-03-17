@@ -1,4 +1,6 @@
-﻿using NuClear.River.Common.Metadata.Context;
+﻿using System.Linq;
+
+using NuClear.River.Common.Metadata.Context;
 
 namespace NuClear.River.Common.Metadata.Model.Operations
 {
@@ -40,6 +42,12 @@ namespace NuClear.River.Common.Metadata.Model.Operations
         {
             // Тип уже проверен
             return Context.Equals(other.Context);
+        }
+
+        public override string ToString()
+        {
+            var prop = string.Join(", ", Context.Properties.Select(x => $"{x.Key}={x.Value}"));
+            return $"{GetType().Name}: {prop}";
         }
     }
 }

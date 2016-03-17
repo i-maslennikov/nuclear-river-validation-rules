@@ -18,6 +18,9 @@ namespace NuClear.ValidationRules.Domain.Specifications
                 {
                     public static MapSpecification<IQuery, IEnumerable<long>> ByCategory(FindSpecification<Facts::Category> specification)
                     {
+                        // todo: А нужно ли пересчитывать заказы, которые имею продажи в одну из родительских рубрик?
+                        // т.е. связаны не с Category.Id, а с Category.ParentId (по факту не бывает) или Category.ParentId.ParentId (очень даже бывает)
+                        // нет, не требуется - это должно быть поддержано на уровне вычисления сообщений, а для пересчёта заказа не требуется.
                         return new MapSpecification<IQuery, IEnumerable<long>>(
                             q => (from category in q.For(specification)
                                   join opa in q.For<Facts::OrderPositionAdvertisement>() on category.Id equals opa.CategoryId
@@ -46,11 +49,23 @@ namespace NuClear.ValidationRules.Domain.Specifications
                     public static MapSpecification<IQuery, IEnumerable<long>> ByPosition(FindSpecification<Facts::Position> specification)
                     {
                         return new MapSpecification<IQuery, IEnumerable<long>>(
-                            q => (from position in q.For(specification)
-                                  join opa in q.For<Facts::OrderPositionAdvertisement>() on position.Id equals opa.PositionId
-                                  join orderPosition in q.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
-                                  select orderPosition.OrderId).Distinct()
-                        );
+                            q =>
+                                {
+                                    var viaOrderPositionAdvertisement
+                                        = from position in q.For(specification)
+                                          join opa in q.For<Facts::OrderPositionAdvertisement>() on position.Id equals opa.PositionId
+                                          join orderPosition in q.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
+                                          select orderPosition.OrderId;
+
+                                    var viaPricePosition
+                                        = from position in q.For(specification)
+                                           join pp in q.For<Facts::PricePosition>() on position.Id equals pp.PositionId
+                                           join orderPosition in q.For<Facts::OrderPosition>() on pp.Id equals orderPosition.PricePositionId
+                                           select orderPosition.OrderId;
+
+                                    return viaOrderPositionAdvertisement.Concat(viaPricePosition).Distinct();
+                                }
+                            );
                     }
                 }
 
