@@ -9,5 +9,7 @@ namespace NuClear.ValidationRules.Domain.Model.Aggregates
     {
         public long Id { get; set; }
         public long PositionCategoryId { get; set; }
+        public bool IsControlledByAmount { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -12,10 +12,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
         .Name(nameof(Position))
         .Fact(
-            new Facts::Position { Id = 1, PositionCategoryId = 2}
+            new Facts::Position { Id = 1, PositionCategoryId = 2, IsControlledByAmount = true, Name = "1" }
             )
         .Aggregate(
-            new Aggs::Position { Id = 1, PositionCategoryId = 2 }
+            new Aggs::Position { Id = 1, PositionCategoryId = 2, IsControlledByAmount = true, Name = "1" }
             );
     }
 }

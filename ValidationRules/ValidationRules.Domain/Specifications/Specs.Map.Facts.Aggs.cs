@@ -200,7 +200,9 @@ namespace NuClear.ValidationRules.Domain.Specifications
                             q => q.For<Facts::Position>().Select(x => new Aggregates::Position
                                 {
                                     Id = x.Id,
-                                    PositionCategoryId = x.PositionCategoryId
+                                    PositionCategoryId = x.PositionCategoryId,
+                                    IsControlledByAmount = x.IsControlledByAmount,
+                                    Name = x.Name
                                 }));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Period>> Periods

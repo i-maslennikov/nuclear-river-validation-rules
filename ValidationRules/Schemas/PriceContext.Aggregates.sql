@@ -138,6 +138,8 @@ go
 create table PriceAggregate.Position(
     Id bigint NOT NULL,
     PositionCategoryId bigint NOT NULL,
+    IsControlledByAmount bit NOT NULL,
+    Name nvarchar(max) NOT NULL,
     constraint PK_Position primary key (Id)
 )
 go
