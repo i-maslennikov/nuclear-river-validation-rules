@@ -21,6 +21,9 @@ namespace NuClear.Replication.Core.Facts
             _metadata = metadata;
         }
 
+        public DependencyType DependencyType
+            => _metadata is IIndirectFactDependencyFeature ? DependencyType.Indirect : DependencyType.Direct;
+
         public IEnumerable<IOperation> ProcessCreation(IReadOnlyCollection<long> factIds)
         {
             return ProcessDependencies(factIds, _metadata.MapSpecificationProviderOnCreate);

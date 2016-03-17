@@ -86,6 +86,7 @@
     <Compile Include="Aggregates\IValueObjectProcessor.cs" />
     <Compile Include="Aggregates\IValueObjectProcessorFactory.cs" />
     <Compile Include="Aggregates\StatisticsProcessorSlice.cs" />
+    <Compile Include="Facts\DependencyType.cs" />
     <Compile Include="Facts\IFactDependencyProcessor.cs" />
     <Compile Include="Facts\IFactDependencyProcessorFactory.cs" />
     <Compile Include="Facts\IFactProcessor.cs" />
