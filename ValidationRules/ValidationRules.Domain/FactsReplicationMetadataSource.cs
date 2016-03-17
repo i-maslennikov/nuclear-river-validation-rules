@@ -75,12 +75,6 @@ namespace NuClear.ValidationRules.Domain
                                 .HasMatchedAggregate<EntityTypePosition>()
                                 .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByPosition),
 
-                            FactMetadata<Position>
-                                .Config
-                                .HasSource(Specs.Map.Erm.ToFacts.Position)
-                                .HasMatchedAggregate<EntityTypePosition>()
-                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByPosition),
-
                             FactMetadata<Price>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Price)
