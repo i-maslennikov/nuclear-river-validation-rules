@@ -18,12 +18,12 @@ using Quartz;
 namespace NuClear.Replication.EntryPoint.Jobs
 {
     [DisallowConcurrentExecution]
-    public class OperationsPrimaryProcessingJob : TaskServiceJobBase
+    public class ProcessingJob : TaskServiceJobBase
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly IMessageFlowProcessorFactory _messageFlowProcessorFactory;
 
-        public OperationsPrimaryProcessingJob(
+        public ProcessingJob(
             IMetadataProvider metadataProvider,
             IMessageFlowProcessorFactory messageFlowProcessorFactory,
             ISignInService signInService,

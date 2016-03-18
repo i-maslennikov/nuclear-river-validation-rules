@@ -309,7 +309,7 @@
     <Compile Include="Factories\UnityServiceBusMessageFlowReceiverFactory.cs" />
     <Compile Include="Jobs\ReportingJob.cs" />
     <Compile Include="Jobs\DebugTestJob.cs" />
-    <Compile Include="Jobs\OperationsPrimaryProcessingJob.cs" />
+    <Compile Include="Jobs\ProcessingJob.cs" />
     <Compile Include="Factories\Messaging\Processor\PrimaryProcessorResolveStrategy.cs" />
     <Compile Include="ReplicationService.cs">
       <SubType>Component</SubType>
