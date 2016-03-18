@@ -1,4 +1,4 @@
-﻿![Alt text](https://immense-sea-86195.herokuapp.com/2gis/nuclear-river/feature/validation-rules/docs/ru/validation-rules/domain.puml)
+﻿!(https://immense-sea-86195.herokuapp.com/2gis/nuclear-river/feature/validation-rules/docs/ru/validation-rules/design-aggs.puml)
 
 # Дизайн агрегатов
 
@@ -46,7 +46,7 @@ Period будет параметризован от проекта, то ест�
 По сравнению со структурой таблиц фактов предлагается вязять таблицы AssociatedPositions и DeniedPositions напрямую к Price, минуя PricePositions.
 Это позволит быстро найти все правила сопутствия\запрещения для конкретного прайса.
 
-В таблицах AssociatedPositions и DeniedPositions хранятся ссылки на номенклатурные позиции
+В таблицах PriceAssociatedPositions и PriceDeniedPositions хранятся ссылки на номенклатурные позиции
 Таблица AdvertisementAmountRestriction служит для хранения ограничений на количество рекламы.
 
 # Order
