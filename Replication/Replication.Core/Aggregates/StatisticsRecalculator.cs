@@ -26,17 +26,21 @@ namespace NuClear.Replication.Core.Aggregates
             MetadataSet metadataSet;
             if (!_metadataProvider.TryGetMetadata<StatisticsRecalculationMetadataIdentity>(out metadataSet))
             {
-                throw new NotSupportedException(string.Format("Metadata for identity '{0}' cannot be found.", typeof(StatisticsRecalculationMetadataIdentity).Name));
+                throw new NotSupportedException($"Metadata for identity '{typeof(StatisticsRecalculationMetadataIdentity).Name}' cannot be found.");
             }
 
-            var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).Single();
-            var processor = _statisticsProcessorFactory.Create(metadata);
-
+            var batches = operations.GroupBy(x => x.ProjectId, x => x.CategoryId).ToArray();
             using (Probe.Create("Recalculate Statistics Operations"))
             {
-                foreach (var batch in operations.GroupBy(x => x.ProjectId, x => x.CategoryId))
+                var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).ToArray();
+                foreach (var element in metadata)
                 {
-                    processor.RecalculateStatistics(batch.Key, batch.Distinct().ToArray());
+                    var processor = _statisticsProcessorFactory.Create(element);
+
+                    foreach (var batch in batches)
+                    {
+                        processor.RecalculateStatistics(batch.Key, batch.Distinct().ToArray());
+                    }
                 }
             }
         }

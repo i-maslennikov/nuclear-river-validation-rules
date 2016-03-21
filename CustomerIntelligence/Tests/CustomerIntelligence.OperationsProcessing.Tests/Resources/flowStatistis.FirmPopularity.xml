@@ -1,0 +1,16 @@
+<FirmPopularity BranchCode="112">
+  <Firms>
+    <Firm Code="70000001019319210" WeightAll="2" WeightRecoveryAndGeo="1">
+      <Rubrics>
+        <Rubric Code="272" ClickCount="1" ImpressionCount="148" />
+        <Rubric Code="676" ClickCount="0" ImpressionCount="35" />
+      </Rubrics>
+    </Firm>
+    <Firm Code="70000001019319244" WeightAll="3" WeightRecoveryAndGeo="1">
+      <Rubrics>
+        <Rubric Code="295" ClickCount="2" ImpressionCount="52" />
+        <Rubric Code="459" ClickCount="2" ImpressionCount="39" />
+      </Rubrics>
+    </Firm>
+  </Firms>
+</FirmPopularity>

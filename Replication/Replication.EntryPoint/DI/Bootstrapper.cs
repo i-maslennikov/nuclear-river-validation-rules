@@ -68,6 +68,8 @@ using NuClear.Replication.EntryPoint.Factories.Messaging.Receiver;
 using NuClear.Replication.EntryPoint.Factories.Messaging.Transformer;
 using NuClear.Replication.EntryPoint.Factories.Replication;
 using NuClear.Replication.EntryPoint.Settings;
+using NuClear.Replication.OperationsProcessing;
+using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
@@ -156,8 +158,9 @@ namespace NuClear.Replication.EntryPoint.DI
 
             // register matadata sources without massprocessor
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(PerformedOperationsMessageFlowsMetadataSource), Lifetime.Singleton);
+            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(OperationRegistryMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(FactsReplicationMetadataSource), Lifetime.Singleton);
-            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(ImportStatisticsMetadataSource), Lifetime.Singleton);
+            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(ImportDocumentMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(AggregateConstructionMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(StatisticsRecalculationMetadataSource), Lifetime.Singleton);
 
@@ -199,8 +202,9 @@ namespace NuClear.Replication.EntryPoint.DI
 
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
-            container.RegisterType<IOperationIdentityRegistry, OperationIdentityRegistry>(Lifetime.Singleton,
-                new InjectionConstructor(OperationIdentityMetadata.AllOperationIdentities));
+            container.RegisterType<IOperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.Resolve<OperationIdentityRegistryFactory>().RegistryFor<FactsSubDomain>()))
+                     .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
+                     .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton);
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);
@@ -297,7 +301,7 @@ namespace NuClear.Replication.EntryPoint.DI
                                                                                                c.Resolve<IMetadataProvider>(),
                                                                                                c.Resolve<IFactProcessorFactory>(),
                                                                                                new CustomerIntelligenceFactTypePriorityComparer())))
-                .RegisterType<IStatisticsImporterFactory, UnityStatisticsImporterFactory>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IImportDocumentMetadataProcessorFactory, UnityImportDocumentMetadataProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregatesConstructor, AggregatesConstructor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStatisticsRecalculator, StatisticsRecalculator>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())

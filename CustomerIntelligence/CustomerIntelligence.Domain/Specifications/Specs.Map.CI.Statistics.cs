@@ -11,12 +11,15 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
     {
         public static partial class Map
         {
-            public static partial class CI
+            public static class CI
             {
-                public static partial class ToStatistics
+                public static class ToStatistics
                 {
                     public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>> FirmCategory3 =
                         new MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>>(q => q.For<Statistics::FirmCategory3>());
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmForecast>> FirmForecast =
+                        new MapSpecification<IQuery, IQueryable<Statistics::FirmForecast>>(q => q.For<Statistics::FirmForecast>());
                 }
             }
         }
