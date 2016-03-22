@@ -7,16 +7,12 @@ package ValidationResultAggregate {
         #OrderTimestamp
         #PeriodStart
         #PeriodEnd
+        #MessageType
         
         ProjectId
-        HasErrors
+        IsFailed
+        MessageParams
     }
-    
-    object FailMessage {
-        Message        
-    }
-    
-    ValidationResult *-- FailMessage
 }
 
 @enduml
