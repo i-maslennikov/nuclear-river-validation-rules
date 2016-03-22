@@ -71,8 +71,8 @@ namespace NuClear.Querying.Edm.Tests
             var provider = CreateProvider(MockSource(context));
             var contextId = context.Identity.Id;
 
-            var edmModelBuilder = new EdmModelBuilder(provider);
-            EdmModel = edmModelBuilder.Build(contextId, ClrTypes);
+            var edmModelBuilder = new EdmModelBuilder(provider, new EdmModelAnnotator(ClrTypes));
+            EdmModel = edmModelBuilder.Build()[contextId];
         }
 
         public static IEdmModel EdmModel { get; private set; }

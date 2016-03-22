@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace NuClear.Querying.Edm.Tests.Edmx
+namespace Querying.Storage.Tests
 {
     [TestFixture]
     internal class EdmxBuilderMappingTests : EdmxBuilderBaseFixture

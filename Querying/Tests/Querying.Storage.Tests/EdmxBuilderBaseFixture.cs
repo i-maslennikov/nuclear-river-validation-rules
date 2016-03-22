@@ -6,14 +6,11 @@ using System.Linq;
 
 using Effort.Provider;
 
-using Moq;
-
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Querying.Edm.EF;
 using NuClear.River.Common.Metadata.Builders;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
@@ -21,7 +18,7 @@ using NuClear.River.Common.Metadata.Identities;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
-namespace NuClear.Querying.Edm.Tests.Edmx
+namespace Querying.Storage.Tests
 {
     public class EdmxBuilderBaseFixture
     {

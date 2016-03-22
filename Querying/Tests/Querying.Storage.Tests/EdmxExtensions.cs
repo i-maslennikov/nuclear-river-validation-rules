@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 
-namespace NuClear.Querying.Edm.Tests.Edmx
+namespace Querying.Storage.Tests
 {
     internal static class EdmxExtensions
     {
@@ -42,7 +42,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
                         SerializeAndValidateSsdl(edmModel, xmlWriter);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("modelType");
+                        throw new ArgumentOutOfRangeException(nameof(modelType));
                 }
             }
 
@@ -94,7 +94,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
 
         private static string ToText(DataModelErrorEventArgs errorEventArgs)
         {
-            return string.Format("{0}.{1}: {2}", errorEventArgs.Item, errorEventArgs.PropertyName, errorEventArgs.ErrorMessage);
+            return $"{errorEventArgs.Item}.{errorEventArgs.PropertyName}: {errorEventArgs.ErrorMessage}";
         }
 
         public enum EdmModelType

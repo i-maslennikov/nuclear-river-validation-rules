@@ -6,7 +6,7 @@ using Microsoft.OData.Edm.Validation;
 
 using NUnit.Framework.Constraints;
 
-namespace NuClear.Querying.Edm.Tests.Edm
+namespace NuClear.Querying.Edm.Tests
 {
     internal static class ModelConstraints
     {

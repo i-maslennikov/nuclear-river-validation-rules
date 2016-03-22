@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 
-namespace NuClear.Querying.Edm.Tests.Edmx
+namespace Querying.Storage.Tests
 {
     internal static class EdmModelExtensions
     {

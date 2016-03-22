@@ -19,7 +19,7 @@ namespace NuClear.Querying.Edm.Tests
         public static ODataQueryOptions CreateValidQueryOptions(IEdmModel model, Type elementClrType, HttpRequestMessage request, ODataValidationSettings validationSettings)
         {
             var queryOptions = CreateQueryOptions(model, elementClrType, request);
-            
+
             queryOptions.Validate(validationSettings);
 
             return queryOptions;

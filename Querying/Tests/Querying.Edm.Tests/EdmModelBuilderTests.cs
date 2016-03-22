@@ -18,7 +18,7 @@ using NuClear.River.Common.Metadata.Identities;
 
 using NUnit.Framework;
 
-namespace NuClear.Querying.Edm.Tests.Edm
+namespace NuClear.Querying.Edm.Tests
 {
     [TestFixture]
     internal class EdmModelBuilderTests
@@ -198,7 +198,7 @@ namespace NuClear.Querying.Edm.Tests.Edm
 
         private static IEdmModel BuildModel(IMetadataProvider provider, Uri contextId)
         {
-            var builder = new EdmModelBuilder(provider, new NullEdmModelAnnotator());
+            var builder = new EdmModelBuilder(provider, new EdmModelAnnotator(Enumerable.Empty<Type>()));
             var model = builder.Build()[contextId];
 
             model.Dump();

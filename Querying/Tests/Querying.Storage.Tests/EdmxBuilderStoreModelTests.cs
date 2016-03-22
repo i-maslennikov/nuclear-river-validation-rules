@@ -7,7 +7,7 @@ using NuClear.River.Common.Metadata.Elements;
 
 using NUnit.Framework;
 
-namespace NuClear.Querying.Edm.Tests.Edmx
+namespace Querying.Storage.Tests
 {
     [TestFixture]
     internal class EdmxBuilderStoreModelTests : EdmxBuilderBaseFixture
