@@ -17,7 +17,7 @@
 
 # Структура агрегатов
 
-!(https://immense-sea-86195.herokuapp.com/2gis/nuclear-river/feature/validation-rules/docs/ru/validation-rules/design-messages.puml)
+![required text](https://immense-sea-86195.herokuapp.com/2gis/nuclear-river/feature/validation-rules/docs/ru/validation-rules/design-messages.puml)
 
 Id агрегата состоит из частей:
 - Id и Timetamp заказа

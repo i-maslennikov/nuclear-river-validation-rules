@@ -1,4 +1,4 @@
-﻿!(https://immense-sea-86195.herokuapp.com/2gis/nuclear-river/feature/validation-rules/docs/ru/validation-rules/design-aggs.puml)
+﻿![required text](https://immense-sea-86195.herokuapp.com/2gis/nuclear-river/feature/validation-rules/docs/ru/validation-rules/design-aggs.puml)
 
 # Дизайн агрегатов
 
