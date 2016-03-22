@@ -10,7 +10,7 @@ using Effort.Provider;
 
 using Moq;
 
-using NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence;
+using NuClear.CustomerIntelligence.Querying.Tests.Model;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;

@@ -2,21 +2,12 @@
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 
+using NuClear.CustomerIntelligence.Querying.Tests.Model;
+
 using NUnit.Framework;
 
 namespace NuClear.CustomerIntelligence.Querying.Tests
 {
-    using NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence;
-
-    using CategoryGroup = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.CategoryGroup;
-    using Client = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.Client;
-    using ClientContact = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.ClientContact;
-    using Firm = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.Firm;
-    using FirmBalance = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.FirmBalance;
-    using FirmCategory3 = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.FirmCategory3;
-    using Project = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.Project;
-    using Territory = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.Territory;
-
     [TestFixture]
     internal class DbModelBuilderConfiguratorTests : DbModelBuilderConfiguratorBaseFixture
     {

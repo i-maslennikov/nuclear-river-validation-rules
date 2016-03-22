@@ -106,19 +106,19 @@
     <Compile Include="DbModelBuilderConfiguratorTests.cs" />
     <Compile Include="EdmxExtensions.cs" />
     <Compile Include="MetadataTests.cs" />
-    <Compile Include="Model\CustomerIntelligence\Category.cs" />
-    <Compile Include="Model\CustomerIntelligence\CategoryGroup.cs" />
-    <Compile Include="Model\CustomerIntelligence\Client.cs" />
-    <Compile Include="Model\CustomerIntelligence\ClientContact.cs" />
-    <Compile Include="Model\CustomerIntelligence\ContactRole.cs" />
-    <Compile Include="Model\CustomerIntelligence\Firm.cs" />
-    <Compile Include="Model\CustomerIntelligence\FirmBalance.cs" />
-    <Compile Include="Model\CustomerIntelligence\FirmCategory1.cs" />
-    <Compile Include="Model\CustomerIntelligence\FirmCategory2.cs" />
-    <Compile Include="Model\CustomerIntelligence\FirmCategory3.cs" />
-    <Compile Include="Model\CustomerIntelligence\FirmTerritory.cs" />
-    <Compile Include="Model\CustomerIntelligence\Project.cs" />
-    <Compile Include="Model\CustomerIntelligence\Territory.cs" />
+    <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\CategoryGroup.cs" />
+    <Compile Include="Model\Client.cs" />
+    <Compile Include="Model\ClientContact.cs" />
+    <Compile Include="Model\ContactRole.cs" />
+    <Compile Include="Model\Firm.cs" />
+    <Compile Include="Model\FirmBalance.cs" />
+    <Compile Include="Model\FirmCategory1.cs" />
+    <Compile Include="Model\FirmCategory2.cs" />
+    <Compile Include="Model\FirmCategory3.cs" />
+    <Compile Include="Model\FirmTerritory.cs" />
+    <Compile Include="Model\Project.cs" />
+    <Compile Include="Model\Territory.cs" />
     <Compile Include="NullEdmModelAnnotator.cs" />
     <Compile Include="QueryExecutionBaseFixture.cs" />
     <Compile Include="QueryExecutionTests.cs" />
@@ -161,6 +161,7 @@
       <Name>CustomerIntelligence.Domain</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

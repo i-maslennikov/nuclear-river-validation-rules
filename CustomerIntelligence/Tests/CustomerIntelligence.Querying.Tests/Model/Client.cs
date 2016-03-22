@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence
+namespace NuClear.CustomerIntelligence.Querying.Tests.Model
 {
     public sealed class Client
     {

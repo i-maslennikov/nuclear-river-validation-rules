@@ -62,13 +62,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
     internal static class ModelConstraints
     {
-        public static Constraint IsValid
-        {
-            get
-            {
-                return new ModelValidationConstraint();
-            }
-        }
+        public static Constraint IsValid => new ModelValidationConstraint();
 
         private class ModelValidationConstraint : Constraint
         {
