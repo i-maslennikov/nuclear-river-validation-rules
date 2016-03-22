@@ -6,11 +6,15 @@ using System.Linq;
 
 using Effort.Provider;
 
+using Moq;
+
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
+using NuClear.Querying.Edm.Emit;
+using NuClear.Querying.Storage;
 using NuClear.River.Common.Metadata.Builders;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
@@ -20,7 +24,7 @@ using NUnit.Framework.Constraints;
 
 namespace Querying.Storage.Tests
 {
-    public class EdmxBuilderBaseFixture
+    public class BaseFixture
     {
         [TestFixtureSetUp]
         public void FixtureSetup()
@@ -28,14 +32,18 @@ namespace Querying.Storage.Tests
             EffortProviderConfiguration.RegisterProvider();
         }
 
-
         protected static DbProviderInfo EffortProvider => new DbProviderInfo(EffortProviderConfiguration.ProviderInvariantName, EffortProviderManifestTokens.Version1);
 
-        protected static DbModel BuildModel(BoundedContextElement context, IClrTypeBuilder clrTypeBuilder = null)
+        protected static DbModel BuildModel(BoundedContextElement context)
         {
-            var builder = CreateBuilder(CreateMetadataProvider(MockSource(context)), clrTypeBuilder);
-            var contextId = context.Identity.Id;
-            var model = builder.Build(contextId, EffortProvider);
+            var metadataProvider = CreateMetadataProvider(MockSource(context));
+            var clrTypeProvider = new EmitClrTypeResolver(metadataProvider);
+            clrTypeProvider.Build();
+
+            var configurator = new DbModelBuilderConfigurator(metadataProvider, clrTypeProvider);
+
+            var builder = configurator.Configure(context);
+            var model = builder.Build(EffortProvider);
 
             model.Dump();
 
@@ -206,14 +214,6 @@ namespace Querying.Storage.Tests
 
         #endregion
 
-        #region Utils
-
-        private static EdmxModelBuilder CreateBuilder(IMetadataProvider metadataProvider, IClrTypeBuilder clrTypeBuilder = null)
-        {
-            return clrTypeBuilder == null 
-                ? new EdmxModelBuilder(metadataProvider)
-                : new EdmxModelBuilder(metadataProvider, clrTypeBuilder);
-        }
 
         protected static IMetadataProvider CreateMetadataProvider(params IMetadataSource[] sources)
         {
@@ -228,7 +228,5 @@ namespace Querying.Storage.Tests
 
             return source.Object;
         }
-
-        #endregion
     }
 }

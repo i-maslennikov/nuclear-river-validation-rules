@@ -50,26 +50,31 @@
       <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NMemory.1.0.1\lib\net45\NMemory.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.2.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NUnit.3.2.0\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdmModelExtensions.cs" />
-    <Compile Include="EdmxBuilderBaseFixture.cs" />
-    <Compile Include="EdmxBuilderConceptualModelTests.cs" />
-    <Compile Include="EdmxBuilderMappingTests.cs" />
-    <Compile Include="EdmxBuilderStoreModelTests.cs" />
+    <Compile Include="BaseFixture.cs" />
+    <Compile Include="ConceptualModelTests.cs" />
+    <Compile Include="MappingTests.cs" />
+    <Compile Include="StoreModelTests.cs" />
     <Compile Include="EdmxExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -80,6 +85,14 @@
     <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
       <Name>Common.Metadata</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Querying.Edm\Querying.Edm.csproj">
+      <Project>{135ef4b2-e97c-44b5-a6ac-6e97b103de55}</Project>
+      <Name>Querying.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Querying.Storage\Querying.Storage.csproj">
+      <Project>{a16c1eb8-1575-4eab-8e4d-891bb5c55150}</Project>
+      <Name>Querying.Storage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Querying.Storage.Tests
 {
     [TestFixture]
-    internal class EdmxBuilderStoreModelTests : EdmxBuilderBaseFixture
+    internal class StoreModelTests : BaseFixture
     {
         private BoundedContextElementBuilder _config;
 

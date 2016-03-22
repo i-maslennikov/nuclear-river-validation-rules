@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Querying.Storage.Tests
 {
     [TestFixture]
-    internal class EdmxBuilderConceptualModelTests : EdmxBuilderBaseFixture
+    internal class ConceptualModelTests : BaseFixture
     {
         [Test]
         public void ShouldExposeEntitySets()

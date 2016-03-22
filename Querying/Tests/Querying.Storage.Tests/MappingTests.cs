@@ -3,7 +3,7 @@
 namespace Querying.Storage.Tests
 {
     [TestFixture]
-    internal class EdmxBuilderMappingTests : EdmxBuilderBaseFixture
+    internal class MappingTests : BaseFixture
     {
         [Test]
         public void ShouldMapEntityOnTable()
