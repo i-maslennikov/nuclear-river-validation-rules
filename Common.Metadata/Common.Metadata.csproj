@@ -75,6 +75,7 @@
     <Compile Include="Features\EntityRelationContainmentFeature.cs" />
     <Compile Include="Features\EntitySetFeature.cs" />
     <Compile Include="Features\IFactDependencyFeature.cs" />
+    <Compile Include="Features\ReceiverTypeFeature.cs" />
     <Compile Include="Features\IndirectlyDependentEntityFeature.cs" />
     <Compile Include="Elements\IValueObjectMetadata.cs" />
     <Compile Include="Elements\ValueObjectMetadata.cs" />

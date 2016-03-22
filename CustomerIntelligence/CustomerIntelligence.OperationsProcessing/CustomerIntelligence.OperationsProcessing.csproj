@@ -129,14 +129,18 @@
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
     <Compile Include="Identities\Flows\StatisticsFlow.cs" />
     <Compile Include="Identities\Operations\ActualizeActiveLocksIdentity.cs" />
+    <Compile Include="Identities\Operations\ActualizeOrderAggregatedIndicatorsPersistedCacheIdentity.cs" />
     <Compile Include="Identities\Operations\ActualizeOrderAmountToWithdrawIdentity.cs" />
+    <Compile Include="Identities\Operations\ActualizeOrderPlatformIdentity.cs" />
     <Compile Include="Identities\Operations\ApplyOrderDiscountIdentity.cs" />
+    <Compile Include="Identities\Operations\AssignClientRelatedActivitiesIdentity.cs" />
     <Compile Include="Identities\Operations\CalculateClientPromisingIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeDealIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderAccountIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderBargainIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderLegalPersonIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderLegalPersonProfileIdentity.cs" />
+    <Compile Include="Identities\Operations\ChangeOrderReleaseCountIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeRequisitesIdentity.cs" />
     <Compile Include="Identities\Operations\ClearOrderBargainIdentity.cs" />
     <Compile Include="Identities\Operations\CloseWithDenialIdentity.cs" />
@@ -144,6 +148,9 @@
     <Compile Include="Identities\Operations\CreateClientByFirmIdentity.cs" />
     <Compile Include="Identities\Operations\CreateOrderBillsIdentity.cs" />
     <Compile Include="Identities\Operations\DeleteOrderBillsIdentity.cs" />
+    <Compile Include="Identities\Operations\DetachFirmFromClientIdentity.cs" />
+    <Compile Include="Identities\Operations\DisqualifyClientIdentity.cs" />
+    <Compile Include="Identities\Operations\DisqualifyFirmIdentity.cs" />
     <Compile Include="Identities\Operations\ImportAdvModelInRubricInfoIdentity.cs" />
     <Compile Include="Identities\Operations\ImportCardForErmIdentity.cs" />
     <Compile Include="Identities\Operations\ImportCardIdentity.cs" />
@@ -151,6 +158,8 @@
     <Compile Include="Identities\Operations\ImportFirmIdentity.cs" />
     <Compile Include="Identities\Operations\ImportFirmPromisingIdentity.cs" />
     <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
+    <Compile Include="Identities\Operations\QualifyClientIdentity.cs" />
+    <Compile Include="Identities\Operations\QualifyFirmIdentity.cs" />
     <Compile Include="Identities\Operations\RepairOutdatedIdentity.cs" />
     <Compile Include="Identities\Operations\RevertWithdrawFromAccountsIdentity.cs" />
     <Compile Include="Identities\Operations\SetInspectorIdentity.cs" />
@@ -158,6 +167,7 @@
     <Compile Include="Identities\Operations\TransferLocksToAccountIdentity.cs" />
     <Compile Include="Identities\Operations\UpdateOrderFinancialPerfomanceIdentity.cs" />
     <Compile Include="Identities\Operations\WithdrawFromAccountsIdentity.cs" />
+    <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="Primary\Parsers\FirmForecastCorporateBusMessageParser.cs" />
