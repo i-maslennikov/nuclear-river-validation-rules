@@ -22,12 +22,12 @@ Task QueueBuild-OData -Precondition { $Metadata['CustomerIntelligence.Querying.H
 	$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Querying.Host'
 	QueueBuild-WebPackage $projectFileName 'CustomerIntelligence.Querying.Host'
 }
-Task Deploy-OData -Depends Take-ODataOffline -Precondition { $Metadata['Web.OData'] } {
+Task Deploy-OData -Depends Take-ODataOffline -Precondition { $Metadata['CustomerIntelligence.Querying.Host'] } {
 	Deploy-WebPackage 'CustomerIntelligence.Querying.Host'
 	Validate-WebSite 'CustomerIntelligence.Querying.Host' 'CustomerIntelligence/$metadata'
 }
 
-Task Take-ODataOffline -Precondition { $Metadata['Web.OData'] } {
+Task Take-ODataOffline -Precondition { $Metadata['CustomerIntelligence.Querying.Host'] } {
 	Take-WebsiteOffline 'CustomerIntelligence.Querying.Host'
 }
 

@@ -8,7 +8,7 @@ if ($TaskList.Count -eq 0){
 if ($Properties.Count -eq 0){
  	$Properties.EnvironmentName = 'Test.20'
 	$Properties.EntryPoints = @(
-		'Web.OData'
+		'CustomerIntelligence.Querying.Host'
 		'Replication.EntryPoint'
 	)
 	#$Properties.UseCaseRoute = 'ERM'
