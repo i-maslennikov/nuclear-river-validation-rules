@@ -4,15 +4,23 @@ package ValidationResultAggregate {
 
     object ValidationResult {
         #OrderId
-        #OrderTimestamp
         #PeriodStart
         #PeriodEnd
         #MessageType
         
         ProjectId
+        
         IsFailed
         MessageParams
     }
+    
+    object HistoryValidationResult {
+        OrderVersion
+        IsFailed
+        MessageParams
+    }
+    
+    ValidationResult *-- HistoryValidationResult
 }
 
 @enduml
