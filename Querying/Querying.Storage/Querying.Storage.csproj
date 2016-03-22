@@ -86,8 +86,6 @@
   <ItemGroup>
     <Compile Include="DbModelBuilderExtensions.cs" />
     <Compile Include="DbModelFactory.cs" />
-    <Compile Include="ODataDbContext.cs" />
-    <Compile Include="ODataQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Specs.cs" />
