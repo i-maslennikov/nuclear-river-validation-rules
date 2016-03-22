@@ -118,6 +118,7 @@
     <Compile Include="Model\CustomerIntelligence\FirmTerritory.cs" />
     <Compile Include="Model\CustomerIntelligence\Project.cs" />
     <Compile Include="Model\CustomerIntelligence\Territory.cs" />
+    <Compile Include="NullEdmModelAnnotator.cs" />
     <Compile Include="QueryExecutionBaseFixture.cs" />
     <Compile Include="QueryExecutionTests.cs" />
     <Compile Include="MetadataExtensions.cs" />
@@ -146,7 +147,7 @@
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
       <Name>Common.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Querying\Querying.QueryExecution\Querying.Edm.csproj">
+    <ProjectReference Include="..\..\..\Querying\Querying.Edm\Querying.Edm.csproj">
       <Project>{135ef4b2-e97c-44b5-a6ac-6e97b103de55}</Project>
       <Name>Querying.Edm</Name>
     </ProjectReference>

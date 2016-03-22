@@ -32,13 +32,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
         }
 
 
-        protected static DbProviderInfo EffortProvider
-        {
-            get
-            {
-                return new DbProviderInfo(EffortProviderConfiguration.ProviderInvariantName, EffortProviderManifestTokens.Version1);
-            }
-        }
+        protected static DbProviderInfo EffortProvider => new DbProviderInfo(EffortProviderConfiguration.ProviderInvariantName, EffortProviderManifestTokens.Version1);
 
         protected static DbModel BuildModel(BoundedContextElement context, IClrTypeBuilder clrTypeBuilder = null)
         {
@@ -55,7 +49,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
         {
             var model = BuildModel(context);
 
-            EdmxExtensions.Dump(model.ConceptualModel, EdmxExtensions.EdmModelType.Conceptual);
+            model.ConceptualModel.Dump(EdmxExtensions.EdmModelType.Conceptual);
 
             return model.ConceptualModel;
         }
@@ -64,14 +58,14 @@ namespace NuClear.Querying.Edm.Tests.Edmx
         {
             var model = BuildModel(context);
 
-            EdmxExtensions.Dump(model.StoreModel, EdmxExtensions.EdmModelType.Store);
+            model.StoreModel.Dump(EdmxExtensions.EdmModelType.Store);
 
             return model.StoreModel;
         }
 
         protected static class ConceptualModel
         {
-            public static Constraint IsValid { get { return new ModelValidationConstraint(); } }
+            public static Constraint IsValid => new ModelValidationConstraint();
 
             private class ModelValidationConstraint : Constraint
             {
@@ -83,10 +77,10 @@ namespace NuClear.Querying.Edm.Tests.Edmx
                     var model = value as EdmModel;
                     if (model == null)
                     {
-                        throw new ArgumentException("The specified actual value is not a model.", "value");
+                        throw new ArgumentException("The specified actual value is not a model.", nameof(value));
                     }
 
-                    return EdmxExtensions.IsValidCsdl(model, out _errors);
+                    return model.IsValidCsdl(out _errors);
                 }
 
                 public override void WriteDescriptionTo(MessageWriter writer)
@@ -112,7 +106,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
 
         protected static class StoreModel
         {
-            public static Constraint IsValid { get { return new ModelValidationConstraint(); } }
+            public static Constraint IsValid => new ModelValidationConstraint();
 
             private class ModelValidationConstraint : Constraint
             {
@@ -124,10 +118,10 @@ namespace NuClear.Querying.Edm.Tests.Edmx
                     var model = value as EdmModel;
                     if (model == null)
                     {
-                        throw new ArgumentException("The specified actual value is not a model.", "value");
+                        throw new ArgumentException("The specified actual value is not a model.", nameof(value));
                     }
 
-                    return EdmxExtensions.IsValidSsdl(model, out _errors);
+                    return model.IsValidSsdl(out _errors);
                 }
 
                 public override void WriteDescriptionTo(MessageWriter writer)
@@ -141,7 +135,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
                     {
                         return;
                     }
-                    
+
                     writer.WriteLine("The model containing errors:");
                     foreach (var error in _errors.Take(MaxErrorsToDisplay))
                     {
@@ -170,7 +164,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
 
             public static Predicate<EdmProperty> Members(params string[] names)
             {
-                return x => names.OrderBy(_ => _).SequenceEqual(Enumerable.OrderBy<string, string>(x.EnumType.Members.Select(m => m.Name), _ => _));
+                return x => names.OrderBy(_ => _).SequenceEqual(x.EnumType.Members.Select(m => m.Name).OrderBy(_ => _));
             }
         }
 
@@ -233,7 +227,7 @@ namespace NuClear.Querying.Edm.Tests.Edmx
         {
             var source = new Mock<IMetadataSource>();
             source.Setup(x => x.Kind).Returns(new QueryingMetadataIdentity());
-            source.Setup(x => x.Metadata).Returns(new Dictionary<Uri, IMetadataElement> { { Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(), context } });
+            source.Setup(x => x.Metadata).Returns(new Dictionary<Uri, IMetadataElement> { { Metadata.Id.For<QueryingMetadataIdentity>(), context } });
 
             return source.Object;
         }

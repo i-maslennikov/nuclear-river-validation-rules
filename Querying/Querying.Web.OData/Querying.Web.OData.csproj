@@ -243,10 +243,10 @@
     <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="EdmModelAnnotator.cs" />
     <Compile Include="HttpConfigurationExtensions.cs" />
-    <Compile Include="Log4NetWebApiExceptionLogger.cs" />
+    <Compile Include="ExceptionTracer.cs" />
     <Compile Include="Settings\WebApplicationSettings.cs" />
     <Compile Include="DynamicControllers\EntityElementIdAttribute.cs" />
-    <Compile Include="Controllers\EnableQueryAttributeProvider.cs" />
+    <Compile Include="Controllers\DynamicEnableQueryAttribute.cs" />
     <Compile Include="DynamicControllers\DynamicAssembliesRegistry.cs" />
     <Compile Include="DynamicControllers\DynamicControllersRegistrar.cs" />
     <Compile Include="Controllers\GenericODataController.cs" />
@@ -273,7 +273,7 @@
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>
       <Name>CustomerIntelligence.Storage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Querying.QueryExecution\Querying.Edm.csproj">
+    <ProjectReference Include="..\Querying.Edm\Querying.Edm.csproj">
       <Project>{135ef4b2-e97c-44b5-a6ac-6e97b103de55}</Project>
       <Name>Querying.Edm</Name>
     </ProjectReference>

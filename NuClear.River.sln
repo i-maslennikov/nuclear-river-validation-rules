@@ -3,16 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Metadata.Tests", "Querying\Tests\Querying.Metadata.Tests\Querying.Metadata.Tests.csproj", "{16DA002C-3DA3-4303-AC10-8FE046F0ED2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Metadata.Tests", "Tests\Common.Metadata.Tests\Common.Metadata.Tests.csproj", "{16DA002C-3DA3-4303-AC10-8FE046F0ED2C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1C7C6AC-4AAC-45E4-94AC-DEC47A72F447}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Edm", "Querying\Querying.QueryExecution\Querying.Edm.csproj", "{135EF4B2-E97C-44B5-A6AC-6E97B103DE55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Edm", "Querying\Querying.Edm\Querying.Edm.csproj", "{135EF4B2-E97C-44B5-A6AC-6E97B103DE55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Edm.Tests", "Querying\Tests\Querying.QueryExecution.Tests\Querying.Edm.Tests.csproj", "{1FB39973-A18A-4764-96D5-6F3347FF3EE6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Edm.Tests", "Querying\Tests\Querying.Edm.Tests\Querying.Edm.Tests.csproj", "{1FB39973-A18A-4764-96D5-6F3347FF3EE6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Web.OData", "Querying\Querying.Web.OData\Querying.Web.OData.csproj", "{4D48AAC9-C244-41A3-9E89-187860717B1F}"
 EndProject
@@ -110,6 +110,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "build", "build\build.csproj", "{8D547BD0-0127-4FC4-AD50-ECDD7BB17152}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Storage", "Querying\Querying.Storage\Querying.Storage.csproj", "{A16C1EB8-1575-4EAB-8E4D-891BB5C55150}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5AD8A29C-BDEE-4B5B-9387-1107E9CD65EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -218,7 +220,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{16DA002C-3DA3-4303-AC10-8FE046F0ED2C} = {F1BB08E3-5A59-42F0-887A-14A26AD4D729}
+		{16DA002C-3DA3-4303-AC10-8FE046F0ED2C} = {5AD8A29C-BDEE-4B5B-9387-1107E9CD65EF}
 		{135EF4B2-E97C-44B5-A6AC-6E97B103DE55} = {77AAFA66-EC7B-44AD-80A2-58B6E5A5A3A9}
 		{1FB39973-A18A-4764-96D5-6F3347FF3EE6} = {F1BB08E3-5A59-42F0-887A-14A26AD4D729}
 		{4D48AAC9-C244-41A3-9E89-187860717B1F} = {77AAFA66-EC7B-44AD-80A2-58B6E5A5A3A9}

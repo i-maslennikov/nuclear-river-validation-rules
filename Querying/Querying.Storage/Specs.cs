@@ -26,8 +26,8 @@ namespace NuClear.Querying.Storage
                 return new FindSpecification<T>(lambda);
             }
 
-            // linq constant parametrization required for better sql server perfomance
-            public static Expression ParametrizeConstant(object value, Type type)
+            // linq constant parametrization required for better sql server performance
+            private static Expression ParametrizeConstant(object value, Type type)
             {
                 var parameter = Activator.CreateInstance(typeof(LinqParameter<>).MakeGenericType(type), value);
 

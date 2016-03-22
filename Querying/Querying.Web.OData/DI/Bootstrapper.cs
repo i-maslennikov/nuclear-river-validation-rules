@@ -79,7 +79,7 @@ namespace NuClear.Querying.Web.OData.DI
 
             return container.RegisterInstance(tracer)
                             .RegisterInstance(tracerContextManager)
-                            .RegisterType<IExceptionLogger, Log4NetWebApiExceptionLogger>("log4net", Lifetime.Singleton);
+                            .RegisterType<IExceptionLogger, ExceptionTracer>("log4net", Lifetime.Singleton);
         }
 
         private static IUnityContainer ConfigureMetadata(this IUnityContainer container)

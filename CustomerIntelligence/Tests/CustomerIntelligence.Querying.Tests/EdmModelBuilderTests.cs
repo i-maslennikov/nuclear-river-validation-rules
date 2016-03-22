@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -36,8 +35,8 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
         private static IEdmModel BuildModel(Uri contextId)
         {
-            var builder = new EdmModelBuilder(TestMetadataProvider.Instance);
-            var model = builder.Build(contextId, Enumerable.Empty<Type>());
+            var builder = new EdmModelBuilder(TestMetadataProvider.Instance, new NullEdmModelAnnotator());
+            var model = builder.Build()[contextId];
 
             model.Dump();
 

@@ -7,7 +7,7 @@ using NuClear.River.Common.Metadata.Elements;
 
 using NUnit.Framework;
 
-namespace NuClear.QueryingMetadata.Tests
+namespace NuClear.River.Common.Metadata.Tests
 {
     [TestFixture]
     internal class StructuralModelMetadataTests : BaseMetadataFixture<StructuralModelElement, StructuralModelElementBuilder>

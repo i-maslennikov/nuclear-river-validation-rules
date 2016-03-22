@@ -4,11 +4,11 @@ using NuClear.Tracing.API;
 
 namespace NuClear.Querying.Web.OData
 {
-    public sealed class Log4NetWebApiExceptionLogger : ExceptionLogger
+    public sealed class ExceptionTracer : ExceptionLogger
     {
         private readonly ITracer _tracer;
 
-        public Log4NetWebApiExceptionLogger(ITracer tracer)
+        public ExceptionTracer(ITracer tracer)
         {
             _tracer = tracer;
         }
