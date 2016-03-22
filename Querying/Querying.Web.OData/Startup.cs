@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.OData.Batch;
 
 using Microsoft.Owin;
 
@@ -28,7 +29,6 @@ namespace NuClear.Querying.Web.OData
             config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
 
             config.MapHttpAttributeRoutes();
-            config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new { id = RouteParameter.Optional });
 
             config.SetupClrTypes();
             config.RegisterODataControllers();
@@ -42,7 +42,9 @@ namespace NuClear.Querying.Web.OData
 
 
             var httpServer = new HttpServer(config);
-            httpServer.MapODataServiceRoutes();
+            var batchHandler = new DefaultODataBatchHandler(httpServer);
+
+            config.MapODataServiceRoutes(batchHandler);
 
             appBuilder.UseWebApi(httpServer);
         }
