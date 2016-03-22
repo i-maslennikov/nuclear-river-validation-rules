@@ -18,7 +18,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
     using Territory = NuClear.CustomerIntelligence.Querying.Tests.Model.CustomerIntelligence.Territory;
 
     [TestFixture]
-    internal class EdmxBuilderModelTests : EdmxBuilderBaseFixture
+    internal class DbModelBuilderConfiguratorTests : DbModelBuilderConfiguratorBaseFixture
     {
         [Test]
         public void ShouldQueryBusinessDirectoryModel()

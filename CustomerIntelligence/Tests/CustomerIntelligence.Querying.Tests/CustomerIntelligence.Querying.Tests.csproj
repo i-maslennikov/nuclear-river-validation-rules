@@ -100,9 +100,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmitEdmModelAnnotator.cs" />
     <Compile Include="EdmModelBuilderTests.cs" />
-    <Compile Include="EdmxBuilderBaseFixture.cs" />
-    <Compile Include="EdmxBuilderModelTests.cs" />
+    <Compile Include="DbModelBuilderConfiguratorBaseFixture.cs" />
+    <Compile Include="DbModelBuilderConfiguratorTests.cs" />
     <Compile Include="EdmxExtensions.cs" />
     <Compile Include="MetadataTests.cs" />
     <Compile Include="Model\CustomerIntelligence\Category.cs" />
@@ -150,6 +151,10 @@
     <ProjectReference Include="..\..\..\Querying\Querying.Edm\Querying.Edm.csproj">
       <Project>{135ef4b2-e97c-44b5-a6ac-6e97b103de55}</Project>
       <Name>Querying.Edm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Querying\Querying.Storage\Querying.Storage.csproj">
+      <Project>{A16C1EB8-1575-4EAB-8E4D-891BB5C55150}</Project>
+      <Name>Querying.Storage</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
       <Project>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</Project>
