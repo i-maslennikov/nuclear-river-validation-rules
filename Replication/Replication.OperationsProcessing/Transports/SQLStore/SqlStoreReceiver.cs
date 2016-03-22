@@ -6,21 +6,21 @@ using System.Transactions;
 using NuClear.Messaging.API.Flows.Metadata;
 using NuClear.Messaging.API.Receivers;
 using NuClear.Model.Common.Entities;
-using NuClear.OperationsProcessing.API.Final;
+using NuClear.OperationsProcessing.API.Primary;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
 {
-    public sealed class SqlStoreReceiver : MessageReceiverBase<PerformedOperationsFinalProcessingMessage, IFinalProcessingQueueReceiverSettings> 
+    public sealed class SqlStoreReceiver : MessageReceiverBase<PerformedOperationsFinalProcessingMessage, IPerformedOperationsReceiverSettings>
     {
         private readonly IQuery _query;
         private readonly IRepository<PerformedOperationFinalProcessing> _repository;
 
         public SqlStoreReceiver(
             MessageFlowMetadata sourceFlowMetadata,
-            IFinalProcessingQueueReceiverSettings messageReceiverSettings,
+            IPerformedOperationsReceiverSettings messageReceiverSettings,
             IQuery query,
             IRepository<PerformedOperationFinalProcessing> repository)
             : base(sourceFlowMetadata, messageReceiverSettings)

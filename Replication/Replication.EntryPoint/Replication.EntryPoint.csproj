@@ -297,9 +297,7 @@
     <Compile Include="DI\ReplicationZone.cs" />
     <Compile Include="DI\UnityContainerExtensions.cs" />
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />
-    <Compile Include="Factories\Messaging\Receiver\CorporateBusReceiverResolveStrategy.cs" />
-    <Compile Include="Factories\Messaging\Receiver\FinalReceiverResolveStrategy.cs" />
-    <Compile Include="Factories\Messaging\Receiver\ServiceBusReceiverResolveStrategy.cs" />
+    <Compile Include="Factories\Messaging\Receiver\MessageFlowReceiverResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Transformer\PrimaryMessageTransformerResolveStrategy.cs" />
     <Compile Include="Factories\Replication\UnityImportDocumentMetadataProcessorFactory.cs" />
     <Compile Include="Factories\Replication\UnityAggregateProcessorFactory.cs" />
@@ -311,8 +309,7 @@
     <Compile Include="Factories\UnityServiceBusMessageFlowReceiverFactory.cs" />
     <Compile Include="Jobs\ReportingJob.cs" />
     <Compile Include="Jobs\DebugTestJob.cs" />
-    <Compile Include="Jobs\OperationsFinalProcessingJob.cs" />
-    <Compile Include="Jobs\OperationsPrimaryProcessingJob.cs" />
+    <Compile Include="Jobs\ProcessingJob.cs" />
     <Compile Include="Factories\Messaging\Processor\PrimaryProcessorResolveStrategy.cs" />
     <Compile Include="ReplicationService.cs">
       <SubType>Component</SubType>
