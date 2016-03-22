@@ -7,10 +7,9 @@ using System.Web.OData;
 using System.Web.OData.Query;
 
 using NuClear.Metamodeling.Provider;
-using NuClear.Querying.Web.OData.DynamicControllers;
 using NuClear.River.Common.Metadata.Elements;
 
-namespace NuClear.Querying.Web.OData.Controllers
+namespace NuClear.Querying.OData.Controllers
 {
     public sealed class DynamicEnableQueryAttribute : EnableQueryAttribute
     {
@@ -54,8 +53,7 @@ namespace NuClear.Querying.Web.OData.Controllers
         // workaround for https://github.com/OData/WebApi/issues/53
         private static void Ieee754Compatible(HttpActionExecutedContext actionExecutedContext)
         {
-            var compatibleParameter = actionExecutedContext.Request.Headers.Accept
-                   .Where(x => string.Equals(x.MediaType, "application/json", StringComparison.OrdinalIgnoreCase))
+            var compatibleParameter = actionExecutedContext.Request.Headers.Accept.Where(x => string.Equals(x.MediaType, "application/json", StringComparison.OrdinalIgnoreCase))
                    .SelectMany(x => x.Parameters)
                    .FirstOrDefault(x => string.Equals(x.Name, "IEEE754Compatible", StringComparison.OrdinalIgnoreCase));
 

@@ -18,17 +18,17 @@ Include 'updateschemas.ps1'
 Include 'bulktool.ps1'
 Include 'datatest.ps1'
 
-Task QueueBuild-OData -Precondition { $Metadata['Web.OData'] } {
-	$projectFileName = Get-ProjectFileName 'Querying' 'Querying.Web.OData'
-	QueueBuild-WebPackage $projectFileName 'Web.OData'
+Task QueueBuild-OData -Precondition { $Metadata['CustomerIntelligence.Querying.Host'] } {
+	$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Querying.Host'
+	QueueBuild-WebPackage $projectFileName 'CustomerIntelligence.Querying.Host'
 }
 Task Deploy-OData -Depends Take-ODataOffline -Precondition { $Metadata['Web.OData'] } {
-	Deploy-WebPackage 'Web.OData'
-	Validate-WebSite 'Web.OData' 'CustomerIntelligence/$metadata'
+	Deploy-WebPackage 'CustomerIntelligence.Querying.Host'
+	Validate-WebSite 'CustomerIntelligence.Querying.Host' 'CustomerIntelligence/$metadata'
 }
 
 Task Take-ODataOffline -Precondition { $Metadata['Web.OData'] } {
-	Take-WebsiteOffline 'Web.OData'
+	Take-WebsiteOffline 'CustomerIntelligence.Querying.Host'
 }
 
 Task QueueBuild-TaskService -Precondition { $Metadata['Replication.EntryPoint'] } {

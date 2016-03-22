@@ -140,7 +140,7 @@ $AllSchemas = @(
 )
 
 $AllEntryPoints = @(
-	'Web.OData'
+	'CustomerIntelligence.Querying.Host'
 	'Replication.EntryPoint'
 	'ConvertUseCasesService'
 )

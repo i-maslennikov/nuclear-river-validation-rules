@@ -5,7 +5,7 @@ using System.Web.OData.Query;
 using NuClear.Querying.Storage;
 using NuClear.Storage.API.Readings;
 
-namespace NuClear.Querying.Web.OData.Controllers
+namespace NuClear.Querying.OData.Controllers
 {
 
     public abstract class GenericODataController<TEntity> : ODataController where TEntity : class

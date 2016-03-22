@@ -4,9 +4,10 @@ using System.Web.OData.Batch;
 
 using Microsoft.Owin;
 
-using NuClear.Querying.Web.OData;
-using NuClear.Querying.Web.OData.DI;
-using NuClear.Querying.Web.OData.Settings;
+using NuClear.CustomerIntelligence.Querying.Host;
+using NuClear.CustomerIntelligence.Querying.Host.DI;
+using NuClear.CustomerIntelligence.Querying.Host.Settings;
+using NuClear.Querying.OData;
 
 using Owin;
 
@@ -15,7 +16,7 @@ using Swashbuckle.OData;
 
 [assembly: OwinStartup(typeof(Startup))]
 
-namespace NuClear.Querying.Web.OData
+namespace NuClear.CustomerIntelligence.Querying.Host
 {
     public class Startup
     {

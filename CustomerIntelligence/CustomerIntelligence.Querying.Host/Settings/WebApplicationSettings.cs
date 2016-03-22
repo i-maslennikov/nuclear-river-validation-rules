@@ -2,14 +2,14 @@
 using System.Configuration;
 
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
+using NuClear.Querying.OData;
 using NuClear.River.Common.Identities.Connections;
-using NuClear.River.Common.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
 
-namespace NuClear.Querying.Web.OData.Settings
+namespace NuClear.CustomerIntelligence.Querying.Host.Settings
 {
-    public sealed class WebApplicationSettings : SettingsContainerBase
+    public sealed class WebApplicationSettings : SettingsContainer
     {
         public WebApplicationSettings()
         {
@@ -26,8 +26,7 @@ namespace NuClear.Querying.Web.OData.Settings
                     }
                 });
 
-            Aspects.Use(connectionStringSettings)
-                   .Use<EnvironmentSettingsAspect>();
+            Aspects.Use(connectionStringSettings);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Web.Http;
 
-namespace NuClear.Querying.Web.OData.Controllers
+namespace NuClear.CustomerIntelligence.Querying.Host.Controllers
 {
     public sealed class VersionController : ApiController
     {

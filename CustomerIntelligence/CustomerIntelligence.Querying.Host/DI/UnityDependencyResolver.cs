@@ -4,7 +4,7 @@ using System.Web.Http.Dependencies;
 
 using Microsoft.Practices.Unity;
 
-namespace NuClear.Querying.Web.OData.DI
+namespace NuClear.CustomerIntelligence.Querying.Host.DI
 {
     internal sealed class UnityDependencyResolver : IDependencyResolver
     {

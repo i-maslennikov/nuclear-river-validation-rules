@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Dispatcher;
 
-namespace NuClear.Querying.Web.OData.DynamicControllers
+using NuClear.Querying.OData.Emit;
+
+namespace NuClear.Querying.OData
 {
-    public sealed class DynamicControllerTypeResolver : DefaultHttpControllerTypeResolver
+    public sealed class ControllerTypeResolver : DefaultHttpControllerTypeResolver
     {
         private readonly IDynamicAssembliesResolver _dynamicAssembliesResolver;
 
-        public DynamicControllerTypeResolver(IDynamicAssembliesResolver dynamicAssembliesResolver)
+        public ControllerTypeResolver(IDynamicAssembliesResolver dynamicAssembliesResolver)
         {
             _dynamicAssembliesResolver = dynamicAssembliesResolver;
         }

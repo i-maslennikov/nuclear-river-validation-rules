@@ -70,16 +70,7 @@ function Get-ValidateWebsiteMetadata ($Context) {
 function Get-IisAppPathMetadata ($Context) {
 
 	switch ($Context.EntryPoint) {
-		'2Gis.Erm.UI.Web.Mvc' { $prefix = "web-app$($Context['Index'])" }
-		'2Gis.Erm.API.WCF.Operations' { $prefix = "basic-operations$($Context['Index']).api" }
-		'2Gis.Erm.API.WCF.MoDi' { $prefix = "money-distribution$($Context['Index']).api" }
-		'2Gis.Erm.API.WCF.Metadata' { $prefix = "metadata$($Context['Index']).api" }
-		'2Gis.Erm.API.WCF.OrderValidation' { $prefix = "order-validation$($Context['Index']).api" }
-		'2Gis.Erm.API.WCF.Operations.Special' { $prefix = "financial-operations$($Context['Index']).api" }
-		'2Gis.Erm.API.WCF.Releasing' { $prefix = "releasing$($Context['Index']).api" }
-		'2Gis.Erm.UI.Desktop.WPF' { $prefix = "wpf-app$($Context['Index'])" }
-		# line added
-		'Web.OData' { $prefix = "search$($Context['Index']).api" }
+		'CustomerIntelligence.Querying.Host' { $prefix = "search$($Context['Index']).api" }
 		default {
 			return @{}
 		}

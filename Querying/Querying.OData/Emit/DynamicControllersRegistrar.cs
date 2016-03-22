@@ -8,12 +8,12 @@ using System.Web.OData;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.Edm.EF;
-using NuClear.Querying.Web.OData.Controllers;
+using NuClear.Querying.OData.Controllers;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Identities;
 
-namespace NuClear.Querying.Web.OData.DynamicControllers
+namespace NuClear.Querying.OData.Emit
 {
     public sealed class DynamicControllersRegistrar
     {

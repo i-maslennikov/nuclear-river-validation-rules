@@ -16,8 +16,9 @@ using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Querying.Edm;
 using NuClear.Querying.Edm.EF;
 using NuClear.Querying.Edm.Emit;
+using NuClear.Querying.OData;
+using NuClear.Querying.OData.Emit;
 using NuClear.Querying.Storage;
-using NuClear.Querying.Web.OData.DynamicControllers;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.River.Common.Settings;
 using NuClear.Settings.API;
@@ -33,7 +34,7 @@ using NuClear.Tracing.Environment;
 using NuClear.Tracing.Log4Net;
 using NuClear.Tracing.Log4Net.Config;
 
-namespace NuClear.Querying.Web.OData.DI
+namespace NuClear.CustomerIntelligence.Querying.Host.DI
 {
     internal static class Bootstrapper
     {
@@ -144,7 +145,7 @@ namespace NuClear.Querying.Web.OData.DI
                 .RegisterType<IDynamicAssembliesResolver, DynamicAssembliesRegistry>(Lifetime.Singleton)
 
                 // custom IHttpControllerTypeResolver
-                .RegisterType<IHttpControllerTypeResolver, DynamicControllerTypeResolver>(Lifetime.Singleton);
+                .RegisterType<IHttpControllerTypeResolver, ControllerTypeResolver>(Lifetime.Singleton);
         }
     }
 }
