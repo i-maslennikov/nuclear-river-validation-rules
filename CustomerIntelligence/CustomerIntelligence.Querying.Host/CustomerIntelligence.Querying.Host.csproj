@@ -262,9 +262,9 @@
       <Project>{135ef4b2-e97c-44b5-a6ac-6e97b103de55}</Project>
       <Name>Querying.Edm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Querying\Querying.OData\Querying.OData.csproj">
+    <ProjectReference Include="..\..\Querying\Querying.Http\Querying.Http.csproj">
       <Project>{f66d6611-ac05-44c6-a5ac-74529d5b4fa0}</Project>
-      <Name>Querying.OData</Name>
+      <Name>Querying.Http</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Querying\Querying.Storage\Querying.Storage.csproj">
       <Project>{a16c1eb8-1575-4eab-8e4d-891bb5c55150}</Project>

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Dispatcher;
 
-using NuClear.Querying.OData.Emit;
+using NuClear.Querying.Http.Emit;
 
-namespace NuClear.Querying.OData
+namespace NuClear.Querying.Http
 {
     public sealed class ControllerTypeResolver : DefaultHttpControllerTypeResolver
     {

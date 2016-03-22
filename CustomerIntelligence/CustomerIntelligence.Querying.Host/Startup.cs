@@ -7,7 +7,7 @@ using Microsoft.Owin;
 using NuClear.CustomerIntelligence.Querying.Host;
 using NuClear.CustomerIntelligence.Querying.Host.DI;
 using NuClear.CustomerIntelligence.Querying.Host.Settings;
-using NuClear.Querying.OData;
+using NuClear.Querying.Http;
 
 using Owin;
 

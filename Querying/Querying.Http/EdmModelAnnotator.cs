@@ -7,7 +7,7 @@ using NuClear.Querying.Edm;
 using NuClear.Querying.Edm.EF;
 using NuClear.River.Common.Metadata.Elements;
 
-namespace NuClear.Querying.OData
+namespace NuClear.Querying.Http
 {
     public class EdmModelAnnotator : IEdmModelAnnotator
     {

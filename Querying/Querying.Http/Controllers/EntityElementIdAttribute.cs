@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NuClear.Querying.OData.Controllers
+namespace NuClear.Querying.Http.Controllers
 {
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class EntityElementIdAttribute : Attribute

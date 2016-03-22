@@ -9,7 +9,7 @@ using System.Web.OData.Query;
 using NuClear.Metamodeling.Provider;
 using NuClear.River.Common.Metadata.Elements;
 
-namespace NuClear.Querying.OData.Controllers
+namespace NuClear.Querying.Http.Controllers
 {
     public sealed class DynamicEnableQueryAttribute : EnableQueryAttribute
     {

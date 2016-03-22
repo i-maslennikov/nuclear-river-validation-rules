@@ -10,9 +10,9 @@ using Microsoft.OData.Edm;
 
 using NuClear.Querying.Edm;
 using NuClear.Querying.Edm.EF;
-using NuClear.Querying.OData.Emit;
+using NuClear.Querying.Http.Emit;
 
-namespace NuClear.Querying.OData
+namespace NuClear.Querying.Http
 {
     public static class HttpConfigurationExtensions
     {

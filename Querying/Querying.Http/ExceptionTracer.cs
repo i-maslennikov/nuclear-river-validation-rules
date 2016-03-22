@@ -2,7 +2,7 @@
 
 using NuClear.Tracing.API;
 
-namespace NuClear.Querying.OData
+namespace NuClear.Querying.Http
 {
     public sealed class ExceptionTracer : ExceptionLogger
     {

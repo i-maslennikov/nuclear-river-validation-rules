@@ -7,8 +7,8 @@
     <ProjectGuid>{F66D6611-AC05-44C6-A5AC-74529D5B4FA0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuClear.Querying.OData</RootNamespace>
-    <AssemblyName>2GIS.NuClear.Querying.OData</AssemblyName>
+    <RootNamespace>NuClear.Querying.Http</RootNamespace>
+    <AssemblyName>2GIS.NuClear.Querying.Http</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

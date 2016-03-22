@@ -2,7 +2,7 @@
 using System.Configuration;
 
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
-using NuClear.Querying.OData;
+using NuClear.Querying.Http;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;

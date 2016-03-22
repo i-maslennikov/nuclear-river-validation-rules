@@ -115,7 +115,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5AD8A29C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Storage.Tests", "Querying\Tests\Querying.Storage.Tests\Querying.Storage.Tests.csproj", "{1A6411FA-C2EB-49C5-A0CE-3D5265141B51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.OData", "Querying\Querying.OData\Querying.OData.csproj", "{F66D6611-AC05-44C6-A5AC-74529D5B4FA0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Http", "Querying\Querying.Http\Querying.Http.csproj", "{F66D6611-AC05-44C6-A5AC-74529D5B4FA0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{98AD53CC-0508-413C-8541-0F9374CA20F2}"
 EndProject

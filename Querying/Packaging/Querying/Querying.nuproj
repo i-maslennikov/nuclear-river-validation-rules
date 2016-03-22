@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Querying.OData\Querying.OData.csproj" />
+    <ProjectReference Include="..\..\Querying.OData\Querying.Http.csproj" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>48631a28-4d1f-4b49-b5d8-392071b232c3</ProjectGuid>
@@ -37,7 +37,7 @@
     </LicenseUrl>
     <Copyright>
     </Copyright>
-    <Tags>NuClear River Querying  ReadModel</Tags>
+    <Tags>NuClear River Querying ReadModel</Tags>
     <EmbedSourceFiles>true</EmbedSourceFiles>
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.targets" />
