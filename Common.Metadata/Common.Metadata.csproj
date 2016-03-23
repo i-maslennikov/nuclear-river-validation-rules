@@ -43,7 +43,6 @@
     <Compile Include="Builders\EnumTypeElementBuilder.cs" />
     <Compile Include="Builders\FactMetadataBuilder.cs" />
     <Compile Include="Builders\ImportStatisticsMetadataBuilder.cs" />
-    <Compile Include="Builders\StatisticsRecalculationMetadataBuilder.cs" />
     <Compile Include="Builders\StructuralModelElementBuilder.cs" />
     <Compile Include="Elements\OperationRegistryMetadataElement.cs" />
     <Compile Include="Elements\AggregateMetadata.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="Elements\IStructuralModelTypeElement.cs" />
     <Compile Include="Elements\MetadataElementExtensions.cs" />
     <Compile Include="Elements\PrimitiveTypeElement.cs" />
-    <Compile Include="Elements\StatisticsRecalculationMetadata.cs" />
     <Compile Include="Elements\StructuralModelElement.cs" />
     <Compile Include="Elements\StructuralModelTypeKind.cs" />
     <Compile Include="Elements\UriExtensions.cs" />
@@ -82,7 +80,6 @@
     <Compile Include="Identities\ImportStatisticsMetadataIdentity.cs" />
     <Compile Include="Identities\OperationRegistryMetadataIdentity.cs" />
     <Compile Include="Identities\ReplicationMetadataIdentity.cs" />
-    <Compile Include="Identities\StatisticsRecalculationMetadataIdentity.cs" />
     <Compile Include="MapToObjectsSpecProvider.cs" />
     <Compile Include="Model\DefaultIdentityProvider.cs" />
     <Compile Include="Model\IAggregateEntity.cs" />

@@ -1,4 +1,6 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System;
+
+using Microsoft.Practices.Unity;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core;
@@ -6,7 +8,6 @@ using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Equality;
-using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 
@@ -23,6 +24,11 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
 
         public IStatisticsProcessor Create(IMetadataElement metadata)
         {
+            if (metadata.GetType().GetGenericTypeDefinition() != typeof(ValueObjectMetadata<,>))
+            {
+                throw new Exception("Я думаю, что должен быть ValueObjectMetadata");
+            }
+
             var statisticsType = metadata.GetType().GenericTypeArguments[0];
             var processorType = typeof(StatisticsProcessor<>).MakeGenericType(statisticsType);
             var processor = _unityContainer.Resolve(processorType,
@@ -62,10 +68,10 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             where T : class
         {
             private readonly IQuery _query;
-            private readonly StatisticsRecalculationMetadata<T, StatisticsKey> _metadata;
+            private readonly ValueObjectMetadata<T, StatisticsKey> _metadata;
             private readonly IEqualityComparerFactory _equalityComparerFactory;
 
-            public DataChangesDetectorFactory(StatisticsRecalculationMetadata<T, StatisticsKey> metadata, IEqualityComparerFactory equalityComparerFactory, IQuery query)
+            public DataChangesDetectorFactory(ValueObjectMetadata<T, StatisticsKey> metadata, IEqualityComparerFactory equalityComparerFactory, IQuery query)
             {
                 _metadata = metadata;
                 _equalityComparerFactory = equalityComparerFactory;

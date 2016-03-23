@@ -10,9 +10,9 @@ namespace NuClear.Replication.Core.Aggregates
     public sealed class StatisticsFindSpecificationProvider<T> : IFindSpecificationProvider<T, RecalculateStatisticsOperation>
         where T : class
     {
-        private readonly StatisticsRecalculationMetadata<T, StatisticsKey> _metadata;
+        private readonly ValueObjectMetadata<T, StatisticsKey> _metadata;
 
-        public StatisticsFindSpecificationProvider(StatisticsRecalculationMetadata<T, StatisticsKey> metadata)
+        public StatisticsFindSpecificationProvider(ValueObjectMetadata<T, StatisticsKey> metadata)
         {
             _metadata = metadata;
         }

@@ -159,9 +159,9 @@ go
 
 -- ClientContact
 create table CustomerIntelligence.ClientContact(
-	ClientId bigint not null
-	, ContactId bigint not null
-	, [Role] int not null
+    ClientId bigint not null
+    , ContactId bigint not null
+    , [Role] int not null
     , constraint PK_ClientContact primary key (ClientId, ContactId)
 )
 go

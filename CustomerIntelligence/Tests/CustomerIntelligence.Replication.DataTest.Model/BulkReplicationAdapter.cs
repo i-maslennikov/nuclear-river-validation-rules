@@ -26,7 +26,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                     new BulkReplicationMetadataSource(),
                     new FactsReplicationMetadataSource(),
                     new AggregateConstructionMetadataSource(),
-                    new StatisticsRecalculationMetadataSource(),
+                    new StatisticsConstructionMetadataSource(),
                 },
                 new IMetadataProcessor[] { new ReferencesEvaluatorProcessor() });
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
+using NuClear.Metamodeling.Elements;
+using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Identities;
@@ -12,6 +14,7 @@ using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates
 {
+    // Нужен?
     public class StatisticsRecalculator : IStatisticsRecalculator
     {
         private readonly IMetadataProvider _metadataProvider;
@@ -63,10 +66,17 @@ namespace NuClear.Replication.Core.Aggregates
 
         private IReadOnlyCollection<IStatisticsProcessor> CreateProcessors()
         {
-            MetadataSet metadataSet;
-            if (!_metadataProvider.TryGetMetadata<StatisticsRecalculationMetadataIdentity>(out metadataSet))
+            IMetadataElement aggregateMetadata;
+            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Statistics/ProjectStatistics", UriKind.Relative));
+            if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
             {
-                throw new NotSupportedException($"Metadata for identity '{typeof(StatisticsRecalculationMetadataIdentity).Name}' cannot be found.");
+                throw new NotSupportedException($"The aggregate of type 'ProjectStatistics' is not supported.");
+            }
+
+            MetadataSet metadataSet;
+            if (!_metadataProvider.TryGetMetadata<ReplicationMetadataIdentity>(out metadataSet))
+            {
+                throw new NotSupportedException($"Metadata for identity '{typeof(ReplicationMetadataIdentity).Name}' cannot be found.");
             }
 
             var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).ToArray();

@@ -15,7 +15,6 @@ using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.OperationsProcessing;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Final;
-using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
@@ -77,7 +76,6 @@ using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.River.Common.Metadata.Equality;
-using NuClear.River.Common.Metadata.Identities;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Security;
@@ -166,7 +164,7 @@ namespace NuClear.Replication.EntryPoint.DI
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(FactsReplicationMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(ImportDocumentMetadataSource), Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(AggregateConstructionMetadataSource), Lifetime.Singleton);
-            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(StatisticsRecalculationMetadataSource), Lifetime.Singleton);
+            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(StatisticsConstructionMetadataSource), Lifetime.Singleton);
 
             return container;
         }

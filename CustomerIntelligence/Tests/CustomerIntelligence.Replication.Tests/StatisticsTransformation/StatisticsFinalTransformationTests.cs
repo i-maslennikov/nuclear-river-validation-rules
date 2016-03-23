@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using Moq;
 
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Storage;
+using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
@@ -134,8 +136,14 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
         private static IStatisticsProcessor StatisticsProcessor<T>(object[] data, out Mock<IRepository<T>> repository)
             where T : class
         {
-            var metadataSource = new StatisticsRecalculationMetadataSource();
-            var metadata = metadataSource.Metadata.Values.SelectMany(x => x.Elements).OfType<StatisticsRecalculationMetadata<T, StatisticsKey>>().Single();
+            IMetadataElement aggregateMetadata;
+            var metadataSource = new StatisticsConstructionMetadataSource();
+            if (!metadataSource.Metadata.Values.TryGetElementById(new Uri(typeof(Statistics.ProjectStatistics).Name, UriKind.Relative), out aggregateMetadata))
+            {
+                throw new NotSupportedException(string.Format("The aggregate of type '{0}' is not supported.", "Statistics"));
+            }
+
+            var metadata = aggregateMetadata.Elements.OfType<ValueObjectMetadata<T, StatisticsKey>>().Single();
             repository = new Mock<IRepository<T>>();
             var comparerFactory = new EqualityComparerFactory(new LinqToDbPropertyProvider(Schema.Erm, Schema.Facts, Schema.CustomerIntelligence));
 

@@ -18,6 +18,18 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
             {
                 public static partial class ToStatistics
                 {
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::ProjectStatistics>> ProjectStatistics =
+                        new MapSpecification<IQuery, IQueryable<Statistics::ProjectStatistics>>(
+                            q =>
+                                {
+                                    var _1 = q.For<Bit::FirmCategoryForecast>().Select(x => x.ProjectId).Distinct();
+                                    var _2 = q.For<Bit::FirmCategoryStatistics>().Select(x => x.ProjectId).Distinct();
+                                    var _3 = q.For<Bit::FirmForecast>().Select(x => x.ProjectId).Distinct();
+                                    var _4 = q.For<Bit::ProjectCategoryStatistics>().Select(x => x.ProjectId).Distinct();
+
+                                    return _1.Union(_2).Union(_3).Union(_4).Distinct().Select(x => new Statistics.ProjectStatistics { ProjectId = x });
+                                });
+
                     public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>> FirmCategory3 =
                         new MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>>(
                             q =>
@@ -58,8 +70,8 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                                       select new Statistics::FirmCategory3
                                                       {
                                                           ProjectId = firmDto.ProjectId,
-                                                          FirmId = firmDto.FirmId,
                                                           CategoryId = firmDto.CategoryId,
+                                                          FirmId = firmDto.FirmId,
                                                           Name = category.Name,
                                                           Hits = firmStatistics == null ? 0 : firmStatistics.Hits,
                                                           Shows = firmStatistics == null ? 0 : firmStatistics.Shows,

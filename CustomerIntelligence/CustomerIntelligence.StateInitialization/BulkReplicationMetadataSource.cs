@@ -32,7 +32,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization
                                               .CommandlineKey("-statistics")
                                               .From(ConnectionString.Facts, Schema.Facts)
                                               .To(ConnectionString.CustomerIntelligence, Schema.CustomerIntelligence)
-                                              .UsingMetadataOfKind<StatisticsRecalculationMetadataIdentity>()
+                                              .UsingMetadataOfKind<ReplicationMetadataIdentity>(ReplicationMetadataName.Statistics)
             }.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);
 
         public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata => Elements;

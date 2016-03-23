@@ -4,5 +4,6 @@
     {
         public const string Facts = "Facts";
         public const string Aggregates = "Aggregates";
+        public const string Statistics = "Statistics";
     }
 }
