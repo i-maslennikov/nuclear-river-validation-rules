@@ -11,8 +11,8 @@ using NuClear.Telemetry.Probing;
 namespace NuClear.Replication.Core.Aggregates
 {
     /// <summary>
-    /// Выполняет обработку прямой зависимости между фактом и сущностью.
-    /// Приямая зависимость означет, что идентификатор факта является идентиифкатором сущности.
+    /// Processes idirect dependency from fact to entity.
+    /// 'Indirect' means that entity identity can be found using fact object.
     /// </summary>
     public class IndirectlyDependentEntityFeatureProcessor<TFact, TEntityKey> : IFactDependencyProcessor
         where TFact : class, IIdentifiable<long>

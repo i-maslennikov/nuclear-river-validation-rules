@@ -5,7 +5,7 @@ using System.Reflection;
 namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
-    /// Описывает идентификацию по единственному свойству Id типа int
+    /// Describes simple identity by 'Id' field of type long.
     /// </summary>
     public class DefaultIdentityProvider : IIdentityProvider<long>
     {
