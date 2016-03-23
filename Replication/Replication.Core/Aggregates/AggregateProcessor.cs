@@ -13,9 +13,9 @@ namespace NuClear.Replication.Core.Aggregates
         private readonly IBulkRepository<T> _repository;
         private readonly DataChangesDetector<T> _aggregateChangesDetector;
         private readonly IReadOnlyCollection<IValueObjectProcessor> _valueObjectProcessors;
-        private readonly IFindSpecificationProvider<T> _findSpecificationProvider;
+        private readonly IFindSpecificationProvider<T, AggregateOperation> _findSpecificationProvider;
 
-        public AggregateProcessor(DataChangesDetector<T> aggregateChangesDetector, IBulkRepository<T> repository, IReadOnlyCollection<IValueObjectProcessor> valueObjectProcessors, IFindSpecificationProvider<T> findSpecificationProvider)
+        public AggregateProcessor(DataChangesDetector<T> aggregateChangesDetector, IBulkRepository<T> repository, IReadOnlyCollection<IValueObjectProcessor> valueObjectProcessors, IFindSpecificationProvider<T, AggregateOperation> findSpecificationProvider)
         {
             _repository = repository;
             _aggregateChangesDetector = aggregateChangesDetector;

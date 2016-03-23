@@ -5,6 +5,7 @@ using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Equality;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
@@ -43,7 +44,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             var metadatOverride = new DependencyOverride(metadata.GetType(), metadata);
 
             return new DependencyOverride(
-                typeof(IFindSpecificationProvider<>).MakeGenericType(metadata.ValueObjectType),
+                typeof(IFindSpecificationProvider<,>).MakeGenericType(metadata.ValueObjectType, typeof(AggregateOperation)),
                 _unityContainer.Resolve(typeof(ValueObjectFindSpecificationProvider<,>).MakeGenericType(metadata.ValueObjectType, metadata.EntityKeyType), metadatOverride));
         }
 
