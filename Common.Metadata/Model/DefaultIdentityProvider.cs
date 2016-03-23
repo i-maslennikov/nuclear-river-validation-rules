@@ -11,7 +11,7 @@ namespace NuClear.River.Common.Metadata.Model
     {
         private const string IdPropertyName = "Id";
 
-        public Expression<Func<TIdentifiable, long>> ExtractIdentity<TIdentifiable>()
+        public Expression<Func<TIdentifiable, long>> Get<TIdentifiable>()
             where TIdentifiable : IIdentifiable<long>
         {
             var property = typeof(TIdentifiable).GetRuntimeProperty(IdPropertyName);

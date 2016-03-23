@@ -25,14 +25,14 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
         public static TKey GetId<T, TKey>(this IIdentityProvider<TKey> identityProvider, T instance)
             where T : IIdentifiable<TKey>
         {
-            var func = identityProvider.ExtractIdentity<T>().Compile();
+            var func = identityProvider.Get<T>().Compile();
             return func.Invoke(instance);
         }
 
         private static Expression<Func<TEntity, bool>> CreateExpression<TEntity, TKey>(IIdentityProvider<TKey> identity, IEnumerable<TKey> keys)
             where TEntity : IIdentifiable<TKey>
         {
-            var expression = identity.ExtractIdentity<TEntity>();
+            var expression = identity.Get<TEntity>();
             var containsMethod = GetMethodInfo<TKey>(Enumerable.Contains);
             return Expression.Lambda<Func<TEntity, bool>>(Expression.Call(null, containsMethod, Expression.Constant(keys), expression.Body),
                                                           expression.Parameters);
