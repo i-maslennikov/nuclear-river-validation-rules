@@ -34,10 +34,10 @@ namespace NuClear.River.Common.Metadata.Builders
         }
 
         // FIXME {all, 03.09.2015}: TEntity заменить на идентификатор типа
-        public FactMetadataBuilder<TFact> HasDependentEntity<TEntity, TKey>(MapToObjectsSpecProvider<TFact, TKey> dependentAggregateSpecProvider)
+        public FactMetadataBuilder<TFact> HasDependentEntity<TEntity, TKey>(MapToObjectsSpecProvider<TFact, TKey> dependentEntitySpecProvider)
             where TEntity : class, IIdentifiable<TKey>
         {
-            AddFeatures(new IndirectlyDependentEntityFeature<TFact, TKey>(typeof(TEntity), dependentAggregateSpecProvider));
+            AddFeatures(new IndirectlyDependentEntityFeature<TFact, TKey>(typeof(TEntity), dependentEntitySpecProvider));
             return this;
         }
 

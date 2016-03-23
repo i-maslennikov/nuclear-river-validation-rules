@@ -52,7 +52,7 @@ namespace NuClear.Replication.Core.Aggregates
             using (Probe.Create("Querying dependent entities"))
             {
                 var filter = _findSpecificationProvider.Create(factIds);
-                return _metadata.DependentAggregateSpecProvider.Invoke(filter).Map(_query).Select(key => _commandFactory.Create(_metadata.EntityType, key)).ToArray();
+                return _metadata.DependentEntitySpecProvider.Invoke(filter).Map(_query).Select(key => _commandFactory.Create(_metadata.EntityType, key)).ToArray();
             }
         }
     }
