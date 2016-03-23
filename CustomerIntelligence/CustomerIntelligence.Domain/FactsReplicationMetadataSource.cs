@@ -12,6 +12,7 @@ using NuClear.River.Common.Metadata.Identities;
 using NuClear.River.Common.Metadata.Model.Operations;
 
 using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
+using Statistics = NuClear.CustomerIntelligence.Domain.Model.Statistics;
 using Specs = NuClear.CustomerIntelligence.Domain.Specifications.Specs;
 
 namespace NuClear.CustomerIntelligence.Domain
@@ -52,7 +53,7 @@ namespace NuClear.CustomerIntelligence.Domain
                             FactMetadata<CategoryFirmAddress>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.CategoryFirmAddresses)
-                                .HasDependentEntity<CI::Statistics, StatisticsKey>(Specs.Map.Facts.ToStatistics.ByFirmAddressCategory)
+                                .HasDependentEntity<Statistics::ProjectStatistics, StatisticsKey>(Specs.Map.Facts.ToStatistics.ByFirmAddressCategory)
                                 .HasDependentEntity<CI::Firm, long>(Specs.Map.Facts.ToFirmAggregate.ByCategoryFirmAddress)
                                 .HasDependentEntity<CI::Client, long>(Specs.Map.Facts.ToClientAggregate.ByCategoryFirmAddress),
 
@@ -86,13 +87,13 @@ namespace NuClear.CustomerIntelligence.Domain
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Firms)
                                 .HasMatchedEntity<CI::Firm>()
-                                .HasDependentEntity<CI::Statistics, StatisticsKey>(Specs.Map.Facts.ToStatistics.ByFirm)
+                                .HasDependentEntity<Statistics::ProjectStatistics, StatisticsKey>(Specs.Map.Facts.ToStatistics.ByFirm)
                                 .HasDependentEntity<CI::Client, long>(Specs.Map.Facts.ToClientAggregate.ByFirm),
 
                             FactMetadata<FirmAddress>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.FirmAddresses)
-                                .HasDependentEntity<CI::Statistics, StatisticsKey>(Specs.Map.Facts.ToStatistics.ByFirmAddress)
+                                .HasDependentEntity<Statistics::ProjectStatistics, StatisticsKey>(Specs.Map.Facts.ToStatistics.ByFirmAddress)
                                 .HasDependentEntity<CI::Firm, long>(Specs.Map.Facts.ToFirmAggregate.ByFirmAddress)
                                 .HasDependentEntity<CI::Client, long>(Specs.Map.Facts.ToClientAggregate.ByFirmAddress),
 
@@ -115,7 +116,7 @@ namespace NuClear.CustomerIntelligence.Domain
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Projects)
                                 .HasMatchedEntity<CI::Project>()
-                                .HasDependentEntity<CI::Statistics, StatisticsKey>(Specs.Map.Facts.ToStatistics.ByProject)
+                                .HasDependentEntity<Statistics::ProjectStatistics, StatisticsKey>(Specs.Map.Facts.ToStatistics.ByProject)
                                 .HasDependentEntity<CI::Territory, long>(Specs.Map.Facts.ToTerritoryAggregate.ByProject)
                                 .HasDependentEntity<CI::Firm, long>(Specs.Map.Facts.ToFirmAggregate.ByProject),
 
