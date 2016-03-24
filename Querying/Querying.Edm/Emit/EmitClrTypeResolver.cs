@@ -14,18 +14,12 @@ namespace NuClear.Querying.Edm.Emit
 {
     public sealed class EmitClrTypeResolver : IClrTypeBuilder, IClrTypeProvider
     {
-        private const string CustomCodeName = "CustomCode";
-
         private readonly IMetadataProvider _metadataProvider;
-        private readonly Lazy<AssemblyBuilder> _assemblyBuilder;
-        private readonly Lazy<ModuleBuilder> _moduleBuilder;
         private readonly Dictionary<IMetadataElementIdentity, Type> _typesById = new Dictionary<IMetadataElementIdentity, Type>();
 
         public EmitClrTypeResolver(IMetadataProvider metadataProvider)
         {
             _metadataProvider = metadataProvider;
-            _assemblyBuilder = new Lazy<AssemblyBuilder>(() => EmitHelper.DefineAssembly(CustomCodeName));
-            _moduleBuilder = new Lazy<ModuleBuilder>(() => _assemblyBuilder.Value.DefineModule(CustomCodeName));
         }
 
         public void Build()
@@ -37,18 +31,23 @@ namespace NuClear.Querying.Edm.Emit
             }
 
             var contexts = metadataSet.Metadata.Values.OfType<BoundedContextElement>();
-            foreach (var entityElement in contexts.SelectMany(x => x.ConceptualModel.Entities))
+            foreach (var context in contexts)
             {
-                BuildType(entityElement);
+                var assemblyName = $"{context.ResolveFullName()}.Domain";
+                var moduleBuilder = EmitHelper.DefineAssembly(assemblyName).DefineModule(assemblyName);
+                foreach (var entityElement in context.ConceptualModel.Entities)
+                {
+                    BuildType(moduleBuilder, entityElement);
+                }
             }
         }
 
-        public Type BuildType(EntityElement entityElement)
+        public Type BuildType(ModuleBuilder moduleBuilder, EntityElement entityElement)
         {
             Type type;
             if (!_typesById.TryGetValue(entityElement.Identity, out type))
             {
-                _typesById.Add(entityElement.Identity, type = CreateType(entityElement));
+                _typesById.Add(entityElement.Identity, type = CreateType(moduleBuilder, entityElement));
             }
 
             return type;
@@ -102,15 +101,15 @@ namespace NuClear.Querying.Edm.Emit
             }
         }
 
-        private Type CreateType(EntityElement entityElement)
+        private Type CreateType(ModuleBuilder moduleBuilder, EntityElement entityElement)
         {
             var typeName = entityElement.ResolveFullName();
-            var typeBuilder = _moduleBuilder.Value.DefineType(typeName, TypeAttributes.Public);
+            var typeBuilder = moduleBuilder.DefineType(typeName, TypeAttributes.Public);
 
             foreach (var propertyElement in entityElement.Properties)
             {
                 var propertyName = propertyElement.ResolveName();
-                var propertyType = ResolveType(propertyElement);
+                var propertyType = ResolveType(moduleBuilder, propertyElement);
 
                 typeBuilder.DefineProperty(propertyName, propertyType);
             }
@@ -121,7 +120,7 @@ namespace NuClear.Querying.Edm.Emit
                 var relationCardinality = relationElement.Cardinality;
 
                 var propertyName = relationElement.ResolveName();
-                var propertyType = CreateRelationType(BuildType(relationTarget), relationCardinality);
+                var propertyType = CreateRelationType(BuildType(moduleBuilder, relationTarget), relationCardinality);
 
                 typeBuilder.DefineProperty(propertyName, propertyType);
             }
@@ -129,7 +128,7 @@ namespace NuClear.Querying.Edm.Emit
             return typeBuilder.CreateType();
         }
 
-        private Type ResolveType(EntityPropertyElement propertyElement)
+        private Type ResolveType(ModuleBuilder moduleBuilder, EntityPropertyElement propertyElement)
         {
             var propertyType = propertyElement.PropertyType;
 
@@ -142,7 +141,7 @@ namespace NuClear.Querying.Edm.Emit
             {
                 if (!_typesById.TryGetValue(propertyType.Identity, out resolvedType))
                 {
-                    _typesById.Add(propertyType.Identity, resolvedType = CreateEnum((EnumTypeElement)propertyType));
+                    _typesById.Add(propertyType.Identity, resolvedType = CreateEnum(moduleBuilder, (EnumTypeElement)propertyType));
                 }
             }
             else
@@ -158,12 +157,12 @@ namespace NuClear.Querying.Edm.Emit
             return resolvedType;
         }
 
-        private Type CreateEnum(EnumTypeElement element)
+        private static Type CreateEnum(ModuleBuilder moduleBuilder, EnumTypeElement element)
         {
             var typeName = element.ResolveName();
             var underlyingType = ConvertType(element.UnderlyingType);
 
-            var typeBuilder = _moduleBuilder.Value.DefineEnum(typeName, underlyingType);
+            var typeBuilder = moduleBuilder.DefineEnum(typeName, underlyingType);
 
             foreach (var member in element.Members)
             {
