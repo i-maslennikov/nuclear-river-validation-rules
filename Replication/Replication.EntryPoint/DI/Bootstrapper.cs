@@ -10,6 +10,7 @@ using Microsoft.Practices.Unity;
 using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.Assembling.TypeProcessing;
 using NuClear.CustomerIntelligence.Domain;
+using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.OperationsProcessing;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
@@ -76,6 +77,7 @@ using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.River.Common.Metadata.Equality;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Security;
 using NuClear.Security.API;
@@ -126,7 +128,8 @@ namespace NuClear.Replication.EntryPoint.DI
                      .ConfigureWcf()
                      .ConfigureOperationsProcessing()
                      .ConfigureStorage(storageSettings, EntryPointSpecificLifetimeManagerFactory)
-                     .ConfigureReplication(EntryPointSpecificLifetimeManagerFactory);
+                     .ConfigureReplication(EntryPointSpecificLifetimeManagerFactory)
+                     .ConfigureDomain();
 
             ReplicationRoot.Instance.PerformTypesMassProcessing(massProcessors, true, typeof(object));
 
@@ -198,6 +201,13 @@ namespace NuClear.Replication.EntryPoint.DI
         {
             return container.RegisterType<IIdentityGenerator, IdentityGenerator>(Lifetime.Singleton)
                             .RegisterType<IIdentityServiceClient, IdentityServiceClient>(Lifetime.Singleton);
+        }
+
+        private static IUnityContainer ConfigureDomain(this IUnityContainer container)
+        {
+            return container.RegisterInstance<IIdentityProvider<long>>(new DefaultIdentityProvider())
+                            .RegisterInstance<ICommandFactory<long>>(new RecalculateAggregateCommandFactory())
+                            .RegisterInstance<ICommandFactory<StatisticsKey>>(new RecalculateStatisticsCommandFactory());
         }
 
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)

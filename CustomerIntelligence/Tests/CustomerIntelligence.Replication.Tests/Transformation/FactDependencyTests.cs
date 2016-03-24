@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain;
+using NuClear.CustomerIntelligence.Domain.Commands;
+using NuClear.CustomerIntelligence.Storage;
 using NuClear.Metamodeling.Elements;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
@@ -745,6 +749,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             private readonly IRepositoryFactory _repositoryFactory;
             private readonly List<IOperation> _operations;
             private readonly FactsReplicationMetadataSource _metadataSource;
+            private readonly EqualityComparerFactory _comparerFactory;
 
             private Transformation(IQuery query, IRepositoryFactory repositoryFactory)
             {
@@ -752,6 +757,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 _repositoryFactory = repositoryFactory;
                 _operations = new List<IOperation>();
                 _metadataSource = new FactsReplicationMetadataSource();
+                _comparerFactory = new EqualityComparerFactory(new LinqToDbPropertyProvider(Schema.Erm, Schema.Facts, Schema.CustomerIntelligence));
             }
 
             public static Transformation Create(IQuery query, IRepositoryFactory repositoryFactory)
@@ -760,7 +766,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             public Transformation ApplyChanges<TFact>(params long[] ids)
-                where TFact : class, IIdentifiable, IFactObject
+                where TFact : class, IIdentifiable<long>, IFactObject
             {
                 var factType = typeof(TFact);
 
@@ -769,12 +775,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 {
                     throw new NotSupportedException(string.Format("The fact of type '{0}' is not supported.", factType));
                 }
-                
+
                 var repository = _repositoryFactory.Create<TFact>();
-                var factory = new Factory<TFact>(_query, repository);
+                var factory = new Factory<TFact>(_query, repository, _comparerFactory);
                 var processor = factory.Create(factMetadata);
 
-                _operations.AddRange(processor.ApplyChanges(ids));
+                _operations.AddRange(processor.Execute(ids.Select(id => new FactOperation(typeof(TFact), id)).ToArray()));
 
                 return this;
             }
@@ -790,25 +796,46 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             private class Factory<TFact> : IFactProcessorFactory, IFactDependencyProcessorFactory
-                where TFact : class, IIdentifiable, IFactObject
+                where TFact : class, IIdentifiable<long>, IFactObject
             {
                 private readonly IQuery _query;
                 private readonly IBulkRepository<TFact> _repository;
+                private readonly EqualityComparerFactory _comparerFactory;
 
-                public Factory(IQuery query, IBulkRepository<TFact> repository)
+                public Factory(IQuery query, IBulkRepository<TFact> repository, EqualityComparerFactory comparerFactory)
                 {
                     _query = query;
                     _repository = repository;
+                    _comparerFactory = comparerFactory;
                 }
 
-                public IFactProcessor Create(IMetadataElement factMetadata)
+                public IFactProcessor Create(IMetadataElement metadata)
                 {
-                    return new FactProcessor<TFact>((FactMetadata<TFact>)factMetadata, this, _query, _repository);
+                    var factMetadata = (FactMetadata<TFact>)metadata;
+                    var changesDetector = new DataChangesDetector<TFact>(factMetadata.MapSpecificationProviderForSource, factMetadata.MapSpecificationProviderForTarget, _comparerFactory.CreateIdentityComparer<TFact>(), _query);
+                    var dependencyProcessors = factMetadata.Features.OfType<IFactDependencyFeature>().Select(this.Create).ToArray();
+                    return new FactProcessor<TFact>(changesDetector, _repository, dependencyProcessors, new DefaultIdentityProvider());
                 }
 
                 public IFactDependencyProcessor Create(IFactDependencyFeature metadata)
                 {
-                    return new FactDependencyProcessor<TFact>((IFactDependencyFeature<TFact>)metadata, _query);
+                    if (metadata.GetType().GetGenericTypeDefinition() == typeof(DirectlyDependentEntityFeature<>))
+                    {
+                        var processorType = typeof(DirectlyDependentEntityFeatureProcessor<>).MakeGenericType(metadata.GetType().GetGenericArguments());
+                        return (IFactDependencyProcessor)Activator.CreateInstance(processorType, metadata);
+                    }
+
+                    if (metadata.GetType().GetGenericTypeDefinition() == typeof(IndirectlyDependentEntityFeature<,>))
+                    {
+                        var processorType = typeof(IndirectlyDependentEntityFeatureProcessor<,>).MakeGenericType(metadata.GetType().GetGenericArguments());
+                        var factory = metadata.GetType().GetGenericArguments()[1] == typeof(long)
+                                          ? (object)new RecalculateAggregateCommandFactory()
+                                          : (object)new RecalculateStatisticsCommandFactory();
+
+                        return (IFactDependencyProcessor)Activator.CreateInstance(processorType, metadata, _query, new DefaultIdentityProvider(), factory);
+                    }
+
+                    throw new ArgumentException($"No processor for feature type {metadata.GetType().Name}");
                 }
             }
         }

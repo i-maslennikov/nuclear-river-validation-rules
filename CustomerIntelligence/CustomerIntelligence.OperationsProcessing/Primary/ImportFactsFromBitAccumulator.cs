@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -58,18 +58,18 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             ICorporateBusMessageParser parser;
             if (!_parsers.TryGetValue(corporateBusObjectName, out parser))
             {
-                dto = null;
-                return false;
+                    dto = null;
+                    return false;
             }
 
             if (!parser.TryParse(xml, out dto))
-            {
+        {
                 _tracer.Warn($"Skip {corporateBusObjectName} message due to unsupported format");
                 dto = null;
                 return false;
             }
 
-            return true;
-        }
+                return true;
+            }
     }
 }

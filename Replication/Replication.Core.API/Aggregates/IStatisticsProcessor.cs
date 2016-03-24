@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.River.Common.Metadata.Model.Operations;
+
 namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IStatisticsProcessor
     {
-        void RecalculateStatistics(long projectId, IReadOnlyCollection<long?> categoryIds);
+        void Execute(IReadOnlyCollection<RecalculateStatisticsOperation> commands);
     }
 }

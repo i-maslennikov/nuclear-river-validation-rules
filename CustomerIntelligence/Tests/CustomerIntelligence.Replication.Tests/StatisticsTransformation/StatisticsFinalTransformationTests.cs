@@ -8,6 +8,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Writings;
 
 using NUnit.Framework;
@@ -91,7 +92,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
             Mock<IRepository<Statistics::FirmCategory3>> repository;
             var processor = StatisticsProcessor(data, out repository);
 
-            processor.RecalculateStatistics(1, new long?[] { 100 });
+            processor.Execute(new[] { new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = 1, CategoryId = 100 }) });
 
             repository.Verify(x => x.Add(It.IsAny<Statistics::FirmCategory3>()), Times.Never);
             repository.Verify(x => x.Delete(It.IsAny<Statistics::FirmCategory3>()), Times.Never);
@@ -107,7 +108,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
             Mock<IRepository<Statistics::FirmCategory3>> repository;
             var processor = StatisticsProcessor(data, out repository);
 
-            processor.RecalculateStatistics(1, new long?[] { null });
+            processor.Execute(new[] { new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = 1, CategoryId = null }) });
 
             repository.Verify(x => x.Add(It.IsAny<Statistics::FirmCategory3>()), Times.Never);
             repository.Verify(x => x.Delete(It.IsAny<Statistics::FirmCategory3>()), Times.Never);
@@ -124,7 +125,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
             Mock<IRepository<Statistics::FirmCategory3>> repository;
             var processor = StatisticsProcessor(data, out repository);
 
-            processor.RecalculateStatistics(3, new long?[] { null });
+            processor.Execute(new[] { new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = 3, CategoryId = null }) });
 
             repository.Verify(x => x.Update(It.Is<Statistics::FirmCategory3>(y => y.CategoryId == 100)), Times.Never);
             repository.Verify(x => x.Update(It.Is<Statistics::FirmCategory3>(y => y.CategoryId == 101)), Times.Once);
@@ -134,7 +135,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.StatisticsTransformatio
             where T : class
         {
             var metadataSource = new StatisticsRecalculationMetadataSource();
-            var metadata = metadataSource.Metadata.Values.SelectMany(x => x.Elements).OfType<StatisticsRecalculationMetadata<T>>().Single();
+            var metadata = metadataSource.Metadata.Values.SelectMany(x => x.Elements).OfType<StatisticsRecalculationMetadata<T, StatisticsKey>>().Single();
             repository = new Mock<IRepository<T>>();
             var comparerFactory = new EqualityComparerFactory(new LinqToDbPropertyProvider(Schema.Erm, Schema.Facts, Schema.CustomerIntelligence));
 

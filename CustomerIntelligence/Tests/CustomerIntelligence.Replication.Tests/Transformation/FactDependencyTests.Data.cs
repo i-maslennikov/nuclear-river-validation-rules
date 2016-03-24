@@ -83,33 +83,33 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         }
 
         private static TestCaseData CaseToVerifyElementInsertion<TSource, TTarget>(TSource sourceObject)
-            where TSource : class, IIdentifiable, new()
-            where TTarget : class, IIdentifiable, IFactObject, new()
+            where TSource : class, IIdentifiable<long>, new()
+            where TTarget : class, IIdentifiable<long>, IFactObject, new()
         {
             return Case((query, ermDb, factsDb) => VerifyElementInsertion<TSource, TTarget>(query, ermDb, sourceObject))
                 .SetName(string.Format("Should insert {0} element.", typeof(TTarget).Name));
         }
 
         private static TestCaseData CaseToVerifyElementUpdate<TSource, TTarget>(TSource sourceObject, TTarget target) 
-            where TSource : class, IIdentifiable, new()
-            where TTarget : class, IIdentifiable, IFactObject, new()
+            where TSource : class, IIdentifiable<long>, new()
+            where TTarget : class, IIdentifiable<long>, IFactObject, new()
         {
             return Case((query, ermDb, factsDb) => VerifyElementUpdate<TSource, TTarget>(query, ermDb, factsDb, sourceObject, target))
                 .SetName(string.Format("Should update {0} element.", typeof(TTarget).Name));
         }
 
         private static TestCaseData CaseToVerifyElementDeletion<TTarget>(TTarget targetObject) 
-            where TTarget : class, IIdentifiable, IFactObject, new()
+            where TTarget : class, IIdentifiable<long>, IFactObject, new()
         {
             return Case((query, ermDb, factsDb) => VerifyElementDeletion<TTarget>(query, factsDb, targetObject))
                 .SetName(string.Format("Should delete {0} element.", typeof(TTarget).Name));
         }
 
         private static void VerifyElementInsertion<TSource, TTarget>(IQuery query, MockLinqToDbDataBuilder ermDb, TSource sourceObject)
-            where TSource : class, IIdentifiable, new()
-            where TTarget : class, IIdentifiable, IFactObject, new()
+            where TSource : class, IIdentifiable<long>, new()
+            where TTarget : class, IIdentifiable<long>, IFactObject, new()
         {
-            var entityId = sourceObject.Id;
+            var entityId = new DefaultIdentityProvider().GetId(sourceObject);
             ermDb.Has(sourceObject);
 
             var factory = new VerifiableRepositoryFactory();
@@ -123,33 +123,33 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         }
 
         private static void VerifyElementUpdate<TSource, TTarget>(IQuery query, MockLinqToDbDataBuilder ermDb, MockLinqToDbDataBuilder factsDb, TSource sourceObject, TTarget targetObject)
-            where TSource : class, IIdentifiable, new()
-            where TTarget : class, IIdentifiable, IFactObject, new()
+            where TSource : class, IIdentifiable<long>, new()
+            where TTarget : class, IIdentifiable<long>, IFactObject, new()
         {
             ermDb.Has(sourceObject);
             factsDb.Has(targetObject);
 
             var factory = new VerifiableRepositoryFactory();
             Transformation.Create(query, factory)
-                          .ApplyChanges<TTarget>(targetObject.Id);
+                          .ApplyChanges<TTarget>(new DefaultIdentityProvider().GetId(targetObject));
 
             factory.Verify<TTarget>(
-                x => x.Update(It.Is(Predicate.ById<TTarget>(targetObject.Id))),
+                x => x.Update(It.Is(Predicate.ById<TTarget>(new DefaultIdentityProvider().GetId(targetObject)))),
                 Times.Once,
                 string.Format("The {0} element was not updated.", typeof(TTarget).Name));
         }
 
         private static void VerifyElementDeletion<TTarget>(IQuery query, MockLinqToDbDataBuilder factsDb, TTarget targetObject)
-            where TTarget : class, IIdentifiable, IFactObject, new()
+            where TTarget : class, IIdentifiable<long>, IFactObject, new()
         {
             factsDb.Has(targetObject);
 
             var factory = new VerifiableRepositoryFactory();
             Transformation.Create(query, factory)
-                          .ApplyChanges<TTarget>(targetObject.Id);
+                          .ApplyChanges<TTarget>(new DefaultIdentityProvider().GetId(targetObject));
 
             factory.Verify<TTarget>(
-                x => x.Delete(It.Is(Predicate.ById<TTarget>(targetObject.Id))),
+                x => x.Delete(It.Is(Predicate.ById<TTarget>(new DefaultIdentityProvider().GetId(targetObject)))),
                 Times.Once,
                 string.Format("The {0} element was not deleted.", typeof(TTarget).Name));
         }

@@ -29,7 +29,7 @@ namespace NuClear.Replication.Core.Aggregates
                 throw new NotSupportedException($"Metadata for identity '{typeof(StatisticsRecalculationMetadataIdentity).Name}' cannot be found.");
             }
 
-            var batches = operations.GroupBy(x => x.ProjectId, x => x.CategoryId).ToArray();
+            var batches = operations.GroupBy(x => x.EntityId.ProjectId).ToArray();
             using (Probe.Create("Recalculate Statistics Operations"))
             {
                 var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).ToArray();
@@ -39,10 +39,10 @@ namespace NuClear.Replication.Core.Aggregates
 
                     foreach (var batch in batches)
                     {
-                        processor.RecalculateStatistics(batch.Key, batch.Distinct().ToArray());
+                        processor.Execute(batch.ToArray());
                     }
                 }
             }
         }
-    }
+}
 }

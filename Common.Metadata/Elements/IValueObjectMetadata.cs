@@ -4,8 +4,9 @@ using NuClear.Metamodeling.Elements;
 
 namespace NuClear.River.Common.Metadata.Elements
 {
-    public interface IValueObjectMetadataElement : IMetadataElement
+    public interface IValueObjectMetadata : IMetadataElement
     {
          Type ValueObjectType { get; }
+         Type EntityKeyType { get; }
     }
 }

@@ -9,34 +9,33 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Builders
 {
-    public class StatisticsRecalculationMetadataBuilder<T> : MetadataElementBuilder<StatisticsRecalculationMetadataBuilder<T>, StatisticsRecalculationMetadata<T>>
+    public class StatisticsRecalculationMetadataBuilder<TStatisticsObject, TEntityKey> : MetadataElementBuilder<StatisticsRecalculationMetadataBuilder<TStatisticsObject, TEntityKey>, StatisticsRecalculationMetadata<TStatisticsObject, TEntityKey>>
     {
-        private MapToObjectsSpecProvider<T, T> _mapSpecificationProviderForSource;
-        private MapToObjectsSpecProvider<T, T> _mapSpecificationProviderForTarget;
-        private Func<long, IReadOnlyCollection<long?>, FindSpecification<T>> _findSpecificationProvider;
+        private MapToObjectsSpecProvider<TStatisticsObject, TStatisticsObject> _mapSpecificationProviderForSource;
+        private MapToObjectsSpecProvider<TStatisticsObject, TStatisticsObject> _mapSpecificationProviderForTarget;
+        private Func<IReadOnlyCollection<TEntityKey>, FindSpecification<TStatisticsObject>> _findSpecificationProvider;
 
-        protected override StatisticsRecalculationMetadata<T> Create()
+        protected override StatisticsRecalculationMetadata<TStatisticsObject, TEntityKey> Create()
         {
-            return new StatisticsRecalculationMetadata<T>(
+            return new StatisticsRecalculationMetadata<TStatisticsObject, TEntityKey>(
                 _mapSpecificationProviderForSource,
                 _mapSpecificationProviderForTarget,
-                _findSpecificationProvider,
-                Features);
+                _findSpecificationProvider);
         }
 
-        public StatisticsRecalculationMetadataBuilder<T> HasSource(MapSpecification<IQuery, IQueryable<T>> sourceMappingSpecification)
+        public StatisticsRecalculationMetadataBuilder<TStatisticsObject, TEntityKey> HasSource(MapSpecification<IQuery, IQueryable<TStatisticsObject>> sourceMappingSpecification)
         {
-            _mapSpecificationProviderForSource = specification => new MapSpecification<IQuery, IEnumerable<T>>(q => sourceMappingSpecification.Map(q).Where(specification));
+            _mapSpecificationProviderForSource = specification => new MapSpecification<IQuery, IEnumerable<TStatisticsObject>>(q => sourceMappingSpecification.Map(q).Where(specification));
             return this;
         }
 
-        public StatisticsRecalculationMetadataBuilder<T> HasTarget(MapSpecification<IQuery, IQueryable<T>> targetMappingSpecification)
+        public StatisticsRecalculationMetadataBuilder<TStatisticsObject, TEntityKey> HasTarget(MapSpecification<IQuery, IQueryable<TStatisticsObject>> targetMappingSpecification)
         {
-            _mapSpecificationProviderForTarget = specification => new MapSpecification<IQuery, IEnumerable<T>>(q => targetMappingSpecification.Map(q).Where(specification)); ;
+            _mapSpecificationProviderForTarget = specification => new MapSpecification<IQuery, IEnumerable<TStatisticsObject>>(q => targetMappingSpecification.Map(q).Where(specification)); ;
             return this;
         }
 
-        public StatisticsRecalculationMetadataBuilder<T> HasFilter(Func<long, IReadOnlyCollection<long?>, FindSpecification<T>> findSpecificationProvider)
+        public StatisticsRecalculationMetadataBuilder<TStatisticsObject, TEntityKey> HasFilter(Func<IReadOnlyCollection<TEntityKey>, FindSpecification<TStatisticsObject>> findSpecificationProvider)
         {
             _findSpecificationProvider = findSpecificationProvider;
             return this;

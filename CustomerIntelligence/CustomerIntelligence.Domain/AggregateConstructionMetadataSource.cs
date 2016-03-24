@@ -9,6 +9,7 @@ using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model;
 
 using Specs = NuClear.CustomerIntelligence.Domain.Specifications.Specs;
 
@@ -24,7 +25,7 @@ namespace NuClear.CustomerIntelligence.Domain
                 HierarchyMetadata
                     .Config
                     .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.Aggregates))
-                    .Childs(AggregateMetadata<Firm>
+                    .Childs(AggregateMetadata<Firm, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Firms)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmActivities, Specs.Find.CI.FirmActivities)
@@ -33,21 +34,21 @@ namespace NuClear.CustomerIntelligence.Domain
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmCategories2, Specs.Find.CI.FirmCategories2)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmTerritories, Specs.Find.CI.FirmTerritories),
 
-                            AggregateMetadata<Client>
+                            AggregateMetadata<Client, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Clients)
                                 .HasValueObject(Specs.Map.Facts.ToCI.ClientContacts, Specs.Find.CI.ClientContacts),
 
-                            AggregateMetadata<Project>
+                            AggregateMetadata<Project, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Projects)
                                 .HasValueObject(Specs.Map.Facts.ToCI.ProjectCategories, Specs.Find.CI.ProjectCategories),
 
-                            AggregateMetadata<Territory>
+                            AggregateMetadata<Territory, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Territories),
 
-                            AggregateMetadata<CategoryGroup>
+                            AggregateMetadata<CategoryGroup, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.CategoryGroups));
 

@@ -66,8 +66,7 @@
     <Compile Include="Elements\StructuralModelTypeKind.cs" />
     <Compile Include="Elements\UriExtensions.cs" />
     <Compile Include="Features\MapSpecificationFeature.cs" />
-    <Compile Include="Features\DependentStatisticsFeature.cs" />
-    <Compile Include="Features\DirectlyDependentAggregateFeature.cs" />
+    <Compile Include="Features\DirectlyDependentEntityFeature.cs" />
     <Compile Include="Features\ElementMappingFeature.cs" />
     <Compile Include="Features\EntityIdentityFeature.cs" />
     <Compile Include="Features\EntityPropertyNullableFeature.cs" />
@@ -75,16 +74,17 @@
     <Compile Include="Features\EntityRelationContainmentFeature.cs" />
     <Compile Include="Features\EntitySetFeature.cs" />
     <Compile Include="Features\IFactDependencyFeature.cs" />
-    <Compile Include="Features\IndirectlyDependentAggregateFeature.cs" />
-    <Compile Include="Elements\IValueObjectMetadataElement.cs" />
-    <Compile Include="Elements\ValueObjectMetadataElement.cs" />
     <Compile Include="Features\ReceiverTypeFeature.cs" />
+    <Compile Include="Features\IndirectlyDependentEntityFeature.cs" />
+    <Compile Include="Elements\IValueObjectMetadata.cs" />
+    <Compile Include="Elements\ValueObjectMetadata.cs" />
     <Compile Include="Identities\QueryingMetadataIdentity.cs" />
     <Compile Include="Identities\ImportStatisticsMetadataIdentity.cs" />
     <Compile Include="Identities\OperationRegistryMetadataIdentity.cs" />
     <Compile Include="Identities\ReplicationMetadataIdentity.cs" />
     <Compile Include="Identities\StatisticsRecalculationMetadataIdentity.cs" />
     <Compile Include="MapToObjectsSpecProvider.cs" />
+    <Compile Include="Model\DefaultIdentityProvider.cs" />
     <Compile Include="Model\IAggregateEntity.cs" />
     <Compile Include="Model\IAggregatePart.cs" />
     <Compile Include="Model\IAggregateRoot.cs" />
@@ -94,17 +94,19 @@
     <Compile Include="Equality\IEqualityComparerFactory.cs" />
     <Compile Include="Model\IFactObject.cs" />
     <Compile Include="Model\IIdentifiable.cs" />
+    <Compile Include="Model\IIdentityProvider.cs" />
     <Compile Include="Model\IObject.cs" />
     <Compile Include="Model\IOperation.cs" />
     <Compile Include="Model\Operations\AggregateOperation.cs" />
     <Compile Include="Model\Operations\AggregateOperationPriorityComparer.cs" />
     <Compile Include="Model\Operations\DestroyAggregate.cs" />
     <Compile Include="Model\Operations\FactOperation.cs" />
+    <Compile Include="Model\Operations\ICommandFactory.cs" />
     <Compile Include="Model\Operations\InitializeAggregate.cs" />
     <Compile Include="Model\Operations\RecalculateAggregate.cs" />
     <Compile Include="Model\Operations\RecalculateStatisticsOperation.cs" />
+    <Compile Include="Model\Operations\StatisticsKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Specs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">

@@ -30,7 +30,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             //arrange
             var factProcessor = new Mock<IFactProcessor>();
-            factProcessor.Setup(x => x.ApplyChanges(It.IsAny<IReadOnlyCollection<long>>()))
+            factProcessor.Setup(x => x.Execute(It.IsAny<IReadOnlyCollection<FactOperation>>()))
                          .Returns(new IOperation[0]);
 
             var provider = new MetadataProvider(new[] { new FactsReplicationMetadataSource() }, new IMetadataProcessor[0]);

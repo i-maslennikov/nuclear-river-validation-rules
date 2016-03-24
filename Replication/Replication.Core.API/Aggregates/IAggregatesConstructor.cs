@@ -6,6 +6,6 @@ namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IAggregatesConstructor
     {
-        void Construct(IEnumerable<AggregateOperation> operations);
+        void Execute(IEnumerable<AggregateOperation> commands);
     }
 }

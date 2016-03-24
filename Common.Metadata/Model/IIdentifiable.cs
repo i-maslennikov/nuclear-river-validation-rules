@@ -1,7 +1,10 @@
 ﻿namespace NuClear.River.Common.Metadata.Model
 {
-    public interface IIdentifiable
+    /// <summary>
+    /// Defines that entity can be referenced using TKey
+    /// </summary>
+    /// <typeparam name="TKey">Entity identity type</typeparam>
+    public interface IIdentifiable<TKey>
     {
-        long Id { get; }
     }
 }

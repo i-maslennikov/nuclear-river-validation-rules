@@ -34,7 +34,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             public static RecalculateStatisticsOperation Operation(long projectId, long? categoryId = null)
             {
-                return new RecalculateStatisticsOperation { ProjectId = projectId, CategoryId = categoryId };
+                return new RecalculateStatisticsOperation(new StatisticsKey { ProjectId = projectId, CategoryId = categoryId });
             }
         }
     }
