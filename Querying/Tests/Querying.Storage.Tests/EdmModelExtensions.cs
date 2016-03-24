@@ -27,7 +27,7 @@ namespace Querying.Storage.Tests
 
         public static EdmProperty FindProperty(this EntityType entityType, string name)
         {
-            return entityType.Properties.FirstOrDefault(x => IsCompositeName(name) ? x.Name == name : x.Name == name);
+            return entityType.Properties.FirstOrDefault(x => x.Name == name);
         }
 
         private static bool IsCompositeName(string name)
