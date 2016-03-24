@@ -21,7 +21,7 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	$entryPointsMetadata += Get-TaskServiceMetadata $Context
 
 	switch ($EntryPoints){
-		'Web.OData' {
+		'CustomerIntelligence.Querying.Host' {
 			$Context.EntryPoint = $_
 			$entryPointsMetadata += Get-WebMetadata $Context
 		}
@@ -140,7 +140,7 @@ $AllSchemas = @(
 )
 
 $AllEntryPoints = @(
-	'Web.OData'
+	'CustomerIntelligence.Querying.Host'
 	'Replication.EntryPoint'
 	'ConvertUseCasesService'
 )

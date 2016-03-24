@@ -2,11 +2,8 @@
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {
-    using Bit = NuClear.CustomerIntelligence.Domain.Model.Bit;
-    using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
     using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
     using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
-    using Statistics = NuClear.CustomerIntelligence.Domain.Model.Statistics;
 
     public sealed partial class TestCaseMetadataSource
     {
