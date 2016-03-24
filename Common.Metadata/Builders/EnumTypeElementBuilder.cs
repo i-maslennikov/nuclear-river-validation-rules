@@ -31,7 +31,7 @@ namespace NuClear.River.Common.Metadata.Builders
                 throw new InvalidOperationException("The entity name was not specified.");
             }
 
-            return new EnumTypeElement(UriExtensions.AsUri(_name).AsIdentity(), _enumMembers);
+            return new EnumTypeElement(_name.AsUri().AsIdentity(), _enumMembers);
         }
     }
 }

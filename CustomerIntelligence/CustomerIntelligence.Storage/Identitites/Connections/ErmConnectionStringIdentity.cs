@@ -5,14 +5,8 @@ namespace NuClear.CustomerIntelligence.Storage.Identitites.Connections
 {
     public class ErmConnectionStringIdentity : IdentityBase<ErmConnectionStringIdentity>, IConnectionStringIdentity
     {
-        public override int Id
-        {
-            get { return 1; }
-        }
+        public override int Id => 1;
 
-        public override string Description
-        {
-            get { return "Erm DB connnection string"; }
-        }
+        public override string Description => "Erm DB connnection string";
     }
 }

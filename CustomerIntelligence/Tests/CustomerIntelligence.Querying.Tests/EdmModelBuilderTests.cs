@@ -9,7 +9,7 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
 using NuClear.Metamodeling.Elements.Identities.Builder;
-using NuClear.Querying.OData.Building;
+using NuClear.Querying.Edm;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
 
@@ -35,8 +35,8 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
         private static IEdmModel BuildModel(Uri contextId)
         {
-            var builder = new EdmModelBuilder(TestMetadataProvider.Instance);
-            var model = builder.Build(contextId);
+            var builder = new EdmModelBuilder(TestMetadataProvider.Instance, new NullEdmModelAnnotator());
+            var model = builder.Build()[contextId];
 
             model.Dump();
 
@@ -62,13 +62,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
 
     internal static class ModelConstraints
     {
-        public static Constraint IsValid
-        {
-            get
-            {
-                return new ModelValidationConstraint();
-            }
-        }
+        public static Constraint IsValid => new ModelValidationConstraint();
 
         private class ModelValidationConstraint : Constraint
         {

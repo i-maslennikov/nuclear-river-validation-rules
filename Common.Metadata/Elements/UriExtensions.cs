@@ -8,7 +8,7 @@ namespace NuClear.River.Common.Metadata.Elements
         {
             if (uri == null)
             {
-                throw new ArgumentNullException("uri");
+                throw new ArgumentNullException(nameof(uri));
             }
 
             return new Uri(uri, UriKind.RelativeOrAbsolute);
