@@ -7,7 +7,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class StatisticsFindSpecificationProvider<T> : IFindSpecificationProvider<T, RecalculateStatisticsOperation>
+    public sealed class StatisticsFindSpecificationProvider<T> : IFindSpecificationProvider<T, RecalculateAggregatePart>
         where T : class
     {
         private readonly ValueObjectMetadata<T, StatisticsKey> _metadata;
@@ -17,9 +17,9 @@ namespace NuClear.Replication.Core.Aggregates
             _metadata = metadata;
         }
 
-        public FindSpecification<T> Create(IEnumerable<RecalculateStatisticsOperation> commands)
+        public FindSpecification<T> Create(IEnumerable<RecalculateAggregatePart> commands)
         {
-            var keys = commands.Select(c => new StatisticsKey { ProjectId = c.ProjectId, CategoryId = c.CategoryId }).ToArray();
+            var keys = commands.Select(c => new StatisticsKey { ProjectId = c.AggregateInstanceId, CategoryId = c.EntityInstanceId }).ToArray();
             return _metadata.FindSpecificationProvider.Invoke(keys);
         }
     }

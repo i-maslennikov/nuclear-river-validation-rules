@@ -177,7 +177,7 @@
     <Compile Include="Identities\Operations\DestroyAggregateOperationIdentity.cs" />
     <Compile Include="Identities\Operations\InitializeAggregateOperationIdentity.cs" />
     <Compile Include="Identities\Operations\RecalculateAggregateOperationIdentity.cs" />
-    <Compile Include="Identities\Operations\StatisticsOperationIdentity.cs" />
+    <Compile Include="Identities\Operations\RecalculateAggregatePartOperationIdentity.cs" />
     <Compile Include="Identities\Telemetry\AggregateEnqueuedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\AggregateProcessedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\AggregateProcessingDelayIdentity.cs" />

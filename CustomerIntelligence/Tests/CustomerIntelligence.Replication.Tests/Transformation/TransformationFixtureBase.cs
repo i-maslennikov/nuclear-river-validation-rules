@@ -1,4 +1,6 @@
-﻿using NuClear.Model.Common.Entities;
+﻿using NuClear.CustomerIntelligence.Domain.EntityTypes;
+using NuClear.Model.Common.Entities;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
@@ -33,12 +35,18 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
         protected static class Statistics
         {
-            public static RecalculateStatisticsOperation Operation(long projectId, long? categoryId = null)
+            public static IOperation Operation(long projectId, long? categoryId = null)
             {
                 return categoryId.HasValue
-                           ? new RecalculateStatisticsOperation(projectId, categoryId.Value)
-                           : new RecalculateStatisticsOperation(projectId);
+                           ? ForProjectCategory(projectId, categoryId.Value)
+                           : ForProject(projectId);
             }
+
+            private static IOperation ForProjectCategory(long projectId, long categoryId)
+                => new RecalculateAggregatePart(EntityTypeProjectStatistics.Instance.Id, projectId, EntityTypeProjectCategoryStatistics.Instance.Id, categoryId);
+
+            private static IOperation ForProject(long projectId)
+                => new RecalculateAggregate(EntityTypeProjectStatistics.Instance.Id, projectId);
         }
     }
 }

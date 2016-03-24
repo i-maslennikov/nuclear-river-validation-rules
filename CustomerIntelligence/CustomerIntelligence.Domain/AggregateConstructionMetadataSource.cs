@@ -69,11 +69,16 @@ namespace NuClear.CustomerIntelligence.Domain
                 HierarchyMetadata
                     .Config
                     .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ReplicationMetadataIdentity>(ReplicationMetadataName.Statistics))
-                    .Childs(AggregateMetadata<ProjectStatistics, StatisticsKey>
+                    .Childs(AggregateMetadata<ProjectStatistics, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToStatistics.ProjectStatistics)
-                                .HasValueObject(Specs.Map.Facts.ToStatistics.FirmCategory3, Specs.Find.CI.FirmCategory3)
-                                .HasValueObject(Specs.Map.Facts.ToStatistics.FirmForecast, Specs.Find.CI.FirmForecast));
+                                .HasEntity<ProjectCategoryStatistics>(Specs.Find.CI.ProjectCategoryStatistics)
+                                .HasValueObject(Specs.Map.Facts.ToStatistics.FirmForecast, Specs.Find.CI.FirmForecast),
+
+                            AggregateMetadata<ProjectCategoryStatistics, StatisticsKey>
+                                .Config
+                                .HasSource(Specs.Map.Facts.ToStatistics.ProjectCategoryStatistics)
+                                .HasValueObject(Specs.Map.Facts.ToStatistics.FirmCategory3, Specs.Find.CI.FirmCategory3));
 
             Metadata = new Dictionary<Uri, IMetadataElement> { { aggregateConstructionMetadataRoot.Identity.Id, aggregateConstructionMetadataRoot } };
         }

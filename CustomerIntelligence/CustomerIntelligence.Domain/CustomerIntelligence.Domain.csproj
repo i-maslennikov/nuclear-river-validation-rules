@@ -67,6 +67,8 @@
     <Compile Include="EntityTypes\EntityTypeOrderPosition.cs" />
     <Compile Include="EntityTypes\EntityTypePhonecall.cs" />
     <Compile Include="EntityTypes\EntityTypeProject.cs" />
+    <Compile Include="EntityTypes\EntityTypeProjectCategoryStatistics.cs" />
+    <Compile Include="EntityTypes\EntityTypeProjectStatistics.cs" />
     <Compile Include="EntityTypes\EntityTypeSalesModelCategoryRestriction.cs" />
     <Compile Include="EntityTypes\EntityTypeTask.cs" />
     <Compile Include="EntityTypes\EntityTypeTerritory.cs" />
@@ -83,7 +85,7 @@
     <Compile Include="Model\CI\FirmBalance.cs" />
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
-    <Compile Include="Model\Statistics\ProjectStatistics.cs" />
+    <Compile Include="Model\Statistics\ProjectCategoryStatistics.cs" />
     <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\ICustomerIntelligenceAggregatePart.cs" />

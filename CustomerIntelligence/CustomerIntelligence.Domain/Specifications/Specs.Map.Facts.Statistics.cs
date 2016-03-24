@@ -21,13 +21,24 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                     public static readonly MapSpecification<IQuery, IQueryable<Statistics::ProjectStatistics>> ProjectStatistics =
                         new MapSpecification<IQuery, IQueryable<Statistics::ProjectStatistics>>(
                             q =>
-                                {
-                                    var _1 = q.For<Bit::FirmCategoryForecast>().Select(x => x.ProjectId).Distinct();
-                                    var _2 = q.For<Bit::FirmCategoryStatistics>().Select(x => x.ProjectId).Distinct();
-                                    var _3 = q.For<Bit::FirmForecast>().Select(x => x.ProjectId).Distinct();
-                                    var _4 = q.For<Bit::ProjectCategoryStatistics>().Select(x => x.ProjectId).Distinct();
+                            {
+                                var _1 = q.For<Bit::FirmCategoryForecast>().Select(x => x.ProjectId).Distinct();
+                                var _2 = q.For<Bit::FirmCategoryStatistics>().Select(x => x.ProjectId).Distinct();
+                                var _3 = q.For<Bit::FirmForecast>().Select(x => x.ProjectId).Distinct();
+                                var _4 = q.For<Bit::ProjectCategoryStatistics>().Select(x => x.ProjectId).Distinct();
 
-                                    return _1.Union(_2).Union(_3).Union(_4).Distinct().Select(x => new Statistics.ProjectStatistics { ProjectId = x });
+                                return _1.Union(_2).Union(_3).Union(_4).Distinct().Select(x => new Statistics.ProjectStatistics { Id = x });
+                            });
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::ProjectCategoryStatistics>> ProjectCategoryStatistics =
+                        new MapSpecification<IQuery, IQueryable<Statistics::ProjectCategoryStatistics>>(
+                            q =>
+                                {
+                                    var _1 = q.For<Bit::FirmCategoryForecast>().Select(x => new { x.ProjectId, x.CategoryId }).Distinct();
+                                    var _2 = q.For<Bit::FirmCategoryStatistics>().Select(x => new { x.ProjectId, x.CategoryId }).Distinct();
+                                    var _3 = q.For<Bit::ProjectCategoryStatistics>().Select(x => new { x.ProjectId, x.CategoryId }).Distinct();
+
+                                    return _1.Union(_2).Union(_3).Distinct().Select(x => new Statistics.ProjectCategoryStatistics { ProjectId = x.ProjectId, CategoryId = x.CategoryId });
                                 });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>> FirmCategory3 =

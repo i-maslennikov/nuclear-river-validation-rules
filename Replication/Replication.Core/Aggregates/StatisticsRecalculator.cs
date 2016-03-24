@@ -6,6 +6,7 @@ using System.Transactions;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
+using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Identities;
 using NuClear.River.Common.Metadata.Model;
@@ -14,16 +15,18 @@ using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    // Нужен?
-    public class StatisticsRecalculator : IStatisticsRecalculator
+    public class StatisticsRecalculator<TSubDomain> : IStatisticsRecalculator
+        where TSubDomain : ISubDomain
     {
         private readonly IMetadataProvider _metadataProvider;
-        private readonly IStatisticsProcessorFactory _statisticsProcessorFactory;
+        private readonly IAggregateProcessorFactory _aggregateProcessorFactory;
+        private readonly IEntityTypeMappingRegistry<TSubDomain> _entityTypeMappingRegistry;
 
-        public StatisticsRecalculator(IMetadataProvider metadataProvider, IStatisticsProcessorFactory statisticsProcessorFactory)
+        public StatisticsRecalculator(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory, IEntityTypeMappingRegistry<TSubDomain> entityTypeMappingRegistry)
         {
             _metadataProvider = metadataProvider;
-            _statisticsProcessorFactory = statisticsProcessorFactory;
+            _aggregateProcessorFactory = aggregateProcessorFactory;
+            _entityTypeMappingRegistry = entityTypeMappingRegistry;
         }
 
         public void Execute(IReadOnlyCollection<IOperation> commands)
@@ -33,13 +36,17 @@ namespace NuClear.Replication.Core.Aggregates
                 var commandsByType = commands.GroupBy(x => x.GetType()).OrderBy(x => x.Key);
 
                 using (var transaction = new TransactionScope(TransactionScopeOption.Required,
-                                              new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
+                                                              new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
                 {
                     foreach (var group in commandsByType)
                     {
-                        if (group.Key == typeof(RecalculateStatisticsOperation))
+                        if (group.Key == typeof(RecalculateAggregate))
                         {
-                            Execute(group.Cast<RecalculateStatisticsOperation>());
+                            Execute(group.Cast<RecalculateAggregate>());
+                        }
+                        if (group.Key == typeof(RecalculateAggregatePart))
+                        {
+                            Execute(group.Cast<RecalculateAggregatePart>());
                         }
                         else
                         {
@@ -52,36 +59,57 @@ namespace NuClear.Replication.Core.Aggregates
             }
         }
 
-        private void Execute(IEnumerable<RecalculateStatisticsOperation> enumerable)
+        private void Execute(IEnumerable<RecalculateAggregate> enumerable)
         {
-            var processor = CreateProcessors();
-            foreach (var slice in enumerable.GroupBy(x => x.ProjectId))
+            foreach (var slice in enumerable.GroupBy(c => c.EntityTypeId))
             {
-                foreach (var statisticsProcessor in processor)
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Recalculate {type.Name}"))
                 {
-                    statisticsProcessor.Execute(slice.ToArray());
+                    processor.Recalculate(slice.ToArray());
                 }
             }
         }
 
-        private IReadOnlyCollection<IStatisticsProcessor> CreateProcessors()
+        private void Execute(IEnumerable<RecalculateAggregatePart> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => new { c.AggregateTypeId, c.EntityTypeId }))
+            {
+                var aggregateType = ParseEntityType(slice.Key.AggregateTypeId);
+                var entityType = ParseEntityType(slice.Key.EntityTypeId);
+                var processor = CreateProcessor(aggregateType);
+                using (Probe.Create($"ETL2 Recalculate {aggregateType.Name} Part {entityType.Name}"))
+                {
+                    processor.Recalculate(slice.ToArray());
+                }
+            }
+        }
+
+        private IAggregateProcessor CreateProcessor(Type aggregate)
         {
             IMetadataElement aggregateMetadata;
-            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Statistics/ProjectStatistics", UriKind.Relative));
+            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Statistics/{aggregate.Name}", UriKind.Relative));
             if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
             {
-                throw new NotSupportedException($"The aggregate of type 'ProjectStatistics' is not supported.");
+                throw new NotSupportedException($"The aggregate of type '{aggregate.Name}' is not supported.");
             }
 
-            MetadataSet metadataSet;
-            if (!_metadataProvider.TryGetMetadata<ReplicationMetadataIdentity>(out metadataSet))
+            var processor = _aggregateProcessorFactory.Create(aggregateMetadata);
+            return processor;
+        }
+
+        private Type ParseEntityType(int entityTypeId)
+        {
+            Type type;
+            IEntityType entityType;
+            if (_entityTypeMappingRegistry.TryParse(entityTypeId, out entityType) &&
+                _entityTypeMappingRegistry.TryGetEntityType(entityType, out type))
             {
-                throw new NotSupportedException($"Metadata for identity '{typeof(ReplicationMetadataIdentity).Name}' cannot be found.");
+                return type;
             }
 
-            var metadata = metadataSet.Metadata.Values.SelectMany(x => x.Elements).ToArray();
-            var processors = metadata.Select(_statisticsProcessorFactory.Create).ToArray();
-            return processors;
+            throw new ArgumentException($"unknown entity type id {entityTypeId}");
         }
     }
 }

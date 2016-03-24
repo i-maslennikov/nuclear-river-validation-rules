@@ -79,8 +79,6 @@
     <Compile Include="Aggregates\IAggregateProcessor.cs" />
     <Compile Include="Aggregates\IAggregateProcessorFactory.cs" />
     <Compile Include="Aggregates\IAggregatesConstructor.cs" />
-    <Compile Include="Aggregates\IStatisticsProcessor.cs" />
-    <Compile Include="Aggregates\IStatisticsProcessorFactory.cs" />
     <Compile Include="Aggregates\IStatisticsRecalculator.cs" />
     <Compile Include="Aggregates\IValueObjectProcessor.cs" />
     <Compile Include="Aggregates\IValueObjectProcessorFactory.cs" />

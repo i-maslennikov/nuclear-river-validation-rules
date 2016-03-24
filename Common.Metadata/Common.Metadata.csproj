@@ -101,7 +101,7 @@
     <Compile Include="Model\Operations\ICommandFactory.cs" />
     <Compile Include="Model\Operations\InitializeAggregate.cs" />
     <Compile Include="Model\Operations\RecalculateAggregate.cs" />
-    <Compile Include="Model\Operations\RecalculateStatisticsOperation.cs" />
+    <Compile Include="Model\Operations\RecalculateAggregatePartOperation.cs" />
     <Compile Include="Model\Operations\StatisticsKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

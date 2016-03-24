@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Metamodeling.Elements;
+using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
@@ -47,6 +48,21 @@ namespace NuClear.River.Common.Metadata.Builders
 
             Childs(new ValueObjectMetadata<TValueObject, TKey>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, findSpecificationProvider));
             return this;
+        }
+
+        public AggregateMetadataBuilder<T, TKey> HasEntity<TChildEntity>(Func<IReadOnlyCollection<TKey>, FindSpecification<TChildEntity>> findSpecificationProvider)
+        {
+            return WithFeatures(new ChildEntityFeature<TKey, TChildEntity>(findSpecificationProvider));
+        }
+    }
+
+    public class ChildEntityFeature<TRootKey, TChildEntity> : IMetadataFeature
+    {
+        private readonly Func<IReadOnlyCollection<TRootKey>, FindSpecification<TChildEntity>> _findSpecificationProvider;
+
+        public ChildEntityFeature(Func<IReadOnlyCollection<TRootKey>, FindSpecification<TChildEntity>> findSpecificationProvider)
+        {
+            _findSpecificationProvider = findSpecificationProvider;
         }
     }
 }

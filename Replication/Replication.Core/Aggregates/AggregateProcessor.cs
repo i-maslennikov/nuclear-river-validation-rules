@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
@@ -43,6 +44,11 @@ namespace NuClear.Replication.Core.Aggregates
             _repository.Delete(mergeResult.Complement);
             _repository.Create(mergeResult.Difference);
             _repository.Update(mergeResult.Intersection);
+        }
+
+        public void Recalculate(IReadOnlyCollection<RecalculateAggregatePart> commands)
+        {
+            throw new NotImplementedException();
         }
 
         public void Destroy(IReadOnlyCollection<DestroyAggregate> commands)

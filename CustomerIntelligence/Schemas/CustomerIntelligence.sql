@@ -113,6 +113,13 @@ create table CustomerIntelligence.FirmCategory2(
 )
 go
 
+-- ProjectStatistics
+create table CustomerIntelligence.ProjectStatistics(
+    Id bigint not null
+    , constraint PK_ProjectStatistics primary key (Id)
+)
+go
+
 -- FirmCategory3
 create table CustomerIntelligence.FirmCategory3(
     ProjectId bigint not null
