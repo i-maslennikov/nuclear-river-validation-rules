@@ -18,12 +18,12 @@ using Quartz;
 namespace NuClear.Replication.EntryPoint.Jobs
 {
     [DisallowConcurrentExecution]
-    public class OperationsPrimaryProcessingJob : TaskServiceJobBase
+    public class ProcessingJob : TaskServiceJobBase
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly IMessageFlowProcessorFactory _messageFlowProcessorFactory;
 
-        public OperationsPrimaryProcessingJob(
+        public ProcessingJob(
             IMetadataProvider metadataProvider,
             IMessageFlowProcessorFactory messageFlowProcessorFactory,
             ISignInService signInService,
@@ -65,21 +65,21 @@ namespace NuClear.Replication.EntryPoint.Jobs
 
             Tracer.Debug("Launching message flow processing. Target message flow: " + messageFlowMetadata);
 
-            ISyncMessageFlowProcessor messageFlowProcessor; 
-            
+            ISyncMessageFlowProcessor messageFlowProcessor;
+
             try
             {
                 var processorSettings = new PerformedOperationsPrimaryFlowProcessorSettings
-                                        {
-                                            MessageBatchSize = BatchSize,
-                                            AppropriatedStages = new[]
-                                                                 {
-                                                                     MessageProcessingStage.Transformation,
-                                                                     MessageProcessingStage.Accumulation,
-                                                                     MessageProcessingStage.Handling
-                                                                 },
-                                            FirstFaultTolerantStage = MessageProcessingStage.None
-                                        };
+                    {
+                        MessageBatchSize = BatchSize,
+                        AppropriatedStages = new[]
+                            {
+                                MessageProcessingStage.Transformation,
+                                MessageProcessingStage.Accumulation,
+                                MessageProcessingStage.Handling
+                            },
+                        FirstFaultTolerantStage = MessageProcessingStage.None
+                    };
 
                 messageFlowProcessor = _messageFlowProcessorFactory.CreateSync<IPerformedOperationsFlowProcessorSettings>(messageFlowMetadata, processorSettings);
             }
