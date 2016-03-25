@@ -31,7 +31,7 @@ namespace NuClear.River.Common.Metadata.Builders
         {
             if (elements == null)
             {
-                throw new ArgumentNullException("elements");
+                throw new ArgumentNullException(nameof(elements));
             }
 
             _elements = _elements.Concat(elements);
@@ -51,7 +51,7 @@ namespace NuClear.River.Common.Metadata.Builders
 
             Childs(types.ToArray());
 
-            return new StructuralModelElement(UriExtensions.AsUri(_name).AsIdentity(), entities, Features);
+            return new StructuralModelElement(_name.AsUri().AsIdentity(), entities, Features);
         }
 
         private void ProcessElements(out IEnumerable<EntityElement> roots, out IEnumerable<IMetadataElement> types)
@@ -68,10 +68,12 @@ namespace NuClear.River.Common.Metadata.Builders
                           {
                               propertyConfig.OfType(LookupOrCreateElement(typesById, propertyConfig.TypeReference, () => propertyConfig.TypeElement));
                           }
+
                           foreach (var relationConfig in entityConfig.RelationConfigs)
                           {
                               relationConfig.DirectTo(LookupOrCreateElement(typesById, relationConfig.TargetEntityReference, () => (EntityElement)relationConfig.TargetEntityElementConfig));
                           }
+
                           LookupOrCreateElement(typesById, entityConfig.EntityId, () => (EntityElement)entityConfig);
                       });
 

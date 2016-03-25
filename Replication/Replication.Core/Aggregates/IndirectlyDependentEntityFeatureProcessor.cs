@@ -11,9 +11,8 @@ using NuClear.Telemetry.Probing;
 namespace NuClear.Replication.Core.Aggregates
 {
     /// <summary>
-    /// Выполняет обработку косвенной зависимости между фактом и сущностью.
-    /// Косвенная зависимость означает, что факт флияет на сущность, но проецируется на неё один-в один.
-    /// Чаще всего он входит в состав агрегата в виде отдельных полей или объекта-значения.
+    /// Processes idirect dependency from fact to entity.
+    /// 'Indirect' means that entity identity can be found using fact object.
     /// </summary>
     public class IndirectlyDependentEntityFeatureProcessor<TFact, TEntityKey> : IFactDependencyProcessor
         where TFact : class, IIdentifiable<long>
@@ -53,7 +52,7 @@ namespace NuClear.Replication.Core.Aggregates
             using (Probe.Create("Querying dependent entities"))
             {
                 var filter = _findSpecificationProvider.Create(factIds);
-                return _metadata.DependentAggregateSpecProvider.Invoke(filter).Map(_query).Select(key => _commandFactory.Create(_metadata.EntityType, key)).ToArray();
+                return _metadata.DependentEntitySpecProvider.Invoke(filter).Map(_query).Select(key => _commandFactory.Create(_metadata.EntityType, key)).ToArray();
             }
         }
     }

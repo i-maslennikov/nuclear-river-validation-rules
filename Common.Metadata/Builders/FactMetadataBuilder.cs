@@ -34,9 +34,9 @@ namespace NuClear.River.Common.Metadata.Builders
             return this;
         }
 
-        public FactMetadataBuilder<TFact> HasDependentEntity<TKey>(IEntityType entityType, MapToObjectsSpecProvider<TFact, TKey> dependentAggregateSpecProvider)
+        public FactMetadataBuilder<TFact> HasDependentEntity<TKey>(IEntityType entityType, MapToObjectsSpecProvider<TFact, TKey> dependentEntitySpecProvider)
         {
-            AddFeatures(new IndirectlyDependentEntityFeature<TFact, TKey>(entityType, dependentAggregateSpecProvider));
+            AddFeatures(new IndirectlyDependentEntityFeature<TFact, TKey>(entityType, dependentEntitySpecProvider));
             return this;
         }
 

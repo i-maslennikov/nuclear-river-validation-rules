@@ -9,8 +9,8 @@ using NuClear.River.Common.Metadata.Model.Operations;
 namespace NuClear.Replication.Core.Aggregates
 {
     /// <summary>
-    /// Выполняет обработку прямой зависимости между фактом и сущностью.
-    /// Приямая зависимость означет, что идентификатор факта является идентиифкатором сущности.
+    /// Processes direct dependency between fact and entity.
+    /// 'Direct' means that identity of fact matches to entity identity.
     /// </summary>
     public class DirectlyDependentEntityFeatureProcessor<TFact> : IFactDependencyProcessor
         where TFact : class, IIdentifiable<long>

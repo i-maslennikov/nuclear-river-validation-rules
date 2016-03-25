@@ -83,7 +83,7 @@
     <Compile Include="Model\CI\FirmBalance.cs" />
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
-    <Compile Include="Model\CI\Statistics.cs" />
+    <Compile Include="Model\Statistics\ProjectStatistics.cs" />
     <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\ICustomerIntelligenceAggregatePart.cs" />

@@ -18,7 +18,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         public void ShouldReturnMetadataByIdentity()
         {
             MetadataSet metadataSet;
-            
+
             Assert.That(TestMetadataProvider.Instance.TryGetMetadata<QueryingMetadataIdentity>(out metadataSet), Is.True);
             Assert.That(metadataSet, Is.Not.Null);
         }
@@ -28,7 +28,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
         {
             BoundedContextElement contextElement;
 
-            var id = Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(name);
+            var id = Metadata.Id.For<QueryingMetadataIdentity>(name);
             Assert.That(TestMetadataProvider.Instance.TryGetMetadata(id, out contextElement), Is.True);
             Assert.That(contextElement, Is.Not.Null);
         }
@@ -67,7 +67,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             var ignoredFeatures = new[] { typeof(EntityIdentityFeature), typeof(ElementMappingFeature), typeof(EntityRelationContainmentFeature) };
             element.Dump(properties, ignoredFeatures);
 
-            Debug.WriteLine((string)element.Serialize(properties, ignoredFeatures));
+            Debug.WriteLine(element.Serialize(properties, ignoredFeatures));
 
             return element.Serialize(properties, ignoredFeatures);
         }
@@ -105,9 +105,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             Assert.That(element, Is.Not.Null);
         }
 
-        private bool TryGetMetadata(string path, out IMetadataElement element)
+        private static bool TryGetMetadata(string path, out IMetadataElement element)
         {
-            var id = Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(path);
+            var id = Metadata.Id.For<QueryingMetadataIdentity>(path);
             return TestMetadataProvider.Instance.TryGetMetadata(id, out element);
         }
     }

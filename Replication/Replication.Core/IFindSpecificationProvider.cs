@@ -4,8 +4,8 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core
 {
-    public interface IFindSpecificationProvider<T, in TCommand>
+    public interface IFindSpecificationProvider<TEntity, in TConstraint>
     {
-        FindSpecification<T> Create(IEnumerable<TCommand> commands);
+        FindSpecification<TEntity> Create(IEnumerable<TConstraint> constraints);
     }
 }

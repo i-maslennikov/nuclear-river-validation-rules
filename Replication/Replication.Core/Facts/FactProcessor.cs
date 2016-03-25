@@ -32,7 +32,7 @@ namespace NuClear.Replication.Core.Facts
             _changesDetector = changesDetector;
 
             _findSpecificationProvider = new FindSpecificationProvider<TFact, long>(factIdentityProvider);
-            _identityProvider = factIdentityProvider.ExtractIdentity<TFact>().Compile();
+            _identityProvider = factIdentityProvider.Get<TFact>().Compile();
         }
 
         public IReadOnlyCollection<IOperation> Execute(IReadOnlyCollection<FactOperation> commands)

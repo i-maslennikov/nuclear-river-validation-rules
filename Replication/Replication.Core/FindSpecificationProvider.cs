@@ -9,7 +9,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core
 {
-    internal sealed class FindSpecificationProvider<T, TKey>
+    internal sealed class FindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T, TKey>
         where T : IIdentifiable<TKey>
     {
         private readonly IIdentityProvider<TKey> _identityProvider;
@@ -26,7 +26,7 @@ namespace NuClear.Replication.Core
 
         private static Expression<Func<T, bool>> CreateExpression(IIdentityProvider<TKey> identity, IEnumerable<TKey> keys)
         {
-            var expression = identity.ExtractIdentity<T>();
+            var expression = identity.Get<T>();
             var containsMethod = GetMethodInfo<TKey>(Enumerable.Contains);
             return Expression.Lambda<Func<T, bool>>(Expression.Call(null, containsMethod, Expression.Constant(keys), expression.Body),
                                                     expression.Parameters);
