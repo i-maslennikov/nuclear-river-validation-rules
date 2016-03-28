@@ -3,25 +3,24 @@
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Model;
-using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class ValueObjectProcessor<TValueObject> : IValueObjectProcessor
+    public sealed class ValueObjectProcessor<TEntity, TValueObject> : IValueObjectProcessor<TEntity>
         where TValueObject : class, IObject
     {
         private readonly IBulkRepository<TValueObject> _repository;
         private readonly DataChangesDetector<TValueObject> _changesDetector;
-        private readonly IFindSpecificationProvider<TValueObject, AggregateOperation> _findSpecificationProvider;
+        private readonly IFindSpecificationProvider<TValueObject, TEntity> _findSpecificationProvider;
 
-        public ValueObjectProcessor(DataChangesDetector<TValueObject> changesDetector, IBulkRepository<TValueObject> repository, IFindSpecificationProvider<TValueObject, AggregateOperation> findSpecificationProvider)
+        public ValueObjectProcessor(DataChangesDetector<TValueObject> changesDetector, IBulkRepository<TValueObject> repository, IFindSpecificationProvider<TValueObject, TEntity> findSpecificationProvider)
         {
             _repository = repository;
             _changesDetector = changesDetector;
             _findSpecificationProvider = findSpecificationProvider;
         }
 
-        public void Execute(IReadOnlyCollection<AggregateOperation> commands)
+        public void Execute(IReadOnlyCollection<TEntity> commands)
         {
             var spec = _findSpecificationProvider.Create(commands);
             var mergeResult = _changesDetector.DetectChanges(spec);

@@ -311,7 +311,7 @@ namespace NuClear.Replication.EntryPoint.DI
                 .RegisterType<IStatisticsRecalculator, StatisticsRecalculator<CustomerIntelligenceSubDomain>>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IFactDependencyProcessorFactory, UnityFactDependencyProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IValueObjectProcessorFactory, UnityValueObjectProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType(typeof(IValueObjectProcessorFactory<>), typeof(UnityValueObjectProcessorFactory<>), entryPointSpecificLifetimeManagerFactory()) // todo: убедиться, что не приводит к утечкам памяти
                 .RegisterType<IFactProcessorFactory, UnityFactProcessorFactory>(entryPointSpecificLifetimeManagerFactory());
         }
 

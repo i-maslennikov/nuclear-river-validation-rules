@@ -10,7 +10,7 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
-    public class UnityValueObjectProcessorFactory : IValueObjectProcessorFactory
+    public class UnityValueObjectProcessorFactory<TEntity> : IValueObjectProcessorFactory<TEntity>
     {
         private readonly IUnityContainer _unityContainer;
 
@@ -19,15 +19,15 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             _unityContainer = unityContainer;
         }
 
-        public IValueObjectProcessor Create(IValueObjectMetadata metadata)
+        public IValueObjectProcessor<TEntity> Create(IValueObjectMetadata metadata)
         {
-            var processorType = typeof(ValueObjectProcessor<>).MakeGenericType(metadata.ValueObjectType);
+            var processorType = typeof(ValueObjectProcessor<,>).MakeGenericType(typeof(TEntity), metadata.ValueObjectType);
 
             var processor = _unityContainer.Resolve(
                 processorType,
                 ResolveDataChangesDetectorDependency(metadata),
                 ResolveValueObjectFindSpecificationProvider(metadata));
-            return (IValueObjectProcessor)processor;
+            return (IValueObjectProcessor<TEntity>)processor;
         }
 
         private DependencyOverride ResolveDataChangesDetectorDependency(IValueObjectMetadata metadata)
@@ -45,7 +45,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
 
             return new DependencyOverride(
                 typeof(IFindSpecificationProvider<,>).MakeGenericType(metadata.ValueObjectType, typeof(AggregateOperation)),
-                _unityContainer.Resolve(typeof(ValueObjectFindSpecificationProvider<>).MakeGenericType(metadata.ValueObjectType), metadatOverride));
+                _unityContainer.Resolve(typeof(ValueObjectFindSpecificationProvider<,>).MakeGenericType(metadata.ValueObjectType), metadatOverride));
         }
 
         interface IValueObjectDataChangesDetectorFactory

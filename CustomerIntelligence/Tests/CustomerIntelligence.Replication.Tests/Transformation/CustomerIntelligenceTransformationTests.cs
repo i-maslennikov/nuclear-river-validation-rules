@@ -475,7 +475,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 return this;
             }
 
-            private Transformation Do<TAggregate>(Action<AggregateProcessor<TAggregate, long>> action)
+            private Transformation Do<TAggregate>(Action<AggregateProcessor<TAggregate>> action)
                 where TAggregate : class, IIdentifiable<long>
             {
                 var aggregateType = typeof(TAggregate);
@@ -488,7 +488,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
                 var factory = new Factory<TAggregate>(_query, _repositoryFactory, _comparerFactory);
                 var processor = factory.Create(aggregateMetadata);
-                action.Invoke((AggregateProcessor<TAggregate, long>)processor);
+                action.Invoke((AggregateProcessor<TAggregate>)processor);
 
                 return this;
             }
@@ -511,28 +511,31 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 {
                     var aggregateMetadata = (AggregateMetadata<TAggregate, long>)metadata;
 
-                    return new AggregateProcessor<TAggregate, long>(
+                    var findSpecProvider = new AggregateFindSpecificationProvider<TAggregate>(new DefaultIdentityProvider());
+                    var rootEntityPricessor = new EntityProcessor<TAggregate>(
+                        _repositoryFactory.Create<TAggregate>(),
                         new DataChangesDetector<TAggregate>(aggregateMetadata.MapSpecificationProviderForSource,
                                                             aggregateMetadata.MapSpecificationProviderForTarget,
                                                             _comparerFactory.CreateIdentityComparer<TAggregate>(),
                                                             _query),
-                        _repositoryFactory.Create<TAggregate>(),
-                        metadata.Elements.OfType<IValueObjectMetadata>().Select(x => CreateFactory(x).Create(x)).ToArray(),
-                        new AggregateFindSpecificationProvider<TAggregate>(new DefaultIdentityProvider()));
+                        metadata.Elements.OfType<IValueObjectMetadata>().Select(x => CreateFactory(x).Create(x)).ToArray());
+
+                    return new AggregateProcessor<TAggregate>(findSpecProvider, rootEntityPricessor, new IChildEntityProcessor<TAggregate>[0]);
                 }
 
-                private IValueObjectProcessorFactory CreateFactory(IValueObjectMetadata metadata)
+                private IValueObjectProcessorFactory<TAggregate> CreateFactory(IValueObjectMetadata metadata)
                 {
-                    return (IValueObjectProcessorFactory)Activator.CreateInstance(
-                        typeof(ValueObjectProcessorFactory<,>).MakeGenericType(metadata.GetType().GenericTypeArguments),
+                    return (IValueObjectProcessorFactory<TAggregate>)Activator.CreateInstance(
+                        typeof(ValueObjectProcessorFactory<,>).MakeGenericType(typeof(TAggregate), metadata.ValueObjectType),
                         _query,
                         _repositoryFactory,
                         _comparerFactory);
                 }
             }
 
-            private class ValueObjectProcessorFactory<TValueObject, TEntityKey> : IValueObjectProcessorFactory
+            private class ValueObjectProcessorFactory<TAggregate, TValueObject> : IValueObjectProcessorFactory<TAggregate>
                 where TValueObject : class, IObject
+                where TAggregate : IIdentifiable<long>
             {
                 private readonly IQuery _query;
                 private readonly IRepositoryFactory _repositoryFactory;
@@ -545,21 +548,21 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     _comparerFactory = comparerFactory;
                 }
 
-                public IValueObjectProcessor Create(IValueObjectMetadata metadata)
+                public IValueObjectProcessor<TAggregate> Create(IValueObjectMetadata metadata)
                 {
                     return Create((ValueObjectMetadata<TValueObject, long>)metadata);
                 }
 
-                private IValueObjectProcessor Create(ValueObjectMetadata<TValueObject, long> metadata)
+                private IValueObjectProcessor<TAggregate> Create(ValueObjectMetadata<TValueObject, long> metadata)
                 {
-                    return new ValueObjectProcessor<TValueObject>(
+                    return new ValueObjectProcessor<TAggregate, TValueObject>(
                         new DataChangesDetector<TValueObject>(
                             metadata.MapSpecificationProviderForSource,
                             metadata.MapSpecificationProviderForTarget,
                             _comparerFactory.CreateCompleteComparer<TValueObject>(),
                             _query),
                         _repositoryFactory.Create<TValueObject>(),
-                        new ValueObjectFindSpecificationProvider<TValueObject>(metadata));
+                        new ValueObjectFindSpecificationProvider<TValueObject, TAggregate>(metadata, new DefaultIdentityProvider()));
                 }
             }
         }

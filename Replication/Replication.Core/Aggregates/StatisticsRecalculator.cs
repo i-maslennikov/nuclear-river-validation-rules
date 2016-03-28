@@ -81,7 +81,7 @@ namespace NuClear.Replication.Core.Aggregates
                 var processor = CreateProcessor(aggregateType);
                 using (Probe.Create($"ETL2 Recalculate {aggregateType.Name} Part {entityType.Name}"))
                 {
-                    processor.Recalculate(slice.ToArray());
+                    processor.RecalculatePartially(slice.ToArray(), entityType);
                 }
             }
         }
