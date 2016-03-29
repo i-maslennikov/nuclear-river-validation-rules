@@ -11,6 +11,7 @@ using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
@@ -20,19 +21,22 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
     public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
     {
         private readonly IFactsReplicator _factsReplicator;
-        private readonly IOperationSender _aggregateSender;
+        private readonly IOperationSender _operationSender;
+        private readonly IOperationDispatcher _operationDispatcher;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromErmHandler(
             IFactsReplicator factsReplicator,
-            IOperationSender aggregateSender,
+            IOperationSender operationSender,
             ITelemetryPublisher telemetryPublisher,
+            IOperationDispatcher operationDispatcher,
             ITracer tracer)
         {
-            _aggregateSender = aggregateSender;
+            _operationSender = operationSender;
             _telemetryPublisher = telemetryPublisher;
             _factsReplicator = factsReplicator;
+            _operationDispatcher = operationDispatcher;
             _tracer = tracer;
         }
 
@@ -65,25 +69,28 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(operations.Count);
 
-            var statistics = result.OfType<RecalculateStatisticsOperation>().ToArray();
-            var aggregates = result.Except(statistics).OfType<AggregateOperation>().ToArray();
-
             // We always need to use different transaction scope to operate with operation sender because it has its own store
             using (var pushTransaction = new TransactionScope(TransactionScopeOption.RequiresNew,
                                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
-                _tracer.Debug("Pushing events for statistics recalculation");
-                _aggregateSender.Push(statistics, StatisticsFlow.Instance);
-                _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(statistics.Length);
-
-                _tracer.Debug("Pushing events for aggregates recalculation");
-                _aggregateSender.Push(aggregates, AggregatesFlow.Instance);
-                _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(aggregates.Length);
-
+                _tracer.Debug("Pushing messages");
+                DispatchOperations(result);
                 pushTransaction.Complete();
             }
 
             _tracer.Debug("Handing fact operations finished");
+        }
+
+        private void DispatchOperations(IEnumerable<IOperation> opertaions)
+        {
+            var dispatched = _operationDispatcher.Dispatch(opertaions);
+            foreach (var pair in dispatched)
+            {
+                _operationSender.Push(pair.Value, pair.Key);
+            }
+
+            _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(dispatched[StatisticsFlow.Instance].Count);
+            _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(dispatched[AggregatesFlow.Instance].Count);
         }
     }
 }

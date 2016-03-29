@@ -1,10 +1,5 @@
 ﻿namespace NuClear.River.Common.Metadata.Model.Operations
 {
-    public class RecalculateStatisticsOperation : IOperation
-    {
-        
-    }
-
     public sealed class RecalculateAggregatePart : IOperation
     {
         public RecalculateAggregatePart(int aggregateTypeId, long aggregateInstanceId, int entityTypeId, long entityInstanceId)

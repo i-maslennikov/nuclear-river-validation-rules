@@ -27,7 +27,7 @@ namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
         }
 
         public void Push<TOperation, TFlow>(IEnumerable<TOperation> operations, TFlow targetFlow)
-            where TFlow : MessageFlowBase<TFlow>, new()
+            where TFlow : IMessageFlow
             where TOperation : IOperation
         {
             using (Probe.Create($"Send {typeof(TOperation).Name}"))
