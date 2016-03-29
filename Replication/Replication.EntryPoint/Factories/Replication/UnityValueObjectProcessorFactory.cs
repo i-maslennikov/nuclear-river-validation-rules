@@ -2,15 +2,18 @@
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Aggregates;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Equality;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
-    public class UnityValueObjectProcessorFactory<TEntity> : IValueObjectProcessorFactory<TEntity>
+    public class UnityValueObjectProcessorFactory<TValueObject, TEntity, TEntityKey> : IValueObjectProcessorFactory<TEntity>
+        where TEntity : IIdentifiable<TEntityKey>
+        where TValueObject : class, IObject
     {
         private readonly IUnityContainer _unityContainer;
 
@@ -21,59 +24,33 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
 
         public IValueObjectProcessor<TEntity> Create(IValueObjectMetadata metadata)
         {
-            var processorType = typeof(ValueObjectProcessor<,>).MakeGenericType(typeof(TEntity), metadata.ValueObjectType);
+            var md = (ValueObjectMetadata<TValueObject, TEntityKey>)metadata;
 
-            var processor = _unityContainer.Resolve(
-                processorType,
-                ResolveDataChangesDetectorDependency(metadata),
-                ResolveValueObjectFindSpecificationProvider(metadata));
-            return (IValueObjectProcessor<TEntity>)processor;
+            return new ValueObjectProcessor<TEntity, TValueObject>(
+                ResolveDataChangesDetector(md),
+                _unityContainer.Resolve<IBulkRepository<TValueObject>>(),
+                ResolveFindSpecificationProvider(md));
         }
 
-        private DependencyOverride ResolveDataChangesDetectorDependency(IValueObjectMetadata metadata)
+        private DataChangesDetector<TValueObject> ResolveDataChangesDetector(ValueObjectMetadata<TValueObject, TEntityKey> metadata)
         {
-            var factory = (IValueObjectDataChangesDetectorFactory)_unityContainer.Resolve(
-                typeof(ValueObjectDataChangesDetectorFactory<,>).MakeGenericType(metadata.GetType().GetGenericArguments()),
-                new DependencyOverride(metadata.GetType(), metadata));
-            var detector = factory.Create();
-            return new DependencyOverride(detector.GetType(), detector);
+            var equalityComparerFactory = _unityContainer.Resolve<IEqualityComparerFactory>();
+            var query = _unityContainer.Resolve<IQuery>();
+
+            // todo: подумать о типах CompleteMetadataDataChangesDetector + IdentityMetadataDataChangesDetector, и об единственной DependencyOverride
+            var detector = new DataChangesDetector<TValueObject>(
+                metadata.MapSpecificationProviderForSource,
+                metadata.MapSpecificationProviderForTarget,
+                equalityComparerFactory.CreateCompleteComparer<TValueObject>(),
+                query);
+
+            return detector;
         }
 
-        private DependencyOverride ResolveValueObjectFindSpecificationProvider(IValueObjectMetadata metadata)
+        private IFindSpecificationProvider<TValueObject, TEntity> ResolveFindSpecificationProvider(ValueObjectMetadata<TValueObject, TEntityKey> metadata)
         {
-            var metadatOverride = new DependencyOverride(metadata.GetType(), metadata);
-
-            return new DependencyOverride(
-                typeof(IFindSpecificationProvider<,>).MakeGenericType(metadata.ValueObjectType, typeof(AggregateOperation)),
-                _unityContainer.Resolve(typeof(ValueObjectFindSpecificationProvider<,>).MakeGenericType(metadata.ValueObjectType), metadatOverride));
-        }
-
-        interface IValueObjectDataChangesDetectorFactory
-        {
-            object Create();
-        }
-
-        class ValueObjectDataChangesDetectorFactory<T, TKey> : IValueObjectDataChangesDetectorFactory
-        {
-            private readonly IQuery _query;
-            private readonly ValueObjectMetadata<T, TKey> _metadata;
-            private readonly IEqualityComparerFactory _equalityComparerFactory;
-
-            public ValueObjectDataChangesDetectorFactory(ValueObjectMetadata<T, TKey> metadata, IEqualityComparerFactory equalityComparerFactory, IQuery query)
-            {
-                _metadata = metadata;
-                _equalityComparerFactory = equalityComparerFactory;
-                _query = query;
-            }
-
-            public object Create()
-            {
-                return new DataChangesDetector<T>(
-                    _metadata.MapSpecificationProviderForSource,
-                    _metadata.MapSpecificationProviderForTarget,
-                    _equalityComparerFactory.CreateCompleteComparer<T>(),
-                    _query);
-            }
+            var identityProvider = _unityContainer.Resolve<IIdentityProvider<TEntityKey>>();
+            return new ValueObjectFindSpecificationProvider<TValueObject, TEntity, TEntityKey>(metadata, identityProvider);
         }
     }
 }

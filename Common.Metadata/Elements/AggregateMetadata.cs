@@ -9,7 +9,14 @@ using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.River.Common.Metadata.Elements
 {
-    public class AggregateMetadata<TEntity, TKey> : MetadataElement<AggregateMetadata<TEntity, TKey>, AggregateMetadataBuilder<TEntity, TKey>>
+    public interface IAggregateMetadata<TEntity>
+    {
+        MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForSource { get; }
+        MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForTarget { get; }
+    }
+
+    // todo: подумать о названии/назначении. Одновременно пытается описать агрегат и сущность.
+    public class AggregateMetadata<TEntity, TKey> : MetadataElement<AggregateMetadata<TEntity, TKey>, AggregateMetadataBuilder<TEntity, TKey>>, IAggregateMetadata<TEntity>
         where TEntity : class, IIdentifiable<TKey>
     {
         private IMetadataElementIdentity _identity = new Uri(typeof(TEntity).Name, UriKind.Relative).AsIdentity();
@@ -25,9 +32,9 @@ namespace NuClear.River.Common.Metadata.Elements
 
         public override IMetadataElementIdentity Identity => _identity;
 
-        public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForSource { get; private set; }
+        public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForSource { get; }
 
-        public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForTarget { get; private set; }
+        public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForTarget { get; }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)
         {

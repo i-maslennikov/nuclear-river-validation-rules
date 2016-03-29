@@ -511,7 +511,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 {
                     var aggregateMetadata = (AggregateMetadata<TAggregate, long>)metadata;
 
-                    var findSpecProvider = new AggregateFindSpecificationProvider<TAggregate>(new DefaultIdentityProvider());
+                    var findSpecProvider = new FindSpecificationProvider<TAggregate, long>(new DefaultIdentityProvider());
                     var rootEntityPricessor = new EntityProcessor<TAggregate>(
                         _repositoryFactory.Create<TAggregate>(),
                         new DataChangesDetector<TAggregate>(aggregateMetadata.MapSpecificationProviderForSource,
@@ -562,7 +562,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                             _comparerFactory.CreateCompleteComparer<TValueObject>(),
                             _query),
                         _repositoryFactory.Create<TValueObject>(),
-                        new ValueObjectFindSpecificationProvider<TValueObject, TAggregate>(metadata, new DefaultIdentityProvider()));
+                        new ValueObjectFindSpecificationProvider<TValueObject, TAggregate, long>(metadata, new DefaultIdentityProvider()));
                 }
             }
         }

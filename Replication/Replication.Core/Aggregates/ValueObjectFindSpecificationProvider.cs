@@ -8,13 +8,13 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class ValueObjectFindSpecificationProvider<TValueObject, TEntity> : IFindSpecificationProvider<TValueObject, TEntity>
-        where TEntity : IIdentifiable<long>
+    public sealed class ValueObjectFindSpecificationProvider<TValueObject, TEntity, TEntityKey> : IFindSpecificationProvider<TValueObject, TEntity>
+        where TEntity : IIdentifiable<TEntityKey>
     {
-        private readonly ValueObjectMetadata<TValueObject, long> _metadata;
-        private readonly Func<TEntity, long> _entityIdentityProvider;
+        private readonly ValueObjectMetadata<TValueObject, TEntityKey> _metadata;
+        private readonly Func<TEntity, TEntityKey> _entityIdentityProvider;
 
-        public ValueObjectFindSpecificationProvider(ValueObjectMetadata<TValueObject, long> metadata, IIdentityProvider<long> entityIdentityProvider)
+        public ValueObjectFindSpecificationProvider(ValueObjectMetadata<TValueObject, TEntityKey> metadata, IIdentityProvider<TEntityKey> entityIdentityProvider)
         {
             _metadata = metadata;
             _entityIdentityProvider = entityIdentityProvider.Get<TEntity>().Compile();
