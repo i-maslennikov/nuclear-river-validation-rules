@@ -42,12 +42,17 @@ namespace NuClear.CustomerIntelligence.Storage
                     .Property(x => x.CategoryId).IsPrimaryKey();
                 config.Entity<Territory>().HasSchemaName(CustomerIntelligenceSchema).Property(x => x.Id).IsPrimaryKey();
 
+                config.Entity<ProjectCategoryStatistics>().HasSchemaName(CustomerIntelligenceSchema);
+
+                config.Entity<ProjectStatistics>().HasSchemaName(CustomerIntelligenceSchema);
+
+                config.Entity<FirmForecast>().HasSchemaName(CustomerIntelligenceSchema)
+                    .Property(x => x.FirmId).IsPrimaryKey();
+
                 config.Entity<FirmCategory3>().HasSchemaName(CustomerIntelligenceSchema)
                     .Property(x => x.FirmId).IsPrimaryKey()
                     .Property(x => x.CategoryId).IsPrimaryKey();
 
-                config.Entity<FirmForecast>().HasSchemaName(CustomerIntelligenceSchema)
-                    .Property(x => x.FirmId).IsPrimaryKey();
 
                 return schema;
             }

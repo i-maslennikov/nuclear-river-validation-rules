@@ -19,7 +19,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
         private static readonly ActMetadataElement BitToStatistics =
             ActMetadataElement.Config
                               .Source(ContextName.Bit)
-                              .Target(ContextName.Statistics)
+                              .Target(ContextName.CustomerIntelligence)
                               .Require(ContextName.Facts)
                               .Action<BulkReplicationAdapter<Statistics>>();
     }

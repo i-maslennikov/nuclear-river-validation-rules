@@ -19,6 +19,8 @@ if object_id('CustomerIntelligence.FirmCategory1') is not null drop table Custom
 if object_id('CustomerIntelligence.FirmCategory2') is not null drop table CustomerIntelligence.FirmCategory2
 if object_id('CustomerIntelligence.FirmCategory3') is not null drop table CustomerIntelligence.FirmCategory3
 if object_id('CustomerIntelligence.FirmTerritory') is not null drop table CustomerIntelligence.FirmTerritory
+if object_id('CustomerIntelligence.ProjectCategoryStatistics') is not null drop table CustomerIntelligence.ProjectCategoryStatistics
+if object_id('CustomerIntelligence.ProjectStatistics') is not null drop table CustomerIntelligence.ProjectStatistics
 if object_id('CustomerIntelligence.FirmView', 'view') is not null drop view CustomerIntelligence.FirmView
 go
 
@@ -117,6 +119,14 @@ go
 create table CustomerIntelligence.ProjectStatistics(
     Id bigint not null
     , constraint PK_ProjectStatistics primary key (Id)
+)
+go
+
+-- FirmForecast
+create table CustomerIntelligence.ProjectCategoryStatistics(
+    ProjectId bigint not null
+    , CategoryId bigint not null
+    , constraint PK_ProjectCategoryStatistics primary key (ProjectId, CategoryId)
 )
 go
 
