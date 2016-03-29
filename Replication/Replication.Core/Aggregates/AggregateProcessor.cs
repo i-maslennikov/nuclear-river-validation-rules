@@ -8,14 +8,14 @@ using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class AggregateProcessor<TRootEntity> : IAggregateProcessor
+    public sealed class AggregateProcessor<TRootEntity> : IAggregateProcessor // ICommandHandler<InitializeAggregate>, ICommandHandler<RecalculateAggregate>, ICommandHandler<DestroyAggregate>, ...
         where TRootEntity : class, IIdentifiable<long>
     {
         private readonly IFindSpecificationProvider<TRootEntity, long> _findSpecificationProvider;
         private readonly EntityProcessor<TRootEntity> _rootEntityProcessor;
-        private readonly IReadOnlyCollection<IChildEntityProcessor<TRootEntity>> _childEntityProcessors;
+        private readonly IReadOnlyCollection<IChildEntityProcessor<long>> _childEntityProcessors;
 
-        public AggregateProcessor(IFindSpecificationProvider<TRootEntity, long> findSpecificationProvider, EntityProcessor<TRootEntity> rootEntityProcessor, IReadOnlyCollection<IChildEntityProcessor<TRootEntity>> childEntityProcessors)
+        public AggregateProcessor(IFindSpecificationProvider<TRootEntity, long> findSpecificationProvider, EntityProcessor<TRootEntity> rootEntityProcessor, IReadOnlyCollection<IChildEntityProcessor<long>> childEntityProcessors)
         {
             _findSpecificationProvider = findSpecificationProvider;
             _rootEntityProcessor = rootEntityProcessor;
@@ -24,38 +24,41 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void Initialize(IReadOnlyCollection<InitializeAggregate> commands)
         {
-            var specification = _findSpecificationProvider.Create(commands.Select(x => x.EntityId));
+            var keys = commands.Select(x => x.EntityId).ToArray();
+            var specification = _findSpecificationProvider.Create(keys);
             _rootEntityProcessor.Initialize(specification);
             foreach (var processor in _childEntityProcessors)
             {
-                processor.Initialize(specification);
+                processor.Initialize(keys);
             }
         }
 
         public void Recalculate(IReadOnlyCollection<RecalculateAggregate> commands)
         {
-            var specification = _findSpecificationProvider.Create(commands.Select(x => x.EntityId));
+            var keys = commands.Select(x => x.EntityId).ToArray();
+            var specification = _findSpecificationProvider.Create(keys);
             _rootEntityProcessor.Recalculate(specification);
             foreach (var processor in _childEntityProcessors)
             {
-                processor.Recalculate(specification);
+                processor.Recalculate(keys);
             }
         }
 
         public void RecalculatePartially(IReadOnlyCollection<RecalculateAggregatePart> commands, Type partType)
         {
-            var specification = _findSpecificationProvider.Create(commands.Select(x => x.AggregateInstanceId));
+            var keys = commands.Select(x => x.AggregateInstanceId).ToArray();
             var processor = _childEntityProcessors.Single(x => x.ChildEntityType == partType);
-            processor.RecalculatePartially(specification, commands);
+            processor.RecalculatePartially(keys, commands);
         }
 
         public void Destroy(IReadOnlyCollection<DestroyAggregate> commands)
         {
-            var specification = _findSpecificationProvider.Create(commands.Select(x => x.EntityId));
+            var keys = commands.Select(x => x.EntityId).ToArray();
+            var specification = _findSpecificationProvider.Create(keys);
             _rootEntityProcessor.Destroy(specification);
             foreach (var processor in _childEntityProcessors)
             {
-                processor.Destroy(specification);
+                processor.Destroy(keys);
             }
         }
     }

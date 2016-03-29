@@ -149,6 +149,7 @@
     <Compile Include="Specifications\Specs.Map.Facts.AggregateIdentity.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.CI.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.Statistics.cs" />
+    <Compile Include="StatisticsConstructionMetadataSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">

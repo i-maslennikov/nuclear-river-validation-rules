@@ -44,6 +44,7 @@
     <Compile Include="Builders\FactMetadataBuilder.cs" />
     <Compile Include="Builders\ImportStatisticsMetadataBuilder.cs" />
     <Compile Include="Builders\StructuralModelElementBuilder.cs" />
+    <Compile Include="Elements\ChildEntityFeature.cs" />
     <Compile Include="Elements\OperationRegistryMetadataElement.cs" />
     <Compile Include="Elements\AggregateMetadata.cs" />
     <Compile Include="Elements\BaseMetadataElement.cs" />

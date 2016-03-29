@@ -520,7 +520,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                                                             _query),
                         metadata.Elements.OfType<IValueObjectMetadata>().Select(x => CreateFactory(x).Create(x)).ToArray());
 
-                    return new AggregateProcessor<TAggregate>(findSpecProvider, rootEntityPricessor, new IChildEntityProcessor<TAggregate>[0]);
+                    return new AggregateProcessor<TAggregate>(findSpecProvider, rootEntityPricessor, new IChildEntityProcessor<long>[0]);
                 }
 
                 private IValueObjectProcessorFactory<TAggregate> CreateFactory(IValueObjectMetadata metadata)

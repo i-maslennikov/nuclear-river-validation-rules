@@ -7,43 +7,43 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class ChildEntityProcessor<TRootEntity, TChildEntity> : IChildEntityProcessor<TRootEntity>
+    public sealed class ChildEntityProcessor<TRootEntityKey, TChildEntity> : IChildEntityProcessor<TRootEntityKey>
     {
         private readonly IEntityProcessor<TChildEntity> _childEntity;
         private readonly IFindSpecificationProvider<TChildEntity, long> _findSpecificationProvider;
-        private readonly IMapSpecification<FindSpecification<TRootEntity>, FindSpecification<TChildEntity>> _mapSpecification;
+        private readonly IMapSpecification<IReadOnlyCollection<TRootEntityKey>, FindSpecification<TChildEntity>> _mapSpecification;
 
         public Type ChildEntityType
             => typeof(TChildEntity);
 
         public ChildEntityProcessor(IEntityProcessor<TChildEntity> childEntity,
                                     IFindSpecificationProvider<TChildEntity, long> findSpecificationProvider,
-                                    IMapSpecification<FindSpecification<TRootEntity>, FindSpecification<TChildEntity>> mapSpecification)
+                                    IMapSpecification<IReadOnlyCollection<TRootEntityKey>, FindSpecification<TChildEntity>> mapSpecification)
         {
             _childEntity = childEntity;
             _findSpecificationProvider = findSpecificationProvider;
             _mapSpecification = mapSpecification;
         }
 
-        public void Initialize(FindSpecification<TRootEntity> specification)
+        public void Initialize(IReadOnlyCollection<TRootEntityKey> specification)
         {
             var spec = _mapSpecification.Map(specification);
             _childEntity.Initialize(spec);
         }
 
-        public void Recalculate(FindSpecification<TRootEntity> specification)
+        public void Recalculate(IReadOnlyCollection<TRootEntityKey> specification)
         {
             var spec = _mapSpecification.Map(specification);
             _childEntity.Recalculate(spec);
         }
 
-        public void Destroy(FindSpecification<TRootEntity> specification)
+        public void Destroy(IReadOnlyCollection<TRootEntityKey> specification)
         {
             var spec = _mapSpecification.Map(specification);
             _childEntity.Destroy(spec);
         }
 
-        public void RecalculatePartially(FindSpecification<TRootEntity> specification, IReadOnlyCollection<RecalculateAggregatePart> commands)
+        public void RecalculatePartially(IReadOnlyCollection<TRootEntityKey> specification, IReadOnlyCollection<RecalculateAggregatePart> commands)
         {
             var specFromRoot = _mapSpecification.Map(specification);
             var specFromCommands = _findSpecificationProvider.Create(commands.Select(x => x.EntityInstanceId));
