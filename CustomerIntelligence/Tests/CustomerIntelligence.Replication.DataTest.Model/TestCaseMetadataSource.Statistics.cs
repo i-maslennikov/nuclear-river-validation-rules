@@ -40,6 +40,13 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                     // Прогнозы, привязанные к неизвестным фирмам ни на что не влияют
                     new Bit::FirmCategoryForecast { FirmId = 2, CategoryId = 2, ProjectId = 1, ForecastClick = 20, ForecastAmount = 1999.9999m })
                 .Statistics(
+                    // Сущности-идентификаторы
+                    new Statistics::ProjectStatistics { Id = 1 },
+                    new Statistics::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 1 },
+                    new Statistics::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 2 },
+                    new Statistics::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 3 },
+                    new Statistics::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 4 },
+
                     // При отсутствии данных, статистика подразумевается нулевой, а прогнозы должны явно указывать на это.
                     // При этом, если у фирмы есть рубрика - то запись должна быть обязательно.
                     new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 1, ProjectId = 1, Hits = 0, Shows = 0, AdvertisersShare = 0, FirmCount = 1, ForecastClick = null, ForecastAmount = null },
@@ -60,6 +67,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                     new Bit::FirmForecast { FirmId = 1, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m },
                     new Bit::FirmForecast { FirmId = 3, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m })
                 .Statistics(
+                    new Statistics::ProjectStatistics { Id = 1 },
                     new Statistics::FirmForecast { FirmId = 1, ProjectId = 1, ForecastClick = 10, ForecastAmount = 999.9999m });
     }
 }

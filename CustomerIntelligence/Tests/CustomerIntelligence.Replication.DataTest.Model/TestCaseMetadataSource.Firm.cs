@@ -35,16 +35,9 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                                        new Erm::FirmAddress { Id = 1, FirmId = 1, TerritoryId = 1, ClosedForAscertainment = false, IsActive = true, IsDeleted = false },
                                                        new Erm::CategoryFirmAddress { Id = 1, CategoryId = 3, FirmAddressId = 1, IsActive = true, IsDeleted = false },
                                                        new Erm::CategoryFirmAddress { Id = 2, CategoryId = 4, FirmAddressId = 1, IsActive = true, IsDeleted = false },
-                                                       new Erm::Project { Id = 1, IsActive = true, Name = "ProjectOne", OrganizationUnitId = 1 })
-                                                  .Bit(
-                                                       new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 3, AdvertisersCount = 2 },
-                                                       new Bit::FirmCategoryStatistics { FirmId = 1, CategoryId = 3, ProjectId = 1, Hits = 10, Shows = 20 })
-                                                  .Statistics(
-                                                      new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 3, ProjectId = 1, Name = "Category 3 level 3", Hits = 10, Shows = 20, AdvertisersShare = 1, FirmCount = 1 },
-                                                      new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 4, ProjectId = 1, Name = "Category 4 level 3", Hits = 0, Shows = 0, AdvertisersShare = 0, FirmCount = 1 });
+                                                       new Erm::Project { Id = 1, IsActive = true, Name = "ProjectOne", OrganizationUnitId = 1 });
 
         // ReSharper disable once UnusedMember.Local
-
         private static ArrangeMetadataElement TestFirmAddressCount =>
             ArrangeMetadataElement.Config
             .Name(nameof(TestFirmAddressCount))
