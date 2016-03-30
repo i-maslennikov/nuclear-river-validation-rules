@@ -9,7 +9,13 @@ using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.River.Common.Metadata.Elements
 {
-    public interface IAggregateMetadata<TEntity>
+    public interface IAggregateMetadata : IMetadataElement
+    {
+        Type EntityType { get; }
+        Type EntityKeyType { get; }
+    }
+
+    public interface IAggregateMetadata<TEntity> : IAggregateMetadata
     {
         MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForSource { get; }
         MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForTarget { get; }
@@ -31,6 +37,10 @@ namespace NuClear.River.Common.Metadata.Elements
         }
 
         public override IMetadataElementIdentity Identity => _identity;
+
+        public Type EntityType => typeof(TEntity);
+
+        public Type EntityKeyType => typeof(TKey);
 
         public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForSource { get; }
 

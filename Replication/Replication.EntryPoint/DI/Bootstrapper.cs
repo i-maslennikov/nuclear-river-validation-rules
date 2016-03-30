@@ -153,7 +153,7 @@ namespace NuClear.Replication.EntryPoint.DI
             container.RegisterType<IMetadataProvider, MetadataProvider>(Lifetime.Singleton);
 
             // processors
-            container.RegisterOne2ManyTypesPerTypeUniqueness<IMetadataProcessor, ReferencesEvaluatorProcessor>(Lifetime.Singleton);
+            container.RegisterOne2ManyTypesPerTypeUniqueness<IMetadataProcessor, TunedReferencesEvaluatorProcessor>(Lifetime.Singleton);
             container.RegisterOne2ManyTypesPerTypeUniqueness<IMetadataProcessor, Feature2PropertiesLinkerProcessor>(Lifetime.Singleton);
 
             // validators

@@ -5,12 +5,12 @@ using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public interface IChildEntityProcessor<TRootEntity>
+    public interface IChildEntityProcessor<TRootEntityKey>
     {
         Type ChildEntityType { get; }
-        void Initialize(IReadOnlyCollection<TRootEntity> specification);
-        void Recalculate(IReadOnlyCollection<TRootEntity> specification);
-        void Destroy(IReadOnlyCollection<TRootEntity> specification);
-        void RecalculatePartially(IReadOnlyCollection<TRootEntity> specification, IReadOnlyCollection<RecalculateAggregatePart> commands);
+        void Initialize(IReadOnlyCollection<TRootEntityKey> specification);
+        void Recalculate(IReadOnlyCollection<TRootEntityKey> specification);
+        void Destroy(IReadOnlyCollection<TRootEntityKey> specification);
+        void RecalculatePartially(IReadOnlyCollection<TRootEntityKey> specification, IReadOnlyCollection<RecalculateAggregatePart> commands);
     }
 }

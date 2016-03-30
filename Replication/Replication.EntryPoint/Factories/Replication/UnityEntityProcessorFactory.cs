@@ -14,12 +14,7 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
-    public interface IEntityProcessorFactory
-    {
-        object Create(IMetadataElement metadata);
-    }
-
-    public sealed class UnityEntityProcessorFactory<TEntity> : IEntityProcessorFactory
+    public sealed class UnityEntityProcessorFactory<TEntity>
     {
         private readonly IUnityContainer _unityContainer;
 
@@ -28,7 +23,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             _unityContainer = unityContainer;
         }
 
-        public object Create(IMetadataElement metadata)
+        public EntityProcessor<TEntity> Create(IMetadataElement metadata)
         {
             return new EntityProcessor<TEntity>(
                 _unityContainer.Resolve<IBulkRepository<TEntity>>(),

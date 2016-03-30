@@ -7,6 +7,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
+    // todo: не поддерживает обобщённый ключ вследствие привязки к конкретной команде RecalculateAggregatePart
     public sealed class ChildEntityProcessor<TRootEntityKey, TChildEntity> : IChildEntityProcessor<TRootEntityKey>
     {
         private readonly IEntityProcessor<TChildEntity> _childEntity;

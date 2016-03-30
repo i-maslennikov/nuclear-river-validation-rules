@@ -8,6 +8,7 @@ using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.Aggregates
 {
+    // todo: не поддерживает обобщённый ключ вследствие привязки к конкретной команде InitializeAggregate, RecalculateAggregate, RecalculateAggregatePart, DestroyAggregate
     public sealed class AggregateProcessor<TRootEntity> : IAggregateProcessor // ICommandHandler<InitializeAggregate>, ICommandHandler<RecalculateAggregate>, ICommandHandler<DestroyAggregate>, ...
         where TRootEntity : class, IIdentifiable<long>
     {
