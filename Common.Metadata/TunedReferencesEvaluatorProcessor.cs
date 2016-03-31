@@ -8,9 +8,10 @@ using NuClear.Metamodeling.Kinds;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 
-namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
+namespace NuClear.River.Common.Metadata
 {
-    class TunedReferencesEvaluatorProcessor : IMetadataProcessor
+    // todo: переместить в NuClear.Metamodeling
+    public sealed class TunedReferencesEvaluatorProcessor : IMetadataProcessor
     {
         public IMetadataKindIdentity[] TargetMetadataConstraints
         {

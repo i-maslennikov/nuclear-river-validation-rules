@@ -10,6 +10,7 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Replication.Bulk.API;
 using NuClear.Replication.Bulk.API.Storage;
+using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.ConnectionStrings;
 
 using DataConnectionFactory = NuClear.Replication.Bulk.API.Factories.DataConnectionFactory;
@@ -28,7 +29,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                     new AggregateConstructionMetadataSource(),
                     new StatisticsConstructionMetadataSource(),
                 },
-                new IMetadataProcessor[] { new ReferencesEvaluatorProcessor() });
+                new IMetadataProcessor[] { new TunedReferencesEvaluatorProcessor() });
 
         private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly T _key;
