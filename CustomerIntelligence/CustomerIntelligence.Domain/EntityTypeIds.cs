@@ -35,7 +35,7 @@
         public const int Lock = 159;
 
         // Значения, первоисточником которых является CI
-        public const int FirmCategoryStatistics = 10010;
+        //public const int FirmCategoryStatistics = 10010;
         public const int ProjectStatistics = 10012;
         public const int ProjectCategoryStatistics = 10011;
     }

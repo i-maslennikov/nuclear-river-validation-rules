@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    // todo: не поддерживает обобщённый ключ вследствие привязки к конкретной команде RecalculateAggregatePart
-    public sealed class ChildEntityProcessor<TRootEntityKey, TChildEntity> : IChildEntityProcessor<TRootEntityKey>
+    public sealed class ChildEntityProcessor<TRootEntityKey, TChildEntity, TChildEntityKey> : IChildEntityProcessor<TRootEntityKey>, IChildEntityProcessor<TRootEntityKey, TChildEntityKey>
     {
         private readonly IEntityProcessor<TChildEntity> _childEntity;
-        private readonly IFindSpecificationProvider<TChildEntity, long> _findSpecificationProvider;
+        private readonly IFindSpecificationProvider<TChildEntity, TChildEntityKey> _findSpecificationProvider;
         private readonly IMapSpecification<IReadOnlyCollection<TRootEntityKey>, FindSpecification<TChildEntity>> _mapSpecification;
 
         public Type ChildEntityType
             => typeof(TChildEntity);
 
         public ChildEntityProcessor(IEntityProcessor<TChildEntity> childEntity,
-                                    IFindSpecificationProvider<TChildEntity, long> findSpecificationProvider,
+                                    IFindSpecificationProvider<TChildEntity, TChildEntityKey> findSpecificationProvider,
                                     IMapSpecification<IReadOnlyCollection<TRootEntityKey>, FindSpecification<TChildEntity>> mapSpecification)
         {
             _childEntity = childEntity;
@@ -44,10 +41,10 @@ namespace NuClear.Replication.Core.Aggregates
             _childEntity.Destroy(spec);
         }
 
-        public void RecalculatePartially(IReadOnlyCollection<TRootEntityKey> specification, IReadOnlyCollection<RecalculateAggregatePart> commands)
+        public void RecalculatePartially(IReadOnlyCollection<TRootEntityKey> specification, IReadOnlyCollection<TChildEntityKey> commands)
         {
             var specFromRoot = _mapSpecification.Map(specification);
-            var specFromCommands = _findSpecificationProvider.Create(commands.Select(x => x.EntityInstanceId));
+            var specFromCommands = _findSpecificationProvider.Create(commands);
             _childEntity.Recalculate(specFromRoot & specFromCommands);
         }
     }

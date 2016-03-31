@@ -24,7 +24,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
                     new AggregateConstructionMetadataSource(),
                     new StatisticsConstructionMetadataSource(),
                 },
-                new IMetadataProcessor[] { new ReferencesEvaluatorProcessor() });
+                new IMetadataProcessor[] { new TunedReferencesEvaluatorProcessor() });
 
         public static void Main(string[] args)
         {

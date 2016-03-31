@@ -6,6 +6,7 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.References;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
@@ -53,7 +54,7 @@ namespace NuClear.River.Common.Metadata.Builders
         public AggregateMetadataBuilder<T, TKey> HasEntity<TChildEntity>(Func<IReadOnlyCollection<TKey>, FindSpecification<TChildEntity>> findSpecificationProvider)
         {
             Childs(new MetadataReference(new Uri("../" + typeof(TChildEntity).Name, UriKind.Relative)));
-            return WithFeatures(new ChildEntityFeature<TKey, TChildEntity, long>(new MapSpecification<IReadOnlyCollection<TKey>, FindSpecification<TChildEntity>>(findSpecificationProvider)));
+            return WithFeatures(new ChildEntityFeature<TKey, TChildEntity, StatisticsKey>(new MapSpecification<IReadOnlyCollection<TKey>, FindSpecification<TChildEntity>>(findSpecificationProvider))); // fixme: here
         }
     }
 }

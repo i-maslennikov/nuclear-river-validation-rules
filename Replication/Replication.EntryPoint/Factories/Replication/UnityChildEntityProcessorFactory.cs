@@ -16,8 +16,8 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
         IChildEntityProcessor<TRootEntityKey> Create(IAggregateMetadata parent, IAggregateMetadata child, IChildEntityFeature childFeature);
     }
 
-    public class UnityChildEntityProcessorFactory<TRootEntityKey, TChildEntity> : IChildEntityProcessorFactory<TRootEntityKey>
-        where TChildEntity : IIdentifiable<long>
+    public class UnityChildEntityProcessorFactory<TRootEntityKey, TChildEntity, TChildEntityKey> : IChildEntityProcessorFactory<TRootEntityKey>
+        where TChildEntity : IIdentifiable<TChildEntityKey>
     {
         private readonly IUnityContainer _unityContainer;
 
@@ -30,11 +30,11 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
         {
             var entityProcessorFactory = _unityContainer.Resolve<UnityEntityProcessorFactory<TChildEntity>>();
             var entityProcessor = entityProcessorFactory.Create(child);
-            var feature = parent.Features.OfType<ChildEntityFeature<TRootEntityKey, TChildEntity, long>>().Single();
+            var feature = parent.Features.OfType<ChildEntityFeature<TRootEntityKey, TChildEntity, TChildEntityKey>>().Single();
 
-            return new ChildEntityProcessor<TRootEntityKey, TChildEntity>(
+            return new ChildEntityProcessor<TRootEntityKey, TChildEntity, TChildEntityKey>(
                 entityProcessor,
-                _unityContainer.Resolve<FindSpecificationProvider<TChildEntity, long>>(),
+                _unityContainer.Resolve<FindSpecificationProvider<TChildEntity, TChildEntityKey>>(),
                 new MapSpecification<IReadOnlyCollection<TRootEntityKey>, FindSpecification<TChildEntity>>(feature.FindSpecificationProvider));
         }
     }

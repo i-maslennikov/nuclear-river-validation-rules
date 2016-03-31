@@ -104,6 +104,8 @@
     <Compile Include="Model\Operations\RecalculateAggregate.cs" />
     <Compile Include="Model\Operations\RecalculateAggregatePartOperation.cs" />
     <Compile Include="Model\Operations\StatisticsKey.cs" />
+    <Compile Include="Model\PropertyAutomapper.cs" />
+    <Compile Include="Model\StatisticsKeyIdentityProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

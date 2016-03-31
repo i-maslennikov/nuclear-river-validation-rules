@@ -9,15 +9,10 @@ namespace NuClear.CustomerIntelligence.Domain.Commands
     {
         public IOperation Create(IEntityType entityType, StatisticsKey key)
         {
-            return key.CategoryId.HasValue
-                       ? ForProjectCategory(key.ProjectId, key.CategoryId.Value)
-                       : ForProject(key.ProjectId);
+            return ForProjectCategory(key.ProjectId, key.CategoryId);
         }
 
         private static IOperation ForProjectCategory(long projectId, long categoryId)
             => new RecalculateAggregatePart(EntityTypeProjectStatistics.Instance.Id, projectId, EntityTypeProjectCategoryStatistics.Instance.Id, categoryId);
-
-        private static IOperation ForProject(long projectId)
-            => new RecalculateAggregate(EntityTypeProjectStatistics.Instance.Id, projectId);
     }
 }

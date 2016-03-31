@@ -206,6 +206,7 @@ namespace NuClear.Replication.EntryPoint.DI
         private static IUnityContainer ConfigureDomain(this IUnityContainer container)
         {
             return container.RegisterInstance<IIdentityProvider<long>>(new DefaultIdentityProvider())
+                            .RegisterInstance<IIdentityProvider<StatisticsKey>>(new StatisticsKeyIdentityProvider())
                             .RegisterInstance<ICommandFactory<long>>(new RecalculateAggregateCommandFactory())
                             .RegisterInstance<ICommandFactory<StatisticsKey>>(new RecalculateStatisticsCommandFactory());
         }

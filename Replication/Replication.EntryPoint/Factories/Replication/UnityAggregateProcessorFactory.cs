@@ -70,7 +70,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             foreach (var feature in metadata.Features.OfType<IChildEntityFeature>())
             {
                 var childMetadata = metadata.Elements.OfType<IAggregateMetadata>().Single(x => x.EntityType == feature.ChildEntityType);
-                var factoryType = typeof(UnityChildEntityProcessorFactory<,>).MakeGenericType(metadata.EntityKeyType, feature.ChildEntityType);
+                var factoryType = typeof(UnityChildEntityProcessorFactory<,,>).MakeGenericType(metadata.EntityKeyType, feature.ChildEntityType, feature.ChildEntityKeyType);
                 var factory = (IChildEntityProcessorFactory<long>)_unityContainer.Resolve(factoryType);
                 var processor = factory.Create(metadata, childMetadata, feature);
                 processors.Add(processor);

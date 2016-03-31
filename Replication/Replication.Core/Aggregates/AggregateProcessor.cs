@@ -8,10 +8,12 @@ using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    // todo: не поддерживает обобщённый ключ вследствие привязки к конкретной команде InitializeAggregate, RecalculateAggregate, RecalculateAggregatePart, DestroyAggregate
-    public sealed class AggregateProcessor<TRootEntity> : IAggregateProcessor // ICommandHandler<InitializeAggregate>, ICommandHandler<RecalculateAggregate>, ICommandHandler<DestroyAggregate>, ...
+    public sealed class AggregateProcessor<TRootEntity> : IAggregateProcessor
         where TRootEntity : class, IIdentifiable<long>
     {
+        // todo: не поддерживает обобщённый ключ вследствие привязки к конетктным командам RecalculateAggregate, RecalculateAggregatePart...
+        // возможно, является ICommandHandler<InitializeAggregate>, ICommandHandler<RecalculateAggregate>, ICommandHandler<DestroyAggregate>, ...но, скорее всего, нет - это уровень выше, здесь уже есть TRootEntity
+
         private readonly IFindSpecificationProvider<TRootEntity, long> _findSpecificationProvider;
         private readonly EntityProcessor<TRootEntity> _rootEntityProcessor;
         private readonly IReadOnlyCollection<IChildEntityProcessor<long>> _childEntityProcessors;
@@ -47,9 +49,10 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void RecalculatePartially(IReadOnlyCollection<RecalculateAggregatePart> commands, Type partType)
         {
-            var keys = commands.Select(x => x.AggregateInstanceId).ToArray();
-            var processor = _childEntityProcessors.Single(x => x.ChildEntityType == partType);
-            processor.RecalculatePartially(keys, commands);
+            var aggregateRootKeys = commands.Select(x => x.AggregateInstanceId).ToArray();
+            var entityKeys = commands.Select(x => new StatisticsKey { ProjectId = x.AggregateInstanceId, CategoryId = x.EntityInstanceId }).ToArray();
+            var processor = _childEntityProcessors.OfType<IChildEntityProcessor<long, StatisticsKey>>().Single();
+            processor.RecalculatePartially(aggregateRootKeys, entityKeys);
         }
 
         public void Destroy(IReadOnlyCollection<DestroyAggregate> commands)

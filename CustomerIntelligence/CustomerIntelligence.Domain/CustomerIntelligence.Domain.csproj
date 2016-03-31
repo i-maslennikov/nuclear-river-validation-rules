@@ -56,7 +56,6 @@
     <Compile Include="EntityTypes\EntityTypeContact.cs" />
     <Compile Include="EntityTypes\EntityTypeDeal.cs" />
     <Compile Include="EntityTypes\EntityTypeFirm.cs" />
-    <Compile Include="EntityTypes\EntityTypeFirmCategoryStatistics.cs" />
     <Compile Include="EntityTypes\EntityTypeFirmAddress.cs" />
     <Compile Include="EntityTypes\EntityTypeFirmContact.cs" />
     <Compile Include="EntityTypes\EntityTypeLegalPerson.cs" />

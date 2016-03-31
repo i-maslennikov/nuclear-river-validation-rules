@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-
-using NuClear.River.Common.Metadata.Model.Operations;
+﻿using System.Collections.Generic;
 
 namespace NuClear.Replication.Core.Aggregates
 {
     public interface IChildEntityProcessor<TRootEntityKey>
     {
-        Type ChildEntityType { get; }
         void Initialize(IReadOnlyCollection<TRootEntityKey> specification);
         void Recalculate(IReadOnlyCollection<TRootEntityKey> specification);
         void Destroy(IReadOnlyCollection<TRootEntityKey> specification);
-        void RecalculatePartially(IReadOnlyCollection<TRootEntityKey> specification, IReadOnlyCollection<RecalculateAggregatePart> commands);
+    }
+
+    public interface IChildEntityProcessor<TRootEntityKey, TChildEntityKey>
+    {
+        void RecalculatePartially(IReadOnlyCollection<TRootEntityKey> specification, IReadOnlyCollection<TChildEntityKey> commands);
     }
 }
