@@ -20,6 +20,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                      .Fact(
                                         new Facts::Firm {Id = 1, OrganizationUnitId = 2},
                                         new Facts::Project {Id = 3, OrganizationUnitId = 2},
+                                        new Facts::CategoryOrganizationUnit { Id = 1, CategoryId = 4, OrganizationUnitId = 2 },
                                         new Facts::FirmAddress {Id = 1, FirmId = 1},
                                         new Facts::CategoryFirmAddress {Id = 1, FirmAddressId = 1, CategoryId = 4},
                                         new Facts::CategoryFirmAddress {Id = 2, FirmAddressId = 1, CategoryId = 5},
