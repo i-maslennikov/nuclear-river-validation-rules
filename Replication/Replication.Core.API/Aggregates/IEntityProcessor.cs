@@ -1,6 +1,6 @@
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.Replication.Core.Aggregates
+namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IEntityProcessor<TEntity>
     {

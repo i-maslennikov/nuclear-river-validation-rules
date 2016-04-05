@@ -22,7 +22,6 @@ namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
                     new BulkReplicationMetadataSource(),
                     new FactsReplicationMetadataSource(),
                     new AggregateConstructionMetadataSource(),
-                    new StatisticsConstructionMetadataSource(),
                 },
                 new IMetadataProcessor[] { new TunedReferencesEvaluatorProcessor() });
 

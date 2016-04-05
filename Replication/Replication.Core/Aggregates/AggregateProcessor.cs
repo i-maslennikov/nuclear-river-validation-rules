@@ -47,7 +47,7 @@ namespace NuClear.Replication.Core.Aggregates
             }
         }
 
-        public void RecalculatePartially(IReadOnlyCollection<RecalculateAggregatePart> commands, Type partType)
+        public void Recalculate(IReadOnlyCollection<RecalculateAggregatePart> commands)
         {
             var aggregateRootKeys = commands.Select(x => x.AggregateInstanceId).ToArray();
             var entityKeys = commands.Select(x => new StatisticsKey { ProjectId = x.AggregateInstanceId, CategoryId = x.EntityInstanceId }).ToArray();

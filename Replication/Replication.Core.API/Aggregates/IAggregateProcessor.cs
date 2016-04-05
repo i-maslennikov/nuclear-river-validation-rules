@@ -9,7 +9,7 @@ namespace NuClear.Replication.Core.API.Aggregates
     {
         void Initialize(IReadOnlyCollection<InitializeAggregate> commands);
         void Recalculate(IReadOnlyCollection<RecalculateAggregate> commands);
-        void RecalculatePartially(IReadOnlyCollection<RecalculateAggregatePart> commands, Type partType);
+        void Recalculate(IReadOnlyCollection<RecalculateAggregatePart> commands);
         void Destroy(IReadOnlyCollection<DestroyAggregate> commands);
     }
 }
