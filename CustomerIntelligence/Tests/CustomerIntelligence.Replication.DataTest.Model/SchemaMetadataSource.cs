@@ -39,8 +39,6 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
         private static readonly SchemaMetadataElement Bit = SchemaMetadataElement.Config
             .For(ContextName.Bit)
             .HasConnectionString<FactsTestConnectionStringIdentity>()
-            // временно объединяем Bit и Facts в одну базу данных, потом надо будет опять разделить
-            //.HasConnectionString<BitTestConnectionStringIdentity>()
             .HasSchema(Schema.Facts)
             .HasEntitiesFromNamespace(typeof(Bit::FirmCategoryStatistics).Namespace);
 
