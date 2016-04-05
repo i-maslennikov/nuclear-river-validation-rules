@@ -81,7 +81,6 @@
     <Compile Include="Aggregates\IAggregatesConstructor.cs" />
     <Compile Include="Aggregates\IChildEntityProcessor.cs" />
     <Compile Include="Aggregates\IEntityProcessor.cs" />
-    <Compile Include="Aggregates\IStatisticsRecalculator.cs" />
     <Compile Include="Aggregates\IValueObjectProcessor.cs" />
     <Compile Include="Aggregates\IValueObjectProcessorFactory.cs" />
     <Compile Include="Facts\DependencyType.cs" />

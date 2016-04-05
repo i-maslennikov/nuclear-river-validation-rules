@@ -52,6 +52,10 @@ namespace NuClear.Replication.Core.Aggregates
                         {
                             Execute(group.Cast<DestroyAggregate>());
                         }
+                        if (group.Key == typeof(RecalculateAggregatePart))
+                        {
+                            Execute(group.Cast<RecalculateAggregatePart>());
+                        }
                         else
                         {
                             throw new InvalidOperationException($"The command of type {group.Key.Name} is not supported");
@@ -102,10 +106,24 @@ namespace NuClear.Replication.Core.Aggregates
             }
         }
 
+        private void Execute(IEnumerable<RecalculateAggregatePart> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => new { c.AggregateTypeId, c.EntityTypeId }))
+            {
+                var aggregateType = ParseEntityType(slice.Key.AggregateTypeId);
+                var entityType = ParseEntityType(slice.Key.EntityTypeId);
+                var processor = CreateProcessor(aggregateType);
+                using (Probe.Create($"ETL2 Recalculate {aggregateType.Name} Part {entityType.Name}"))
+                {
+                    processor.Recalculate(slice.ToArray());
+                }
+            }
+        }
+
         private IAggregateProcessor CreateProcessor(Type aggregate)
         {
             IMetadataElement aggregateMetadata;
-            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregate.Name}", UriKind.Relative));
+            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregate.Name}", UriKind.Relative)); // todo: Statistics
             if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
             {
                 throw new NotSupportedException($"The aggregate of type '{aggregate.Name}' is not supported.");

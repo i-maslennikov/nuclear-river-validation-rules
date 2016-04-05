@@ -16,13 +16,13 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public sealed class StatisticsAggregatableMessageHandler : IMessageProcessingHandler
     {
-        private readonly IStatisticsRecalculator _statisticsRecalculator;
+        private readonly IAggregatesConstructor _aggregatesConstructor;
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
 
-        public StatisticsAggregatableMessageHandler(IStatisticsRecalculator statisticsRecalculator, ITelemetryPublisher telemetryPublisher, ITracer tracer)
+        public StatisticsAggregatableMessageHandler(IAggregatesConstructor aggregatesConstructor, ITelemetryPublisher telemetryPublisher, ITracer tracer)
         {
-            _statisticsRecalculator = statisticsRecalculator;
+            _aggregatesConstructor = aggregatesConstructor;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
         }
@@ -38,7 +38,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             {
                 foreach (var message in messages.OfType<OperationAggregatableMessage<IOperation>>())
                 {
-                    _statisticsRecalculator.Execute(message.Operations);
+                    _aggregatesConstructor.Execute(message.Operations);
                     _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(message.Operations.Count);
 
                     _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
