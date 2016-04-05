@@ -88,8 +88,6 @@
     <Compile Include="Aggregates\AggregatesConstructor.cs" />
     <Compile Include="Aggregates\ChildEntityProcessor.cs" />
     <Compile Include="Aggregates\EntityProcessor.cs" />
-    <Compile Include="Aggregates\IChildEntityProcessor.cs" />
-    <Compile Include="Aggregates\IEntityProcessor.cs" />
     <Compile Include="Aggregates\StatisticsFindSpecificationProvider.cs" />
     <Compile Include="Aggregates\StatisticsRecalculator.cs" />
     <Compile Include="Aggregates\ValueObjectFindSpecificationProvider.cs" />

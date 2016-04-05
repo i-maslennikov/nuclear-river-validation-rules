@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NuClear.Replication.Core.Aggregates
+namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IChildEntityProcessor<TRootEntityKey>
     {

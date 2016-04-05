@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
