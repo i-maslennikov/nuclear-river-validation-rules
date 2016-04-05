@@ -2,15 +2,15 @@
 
 namespace NuClear.Replication.Core.API.Aggregates
 {
-    public interface IChildEntityProcessor<TRootEntityKey>
+    public interface IChildEntityProcessor<TParentEntityKey>
     {
-        void Initialize(IReadOnlyCollection<TRootEntityKey> specification);
-        void Recalculate(IReadOnlyCollection<TRootEntityKey> specification);
-        void Destroy(IReadOnlyCollection<TRootEntityKey> specification);
+        void Initialize(IReadOnlyCollection<TParentEntityKey> parentEntityKeys);
+        void Recalculate(IReadOnlyCollection<TParentEntityKey> parentEntityKeys);
+        void Destroy(IReadOnlyCollection<TParentEntityKey> parentEntityKeys);
     }
 
-    public interface IChildEntityProcessor<TRootEntityKey, TChildEntityKey>
+    public interface IChildEntityProcessor<TParentEntityKey, TChildEntityKey>
     {
-        void RecalculatePartially(IReadOnlyCollection<TRootEntityKey> specification, IReadOnlyCollection<TChildEntityKey> commands);
+        void RecalculatePartially(IReadOnlyCollection<TParentEntityKey> parentEntityKeys, IReadOnlyCollection<TChildEntityKey> childEntityKeys);
     }
 }
