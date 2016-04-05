@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using NuClear.Storage.API.Specifications;
 
@@ -10,9 +9,6 @@ namespace NuClear.Replication.Core.Aggregates
         private readonly IEntityProcessor<TChildEntity> _childEntity;
         private readonly IFindSpecificationProvider<TChildEntity, TChildEntityKey> _findSpecificationProvider;
         private readonly IMapSpecification<IReadOnlyCollection<TRootEntityKey>, FindSpecification<TChildEntity>> _mapSpecification;
-
-        public Type ChildEntityType
-            => typeof(TChildEntity);
 
         public ChildEntityProcessor(IEntityProcessor<TChildEntity> childEntity,
                                     IFindSpecificationProvider<TChildEntity, TChildEntityKey> findSpecificationProvider,
