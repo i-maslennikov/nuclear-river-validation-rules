@@ -40,9 +40,9 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void RecalculatePartially(IReadOnlyCollection<TParentEntityKey> parentEntityKeys, IReadOnlyCollection<TChildEntityKey> childEntityKeys)
         {
-            var specFromRoot = _mapSpecification.Map(parentEntityKeys);
-            var specFromCommands = _findSpecificationProvider.Create(childEntityKeys);
-            _childEntity.Recalculate(specFromRoot & specFromCommands);
+            var byParent = _mapSpecification.Map(parentEntityKeys);
+            var bySelf = _findSpecificationProvider.Create(childEntityKeys);
+            _childEntity.Recalculate(byParent & bySelf);
         }
     }
 }
