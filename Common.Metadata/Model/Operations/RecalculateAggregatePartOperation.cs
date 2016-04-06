@@ -1,18 +1,20 @@
-﻿namespace NuClear.River.Common.Metadata.Model.Operations
+﻿using NuClear.Model.Common.Entities;
+
+namespace NuClear.River.Common.Metadata.Model.Operations
 {
     public sealed class RecalculateAggregatePart : IOperation
     {
-        public RecalculateAggregatePart(int aggregateTypeId, long aggregateInstanceId, int entityTypeId, long entityInstanceId)
+        public RecalculateAggregatePart(IEntityType aggregateType, long aggregateInstanceId, IEntityType entityType, long entityInstanceId)
         {
-            AggregateTypeId = aggregateTypeId;
+            AggregateType = aggregateType;
             AggregateInstanceId = aggregateInstanceId;
-            EntityTypeId = entityTypeId;
+            EntityType = entityType;
             EntityInstanceId = entityInstanceId;
         }
 
-        public int AggregateTypeId { get; }
+        public IEntityType AggregateType { get; }
         public long AggregateInstanceId { get; }
-        public int EntityTypeId { get; }
+        public IEntityType EntityType { get; }
         public long EntityInstanceId { get; }
 
         public override bool Equals(object obj)
@@ -37,18 +39,18 @@
 
         public override int GetHashCode()
         {
-            var code = AggregateTypeId;
+            var code = AggregateType.Id;
             code = (code * 397) ^ AggregateInstanceId.GetHashCode();
-            code = (code * 397) ^ EntityTypeId;
+            code = (code * 397) ^ EntityType.Id;
             code = (code * 397) ^ EntityInstanceId.GetHashCode();
             return code;
         }
 
         private bool Equals(RecalculateAggregatePart other)
         {
-            return AggregateTypeId == other.AggregateTypeId
+            return AggregateType.Id == other.AggregateType.Id
                 && AggregateInstanceId == other.AggregateInstanceId
-                && EntityTypeId == other.EntityTypeId
+                && EntityType.Id == other.EntityType.Id
                 && EntityInstanceId == other.EntityInstanceId;
         }
     }

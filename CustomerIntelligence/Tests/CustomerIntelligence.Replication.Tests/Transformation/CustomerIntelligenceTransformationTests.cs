@@ -443,17 +443,17 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             public Transformation Initialize<TAggregate>(IEntityType entityType, params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
-                return Do<TAggregate>(x => x.Initialize(ids.Select(id => new InitializeAggregate(entityType.Id, id)).ToArray()));
+                return Do<TAggregate>(x => x.Initialize(ids.Select(id => new InitializeAggregate(entityType, id)).ToArray()));
             }
 
             public Transformation Recalculate<TAggregate>(IEntityType entityType, params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
-                return Do<TAggregate>(x => x.Recalculate(ids.Select(id => new RecalculateAggregate(entityType.Id, id)).ToArray()));
+                return Do<TAggregate>(x => x.Recalculate(ids.Select(id => new RecalculateAggregate(entityType, id)).ToArray()));
             }
 
             public Transformation Destroy<TAggregate>(IEntityType entityType, params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
-                return Do<TAggregate>(x => x.Destroy(ids.Select(id => new DestroyAggregate(entityType.Id, id)).ToArray()));
+                return Do<TAggregate>(x => x.Destroy(ids.Select(id => new DestroyAggregate(entityType, id)).ToArray()));
             }
 
             public Transformation Verify<T>(Expression<Action<IRepository<T>>> expression)

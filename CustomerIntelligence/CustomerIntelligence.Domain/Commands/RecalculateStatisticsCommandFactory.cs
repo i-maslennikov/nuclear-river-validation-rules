@@ -13,6 +13,6 @@ namespace NuClear.CustomerIntelligence.Domain.Commands
         }
 
         private static IOperation ForProjectCategory(long projectId, long categoryId)
-            => new RecalculateAggregatePart(EntityTypeProjectStatistics.Instance.Id, projectId, EntityTypeProjectCategoryStatistics.Instance.Id, categoryId);
+            => new RecalculateAggregatePart(EntityTypeProjectStatistics.Instance, projectId, EntityTypeProjectCategoryStatistics.Instance, categoryId);
     }
 }

@@ -19,7 +19,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             foreach (var operation in operations)
             {
                 var recalculatePart = operation as RecalculateAggregatePart;
-                if (recalculatePart != null && recalculatePart.AggregateTypeId == EntityTypeProjectStatistics.Instance.Id)
+                if (recalculatePart != null && recalculatePart.AggregateType.Id == EntityTypeProjectStatistics.Instance.Id)
                 {
                     statisticsFlow.Add(operation);
                     continue;
