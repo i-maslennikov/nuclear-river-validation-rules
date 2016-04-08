@@ -52,7 +52,7 @@ namespace NuClear.Replication.Core.Aggregates
                         {
                             Execute(group.Cast<DestroyAggregate>());
                         }
-                        if (group.Key == typeof(RecalculateAggregatePart))
+                        else if(group.Key == typeof(RecalculateAggregatePart))
                         {
                             Execute(group.Cast<RecalculateAggregatePart>());
                         }
@@ -69,7 +69,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         private void Execute(IEnumerable<InitializeAggregate> enumerable)
         {
-            foreach (var slice in enumerable.GroupBy(c => c.EntityType))
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
             {
                 var type = ParseEntityType(slice.Key);
                 var processor = CreateProcessor(type);
@@ -82,7 +82,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         private void Execute(IEnumerable<RecalculateAggregate> enumerable)
         {
-            foreach (var slice in enumerable.GroupBy(c => c.EntityType))
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
             {
                 var type = ParseEntityType(slice.Key);
                 var processor = CreateProcessor(type);
@@ -95,7 +95,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         private void Execute(IEnumerable<DestroyAggregate> enumerable)
         {
-            foreach (var slice in enumerable.GroupBy(c => c.EntityType))
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
             {
                 var type = ParseEntityType(slice.Key);
                 var processor = CreateProcessor(type);
@@ -108,14 +108,14 @@ namespace NuClear.Replication.Core.Aggregates
 
         private void Execute(IEnumerable<RecalculateAggregatePart> enumerable)
         {
-            foreach (var slice in enumerable.GroupBy(c => new { c.AggregateType, c.EntityType }))
+            foreach (var slice in enumerable.GroupBy(c => new { AggregateRootType = c.AggregateRoot.EntityType, c.Entity.EntityType }))
             {
-                var aggregateType = ParseEntityType(slice.Key.AggregateType);
+                var aggregateType = ParseEntityType(slice.Key.AggregateRootType);
                 var entityType = ParseEntityType(slice.Key.EntityType);
                 var processor = CreateProcessor(aggregateType);
                 using (Probe.Create($"ETL2 Recalculate {aggregateType.Name} Part {entityType.Name}"))
                 {
-                    processor.Recalculate(slice.ToArray());
+                    processor.Recalculate(entityType, slice.ToArray());
                 }
             }
         }

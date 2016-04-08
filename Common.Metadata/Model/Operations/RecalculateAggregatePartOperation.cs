@@ -1,21 +1,14 @@
-﻿using NuClear.Model.Common.Entities;
-
-namespace NuClear.River.Common.Metadata.Model.Operations
+﻿namespace NuClear.River.Common.Metadata.Model.Operations
 {
-    public sealed class RecalculateAggregatePart : IOperation
+    public sealed class RecalculateAggregatePart : AggregateOperation
     {
-        public RecalculateAggregatePart(IEntityType aggregateType, long aggregateInstanceId, IEntityType entityType, long entityInstanceId)
+        public RecalculateAggregatePart(EntityReference root, EntityReference entity)
+            : base(root)
         {
-            AggregateType = aggregateType;
-            AggregateInstanceId = aggregateInstanceId;
-            EntityType = entityType;
-            EntityInstanceId = entityInstanceId;
+            Entity = entity;
         }
 
-        public IEntityType AggregateType { get; }
-        public long AggregateInstanceId { get; }
-        public IEntityType EntityType { get; }
-        public long EntityInstanceId { get; }
+        public EntityReference Entity { get; }
 
         public override bool Equals(object obj)
         {
@@ -39,19 +32,16 @@ namespace NuClear.River.Common.Metadata.Model.Operations
 
         public override int GetHashCode()
         {
-            var code = AggregateType.Id;
-            code = (code * 397) ^ AggregateInstanceId.GetHashCode();
-            code = (code * 397) ^ EntityType.Id;
-            code = (code * 397) ^ EntityInstanceId.GetHashCode();
+            var code = base.GetHashCode() * 397;
+            code = (code * 397) ^ Entity.EntityKey.GetHashCode();
+            code = (code * 397) ^ Entity.EntityType.Id;
             return code;
         }
 
         private bool Equals(RecalculateAggregatePart other)
         {
-            return AggregateType.Id == other.AggregateType.Id
-                && AggregateInstanceId == other.AggregateInstanceId
-                && EntityType.Id == other.EntityType.Id
-                && EntityInstanceId == other.EntityInstanceId;
+            return base.Equals(other)
+                && Equals(Entity, other.Entity);
         }
     }
 }

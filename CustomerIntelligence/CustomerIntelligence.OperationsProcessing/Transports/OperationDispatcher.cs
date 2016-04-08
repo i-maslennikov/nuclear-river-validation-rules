@@ -19,14 +19,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             foreach (var operation in operations)
             {
                 var recalculatePart = operation as RecalculateAggregatePart;
-                if (recalculatePart != null && recalculatePart.AggregateType.Id == EntityTypeProjectStatistics.Instance.Id)
+                if (recalculatePart != null && recalculatePart.AggregateRoot.EntityType.Id == EntityTypeProjectStatistics.Instance.Id)
                 {
                     statisticsFlow.Add(operation);
                     continue;
                 }
 
                 var recalculate = operation as RecalculateAggregate;
-                if (recalculate != null && recalculate.EntityId == EntityTypeProjectStatistics.Instance.Id)
+                if (recalculate != null && recalculate.AggregateRoot.EntityType.Id == EntityTypeProjectStatistics.Instance.Id)
                 {
                     statisticsFlow.Add(operation);
                     continue;

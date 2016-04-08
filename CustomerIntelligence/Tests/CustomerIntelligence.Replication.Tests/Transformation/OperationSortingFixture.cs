@@ -20,9 +20,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             var type = new SampleEntityType();
             var data = new AggregateOperation[]
                        {
-                           new DestroyAggregate(type, 0),
-                           new InitializeAggregate(type, 0),
-                           new RecalculateAggregate(type, 0),
+                           new DestroyAggregate(new EntityReference(type, 0)),
+                           new InitializeAggregate(new EntityReference(type, 0)),
+                           new RecalculateAggregate(new EntityReference(type, 0)),
                        };
 
             var sortedData = data.OrderByDescending(x => x.GetType(), comparer).ToArray();

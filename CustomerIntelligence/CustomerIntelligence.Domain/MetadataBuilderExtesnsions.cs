@@ -16,7 +16,7 @@ namespace NuClear.CustomerIntelligence.Domain
         public static ImportDocumentMetadataBuilder<TDto> LeadsToProjectStatisticsCalculation<TDto>(this ImportDocumentMetadataBuilder<TDto> builder)
             where TDto : IBitDto
         {
-            Func<TDto, IReadOnlyCollection<IOperation>> projector = x => new [] { new RecalculateAggregate(EntityTypeProjectStatistics.Instance, x.ProjectId) };
+            Func<TDto, IReadOnlyCollection<IOperation>> projector = x => new [] { new RecalculateAggregate(new EntityReference(EntityTypeProjectStatistics.Instance, x.ProjectId)) };
             var specification = new MapSpecification<TDto, IReadOnlyCollection<IOperation>>(projector);
             var feature = new MapSpecificationFeature<TDto, IReadOnlyCollection<IOperation>>(specification);
             return builder.WithFeatures(feature);

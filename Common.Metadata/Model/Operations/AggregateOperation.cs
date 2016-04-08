@@ -1,25 +1,21 @@
 ﻿using System;
 
-using NuClear.Model.Common.Entities;
-
 namespace NuClear.River.Common.Metadata.Model.Operations
 {
     public abstract class AggregateOperation : IOperation
     {
-        protected AggregateOperation(IEntityType entityType, long entityId)
+        protected AggregateOperation(EntityReference aggregateRoot)
         {
-            if (entityType == null)
+            if (aggregateRoot == null)
             {
-                throw new ArgumentNullException(nameof(entityType));
+                throw new ArgumentNullException(nameof(aggregateRoot));
             }
 
-            EntityType = entityType;
-            EntityId = entityId;
+            AggregateRoot = aggregateRoot;
         }
 
-        public IEntityType EntityType { get; }
+        public EntityReference AggregateRoot { get; }
 
-        public long EntityId { get; }
 
         public override bool Equals(object obj)
         {
@@ -43,18 +39,18 @@ namespace NuClear.River.Common.Metadata.Model.Operations
         {
             unchecked
             {
-                return (EntityType.Id * 397) ^ EntityId.GetHashCode();
+                return (AggregateRoot.GetHashCode() * 397) ^ this.GetType().GetHashCode();
             }
         }
 
         private bool Equals(AggregateOperation other)
         {
-            return EntityType.Id == other.EntityType.Id && EntityId == other.EntityId;
+            return Equals(this.AggregateRoot, other.AggregateRoot);
         }
 
         public override string ToString()
         {
-            return $"{GetType().Name}({EntityType.Id}, {EntityId})";
+            return $"{GetType().Name}({AggregateRoot})";
         }
     }
 }

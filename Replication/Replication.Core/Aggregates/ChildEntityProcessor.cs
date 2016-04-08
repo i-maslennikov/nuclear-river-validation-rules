@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class ChildEntityProcessor<TParentEntityKey, TChildEntity, TChildEntityKey> : IChildEntityProcessor<TParentEntityKey>, IChildEntityProcessor<TParentEntityKey, TChildEntityKey>
+    public sealed class ChildEntityProcessor<TParentEntityKey, TChildEntity, TChildEntityKey> : IChildEntityProcessor<TParentEntityKey>
     {
         private readonly IEntityProcessor<TChildEntity> _childEntity;
         private readonly IFindSpecificationProvider<TChildEntity, TChildEntityKey> _findSpecificationProvider;
@@ -19,6 +21,9 @@ namespace NuClear.Replication.Core.Aggregates
             _findSpecificationProvider = findSpecificationProvider;
             _mapSpecification = mapSpecification;
         }
+
+        public Type EntityType
+            => typeof(TChildEntity);
 
         public void Initialize(IReadOnlyCollection<TParentEntityKey> parentEntityKeys)
         {
@@ -38,11 +43,20 @@ namespace NuClear.Replication.Core.Aggregates
             _childEntity.Destroy(spec);
         }
 
-        public void RecalculatePartially(IReadOnlyCollection<TParentEntityKey> parentEntityKeys, IReadOnlyCollection<TChildEntityKey> childEntityKeys)
+        public void Recalculate(IReadOnlyCollection<IGrouping<TParentEntityKey, object>> entityKeys)
         {
-            var byParent = _mapSpecification.Map(parentEntityKeys);
-            var bySelf = _findSpecificationProvider.Create(childEntityKeys);
-            _childEntity.Recalculate(byParent & bySelf);
+            FindSpecification<TChildEntity> spec = null;
+            foreach (var entityKey in entityKeys)
+            {
+                var byParent = _mapSpecification.Map(new [] { entityKey.Key });
+                var bySelf = _findSpecificationProvider.Create(entityKey.Cast<TChildEntityKey>());
+
+                spec = spec == null
+                           ? byParent & bySelf
+                           : spec | (byParent & bySelf);
+            }
+
+            _childEntity.Recalculate(spec);
         }
     }
 }
