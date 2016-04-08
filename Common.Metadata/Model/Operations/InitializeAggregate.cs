@@ -2,8 +2,8 @@
 {
     public sealed class InitializeAggregate : AggregateOperation
     {
-        public InitializeAggregate(int entityTypeId, long entityId)
-            : base(entityTypeId, entityId)
+        public InitializeAggregate(EntityReference entityReference)
+            : base(entityReference)
         {
         }
     }

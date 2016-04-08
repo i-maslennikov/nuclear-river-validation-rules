@@ -8,7 +8,7 @@ namespace NuClear.CustomerIntelligence.Domain.Commands
     {
         public IOperation Create(IEntityType entityType, long key)
         {
-            return new RecalculateAggregate(entityType.Id, key);
+            return new RecalculateAggregate(new EntityReference(entityType, key));
         }
     }
 }

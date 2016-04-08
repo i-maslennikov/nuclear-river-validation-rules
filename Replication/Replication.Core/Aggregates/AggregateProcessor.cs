@@ -8,17 +8,14 @@ using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class AggregateProcessor<TRootEntity> : IAggregateProcessor
-        where TRootEntity : class, IIdentifiable<long>
+    public sealed class AggregateProcessor<TRootEntity, TRootKey> : IAggregateProcessor
+        where TRootEntity : class, IIdentifiable<TRootKey>
     {
-        // todo: не поддерживает обобщённый ключ вследствие привязки к конетктным командам RecalculateAggregate, RecalculateAggregatePart...
-        // возможно, является ICommandHandler<InitializeAggregate>, ICommandHandler<RecalculateAggregate>, ICommandHandler<DestroyAggregate>, ...но, скорее всего, нет - это уровень выше, здесь уже есть TRootEntity
-
-        private readonly IFindSpecificationProvider<TRootEntity, long> _findSpecificationProvider;
+        private readonly IFindSpecificationProvider<TRootEntity, TRootKey> _findSpecificationProvider;
         private readonly EntityProcessor<TRootEntity> _rootEntityProcessor;
-        private readonly IReadOnlyCollection<IChildEntityProcessor<long>> _childEntityProcessors;
+        private readonly IReadOnlyCollection<IChildEntityProcessor<TRootKey>> _childEntityProcessors;
 
-        public AggregateProcessor(IFindSpecificationProvider<TRootEntity, long> findSpecificationProvider, EntityProcessor<TRootEntity> rootEntityProcessor, IReadOnlyCollection<IChildEntityProcessor<long>> childEntityProcessors)
+        public AggregateProcessor(IFindSpecificationProvider<TRootEntity, TRootKey> findSpecificationProvider, EntityProcessor<TRootEntity> rootEntityProcessor, IReadOnlyCollection<IChildEntityProcessor<TRootKey>> childEntityProcessors)
         {
             _findSpecificationProvider = findSpecificationProvider;
             _rootEntityProcessor = rootEntityProcessor;
@@ -27,7 +24,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void Initialize(IReadOnlyCollection<InitializeAggregate> commands)
         {
-            var keys = commands.Select(x => x.EntityId).ToArray();
+            var keys = commands.Select(x => (TRootKey)x.AggregateRoot.EntityKey).ToArray();
             var specification = _findSpecificationProvider.Create(keys);
             _rootEntityProcessor.Initialize(specification);
             foreach (var processor in _childEntityProcessors)
@@ -38,7 +35,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void Recalculate(IReadOnlyCollection<RecalculateAggregate> commands)
         {
-            var keys = commands.Select(x => x.EntityId).ToArray();
+            var keys = commands.Select(x => (TRootKey)x.AggregateRoot.EntityKey).ToArray();
             var specification = _findSpecificationProvider.Create(keys);
             _rootEntityProcessor.Recalculate(specification);
             foreach (var processor in _childEntityProcessors)
@@ -47,17 +44,16 @@ namespace NuClear.Replication.Core.Aggregates
             }
         }
 
-        public void Recalculate(IReadOnlyCollection<RecalculateAggregatePart> commands)
+        public void Recalculate(Type partType, IReadOnlyCollection<RecalculateAggregatePart> commands)
         {
-            var aggregateRootKeys = commands.Select(x => x.AggregateInstanceId).ToArray();
-            var entityKeys = commands.Select(x => new StatisticsKey { ProjectId = x.AggregateInstanceId, CategoryId = x.EntityInstanceId }).ToArray();
-            var processor = _childEntityProcessors.OfType<IChildEntityProcessor<long, StatisticsKey>>().Single();
-            processor.RecalculatePartially(aggregateRootKeys, entityKeys);
+            var keys = commands.GroupBy(x => (TRootKey)x.AggregateRoot.EntityKey, x => x.Entity.EntityKey).ToArray();
+            var processor = _childEntityProcessors.Single(x => x.EntityType == partType);
+            processor.Recalculate(keys);
         }
 
         public void Destroy(IReadOnlyCollection<DestroyAggregate> commands)
         {
-            var keys = commands.Select(x => x.EntityId).ToArray();
+            var keys = commands.Select(x => (TRootKey)x.AggregateRoot.EntityKey).ToArray();
             var specification = _findSpecificationProvider.Create(keys);
             _rootEntityProcessor.Destroy(specification);
             foreach (var processor in _childEntityProcessors)

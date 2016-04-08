@@ -26,17 +26,17 @@ namespace NuClear.Replication.Core.Aggregates
 
         public IEnumerable<IOperation> ProcessCreation(IReadOnlyCollection<long> factIds)
         {
-            return factIds.Select(id => new InitializeAggregate(_metadata.EntityType.Id, id));
+            return factIds.Select(id => new InitializeAggregate(new EntityReference(_metadata.EntityType, id)));
         }
 
         public IEnumerable<IOperation> ProcessUpdating(IReadOnlyCollection<long> factIds)
         {
-            return factIds.Select(id => new RecalculateAggregate(_metadata.EntityType.Id, id));
+            return factIds.Select(id => new RecalculateAggregate(new EntityReference(_metadata.EntityType, id)));
         }
 
         public IEnumerable<IOperation> ProcessDeletion(IReadOnlyCollection<long> factIds)
         {
-            return factIds.Select(id => new DestroyAggregate(_metadata.EntityType.Id, id));
+            return factIds.Select(id => new DestroyAggregate(new EntityReference(_metadata.EntityType, id)));
         }
     }
 }

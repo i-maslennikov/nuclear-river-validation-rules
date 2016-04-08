@@ -52,7 +52,7 @@ namespace NuClear.Replication.Core.Aggregates
                         {
                             Execute(group.Cast<DestroyAggregate>());
                         }
-                        if (group.Key == typeof(RecalculateAggregatePart))
+                        else if(group.Key == typeof(RecalculateAggregatePart))
                         {
                             Execute(group.Cast<RecalculateAggregatePart>());
                         }
@@ -69,7 +69,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         private void Execute(IEnumerable<InitializeAggregate> enumerable)
         {
-            foreach (var slice in enumerable.GroupBy(c => c.EntityTypeId))
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
             {
                 var type = ParseEntityType(slice.Key);
                 var processor = CreateProcessor(type);
@@ -82,7 +82,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         private void Execute(IEnumerable<RecalculateAggregate> enumerable)
         {
-            foreach (var slice in enumerable.GroupBy(c => c.EntityTypeId))
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
             {
                 var type = ParseEntityType(slice.Key);
                 var processor = CreateProcessor(type);
@@ -95,7 +95,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         private void Execute(IEnumerable<DestroyAggregate> enumerable)
         {
-            foreach (var slice in enumerable.GroupBy(c => c.EntityTypeId))
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
             {
                 var type = ParseEntityType(slice.Key);
                 var processor = CreateProcessor(type);
@@ -108,22 +108,23 @@ namespace NuClear.Replication.Core.Aggregates
 
         private void Execute(IEnumerable<RecalculateAggregatePart> enumerable)
         {
-            foreach (var slice in enumerable.GroupBy(c => new { c.AggregateTypeId, c.EntityTypeId }))
+            foreach (var slice in enumerable.GroupBy(c => new { AggregateRootType = c.AggregateRoot.EntityType, c.Entity.EntityType }))
             {
-                var aggregateType = ParseEntityType(slice.Key.AggregateTypeId);
-                var entityType = ParseEntityType(slice.Key.EntityTypeId);
+                var aggregateType = ParseEntityType(slice.Key.AggregateRootType);
+                var entityType = ParseEntityType(slice.Key.EntityType);
                 var processor = CreateProcessor(aggregateType);
                 using (Probe.Create($"ETL2 Recalculate {aggregateType.Name} Part {entityType.Name}"))
                 {
-                    processor.Recalculate(slice.ToArray());
+                    processor.Recalculate(entityType, slice.ToArray());
                 }
             }
         }
 
+        // todo: если перевести метаданные на идентификаоры, основанные не на тменах типов, а идентификаторах - то от этого парсинга можно избавиться
         private IAggregateProcessor CreateProcessor(Type aggregate)
         {
             IMetadataElement aggregateMetadata;
-            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregate.Name}", UriKind.Relative)); // todo: Statistics
+            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregate.Name}", UriKind.Relative));
             if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
             {
                 throw new NotSupportedException($"The aggregate of type '{aggregate.Name}' is not supported.");
@@ -133,17 +134,15 @@ namespace NuClear.Replication.Core.Aggregates
             return processor;
         }
 
-        private Type ParseEntityType(int entityTypeId)
+        private Type ParseEntityType(IEntityType entityType)
         {
             Type type;
-            IEntityType entityType;
-            if (_entityTypeMappingRegistry.TryParse(entityTypeId, out entityType) &&
-                _entityTypeMappingRegistry.TryGetEntityType(entityType, out type))
+            if (_entityTypeMappingRegistry.TryGetEntityType(entityType, out type))
             {
                 return type;
             }
 
-            throw new ArgumentException($"unknown entity type id {entityTypeId}");
+            throw new ArgumentException($"unknown entity type id {entityType.Id}");
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 
-using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
 using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing;
+using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
@@ -13,9 +13,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         MessageProcessingContextAccumulatorBase<TMessageFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<IOperation>>
         where TMessageFlow : class, IMessageFlow, new()
     {
-        private readonly XmlOperationSerializer _serializer;
+        private readonly IOperationSerializer _serializer;
 
-        public AggregateOperationAccumulator(XmlOperationSerializer serializer)
+        public AggregateOperationAccumulator(IOperationSerializer serializer)
         {
             _serializer = serializer;
         }

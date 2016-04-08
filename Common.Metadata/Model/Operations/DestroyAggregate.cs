@@ -2,8 +2,8 @@
 {
     public sealed class DestroyAggregate : AggregateOperation
     {
-        public DestroyAggregate(int entityTypeId, long entityId)
-            : base(entityTypeId, entityId)
+        public DestroyAggregate(EntityReference entityType)
+            : base(entityType)
         {
         }
     }

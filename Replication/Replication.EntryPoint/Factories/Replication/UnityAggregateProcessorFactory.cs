@@ -30,13 +30,13 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
                 throw new ArgumentException($"требуются доработки для поддержки ключа {am.EntityKeyType.Name}");
             }
 
-            var factory = (IAggregateProcessorFactory)_unityContainer.Resolve(typeof(UnityAggregateProcessorFactory<>).MakeGenericType(am.EntityType));
+            var factory = (IAggregateProcessorFactory)_unityContainer.Resolve(typeof(UnityAggregateProcessorFactory<,>).MakeGenericType(am.EntityType, am.EntityKeyType));
             return factory.Create(am);
         }
     }
 
-    internal sealed class UnityAggregateProcessorFactory<TEntity> : IAggregateProcessorFactory
-        where TEntity : class, IIdentifiable<long>
+    internal sealed class UnityAggregateProcessorFactory<TEntity, TEntityKey> : IAggregateProcessorFactory
+        where TEntity : class, IIdentifiable<TEntityKey>
     {
         private readonly IUnityContainer _unityContainer;
 
@@ -49,8 +49,8 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
         {
             var am = (IAggregateMetadata<TEntity>)metadata;
 
-            var processor = new AggregateProcessor<TEntity>(
-                _unityContainer.Resolve<FindSpecificationProvider<TEntity, long>>(),
+            var processor = new AggregateProcessor<TEntity, TEntityKey>(
+                _unityContainer.Resolve<FindSpecificationProvider<TEntity, TEntityKey>>(),
                 ResolveRootEntityProcessor(am),
                 ResolveChildProcessors(am));
 
@@ -64,19 +64,24 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             return processor;
         }
 
-        private IReadOnlyCollection<IChildEntityProcessor<long>> ResolveChildProcessors(IAggregateMetadata<TEntity> metadata)
+        private IReadOnlyCollection<IChildEntityProcessor<TEntityKey>> ResolveChildProcessors(IAggregateMetadata<TEntity> metadata)
         {
-            var processors = new List<IChildEntityProcessor<long>>();
+            var processors = new List<IChildEntityProcessor<TEntityKey>>();
             foreach (var feature in metadata.Features.OfType<IChildEntityFeature>())
             {
-                var childMetadata = metadata.Elements.OfType<IAggregateMetadata>().Single(x => x.EntityType == feature.ChildEntityType);
-                var factoryType = typeof(UnityChildEntityProcessorFactory<,,>).MakeGenericType(metadata.EntityKeyType, feature.ChildEntityType, feature.ChildEntityKeyType);
-                var factory = (IChildEntityProcessorFactory<long>)_unityContainer.Resolve(factoryType);
-                var processor = factory.Create(metadata, childMetadata, feature);
-                processors.Add(processor);
+                processors.Add(CreateChildEntityProcessor(metadata, feature));
             }
 
             return processors;
+        }
+
+        private IChildEntityProcessor<TEntityKey> CreateChildEntityProcessor(IAggregateMetadata<TEntity> metadata, IChildEntityFeature feature)
+        {
+            var childMetadata = metadata.Elements.OfType<IAggregateMetadata>().Single(x => x.EntityType == feature.ChildEntityType);
+            var factoryType = typeof(UnityChildEntityProcessorFactory<,,>).MakeGenericType(metadata.EntityKeyType, feature.ChildEntityType, feature.ChildEntityKeyType);
+            var factory = (IChildEntityProcessorFactory<TEntityKey>)_unityContainer.Resolve(factoryType);
+            var processor = factory.Create(metadata, childMetadata, feature);
+            return processor;
         }
     }
 }

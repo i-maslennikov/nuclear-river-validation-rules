@@ -230,7 +230,9 @@ namespace NuClear.Replication.EntryPoint.DI
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
                      .RegisterType<IOperationSender, SqlStoreSender>(Lifetime.PerScope)
-                     .RegisterType<IOperationSerializer, XmlOperationSerializer>();
+                     .RegisterType<IOperationSerializer, XmlOperationSerializer>()
+                     .RegisterType<IEntityReferenceSerializer, EntityReferenceSerializer>()
+                     .RegisterType<IEntityTypeParser, EntityTypeParser<CustomerIntelligenceSubDomain>>();
 
             // final
             container.RegisterTypeWithDependencies(typeof(SqlStoreReceiverTelemetryDecorator), Lifetime.PerScope, null)
