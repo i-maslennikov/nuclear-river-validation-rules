@@ -38,7 +38,7 @@ namespace NuClear.Replication.Core.Facts
             _factTypePriorityComparer = factTypePriorityComparer;
         }
 
-        public IReadOnlyCollection<IOperation> Replicate(IEnumerable<FactOperation> operations)
+        public IReadOnlyCollection<IOperation> Replicate(IEnumerable<SyncFactCommand> operations)
         {
             using (Probe.Create("ETL1 Transforming"))
             {
@@ -52,10 +52,10 @@ namespace NuClear.Replication.Core.Facts
                     var factType = slice.Key.FactType;
 
                     IMetadataElement factMetadata;
-                    var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri(string.Format("Facts/{0}", factType.Name), UriKind.Relative));
+                    var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Facts/{factType.Name}", UriKind.Relative));
                     if (!_metadataProvider.TryGetMetadata(metadataId, out factMetadata))
                     {
-                        throw new NotSupportedException(string.Format("The fact of type '{0}' is not supported.", factType));
+                        throw new NotSupportedException($"The fact of type '{factType}' is not supported.");
                     }
 
                     using (Probe.Create("ETL1 Transforming", factType.Name))

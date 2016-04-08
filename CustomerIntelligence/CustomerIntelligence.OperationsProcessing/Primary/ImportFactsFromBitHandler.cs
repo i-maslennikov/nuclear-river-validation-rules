@@ -17,18 +17,18 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 {
     public sealed class ImportFactsFromBitHandler : IMessageProcessingHandler
     {
-        private readonly IImportDocumentMetadataProcessorFactory _importDocumentMetadataProcessorFactory;
+        private readonly IReplaceFactsActorFactory _replaceFactsActorFactory;
         private readonly IOperationSender<RecalculateStatisticsOperation> _sender;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromBitHandler(
-            IImportDocumentMetadataProcessorFactory importDocumentMetadataProcessorFactory,
+            IReplaceFactsActorFactory replaceFactsActorFactory,
             IOperationSender<RecalculateStatisticsOperation> sender,
             ITracer tracer,
             ITelemetryPublisher telemetryPublisher)
         {
-            _importDocumentMetadataProcessorFactory = importDocumentMetadataProcessorFactory;
+            _replaceFactsActorFactory = replaceFactsActorFactory;
             _sender = sender;
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
@@ -36,21 +36,25 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
         {
-            return processingResultsMap.Select(pair => Handle(pair.Key, pair.Value));
+            return processingResultsMap.Select(pair => Handle(pair.Key, pair.Value.OfType<CorporateBusAggregatableMessage>()));
         }
 
-        private StageResult Handle(Guid bucketId, IEnumerable<IAggregatableMessage> messages)
+        private StageResult Handle(Guid bucketId, IEnumerable<CorporateBusAggregatableMessage> messages)
         {
             try
             {
-                foreach (var message in messages.OfType<CorporateBusAggregatableMessage>())
+                foreach (var message in messages)
                 {
-                    foreach (var dto in message.Dtos)
+                    var commandGroups = message.Commands.GroupBy(x => x.GetType());
+                    foreach (var commandGroup in commandGroups)
                     {
-                        var importer = _importDocumentMetadataProcessorFactory.Create(dto.GetType());
-                        var opertaions = importer.Import(dto);
-                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(1);
-                        _sender.Push(opertaions.Cast<RecalculateStatisticsOperation>());
+                        var replaceFactActor = _replaceFactsActorFactory.Create(commandGroup.Key);
+
+                        var commands = commandGroup.ToArray();
+                        var events = replaceFactActor.ExecuteCommands(commands);
+
+                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(commands.Length);
+                        _sender.Push(events.Cast<RecalculateStatisticsOperation>());
                     }
                 }
 

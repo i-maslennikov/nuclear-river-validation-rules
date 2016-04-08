@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using NuClear.Messaging.API;
 using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.API.Processing;
-using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata;
 
 namespace NuClear.Replication.OperationsProcessing.Primary
 {
@@ -13,6 +13,6 @@ namespace NuClear.Replication.OperationsProcessing.Primary
         public override Guid Id => Guid.Empty;
         public IMessageFlow TargetFlow { get; set; }
 
-        public IReadOnlyCollection<IDataTransferObject> Dtos { get; set; }
+        public IReadOnlyCollection<ICommand> Commands { get; set; }
     }
 }

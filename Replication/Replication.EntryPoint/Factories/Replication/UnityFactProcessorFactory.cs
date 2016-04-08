@@ -5,6 +5,7 @@ using Microsoft.Practices.Unity;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
 using NuClear.River.Common.Metadata.Elements;

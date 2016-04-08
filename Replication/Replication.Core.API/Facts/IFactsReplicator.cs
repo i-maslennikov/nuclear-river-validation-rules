@@ -7,6 +7,6 @@ namespace NuClear.Replication.Core.API.Facts
 {
     public interface IFactsReplicator
     {
-        IReadOnlyCollection<IOperation> Replicate(IEnumerable<FactOperation> operations);
+        IReadOnlyCollection<IOperation> Replicate(IEnumerable<SyncFactCommand> operations);
     }
 }

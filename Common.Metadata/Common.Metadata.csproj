@@ -78,11 +78,13 @@
     <Compile Include="Features\IndirectlyDependentEntityFeature.cs" />
     <Compile Include="Elements\IValueObjectMetadata.cs" />
     <Compile Include="Elements\ValueObjectMetadata.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="Identities\QueryingMetadataIdentity.cs" />
     <Compile Include="Identities\ImportStatisticsMetadataIdentity.cs" />
     <Compile Include="Identities\OperationRegistryMetadataIdentity.cs" />
     <Compile Include="Identities\ReplicationMetadataIdentity.cs" />
     <Compile Include="Identities\StatisticsRecalculationMetadataIdentity.cs" />
+    <Compile Include="IEvent.cs" />
     <Compile Include="MapToObjectsSpecProvider.cs" />
     <Compile Include="Model\DefaultIdentityProvider.cs" />
     <Compile Include="Model\IAggregateEntity.cs" />
@@ -100,7 +102,7 @@
     <Compile Include="Model\Operations\AggregateOperation.cs" />
     <Compile Include="Model\Operations\AggregateOperationPriorityComparer.cs" />
     <Compile Include="Model\Operations\DestroyAggregate.cs" />
-    <Compile Include="Model\Operations\FactOperation.cs" />
+    <Compile Include="Model\Operations\SyncFactCommand.cs" />
     <Compile Include="Model\Operations\ICommandFactory.cs" />
     <Compile Include="Model\Operations\InitializeAggregate.cs" />
     <Compile Include="Model\Operations\RecalculateAggregate.cs" />

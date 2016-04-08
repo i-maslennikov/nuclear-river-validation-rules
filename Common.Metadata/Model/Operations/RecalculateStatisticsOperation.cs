@@ -1,6 +1,6 @@
 ﻿namespace NuClear.River.Common.Metadata.Model.Operations
 {
-    public sealed class RecalculateStatisticsOperation : IOperation
+    public sealed class RecalculateStatisticsOperation : IEvent, IOperation
     {
         public RecalculateStatisticsOperation(StatisticsKey entityId)
         {

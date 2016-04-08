@@ -27,7 +27,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
         public ImportFactsFromErmHandler(
             IFactsReplicator factsReplicator,
             IOperationSender<AggregateOperation> aggregateSender,
-            IOperationSender<RecalculateStatisticsOperation> statisticsSender, 
+            IOperationSender<RecalculateStatisticsOperation> statisticsSender,
             ITracer tracer,
             ITelemetryPublisher telemetryPublisher)
         {
@@ -43,7 +43,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             try
             {
                 var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<OperationAggregatableMessage<FactOperation>>()
+                                                   .Cast<OperationAggregatableMessage<SyncFactCommand>>()
                                                    .ToArray();
 
                 Handle(messages.SelectMany(message => message.Operations).ToArray());
@@ -60,7 +60,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<FactOperation> operations)
+        private void Handle(IReadOnlyCollection<SyncFactCommand> operations)
         {
             _tracer.Debug("Handing fact operations started");
             var result = _factsReplicator.Replicate(operations);

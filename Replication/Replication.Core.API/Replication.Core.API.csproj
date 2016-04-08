@@ -74,6 +74,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregates\IAggregateProcessor.cs" />
@@ -84,14 +85,18 @@
     <Compile Include="Aggregates\IStatisticsRecalculator.cs" />
     <Compile Include="Aggregates\IValueObjectProcessor.cs" />
     <Compile Include="Aggregates\IValueObjectProcessorFactory.cs" />
+    <Compile Include="DataChangesDetector.cs" />
     <Compile Include="Facts\DependencyType.cs" />
+    <Compile Include="Facts\IMemoryBasedFactActor.cs" />
+    <Compile Include="Facts\IStorageBasedFactActor.cs" />
     <Compile Include="Facts\IFactDependencyProcessor.cs" />
     <Compile Include="Facts\IFactDependencyProcessorFactory.cs" />
     <Compile Include="Facts\IFactProcessor.cs" />
     <Compile Include="Facts\IFactProcessorFactory.cs" />
     <Compile Include="Facts\IFactsReplicator.cs" />
     <Compile Include="Facts\IImportDocumentMetadataProcessor.cs" />
-    <Compile Include="Facts\IImportDocumentMetadataProcessorFactory.cs" />
+    <Compile Include="Facts\IReplaceFactsActorFactory.cs" />
+    <Compile Include="IActor.cs" />
     <Compile Include="IBulkRepository.cs" />
     <Compile Include="LinqExtensions.cs" />
     <Compile Include="MergeTool.cs" />

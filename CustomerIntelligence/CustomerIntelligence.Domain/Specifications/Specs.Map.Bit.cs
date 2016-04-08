@@ -14,9 +14,9 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
         {
             public static partial class Bit
             {
-                public static IMapSpecification<FirmStatisticsDto, IReadOnlyCollection<Bit::FirmCategoryStatistics>> FirmCategoryStatistics()
+                public static MapSpecification<FirmPopularity, IReadOnlyCollection<Bit::FirmCategoryStatistics>> FirmCategoryStatistics()
                 {
-                    return new MapSpecification<FirmStatisticsDto, IReadOnlyCollection<Bit::FirmCategoryStatistics>>(
+                    return new MapSpecification<FirmPopularity, IReadOnlyCollection<Bit::FirmCategoryStatistics>>(
                         dto =>
                         {
                             return dto.Firms
@@ -32,9 +32,9 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                         });
                 }
 
-                public static IMapSpecification<CategoryStatisticsDto, IReadOnlyCollection<Bit::ProjectCategoryStatistics>> ProjectCategoryStatistics()
+                public static MapSpecification<RubricPopularity, IReadOnlyCollection<Bit::ProjectCategoryStatistics>> ProjectCategoryStatistics()
                 {
-                    return new MapSpecification<CategoryStatisticsDto, IReadOnlyCollection<Bit::ProjectCategoryStatistics>>(
+                    return new MapSpecification<RubricPopularity, IReadOnlyCollection<Bit::ProjectCategoryStatistics>>(
                         dto =>
                             {
                                 return dto.Categories
@@ -48,9 +48,9 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                             });
                 }
 
-                public static IMapSpecification<FirmForecastDto, IReadOnlyCollection<Bit::FirmCategoryForecast>> FirmCategoryForecasts()
+                public static MapSpecification<FirmForecast, IReadOnlyCollection<Bit::FirmCategoryForecast>> FirmCategoryForecasts()
                 {
-                    return new MapSpecification<FirmForecastDto, IReadOnlyCollection<Bit::FirmCategoryForecast>>(
+                    return new MapSpecification<FirmForecast, IReadOnlyCollection<Bit::FirmCategoryForecast>>(
                         dto =>
                             {
                                 var forecasts = from firm in dto.Firms
@@ -68,9 +68,9 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                             });
                 }
 
-                public static IMapSpecification<FirmForecastDto, IReadOnlyCollection<Bit::FirmForecast>> FirmForecasts()
+                public static IMapSpecification<FirmForecast, IReadOnlyCollection<Bit::FirmForecast>> FirmForecasts()
                 {
-                    return new MapSpecification<FirmForecastDto, IReadOnlyCollection<Bit::FirmForecast>>(
+                    return new MapSpecification<FirmForecast, IReadOnlyCollection<Bit::FirmForecast>>(
                         dto =>
                         {
                             var forecasts = from firm in dto.Firms

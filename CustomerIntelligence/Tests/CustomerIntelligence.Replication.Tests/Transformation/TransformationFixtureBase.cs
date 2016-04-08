@@ -6,9 +6,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
     {
         protected static class Fact
         {
-            public static FactOperation Operation<T>(long entityId)
+            public static SyncFactCommand Operation<T>(long entityId)
             {
-                return new FactOperation(typeof(T), entityId);
+                return new SyncFactCommand(typeof(T), entityId);
             }
         }
 

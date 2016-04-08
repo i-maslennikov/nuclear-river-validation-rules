@@ -15,16 +15,20 @@ using NuClear.Tracing.API;
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 {
     /// <summary>
-    /// Applies filter for TUC and maps them to FactOperation
+    /// Applies filter for TUC and maps them to SyncFactCommand
     /// </summary>
-    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, OperationAggregatableMessage<FactOperation>>
+    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, OperationAggregatableMessage<SyncFactCommand>>
     {
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly IEntityTypeMappingRegistry<FactsSubDomain> _registry;
         private readonly TrackedUseCaseFiltrator<FactsSubDomain> _useCaseFiltrator;
 
-        public ImportFactsFromErmAccumulator(ITracer tracer, ITelemetryPublisher telemetryPublisher, IEntityTypeMappingRegistry<FactsSubDomain> registry, TrackedUseCaseFiltrator<FactsSubDomain> useCaseFiltrator)
+        public ImportFactsFromErmAccumulator(
+            ITracer tracer,
+            ITelemetryPublisher telemetryPublisher,
+            IEntityTypeMappingRegistry<FactsSubDomain> registry,
+            TrackedUseCaseFiltrator<FactsSubDomain> useCaseFiltrator)
         {
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
@@ -32,7 +36,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             _useCaseFiltrator = useCaseFiltrator;
         }
 
-        protected override OperationAggregatableMessage<FactOperation> Process(TrackedUseCase message)
+        protected override OperationAggregatableMessage<SyncFactCommand> Process(TrackedUseCase message)
         {
             _tracer.DebugFormat("Processing TUC {0}", message.Id);
 
@@ -42,14 +46,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             var changes = _useCaseFiltrator.Filter(message);
 
             // TODO: вместо кучи factoperation можно передавать одну с dictionary, где уже всё сгруппировано по entity type 
-            var factOperations = changes.SelectMany(x => x.Value.Select(y => new FactOperation(_registry.GetEntityType(x.Key), y))).ToList();
+            var commands = changes.SelectMany(x => x.Value.Select(y => new SyncFactCommand(_registry.GetEntityType(x.Key), y))).ToArray();
 
-            _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(factOperations.Count);
+            _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Length);
 
-            return new OperationAggregatableMessage<FactOperation>
+            return new OperationAggregatableMessage<SyncFactCommand>
             {
                 TargetFlow = MessageFlow,
-                Operations = factOperations,
+                Operations = commands,
                 OperationTime = message.Context.Finished.UtcDateTime,
             };
         }

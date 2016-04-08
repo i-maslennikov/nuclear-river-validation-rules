@@ -35,7 +35,7 @@ namespace NuClear.Replication.Core.Facts
             _identityProvider = factIdentityProvider.Get<TFact>().Compile();
         }
 
-        public IReadOnlyCollection<IOperation> Execute(IReadOnlyCollection<FactOperation> commands)
+        public IReadOnlyCollection<IOperation> Execute(IReadOnlyCollection<SyncFactCommand> commands)
         {
             var spec = _findSpecificationProvider.Create(commands.Select(x => x.FactId).ToArray());
             var changes = _changesDetector.DetectChanges(spec);

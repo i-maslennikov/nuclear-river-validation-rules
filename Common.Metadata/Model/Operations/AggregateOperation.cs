@@ -2,7 +2,7 @@
 
 namespace NuClear.River.Common.Metadata.Model.Operations
 {
-    public abstract class AggregateOperation : IOperation
+    public abstract class AggregateOperation : IEvent, IOperation
     {
         protected AggregateOperation(Type aggregateType, long aggregateId)
         {

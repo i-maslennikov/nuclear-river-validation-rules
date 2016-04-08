@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Transactions;
 
-using NuClear.Replication.Core.API;
 using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.Replication.Core
+namespace NuClear.Replication.Core.API
 {
     public class DataChangesDetector<T>
     {

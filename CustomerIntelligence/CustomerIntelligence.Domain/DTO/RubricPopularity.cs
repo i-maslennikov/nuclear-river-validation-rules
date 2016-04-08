@@ -4,13 +4,13 @@ using NuClear.CustomerIntelligence.Domain.Model;
 
 namespace NuClear.CustomerIntelligence.Domain.DTO
 {
-    public sealed class CategoryStatisticsDto : IBitDto
+    public sealed class RubricPopularity : IBitDto
     {
         public long ProjectId { get; set; }
 
-        public IReadOnlyCollection<CategoryDto> Categories { get; set; }
+        public IReadOnlyCollection<Category> Categories { get; set; }
 
-        public class CategoryDto
+        public class Category
         {
             public long CategoryId { get; set; }
 

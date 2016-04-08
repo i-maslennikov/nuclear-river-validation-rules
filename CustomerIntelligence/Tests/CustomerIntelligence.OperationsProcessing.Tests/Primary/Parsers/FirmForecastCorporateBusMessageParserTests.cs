@@ -4,7 +4,6 @@ using System.Xml.Linq;
 using NuClear.CustomerIntelligence.Domain.DTO;
 using NuClear.CustomerIntelligence.OperationsProcessing.Primary.Parsers;
 using NuClear.CustomerIntelligence.OperationsProcessing.Tests.Properties;
-using NuClear.River.Common.Metadata.Model;
 
 using NUnit.Framework;
 
@@ -19,22 +18,21 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Primary.Parser
             var x = XElement.Parse(Resources.flowStatistics_FirmForecast_xml);
             var parser = new FirmForecastCorporateBusMessageParser();
 
-            IDataTransferObject dto;
-            var result = parser.TryParse(x, out dto);
+            FirmForecast firmForecast;
+            var result = parser.TryParse(x, out firmForecast);
 
             Assert.That(result, Is.True);
-            Assert.That(dto, Is.InstanceOf(typeof(FirmForecastDto)));
+            Assert.That(firmForecast, Is.InstanceOf(typeof(FirmForecast)));
 
-            var ffdto = (FirmForecastDto)dto;
-            Assert.That(ffdto.ProjectId, Is.EqualTo(1));
-            Assert.That(ffdto.Firms.Count, Is.EqualTo(2));
-            Assert.That(ffdto.Firms.First().Id, Is.EqualTo(141274359267368));
-            Assert.That(ffdto.Firms.First().ForecastClick, Is.EqualTo(45));
-            Assert.That(ffdto.Firms.First().ForecastAmount, Is.EqualTo(670.00));
-            Assert.That(ffdto.Firms.First().Categories.Count, Is.EqualTo(2));
-            Assert.That(ffdto.Firms.First().Categories.First().Id, Is.EqualTo(110365));
-            Assert.That(ffdto.Firms.First().Categories.First().ForecastClick, Is.EqualTo(23));
-            Assert.That(ffdto.Firms.First().Categories.First().ForecastAmount, Is.EqualTo(230.00));
+            Assert.That(firmForecast.ProjectId, Is.EqualTo(1));
+            Assert.That(firmForecast.Firms.Count, Is.EqualTo(2));
+            Assert.That(firmForecast.Firms.First().Id, Is.EqualTo(141274359267368));
+            Assert.That(firmForecast.Firms.First().ForecastClick, Is.EqualTo(45));
+            Assert.That(firmForecast.Firms.First().ForecastAmount, Is.EqualTo(670.00));
+            Assert.That(firmForecast.Firms.First().Categories.Count, Is.EqualTo(2));
+            Assert.That(firmForecast.Firms.First().Categories.First().Id, Is.EqualTo(110365));
+            Assert.That(firmForecast.Firms.First().Categories.First().ForecastClick, Is.EqualTo(23));
+            Assert.That(firmForecast.Firms.First().Categories.First().ForecastAmount, Is.EqualTo(230.00));
         }
     }
 }

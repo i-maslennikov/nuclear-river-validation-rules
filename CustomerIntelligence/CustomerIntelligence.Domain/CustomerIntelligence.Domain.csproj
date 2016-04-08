@@ -2,7 +2,6 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</ProjectGuid>
@@ -10,11 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NuClear.CustomerIntelligence.Domain</RootNamespace>
     <AssemblyName>2GIS.NuClear.CustomerIntelligence.Domain</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile151</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,15 +35,23 @@
     <Compile Include="AggregateConstructionMetadataSource.cs" />
     <Compile Include="Commands\RecalculateAggregateCommandFactory.cs" />
     <Compile Include="Commands\RecalculateStatisticsCommandFactory.cs" />
-    <Compile Include="DTO\CategoryStatisticsDto.cs" />
-    <Compile Include="DTO\FirmForecastDto.cs" />
-    <Compile Include="DTO\FirmStatisticsDto.cs" />
+    <Compile Include="Commands\ReplaceFirmCategoryForecastCommand.cs" />
+    <Compile Include="Commands\ReplaceFirmForecastCommand.cs" />
+    <Compile Include="Commands\ReplaceFirmPopularityCommand.cs" />
+    <Compile Include="Commands\ReplaceRubricPopularityCommand.cs" />
+    <Compile Include="DTO\RubricPopularity.cs" />
+    <Compile Include="DTO\FirmForecast.cs" />
+    <Compile Include="DTO\FirmPopularity.cs" />
     <Compile Include="EntityTypeIds.cs" />
     <Compile Include="FactsReplicationMetadataSource.cs" />
     <Compile Include="ImportStatisticsMetadataSource.cs" />
     <Compile Include="MetadataBuilderExtesnsions.cs" />
     <Compile Include="Model\Bit\FirmCategoryForecast.cs" />
+    <Compile Include="Model\Bit\FirmCategoryForecastActor.cs" />
+    <Compile Include="Model\Bit\FirmCategoryStatisticsActor.cs" />
     <Compile Include="Model\Bit\FirmForecast.cs" />
+    <Compile Include="Model\Bit\FirmForecastActor.cs" />
+    <Compile Include="Model\Bit\ProjectCategoryStatisticsActor.cs" />
     <Compile Include="Model\CI\CategoryGroup.cs" />
     <Compile Include="Model\CI\Client.cs" />
     <Compile Include="Model\CI\ClientContact.cs" />
@@ -55,6 +60,7 @@
     <Compile Include="Model\CI\FirmBalance.cs" />
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
+    <Compile Include="Model\Facts\FirmActor.cs" />
     <Compile Include="Model\Statistics\ProjectStatistics.cs" />
     <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
@@ -143,6 +149,8 @@
       <HintPath>..\..\packages\2GIS.NuClear.Utils.1.0.12\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
@@ -154,9 +162,12 @@
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
       <Name>Common.Metadata</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Replication\Replication.Core.API\Replication.Core.API.csproj">
+      <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
+      <Name>Replication.Core.API</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

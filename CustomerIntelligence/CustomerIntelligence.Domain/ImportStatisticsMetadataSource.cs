@@ -15,34 +15,31 @@ namespace NuClear.CustomerIntelligence.Domain
 {
     public class ImportDocumentMetadataSource : MetadataSourceBase<ImportDocumentMetadataIdentity>
     {
-        private readonly IReadOnlyDictionary<Uri, IMetadataElement> _metadata;
-
         public ImportDocumentMetadataSource()
         {
             HierarchyMetadata importStatisticsMetadataRoot =
                 HierarchyMetadata
                     .Config
                     .Id.Is(Metamodeling.Elements.Identities.Builder.Metadata.Id.For<ImportDocumentMetadataIdentity>())
-                    .Childs(ImportDocumentMetadata<FirmStatisticsDto>
+                    .Childs(ImportDocumentMetadata<FirmPopularity>
                                 .Config
                                 .ImportToFacts(Specs.Find.Bit.FirmCategoryStatistics.ByBitDto, Specs.Map.Bit.FirmCategoryStatistics())
                                 .LeadsToProjectStatisticsCalculation(),
 
-                            ImportDocumentMetadata<CategoryStatisticsDto>
+                            ImportDocumentMetadata<RubricPopularity>
                                 .Config
                                 .ImportToFacts(Specs.Find.Bit.ProjectCategoryStatistics.ByBitDto, Specs.Map.Bit.ProjectCategoryStatistics())
                                 .LeadsToProjectStatisticsCalculation(),
 
-                            ImportDocumentMetadata<FirmForecastDto>
+                            ImportDocumentMetadata<FirmForecast>
                                 .Config
                                 .ImportToFacts(Specs.Find.Bit.FirmCategoryForecast.ByBitDto, Specs.Map.Bit.FirmCategoryForecasts())
                                 .ImportToFacts(Specs.Find.Bit.FirmForecast.ByBitDto, Specs.Map.Bit.FirmForecasts())
                                 .LeadsToProjectStatisticsCalculation());
 
-            _metadata = new Dictionary<Uri, IMetadataElement> { { importStatisticsMetadataRoot.Identity.Id, importStatisticsMetadataRoot } };
+            Metadata = new Dictionary<Uri, IMetadataElement> { { importStatisticsMetadataRoot.Identity.Id, importStatisticsMetadataRoot } };
         }
 
-        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata
-            => _metadata;
+        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }
     }
 }

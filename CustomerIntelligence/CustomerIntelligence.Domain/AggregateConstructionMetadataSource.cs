@@ -9,7 +9,6 @@ using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
-using NuClear.River.Common.Metadata.Model;
 
 using Specs = NuClear.CustomerIntelligence.Domain.Specifications.Specs;
 

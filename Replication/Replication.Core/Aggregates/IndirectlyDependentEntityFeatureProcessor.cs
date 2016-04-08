@@ -22,7 +22,11 @@ namespace NuClear.Replication.Core.Aggregates
         private readonly IndirectlyDependentEntityFeature<TFact, TEntityKey> _metadata;
         private readonly FindSpecificationProvider<TFact, long> _findSpecificationProvider;
 
-        public IndirectlyDependentEntityFeatureProcessor(IndirectlyDependentEntityFeature<TFact, TEntityKey> metadata, IQuery query, IIdentityProvider<long> identityProvider, ICommandFactory<TEntityKey> commandFactory)
+        public IndirectlyDependentEntityFeatureProcessor(
+            IndirectlyDependentEntityFeature<TFact, TEntityKey> metadata,
+            IQuery query,
+            IIdentityProvider<long> identityProvider,
+            ICommandFactory<TEntityKey> commandFactory)
         {
             _query = query;
             _metadata = metadata;

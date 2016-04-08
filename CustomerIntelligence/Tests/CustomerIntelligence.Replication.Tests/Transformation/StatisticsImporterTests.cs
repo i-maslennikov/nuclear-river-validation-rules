@@ -25,17 +25,17 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             // Arrange
             var repositoryFactory = new VerifiableRepositoryFactory();
-            var dto = new FirmStatisticsDto
+            var dto = new FirmPopularity
                 {
                     ProjectId = 1,
                     Firms = new[]
                         {
-                            new FirmStatisticsDto.FirmDto
+                            new FirmPopularity.Firm
                                 {
                                     FirmId = 2,
                                     Categories = new[]
                                         {
-                                            new FirmStatisticsDto.FirmDto.CategoryDto
+                                            new FirmPopularity.Firm.Category
                                                 {
                                                     CategoryId = 3,
                                                     Hits = 4,
@@ -49,7 +49,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Bit::FirmCategoryStatistics { ProjectId = 1, FirmId = 7 },
                          new Bit::FirmCategoryStatistics { ProjectId = 2, FirmId = 8 });
 
-            var importer = CreateProcessor<FirmStatisticsDto, Bit::FirmCategoryStatistics>(repositoryFactory);
+            var importer = CreateProcessor<FirmPopularity, Bit::FirmCategoryStatistics>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
@@ -69,12 +69,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             // Arrange
             var repositoryFactory = new VerifiableRepositoryFactory();
-            var dto = new CategoryStatisticsDto
+            var dto = new RubricPopularity
                 {
                     ProjectId = 1,
                     Categories = new[]
                         {
-                            new CategoryStatisticsDto.CategoryDto
+                            new RubricPopularity.Category
                                 {
                                     CategoryId = 2,
                                     AdvertisersCount = 3,
@@ -85,7 +85,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 7 },
                          new Bit::ProjectCategoryStatistics { ProjectId = 2, CategoryId = 7 });
 
-            var importer = CreateProcessor<CategoryStatisticsDto, Bit::ProjectCategoryStatistics>(repositoryFactory);
+            var importer = CreateProcessor<RubricPopularity, Bit::ProjectCategoryStatistics>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
@@ -105,19 +105,19 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             // Arrange
             var repositoryFactory = new VerifiableRepositoryFactory();
-            var dto = new FirmForecastDto
+            var dto = new FirmForecast
                 {
                     ProjectId = 1,
                     Firms = new[]
                         {
-                            new FirmForecastDto.FirmDto
+                            new FirmForecast.Firm
                                 {
                                     Id = 1,
                                     ForecastClick = 1,
                                     ForecastAmount = 1,
                                     Categories = new[]
                                         {
-                                            new FirmForecastDto.CategoryDto
+                                            new FirmForecast.Category
                                                 {
                                                     Id = 1,
                                                     ForecastAmount = 1,
@@ -131,7 +131,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Bit::FirmForecast { ProjectId = 1, FirmId = 1 },
                          new Bit::FirmForecast { ProjectId = 2, FirmId = 2 });
 
-            var importer = CreateProcessor<FirmForecastDto, Bit::FirmForecast>(repositoryFactory);
+            var importer = CreateProcessor<FirmForecast, Bit::FirmForecast>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
@@ -151,19 +151,19 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             // Arrange
             var repositoryFactory = new VerifiableRepositoryFactory();
-            var dto = new FirmForecastDto
+            var dto = new FirmForecast
             {
                 ProjectId = 1,
                 Firms = new[]
                         {
-                            new FirmForecastDto.FirmDto
+                            new FirmForecast.Firm
                                 {
                                     Id = 1,
                                     ForecastClick = 1,
                                     ForecastAmount = 1,
                                     Categories = new[]
                                         {
-                                            new FirmForecastDto.CategoryDto
+                                            new FirmForecast.Category
                                                 {
                                                     Id = 1,
                                                     ForecastAmount = 1,
@@ -177,7 +177,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Bit::FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1 },
                          new Bit::FirmCategoryForecast { ProjectId = 2, FirmId = 2, CategoryId = 1 });
 
-            var importer = CreateProcessor<FirmForecastDto, Bit::FirmCategoryForecast>(repositoryFactory);
+            var importer = CreateProcessor<FirmForecast, Bit::FirmCategoryForecast>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();

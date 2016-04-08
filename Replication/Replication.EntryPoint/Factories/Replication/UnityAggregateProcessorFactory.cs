@@ -6,6 +6,7 @@ using Microsoft.Practices.Unity;
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Aggregates;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Equality;

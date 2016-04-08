@@ -14,26 +14,26 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldMapFromFirmStatisticsDto()
         {
-            var dto = new FirmStatisticsDto
-            {
-                ProjectId = 1,
-                Firms = new[]
-                                  {
-                                      new FirmStatisticsDto.FirmDto
-                                      {
-                                          FirmId = 2,
-                        Categories = new[]
-                        {
-                            new FirmStatisticsDto.FirmDto.CategoryDto
-                            {
-                                          CategoryId = 3,
-                                          Hits = 4,
-                                          Shows = 5
-                                      }
-                                  }
-                    }
-                }
-            };
+            var dto = new FirmPopularity
+                          {
+                              ProjectId = 1,
+                              Firms = new[]
+                                          {
+                                              new FirmPopularity.Firm
+                                                  {
+                                                      FirmId = 2,
+                                                      Categories = new[]
+                                                                       {
+                                                                           new FirmPopularity.Firm.Category
+                                                                               {
+                                                                                   CategoryId = 3,
+                                                                                   Hits = 4,
+                                                                                   Shows = 5
+                                                                               }
+                                                                       }
+                                                  }
+                                          }
+                          };
 
             var entities = Specs.Map.Bit.FirmCategoryStatistics().Map(dto);
 
@@ -48,12 +48,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldMapFromCategoryStatisticsDto()
         {
-            var dto = new CategoryStatisticsDto
+            var dto = new RubricPopularity
             {
                 ProjectId = 1,
                 Categories = new[]
                                   {
-                                      new CategoryStatisticsDto.CategoryDto
+                                      new RubricPopularity.Category
                                       {
                                           CategoryId = 2,
                                           AdvertisersCount = 3,

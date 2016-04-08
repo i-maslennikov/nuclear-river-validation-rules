@@ -299,7 +299,7 @@
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Receiver\MessageFlowReceiverResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Transformer\PrimaryMessageTransformerResolveStrategy.cs" />
-    <Compile Include="Factories\Replication\UnityImportDocumentMetadataProcessorFactory.cs" />
+    <Compile Include="Factories\Replication\UnityReplaceFactsActorFactory.cs" />
     <Compile Include="Factories\Replication\UnityAggregateProcessorFactory.cs" />
     <Compile Include="Factories\Replication\UnityFactDependencyProcessorFactory.cs" />
     <Compile Include="Factories\Replication\UnityStatisticsProcessorFactory.cs" />

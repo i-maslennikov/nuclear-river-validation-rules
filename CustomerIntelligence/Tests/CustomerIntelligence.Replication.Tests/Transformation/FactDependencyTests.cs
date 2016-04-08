@@ -780,7 +780,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 var factory = new Factory<TFact>(_query, repository, _comparerFactory);
                 var processor = factory.Create(factMetadata);
 
-                _operations.AddRange(processor.Execute(ids.Select(id => new FactOperation(typeof(TFact), id)).ToArray()));
+                _operations.AddRange(processor.Execute(ids.Select(id => new SyncFactCommand(typeof(TFact), id)).ToArray()));
 
                 return this;
             }

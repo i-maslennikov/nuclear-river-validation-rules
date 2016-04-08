@@ -92,11 +92,12 @@
     <Compile Include="Aggregates\ValueObjectFindSpecificationProvider.cs" />
     <Compile Include="Aggregates\ValueObjectProcessor.cs" />
     <Compile Include="BulkRepository.cs" />
-    <Compile Include="DataChangesDetector.cs" />
     <Compile Include="EqualityComparerFactory.cs" />
     <Compile Include="Aggregates\DirectlyDependentEntityFeatureProcessor.cs" />
     <Compile Include="Facts\FactProcessor.cs" />
+    <Compile Include="Facts\ReplaceFactsActor.cs" />
     <Compile Include="Facts\FactsReplicator.cs" />
+    <Compile Include="Facts\SyncFactsActor.cs" />
     <Compile Include="Facts\IImportDocumentFeatureProcessor.cs" />
     <Compile Include="Facts\ImportDocumentMetadataProcessor.cs" />
     <Compile Include="Facts\ImportImportDocumentFeatureProcessor.cs" />
