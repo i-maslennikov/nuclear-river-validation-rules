@@ -46,7 +46,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                                                    .Cast<OperationAggregatableMessage<FactOperation>>()
                                                    .ToArray();
 
-                Handle(messages.SelectMany(message => message.Operations).ToArray());
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Operations).ToArray());
 
                 var eldestOperationPerformTime = messages.Min(message => message.OperationTime);
                 _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);
@@ -60,10 +60,16 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<FactOperation> operations)
+        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<FactOperation> operations)
         {
             _tracer.Debug("Handing fact operations started");
             var result = _factsReplicator.Replicate(operations);
+
+            if (result.Count > 1000 * bucketIds.Count)
+            {
+                _tracer.Warn($"Messages produced huge operation amount: from {bucketIds.Count} TUCs to {result.Count} commands\n" + 
+                    string.Join(", ", bucketIds));
+            }
 
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(operations.Count);
 
