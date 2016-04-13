@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
@@ -7,7 +9,6 @@ using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.River.Common.Metadata.Model.Operations;
-using System.Collections.Generic;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
@@ -33,25 +34,27 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 {
                     commands.Add(new InitializeAggregateCommand(@event.AggregateType, @event.AggregateId));
                 }
-
-                if (eventType == typeof(RecalculateAggregate))
+                else if (eventType == typeof(RecalculateAggregate))
                 {
                     commands.Add(new RecalculateAggregateCommand(@event.AggregateType, @event.AggregateId));
                 }
-
-                if (eventType == typeof(RecalculateAggregate))
+                else if (eventType == typeof(RecalculateAggregate))
                 {
                     commands.Add(new RecalculateAggregateCommand(@event.AggregateType, @event.AggregateId));
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The event of type {@eventType.Name} is not expected");
                 }
             }
 
-            var oldestOperation = message.FinalProcessings.Min(x => x.CreatedOn);
+            var oldestEvent = message.FinalProcessings.Min(x => x.CreatedOn);
 
             return new OperationAggregatableMessage<IAggregateCommand>
             {
                 TargetFlow = MessageFlow,
                 Commands = commands,
-                OperationTime = oldestOperation,
+                OperationTime = oldestEvent,
             };
         }
     }
