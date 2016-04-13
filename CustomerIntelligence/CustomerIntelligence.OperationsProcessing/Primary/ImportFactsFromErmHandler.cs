@@ -46,7 +46,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                                                    .Cast<OperationAggregatableMessage<SyncFactCommand>>()
                                                    .ToArray();
 
-                Handle(messages.SelectMany(message => message.Operations).ToArray());
+                Handle(messages.SelectMany(message => message.Commands).ToArray());
 
                 var eldestOperationPerformTime = messages.Min(message => message.OperationTime);
                 _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);

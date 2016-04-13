@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 
+using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry;
+using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public sealed class AggregateOperationAggregatableMessageHandler : IMessageProcessingHandler
     {
-        private readonly IAggregatesConstructor _aggregatesConstructor;
+        private readonly IAggregateCommandActorFactory _aggregateCommandActorFactory;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
-        public AggregateOperationAggregatableMessageHandler(IAggregatesConstructor aggregatesConstructor, ITracer tracer, ITelemetryPublisher telemetryPublisher)
+        public AggregateOperationAggregatableMessageHandler(IAggregateCommandActorFactory aggregateCommandActorFactory, ITracer tracer, ITelemetryPublisher telemetryPublisher)
         {
-            _aggregatesConstructor = aggregatesConstructor;
+            _aggregateCommandActorFactory = aggregateCommandActorFactory;
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
         }
@@ -36,10 +38,17 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         {
             try
             {
-                foreach (var message in messages.OfType<OperationAggregatableMessage<AggregateOperation>>())
+                foreach (var message in messages.Cast<OperationAggregatableMessage<IAggregateCommand>>())
                 {
-                    _aggregatesConstructor.Execute(message.Operations);
-                    _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Operations.Count);
+                    var commandGroups = message.Commands
+                                               .GroupBy(x => new { CommandType = x.GetType(), x.AggregateType })
+                                               .OrderByDescending(x => x.Key.CommandType, new AggregateCommandPriorityComparer());
+                    foreach (var commandGroup in commandGroups)
+                    {
+                        ExecuteCommands(commandGroup.Key.CommandType, commandGroup.Key.AggregateType, commandGroup.ToArray());
+                    }
+
+                    _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Commands.Count);
 
                     _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
                 }
@@ -50,6 +59,22 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             {
                 _tracer.Error(ex, "Error when calculating aggregates");
                 return MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex);
+            }
+        }
+
+        private void ExecuteCommands(Type commandType, Type aggregateType, IReadOnlyCollection<IAggregateCommand> commands)
+        {
+            using (var transaction = new TransactionScope(
+                TransactionScopeOption.Required,
+                new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
+            {
+                using (Probe.Create($"ETL2 {commandType.Name} {aggregateType.Name}"))
+                {
+                    var actor = _aggregateCommandActorFactory.Create(commandType, aggregateType);
+                    actor.ExecuteCommands(commands);
+                }
+
+                transaction.Complete();
             }
         }
     }

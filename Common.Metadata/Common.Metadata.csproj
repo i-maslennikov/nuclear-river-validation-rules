@@ -100,7 +100,7 @@
     <Compile Include="Model\IObject.cs" />
     <Compile Include="Model\IOperation.cs" />
     <Compile Include="Model\Operations\AggregateOperation.cs" />
-    <Compile Include="Model\Operations\AggregateOperationPriorityComparer.cs" />
+    <Compile Include="Model\Operations\AggregateCommandPriorityComparer.cs" />
     <Compile Include="Model\Operations\DestroyAggregate.cs" />
     <Compile Include="Model\Operations\SyncFactCommand.cs" />
     <Compile Include="Model\Operations\ICommandFactory.cs" />

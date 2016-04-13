@@ -33,6 +33,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AggregateConstructionMetadataSource.cs" />
+    <Compile Include="Commands\AggregateCommandPriorityComparer.cs" />
+    <Compile Include="Commands\DestroyAggregateCommand.cs" />
+    <Compile Include="Commands\IAggregateCommand.cs" />
+    <Compile Include="Commands\InitializeAggregateCommand.cs" />
+    <Compile Include="Commands\RecalculateAggregateCommand.cs" />
     <Compile Include="Commands\RecalculateAggregateCommandFactory.cs" />
     <Compile Include="Commands\RecalculateStatisticsCommandFactory.cs" />
     <Compile Include="Commands\ReplaceFirmCategoryForecastCommand.cs" />
@@ -57,6 +62,7 @@
     <Compile Include="Model\CI\ClientContact.cs" />
     <Compile Include="Model\CI\Firm.cs" />
     <Compile Include="Model\CI\FirmActivity.cs" />
+    <Compile Include="Model\CI\FirmAggregateActorsFactory.cs" />
     <Compile Include="Model\CI\FirmBalance.cs" />
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />

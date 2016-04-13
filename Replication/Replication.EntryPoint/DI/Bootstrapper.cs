@@ -309,7 +309,7 @@ namespace NuClear.Replication.EntryPoint.DI
                                                                                                c.Resolve<IMetadataProvider>(),
                                                                                                c.Resolve<IFactProcessorFactory>(),
                                                                                                new CustomerIntelligenceFactTypePriorityComparer())))
-                .RegisterType<IReplaceFactsActorFactory, UnityReplaceFactsActorFactory>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IReplaceDataObjectsActorFactory, UnityReplaceDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregatesConstructor, AggregatesConstructor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStatisticsRecalculator, StatisticsRecalculator>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())

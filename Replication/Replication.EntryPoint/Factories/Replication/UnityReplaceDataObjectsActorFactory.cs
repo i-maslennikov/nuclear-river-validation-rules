@@ -15,18 +15,18 @@ using NuClear.River.Common.Metadata.Identities;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
-    public class UnityReplaceFactsActorFactory : IReplaceFactsActorFactory
+    public class UnityReplaceDataObjectsActorFactory : IReplaceDataObjectsActorFactory
     {
         private readonly IUnityContainer _unityContainer;
         private readonly IMetadataProvider _metadataProvider;
 
-        public UnityReplaceFactsActorFactory(IUnityContainer unityContainer, IMetadataProvider metadataProvider)
+        public UnityReplaceDataObjectsActorFactory(IUnityContainer unityContainer, IMetadataProvider metadataProvider)
         {
             _unityContainer = unityContainer;
             _metadataProvider = metadataProvider;
         }
 
-        public IActor Create(Type commandType)
+        public IReplaceDataObjectsActor Create(Type commandType)
         {
             IMetadataElement metadata;
             if (!_metadataProvider.TryGetMetadata(GetMetadataUri(commandType), out metadata))

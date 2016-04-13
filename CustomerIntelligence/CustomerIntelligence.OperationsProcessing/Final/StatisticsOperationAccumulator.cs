@@ -28,7 +28,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             return new OperationAggregatableMessage<RecalculateStatisticsOperation>
             {
                 TargetFlow = MessageFlow,
-                Operations = operations,
+                Commands = operations,
                 OperationTime = oldestOperation,
             };
         }

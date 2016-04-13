@@ -53,7 +53,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             return new OperationAggregatableMessage<SyncFactCommand>
             {
                 TargetFlow = MessageFlow,
-                Operations = commands,
+                Commands = commands,
                 OperationTime = message.Context.Finished.UtcDateTime,
             };
         }
