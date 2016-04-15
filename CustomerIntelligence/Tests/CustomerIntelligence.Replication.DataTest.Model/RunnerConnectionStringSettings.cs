@@ -30,7 +30,6 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                 { FactsTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.Facts].ConnectionString) },
                 { CustomerIntelligenceTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.CustomerIntelligence].ConnectionString) },
                 { BitTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.Bit].ConnectionString) },
-                { StatisticsTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration[ConnectionStringName.Statistics].ConnectionString) },
 
                 { ErmMasterConnectionStringIdentity.Instance, configuration[ConnectionStringName.ErmMaster].ConnectionString },
             };

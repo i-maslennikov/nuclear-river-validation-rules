@@ -26,6 +26,7 @@ using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API;
 using NuClear.OperationsProcessing.API.Primary;
 using NuClear.Replication.OperationsProcessing.Primary;
+using NuClear.River.Common.Metadata;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
@@ -44,7 +45,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.DI
             },
             new IMetadataProcessor[]
             {
-                new ReferencesEvaluatorProcessor()
+                new TunedReferencesEvaluatorProcessor()
             });
 
             return container

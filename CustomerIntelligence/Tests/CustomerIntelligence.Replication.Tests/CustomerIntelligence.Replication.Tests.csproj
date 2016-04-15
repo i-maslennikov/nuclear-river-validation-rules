@@ -98,7 +98,6 @@
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="SqliteDomainContextFactory.cs" />
     <Compile Include="SqliteEntityContainerNameResolver.cs" />
-    <Compile Include="StatisticsTransformation\StatisticsFinalTransformationTests.cs" />
     <Compile Include="StubDomainContextProvider.cs" />
     <Compile Include="StubReadableDomainContextProvider.cs" />
     <Compile Include="Transformation\ErmFactsTransformationFixture.cs" />

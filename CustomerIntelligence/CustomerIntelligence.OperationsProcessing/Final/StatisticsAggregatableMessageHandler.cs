@@ -8,7 +8,7 @@ using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
@@ -16,13 +16,13 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public sealed class StatisticsAggregatableMessageHandler : IMessageProcessingHandler
     {
-        private readonly IStatisticsRecalculator _statisticsRecalculator;
+        private readonly IAggregatesConstructor _aggregatesConstructor;
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
 
-        public StatisticsAggregatableMessageHandler(IStatisticsRecalculator statisticsRecalculator, ITelemetryPublisher telemetryPublisher, ITracer tracer)
+        public StatisticsAggregatableMessageHandler(IAggregatesConstructor aggregatesConstructor, ITelemetryPublisher telemetryPublisher, ITracer tracer)
         {
-            _statisticsRecalculator = statisticsRecalculator;
+            _aggregatesConstructor = aggregatesConstructor;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
         }
@@ -36,10 +36,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         {
             try
             {
-                foreach (var message in messages.OfType<OperationAggregatableMessage<RecalculateStatisticsOperation>>())
+                foreach (var message in messages.OfType<OperationAggregatableMessage<IOperation>>())
                 {
-                    _statisticsRecalculator.Recalculate(message.Commands);
-                    _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(message.Commands.Count);
+                    _aggregatesConstructor.Execute(message.Operations);
+                    _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(message.Operations.Count);
 
                     _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
                 }

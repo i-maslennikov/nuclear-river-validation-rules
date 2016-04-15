@@ -2,6 +2,7 @@
 using System.Linq;
 
 using NuClear.Metamodeling.Elements;
+using NuClear.Model.Common.Entities;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Model;
@@ -33,19 +34,15 @@ namespace NuClear.River.Common.Metadata.Builders
             return this;
         }
 
-        // FIXME {all, 03.09.2015}: TEntity заменить на идентификатор типа
-        public FactMetadataBuilder<TFact> HasDependentEntity<TEntity, TKey>(MapToObjectsSpecProvider<TFact, TKey> dependentEntitySpecProvider)
-            where TEntity : class, IIdentifiable<TKey>
+        public FactMetadataBuilder<TFact> HasDependentEntity<TKey>(IEntityType entityType, MapToObjectsSpecProvider<TFact, TKey> dependentEntitySpecProvider)
         {
-            AddFeatures(new IndirectlyDependentEntityFeature<TFact, TKey>(typeof(TEntity), dependentEntitySpecProvider));
+            AddFeatures(new IndirectlyDependentEntityFeature<TFact, TKey>(entityType, dependentEntitySpecProvider));
             return this;
         }
 
-        // FIXME {all, 03.09.2015}: TEntity заменить на идентификатор типа
-        public FactMetadataBuilder<TFact> HasMatchedEntity<TEntity>()
-            where TEntity : class, IIdentifiable<long>
+        public FactMetadataBuilder<TFact> HasMatchedEntity(IEntityType entityType)
         {
-            AddFeatures(new DirectlyDependentEntityFeature<TFact>(typeof(TEntity)));
+            AddFeatures(new DirectlyDependentEntityFeature<TFact>(entityType));
             return this;
         }
     }

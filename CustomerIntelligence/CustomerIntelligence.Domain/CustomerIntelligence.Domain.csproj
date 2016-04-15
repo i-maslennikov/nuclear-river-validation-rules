@@ -48,6 +48,35 @@
     <Compile Include="DTO\FirmForecast.cs" />
     <Compile Include="DTO\FirmPopularity.cs" />
     <Compile Include="EntityTypeIds.cs" />
+    <Compile Include="EntityTypes\EntityTypeAccount.cs" />
+    <Compile Include="EntityTypes\EntityTypeActivity.cs" />
+    <Compile Include="EntityTypes\EntityTypeAppointment.cs" />
+    <Compile Include="EntityTypes\EntityTypeBill.cs" />
+    <Compile Include="EntityTypes\EntityTypeBranchOfficeOrganizationUnit.cs" />
+    <Compile Include="EntityTypes\EntityTypeBuilding.cs" />
+    <Compile Include="EntityTypes\EntityTypeCategory.cs" />
+    <Compile Include="EntityTypes\EntityTypeCategoryFirmAddress.cs" />
+    <Compile Include="EntityTypes\EntityTypeCategoryGroup.cs" />
+    <Compile Include="EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
+    <Compile Include="EntityTypes\EntityTypeClient.cs" />
+    <Compile Include="EntityTypes\EntityTypeContact.cs" />
+    <Compile Include="EntityTypes\EntityTypeDeal.cs" />
+    <Compile Include="EntityTypes\EntityTypeFirm.cs" />
+    <Compile Include="EntityTypes\EntityTypeFirmAddress.cs" />
+    <Compile Include="EntityTypes\EntityTypeFirmContact.cs" />
+    <Compile Include="EntityTypes\EntityTypeLegalPerson.cs" />
+    <Compile Include="EntityTypes\EntityTypeLegalPersonProfile.cs" />
+    <Compile Include="EntityTypes\EntityTypeLetter.cs" />
+    <Compile Include="EntityTypes\EntityTypeLock.cs" />
+    <Compile Include="EntityTypes\EntityTypeOrder.cs" />
+    <Compile Include="EntityTypes\EntityTypeOrderPosition.cs" />
+    <Compile Include="EntityTypes\EntityTypePhonecall.cs" />
+    <Compile Include="EntityTypes\EntityTypeProject.cs" />
+    <Compile Include="EntityTypes\EntityTypeProjectCategoryStatistics.cs" />
+    <Compile Include="EntityTypes\EntityTypeProjectStatistics.cs" />
+    <Compile Include="EntityTypes\EntityTypeSalesModelCategoryRestriction.cs" />
+    <Compile Include="EntityTypes\EntityTypeTask.cs" />
+    <Compile Include="EntityTypes\EntityTypeTerritory.cs" />
     <Compile Include="FactsReplicationMetadataSource.cs" />
     <Compile Include="ImportStatisticsMetadataSource.cs" />
     <Compile Include="MetadataBuilderExtesnsions.cs" />
@@ -67,7 +96,7 @@
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
     <Compile Include="Model\Facts\FirmActor.cs" />
-    <Compile Include="Model\Statistics\ProjectStatistics.cs" />
+    <Compile Include="Model\Statistics\ProjectCategoryStatistics.cs" />
     <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\ICustomerIntelligenceAggregatePart.cs" />
@@ -127,12 +156,9 @@
     <Compile Include="Specifications\Specs.Find.CI.cs" />
     <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Specs.Map.Bit.cs" />
-    <Compile Include="Specifications\Specs.Map.CI.Statistics.cs" />
     <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.AggregateIdentity.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.CI.cs" />
-    <Compile Include="Specifications\Specs.Map.Facts.Statistics.cs" />
-    <Compile Include="StatisticsRecalculationMetadataSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">

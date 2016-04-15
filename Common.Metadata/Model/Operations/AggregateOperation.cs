@@ -4,20 +4,18 @@ namespace NuClear.River.Common.Metadata.Model.Operations
 {
     public abstract class AggregateOperation : IEvent, IOperation
     {
-        protected AggregateOperation(Type aggregateType, long aggregateId)
+        protected AggregateOperation(EntityReference aggregateRoot)
         {
-            if (aggregateType == null)
+            if (aggregateRoot == null)
             {
-                throw new ArgumentNullException("aggregateType");
+                throw new ArgumentNullException(nameof(aggregateRoot));
             }
 
-            AggregateType = aggregateType;
-            AggregateId = aggregateId;
+            AggregateRoot = aggregateRoot;
         }
 
-        public Type AggregateType { get; private set; }
+        public EntityReference AggregateRoot { get; }
 
-        public long AggregateId { get; private set; }
 
         public override bool Equals(object obj)
         {
@@ -41,20 +39,18 @@ namespace NuClear.River.Common.Metadata.Model.Operations
         {
             unchecked
             {
-                var hashCode = (AggregateType != null ? AggregateType.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ AggregateId.GetHashCode();
-                return hashCode;
+                return (AggregateRoot.GetHashCode() * 397) ^ this.GetType().GetHashCode();
             }
         }
 
         private bool Equals(AggregateOperation other)
         {
-            return AggregateType == other.AggregateType && AggregateId == other.AggregateId;
+            return Equals(this.AggregateRoot, other.AggregateRoot);
         }
 
         public override string ToString()
         {
-            return string.Format("{0}<{1}>({2})", GetType().Name, AggregateType.Name, AggregateId);
+            return $"{GetType().Name}({AggregateRoot})";
         }
     }
 }

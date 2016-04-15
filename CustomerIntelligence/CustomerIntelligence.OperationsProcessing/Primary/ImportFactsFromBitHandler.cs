@@ -9,7 +9,7 @@ using NuClear.Replication.Core.API;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
 using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
@@ -18,13 +18,15 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
     public sealed class ImportFactsFromBitHandler : IMessageProcessingHandler
     {
         private readonly IReplaceDataObjectsActorFactory _replaceDataObjectsActorFactory;
-        private readonly IOperationSender<RecalculateStatisticsOperation> _sender;
+        private readonly IOperationSender _sender;
+        private readonly IOperationDispatcher _operationDispatcher;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromBitHandler(
             IReplaceDataObjectsActorFactory replaceDataObjectsActorFactory,
-            IOperationSender<RecalculateStatisticsOperation> sender,
+            IOperationSender sender,
+            IOperationDispatcher operationDispatcher,
             ITracer tracer,
             ITelemetryPublisher telemetryPublisher)
         {
@@ -32,6 +34,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             _sender = sender;
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
+            _operationDispatcher = operationDispatcher;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -54,7 +57,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                         var events = replaceFactActor.ExecuteCommands(commands);
 
                         _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(commands.Length);
-                        _sender.Push(events.Cast<RecalculateStatisticsOperation>());
+                        DispatchOperations(opertaions);
                     }
                 }
 
@@ -64,6 +67,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             {
                 _tracer.Error(ex, "Error when import facts for BIT");
                 return MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex);
+            }
+        }
+
+        private void DispatchOperations(IEnumerable<IOperation> opertaions)
+        {
+            foreach (var pair in _operationDispatcher.Dispatch(opertaions))
+            {
+                _sender.Push(pair.Value, pair.Key);
             }
         }
     }

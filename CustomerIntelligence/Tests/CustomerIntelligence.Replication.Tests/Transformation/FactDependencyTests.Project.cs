@@ -1,8 +1,9 @@
-﻿using NUnit.Framework;
+﻿using NuClear.CustomerIntelligence.Domain.EntityTypes;
+
+using NUnit.Framework;
 
 using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
 using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
-using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
@@ -18,7 +19,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Project>(1)
                           .VerifyDistinct(Statistics.Operation(1),
-                                          Aggregate.Initialize<CI::Project>(1));
+                                          Aggregate.Initialize(EntityTypeProject.Instance, 1));
         }
 
         [Test]
@@ -29,7 +30,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Project>(1)
                           .VerifyDistinct(Statistics.Operation(1),
-                                          Aggregate.Destroy<CI::Project>(1));
+                                          Aggregate.Destroy(EntityTypeProject.Instance, 1));
         }
 
         [Test]
@@ -46,11 +47,11 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Project>(1)
                           .VerifyDistinct(Statistics.Operation(1),
-                                          Aggregate.Recalculate<CI::Territory>(1),
-                                          Aggregate.Recalculate<CI::Firm>(1),
-                                          Aggregate.Recalculate<CI::Project>(1),
-                                          Aggregate.Recalculate<CI::Territory>(2),
-                                          Aggregate.Recalculate<CI::Firm>(2));
+                                          Aggregate.Recalculate(EntityTypeTerritory.Instance, 1),
+                                          Aggregate.Recalculate(EntityTypeFirm.Instance, 1),
+                                          Aggregate.Recalculate(EntityTypeProject.Instance, 1),
+                                          Aggregate.Recalculate(EntityTypeTerritory.Instance, 2),
+                                          Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
     }
 }

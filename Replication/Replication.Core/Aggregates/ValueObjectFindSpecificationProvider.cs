@@ -1,25 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class ValueObjectFindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T, AggregateOperation>
+    public sealed class ValueObjectFindSpecificationProvider<TValueObject, TEntity, TEntityKey> : IFindSpecificationProvider<TValueObject, TEntity>
+        where TEntity : IIdentifiable<TEntityKey>
     {
-        private readonly ValueObjectMetadata<T, TKey> _metadata;
+        private readonly ValueObjectMetadata<TValueObject, TEntityKey> _metadata;
+        private readonly Func<TEntity, TEntityKey> _entityIdentityProvider;
 
-        public ValueObjectFindSpecificationProvider(ValueObjectMetadata<T, TKey> metadata)
+        public ValueObjectFindSpecificationProvider(ValueObjectMetadata<TValueObject, TEntityKey> metadata, IIdentityProvider<TEntityKey> entityIdentityProvider)
         {
             _metadata = metadata;
+            _entityIdentityProvider = entityIdentityProvider.Get<TEntity>().Compile();
         }
 
-        public FindSpecification<T> Create(IEnumerable<AggregateOperation> commands)
+        public FindSpecification<TValueObject> Create(IEnumerable<TEntity> entities)
         {
-            // todo: вот если бы была возможность из комманды получить TKey... (см. задачу "унификация контекста")
-            return _metadata.FindSpecificationProvider.Invoke(commands.Select(c => c.AggregateId).Cast<TKey>().ToArray());
+            return _metadata.FindSpecificationProvider.Invoke(entities.Select(_entityIdentityProvider.Invoke).ToArray());
         }
     }
 }
