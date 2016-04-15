@@ -42,7 +42,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateClientIfClientUpdated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1 });
+            SourceDb.Has(new Erm::Client { Id = 1, Name = "asdf" });
             TargetDb.Has(new Facts::Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
@@ -108,7 +108,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateFirmIfFirmUpdated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 });
+            SourceDb.Has(new Erm::Firm { Id = 1, Name = "asdf" });
             TargetDb.Has(new Facts::Firm { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
@@ -312,7 +312,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
                  .Has(new Erm::Category { Id = 1, Level = 1 },
                       new Erm::Category { Id = 2, Level = 2, ParentId = 1 },
-                      new Erm::Category { Id = 3, Level = 3, ParentId = 2 });
+                      new Erm::Category { Id = 3, Level = 3, ParentId = 2, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -332,7 +332,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Erm::Firm { Id = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
                  .Has(new Erm::Category { Id = 1, Level = 1 },
-                      new Erm::Category { Id = 2, Level = 2, ParentId = 1 });
+                      new Erm::Category { Id = 2, Level = 2, ParentId = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -351,7 +351,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             SourceDb.Has(new Erm::Firm { Id = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
-                 .Has(new Erm::Category { Id = 1, Level = 1 });
+                 .Has(new Erm::Category { Id = 1, Level = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -518,7 +518,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateFirmIfClientUpdated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1 });
+            SourceDb.Has(new Erm::Client { Id = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Client { Id = 1 })
                    .Has(new Facts::Firm { Id = 1, ClientId = 1 });
@@ -812,7 +812,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 public IFactProcessor Create(IMetadataElement metadata)
                 {
                     var factMetadata = (FactMetadata<TFact>)metadata;
-                    var changesDetector = new DataChangesDetector<TFact>(factMetadata.MapSpecificationProviderForSource, factMetadata.MapSpecificationProviderForTarget, _comparerFactory.CreateIdentityComparer<TFact>(), _query);
+                    var changesDetector = new FactChangesDetector<TFact>(factMetadata.MapSpecificationProviderForSource, factMetadata.MapSpecificationProviderForTarget, _comparerFactory.CreateIdentityComparer<TFact>(), _comparerFactory.CreateCompleteComparer<TFact>(), _query);
                     var dependencyProcessors = factMetadata.Features.OfType<IFactDependencyFeature>().Select(this.Create).ToArray();
                     return new FactProcessor<TFact>(changesDetector, _repository, dependencyProcessors, new DefaultIdentityProvider());
                 }

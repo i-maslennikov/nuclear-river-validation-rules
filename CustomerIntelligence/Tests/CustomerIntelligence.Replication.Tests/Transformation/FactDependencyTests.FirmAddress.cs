@@ -13,7 +13,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateClientAndFirmIfFirmAddressUpdated()
         {
-            SourceDb.Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
+            SourceDb.Has(new Erm::FirmAddress { Id = 1, FirmId = 1, TerritoryId = 1 })
                 .Has(new Erm::Firm { Id = 1, OrganizationUnitId = 1, ClientId = 1 })
                 .Has(new Erm::Client { Id = 1 });
 

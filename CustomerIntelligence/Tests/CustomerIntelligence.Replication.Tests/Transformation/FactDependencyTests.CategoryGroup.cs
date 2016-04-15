@@ -48,7 +48,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateClientAndFirmIfCategoryGroupUpdated()
         {
-            SourceDb.Has(new Erm::CategoryGroup { Id = 1, Name = "Name", Rate = 1 })
+            SourceDb.Has(new Erm::CategoryGroup { Id = 1, Name = "Name 2", Rate = 1 })
                  .Has(new Erm::CategoryOrganizationUnit { Id = 1, CategoryGroupId = 1, CategoryId = 1, OrganizationUnitId = 1 })
                  .Has(new Erm::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
