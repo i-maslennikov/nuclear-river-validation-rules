@@ -51,7 +51,11 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
 
                 public static FindSpecification<FirmCategory3> FirmCategory3(IReadOnlyCollection<StatisticsKey> entityIds)
                 {
-                    return new FindSpecification<FirmCategory3>(x => entityIds.Contains(new StatisticsKey { ProjectId = x.ProjectId, CategoryId = x.CategoryId }));
+                    var spec = entityIds.GroupBy(x => x.ProjectId, x => x.CategoryId)
+                                        .Aggregate(new FindSpecification<FirmCategory3>(x => false),
+                                                   (acc, idsGroup) => acc | new FindSpecification<FirmCategory3>(x => x.ProjectId == idsGroup.Key && idsGroup.Contains(x.CategoryId)));
+
+                    return spec;
                 }
 
                 public static FindSpecification<FirmForecast> FirmForecast(IReadOnlyCollection<long> aggregateIds)
