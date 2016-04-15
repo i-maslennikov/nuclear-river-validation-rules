@@ -3,12 +3,12 @@
 using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.Replication.Core.API.Facts
+namespace NuClear.Replication.Core.API
 {
-    public interface IMemoryBasedFactActor<TDataObject>
+    public interface IMemoryBasedDataObjectAccessor<TDataObject>
     {
         IReadOnlyCollection<TDataObject> GetDataObjects(ICommand command);
-        FindSpecification<TDataObject> GetDataObjectsFindSpecification(ICommand command);
+        FindSpecification<TDataObject> GetFindSpecification(ICommand command);
         IReadOnlyCollection<IEvent> HandleChanges(IReadOnlyCollection<TDataObject> dataObjects);
     }
 }

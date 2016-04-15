@@ -6,13 +6,13 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.API
 {
-    public sealed class CreateDataObjectsActor<TDataObject> : DataObjectsActorBase<TDataObject>
+    public sealed class ReplaceStorageBasedDataObjectsActor<TDataObject> : DataObjectsActorBase<TDataObject>
         where TDataObject : class
     {
         private readonly IBulkRepository<TDataObject> _bulkRepository;
         private readonly IDataChangesHandler<TDataObject> _dataChangesHandler;
 
-        public CreateDataObjectsActor(
+        public ReplaceStorageBasedDataObjectsActor(
             IQuery query,
             IBulkRepository<TDataObject> bulkRepository,
             IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor,
@@ -23,7 +23,7 @@ namespace NuClear.Replication.Core.API
             _dataChangesHandler = dataChangesHandler;
         }
 
-        public CreateDataObjectsActor(
+        public ReplaceStorageBasedDataObjectsActor(
             IQuery query,
             IBulkRepository<TDataObject> bulkRepository,
             IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor)
@@ -33,12 +33,19 @@ namespace NuClear.Replication.Core.API
 
         public override IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
+            var events = new List<IEvent>();
             var changes = DetectChanges(commands);
 
             var toCreate = changes.Difference.ToArray();
+            var toDelete = changes.Complement.ToArray();
+
+            _bulkRepository.Delete(toDelete);
+            events.AddRange(_dataChangesHandler.HandleDeletes(toDelete));
 
             _bulkRepository.Create(toCreate);
-            return _dataChangesHandler.HandleCreates(toCreate);
+            events.AddRange(_dataChangesHandler.HandleCreates(toCreate));
+
+            return events;
         }
     }
 }

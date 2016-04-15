@@ -49,7 +49,6 @@ using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.Messaging.Transports.ServiceBus.LockRenewer;
 using NuClear.Metamodeling.Domain.Processors.Concrete;
 using NuClear.Metamodeling.Processors;
-using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
@@ -216,7 +215,7 @@ namespace NuClear.Replication.EntryPoint.DI
             container.RegisterType<IOperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.Resolve<OperationIdentityRegistryFactory>().RegistryFor<FactsSubDomain>()))
                     .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
                     .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton)
-                    .RegisterType<IOperationDispatcher, OperationDispatcher>(Lifetime.Singleton);
+                    .RegisterType<IEventDispatcher, EventDispatcher>(Lifetime.Singleton);
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);
@@ -229,8 +228,8 @@ namespace NuClear.Replication.EntryPoint.DI
                      .RegisterTypeWithDependencies(typeof(ServiceBusOperationsReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
-                     .RegisterType<IOperationSender, SqlStoreSender>(Lifetime.PerScope)
-                     .RegisterType<IOperationSerializer, XmlOperationSerializer>()
+                     .RegisterType<IEventSender, SqlStoreSender>(Lifetime.PerScope)
+                     .RegisterType<IEventSerializer, XmlEventSerializer>()
                      .RegisterType<IEntityReferenceSerializer, EntityReferenceSerializer>()
                      .RegisterType<IEntityTypeParser, EntityTypeParser<CustomerIntelligenceSubDomain>>();
 
@@ -311,7 +310,7 @@ namespace NuClear.Replication.EntryPoint.DI
                                                                                                c.Resolve<IMetadataProvider>(),
                                                                                                c.Resolve<IFactProcessorFactory>(),
                                                                                                new CustomerIntelligenceFactTypePriorityComparer())))
-                .RegisterType<IReplaceDataObjectsActorFactory, UnityReplaceDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregatesConstructor, AggregatesConstructor<CustomerIntelligenceSubDomain>>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IFactDependencyProcessorFactory, UnityFactDependencyProcessorFactory>(entryPointSpecificLifetimeManagerFactory())

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.EntityTypes;
+using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
@@ -9,7 +9,6 @@ using NuClear.OperationsTracking.API.UseCases;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
 using NuClear.Replication.OperationsProcessing.Primary;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
@@ -18,7 +17,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
     /// <summary>
     /// Applies filter for TUC and maps them to SyncFactCommand
     /// </summary>
-    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, OperationAggregatableMessage<SyncFactCommand>>
+    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, OperationAggregatableMessage<IDataObjectCommand>>
     {
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
@@ -37,7 +36,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             _useCaseFiltrator = useCaseFiltrator;
         }
 
-        protected override OperationAggregatableMessage<SyncFactCommand> Process(TrackedUseCase message)
+        protected override OperationAggregatableMessage<IDataObjectCommand> Process(TrackedUseCase message)
         {
             _tracer.DebugFormat("Processing TUC {0}", message.Id);
 
@@ -46,12 +45,11 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
             var changes = _useCaseFiltrator.Filter(message);
 
-            // TODO: вместо кучи factoperation можно передавать одну с dictionary, где уже всё сгруппировано по entity type 
-            var commands = changes.SelectMany(x => x.Value.Select(y => new SyncFactCommand(_registry.GetEntityType(x.Key), y))).ToArray();
+            var commands = changes.SelectMany(x => x.Value.Select(y => new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y))).ToArray();
 
             _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Length);
 
-            return new OperationAggregatableMessage<SyncFactCommand>
+            return new OperationAggregatableMessage<IDataObjectCommand>
             {
                 TargetFlow = MessageFlow,
                 Commands = commands,

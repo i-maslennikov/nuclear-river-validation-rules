@@ -3,72 +3,72 @@ using System.Xml.Linq;
 
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing.Identities.Operations;
-using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata;
 using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
 {
-    public sealed class XmlOperationSerializer : IOperationSerializer
+    public sealed class XmlEventSerializer : IEventSerializer
     {
         private readonly IEntityReferenceSerializer _entityReferenceSerializer;
 
-        public XmlOperationSerializer(IEntityReferenceSerializer entityReferenceSerializer)
+        public XmlEventSerializer(IEntityReferenceSerializer entityReferenceSerializer)
         {
             _entityReferenceSerializer = entityReferenceSerializer;
         }
 
-        public IOperation Deserialize(PerformedOperationFinalProcessing operation)
+        public IEvent Deserialize(PerformedOperationFinalProcessing message)
         {
-            var context = XElement.Parse(operation.Context);
-            if (operation.OperationId == InitializeAggregateOperationIdentity.Instance.Guid)
+            var context = XElement.Parse(message.Context);
+            if (message.OperationId == InitializeAggregateOperationIdentity.Instance.Guid)
             {
                 return new InitializeAggregate(_entityReferenceSerializer.Deserialize(context.Element("root")));
             }
 
-            if (operation.OperationId == RecalculateAggregateOperationIdentity.Instance.Guid)
+            if (message.OperationId == RecalculateAggregateOperationIdentity.Instance.Guid)
             {
                 return new RecalculateAggregate(_entityReferenceSerializer.Deserialize(context.Element("root")));
             }
 
-            if (operation.OperationId == DestroyAggregateOperationIdentity.Instance.Guid)
+            if (message.OperationId == DestroyAggregateOperationIdentity.Instance.Guid)
             {
                 return new DestroyAggregate(_entityReferenceSerializer.Deserialize(context.Element("root")));
             }
 
-            if (operation.OperationId == RecalculateAggregatePartOperationIdentity.Instance.Guid)
+            if (message.OperationId == RecalculateAggregatePartOperationIdentity.Instance.Guid)
             {
                 return new RecalculateAggregatePart(
                     _entityReferenceSerializer.Deserialize(context.Element("root")),
                     _entityReferenceSerializer.Deserialize(context.Element("part")));
             }
 
-            throw new ArgumentException($"Unknown operation id {operation.OperationId}", nameof(operation));
+            throw new ArgumentException($"Unknown operation id {message.OperationId}", nameof(message));
         }
 
-        public PerformedOperationFinalProcessing Serialize(IOperation operation)
+        public PerformedOperationFinalProcessing Serialize(IEvent @event)
         {
-            var initializeAggregate = operation as InitializeAggregate;
+            var initializeAggregate = @event as InitializeAggregate;
             if (initializeAggregate != null)
             {
                 return CreatePbo(InitializeAggregateOperationIdentity.Instance.Guid,
                                  _entityReferenceSerializer.Serialize("root", initializeAggregate.AggregateRoot));
             }
 
-            var recalculateAggregate = operation as RecalculateAggregate;
+            var recalculateAggregate = @event as RecalculateAggregate;
             if (recalculateAggregate != null)
             {
                 return CreatePbo(RecalculateAggregateOperationIdentity.Instance.Guid,
                                  _entityReferenceSerializer.Serialize("root", recalculateAggregate.AggregateRoot));
             }
 
-            var destroyAggregate = operation as DestroyAggregate;
+            var destroyAggregate = @event as DestroyAggregate;
             if (destroyAggregate != null)
             {
                 return CreatePbo(DestroyAggregateOperationIdentity.Instance.Guid,
                                  _entityReferenceSerializer.Serialize("root", destroyAggregate.AggregateRoot));
             }
 
-            var recalculateStatisticsOperation = operation as RecalculateAggregatePart;
+            var recalculateStatisticsOperation = @event as RecalculateAggregatePart;
             if (recalculateStatisticsOperation != null)
             {
                 return CreatePbo(RecalculateAggregatePartOperationIdentity.Instance.Guid,
@@ -76,7 +76,7 @@ namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
                                  _entityReferenceSerializer.Serialize("part", recalculateStatisticsOperation.Entity));
             }
 
-            throw new ArgumentException($"unsuppoted command {operation.GetType().Name}", nameof(operation));
+            throw new ArgumentException($"unsuppoted command {@event.GetType().Name}", nameof(@event));
         }
 
         private static PerformedOperationFinalProcessing CreatePbo(Guid operationId, params object[] content)

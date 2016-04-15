@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
-using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
@@ -15,9 +15,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         MessageProcessingContextAccumulatorBase<TMessageFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<IAggregateCommand>>
         where TMessageFlow : class, IMessageFlow, new()
     {
-        private readonly IOperationSerializer _serializer;
+        private readonly IEventSerializer _serializer;
 
-        public AggregateOperationAccumulator(IOperationSerializer serializer)
+        public AggregateOperationAccumulator(IEventSerializer serializer)
         {
             _serializer = serializer;
         }
@@ -31,7 +31,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 var eventType = @event.GetType();
                 if (eventType == typeof(InitializeAggregate))
                 {
-                    commands.Add(new InitializeAggregateCommand(@event.AggregateType, @event.AggregateId));
+                    commands.Add(new InitializeAggregateCommand(@event.AggregateRoot.EntityType, (long)@event.AggregateRoot.EntityKey));
                 }
                 else if (eventType == typeof(RecalculateAggregate))
                 {
@@ -40,10 +40,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 else if (eventType == typeof(RecalculateAggregate))
                 {
                     commands.Add(new RecalculateAggregateCommand(@event.AggregateType, @event.AggregateId));
-                }
-                else
-                {
-                    throw new InvalidOperationException($"The event of type {@eventType.Name} is not expected");
                 }
             }
 

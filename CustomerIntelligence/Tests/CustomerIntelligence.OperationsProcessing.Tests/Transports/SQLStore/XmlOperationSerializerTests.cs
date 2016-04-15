@@ -18,7 +18,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports.SQL
         {
             var m = new Mock<IEntityTypeParser>();
             m.Setup(x => x.Parse(It.IsAny<int>())).Returns<int>(id => new UnknownEntityType(id));
-            var serializer = new XmlOperationSerializer(new EntityReferenceSerializer(m.Object));
+            var serializer = new XmlEventSerializer(new EntityReferenceSerializer(m.Object));
 
             var pbo = serializer.Serialize(new InitializeAggregate(new EntityReference(new UnknownEntityType(1), 1L)));
             var reference = serializer.Deserialize(pbo);
@@ -31,7 +31,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports.SQL
         {
             var m = new Mock<IEntityTypeParser>();
             m.Setup(x => x.Parse(It.IsAny<int>())).Returns<int>(id => new UnknownEntityType(id));
-            var serializer = new XmlOperationSerializer(new EntityReferenceSerializer(m.Object));
+            var serializer = new XmlEventSerializer(new EntityReferenceSerializer(m.Object));
 
             var pbo = serializer.Serialize(new RecalculateAggregate(new EntityReference(new UnknownEntityType(1), 1L)));
             var reference = serializer.Deserialize(pbo);
@@ -44,7 +44,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports.SQL
         {
             var m = new Mock<IEntityTypeParser>();
             m.Setup(x => x.Parse(It.IsAny<int>())).Returns<int>(id => new UnknownEntityType(id));
-            var serializer = new XmlOperationSerializer(new EntityReferenceSerializer(m.Object));
+            var serializer = new XmlEventSerializer(new EntityReferenceSerializer(m.Object));
 
             var pbo = serializer.Serialize(new DestroyAggregate(new EntityReference(new UnknownEntityType(1), 1L)));
             var reference = serializer.Deserialize(pbo);
@@ -57,7 +57,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports.SQL
         {
             var m = new Mock<IEntityTypeParser>();
             m.Setup(x => x.Parse(It.IsAny<int>())).Returns<int>(id => new UnknownEntityType(id));
-            var serializer = new XmlOperationSerializer(new EntityReferenceSerializer(m.Object));
+            var serializer = new XmlEventSerializer(new EntityReferenceSerializer(m.Object));
 
             var pbo = serializer.Serialize(new RecalculateAggregatePart(new EntityReference(new UnknownEntityType(1), 1L), new EntityReference(new UnknownEntityType(2), 2L)));
             var reference = serializer.Deserialize(pbo);

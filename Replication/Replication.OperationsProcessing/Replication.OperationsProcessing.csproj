@@ -208,19 +208,19 @@
     <Compile Include="Transports\CorporateBus\CorporateBusOperationsReceiver.cs" />
     <Compile Include="Transports\EntityTypeParser.cs" />
     <Compile Include="Transports\IEntityTypeParser.cs" />
-    <Compile Include="Transports\IOperationDispatcher.cs" />
+    <Compile Include="Transports\IEventDispatcher.cs" />
     <Compile Include="Transports\SQLStore\IEntityReferenceSerializer.cs" />
-    <Compile Include="Transports\SQLStore\IOperationSerializer.cs" />
+    <Compile Include="Transports\SQLStore\IEventSerializer.cs" />
     <Compile Include="Transports\ServiceBus\ServiceBusOperationsReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\ServiceBus\UnknownEntityType.cs" />
     <Compile Include="Transports\SQLStore\IdentityGenerator.cs" />
     <Compile Include="Transports\SQLStore\IIdentityGenerator.cs" />
-    <Compile Include="Transports\IOperationSender.cs" />
+    <Compile Include="Transports\IEventSender.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreReceiver.cs" />
     <Compile Include="Transports\SQLStore\Schema.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreSender.cs" />
-    <Compile Include="Transports\SQLStore\XmlOperationSerializer.cs" />
+    <Compile Include="Transports\SQLStore\XmlEventSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

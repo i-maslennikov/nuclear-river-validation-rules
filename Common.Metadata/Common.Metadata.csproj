@@ -82,7 +82,6 @@
     <Compile Include="Identities\ImportStatisticsMetadataIdentity.cs" />
     <Compile Include="Identities\OperationRegistryMetadataIdentity.cs" />
     <Compile Include="Identities\ReplicationMetadataIdentity.cs" />
-    <Compile Include="Identities\StatisticsRecalculationMetadataIdentity.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="MapToObjectsSpecProvider.cs" />
     <Compile Include="Model\DefaultIdentityProvider.cs" />

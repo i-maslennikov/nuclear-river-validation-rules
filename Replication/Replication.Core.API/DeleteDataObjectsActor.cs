@@ -1,33 +1,44 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.Replication.Core.API.Facts;
 using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.API
 {
-    public class DeleteDataObjectsActor<TDataObject> : DataObjectsActor<TDataObject>, IDeleteDataObjectsActor
+    public sealed class DeleteDataObjectsActor<TDataObject> : DataObjectsActorBase<TDataObject>
         where TDataObject : class
     {
         private readonly IBulkRepository<TDataObject> _bulkRepository;
-        private readonly IStorageBasedFactActor<TDataObject> _storageBasedFactActor;
+        private readonly IDataChangesHandler<TDataObject> _dataChangesHandler;
 
-        public DeleteDataObjectsActor(IQuery query, IBulkRepository<TDataObject> bulkRepository, IStorageBasedFactActor<TDataObject> storageBasedFactActor)
-            : base(query, storageBasedFactActor)
+        public DeleteDataObjectsActor(
+            IQuery query,
+            IBulkRepository<TDataObject> bulkRepository,
+            IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor,
+            IDataChangesHandler<TDataObject> dataChangesHandler)
+            : base(query, storageBasedDataObjectAccessor)
         {
             _bulkRepository = bulkRepository;
-            _storageBasedFactActor = storageBasedFactActor;
+            _dataChangesHandler = dataChangesHandler;
         }
 
-        public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
+        public DeleteDataObjectsActor(
+            IQuery query,
+            IBulkRepository<TDataObject> bulkRepository,
+            IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor)
+            : this(query, bulkRepository, storageBasedDataObjectAccessor, new NullDataChangesHandler<TDataObject>())
+        {
+        }
+
+        public override IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
             var changes = DetectChanges(commands);
 
             var toDelete = changes.Complement.ToArray();
 
             _bulkRepository.Delete(toDelete);
-            return _storageBasedFactActor.HandleDeletes(toDelete);
+            return _dataChangesHandler.HandleDeletes(toDelete);
         }
     }
 }
