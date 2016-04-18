@@ -38,7 +38,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalulateProjectIfCategoryOrganizationUnitUpdated()
         {
-            SourceDb.Has(new Erm::CategoryOrganizationUnit { Id = 1, OrganizationUnitId = 1 });
+            SourceDb.Has(new Erm::CategoryOrganizationUnit { Id = 1, OrganizationUnitId = 1, CategoryGroupId = 1 });
 
             TargetDb.Has(new Facts::CategoryOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
                    .Has(new Facts::Project { Id = 1, OrganizationUnitId = 1 });
@@ -51,7 +51,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateClientAndFirmIfCategoryOrganizationUnitUpdated()
         {
-            SourceDb.Has(new Erm::CategoryOrganizationUnit { Id = 1, CategoryGroupId = 1, CategoryId = 1, OrganizationUnitId = 1 })
+            SourceDb.Has(new Erm::CategoryOrganizationUnit { Id = 1, CategoryGroupId = 1, CategoryId = 1, OrganizationUnitId = 1, IsActive = false })
                  .Has(new Erm::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
                  .Has(new Erm::Firm { Id = 1, OrganizationUnitId = 1, ClientId = 1 })
