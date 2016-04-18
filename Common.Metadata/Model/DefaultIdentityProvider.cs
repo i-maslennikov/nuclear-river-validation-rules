@@ -1,17 +1,17 @@
-using System;
+п»їusing System;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
-    /// Описывает идентификацию по единственному свойству Id типа int
+    /// Describes simple identity by 'Id' field of type long.
     /// </summary>
-    public class DefaultIdentityProvider : IdentityProviderBase<DefaultIdentityProvider>, IIdentityProvider<long>
+    public class DefaultIdentityProvider : IIdentityProvider<long>
     {
         private const string IdPropertyName = "Id";
 
-        public Expression<Func<TIdentifiable, long>> ExtractIdentity<TIdentifiable>()
+        public Expression<Func<TIdentifiable, long>> Get<TIdentifiable>()
             where TIdentifiable : IIdentifiable<long>
         {
             var property = typeof(TIdentifiable).GetRuntimeProperty(IdPropertyName);

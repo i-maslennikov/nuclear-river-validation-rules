@@ -6,12 +6,18 @@ namespace NuClear.River.Common.Metadata.Model.Operations
 {
     public abstract class AggregateOperation : IOperation
     {
-        protected AggregateOperation(Predicate context)
+        protected AggregateOperation(EntityReference aggregateRoot)
         {
-            Context = context;
+            if (aggregateRoot == null)
+            {
+                throw new ArgumentNullException(nameof(aggregateRoot));
+            }
+
+            AggregateRoot = aggregateRoot;
         }
 
-        public Predicate Context { get; }
+        public EntityReference AggregateRoot { get; }
+
 
         public override bool Equals(object obj)
         {
@@ -35,19 +41,20 @@ namespace NuClear.River.Common.Metadata.Model.Operations
 
         public override int GetHashCode()
         {
-            return Context.GetHashCode();
+            unchecked
+            {
+                return (AggregateRoot.GetHashCode() * 397) ^ this.GetType().GetHashCode();
+            }
         }
 
         private bool Equals(AggregateOperation other)
         {
-            // Тип уже проверен
-            return Context.Equals(other.Context);
+            return Equals(this.AggregateRoot, other.AggregateRoot);
         }
 
         public override string ToString()
         {
-            var prop = string.Join(", ", Context.Properties.Select(x => $"{x.Key}={x.Value}"));
-            return $"{GetType().Name}: {prop}";
+            return $"{GetType().Name}({AggregateRoot})";
         }
     }
 }

@@ -18,8 +18,7 @@ namespace NuClear.Replication.Bulk.API.Factories
             {
                 { typeof(FactMetadata<>), typeof(FactBulkReplicatorFactory<>) },
                 { typeof(AggregateMetadata<,>), typeof(AggregatesBulkReplicatorFactory<,>) },
-                { typeof(ValueObjectMetadataElement<>), typeof(ValueObjectsBulkReplicatorFactory<>) },
-                { typeof(StatisticsRecalculationMetadata<>), typeof(StatisticsBulkReplicatorFactory<>) },
+                { typeof(ValueObjectMetadata<,>), typeof(ValueObjectsBulkReplicatorFactory<,>) }
             };
 
         public RoutingBulkReplicatorFactory(IStorage source, IStorage target)

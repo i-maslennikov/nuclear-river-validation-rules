@@ -3,6 +3,8 @@
     public static class OperationIdentityIds
     {
         public const int ActualizeOrderAmountToWithdrawIdentity = 15117;
+        public const int ActualizeOrderPlatformIdentity = 15139;
+        public const int ActualizeOrderAggregatedIndicatorsPersistedCacheIdentity = 15137;
         public const int CalculateClientPromisingIdentity = 20003;
         public const int ChangeDealIdentity = 15106;
         public const int ChangeOrderLegalPersonProfileIdentity = 15120;
@@ -10,6 +12,12 @@
         public const int CloseWithDenialIdentity = 15108;
         public const int CopyOrderIdentity = 15113;
         public const int CreateClientByFirmIdentity = 20001;
+        public const int QualifyFirmIdentity = 14612;
+        public const int DisqualifyFirmIdentity = 14613;
+        public const int QualifyClientIdentity = 20011;
+        public const int DisqualifyClientIdentity = 20012;
+        public const int AssignClientRelatedActivitiesIdentity = 20007;
+        public const int DetachFirmFromClientIdentity = 20009;
         public const int ImportCardForErmIdentity = 14604;
         public const int ImportCardsFromServiceBusIdentity = 14601;
         public const int ImportFirmIdentity = 14602;
@@ -22,6 +30,7 @@
         public const int ChangeOrderAccountIdentity = 15133;
         public const int ChangeOrderBargainIdentity = 15131;
         public const int ChangeOrderLegalPersonIdentity = 15130;
+        public const int ChangeOrderReleaseCountIdentity = 15035;
         public const int ClearOrderBargainIdentity = 15132;
         public const int CreateOrderBillsIdentity = 15115;
         public const int DeleteOrderBillsIdentity = 15116;

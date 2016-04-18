@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -52,6 +52,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<UpdateIdentity, EntityTypeFirm>()
                         .Allow<UpdateIdentity, EntityTypeFirmAddress>()
                         .Allow<UpdateIdentity, EntityTypeFirmContact>()
+                        .Allow<UpdateIdentity, EntityTypeBranchOfficeOrganizationUnit>()
                         .Allow<UpdateIdentity, EntityTypeBuilding>()
                         .Allow<UpdateIdentity, EntityTypeOrderPosition>()
                         .Allow<UpdateIdentity, EntityTypeProject>()
@@ -63,6 +64,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<UpdateIdentity, EntityTypeAppointment>()
 
                         .Allow<BulkUpdateIdentity, EntityTypeFirm>()
+                        .Allow<BulkUpdateIdentity, EntityTypeCategory>()
                         .Allow<BulkUpdateIdentity, EntityTypeFirmContact>()
                         .Allow<BulkUpdateIdentity, EntityTypeCategoryFirmAddress>()
 
@@ -86,6 +88,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
 
                         .Allow<AppendIdentity, EntityTypeClient, EntityTypeClient>()
                         .Allow<DetachIdentity, EntityTypeClient, EntityTypeFirm>()
+                        .Allow<DetachIdentity, EntityTypeFirm, EntityTypeClient>()
 
                         .Allow<AssignIdentity, EntityTypeClient>()
                         .Allow<AssignIdentity, EntityTypeContact>()
@@ -117,12 +120,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<MergeIdentity, EntityTypeLegalPerson>()
                         .Allow<MergeIdentity, EntityTypeClient>()
 
-                        .Allow<QualifyIdentity, EntityTypeClient>()
-                        .Allow<QualifyIdentity, EntityTypeFirm>()
-
-                        .Allow<DisqualifyIdentity, EntityTypeClient>()
-                        .Allow<DisqualifyIdentity, EntityTypeFirm>()
-
                         .Allow<ChangeTerritoryIdentity, EntityTypeClient>()
                         .Allow<ChangeTerritoryIdentity, EntityTypeFirm>()
 
@@ -131,7 +128,17 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<ChangeClientIdentity, EntityTypeLegalPerson>()
                         .Allow<ChangeClientIdentity, EntityTypeContact>()
 
+                        .Allow<QualifyFirmIdentity>()
+                        .Allow<DisqualifyFirmIdentity>()
+
+                        .Allow<QualifyClientIdentity>()
+                        .Allow<DisqualifyClientIdentity>()
+                        .Allow<AssignClientRelatedActivitiesIdentity>()
+                        .Allow<DetachFirmFromClientIdentity>()
+
                         .Allow<ActualizeOrderAmountToWithdrawIdentity>()
+                        .Allow<ActualizeOrderPlatformIdentity>()
+                        .Allow<ActualizeOrderAggregatedIndicatorsPersistedCacheIdentity>()
                         .Allow<SetInspectorIdentity>()
                         .Allow<ChangeDealIdentity>()
                         .Allow<CloseWithDenialIdentity>()
@@ -146,6 +153,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<ChangeOrderAccountIdentity>()
                         .Allow<ChangeOrderBargainIdentity>()
                         .Allow<ChangeOrderLegalPersonIdentity>()
+                        .Allow<ChangeOrderReleaseCountIdentity>()
                         .Allow<ClearOrderBargainIdentity>()
                         .Allow<UpdateOrderFinancialPerformanceIdentity>()
                         .Allow<CreateOrderBillsIdentity>()
@@ -156,7 +164,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<ActualizeActiveLocksIdentity>()
                         .Allow<ImportAdvModelInRubricInfoIdentity>()
 
-                        // эти операции станут ignored после того как фирмы будем брать из InfoRussia
+                        // СЌС‚Рё РѕРїРµСЂР°С†РёРё СЃС‚Р°РЅСѓС‚ ignored РїРѕСЃР»Рµ С‚РѕРіРѕ РєР°Рє С„РёСЂРјС‹ Р±СѓРґРµРј Р±СЂР°С‚СЊ РёР· InfoRussia
                         .Allow<ImportCardForErmIdentity>()
                         .Allow<ImportCardIdentity>()
                         .Allow<ImportFirmIdentity>()

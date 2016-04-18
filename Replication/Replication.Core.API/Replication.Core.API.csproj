@@ -80,12 +80,10 @@
     <Compile Include="Aggregates\IAggregateProcessor.cs" />
     <Compile Include="Aggregates\IAggregateProcessorFactory.cs" />
     <Compile Include="Aggregates\IAggregatesConstructor.cs" />
-    <Compile Include="Aggregates\IStatisticsProcessor.cs" />
-    <Compile Include="Aggregates\IStatisticsProcessorFactory.cs" />
-    <Compile Include="Aggregates\IStatisticsRecalculator.cs" />
+    <Compile Include="Aggregates\IChildEntityProcessor.cs" />
+    <Compile Include="Aggregates\IEntityProcessor.cs" />
     <Compile Include="Aggregates\IValueObjectProcessor.cs" />
     <Compile Include="Aggregates\IValueObjectProcessorFactory.cs" />
-    <Compile Include="Aggregates\StatisticsProcessorSlice.cs" />
     <Compile Include="Facts\DependencyType.cs" />
     <Compile Include="Facts\IFactDependencyProcessor.cs" />
     <Compile Include="Facts\IFactDependencyProcessorFactory.cs" />

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 using NuClear.CustomerIntelligence.Domain.Model.CI;
+using NuClear.CustomerIntelligence.Domain.Model.Statistics;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
-using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 using Specs = NuClear.CustomerIntelligence.Domain.Specifications.Specs;
 
@@ -28,7 +29,6 @@ namespace NuClear.CustomerIntelligence.Domain
                     .Childs(AggregateMetadata<Firm, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Firms)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmActivities, Specs.Find.CI.FirmActivities)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmBalances, Specs.Find.CI.FirmBalances)
                                 .HasValueObject(Specs.Map.Facts.ToCI.FirmCategories1, Specs.Find.CI.FirmCategories1)
@@ -38,26 +38,36 @@ namespace NuClear.CustomerIntelligence.Domain
                             AggregateMetadata<Client, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Clients)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                 .HasValueObject(Specs.Map.Facts.ToCI.ClientContacts, Specs.Find.CI.ClientContacts),
 
                             AggregateMetadata<Project, long>
                                 .Config
                                 .HasSource(Specs.Map.Facts.ToCI.Projects)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                 .HasValueObject(Specs.Map.Facts.ToCI.ProjectCategories, Specs.Find.CI.ProjectCategories),
 
                             AggregateMetadata<Territory, long>
                                 .Config
-                                .HasSource(Specs.Map.Facts.ToCI.Territories)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance),
+                                .HasSource(Specs.Map.Facts.ToCI.Territories),
 
                             AggregateMetadata<CategoryGroup, long>
                                 .Config
-                                .HasSource(Specs.Map.Facts.ToCI.CategoryGroups)
-                                .HasIdentityProvider(DefaultIdentityProvider.Instance));
+                                .HasSource(Specs.Map.Facts.ToCI.CategoryGroups),
 
-            Metadata = new Dictionary<Uri, IMetadataElement> { { aggregateConstructionMetadataRoot.Identity.Id, aggregateConstructionMetadataRoot } };
+                            AggregateMetadata<ProjectStatistics, long>
+                                .Config
+                                .HasSource(Specs.Map.Facts.ToCI.ProjectStatistics)
+                                .HasEntity<ProjectCategoryStatistics>(Specs.Find.CI.ProjectCategoryStatistics)
+                                .HasValueObject(Specs.Map.Facts.ToCI.FirmForecast, Specs.Find.CI.FirmForecast),
+
+                            AggregateMetadata<ProjectCategoryStatistics, StatisticsKey>
+                                .Config
+                                .HasSource(Specs.Map.Facts.ToCI.ProjectCategoryStatistics)
+                                .HasValueObject(Specs.Map.Facts.ToCI.FirmCategory3, Specs.Find.CI.FirmCategory3));
+
+            Metadata = new Dictionary<Uri, IMetadataElement>
+                {
+                    { aggregateConstructionMetadataRoot.Identity.Id, aggregateConstructionMetadataRoot }
+                };
         }
 
         public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }

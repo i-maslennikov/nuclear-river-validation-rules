@@ -117,7 +117,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Tracing.API.1.0.4-logstash-bc8fb3-174\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Tracing.API.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.Environment, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
@@ -180,8 +180,25 @@
     <Compile Include="Identities\Operations\DestroyAggregateOperationIdentity.cs" />
     <Compile Include="Identities\Operations\InitializeAggregateOperationIdentity.cs" />
     <Compile Include="Identities\Operations\RecalculateAggregateOperationIdentity.cs" />
-    <Compile Include="Identities\Operations\StatisticsOperationIdentity.cs" />
+    <Compile Include="Identities\Operations\RecalculateAggregatePartOperationIdentity.cs" />
+    <Compile Include="Identities\Telemetry\AggregateEnqueuedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\AggregateProcessedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\AggregateProcessingDelayIdentity.cs" />
+    <Compile Include="Identities\Telemetry\BitStatisticsEntityProcessedCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\ErmEnqueuedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\ErmProcessedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\ErmReceivedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\ErmReceivedUseCaseCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\FinalProcessingAggregateQueueLengthIdentity.cs" />
+    <Compile Include="Identities\Telemetry\FinalProcessingStatisticsQueueLengthIdentity.cs" />
+    <Compile Include="Identities\Telemetry\PrimaryProcessingDelayIdentity.cs" />
+    <Compile Include="Identities\Telemetry\PrimaryProcessingQueueLengthIdentity.cs" />
+    <Compile Include="Identities\Telemetry\ProcessPrivateMemorySizeIdentity.cs" />
+    <Compile Include="Identities\Telemetry\ProcessWorkingSetIdentity.cs" />
+    <Compile Include="Identities\Telemetry\StatisticsEnqueuedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\StatisticsProcessedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\StatisticsProcessingDelayIdentity.cs" />
+    <Compile Include="OperationIdentityRegistryFactory.cs" />
     <Compile Include="OperationAggregatableMessage.cs" />
     <Compile Include="Primary\IdentityEntityTypeMapping.cs" />
     <Compile Include="Primary\IEntityTypeExplicitMapping.cs" />
@@ -192,6 +209,10 @@
     <Compile Include="Primary\CorporateBusAggregatableMessage.cs" />
     <Compile Include="Transports\CorporateBus\CorporateBusMessage.cs" />
     <Compile Include="Transports\CorporateBus\CorporateBusOperationsReceiver.cs" />
+    <Compile Include="Transports\EntityTypeParser.cs" />
+    <Compile Include="Transports\IEntityTypeParser.cs" />
+    <Compile Include="Transports\IOperationDispatcher.cs" />
+    <Compile Include="Transports\SQLStore\IEntityReferenceSerializer.cs" />
     <Compile Include="Transports\SQLStore\AggregateOperationSerializer.cs" />
     <Compile Include="Transports\SQLStore\IOperationSerializer.cs" />
     <Compile Include="Transports\ServiceBus\ServiceBusOperationsReceiverTelemetryDecorator.cs" />
@@ -203,6 +224,7 @@
     <Compile Include="Transports\SQLStore\Schema.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreSender.cs" />
+    <Compile Include="Transports\SQLStore\XmlOperationSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

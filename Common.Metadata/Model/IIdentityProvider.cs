@@ -1,15 +1,15 @@
-using System;
+п»їusing System;
 using System.Linq.Expressions;
 
 namespace NuClear.River.Common.Metadata.Model
 {
     /// <summary>
-    /// Предосталяет метод для установления связи между сущностью и её идентификатором.
+    /// Provides match between entity and its identifier
     /// </summary>
-    /// <typeparam name="TKey">Тип идентификатора</typeparam>
+    /// <typeparam name="TKey">Identifier type</typeparam>
     public interface IIdentityProvider<TKey>
     {
-        Expression<Func<TIdentifiable, TKey>> ExtractIdentity<TIdentifiable>()
+        Expression<Func<TIdentifiable, TKey>> Get<TIdentifiable>()
             where TIdentifiable : IIdentifiable<TKey>;
     }
 }

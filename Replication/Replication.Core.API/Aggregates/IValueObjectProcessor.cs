@@ -2,8 +2,8 @@
 
 namespace NuClear.Replication.Core.API.Aggregates
 {
-    public interface IValueObjectProcessor
+    public interface IValueObjectProcessor<TEntity>
     {
-        void ApplyChanges(IReadOnlyCollection<long> ids);
+        void Execute(IReadOnlyCollection<TEntity> commands);
     }
 }

@@ -11,6 +11,7 @@ namespace NuClear.River.Common.Metadata.Model.Operations
                   { typeof(DestroyAggregate), 3 },
                   { typeof(InitializeAggregate), 2 },
                   { typeof(RecalculateAggregate), 1 },
+                  { typeof(RecalculateAggregatePart), 1 }
               };
 
         public int Compare(Type x, Type y)

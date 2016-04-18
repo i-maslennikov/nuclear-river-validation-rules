@@ -36,9 +36,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AggregateConstructionMetadataSource.cs" />
+    <Compile Include="Commands\RecalculateAggregateCommandFactory.cs" />
+    <Compile Include="Commands\RecalculateStatisticsCommandFactory.cs" />
     <Compile Include="DTO\CategoryStatisticsDto.cs" />
     <Compile Include="DTO\FirmForecastDto.cs" />
     <Compile Include="DTO\FirmStatisticsDto.cs" />
+    <Compile Include="EntityTypeIds.cs" />
     <Compile Include="EntityTypes\EntityTypeAccount.cs" />
     <Compile Include="EntityTypes\EntityTypeActivity.cs" />
     <Compile Include="EntityTypes\EntityTypeAppointment.cs" />
@@ -63,6 +66,8 @@
     <Compile Include="EntityTypes\EntityTypeOrderPosition.cs" />
     <Compile Include="EntityTypes\EntityTypePhonecall.cs" />
     <Compile Include="EntityTypes\EntityTypeProject.cs" />
+    <Compile Include="EntityTypes\EntityTypeProjectCategoryStatistics.cs" />
+    <Compile Include="EntityTypes\EntityTypeProjectStatistics.cs" />
     <Compile Include="EntityTypes\EntityTypeSalesModelCategoryRestriction.cs" />
     <Compile Include="EntityTypes\EntityTypeTask.cs" />
     <Compile Include="EntityTypes\EntityTypeTerritory.cs" />
@@ -80,10 +85,11 @@
     <Compile Include="Model\CI\FirmBalance.cs" />
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
+    <Compile Include="Model\Statistics\ProjectCategoryStatistics.cs" />
     <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
-    <Compile Include="Model\IBitFactObject.cs" />
     <Compile Include="Model\ICustomerIntelligenceAggregatePart.cs" />
+    <Compile Include="Model\IBitFactObject.cs" />
     <Compile Include="Model\IErmFactObject.cs" />
     <Compile Include="Model\IErmObject.cs" />
     <Compile Include="Model\IErmValueObject.cs" />
@@ -139,12 +145,9 @@
     <Compile Include="Specifications\Specs.Find.CI.cs" />
     <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Specs.Map.Bit.cs" />
-    <Compile Include="Specifications\Specs.Map.CI.Statistics.cs" />
     <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.AggregateIdentity.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.CI.cs" />
-    <Compile Include="Specifications\Specs.Map.Facts.Statistics.cs" />
-    <Compile Include="StatisticsRecalculationMetadataSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
@@ -179,6 +182,7 @@
       <Name>Common.Metadata</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

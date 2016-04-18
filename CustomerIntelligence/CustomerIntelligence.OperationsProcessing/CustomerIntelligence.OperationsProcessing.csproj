@@ -89,7 +89,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Tracing.API.1.0.4-logstash-bc8fb3-174\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Tracing.API.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.Environment, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
@@ -128,14 +128,18 @@
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
     <Compile Include="Identities\Flows\StatisticsFlow.cs" />
     <Compile Include="Identities\Operations\ActualizeActiveLocksIdentity.cs" />
+    <Compile Include="Identities\Operations\ActualizeOrderAggregatedIndicatorsPersistedCacheIdentity.cs" />
     <Compile Include="Identities\Operations\ActualizeOrderAmountToWithdrawIdentity.cs" />
+    <Compile Include="Identities\Operations\ActualizeOrderPlatformIdentity.cs" />
     <Compile Include="Identities\Operations\ApplyOrderDiscountIdentity.cs" />
+    <Compile Include="Identities\Operations\AssignClientRelatedActivitiesIdentity.cs" />
     <Compile Include="Identities\Operations\CalculateClientPromisingIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeDealIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderAccountIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderBargainIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderLegalPersonIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderLegalPersonProfileIdentity.cs" />
+    <Compile Include="Identities\Operations\ChangeOrderReleaseCountIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeRequisitesIdentity.cs" />
     <Compile Include="Identities\Operations\ClearOrderBargainIdentity.cs" />
     <Compile Include="Identities\Operations\CloseWithDenialIdentity.cs" />
@@ -143,6 +147,9 @@
     <Compile Include="Identities\Operations\CreateClientByFirmIdentity.cs" />
     <Compile Include="Identities\Operations\CreateOrderBillsIdentity.cs" />
     <Compile Include="Identities\Operations\DeleteOrderBillsIdentity.cs" />
+    <Compile Include="Identities\Operations\DetachFirmFromClientIdentity.cs" />
+    <Compile Include="Identities\Operations\DisqualifyClientIdentity.cs" />
+    <Compile Include="Identities\Operations\DisqualifyFirmIdentity.cs" />
     <Compile Include="Identities\Operations\ImportAdvModelInRubricInfoIdentity.cs" />
     <Compile Include="Identities\Operations\ImportCardForErmIdentity.cs" />
     <Compile Include="Identities\Operations\ImportCardIdentity.cs" />
@@ -150,6 +157,8 @@
     <Compile Include="Identities\Operations\ImportFirmIdentity.cs" />
     <Compile Include="Identities\Operations\ImportFirmPromisingIdentity.cs" />
     <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
+    <Compile Include="Identities\Operations\QualifyClientIdentity.cs" />
+    <Compile Include="Identities\Operations\QualifyFirmIdentity.cs" />
     <Compile Include="Identities\Operations\RepairOutdatedIdentity.cs" />
     <Compile Include="Identities\Operations\RevertWithdrawFromAccountsIdentity.cs" />
     <Compile Include="Identities\Operations\SetInspectorIdentity.cs" />
@@ -173,6 +182,7 @@
     <Compile Include="Identities\Telemetry\StatisticsEnqueuedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\StatisticsProcessedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\StatisticsProcessingDelayIdentity.cs" />
+    <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="Primary\Parsers\FirmForecastCorporateBusMessageParser.cs" />
@@ -184,6 +194,8 @@
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Primary\Parsers\RubricPopularityCorporateBusMessageParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transports\OperationDispatcher.cs" />
+    <Compile Include="Transports\SQLStore\EntityReferenceSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common.Metadata\Common.Metadata.csproj">
@@ -209,7 +221,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Identities\EntityTypes\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

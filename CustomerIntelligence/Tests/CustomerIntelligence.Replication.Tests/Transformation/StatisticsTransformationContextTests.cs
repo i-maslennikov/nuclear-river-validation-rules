@@ -33,7 +33,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query)
                           .VerifyTransform(
-                              x => Specs.Map.Facts.ToStatistics.FirmCategory3.Map(x),
+                              x => Specs.Map.Facts.ToCI.FirmCategory3.Map(x),
                               Inquire(
                                   new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 0, Shows = 0 },
                                   new Statistics::FirmCategory3 { FirmId = 2, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 100, Shows = 200 }));
@@ -58,7 +58,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query)
                           .VerifyTransform(
-                              x => Specs.Map.Facts.ToStatistics.FirmCategory3.Map(x),
+                              x => Specs.Map.Facts.ToCI.FirmCategory3.Map(x),
                               Inquire(
                                   new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 10000, Shows = 20000 },
                                   new Statistics::FirmCategory3 { FirmId = 2, CategoryId = 1, ProjectId = 1, AdvertisersShare = 0.5f, FirmCount = 2, Hits = 0, Shows = 0 },
@@ -79,7 +79,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query)
                           .VerifyTransform(
-                              x => Specs.Map.Facts.ToStatistics.FirmCategory3.Map(x),
+                              x => Specs.Map.Facts.ToCI.FirmCategory3.Map(x),
                               Inquire(new Statistics::FirmCategory3 { FirmId = 1, CategoryId = 1, ProjectId = 1, AdvertisersShare = 1f, FirmCount = 1, Hits = 10000, Shows = 20000 }));
         }
 

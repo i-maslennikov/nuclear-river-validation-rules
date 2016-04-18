@@ -71,6 +71,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                     .AddMapping<EntityTypeFirm, CI.Firm>()
                     .AddMapping<EntityTypeProject, CI.Project>()
                     .AddMapping<EntityTypeTerritory, CI.Territory>()
+                    .AddMapping<EntityTypeProjectStatistics, Statistics.ProjectStatistics>()
+                    .AddMapping<EntityTypeProjectCategoryStatistics, Statistics.ProjectCategoryStatistics>()
                     .AddAsPersistenceOnly(typeof(CI.ClientContact))
                     .AddAsPersistenceOnly(typeof(CI.ProjectCategory))
                     .AddAsPersistenceOnly(typeof(CI.FirmActivity))

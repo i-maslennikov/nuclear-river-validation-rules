@@ -62,7 +62,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Tracing.API.1.0.4-logstash-bc8fb3-174\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Tracing.API.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.Environment, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
@@ -86,18 +86,23 @@
   <ItemGroup>
     <Compile Include="Aggregates\AggregateProcessor.cs" />
     <Compile Include="Aggregates\AggregatesConstructor.cs" />
-    <Compile Include="Aggregates\StatisticsProcessor.cs" />
-    <Compile Include="Aggregates\StatisticsRecalculator.cs" />
+    <Compile Include="Aggregates\ChildEntityProcessor.cs" />
+    <Compile Include="Aggregates\EntityProcessor.cs" />
+    <Compile Include="Aggregates\ValueObjectFindSpecificationProvider.cs" />
     <Compile Include="Aggregates\ValueObjectProcessor.cs" />
     <Compile Include="BulkRepository.cs" />
     <Compile Include="DataChangesDetector.cs" />
     <Compile Include="EqualityComparerFactory.cs" />
-    <Compile Include="Facts\FactDependencyProcessor.cs" />
+    <Compile Include="Aggregates\DirectlyDependentEntityFeatureProcessor.cs" />
+    <Compile Include="FactChangesDetector.cs" />
     <Compile Include="Facts\FactProcessor.cs" />
     <Compile Include="Facts\FactsReplicator.cs" />
     <Compile Include="Facts\IImportDocumentFeatureProcessor.cs" />
     <Compile Include="Facts\ImportDocumentMetadataProcessor.cs" />
     <Compile Include="Facts\ImportImportDocumentFeatureProcessor.cs" />
+    <Compile Include="Aggregates\IndirectlyDependentEntityFeatureProcessor.cs" />
+    <Compile Include="FindSpecificationProvider.cs" />
+    <Compile Include="IFindSpecificationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

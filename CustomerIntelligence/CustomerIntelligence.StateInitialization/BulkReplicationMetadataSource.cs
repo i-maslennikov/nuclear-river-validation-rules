@@ -26,13 +26,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization
                                               .CommandlineKey("-ci")
                                               .From(ConnectionString.Facts, Schema.Facts)
                                               .To(ConnectionString.CustomerIntelligence, Schema.CustomerIntelligence)
-                                              .UsingMetadataOfKind<ReplicationMetadataIdentity>(ReplicationMetadataName.Aggregates),
-
-                BulkReplicationMetadataElement.Config
-                                              .CommandlineKey("-statistics")
-                                              .From(ConnectionString.Facts, Schema.Facts)
-                                              .To(ConnectionString.CustomerIntelligence, Schema.CustomerIntelligence)
-                                              .UsingMetadataOfKind<StatisticsRecalculationMetadataIdentity>()
+                                              .UsingMetadataOfKind<ReplicationMetadataIdentity>(ReplicationMetadataName.Aggregates)
             }.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);
 
         public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata => Elements;

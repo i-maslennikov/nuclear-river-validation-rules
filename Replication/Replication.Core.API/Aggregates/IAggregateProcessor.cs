@@ -1,9 +1,15 @@
-﻿namespace NuClear.Replication.Core.API.Aggregates
+﻿using System;
+using System.Collections.Generic;
+
+using NuClear.River.Common.Metadata.Model.Operations;
+
+namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IAggregateProcessor
     {
-        void Initialize(AggregateProcessorSlice slice);
-        void Recalculate(AggregateProcessorSlice slice);
-        void Destroy(AggregateProcessorSlice slice);
+        void Initialize(IReadOnlyCollection<InitializeAggregate> commands);
+        void Recalculate(IReadOnlyCollection<RecalculateAggregate> commands);
+        void Recalculate(Type partType, IReadOnlyCollection<RecalculateAggregatePart> commands);
+        void Destroy(IReadOnlyCollection<DestroyAggregate> commands);
     }
 }

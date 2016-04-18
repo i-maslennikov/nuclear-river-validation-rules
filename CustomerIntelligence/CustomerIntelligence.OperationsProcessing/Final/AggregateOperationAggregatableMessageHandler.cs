@@ -8,7 +8,7 @@ using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
@@ -36,9 +36,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         {
             try
             {
-                foreach (var message in messages.OfType<OperationAggregatableMessage<AggregateOperation>>())
+                foreach (var message in messages.OfType<OperationAggregatableMessage<IOperation>>())
                 {
-                    _aggregatesConstructor.Construct(message.Operations);
+                    _aggregatesConstructor.Execute(message.Operations);
                     _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Operations.Count);
 
                     _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);

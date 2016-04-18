@@ -37,7 +37,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalulateClientIfContactUpdated()
         {
-            SourceDb.Has(new Erm::Contact { Id = 1, ClientId = 1 });
+            SourceDb.Has(new Erm::Contact { Id = 1, ClientId = 1, Website = "asdf" });
 
             TargetDb.Has(new Facts::Contact { Id = 1, ClientId = 1 })
                    .Has(new Facts::Client { Id = 1 });

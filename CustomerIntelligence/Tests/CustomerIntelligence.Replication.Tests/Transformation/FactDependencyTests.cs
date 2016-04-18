@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain;
+using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Domain.EntityTypes;
+using NuClear.CustomerIntelligence.Storage;
 using NuClear.Metamodeling.Elements;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
@@ -38,7 +42,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateClientIfClientUpdated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1 });
+            SourceDb.Has(new Erm::Client { Id = 1, Name = "asdf" });
             TargetDb.Has(new Facts::Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
@@ -104,7 +108,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateFirmIfFirmUpdated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 });
+            SourceDb.Has(new Erm::Firm { Id = 1, Name = "asdf" });
             TargetDb.Has(new Facts::Firm { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
@@ -308,7 +312,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
                  .Has(new Erm::Category { Id = 1, Level = 1 },
                       new Erm::Category { Id = 2, Level = 2, ParentId = 1 },
-                      new Erm::Category { Id = 3, Level = 3, ParentId = 2 });
+                      new Erm::Category { Id = 3, Level = 3, ParentId = 2, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -328,7 +332,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Erm::Firm { Id = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
                  .Has(new Erm::Category { Id = 1, Level = 1 },
-                      new Erm::Category { Id = 2, Level = 2, ParentId = 1 });
+                      new Erm::Category { Id = 2, Level = 2, ParentId = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -347,7 +351,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             SourceDb.Has(new Erm::Firm { Id = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
-                 .Has(new Erm::Category { Id = 1, Level = 1 });
+                 .Has(new Erm::Category { Id = 1, Level = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -514,7 +518,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalculateFirmIfClientUpdated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1 });
+            SourceDb.Has(new Erm::Client { Id = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Client { Id = 1 })
                    .Has(new Facts::Firm { Id = 1, ClientId = 1 });
@@ -561,10 +565,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Contact>(1)
-                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1),
-                          Aggregate.Recalculate(EntityTypeFirm.Instance, 1),
-                          Aggregate.Recalculate(EntityTypeClient.Instance, 2),
-                          Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeClient.Instance, 2), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -748,6 +749,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             private readonly IRepositoryFactory _repositoryFactory;
             private readonly List<IOperation> _operations;
             private readonly FactsReplicationMetadataSource _metadataSource;
+            private readonly EqualityComparerFactory _comparerFactory;
 
             private Transformation(IQuery query, IRepositoryFactory repositoryFactory)
             {
@@ -755,6 +757,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 _repositoryFactory = repositoryFactory;
                 _operations = new List<IOperation>();
                 _metadataSource = new FactsReplicationMetadataSource();
+                _comparerFactory = new EqualityComparerFactory(new LinqToDbPropertyProvider(Schema.Erm, Schema.Facts, Schema.CustomerIntelligence));
             }
 
             public static Transformation Create(IQuery query, IRepositoryFactory repositoryFactory)
@@ -772,12 +775,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 {
                     throw new NotSupportedException(string.Format("The fact of type '{0}' is not supported.", factType));
                 }
-                
+
                 var repository = _repositoryFactory.Create<TFact>();
-                var factory = new Factory<TFact>(_query, repository);
+                var factory = new Factory<TFact>(_query, repository, _comparerFactory);
                 var processor = factory.Create(factMetadata);
 
-                _operations.AddRange(processor.ApplyChanges(ids));
+                _operations.AddRange(processor.Execute(ids.Select(id => new FactOperation(typeof(TFact), id)).ToArray()));
 
                 return this;
             }
@@ -797,21 +800,42 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             {
                 private readonly IQuery _query;
                 private readonly IBulkRepository<TFact> _repository;
+                private readonly EqualityComparerFactory _comparerFactory;
 
-                public Factory(IQuery query, IBulkRepository<TFact> repository)
+                public Factory(IQuery query, IBulkRepository<TFact> repository, EqualityComparerFactory comparerFactory)
                 {
                     _query = query;
                     _repository = repository;
+                    _comparerFactory = comparerFactory;
                 }
 
-                public IFactProcessor Create(IMetadataElement factMetadata)
+                public IFactProcessor Create(IMetadataElement metadata)
                 {
-                    return new FactProcessor<TFact>((FactMetadata<TFact>)factMetadata, this, _query, _repository);
+                    var factMetadata = (FactMetadata<TFact>)metadata;
+                    var changesDetector = new FactChangesDetector<TFact>(factMetadata.MapSpecificationProviderForSource, factMetadata.MapSpecificationProviderForTarget, _comparerFactory.CreateIdentityComparer<TFact>(), _comparerFactory.CreateCompleteComparer<TFact>(), _query);
+                    var dependencyProcessors = factMetadata.Features.OfType<IFactDependencyFeature>().Select(this.Create).ToArray();
+                    return new FactProcessor<TFact>(changesDetector, _repository, dependencyProcessors, new DefaultIdentityProvider());
                 }
 
                 public IFactDependencyProcessor Create(IFactDependencyFeature metadata)
                 {
-                    return new FactDependencyProcessor<TFact>((IFactDependencyFeature<TFact, long>)metadata, _query);
+                    if (metadata.GetType().GetGenericTypeDefinition() == typeof(DirectlyDependentEntityFeature<>))
+                    {
+                        var processorType = typeof(DirectlyDependentEntityFeatureProcessor<>).MakeGenericType(metadata.GetType().GetGenericArguments());
+                        return (IFactDependencyProcessor)Activator.CreateInstance(processorType, metadata);
+                    }
+
+                    if (metadata.GetType().GetGenericTypeDefinition() == typeof(IndirectlyDependentEntityFeature<,>))
+                    {
+                        var processorType = typeof(IndirectlyDependentEntityFeatureProcessor<,>).MakeGenericType(metadata.GetType().GetGenericArguments());
+                        var factory = metadata.GetType().GetGenericArguments()[1] == typeof(long)
+                                          ? (object)new RecalculateAggregateCommandFactory()
+                                          : (object)new RecalculateStatisticsCommandFactory();
+
+                        return (IFactDependencyProcessor)Activator.CreateInstance(processorType, metadata, _query, new DefaultIdentityProvider(), factory);
+                    }
+
+                    throw new ArgumentException($"No processor for feature type {metadata.GetType().Name}");
                 }
             }
         }

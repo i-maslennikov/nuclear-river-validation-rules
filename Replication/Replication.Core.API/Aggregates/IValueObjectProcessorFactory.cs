@@ -2,8 +2,8 @@
 
 namespace NuClear.Replication.Core.API.Aggregates
 {
-    public interface IValueObjectProcessorFactory
+    public interface IValueObjectProcessorFactory<TEntity>
     {
-        IValueObjectProcessor Create(IValueObjectMetadataElement metadata);
+        IValueObjectProcessor<TEntity> Create(IValueObjectMetadata metadata);
     }
 }

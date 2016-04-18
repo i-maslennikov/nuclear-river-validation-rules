@@ -100,7 +100,6 @@
     <Compile Include="Factories\FactBulkReplicatorFactory.cs" />
     <Compile Include="Factories\IBulkReplicatorFactory.cs" />
     <Compile Include="Factories\RoutingBulkReplicatorFactory.cs" />
-    <Compile Include="Factories\StatisticsBulkReplicatorFactory.cs" />
     <Compile Include="Factories\ValueObjectsBulkReplicatorFactory.cs" />
     <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

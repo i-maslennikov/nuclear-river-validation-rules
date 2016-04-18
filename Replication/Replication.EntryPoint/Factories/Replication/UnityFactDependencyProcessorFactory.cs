@@ -1,13 +1,22 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System;
+using System.Collections.Generic;
 
+using Microsoft.Practices.Unity;
+
+using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Facts;
-using NuClear.Replication.Core.Facts;
 using NuClear.River.Common.Metadata.Features;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
     internal class UnityFactDependencyProcessorFactory : IFactDependencyProcessorFactory
     {
+        private static readonly IDictionary<Type, Type> KnownFeatureProcessors = new Dictionary<Type, Type>
+            {
+                { typeof(DirectlyDependentEntityFeature<>), typeof(DirectlyDependentEntityFeatureProcessor<>) },
+                { typeof(IndirectlyDependentEntityFeature<,>), typeof(IndirectlyDependentEntityFeatureProcessor<,>) },
+            };
+
         private readonly IUnityContainer _unityContainer;
 
         public UnityFactDependencyProcessorFactory(IUnityContainer unityContainer)
@@ -17,9 +26,15 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
 
         public IFactDependencyProcessor Create(IFactDependencyFeature metadata)
         {
-            var processorType = typeof(FactDependencyProcessor<>).MakeGenericType(metadata.DependancyType);
-            var metadataDependency = new DependencyOverride(typeof(IFactDependencyFeature<,>).MakeGenericType(metadata.GetType().GetGenericArguments()), metadata);
-            var processor = _unityContainer.Resolve(processorType, metadataDependency);
+            Type processorType;
+            if (!KnownFeatureProcessors.TryGetValue(metadata.GetType().GetGenericTypeDefinition(), out processorType))
+            {
+                throw new ArgumentException($"Feature of type {metadata.GetType().Name} has no known processor", nameof(metadata));
+            }
+
+            processorType = processorType.MakeGenericType(metadata.GetType().GetGenericArguments());
+            var metadataOverride = new DependencyOverride(metadata.GetType(), metadata);
+            var processor = _unityContainer.Resolve(processorType, metadataOverride);
             return (IFactDependencyProcessor)processor;
         }
     }

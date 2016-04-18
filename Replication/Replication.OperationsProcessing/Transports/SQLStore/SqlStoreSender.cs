@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Messaging.API.Flows;
@@ -13,12 +14,12 @@ namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
     {
         private readonly IIdentityGenerator _identityGenerator;
         private readonly IRepository<PerformedOperationFinalProcessing> _repository;
-        private readonly IOperationSerializer<AggregateOperation> _serializer;
+        private readonly IOperationSerializer _serializer;
 
         public SqlStoreSender(
             IIdentityGenerator identityGenerator,
             IRepository<PerformedOperationFinalProcessing> repository,
-            IOperationSerializer<AggregateOperation> serializer)
+            IOperationSerializer serializer)
         {
             _identityGenerator = identityGenerator;
             _repository = repository;
@@ -26,21 +27,23 @@ namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
         }
 
         public void Push<TOperation, TFlow>(IEnumerable<TOperation> operations, TFlow targetFlow)
-            where TFlow : MessageFlowBase<TFlow>, new()
-            where TOperation : AggregateOperation
+            where TFlow : IMessageFlow
+            where TOperation : IOperation
         {
             using (Probe.Create($"Send {typeof(TOperation).Name}"))
             {
-                var transportMessages = operations.Select(operation => _serializer.Serialize(operation, targetFlow));
-                Save(transportMessages.ToArray());
+                var transportMessages = operations.Select(x => _serializer.Serialize(x));
+                Save(transportMessages.ToArray(), targetFlow.Id);
             }
         }
 
-        private void Save(IReadOnlyCollection<PerformedOperationFinalProcessing> transportMessages)
+        private void Save(IReadOnlyCollection<PerformedOperationFinalProcessing> transportMessages, Guid targetFlowId)
         {
             foreach (var transportMessage in transportMessages)
             {
                 transportMessage.Id = _identityGenerator.Next();
+                transportMessage.CreatedOn = DateTime.UtcNow;
+                transportMessage.MessageFlowId = targetFlowId;
             }
 
             _repository.AddRange(transportMessages);

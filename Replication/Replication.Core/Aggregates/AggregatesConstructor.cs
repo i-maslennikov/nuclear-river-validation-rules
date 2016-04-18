@@ -7,8 +7,8 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core.API.Aggregates;
-using NuClear.River.Common.Metadata.Context;
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
 
@@ -19,101 +19,129 @@ namespace NuClear.Replication.Core.Aggregates
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly IAggregateProcessorFactory _aggregateProcessorFactory;
-        private readonly IEntityTypeMappingRegistry<TSubDomain> _mappingRegistry;
-        private readonly ISlicer<AggregateProcessorSlice> _slicer;
-        private readonly IMetadataUriProvider _metadataUriProvider;
+        private readonly IEntityTypeMappingRegistry<TSubDomain> _entityTypeMappingRegistry;
 
-        public AggregatesConstructor(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory, IEntityTypeMappingRegistry<TSubDomain> mappingRegistry, IMetadataUriProvider metadataUriProvider)
+        public AggregatesConstructor(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory, IEntityTypeMappingRegistry<TSubDomain> entityTypeMappingRegistry)
         {
             _metadataProvider = metadataProvider;
             _aggregateProcessorFactory = aggregateProcessorFactory;
-            _mappingRegistry = mappingRegistry;
-            _metadataUriProvider = metadataUriProvider;
-            _slicer = new AggregateRecalculationSlicer();
+            _entityTypeMappingRegistry = entityTypeMappingRegistry;
         }
 
-        public void Construct(IEnumerable<AggregateOperation> operations)
+        public void Execute(IReadOnlyCollection<IOperation> commands)
         {
             using (Probe.Create("ETL2 Transforming"))
             {
-                var operationTypeGroups = operations.GroupBy(x => x.GetType(), x => x.Context)
-                                                    .OrderByDescending(x => x.Key, new AggregateOperationPriorityComparer());
+                var commandsByType = commands.GroupBy(x => x.GetType()).OrderBy(x => x.Key, new AggregateOperationPriorityComparer());
 
-                foreach (var operationTypeGroup in operationTypeGroups)
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+                                                              new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
                 {
-                    Construct(operationTypeGroup.Key, operationTypeGroup);
+                    foreach (var group in commandsByType)
+                    {
+                        if (group.Key == typeof(InitializeAggregate))
+                        {
+                            Execute(group.Cast<InitializeAggregate>());
+                        }
+                        else if (group.Key == typeof(RecalculateAggregate))
+                        {
+                            Execute(group.Cast<RecalculateAggregate>());
+                        }
+                        else if (group.Key == typeof(DestroyAggregate))
+                        {
+                            Execute(group.Cast<DestroyAggregate>());
+                        }
+                        else if(group.Key == typeof(RecalculateAggregatePart))
+                        {
+                            Execute(group.Cast<RecalculateAggregatePart>());
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"The command of type {group.Key.Name} is not supported");
+                        }
+                    }
+
+                    transaction.Complete();
                 }
             }
         }
 
-        private void Construct(Type operation, IEnumerable<Predicate> operations)
-                    {
-            foreach (var slice in _slicer.Slice(operations))
-            {
-                var aggregateType = ParseAggregateType(slice.AggregateTypeId);
-                var processor = CreateProcessor(aggregateType);
-
-                    using (var transaction = new TransactionScope(TransactionScopeOption.Required,
-                                                                  new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
-                    {
-                        using (Probe.Create("ETL2 Transforming", aggregateType.Name))
-                        {
-
-                            if (operation == typeof(InitializeAggregate))
-                            {
-                            processor.Initialize(slice);
-                            }
-                            else if (operation == typeof(RecalculateAggregate))
-                            {
-                            processor.Recalculate(slice);
-                            }
-                            else if (operation == typeof(DestroyAggregate))
-                            {
-                            processor.Destroy(slice);
-                            }
-                            else
-                            {
-                                throw new InvalidOperationException($"The command of type {operation.Name} is not supported");
-                            }
-                        }
-
-                        transaction.Complete();
-                    }
-            }
-        }
-
-        private Type ParseAggregateType(int entityTypeId)
+        private void Execute(IEnumerable<InitializeAggregate> enumerable)
         {
-            IEntityType aggregateEntityType;
-            Type aggregateType;
-            if (!_mappingRegistry.TryParse(entityTypeId, out aggregateEntityType) ||
-                !_mappingRegistry.TryGetEntityType(aggregateEntityType, out aggregateType))
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
             {
-                throw new NotSupportedException($"Unknown aggregate '{entityTypeId}'");
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Initialize {type.Name}"))
+                {
+                    processor.Initialize(slice.ToArray());
+                }
             }
-
-            return aggregateType;
         }
 
-        private IAggregateProcessor CreateProcessor(Type aggregateType)
+        private void Execute(IEnumerable<RecalculateAggregate> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
+            {
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Recalculate {type.Name}"))
+                {
+                    processor.Recalculate(slice.ToArray());
+                }
+            }
+        }
+
+        private void Execute(IEnumerable<DestroyAggregate> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
+            {
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Destroy {type.Name}"))
+                {
+                    processor.Destroy(slice.ToArray());
+                }
+            }
+        }
+
+        private void Execute(IEnumerable<RecalculateAggregatePart> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => new { AggregateRootType = c.AggregateRoot.EntityType, c.Entity.EntityType }))
+            {
+                var aggregateType = ParseEntityType(slice.Key.AggregateRootType);
+                var entityType = ParseEntityType(slice.Key.EntityType);
+                var processor = CreateProcessor(aggregateType);
+                using (Probe.Create($"ETL2 Recalculate {aggregateType.Name} Part {entityType.Name}"))
+                {
+                    processor.Recalculate(entityType, slice.ToArray());
+                }
+            }
+        }
+
+        // todo: если перевести метаданные на идентификаоры, основанные не на тменах типов, а идентификаторах - то от этого парсинга можно избавиться
+        private IAggregateProcessor CreateProcessor(Type aggregate)
         {
             IMetadataElement aggregateMetadata;
-            var metadataId = _metadataUriProvider.GetFor(aggregateType);
+            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregate.Name}", UriKind.Relative));
             if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
             {
-                throw new NotSupportedException($"The aggregate of type '{aggregateType.Name}' is not supported.");
+                throw new NotSupportedException($"The aggregate of type '{aggregate.Name}' is not supported.");
             }
 
-            return _aggregateProcessorFactory.Create(aggregateMetadata);
-                }
+            var processor = _aggregateProcessorFactory.Create(aggregateMetadata);
+            return processor;
+        }
 
-        public sealed class AggregateRecalculationSlicer : ISlicer<AggregateProcessorSlice>
+        private Type ParseEntityType(IEntityType entityType)
         {
-            public IEnumerable<AggregateProcessorSlice> Slice(IEnumerable<Predicate> predicates)
+            Type type;
+            if (_entityTypeMappingRegistry.TryGetEntityType(entityType, out type))
             {
-                return predicates.GroupBy(p => PredicateProperty.EntityType.GetValue(p), p => PredicateProperty.EntityId.GetValue(p))
-                                 .Select(group => new AggregateProcessorSlice { AggregateTypeId = group.Key, AggregateIds = group.ToArray() });
+                return type;
             }
+
+            throw new ArgumentException($"unknown entity type id {entityType.Id}");
         }
     }
 }

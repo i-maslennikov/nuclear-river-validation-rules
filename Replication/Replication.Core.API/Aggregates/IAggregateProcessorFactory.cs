@@ -4,6 +4,6 @@ namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IAggregateProcessorFactory
     {
-        IAggregateProcessor Create(IMetadataElement aggregateMetadata);
+        IAggregateProcessor Create(IMetadataElement metadata);
     }
 }

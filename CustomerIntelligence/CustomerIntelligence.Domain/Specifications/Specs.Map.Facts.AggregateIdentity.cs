@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 
 using NuClear.CustomerIntelligence.Domain.Model.Facts;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
@@ -332,41 +332,39 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
 
                 public static partial class ToStatistics
                 {
-                    public static MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>> ByFirm(FindSpecification<Firm> specification)
+                    public static MapSpecification<IQuery, IEnumerable<StatisticsKey>> ByFirm(FindSpecification<Firm> specification)
                     {
-                        return new MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>>(
+                        return new MapSpecification<IQuery, IEnumerable<StatisticsKey>>(
                             q => from firm in q.For(specification)
                                  join project in q.For<Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
                                  join firmAddress in q.For<FirmAddress>() on firm.Id equals firmAddress.FirmId
                                  join firmAddressCategory in q.For<CategoryFirmAddress>() on firmAddress.Id equals firmAddressCategory.FirmAddressId
-                                 select new Tuple<long, long?>(project.Id, firmAddressCategory.CategoryId));
+                                 select new StatisticsKey { ProjectId = project.Id, CategoryId = firmAddressCategory.CategoryId });
                     }
 
-                    public static MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>> ByFirmAddress(FindSpecification<FirmAddress> specification)
+                    public static MapSpecification<IQuery, IEnumerable<StatisticsKey>> ByFirmAddress(FindSpecification<FirmAddress> specification)
                     {
-                        return new MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>>(
+                        return new MapSpecification<IQuery, IEnumerable<StatisticsKey>>(
                             q => from firm in q.For<Firm>()
                                  join project in q.For<Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
                                  join firmAddress in q.For(specification) on firm.Id equals firmAddress.FirmId
                                  join firmAddressCategory in q.For<CategoryFirmAddress>() on firmAddress.Id equals firmAddressCategory.FirmAddressId
-                                 select new Tuple<long, long?>(project.Id, firmAddressCategory.CategoryId));
+                                 select new StatisticsKey { ProjectId = project.Id, CategoryId = firmAddressCategory.CategoryId });
                     }
 
-                    public static MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>> ByFirmAddressCategory(FindSpecification<CategoryFirmAddress> specification)
+                    public static MapSpecification<IQuery, IEnumerable<StatisticsKey>> ByFirmAddressCategory(FindSpecification<CategoryFirmAddress> specification)
                     {
-                        return new MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>>(
+                        return new MapSpecification<IQuery, IEnumerable<StatisticsKey>>(
                             q => from firm in q.For<Firm>()
                                  join project in q.For<Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
                                  join firmAddress in q.For<FirmAddress>() on firm.Id equals firmAddress.FirmId
                                  join firmAddressCategory in q.For(specification) on firmAddress.Id equals firmAddressCategory.FirmAddressId
-                                 select new Tuple<long, long?>(project.Id, firmAddressCategory.CategoryId));
+                                 select new StatisticsKey { ProjectId = project.Id, CategoryId = firmAddressCategory.CategoryId });
                     }
 
-                    public static MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>> ByProject(FindSpecification<Project> specification)
+                    public static MapSpecification<IQuery, IEnumerable<long>> ByProject(FindSpecification<Project> specification)
                     {
-                        return new MapSpecification<IQuery, IEnumerable<Tuple<long, long?>>>(
-                            q => from project in q.For(specification)
-                                 select new Tuple<long, long?>(project.Id, null));
+                        return new MapSpecification<IQuery, IEnumerable<long>>(q => q.For(specification).Select(x => x.Id));
                     }
                 }
             }

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace NuClear.AdvancedSearch.Common.Metadata.Model
+namespace NuClear.River.Common.Metadata.Model
 {
     public sealed class PropertyAutomapper<TKey>
         where TKey : new()

@@ -9,7 +9,8 @@ using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Bulk.API.Factories
 {
-    public class ValueObjectsBulkReplicatorFactory<T> : IBulkReplicatorFactory where T : class
+    public class ValueObjectsBulkReplicatorFactory<TValueObject, TKey> : IBulkReplicatorFactory 
+        where TValueObject : class
     {
         private readonly IQuery _query;
         private readonly DataConnection _dataConnection;
@@ -20,10 +21,10 @@ namespace NuClear.Replication.Bulk.API.Factories
             _dataConnection = dataConnection;
         }
 
-        public IReadOnlyCollection<IBulkReplicator> Create(IMetadataElement metadataElement)
+        public IReadOnlyCollection<IBulkReplicator> Create(IMetadataElement metadata)
         {
-            var statisticsRecalculationMetadata = (ValueObjectMetadataElement<T>)metadataElement;
-            return new[] { new InsertsBulkReplicator<T>(_query, _dataConnection, statisticsRecalculationMetadata.MapSpecificationProviderForSource.Invoke(Specs.Find.All<T>())) };
+            var valueObjectMetadata = (ValueObjectMetadata<TValueObject, TKey>)metadata;
+            return new[] { new InsertsBulkReplicator<TValueObject>(_query, _dataConnection, valueObjectMetadata.MapSpecificationProviderForSource.Invoke(Specs.Find.All<TValueObject>())) };
         }
 
         public void Dispose()

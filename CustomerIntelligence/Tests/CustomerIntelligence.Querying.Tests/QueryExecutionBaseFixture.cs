@@ -20,7 +20,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             HandleNullPropagation = HandleNullPropagationOption.False
         };
 
-        protected readonly static ODataValidationSettings DefaultValidationSettings = new ODataValidationSettings();
+        protected static readonly ODataValidationSettings DefaultValidationSettings = new ODataValidationSettings();
 
         protected static ODataQueryOptions CreateValidQueryOptions(IEdmModel model, Type entityType, string filter = null)
         {
@@ -34,6 +34,7 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
                 Debug.WriteLine(e);
                 throw;
             }
+
             return options;
         }
 
@@ -54,14 +55,9 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             var expression = queryable.Expression.ToString();
 
             // just reduce the text size
-            expression = expression.Replace(@namespace + ".", "").Replace("\"", "'");
+            expression = expression.Replace(@namespace + ".", string.Empty).Replace("\"", "'");
 
             return expression;
-        }
-
-        private static class EnumerableTypeInfo
-        {
-            public static readonly MethodInfo EmptyMethodInfo = typeof(Enumerable).GetMethod("Empty", BindingFlags.Public | BindingFlags.Static);
         }
 
         private static HttpRequestMessage CreateRequest(string query = null)
@@ -80,6 +76,11 @@ namespace NuClear.CustomerIntelligence.Querying.Tests
             var context = new ODataQueryContext(model, elementClrType, null);
             var queryOptions = new ODataQueryOptions(context, request);
             return queryOptions;
+        }
+
+        private static class EnumerableTypeInfo
+        {
+            public static readonly MethodInfo EmptyMethodInfo = typeof(Enumerable).GetMethod("Empty", BindingFlags.Public | BindingFlags.Static);
         }
     }
 }

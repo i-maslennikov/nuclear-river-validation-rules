@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Metamodeling.Elements;
+using NuClear.Metamodeling.Elements.Concrete.References;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
@@ -14,7 +16,6 @@ namespace NuClear.River.Common.Metadata.Builders
         where T : class, IIdentifiable<TKey>
     {
         private MapSpecification<IQuery, IQueryable<T>> _mapToSourceSpec;
-        private IIdentityProvider<TKey> _identityProvider;
 
         protected override AggregateMetadata<T, TKey> Create()
         {
@@ -25,7 +26,7 @@ namespace NuClear.River.Common.Metadata.Builders
             MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget =
                 specification => new MapSpecification<IQuery, IEnumerable<T>>(q => targetMappingSpecification.Map(q).Where(specification));
 
-            return new AggregateMetadata<T, TKey>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, _identityProvider, Features);
+            return new AggregateMetadata<T, TKey>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, Features);
         }
 
         public AggregateMetadataBuilder<T, TKey> HasSource(MapSpecification<IQuery, IQueryable<T>> mapToSourceSpec)
@@ -34,26 +35,26 @@ namespace NuClear.River.Common.Metadata.Builders
             return this;
         }
 
-        public AggregateMetadataBuilder<T, TKey> HasIdentityProvider(IIdentityProvider<TKey> identityProvider)
-        {
-            _identityProvider = identityProvider;
-            return this;
-        }
-
         public AggregateMetadataBuilder<T, TKey> HasValueObject<TValueObject>(
             MapSpecification<IQuery, IQueryable<TValueObject>> sourceMappingSpecification,
-            Func<IReadOnlyCollection<long>, FindSpecification<TValueObject>> findSpecificationProvider)
+            Func<IReadOnlyCollection<TKey>, FindSpecification<TValueObject>> findSpecificationProvider)
             where TValueObject : class
         {
-            MapToObjectsSpecProvider<TValueObject, TValueObject> mapSpecificationProviderForSource = 
+            MapToObjectsSpecProvider<TValueObject, TValueObject> mapSpecificationProviderForSource =
                 specification => new MapSpecification<IQuery, IEnumerable<TValueObject>>(q => sourceMappingSpecification.Map(q).Where(specification));
 
             var targetMappingSpecification = new MapSpecification<IQuery, IQueryable<TValueObject>>(q => q.For<TValueObject>());
-            MapToObjectsSpecProvider<TValueObject, TValueObject> mapSpecificationProviderForTarget = 
+            MapToObjectsSpecProvider<TValueObject, TValueObject> mapSpecificationProviderForTarget =
                 specification => new MapSpecification<IQuery, IEnumerable<TValueObject>>(q => targetMappingSpecification.Map(q).Where(specification));
-            
-            Childs(new ValueObjectMetadataElement<TValueObject>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, findSpecificationProvider));
+
+            Childs(new ValueObjectMetadata<TValueObject, TKey>(mapSpecificationProviderForSource, mapSpecificationProviderForTarget, findSpecificationProvider));
             return this;
+        }
+
+        public AggregateMetadataBuilder<T, TKey> HasEntity<TChildEntity>(Func<IReadOnlyCollection<TKey>, FindSpecification<TChildEntity>> findSpecificationProvider)
+        {
+            Childs(new MetadataReference(new Uri("../" + typeof(TChildEntity).Name, UriKind.Relative)));
+            return WithFeatures(new ChildEntityFeature<TKey, TChildEntity, StatisticsKey>(new MapSpecification<IReadOnlyCollection<TKey>, FindSpecification<TChildEntity>>(findSpecificationProvider))); // fixme: here
         }
     }
 }

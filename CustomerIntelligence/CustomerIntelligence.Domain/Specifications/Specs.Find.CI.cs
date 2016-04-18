@@ -2,6 +2,8 @@
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Model.CI;
+using NuClear.CustomerIntelligence.Domain.Model.Statistics;
+using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Domain.Specifications
@@ -47,25 +49,23 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                     return new FindSpecification<ProjectCategory>(x => aggregateIds.Contains(x.ProjectId));
                 }
 
-                public static class FirmCategory3
+                public static FindSpecification<FirmCategory3> FirmCategory3(IReadOnlyCollection<StatisticsKey> entityIds)
                 {
-                    public static FindSpecification<Model.Statistics.FirmCategory3> ByProject(long projectId)
-                    {
-                        return new FindSpecification<Model.Statistics.FirmCategory3>(x => x.ProjectId == projectId);
-                    }
+                    var spec = entityIds.GroupBy(x => x.ProjectId, x => x.CategoryId)
+                                        .Aggregate(new FindSpecification<FirmCategory3>(x => false),
+                                                   (acc, idsGroup) => acc | new FindSpecification<FirmCategory3>(x => x.ProjectId == idsGroup.Key && idsGroup.Contains(x.CategoryId)));
 
-                    public static FindSpecification<Model.Statistics.FirmCategory3> ByProjectAndCategories(long projectId, IReadOnlyCollection<long> categoryIds)
-                    {
-                        return new FindSpecification<Model.Statistics.FirmCategory3>(x => x.ProjectId == projectId && categoryIds.Contains(x.CategoryId));
-                    }
+                    return spec;
                 }
 
-                public static class FirmForecast
+                public static FindSpecification<FirmForecast> FirmForecast(IReadOnlyCollection<long> aggregateIds)
                 {
-                    public static FindSpecification<Model.Statistics.FirmForecast> ByProject(long projectId)
-                    {
-                        return new FindSpecification<Model.Statistics.FirmForecast>(x => x.ProjectId == projectId);
-                    }
+                    return new FindSpecification<FirmForecast>(x => aggregateIds.Contains(x.ProjectId));
+                }
+
+                public static FindSpecification<ProjectCategoryStatistics> ProjectCategoryStatistics(IReadOnlyCollection<long> aggregateIds)
+                {
+                    return new FindSpecification<ProjectCategoryStatistics>(x => aggregateIds.Contains(x.ProjectId));
                 }
             }
         }

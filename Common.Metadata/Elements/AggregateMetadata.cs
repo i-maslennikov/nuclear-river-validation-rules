@@ -6,36 +6,45 @@ using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.River.Common.Metadata.Builders;
 using NuClear.River.Common.Metadata.Model;
-using NuClear.Storage.API.Specifications;
 
 namespace NuClear.River.Common.Metadata.Elements
 {
-    public class AggregateMetadata<T, TKey> : MetadataElement<AggregateMetadata<T, TKey>, AggregateMetadataBuilder<T, TKey>>
-        where T : class, IIdentifiable<TKey>
+    public interface IAggregateMetadata : IMetadataElement
     {
-        private IMetadataElementIdentity _identity = new Uri(typeof(T).Name, UriKind.Relative).AsIdentity();
+        Type EntityType { get; }
+        Type EntityKeyType { get; }
+    }
+
+    public interface IAggregateMetadata<TEntity> : IAggregateMetadata
+    {
+        MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForSource { get; }
+        MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForTarget { get; }
+    }
+
+    // todo: подумать о названии/назначении. Одновременно пытается описать агрегат и сущность.
+    public class AggregateMetadata<TEntity, TKey> : MetadataElement<AggregateMetadata<TEntity, TKey>, AggregateMetadataBuilder<TEntity, TKey>>, IAggregateMetadata<TEntity>
+        where TEntity : class, IIdentifiable<TKey>
+    {
+        private IMetadataElementIdentity _identity = new Uri(typeof(TEntity).Name, UriKind.Relative).AsIdentity();
 
         public AggregateMetadata(
-            MapToObjectsSpecProvider<T, T> mapSpecificationProviderForSource,
-            MapToObjectsSpecProvider<T, T> mapSpecificationProviderForTarget,
-            IIdentityProvider<TKey> identityProvider,
+            MapToObjectsSpecProvider<TEntity, TEntity> mapSpecificationProviderForSource,
+            MapToObjectsSpecProvider<TEntity, TEntity> mapSpecificationProviderForTarget,
             IEnumerable<IMetadataFeature> features) : base(features)
         {
             MapSpecificationProviderForSource = mapSpecificationProviderForSource;
             MapSpecificationProviderForTarget = mapSpecificationProviderForTarget;
-            FindSpecificationProvider = keys => new FindSpecification<T>(identityProvider.Create<T, TKey>(keys));
         }
 
-        public override IMetadataElementIdentity Identity
-        {
-            get { return _identity; }
-        }
+        public override IMetadataElementIdentity Identity => _identity;
 
-        public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForSource { get; private set; }
+        public Type EntityType => typeof(TEntity);
 
-        public MapToObjectsSpecProvider<T, T> MapSpecificationProviderForTarget { get; private set; }
+        public Type EntityKeyType => typeof(TKey);
 
-        public Func<IReadOnlyCollection<TKey>, FindSpecification<T>> FindSpecificationProvider { get; private set; }
+        public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForSource { get; }
+
+        public MapToObjectsSpecProvider<TEntity, TEntity> MapSpecificationProviderForTarget { get; }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)
         {

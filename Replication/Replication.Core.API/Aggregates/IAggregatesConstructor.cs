@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.Replication.Core.API.Aggregates
 {
     public interface IAggregatesConstructor
     {
-        void Construct(IEnumerable<AggregateOperation> operations);
+        void Execute(IReadOnlyCollection<IOperation> commands);
     }
 }

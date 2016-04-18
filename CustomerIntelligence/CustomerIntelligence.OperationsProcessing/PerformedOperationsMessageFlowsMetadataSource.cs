@@ -9,7 +9,9 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
-using NuClear.Replication.OperationsProcessing.Final;
+using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
+using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
+using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing
 {
@@ -18,33 +20,29 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
         private static readonly HierarchyMetadata MetadataRoot =
             PerformedOperations.Flows
                                .Primary(
+                                        MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
+                                                           .Receiver<ServiceBusOperationsReceiverTelemetryDecorator>()
+                                                           .Accumulator<ImportFactsFromErmAccumulator>()
+                                                           .Handler<ImportFactsFromErmHandler>()
+                                                           .To.Primary().Flow<ImportFactsFromErmFlow>().Connect(),
 
-                                   MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
-                                                      .Accumulator<ImportFactsFromErmAccumulator>()
-                                                      .Handler<ImportFactsFromErmHandler>()
-                                                      .To.Primary().Flow<ImportFactsFromErmFlow>().Connect()
-                                                      .To.Final().Flow<AggregatesFlow>().Connect()
-                                                      .To.Final().Flow<StatisticsFlow>().Connect(),
+                                        MessageFlowMetadata.Config.For<ImportFactsFromBitFlow>()
+                                                           .Receiver<CorporateBusOperationsReceiver>()
+                                                           .Accumulator<ImportFactsFromBitAccumulator>()
+                                                           .Handler<ImportFactsFromBitHandler>()
+                                                           .To.Primary().Flow<ImportFactsFromBitFlow>().Connect(),
 
-                                   MessageFlowMetadata.Config.For<ImportFactsFromBitFlow>()
-                                                      .Accumulator<ImportFactsFromBitAccumulator>()
-                                                      .Handler<ImportFactsFromBitHandler>()
-                                                      .To.Primary().Flow<ImportFactsFromBitFlow>().Connect()
-                                                      .To.Final().Flow<StatisticsFlow>().Connect()
-                )
-                               .Final(
+                                        MessageFlowMetadata.Config.For<AggregatesFlow>()
+                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
+                                                           .Accumulator<AggregateOperationAccumulator<AggregatesFlow>>()
+                                                           .Handler<AggregateOperationAggregatableMessageHandler>()
+                                                           .To.Primary().Flow<AggregatesFlow>().Connect(),
 
-                                   MessageFlowMetadata.Config.For<AggregatesFlow>()
-                                                      .Accumulator<AggregateOperationAccumulator<AggregatesFlow>>()
-                                                      .Handler<AggregateOperationAggregatableMessageHandler>()
-                                                      .To.Final().Flow<AggregatesFlow>().Connect(),
-
-                                   MessageFlowMetadata.Config.For<StatisticsFlow>()
-                                                      .Accumulator<AggregateOperationAccumulator<StatisticsFlow>>()
-                                                      .Handler<StatisticsAggregatableMessageHandler>()
-                                                      .To.Final().Flow<StatisticsFlow>().Connect()
-
-                );
+                                        MessageFlowMetadata.Config.For<StatisticsFlow>()
+                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
+                                                           .Accumulator<AggregateOperationAccumulator<StatisticsFlow>>()
+                                                           .Handler<StatisticsAggregatableMessageHandler>()
+                                                           .To.Primary().Flow<StatisticsFlow>().Connect());
 
         private readonly IReadOnlyDictionary<Uri, IMetadataElement> _metadata;
 

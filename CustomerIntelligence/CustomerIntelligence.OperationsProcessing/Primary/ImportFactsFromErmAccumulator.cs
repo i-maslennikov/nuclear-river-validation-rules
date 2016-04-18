@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 
+using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
@@ -15,7 +16,7 @@ using NuClear.Tracing.API;
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 {
     /// <summary>
-    /// Стратегия выполняет фильтрацию операций, приехавших в TUC, и преобразование этих операций в операции над фактами.
+    /// Applies filter for TUC and maps them to FactOperation
     /// </summary>
     public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, OperationAggregatableMessage<FactOperation>>
     {

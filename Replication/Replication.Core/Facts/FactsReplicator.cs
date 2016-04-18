@@ -60,15 +60,14 @@ namespace NuClear.Replication.Core.Facts
                         throw new NotSupportedException(string.Format("The fact of type '{0}' is not supported.", factType));
                     }
 
-                    var factIds = slice.Select(x => x.FactId).Distinct();
                     using (Probe.Create("ETL1 Transforming", factType.Name))
                     {
                         var processor = _factProcessorFactory.Create(factMetadata);
 
-                        foreach (var batch in factIds.CreateBatches(_replicationSettings.ReplicationBatchSize))
+                        foreach (var batch in slice.Distinct().CreateBatches(_replicationSettings.ReplicationBatchSize))
                         {
                             _tracer.Debug("Apply changes to target facts storage");
-                            var aggregateOperations = processor.ApplyChanges(batch);
+                            var aggregateOperations = processor.Execute(batch);
 
                             result = result.Concat(aggregateOperations);
                         }

@@ -1,83 +1,64 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
-using NuClear.River.Common.Metadata;
-using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Model;
-using NuClear.Storage.API.Readings;
+using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class AggregateProcessor<T> : IAggregateProcessor
-        where T : class, IIdentifiable<long>
+    public sealed class AggregateProcessor<TRootEntity, TRootKey> : IAggregateProcessor
+        where TRootEntity : class, IIdentifiable<TRootKey>
     {
-        private readonly IQuery _query;
-        private readonly IBulkRepository<T> _repository;
-        private readonly AggregateMetadata<T, long> _metadata;
-        private readonly DataChangesDetector<T, T> _aggregateChangesDetector;
-        private readonly IReadOnlyCollection<IValueObjectProcessor> _valueObjectProcessors;
+        private readonly IFindSpecificationProvider<TRootEntity, TRootKey> _findSpecificationProvider;
+        private readonly EntityProcessor<TRootEntity> _rootEntityProcessor;
+        private readonly IReadOnlyCollection<IChildEntityProcessor<TRootKey>> _childEntityProcessors;
 
-        public AggregateProcessor(AggregateMetadata<T, long> metadata, IValueObjectProcessorFactory valueObjectProcessorFactory, IQuery query, IBulkRepository<T> repository)
+        public AggregateProcessor(IFindSpecificationProvider<TRootEntity, TRootKey> findSpecificationProvider, EntityProcessor<TRootEntity> rootEntityProcessor, IReadOnlyCollection<IChildEntityProcessor<TRootKey>> childEntityProcessors)
         {
-            _metadata = metadata;
-            _query = query;
-            _repository = repository;
-            _aggregateChangesDetector = new DataChangesDetector<T, T>(_metadata.MapSpecificationProviderForSource, _metadata.MapSpecificationProviderForTarget, _query);
-            _valueObjectProcessors = _metadata.Elements.OfType<IValueObjectMetadataElement>().Select(valueObjectProcessorFactory.Create).ToArray();
+            _findSpecificationProvider = findSpecificationProvider;
+            _rootEntityProcessor = rootEntityProcessor;
+            _childEntityProcessors = childEntityProcessors;
         }
 
-        public void Initialize(AggregateProcessorSlice slice)
+        public void Initialize(IReadOnlyCollection<InitializeAggregate> commands)
         {
-            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(slice.AggregateIds), EqualityComparer<long>.Default);
-
-            var createFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Difference.ToArray());
-
-            var aggregatesToCreate = _metadata.MapSpecificationProviderForSource.Invoke(createFilter).Map(_query);
-
-            _repository.Create(aggregatesToCreate);
-
-            ApplyChangesToValueObjects(slice.AggregateIds);
-        }
-
-        public void Recalculate(AggregateProcessorSlice slice)
-        {
-            ApplyChangesToValueObjects(slice.AggregateIds);
-
-            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(slice.AggregateIds), EqualityComparer<long>.Default);
-
-            var createFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Difference.ToArray());
-            var updateFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Intersection.ToArray());
-            var deleteFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Complement.ToArray());
-
-            var aggregatesToCreate = _metadata.MapSpecificationProviderForSource.Invoke(createFilter).Map(_query);
-            var aggregatesToUpdate = _metadata.MapSpecificationProviderForSource.Invoke(updateFilter).Map(_query);
-            var aggregatesToDelete = _metadata.MapSpecificationProviderForTarget.Invoke(deleteFilter).Map(_query);
-
-            _repository.Delete(aggregatesToDelete);
-            _repository.Create(aggregatesToCreate);
-            _repository.Update(aggregatesToUpdate);
-        }
-
-        public void Destroy(AggregateProcessorSlice slice)
-        {
-            ApplyChangesToValueObjects(slice.AggregateIds);
-
-            var mergeResult = _aggregateChangesDetector.DetectChanges(Specs.Map.ToIds<T>(), _metadata.FindSpecificationProvider.Invoke(slice.AggregateIds), EqualityComparer<long>.Default);
-
-            var deleteFilter = _metadata.FindSpecificationProvider.Invoke(mergeResult.Complement.ToArray());
-
-            var aggregatesToDelete = _metadata.MapSpecificationProviderForTarget.Invoke(deleteFilter).Map(_query);
-
-            _repository.Delete(aggregatesToDelete);
-        }
-
-        private void ApplyChangesToValueObjects(IReadOnlyCollection<long> aggregateIds)
-        {
-            foreach (var processor in _valueObjectProcessors)
+            var keys = commands.Select(x => (TRootKey)x.AggregateRoot.EntityKey).ToArray();
+            var specification = _findSpecificationProvider.Create(keys);
+            _rootEntityProcessor.Initialize(specification);
+            foreach (var processor in _childEntityProcessors)
             {
-                processor.ApplyChanges(aggregateIds);
+                processor.Initialize(keys);
+            }
+        }
+
+        public void Recalculate(IReadOnlyCollection<RecalculateAggregate> commands)
+        {
+            var keys = commands.Select(x => (TRootKey)x.AggregateRoot.EntityKey).ToArray();
+            var specification = _findSpecificationProvider.Create(keys);
+            _rootEntityProcessor.Recalculate(specification);
+            foreach (var processor in _childEntityProcessors)
+            {
+                processor.Recalculate(keys);
+            }
+        }
+
+        public void Recalculate(Type partType, IReadOnlyCollection<RecalculateAggregatePart> commands)
+        {
+            var keys = commands.GroupBy(x => (TRootKey)x.AggregateRoot.EntityKey, x => x.Entity.EntityKey).ToArray();
+            var processor = _childEntityProcessors.Single(x => x.EntityType == partType);
+            processor.Recalculate(keys);
+        }
+
+        public void Destroy(IReadOnlyCollection<DestroyAggregate> commands)
+        {
+            var keys = commands.Select(x => (TRootKey)x.AggregateRoot.EntityKey).ToArray();
+            var specification = _findSpecificationProvider.Create(keys);
+            _rootEntityProcessor.Destroy(specification);
+            foreach (var processor in _childEntityProcessors)
+            {
+                processor.Destroy(keys);
             }
         }
     }
