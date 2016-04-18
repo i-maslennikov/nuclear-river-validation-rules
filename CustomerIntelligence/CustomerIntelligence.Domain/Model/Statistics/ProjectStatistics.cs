@@ -1,11 +1,9 @@
 ﻿using NuClear.River.Common.Metadata.Model;
-using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
 {
-    public sealed class ProjectStatistics : ICustomerIntelligenceAggregatePart, IIdentifiable<StatisticsKey>
+    public sealed class ProjectStatistics : IAggregateRoot
     {
-        public long ProjectId { get; set; }
-        public long CategoryId { get; set; }
+        public long Id { get; set; } // ProjectId
     }
 }

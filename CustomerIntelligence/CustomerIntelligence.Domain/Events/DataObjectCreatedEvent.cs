@@ -1,8 +1,10 @@
 ﻿using System;
 
+using NuClear.River.Common.Metadata;
+
 namespace NuClear.CustomerIntelligence.Domain.Events
 {
-    public class DataObjectCreatedEvent : IDataObjectEvent<long>
+    public class DataObjectCreatedEvent : IEvent
     {
         public DataObjectCreatedEvent(Type dataObjectType, long dataObjectId)
         {

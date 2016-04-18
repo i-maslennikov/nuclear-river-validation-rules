@@ -1,18 +1,18 @@
 ﻿using System;
 
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata;
 
 namespace NuClear.CustomerIntelligence.Domain.Events
 {
-    public class DataObjectReplacedEvent : IDataObjectEvent<StatisticsKey>
+    public class DataObjectReplacedEvent : IEvent
     {
-        public DataObjectReplacedEvent(Type dataObjectType, StatisticsKey dataObjectId)
+        public DataObjectReplacedEvent(Type dataObjectType, long dataObjectId)
         {
             DataObjectType = dataObjectType;
             DataObjectId = dataObjectId;
         }
 
         public Type DataObjectType { get; }
-        public StatisticsKey DataObjectId { get; }
+        public long DataObjectId { get; }
     }
 }

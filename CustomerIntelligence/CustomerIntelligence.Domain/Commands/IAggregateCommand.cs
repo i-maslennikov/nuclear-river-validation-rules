@@ -6,7 +6,7 @@ namespace NuClear.CustomerIntelligence.Domain.Commands
 {
     public interface IAggregateCommand : ICommand
     {
-        Type AggregateType { get; }
-        long AggregateId { get; }
+        Type AggregateRootType { get; }
+        long AggregateRootId { get; }
     }
 }

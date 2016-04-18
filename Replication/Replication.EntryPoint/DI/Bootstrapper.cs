@@ -235,7 +235,7 @@ namespace NuClear.Replication.EntryPoint.DI
 
             // final
             container.RegisterTypeWithDependencies(typeof(SqlStoreReceiverTelemetryDecorator), Lifetime.PerScope, null)
-                     .RegisterTypeWithDependencies(typeof(AggregateOperationAggregatableMessageHandler), Lifetime.PerResolve, null);
+                     .RegisterTypeWithDependencies(typeof(AggregateCommandsHandler), Lifetime.PerResolve, null);
 
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(typeof(IUserContext)), Lifetime.Singleton)

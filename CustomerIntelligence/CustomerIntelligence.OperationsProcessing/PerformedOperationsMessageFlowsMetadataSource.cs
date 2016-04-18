@@ -32,28 +32,23 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                                                            .Handler<ImportFactsFromBitHandler>()
                                                            .To.Primary().Flow<ImportFactsFromBitFlow>().Connect(),
 
-                                        MessageFlowMetadata.Config.For<AggregatesFlow>()
+                                        MessageFlowMetadata.Config.For<CommonEventsFlow>()
                                                            .Receiver<SqlStoreReceiverTelemetryDecorator>()
-                                                           .Accumulator<AggregateOperationAccumulator<AggregatesFlow>>()
-                                                           .Handler<AggregateOperationAggregatableMessageHandler>()
-                                                           .To.Primary().Flow<AggregatesFlow>().Connect(),
+                                                           .Accumulator<CommonEventsAccumulator>()
+                                                           .Handler<AggregateCommandsHandler>()
+                                                           .To.Primary().Flow<CommonEventsFlow>().Connect(),
 
-                                        MessageFlowMetadata.Config.For<StatisticsFlow>()
+                                        MessageFlowMetadata.Config.For<StatisticsEventsFlow>()
                                                            .Receiver<SqlStoreReceiverTelemetryDecorator>()
-                                                           .Accumulator<AggregateOperationAccumulator<StatisticsFlow>>()
-                                                           .Handler<StatisticsAggregatableMessageHandler>()
-                                                           .To.Primary().Flow<StatisticsFlow>().Connect());
-
-        private readonly IReadOnlyDictionary<Uri, IMetadataElement> _metadata;
+                                                           .Accumulator<ProjectStatisticsAggregateEventsAccumulator>()
+                                                           .Handler<ProjectStatisticsAggregateCommandsHandler>()
+                                                           .To.Primary().Flow<StatisticsEventsFlow>().Connect());
 
         public PerformedOperationsMessageFlowsMetadataSource()
         {
-            _metadata = new Dictionary<Uri, IMetadataElement> { { MetadataRoot.Identity.Id, MetadataRoot } };
+            Metadata = new Dictionary<Uri, IMetadataElement> { { MetadataRoot.Identity.Id, MetadataRoot } };
         }
 
-        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata
-        {
-            get { return _metadata; }
-        }
+        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }
     }
 }

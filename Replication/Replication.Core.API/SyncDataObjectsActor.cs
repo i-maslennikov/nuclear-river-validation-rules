@@ -9,7 +9,6 @@ namespace NuClear.Replication.Core.API
     public sealed class SyncDataObjectsActor<TDataObject> : DataObjectsActorBase<TDataObject>
         where TDataObject : class
     {
-        private readonly IQuery _query;
         private readonly IDataChangesHandler<TDataObject> _dataChangesHandler;
         private readonly IBulkRepository<TDataObject> _bulkRepository;
 
@@ -20,7 +19,6 @@ namespace NuClear.Replication.Core.API
             IDataChangesHandler<TDataObject> dataChangesHandler)
             : base(query, storageBasedDataObjectAccessor)
         {
-            _query = query;
             _bulkRepository = bulkRepository;
             _dataChangesHandler = dataChangesHandler;
         }
@@ -49,8 +47,9 @@ namespace NuClear.Replication.Core.API
             _bulkRepository.Create(toCreate);
             events.AddRange(_dataChangesHandler.HandleCreates(toCreate));
 
-            events.AddRange(_dataChangesHandler.HandleReferences(_query, toUpdate));
+            events.AddRange(_dataChangesHandler.HandleRelates(toUpdate));
             _bulkRepository.Update(toCreate);
+            events.AddRange(_dataChangesHandler.HandleRelates(toUpdate));
             events.AddRange(_dataChangesHandler.HandleUpdates(toUpdate));
 
             return events;

@@ -20,7 +20,7 @@ namespace NuClear.Replication.Core.API
             _query = query;
             _storageBasedDataObjectAccessor = storageBasedDataObjectAccessor;
 
-            _mapSpecificationProviderForSource = specification => new MapSpecification<IQuery, IEnumerable<TDataObject>>(q => _storageBasedDataObjectAccessor.GetSource(q).Where(specification));
+            _mapSpecificationProviderForSource = specification => new MapSpecification<IQuery, IEnumerable<TDataObject>>(q => _storageBasedDataObjectAccessor.GetSource().Where(specification));
 
             var mapSpecification = new MapSpecification<IQuery, IQueryable<TDataObject>>(q => q.For<TDataObject>());
             _mapSpecificationProviderForTarget = specification => new MapSpecification<IQuery, IEnumerable<TDataObject>>(q => mapSpecification.Map(q).Where(specification));

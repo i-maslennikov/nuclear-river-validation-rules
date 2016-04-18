@@ -39,6 +39,7 @@
     <Compile Include="Commands\IDataObjectCommand.cs" />
     <Compile Include="Commands\InitializeAggregateCommand.cs" />
     <Compile Include="Commands\RecalculateAggregateCommand.cs" />
+    <Compile Include="Commands\RecalculateEntityCommand.cs" />
     <Compile Include="Commands\RecalculateAggregateCommandFactory.cs" />
     <Compile Include="Commands\RecalculateStatisticsCommandFactory.cs" />
     <Compile Include="Commands\ReplaceFirmCategoryForecastCommand.cs" />
@@ -83,8 +84,7 @@
     <Compile Include="Events\DataObjectDeletedEvent.cs" />
     <Compile Include="Events\DataObjectReplacedEvent.cs" />
     <Compile Include="Events\DataObjectUpdatedEvent.cs" />
-    <Compile Include="Events\IDataObjectEvent.cs" />
-    <Compile Include="Events\ReferencedDataObjectUpdatedEvent.cs" />
+    <Compile Include="Events\RelatedDataObjectOutdatedEvent.cs" />
     <Compile Include="FactsReplicationMetadataSource.cs" />
     <Compile Include="ImportStatisticsMetadataSource.cs" />
     <Compile Include="MetadataBuilderExtesnsions.cs" />
@@ -104,6 +104,7 @@
     <Compile Include="Model\CI\FirmBalance.cs" />
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
+    <Compile Include="Model\Statistics\ProjectStatistics.cs" />
     <Compile Include="Model\Statistics\ProjectStatisticsAggregate.cs" />
     <Compile Include="Model\Facts\FirmAccessor.cs" />
     <Compile Include="Model\Statistics\ProjectCategoryStatistics.cs" />

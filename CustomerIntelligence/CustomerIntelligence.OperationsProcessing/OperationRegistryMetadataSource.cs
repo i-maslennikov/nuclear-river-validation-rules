@@ -7,7 +7,6 @@ using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Operations;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity.Generic;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;

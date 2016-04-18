@@ -6,7 +6,6 @@ using NuClear.CustomerIntelligence.Domain.Events;
 using NuClear.CustomerIntelligence.Domain.Specifications;
 using NuClear.Replication.Core.API;
 using NuClear.River.Common.Metadata;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Bit
@@ -27,7 +26,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Bit
 
         public IReadOnlyCollection<IEvent> HandleChanges(IReadOnlyCollection<FirmForecast> dataObjects)
         {
-            return dataObjects.Select(x => new DataObjectReplacedEvent(typeof(FirmForecast), new StatisticsKey { ProjectId = x.ProjectId })).ToArray();
+            return dataObjects.Select(x => new DataObjectReplacedEvent(typeof(FirmForecast), x.ProjectId)).ToArray();
         }
     }
 }

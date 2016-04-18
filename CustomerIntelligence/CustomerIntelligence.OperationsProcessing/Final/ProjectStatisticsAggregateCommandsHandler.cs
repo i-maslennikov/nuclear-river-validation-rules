@@ -2,27 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.CustomerIntelligence.Domain.Commands;
+using NuClear.CustomerIntelligence.Domain.Model.Statistics;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
-using NuClear.River.Common.Metadata.Model;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
-    public sealed class StatisticsAggregatableMessageHandler : IMessageProcessingHandler
+    public sealed class ProjectStatisticsAggregateCommandsHandler : IMessageProcessingHandler
     {
-        private readonly IAggregatesConstructor _aggregatesConstructor;
+        private readonly IAggregateCommandActorFactory _aggregateCommandActorFactory;
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
 
-        public StatisticsAggregatableMessageHandler(IAggregatesConstructor aggregatesConstructor, ITelemetryPublisher telemetryPublisher, ITracer tracer)
+        public ProjectStatisticsAggregateCommandsHandler(IAggregateCommandActorFactory aggregateCommandActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer)
         {
-            _aggregatesConstructor = aggregatesConstructor;
+            _aggregateCommandActorFactory = aggregateCommandActorFactory;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
         }
@@ -36,12 +37,19 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         {
             try
             {
-                foreach (var message in messages.OfType<OperationAggregatableMessage<IOperation>>())
+                foreach (var message in messages.Cast<OperationAggregatableMessage<IAggregateCommand>>())
                 {
-                    _aggregatesConstructor.Execute(message.Operations);
-                    _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(message.Operations.Count);
+                    var commandGroups = message.Commands.GroupBy(x => x.GetType());
+                    foreach (var commandGroup in commandGroups)
+                    {
+                        var actor = _aggregateCommandActorFactory.Create(commandGroup.Key, typeof(ProjectStatistics));
+                        var commands = commandGroup.ToArray();
 
-                    _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
+                        actor.ExecuteCommands(commands);
+
+                        _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(commands.Length);
+                        _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
+                    }
                 }
 
                 return MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded();

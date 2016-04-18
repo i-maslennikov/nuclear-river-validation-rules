@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Model.CI;
@@ -49,6 +50,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                     return new FindSpecification<ProjectCategory>(x => aggregateIds.Contains(x.ProjectId));
                 }
 
+                [Obsolete]
                 public static FindSpecification<FirmCategory3> FirmCategory3(IReadOnlyCollection<StatisticsKey> entityIds)
                 {
                     return new FindSpecification<FirmCategory3>(x => entityIds.Contains(new StatisticsKey { ProjectId = x.ProjectId, CategoryId = x.CategoryId }));

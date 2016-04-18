@@ -114,8 +114,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                 _eventSender.Push(pair.Key, pair.Value);
             }
 
-            _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(dispatched[StatisticsFlow.Instance].Count);
-            _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(dispatched[AggregatesFlow.Instance].Count);
+            _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(dispatched[StatisticsEventsFlow.Instance].Count);
+            _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(dispatched[CommonEventsFlow.Instance].Count);
         }
     }
 }

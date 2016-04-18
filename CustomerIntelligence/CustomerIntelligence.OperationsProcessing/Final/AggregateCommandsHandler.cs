@@ -16,13 +16,13 @@ using NuClear.Tracing.API;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
-    public sealed class AggregateOperationAggregatableMessageHandler : IMessageProcessingHandler
+    public sealed class AggregateCommandsHandler : IMessageProcessingHandler
     {
         private readonly IAggregateCommandActorFactory _aggregateCommandActorFactory;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
-        public AggregateOperationAggregatableMessageHandler(IAggregateCommandActorFactory aggregateCommandActorFactory, ITracer tracer, ITelemetryPublisher telemetryPublisher)
+        public AggregateCommandsHandler(IAggregateCommandActorFactory aggregateCommandActorFactory, ITracer tracer, ITelemetryPublisher telemetryPublisher)
         {
             _aggregateCommandActorFactory = aggregateCommandActorFactory;
             _tracer = tracer;
@@ -41,15 +41,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 foreach (var message in messages.Cast<OperationAggregatableMessage<IAggregateCommand>>())
                 {
                     var commandGroups = message.Commands
-                                               .GroupBy(x => new { CommandType = x.GetType(), x.AggregateType })
+                                               .GroupBy(x => new { CommandType = x.GetType(), x.AggregateRootType })
                                                .OrderByDescending(x => x.Key.CommandType, new AggregateCommandPriorityComparer());
                     foreach (var commandGroup in commandGroups)
                     {
-                        ExecuteCommands(commandGroup.Key.CommandType, commandGroup.Key.AggregateType, commandGroup.ToArray());
+                        ExecuteCommands(commandGroup.Key.CommandType, commandGroup.Key.AggregateRootType, commandGroup.ToArray());
                     }
 
                     _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Commands.Count);
-
                     _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
                 }
 
@@ -62,15 +61,15 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             }
         }
 
-        private void ExecuteCommands(Type commandType, Type aggregateType, IReadOnlyCollection<IAggregateCommand> commands)
+        private void ExecuteCommands(Type commandType, Type aggregateRootType, IReadOnlyCollection<IAggregateCommand> commands)
         {
             using (var transaction = new TransactionScope(
                 TransactionScopeOption.Required,
                 new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
-                using (Probe.Create($"ETL2 {commandType.Name} {aggregateType.Name}"))
+                using (Probe.Create($"ETL2 {commandType.Name} {aggregateRootType.Name}"))
                 {
-                    var actor = _aggregateCommandActorFactory.Create(commandType, aggregateType);
+                    var actor = _aggregateCommandActorFactory.Create(commandType, aggregateRootType);
                     actor.ExecuteCommands(commands);
                 }
 

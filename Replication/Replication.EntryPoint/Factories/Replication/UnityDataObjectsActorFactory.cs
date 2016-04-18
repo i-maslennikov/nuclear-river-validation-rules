@@ -8,7 +8,6 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
@@ -48,7 +47,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
             var processor = _unityContainer.Resolve(processorType,
                                                     new DependencyOverride(metadata.GetType(), metadata),
                                                     new DependencyOverride(MakeProcessorsCollectionType(commandType), featureProcessorsArray));
-            return (IImportDocumentMetadataProcessor)processor;
+            return (IActor)processor;
         }
 
         private Uri GetMetadataUri(Type dtoType)

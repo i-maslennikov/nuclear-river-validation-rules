@@ -13,25 +13,25 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
     {
         public IDictionary<IMessageFlow, IReadOnlyCollection<IEvent>> Dispatch(IReadOnlyCollection<IEvent> events)
         {
-            var aggregateFlow = new List<IEvent>();
-            var statisticsFlow = new List<IEvent>();
+            var commonEvents = new List<IEvent>();
+            var statisticsEvents = new List<IEvent>();
 
             foreach (var @event in events)
             {
-                if (@event is IDataObjectEvent<StatisticsKey>)
+                if (@event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>)
                 {
-                    statisticsFlow.Add(@event);
+                    statisticsEvents.Add(@event);
                 }
                 else
                 {
-                    aggregateFlow.Add(@event);
+                    commonEvents.Add(@event);
                 }
             }
 
             return new Dictionary<IMessageFlow, IReadOnlyCollection<IEvent>>
                 {
-                    { StatisticsFlow.Instance, statisticsFlow },
-                    { AggregatesFlow.Instance, aggregateFlow },
+                    { StatisticsEventsFlow.Instance, statisticsEvents },
+                    { CommonEventsFlow.Instance, commonEvents },
                 };
         }
     }

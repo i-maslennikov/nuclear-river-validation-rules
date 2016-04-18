@@ -4,7 +4,7 @@ using NuClear.Messaging.API.Flows;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows
 {
-    public sealed class AggregatesFlow : MessageFlowBase<AggregatesFlow>
+    public sealed class CommonEventsFlow : MessageFlowBase<CommonEventsFlow>
     {
         public override Guid Id
         {
