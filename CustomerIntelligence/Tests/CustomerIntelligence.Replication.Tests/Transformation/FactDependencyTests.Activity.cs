@@ -25,7 +25,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                  .Has(new AppointmentReference { ActivityId = 1, Reference = RegardingObjectReference, ReferencedObjectId = 2, ReferencedType = EntityTypeIds.Client },
                       new AppointmentReference { ActivityId = 1, Reference = RegardingObjectReference, ReferencedObjectId = 3, ReferencedType = EntityTypeIds.Firm });
 
-            TargetDb.Has(new Facts::Activity { Id = 1, ClientId = 2, FirmId = 3, ModifiedOn = DateTimeOffset.Now });
+            TargetDb.Has(new Facts::Activity { Id = 1, ClientId = 2, FirmId = 3, ModifiedOn = DateTimeOffset.Now.AddDays(-1) });
             TargetDb.Has(new Facts::Client { Id = 2 });
             TargetDb.Has(new Facts::Firm { Id = 3 });
             TargetDb.Has(new Facts::Firm { Id = 4, ClientId = 2 });

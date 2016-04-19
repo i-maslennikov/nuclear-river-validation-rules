@@ -54,6 +54,13 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                                                    .Cast<OperationAggregatableMessage<SyncDataObjectCommand>>()
                                                    .ToArray();
 
+                var bucketIds = processingResultsMap.Keys.ToArray();
+                if (result.Count > 1000 * bucketIds.Count)
+                {
+                    _tracer.Warn($"Messages produced huge operation amount: from {bucketIds.Count} TUCs to {result.Count} commands\n" +
+                        string.Join(", ", bucketIds));
+                }
+
                 Handle(messages.SelectMany(message => message.Commands).ToArray());
 
                 var eldestOperationPerformTime = messages.Min(message => message.OperationTime);

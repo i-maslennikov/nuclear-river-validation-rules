@@ -74,10 +74,11 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
 
             public object Create()
             {
-                return new DataChangesDetector<T>(
+                return new FactChangesDetector<T>(
                     _metadata.MapSpecificationProviderForSource,
                     _metadata.MapSpecificationProviderForTarget,
                     _equalityComparerFactory.CreateIdentityComparer<T>(),
+                    _equalityComparerFactory.CreateCompleteComparer<T>(),
                     _query);
             }
         }

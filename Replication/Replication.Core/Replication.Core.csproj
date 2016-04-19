@@ -93,6 +93,7 @@
     <Compile Include="BulkRepository.cs" />
     <Compile Include="EqualityComparerFactory.cs" />
     <Compile Include="Aggregates\DirectlyDependentEntityFeatureProcessor.cs" />
+    <Compile Include="FactChangesDetector.cs" />
     <Compile Include="Facts\FactProcessor.cs" />
     <Compile Include="Facts\FactsReplicator.cs" />
     <Compile Include="Facts\IImportDocumentFeatureProcessor.cs" />
