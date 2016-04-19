@@ -100,11 +100,14 @@
     <Compile Include="Identities\Operations\ManageGlobalAssociatedDeniedDraftRulesIdentity.cs" />
     <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
     <Compile Include="Identities\Operations\PublishGlobalAssociatedDeniedRulesIdentity.cs" />
+    <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="Primary\ImportFactsFromErmAccumulator.cs" />
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transports\OperationDispatcher.cs" />
+    <Compile Include="Transports\SQLStore\EntityReferenceSerializer.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

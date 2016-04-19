@@ -1,6 +1,5 @@
 ﻿using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
-using NuClear.River.Common.Metadata.Context;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.ValidationRules.Domain.EntityTypes;
 using NuClear.ValidationRules.Domain.Model.Facts;
@@ -409,12 +408,12 @@ namespace NuClear.ValidationRules.Replication.Tests
         }
 
         private static InitializeAggregate Initialize<TEntityType>(long id) where TEntityType : IdentityBase<TEntityType>, IEntityType, new()
-            => new InitializeAggregate(PredicateFactory.EntityById(EntityTypeBase<TEntityType>.Instance, id));
+            => new InitializeAggregate(new EntityReference(EntityTypeBase<TEntityType>.Instance, id));
 
         private static RecalculateAggregate Recalculate<TEntityType>(long id) where TEntityType : IdentityBase<TEntityType>, IEntityType, new()
-            => new RecalculateAggregate(PredicateFactory.EntityById(EntityTypeBase<TEntityType>.Instance, id));
+            => new RecalculateAggregate(new EntityReference(EntityTypeBase<TEntityType>.Instance, id));
 
         private static DestroyAggregate Destroy<TEntityType>(long id) where TEntityType : IdentityBase<TEntityType>, IEntityType, new()
-            => new DestroyAggregate(PredicateFactory.EntityById(EntityTypeBase<TEntityType>.Instance, id));
+            => new DestroyAggregate(new EntityReference(EntityTypeBase<TEntityType>.Instance, id));
     }
 }

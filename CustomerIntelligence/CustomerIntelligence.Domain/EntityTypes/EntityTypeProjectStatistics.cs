@@ -1,4 +1,5 @@
 ﻿using NuClear.Model.Common.Entities;
+using NuClear.River.Common.Metadata;
 
 namespace NuClear.CustomerIntelligence.Domain.EntityTypes
 {

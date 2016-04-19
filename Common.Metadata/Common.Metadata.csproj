@@ -44,13 +44,6 @@
     <Compile Include="Builders\FactMetadataBuilder.cs" />
     <Compile Include="Builders\ImportStatisticsMetadataBuilder.cs" />
     <Compile Include="Builders\StructuralModelElementBuilder.cs" />
-    <Compile Include="Context\IPredicateProperty.cs" />
-    <Compile Include="Context\IPredicateXmlSerializer.cs" />
-    <Compile Include="Context\ISlicer.cs" />
-    <Compile Include="Context\Predicate.cs" />
-    <Compile Include="Context\PredicateFactory.cs" />
-    <Compile Include="Context\PredicateProperty.cs" />
-    <Compile Include="Context\PredicateXmlSerializer.cs" />
     <Compile Include="Elements\ChildEntityFeature.cs" />
     <Compile Include="Elements\OperationRegistryMetadataElement.cs" />
     <Compile Include="Elements\AggregateMetadata.cs" />

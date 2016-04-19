@@ -4,6 +4,7 @@ using System.Linq;
 using System.Transactions;
 
 using NuClear.Metamodeling.Elements;
+using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core.API.Aggregates;

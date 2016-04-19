@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-using NuClear.River.Common.Metadata.Context;
+﻿using System;
 
 namespace NuClear.River.Common.Metadata.Model.Operations
 {

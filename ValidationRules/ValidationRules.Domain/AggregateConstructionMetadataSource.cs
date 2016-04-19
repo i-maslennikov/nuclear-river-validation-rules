@@ -8,7 +8,6 @@ using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Identities;
-using NuClear.River.Common.Metadata.Model;
 using NuClear.ValidationRules.Domain.Model;
 using NuClear.ValidationRules.Domain.Model.Aggregates;
 using NuClear.ValidationRules.Domain.Specifications;
@@ -26,7 +25,6 @@ namespace NuClear.ValidationRules.Domain
                                      AggregateMetadata<Price, long>
                                          .Config
                                          .HasSource(Specs.Map.Facts.ToAggregates.Prices)
-                                         .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions, Specs.Find.Aggs.AdvertisementAmountRestrictions)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.PriceDeniedPositions, Specs.Find.Aggs.PriceDeniedPositions)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.PriceAssociatedPositions, Specs.Find.Aggs.PriceAssociatedPositions),
@@ -34,26 +32,22 @@ namespace NuClear.ValidationRules.Domain
                                      AggregateMetadata<Ruleset, long>
                                          .Config
                                          .HasSource(Specs.Map.Facts.ToAggregates.Rulesets)
-                                         .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.RulesetDeniedPositions, Specs.Find.Aggs.RulesetDeniedPositions)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.RulesetAssociatedPositions, Specs.Find.Aggs.RulesetAssociatedPositions),
 
                                      AggregateMetadata<Order, long>
                                          .Config
                                          .HasSource(Specs.Map.Facts.ToAggregates.Orders)
-                                         .HasIdentityProvider(DefaultIdentityProvider.Instance)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPositions, Specs.Find.Aggs.OrderPositions)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPrices, Specs.Find.Aggs.OrderPrices),
 
                                      AggregateMetadata<Position, long>
                                          .Config
-                                         .HasSource(Specs.Map.Facts.ToAggregates.Positions)
-                                         .HasIdentityProvider(DefaultIdentityProvider.Instance),
+                                         .HasSource(Specs.Map.Facts.ToAggregates.Positions),
 
-                                     AggregateMetadata<Period, PeriodId>
+                                     AggregateMetadata<Period, PeriodKey>
                                          .Config
-                                         .HasSource(Specs.Map.Facts.ToAggregates.Periods)
-                                         .HasIdentityProvider(PeriodIdentityProvider.Instance));
+                                         .HasSource(Specs.Map.Facts.ToAggregates.Periods));
 
         public AggregateConstructionMetadataSource()
         {

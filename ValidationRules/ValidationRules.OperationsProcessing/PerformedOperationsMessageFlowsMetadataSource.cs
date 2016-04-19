@@ -9,6 +9,8 @@ using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.Replication.OperationsProcessing.Final;
+using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
+using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.ValidationRules.OperationsProcessing.Final;
 
 namespace NuClear.ValidationRules.OperationsProcessing
@@ -19,18 +21,17 @@ namespace NuClear.ValidationRules.OperationsProcessing
         private static readonly HierarchyMetadata MetadataRoot =
             PerformedOperations.Flows
                                .Primary(
-                                   MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
-                                                      .Accumulator<ImportFactsFromErmAccumulator>()
-                                                      .Handler<ImportFactsFromErmHandler>()
-                                                      .To.Primary().Flow<ImportFactsFromErmFlow>().Connect()
-                                                      .To.Final().Flow<AggregatesFlow>().Connect()
-                                )
-                                .Final(
-                                   MessageFlowMetadata.Config.For<AggregatesFlow>()
-                                                      .Accumulator<AggregateOperationAccumulator<AggregatesFlow>>()
-                                                      .Handler<AggregateOperationAggregatableMessageHandler>()
-                                                      .To.Final().Flow<AggregatesFlow>().Connect()
-                                );
+                                        MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
+                                                           .Receiver<ServiceBusOperationsReceiverTelemetryDecorator>()
+                                                           .Accumulator<ImportFactsFromErmAccumulator>()
+                                                           .Handler<ImportFactsFromErmHandler>()
+                                                           .To.Primary().Flow<ImportFactsFromErmFlow>().Connect(),
+
+                                        MessageFlowMetadata.Config.For<AggregatesFlow>()
+                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
+                                                           .Accumulator<AggregateOperationAccumulator<AggregatesFlow>>()
+                                                           .Handler<AggregateOperationAggregatableMessageHandler>()
+                                                           .To.Primary().Flow<AggregatesFlow>().Connect());
 
         public PerformedOperationsMessageFlowsMetadataSource()
         {

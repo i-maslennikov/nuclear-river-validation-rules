@@ -292,7 +292,6 @@
   <ItemGroup>
     <Compile Include="DI\Bootstrapper.CustomerIntelligence.cs" />
     <Compile Include="DI\Bootstrapper.ValidationRules.cs" />
-    <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="DI\Renewer.cs" />
     <Compile Include="DI\ReplicationEntryPointAssembly.cs" />
     <Compile Include="DI\ReplicationRoot.cs" />

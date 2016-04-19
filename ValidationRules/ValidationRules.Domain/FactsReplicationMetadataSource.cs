@@ -27,63 +27,63 @@ namespace NuClear.ValidationRules.Domain
                     .Childs(FactMetadata<AssociatedPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.AssociatedPosition)
-                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPosition),
+                                .HasDependentEntity(EntityTypePrice.Instance, Specs.Map.Facts.ToPriceAggregate.ByAssociatedPosition),
 
                             FactMetadata<AssociatedPositionsGroup>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.AssociatedPositionsGroup)
-                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByAssociatedPositionGroup),
+                                .HasDependentEntity(EntityTypePrice.Instance, Specs.Map.Facts.ToPriceAggregate.ByAssociatedPositionGroup),
 
                             FactMetadata<DeniedPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.DeniedPosition)
-                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByDeniedPosition),
+                                .HasDependentEntity(EntityTypePrice.Instance, Specs.Map.Facts.ToPriceAggregate.ByDeniedPosition),
 
                             FactMetadata<GlobalAssociatedPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.GlobalAssociatedPosition)
-                                .HasDependentAggregate<EntityTypeRuleset>(Specs.Map.Facts.ToRulesetAggregate.ByGlobalAssociatedPosition),
+                                .HasDependentEntity(EntityTypeRuleset.Instance, Specs.Map.Facts.ToRulesetAggregate.ByGlobalAssociatedPosition),
 
                             FactMetadata<GlobalDeniedPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.GlobalDeniedPosition)
-                                .HasDependentAggregate<EntityTypeRuleset>(Specs.Map.Facts.ToRulesetAggregate.ByGlobalDeniedPosition),
+                                .HasDependentEntity(EntityTypeRuleset.Instance, Specs.Map.Facts.ToRulesetAggregate.ByGlobalDeniedPosition),
 
                             FactMetadata<Category>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Category)
-                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByCategory),
+                                .HasDependentEntity(EntityTypeOrder.Instance, Specs.Map.Facts.ToOrderAggregate.ByCategory),
 
                             FactMetadata<Order>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Order)
-                                .HasMatchedAggregate<EntityTypeOrder>(),
+                                .HasMatchedEntity(EntityTypeOrder.Instance),
 
                             FactMetadata<OrderPosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.OrderPosition)
-                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByOrderPosition),
+                                .HasDependentEntity(EntityTypeOrder.Instance, Specs.Map.Facts.ToOrderAggregate.ByOrderPosition),
 
                             FactMetadata<OrderPositionAdvertisement>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.OrderPositionAdvertisement)
-                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByOrderPositionAdvertisement),
+                                .HasDependentEntity(EntityTypeOrder.Instance, Specs.Map.Facts.ToOrderAggregate.ByOrderPositionAdvertisement),
 
                             FactMetadata<Position>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Position)
-                                .HasMatchedAggregate<EntityTypePosition>()
-                                .HasDependentAggregate<EntityTypeOrder>(Specs.Map.Facts.ToOrderAggregate.ByPosition),
+                                .HasMatchedEntity(EntityTypePosition.Instance)
+                                .HasDependentEntity(EntityTypeOrder.Instance, Specs.Map.Facts.ToOrderAggregate.ByPosition),
 
                             FactMetadata<Price>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Price)
-                                .HasMatchedAggregate<EntityTypePrice>(),
+                                .HasMatchedEntity(EntityTypePrice.Instance),
 
                             FactMetadata<PricePosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.PricePosition)
-                                .HasDependentAggregate<EntityTypePrice>(Specs.Map.Facts.ToPriceAggregate.ByPricePosition),
+                                .HasDependentEntity(EntityTypePrice.Instance, Specs.Map.Facts.ToPriceAggregate.ByPricePosition),
 
                             // TODO: attach to period aggregate
                             FactMetadata<OrganizationUnit>

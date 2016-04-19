@@ -41,7 +41,6 @@
     <Compile Include="DTO\CategoryStatisticsDto.cs" />
     <Compile Include="DTO\FirmForecastDto.cs" />
     <Compile Include="DTO\FirmStatisticsDto.cs" />
-    <Compile Include="EntityTypeIds.cs" />
     <Compile Include="EntityTypes\EntityTypeAccount.cs" />
     <Compile Include="EntityTypes\EntityTypeActivity.cs" />
     <Compile Include="EntityTypes\EntityTypeAppointment.cs" />

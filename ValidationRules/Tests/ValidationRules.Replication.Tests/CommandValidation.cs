@@ -4,14 +4,15 @@ using System.Linq;
 using System.Reflection;
 
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
+using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Facts;
-using NuClear.Replication.Core.Facts;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Domain;
+using NuClear.ValidationRules.Domain.Commands;
 using NuClear.ValidationRules.Domain.Model;
 
 using NUnit.Framework;
@@ -31,8 +32,8 @@ namespace NuClear.ValidationRules.Replication.Tests
         {
             _store = new Store(data);
             _dependencyProcessors = metadata.Features.OfType<IFactDependencyFeature>().Select(Create).ToArray();
-            _indirectDepencencyProcessors = metadata.Features.OfType<IIndirectFactDependencyFeature>().Select(Create).ToArray();
-            _identityExtractor = new DefaultIdentityProvider().ExtractIdentity<TFact>().Compile();
+            _indirectDepencencyProcessors = _dependencyProcessors.Where(x => x.DependencyType == DependencyType.Indirect).ToArray();
+            _identityExtractor = new DefaultIdentityProvider().Get<TFact>().Compile();
         }
 
         public static CommandValidation<TFact> Given(params object[] data)
@@ -43,7 +44,27 @@ namespace NuClear.ValidationRules.Replication.Tests
         }
 
         private IFactDependencyProcessor Create(IFactDependencyFeature feature)
-            => new FactDependencyProcessor<TFact>((IFactDependencyFeature<TFact, long>)feature, _store.GetQuery());
+        {
+            var direct = feature as DirectlyDependentEntityFeature<TFact>;
+            if (direct != null)
+            {
+                return new DirectlyDependentEntityFeatureProcessor<TFact>(direct);
+            }
+
+            var indirect = feature as IndirectlyDependentEntityFeature<TFact, long>;
+            if (indirect != null)
+            {
+                return new IndirectlyDependentEntityFeatureProcessor<TFact, long>(indirect, _store.GetQuery(), new DefaultIdentityProvider(), new RecalculateAggregateCommandFactory());
+            }
+
+            var indirectPeriod = feature as IndirectlyDependentEntityFeature<TFact, PeriodKey>;
+            if (indirectPeriod != null)
+            {
+                return new IndirectlyDependentEntityFeatureProcessor<TFact, PeriodKey>(indirectPeriod, _store.GetQuery(), new DefaultIdentityProvider(), new RecalculatePeriodCommandFactory());
+            }
+
+            throw new Exception($"Need explicit code for {feature.GetType().Name}");
+        }
 
         public CommandValidation<TFact> Create(TFact fact)
         {
@@ -132,7 +153,7 @@ namespace NuClear.ValidationRules.Replication.Tests
                 private readonly IDictionary<Type, object> _identityProviders = new Dictionary<Type, object>
                     {
                         { typeof(long), new DefaultIdentityProvider() },
-                        { typeof(PeriodId), new PeriodIdentityProvider() },
+                        { typeof(PeriodKey), new PeriodIdentityProvider() },
                     };
 
                 bool IEqualityComparer<object>.Equals(object x, object y)
@@ -176,7 +197,7 @@ namespace NuClear.ValidationRules.Replication.Tests
                         throw new Exception($"Для прохождения теста добавь IIdentityProvider<{typeof(TKey)}>");
                     }
 
-                    var identityFunc = ((IIdentityProvider<TKey>)obj).ExtractIdentity<T>().Compile();
+                    var identityFunc = ((IIdentityProvider<TKey>)obj).Get<T>().Compile();
                     return identityFunc.Invoke(x);
                 }
             }

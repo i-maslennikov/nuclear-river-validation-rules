@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             {
                 foreach (var message in messages.OfType<OperationAggregatableMessage<AggregateOperation>>())
                 {
-                    _aggregatesConstructor.Construct(message.Operations);
+                    _aggregatesConstructor.Execute(message.Operations);
 
                     // TODO: telemetry
                     //_telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Operations.Count);

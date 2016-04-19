@@ -56,7 +56,8 @@ namespace NuClear.Replication.EntryPoint
             IUnityContainer container = null;
             try
             {
-                container = Bootstrapper.ConfigureUnity(settingsContainer, tracer, tracerContextManager);
+                container = BootstrapperValidationRules.ConfigureUnity(settingsContainer, tracer, tracerContextManager);
+                //container = BootstrapperCustomerIntelligence.ConfigureUnity(settingsContainer, tracer, tracerContextManager);
                 var schedulerManager = container.Resolve<ISchedulerManager>();
                 if (IsConsoleMode(args))
                 {

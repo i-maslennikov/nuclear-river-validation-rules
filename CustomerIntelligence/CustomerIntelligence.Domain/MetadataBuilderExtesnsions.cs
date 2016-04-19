@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.River.Common.Metadata.Builders;
-using NuClear.River.Common.Metadata.Context;
 using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
