@@ -22,8 +22,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Facts
             _query = query;
         }
 
-        public IEqualityComparer<Firm> EqualityComparer => null;
-
         public IQueryable<Firm> GetSource() => Specs.Map.Erm.ToFacts.Firms.Map(_query);
 
         public FindSpecification<Firm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

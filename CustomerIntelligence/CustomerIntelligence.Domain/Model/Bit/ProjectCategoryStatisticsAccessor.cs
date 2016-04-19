@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
@@ -10,7 +11,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Bit
 {
-    public class ProjectCategoryStatisticsAccessor : IMemoryBasedDataObjectAccessor<ProjectCategoryStatistics>
+    public class ProjectCategoryStatisticsAccessor : IMemoryBasedDataObjectAccessor<ProjectCategoryStatistics>, IDataChangesHandler<ProjectCategoryStatistics>
     {
         public FindSpecification<ProjectCategoryStatistics> GetFindSpecification(ICommand command)
         {
@@ -24,9 +25,14 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Bit
             return Specs.Map.Bit.ProjectCategoryStatistics().Map(replaceCommand.RubricPopularity);
         }
 
-        public IReadOnlyCollection<IEvent> HandleChanges(IReadOnlyCollection<ProjectCategoryStatistics> dataObjects)
-        {
-            return dataObjects.Select(x => new DataObjectReplacedEvent(typeof(ProjectCategoryStatistics), x.ProjectId)).ToArray();
-        }
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<ProjectCategoryStatistics> dataObjects)
+            => dataObjects.Select(x => new DataObjectReplacedEvent(typeof(ProjectCategoryStatistics), x.ProjectId)).ToArray();
+
+
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<ProjectCategoryStatistics> dataObjects) => Array.Empty<IEvent>();
+
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<ProjectCategoryStatistics> dataObjects) => Array.Empty<IEvent>();
+
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<ProjectCategoryStatistics> dataObjects) => Array.Empty<IEvent>();
     }
 }

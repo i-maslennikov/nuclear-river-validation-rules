@@ -8,8 +8,6 @@ namespace NuClear.Replication.Core.API
 {
     public interface IStorageBasedDataObjectAccessor<TDataObject>
     {
-        IEqualityComparer<TDataObject> EqualityComparer { get; }
-
         IQueryable<TDataObject> GetSource();
 
         FindSpecification<TDataObject> GetFindSpecification(IReadOnlyCollection<ICommand> commands);

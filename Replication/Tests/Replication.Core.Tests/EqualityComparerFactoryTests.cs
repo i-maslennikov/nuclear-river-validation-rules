@@ -3,7 +3,7 @@ using System.Reflection;
 
 using Moq;
 
-using NuClear.River.Common.Metadata.Equality;
+using NuClear.Replication.Core.API.Equality;
 
 using NUnit.Framework;
 

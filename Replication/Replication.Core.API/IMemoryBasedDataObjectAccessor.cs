@@ -9,6 +9,5 @@ namespace NuClear.Replication.Core.API
     {
         IReadOnlyCollection<TDataObject> GetDataObjects(ICommand command);
         FindSpecification<TDataObject> GetFindSpecification(ICommand command);
-        IReadOnlyCollection<IEvent> HandleChanges(IReadOnlyCollection<TDataObject> dataObjects);
     }
 }

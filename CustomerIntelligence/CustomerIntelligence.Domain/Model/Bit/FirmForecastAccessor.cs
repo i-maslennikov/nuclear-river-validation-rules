@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
@@ -10,7 +11,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Bit
 {
-    public class FirmForecastAccessor : IMemoryBasedDataObjectAccessor<FirmForecast>
+    public class FirmForecastAccessor : IMemoryBasedDataObjectAccessor<FirmForecast>, IDataChangesHandler<FirmForecast>
     {
         public FindSpecification<FirmForecast> GetFindSpecification(ICommand command)
         {
@@ -24,9 +25,13 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Bit
             return Specs.Map.Bit.FirmForecasts().Map(replaceCommand.FirmForecast);
         }
 
-        public IReadOnlyCollection<IEvent> HandleChanges(IReadOnlyCollection<FirmForecast> dataObjects)
-        {
-            return dataObjects.Select(x => new DataObjectReplacedEvent(typeof(FirmForecast), x.ProjectId)).ToArray();
-        }
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<FirmForecast> dataObjects)
+            => dataObjects.Select(x => new DataObjectReplacedEvent(typeof(FirmForecast), x.ProjectId)).ToArray();
+
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<FirmForecast> dataObjects) => Array.Empty<IEvent>();
+
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<FirmForecast> dataObjects) => Array.Empty<IEvent>();
+
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<FirmForecast> dataObjects) => Array.Empty<IEvent>();
     }
 }

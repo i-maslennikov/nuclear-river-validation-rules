@@ -813,7 +813,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 public IFactProcessor Create(IMetadataElement metadata)
                 {
                     var factMetadata = (FactMetadata<TFact>)metadata;
-                    var changesDetector = new FactChangesDetector<TFact>(factMetadata.MapSpecificationProviderForSource, factMetadata.MapSpecificationProviderForTarget, _comparerFactory.CreateIdentityComparer<TFact>(), _comparerFactory.CreateCompleteComparer<TFact>(), _query);
+                    var changesDetector = new TwoPhaseDataChangesDetector<TFact>(factMetadata.MapSpecificationProviderForSource, factMetadata.MapSpecificationProviderForTarget, _comparerFactory.CreateIdentityComparer<TFact>(), _comparerFactory.CreateCompleteComparer<TFact>(), _query);
                     var dependencyProcessors = factMetadata.Features.OfType<IFactDependencyFeature>().Select(this.Create).ToArray();
                     return new FactProcessor<TFact>(changesDetector, _repository, dependencyProcessors, new DefaultIdentityProvider());
                 }

@@ -93,6 +93,10 @@
     <Compile Include="DataChangesDetector.cs" />
     <Compile Include="DataObjectsActorBase.cs" />
     <Compile Include="DeleteDataObjectsActor.cs" />
+    <Compile Include="EqualityComparerWrapper.cs" />
+    <Compile Include="Equality\IEqualityComparerFactory.cs" />
+    <Compile Include="Equality\IObjectPropertyProvider.cs" />
+    <Compile Include="TwoPhaseDataChangesDetector.cs" />
     <Compile Include="Facts\DependencyType.cs" />
     <Compile Include="Facts\IFactDependencyProcessor.cs" />
     <Compile Include="Facts\IFactDependencyProcessorFactory.cs" />

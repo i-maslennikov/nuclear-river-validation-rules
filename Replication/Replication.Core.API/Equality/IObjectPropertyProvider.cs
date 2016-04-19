@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace NuClear.River.Common.Metadata.Equality
+namespace NuClear.Replication.Core.API.Equality
 {
     public interface IObjectPropertyProvider
     {

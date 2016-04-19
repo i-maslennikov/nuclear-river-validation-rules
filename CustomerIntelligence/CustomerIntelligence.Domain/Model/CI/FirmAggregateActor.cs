@@ -5,6 +5,7 @@ using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Domain.Specifications;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.Replication.Core.API.Equality;
 using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
@@ -20,6 +21,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
         private readonly IBulkRepository<FirmCategory1> _firmCategory1BulkRepository;
         private readonly IBulkRepository<FirmCategory2> _firmCategory2BulkRepository;
         private readonly IBulkRepository<FirmTerritory> _firmFirmTerritoryBulkRepository;
+        private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public FirmAggregateActor(
             IQuery query,
@@ -28,7 +30,8 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
             IBulkRepository<FirmBalance> firmBalanceBulkRepository,
             IBulkRepository<FirmCategory1> firmCategory1BulkRepository,
             IBulkRepository<FirmCategory2> firmCategory2BulkRepository,
-            IBulkRepository<FirmTerritory> firmFirmTerritoryBulkRepository)
+            IBulkRepository<FirmTerritory> firmFirmTerritoryBulkRepository,
+            IEqualityComparerFactory equalityComparerFactory)
         {
             _query = query;
             _firmBulkRepository = firmBulkRepository;
@@ -37,11 +40,12 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
             _firmCategory1BulkRepository = firmCategory1BulkRepository;
             _firmCategory2BulkRepository = firmCategory2BulkRepository;
             _firmFirmTerritoryBulkRepository = firmFirmTerritoryBulkRepository;
+            _equalityComparerFactory = equalityComparerFactory;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var actor = new FirmActor(_query, _firmBulkRepository);
+            var actor = new FirmActor(_query, _firmBulkRepository, _equalityComparerFactory);
             return actor.ExecuteCommands(commands);
         }
 
@@ -50,17 +54,37 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
         public IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
-                    new ReplaceStorageBasedDataObjectsActor<FirmActivity>(_query, _firmActivityBulkRepository, new FirmActivityAccessor(_query)),
-                    new ReplaceStorageBasedDataObjectsActor<FirmBalance>(_query, _firmBalanceBulkRepository, new FirmBalanceAccessor(_query)),
-                    new ReplaceStorageBasedDataObjectsActor<FirmCategory1>(_query, _firmCategory1BulkRepository, new FirmCategory1Accessor(_query)),
-                    new ReplaceStorageBasedDataObjectsActor<FirmCategory2>(_query, _firmCategory2BulkRepository, new FirmCategory2Accessor(_query)),
-                    new ReplaceStorageBasedDataObjectsActor<FirmTerritory>(_query, _firmFirmTerritoryBulkRepository, new FirmTerritoryAccessor(_query))
+                    new ReplaceStorageBasedDataObjectsActor<FirmActivity>(
+                        _query,
+                        _firmActivityBulkRepository,
+                        _equalityComparerFactory,
+                        new FirmActivityAccessor(_query)),
+                    new ReplaceStorageBasedDataObjectsActor<FirmBalance>(
+                        _query,
+                        _firmBalanceBulkRepository,
+                        _equalityComparerFactory,
+                        new FirmBalanceAccessor(_query)),
+                    new ReplaceStorageBasedDataObjectsActor<FirmCategory1>(
+                        _query,
+                        _firmCategory1BulkRepository,
+                        _equalityComparerFactory,
+                        new FirmCategory1Accessor(_query)),
+                    new ReplaceStorageBasedDataObjectsActor<FirmCategory2>(
+                        _query,
+                        _firmCategory2BulkRepository,
+                        _equalityComparerFactory,
+                        new FirmCategory2Accessor(_query)),
+                    new ReplaceStorageBasedDataObjectsActor<FirmTerritory>(
+                        _query,
+                        _firmFirmTerritoryBulkRepository,
+                        _equalityComparerFactory,
+                        new FirmTerritoryAccessor(_query))
                 };
 
         private class FirmActor : AggregateRootActorBase<Firm>
         {
-            public FirmActor(IQuery query, IBulkRepository<Firm> projectCategoryStatisticsBulkRepository)
-                : base(query, projectCategoryStatisticsBulkRepository, new FirmAccessor(query))
+            public FirmActor(IQuery query, IBulkRepository<Firm> projectCategoryStatisticsBulkRepository, IEqualityComparerFactory equalityComparerFactory)
+                : base(query, projectCategoryStatisticsBulkRepository, equalityComparerFactory, new FirmAccessor(query))
             {
             }
         }
@@ -73,8 +97,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
             {
                 _query = query;
             }
-
-            public IEqualityComparer<Firm> EqualityComparer => null;
 
             public IQueryable<Firm> GetSource() => Specs.Map.Facts.ToCI.Firms.Map(_query);
 
@@ -91,8 +113,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                 _query = query;
             }
 
-            public IEqualityComparer<FirmActivity> EqualityComparer => null;
-
             public IQueryable<FirmActivity> GetSource() => Specs.Map.Facts.ToCI.FirmActivities.Map(_query);
 
             public FindSpecification<FirmActivity> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -107,8 +127,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
             {
                 _query = query;
             }
-
-            public IEqualityComparer<FirmBalance> EqualityComparer => null;
 
             public IQueryable<FirmBalance> GetSource() => Specs.Map.Facts.ToCI.FirmBalances.Map(_query);
 
@@ -125,8 +143,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                 _query = query;
             }
 
-            public IEqualityComparer<FirmCategory1> EqualityComparer => null;
-
             public IQueryable<FirmCategory1> GetSource() => Specs.Map.Facts.ToCI.FirmCategories1.Map(_query);
 
             public FindSpecification<FirmCategory1> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -142,8 +158,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                 _query = query;
             }
 
-            public IEqualityComparer<FirmCategory2> EqualityComparer => null;
-
             public IQueryable<FirmCategory2> GetSource() => Specs.Map.Facts.ToCI.FirmCategories2.Map(_query);
 
             public FindSpecification<FirmCategory2> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -158,8 +172,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
             {
                 _query = query;
             }
-
-            public IEqualityComparer<FirmTerritory> EqualityComparer => null;
 
             public IQueryable<FirmTerritory> GetSource() => Specs.Map.Facts.ToCI.FirmTerritories.Map(_query);
 

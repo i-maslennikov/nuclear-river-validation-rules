@@ -6,6 +6,7 @@ using NuClear.CustomerIntelligence.Domain.Model.CI;
 using NuClear.CustomerIntelligence.Domain.Specifications;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.Replication.Core.API.Equality;
 using NuClear.River.Common.Metadata;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
@@ -20,37 +21,57 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
         private readonly IBulkRepository<ProjectCategoryStatistics> _projectCategoryStatisticsBulkRepository;
         private readonly IBulkRepository<FirmForecast> _firmForecastBulkRepository;
         private readonly IBulkRepository<FirmCategory3> _firmCategory3BulkRepository;
+        private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public ProjectStatisticsAggregateActor(
             IQuery query,
             IBulkRepository<ProjectStatistics> projectStatisticsBulkRepository,
             IBulkRepository<ProjectCategoryStatistics> projectCategoryStatisticsBulkRepository,
             IBulkRepository<FirmForecast> firmForecastBulkRepository,
-            IBulkRepository<FirmCategory3> firmCategory3BulkRepository)
+            IBulkRepository<FirmCategory3> firmCategory3BulkRepository,
+            IEqualityComparerFactory equalityComparerFactory)
         {
             _query = query;
             _projectStatisticsBulkRepository = projectStatisticsBulkRepository;
             _projectCategoryStatisticsBulkRepository = projectCategoryStatisticsBulkRepository;
             _firmForecastBulkRepository = firmForecastBulkRepository;
             _firmCategory3BulkRepository = firmCategory3BulkRepository;
+            _equalityComparerFactory = equalityComparerFactory;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var actor = new ProjectStatisticsActor(_query, _projectStatisticsBulkRepository);
+            var actor = new ProjectStatisticsActor(_query, _equalityComparerFactory, _projectStatisticsBulkRepository);
             return actor.ExecuteCommands(commands);
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => new[] { new ProjectCategoryStatisticsActor(_query, _projectCategoryStatisticsBulkRepository, _firmCategory3BulkRepository) };
+            => new[]
+                {
+                    new ProjectCategoryStatisticsActor(
+                        _query,
+                        _projectCategoryStatisticsBulkRepository,
+                        _firmCategory3BulkRepository,
+                        _equalityComparerFactory)
+                };
 
         public IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new[] { new ReplaceStorageBasedDataObjectsActor<FirmForecast>(_query, _firmForecastBulkRepository, new FirmForecastAccessor(_query)) };
+            => new[]
+                {
+                    new ReplaceStorageBasedDataObjectsActor<FirmForecast>(
+                        _query,
+                        _firmForecastBulkRepository,
+                        _equalityComparerFactory,
+                        new FirmForecastAccessor(_query))
+                };
 
         private class ProjectStatisticsActor : AggregateRootActorBase<ProjectStatistics>
         {
-            public ProjectStatisticsActor(IQuery query, IBulkRepository<ProjectStatistics> projectCategoryStatisticsBulkRepository)
-                : base(query, projectCategoryStatisticsBulkRepository, new ProjectStatisticsAccessor(query))
+            public ProjectStatisticsActor(
+                IQuery query,
+                IEqualityComparerFactory equalityComparerFactory,
+                IBulkRepository<ProjectStatistics> projectCategoryStatisticsBulkRepository)
+                : base(query, projectCategoryStatisticsBulkRepository, equalityComparerFactory, new ProjectStatisticsAccessor(query))
             {
             }
         }
@@ -60,25 +81,40 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
             private readonly IQuery _query;
             private readonly IBulkRepository<ProjectCategoryStatistics> _projectCategoryStatisticsBulkRepository;
             private readonly IBulkRepository<FirmCategory3> _firmCategory3BulkRepository;
+            private readonly IEqualityComparerFactory _equalityComparerFactory;
+
 
             public ProjectCategoryStatisticsActor(
                 IQuery query,
                 IBulkRepository<ProjectCategoryStatistics> projectCategoryStatisticsBulkRepository,
-                IBulkRepository<FirmCategory3> firmCategory3BulkRepository)
+                IBulkRepository<FirmCategory3> firmCategory3BulkRepository,
+                IEqualityComparerFactory equalityComparerFactory)
             {
                 _query = query;
                 _projectCategoryStatisticsBulkRepository = projectCategoryStatisticsBulkRepository;
                 _firmCategory3BulkRepository = firmCategory3BulkRepository;
+                _equalityComparerFactory = equalityComparerFactory;
             }
 
             public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
             {
-                var actor = new SyncDataObjectsActor<ProjectCategoryStatistics>(_query, _projectCategoryStatisticsBulkRepository, new ProjectCategoryStatisticsAccessor(_query));
+                var actor = new SyncDataObjectsActor<ProjectCategoryStatistics>(
+                    _query,
+                    _projectCategoryStatisticsBulkRepository,
+                    _equalityComparerFactory,
+                    new ProjectCategoryStatisticsAccessor(_query));
                 return actor.ExecuteCommands(commands);
             }
 
             public IReadOnlyCollection<IActor> GetValueObjectActors()
-                => new [] { new ReplaceStorageBasedDataObjectsActor<FirmCategory3>(_query, _firmCategory3BulkRepository, new FirmCategory3Accessor(_query))};
+                => new[]
+                    {
+                        new ReplaceStorageBasedDataObjectsActor<FirmCategory3>(
+                            _query,
+                            _firmCategory3BulkRepository,
+                            _equalityComparerFactory,
+                            new FirmCategory3Accessor(_query))
+                    };
         }
 
         private class ProjectStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectStatistics>
@@ -89,8 +125,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
             {
                 _query = query;
             }
-
-            public IEqualityComparer<ProjectStatistics> EqualityComparer => null;
 
             public IQueryable<ProjectStatistics> GetSource() => Specs.Map.Facts.ToCI.ProjectStatistics.Map(_query);
 
@@ -109,8 +143,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
                 _query = query;
             }
 
-            public IEqualityComparer<ProjectCategoryStatistics> EqualityComparer => null;
-
             public IQueryable<ProjectCategoryStatistics> GetSource() => Specs.Map.Facts.ToCI.ProjectCategoryStatistics.Map(_query);
 
             public FindSpecification<ProjectCategoryStatistics> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -126,8 +158,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
                 _query = query;
             }
 
-            public IEqualityComparer<FirmForecast> EqualityComparer => null;
-
             public IQueryable<FirmForecast> GetSource() => Specs.Map.Facts.ToCI.FirmForecast.Map(_query);
 
             public FindSpecification<FirmForecast> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -142,8 +172,6 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
             {
                 _query = query;
             }
-
-            public IEqualityComparer<FirmCategory3> EqualityComparer => null;
 
             public IQueryable<FirmCategory3> GetSource() => Specs.Map.Facts.ToCI.FirmCategory3.Map(_query);
 

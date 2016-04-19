@@ -90,8 +90,6 @@
     <Compile Include="Model\IAggregateRoot.cs" />
     <Compile Include="Model\IAggregateValueObject.cs" />
     <Compile Include="Model\IDataTransferObject.cs" />
-    <Compile Include="Equality\IObjectPropertyProvider.cs" />
-    <Compile Include="Equality\IEqualityComparerFactory.cs" />
     <Compile Include="Model\IFactObject.cs" />
     <Compile Include="Model\IIdentifiable.cs" />
     <Compile Include="Model\IIdentityProvider.cs" />

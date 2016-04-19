@@ -16,12 +16,12 @@ namespace NuClear.Replication.Core.Facts
 
         private readonly IReadOnlyCollection<IFactDependencyProcessor> _depencencyProcessors;
         private readonly IReadOnlyCollection<IFactDependencyProcessor> _indirectDepencencyProcessors;
-        private readonly FactChangesDetector<TFact> _changesDetector;
+        private readonly TwoPhaseDataChangesDetector<TFact> _changesDetector;
         private readonly FindSpecificationProvider<TFact, long> _findSpecificationProvider;
         private readonly Func<TFact, long> _identityProvider;
 
         public FactProcessor(
-            FactChangesDetector<TFact> changesDetector,
+            TwoPhaseDataChangesDetector<TFact> changesDetector,
             IBulkRepository<TFact> repository,
             IReadOnlyCollection<IFactDependencyProcessor> depencencyProcessors,
             IIdentityProvider<long> factIdentityProvider)

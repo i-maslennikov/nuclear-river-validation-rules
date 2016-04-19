@@ -13,15 +13,18 @@ namespace NuClear.Replication.Core.API
         private readonly IQuery _query;
         private readonly IBulkRepository<TDataObject> _bulkRepository;
         private readonly IMemoryBasedDataObjectAccessor<TDataObject> _memoryBasedDataObjectAccessor;
+        private readonly IDataChangesHandler<TDataObject> _dataChangesHandler;
 
         public ReplaceMemoryBasedDataObjectsActor(
             IQuery query,
             IBulkRepository<TDataObject> bulkRepository,
-            IMemoryBasedDataObjectAccessor<TDataObject> memoryBasedDataObjectAccessor)
+            IMemoryBasedDataObjectAccessor<TDataObject> memoryBasedDataObjectAccessor,
+            IDataChangesHandler<TDataObject> dataChangesHandler)
         {
             _query = query;
             _bulkRepository = bulkRepository;
             _memoryBasedDataObjectAccessor = memoryBasedDataObjectAccessor;
+            _dataChangesHandler = dataChangesHandler;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -37,9 +40,10 @@ namespace NuClear.Replication.Core.API
                     _bulkRepository.Delete(_query.For(findSpecification));
 
                     var dataObjects = _memoryBasedDataObjectAccessor.GetDataObjects(command);
-                    _bulkRepository.Create(dataObjects);
 
-                    events.AddRange(_memoryBasedDataObjectAccessor.HandleChanges(dataObjects));
+                    _bulkRepository.Create(dataObjects);
+                    events.AddRange(_dataChangesHandler.HandleCreates(dataObjects));
+
                     transaction.Complete();
                 }
             }

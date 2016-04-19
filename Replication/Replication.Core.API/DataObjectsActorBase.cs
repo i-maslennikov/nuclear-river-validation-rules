@@ -28,12 +28,27 @@ namespace NuClear.Replication.Core.API
 
         public abstract IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands);
 
-        protected MergeResult<TDataObject> DetectChanges(IReadOnlyCollection<ICommand> commands)
+        protected MergeResult<TDataObject> DetectChanges(IReadOnlyCollection<ICommand> commands, IEqualityComparer<TDataObject> equalityComparer)
         {
             var dataChangesDetector = new DataChangesDetector<TDataObject>(
                 _mapSpecificationProviderForSource,
                 _mapSpecificationProviderForTarget,
-                _storageBasedDataObjectAccessor.EqualityComparer,
+                equalityComparer,
+                _query);
+
+            return dataChangesDetector.DetectChanges(_storageBasedDataObjectAccessor.GetFindSpecification(commands));
+        }
+
+        protected MergeResult<TDataObject> DetectChanges(
+            IReadOnlyCollection<ICommand> commands,
+            IEqualityComparer<TDataObject> identityEqualityComparer,
+            IEqualityComparer<TDataObject> completEqualityComparer)
+        {
+            var dataChangesDetector = new TwoPhaseDataChangesDetector<TDataObject>(
+                _mapSpecificationProviderForSource,
+                _mapSpecificationProviderForTarget,
+                identityEqualityComparer,
+                completEqualityComparer,
                 _query);
 
             return dataChangesDetector.DetectChanges(_storageBasedDataObjectAccessor.GetFindSpecification(commands));

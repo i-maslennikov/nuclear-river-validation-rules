@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.Replication.Core.API.Equality;
 using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 
@@ -11,23 +12,27 @@ namespace NuClear.Replication.Core.API
     {
         private readonly IDataChangesHandler<TDataObject> _dataChangesHandler;
         private readonly IBulkRepository<TDataObject> _bulkRepository;
+        private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public SyncDataObjectsActor(
             IQuery query,
             IBulkRepository<TDataObject> bulkRepository,
+            IEqualityComparerFactory equalityComparerFactory,
             IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor,
             IDataChangesHandler<TDataObject> dataChangesHandler)
             : base(query, storageBasedDataObjectAccessor)
         {
             _bulkRepository = bulkRepository;
+            _equalityComparerFactory = equalityComparerFactory;
             _dataChangesHandler = dataChangesHandler;
         }
 
         public SyncDataObjectsActor(
             IQuery query,
             IBulkRepository<TDataObject> bulkRepository,
+            IEqualityComparerFactory equalityComparerFactory,
             IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor)
-            : this(query, bulkRepository, storageBasedDataObjectAccessor, new NullDataChangesHandler<TDataObject>())
+            : this(query, bulkRepository, equalityComparerFactory, storageBasedDataObjectAccessor, new NullDataChangesHandler<TDataObject>())
         {
         }
 
@@ -35,7 +40,9 @@ namespace NuClear.Replication.Core.API
         {
             var events = new List<IEvent>();
 
-            var changes = DetectChanges(commands);
+            var changes = DetectChanges(commands,
+                                        _equalityComparerFactory.CreateIdentityComparer<TDataObject>(),
+                                        _equalityComparerFactory.CreateCompleteComparer<TDataObject>());
 
             var toCreate = changes.Difference.ToArray();
             var toUpdate = changes.Intersection.ToArray();

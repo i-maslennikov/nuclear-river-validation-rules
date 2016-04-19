@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NuClear.River.Common.Metadata.Equality
+namespace NuClear.Replication.Core.API.Equality
 {
     public interface IEqualityComparerFactory
     {

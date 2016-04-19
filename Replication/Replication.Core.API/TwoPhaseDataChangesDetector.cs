@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.Replication.Core.API;
 using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.Replication.Core
+namespace NuClear.Replication.Core.API
 {
-    public class FactChangesDetector<T>
+    public class TwoPhaseDataChangesDetector<T>
     {
         private readonly DataChangesDetector<T> _dataChangesDetector;
         private readonly IEqualityComparer<T> _identityComparer;
 
-        public FactChangesDetector(
+        public TwoPhaseDataChangesDetector(
             MapToObjectsSpecProvider<T, T> sourceProvider,
             MapToObjectsSpecProvider<T, T> targetProvider,
             IEqualityComparer<T> identityComparer,
