@@ -75,6 +75,10 @@
       <HintPath>..\..\..\packages\2GIS.NuClear.OperationsProcessing.API.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
+    </Reference>
     <Reference Include="2GIS.NuClear.OperationsTracking, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7546e3dd2743b918, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\2GIS.NuClear.OperationsTracking.2.0.0\lib\net451\2GIS.NuClear.OperationsTracking.dll</HintPath>
       <Private>True</Private>
@@ -182,6 +186,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="TrackedUsecases.cs" />
+    <Compile Include="Transports\SQLStore\XmlOperationSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

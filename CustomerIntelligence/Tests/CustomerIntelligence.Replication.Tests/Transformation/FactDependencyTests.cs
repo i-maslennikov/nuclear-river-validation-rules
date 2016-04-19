@@ -4,6 +4,7 @@ using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Commands;
+using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core;
@@ -36,18 +37,18 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Client>(1)
-                          .VerifyDistinct(Aggregate.Initialize<CI.Client>(1));
+                          .VerifyDistinct(Aggregate.Initialize(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateClientIfClientUpdated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1 });
+            SourceDb.Has(new Erm::Client { Id = 1, Name = "asdf" });
             TargetDb.Has(new Facts::Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Client>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Client>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
@@ -57,7 +58,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Client>(1)
-                          .VerifyDistinct(Aggregate.Destroy<CI.Client>(1));
+                          .VerifyDistinct(Aggregate.Destroy(EntityTypeClient.Instance, 1));
         }
 
         [Test]
@@ -68,7 +69,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Firm>(2)
-                          .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate<CI.Client>(1));
+                          .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
@@ -81,7 +82,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Firm>(2)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Client>(1), Aggregate.Recalculate<CI.Firm>(2), Aggregate.Recalculate<CI.Client>(3));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2), Aggregate.Recalculate(EntityTypeClient.Instance, 3));
         }
 
         [Test]
@@ -92,7 +93,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Firm>(2)
-                          .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate<CI.Client>(1));
+                          .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
@@ -102,18 +103,18 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Firm>(1)
-                          .VerifyDistinct(Aggregate.Initialize<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Initialize(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfFirmUpdated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 });
+            SourceDb.Has(new Erm::Firm { Id = 1, Name = "asdf" });
             TargetDb.Has(new Facts::Firm { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Firm>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -123,7 +124,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Firm>(1)
-                          .VerifyDistinct(Aggregate.Destroy<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Destroy(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -138,7 +139,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Account>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -157,7 +158,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Account>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -171,7 +172,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Account>(5)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -186,7 +187,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -198,7 +199,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -215,7 +216,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -229,7 +230,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -243,7 +244,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -254,7 +255,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -270,7 +271,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -286,7 +287,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(2)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -302,7 +303,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -312,7 +313,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
                  .Has(new Erm::Category { Id = 1, Level = 1 },
                       new Erm::Category { Id = 2, Level = 2, ParentId = 1 },
-                      new Erm::Category { Id = 3, Level = 3, ParentId = 2 });
+                      new Erm::Category { Id = 3, Level = 3, ParentId = 2, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -323,7 +324,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -332,7 +333,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Erm::Firm { Id = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
                  .Has(new Erm::Category { Id = 1, Level = 1 },
-                      new Erm::Category { Id = 2, Level = 2, ParentId = 1 });
+                      new Erm::Category { Id = 2, Level = 2, ParentId = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -343,7 +344,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(2)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -351,7 +352,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             SourceDb.Has(new Erm::Firm { Id = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
-                 .Has(new Erm::Category { Id = 1, Level = 1 });
+                 .Has(new Erm::Category { Id = 1, Level = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Firm { Id = 1 })
                    .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
@@ -362,7 +363,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -377,7 +378,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -392,7 +393,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(2)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -407,7 +408,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Category>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -422,7 +423,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryFirmAddress>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -440,7 +441,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryFirmAddress>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -455,7 +456,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryFirmAddress>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -469,7 +470,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryOrganizationUnit>(6)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(3));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3));
         }
 
         [Test]
@@ -487,7 +488,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryOrganizationUnit>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -500,7 +501,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryOrganizationUnit>(6)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(3));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3));
         }
 
         [Test]
@@ -512,20 +513,20 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Client>(1)
-                          .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfClientUpdated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1 });
+            SourceDb.Has(new Erm::Client { Id = 1, Name = "asdf" });
 
             TargetDb.Has(new Facts::Client { Id = 1 })
                    .Has(new Facts::Firm { Id = 1, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Client>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Client>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
@@ -536,7 +537,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Client>(1)
-                          .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -549,7 +550,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Contact>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Client>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -565,7 +566,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Contact>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Client>(1), Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Client>(2), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeClient.Instance, 2), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -577,7 +578,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Contact>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Client>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -588,7 +589,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::FirmAddress>(2)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -601,7 +602,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::FirmAddress>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -612,7 +613,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::FirmAddress>(2)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -625,7 +626,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::FirmContact>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -641,7 +642,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::FirmContact>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -655,7 +656,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::FirmContact>(3)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -670,7 +671,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::LegalPerson>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -688,7 +689,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::LegalPerson>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -702,7 +703,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::LegalPerson>(4)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -713,7 +714,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Order>(2)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
@@ -727,7 +728,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Order>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1), Aggregate.Recalculate<CI.Firm>(2));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
@@ -738,7 +739,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::Order>(2)
-                          .VerifyDistinct(Aggregate.Recalculate<CI.Firm>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         #region Transformation
@@ -812,7 +813,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 public IFactProcessor Create(IMetadataElement metadata)
                 {
                     var factMetadata = (FactMetadata<TFact>)metadata;
-                    var changesDetector = new DataChangesDetector<TFact>(factMetadata.MapSpecificationProviderForSource, factMetadata.MapSpecificationProviderForTarget, _comparerFactory.CreateIdentityComparer<TFact>(), _query);
+                    var changesDetector = new TwoPhaseDataChangesDetector<TFact>(factMetadata.MapSpecificationProviderForSource, factMetadata.MapSpecificationProviderForTarget, _comparerFactory.CreateIdentityComparer<TFact>(), _comparerFactory.CreateCompleteComparer<TFact>(), _query);
                     var dependencyProcessors = factMetadata.Features.OfType<IFactDependencyFeature>().Select(this.Create).ToArray();
                     return new FactProcessor<TFact>(changesDetector, _repository, dependencyProcessors, new DefaultIdentityProvider());
                 }

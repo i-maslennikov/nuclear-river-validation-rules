@@ -4,7 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using NuClear.River.Common.Metadata.Equality;
+using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Equality;
 
 namespace NuClear.Replication.Core
 {
@@ -29,7 +30,7 @@ namespace NuClear.Replication.Core
                 var properties = _propertyProvider.GetPrimaryKeyProperties<T>();
                 var equality = CreateEqualityFunction<T>(properties);
                 var hashCode = CreateHashCodeFunction<T>(properties);
-                _identityComparerCache[typeof(T)] = comparer = new UniversalComparer<T>(equality, hashCode);
+                _identityComparerCache[typeof(T)] = comparer = new EqualityComparerWrapper<T>(equality, hashCode);
             }
 
             return (IEqualityComparer<T>)comparer;
@@ -43,7 +44,7 @@ namespace NuClear.Replication.Core
                 var properties = _propertyProvider.GetProperties<T>();
                 var equality = CreateEqualityFunction<T>(properties);
                 var hashCode = CreateHashCodeFunction<T>(properties);
-                _completeComparerCache[typeof(T)] = comparer = new UniversalComparer<T>(equality, hashCode);
+                _completeComparerCache[typeof(T)] = comparer = new EqualityComparerWrapper<T>(equality, hashCode);
             }
 
             return (IEqualityComparer<T>)comparer;
@@ -84,28 +85,6 @@ namespace NuClear.Replication.Core
                                     .Aggregate((Expression)Expression.Constant(true), Expression.And);
 
             return Expression.Lambda<Func<T, T, bool>>(compare, left, right).Compile();
-        }
-
-        private class UniversalComparer<T> : IEqualityComparer<T>
-        {
-            private readonly Func<T, T, bool> _equality;
-            private readonly Func<T, int> _hashCode;
-
-            public UniversalComparer(Func<T, T, bool> equality, Func<T, int> hashCode)
-            {
-                _equality = equality;
-                _hashCode = hashCode;
-            }
-
-            public bool Equals(T x, T y)
-            {
-                return _equality.Invoke(x, y);
-            }
-
-            public int GetHashCode(T obj)
-            {
-                return _hashCode.Invoke(obj);
-            }
         }
     }
 }

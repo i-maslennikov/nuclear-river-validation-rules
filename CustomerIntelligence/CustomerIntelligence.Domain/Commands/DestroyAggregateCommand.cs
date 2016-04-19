@@ -4,14 +4,14 @@ namespace NuClear.CustomerIntelligence.Domain.Commands
 {
     public class DestroyAggregateCommand : IAggregateCommand
     {
-        public DestroyAggregateCommand(Type aggregateType, long aggregateId)
+        public DestroyAggregateCommand(Type aggregateRootType, long aggregateRootId)
         {
-            AggregateType = aggregateType;
-            AggregateId = aggregateId;
+            AggregateRootType = aggregateRootType;
+            AggregateRootId = aggregateRootId;
         }
 
-        public Type AggregateType { get; }
+        public Type AggregateRootType { get; }
 
-        public long AggregateId { get; }
+        public long AggregateRootId { get; }
     }
 }

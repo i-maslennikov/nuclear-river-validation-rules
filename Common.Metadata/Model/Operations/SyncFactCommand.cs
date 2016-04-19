@@ -2,6 +2,7 @@
 
 namespace NuClear.River.Common.Metadata.Model.Operations
 {
+    [Obsolete]
     public sealed class SyncFactCommand : ICommand, IOperation
     {
         public SyncFactCommand(Type factType, long factId)

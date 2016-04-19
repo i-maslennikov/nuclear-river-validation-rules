@@ -3,39 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
+using NuClear.CustomerIntelligence.Domain.Commands;
+using NuClear.CustomerIntelligence.Domain.Model;
+using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
-using NuClear.Replication.Core.API.Facts;
+using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Settings;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata;
 using NuClear.Telemetry;
+using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 {
     public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
     {
-        private readonly IFactsReplicator _factsReplicator;
-        private readonly IOperationSender<AggregateOperation> _aggregateSender;
-        private readonly IOperationSender<RecalculateStatisticsOperation> _statisticsSender;
+        private readonly IReplicationSettings _replicationSettings;
+        private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
+        private readonly IEventSender _eventSender;
+        private readonly IEventDispatcher _eventDispatcher;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromErmHandler(
-            IFactsReplicator factsReplicator,
-            IOperationSender<AggregateOperation> aggregateSender,
-            IOperationSender<RecalculateStatisticsOperation> statisticsSender,
-            ITracer tracer,
-            ITelemetryPublisher telemetryPublisher)
+            IReplicationSettings replicationSettings,
+            IDataObjectsActorFactory dataObjectsActorFactory,
+            IEventSender eventSender,
+            ITelemetryPublisher telemetryPublisher,
+            IEventDispatcher eventDispatcher,
+            ITracer tracer)
         {
-            _aggregateSender = aggregateSender;
-            _statisticsSender = statisticsSender;
-            _tracer = tracer;
+            _replicationSettings = replicationSettings;
+            _dataObjectsActorFactory = dataObjectsActorFactory;
+            _eventSender = eventSender;
             _telemetryPublisher = telemetryPublisher;
-            _factsReplicator = factsReplicator;
+            _eventDispatcher = eventDispatcher;
+            _tracer = tracer;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -43,10 +51,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             try
             {
                 var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<OperationAggregatableMessage<SyncFactCommand>>()
+                                                   .Cast<OperationAggregatableMessage<SyncDataObjectCommand>>()
                                                    .ToArray();
 
-                Handle(messages.SelectMany(message => message.Commands).ToArray());
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands).ToArray());
 
                 var eldestOperationPerformTime = messages.Min(message => message.OperationTime);
                 _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);
@@ -60,32 +68,61 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<SyncFactCommand> operations)
+        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<SyncDataObjectCommand> commands)
         {
-            _tracer.Debug("Handing fact operations started");
-            var result = _factsReplicator.Replicate(operations);
+            _tracer.Debug("Executing fact commands started");
 
-            _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(operations.Count);
+            var events = Enumerable.Empty<IEvent>();
+            using (Probe.Create("ETL1 Transforming"))
+            {
+                var slices = commands.GroupBy(x => x.DataObjectType)
+                                       .OrderByDescending(slice => slice.Key, new CustomerIntelligenceFactTypePriorityComparer());
+                foreach (var slice in slices)
+                {
+                    var dataObjectType = slice.Key;
+                    using (Probe.Create("ETL1 Transforming", dataObjectType.Name))
+                    {
+                        var actor = _dataObjectsActorFactory.Create(dataObjectType);
+                        foreach (var batch in slice.Distinct().CreateBatches(_replicationSettings.ReplicationBatchSize))
+                        {
+                            _tracer.Debug("Apply changes to target facts storage");
+                            events = events.Concat(actor.ExecuteCommands(batch));
+                        }
+                    }
+                }
+            }
 
-            var statistics = result.OfType<RecalculateStatisticsOperation>().ToArray();
-            var aggregates = result.OfType<AggregateOperation>().ToArray();
+            var resultedEvents = events.Distinct().ToArray();
+            if (resultedEvents.Length > 1000 * bucketIds.Count)
+            {
+                _tracer.Warn($"Messages produced huge operation amount: from {bucketIds.Count} TUCs to {resultedEvents.Length} commands\n" +
+                             string.Join(", ", bucketIds));
+            }
+
+            _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);
 
             // We always need to use different transaction scope to operate with operation sender because it has its own store
             using (var pushTransaction = new TransactionScope(TransactionScopeOption.RequiresNew,
                                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
-                _tracer.Debug("Pushing events for statistics recalculation");
-                _statisticsSender.Push(statistics);
-                _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(statistics.Length);
-
-                _tracer.Debug("Pushing events for aggregates recalculation");
-                _aggregateSender.Push(aggregates);
-                _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(aggregates.Length);
-
+                _tracer.Debug("Pushing messages");
+                DispatchEvents(resultedEvents);
                 pushTransaction.Complete();
             }
 
-            _tracer.Debug("Handing fact operations finished");
+            _tracer.Debug("Executing fact commands finished");
+        }
+
+        private void DispatchEvents(IReadOnlyCollection<IEvent> events)
+        {
+            var dispatched = _eventDispatcher.Dispatch(events);
+            foreach (var pair in dispatched)
+            {
+                _eventSender.Push(pair.Key, pair.Value);
+            }
+
+            _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(dispatched[StatisticsEventsFlow.Instance].Count);
+            _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(dispatched[CommonEventsFlow.Instance].Count);
         }
     }
 }

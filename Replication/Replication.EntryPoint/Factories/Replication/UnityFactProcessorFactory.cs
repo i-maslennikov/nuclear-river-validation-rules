@@ -4,12 +4,11 @@ using System.Linq;
 using Microsoft.Practices.Unity;
 
 using NuClear.Metamodeling.Elements;
-using NuClear.Replication.Core;
 using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Equality;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
 using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Equality;
 using NuClear.River.Common.Metadata.Features;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
@@ -74,10 +73,11 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
 
             public object Create()
             {
-                return new DataChangesDetector<T>(
+                return new TwoPhaseDataChangesDetector<T>(
                     _metadata.MapSpecificationProviderForSource,
                     _metadata.MapSpecificationProviderForTarget,
                     _equalityComparerFactory.CreateIdentityComparer<T>(),
+                    _equalityComparerFactory.CreateCompleteComparer<T>(),
                     _query);
             }
         }

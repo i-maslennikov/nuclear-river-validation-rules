@@ -1,5 +1,6 @@
 ﻿using System;
 
+using NuClear.Model.Common.Entities;
 using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.River.Common.Metadata.Features
@@ -7,7 +8,7 @@ namespace NuClear.River.Common.Metadata.Features
     public class DirectlyDependentEntityFeature<TFact> : IFactDependencyFeature
         where TFact : class, IIdentifiable<long>
     {
-        public DirectlyDependentEntityFeature(Type entityType)
+        public DirectlyDependentEntityFeature(IEntityType entityType)
         {
             EntityType = entityType;
             FactType = typeof(TFact);
@@ -15,6 +16,6 @@ namespace NuClear.River.Common.Metadata.Features
 
         public Type FactType { get; }
 
-        public Type EntityType { get; }
+        public IEntityType EntityType { get; }
     }
 }

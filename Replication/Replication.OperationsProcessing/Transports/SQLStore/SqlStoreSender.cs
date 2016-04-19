@@ -1,48 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Messaging.API.Flows;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
-using NuClear.River.Common.Metadata.Model;
+using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Writings;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
 {
-    public sealed class SqlStoreSender<TOperation, TFlow> : IOperationSender<TOperation>
-        where TOperation : IOperation
-        where TFlow : MessageFlowBase<TFlow>, new()
+    public sealed class SqlStoreSender : IEventSender
     {
         private readonly IIdentityGenerator _identityGenerator;
         private readonly IRepository<PerformedOperationFinalProcessing> _repository;
-        private readonly IOperationSerializer<TOperation> _serializer;
-        private readonly TFlow _targetFlow;
+        private readonly IEventSerializer _serializer;
 
         public SqlStoreSender(
             IIdentityGenerator identityGenerator,
             IRepository<PerformedOperationFinalProcessing> repository,
-            IOperationSerializer<TOperation> serializer)
+            IEventSerializer serializer)
         {
             _identityGenerator = identityGenerator;
             _repository = repository;
             _serializer = serializer;
-            _targetFlow = MessageFlowBase<TFlow>.Instance;
         }
 
-        public void Push(IEnumerable<TOperation> operations)
+        public void Push<TEvent, TFlow>(TFlow targetFlow, IReadOnlyCollection<TEvent> events)
+            where TFlow : IMessageFlow
+            where TEvent : IEvent
         {
-            using (Probe.Create($"Send {typeof(TOperation).Name}"))
+            using (Probe.Create($"Send {typeof(TEvent).Name}"))
             {
-                var transportMessages = operations.Select(operation => _serializer.Serialize(operation, _targetFlow));
-                Save(transportMessages.ToArray());
+                var transportMessages = events.Select(x => _serializer.Serialize(x));
+                Save(transportMessages.ToArray(), targetFlow.Id);
             }
         }
 
-        private void Save(IReadOnlyCollection<PerformedOperationFinalProcessing> transportMessages)
+        private void Save(IReadOnlyCollection<PerformedOperationFinalProcessing> transportMessages, Guid targetFlowId)
         {
             foreach (var transportMessage in transportMessages)
             {
                 transportMessage.Id = _identityGenerator.Next();
+                transportMessage.CreatedOn = DateTime.UtcNow;
+                transportMessage.MessageFlowId = targetFlowId;
             }
 
             _repository.AddRange(transportMessages);

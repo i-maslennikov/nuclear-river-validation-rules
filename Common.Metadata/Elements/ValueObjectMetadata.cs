@@ -34,6 +34,7 @@ namespace NuClear.River.Common.Metadata.Elements
 
         public MapToObjectsSpecProvider<TValueObject, TValueObject> MapSpecificationProviderForTarget { get; private set; }
 
+        // todo: подумать о замене TEntityKey на TEntity
         public Func<IReadOnlyCollection<TEntityKey>, FindSpecification<TValueObject>> FindSpecificationProvider { get; private set; }
 
         public override void ActualizeId(IMetadataElementIdentity actualMetadataElementIdentity)

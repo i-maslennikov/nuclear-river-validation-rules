@@ -18,7 +18,6 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                 { FactsTestConnectionStringIdentity.Instance, FactsConnectionStringIdentity.Instance },
                 { BitTestConnectionStringIdentity.Instance, FactsConnectionStringIdentity.Instance },
                 { CustomerIntelligenceTestConnectionStringIdentity.Instance, CustomerIntelligenceConnectionStringIdentity.Instance },
-                { StatisticsTestConnectionStringIdentity.Instance, CustomerIntelligenceConnectionStringIdentity.Instance },
             };
 
         private readonly IConnectionStringSettings _connectionStringSettings;

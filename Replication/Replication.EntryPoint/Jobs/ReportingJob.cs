@@ -83,10 +83,10 @@ namespace NuClear.Replication.EntryPoint.Jobs
             var command = new SqlCommand(CommandText, _sqlConnection);
             command.Parameters.Add("@flowId", SqlDbType.UniqueIdentifier);
 
-            command.Parameters["@flowId"].Value = AggregatesFlow.Instance.Id;
+            command.Parameters["@flowId"].Value = CommonEventsFlow.Instance.Id;
             _telemetry.Publish<FinalProcessingAggregateQueueLengthIdentity>((int)command.ExecuteScalar());
 
-            command.Parameters["@flowId"].Value = StatisticsFlow.Instance.Id;
+            command.Parameters["@flowId"].Value = StatisticsEventsFlow.Instance.Id;
             _telemetry.Publish<FinalProcessingStatisticsQueueLengthIdentity>((int)command.ExecuteScalar());
 
             _sqlConnection.Close();

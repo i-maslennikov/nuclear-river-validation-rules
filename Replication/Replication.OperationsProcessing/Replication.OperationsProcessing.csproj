@@ -177,7 +177,7 @@
     <Compile Include="Identities\Operations\DestroyAggregateOperationIdentity.cs" />
     <Compile Include="Identities\Operations\InitializeAggregateOperationIdentity.cs" />
     <Compile Include="Identities\Operations\RecalculateAggregateOperationIdentity.cs" />
-    <Compile Include="Identities\Operations\StatisticsOperationIdentity.cs" />
+    <Compile Include="Identities\Operations\RecalculateAggregatePartOperationIdentity.cs" />
     <Compile Include="Identities\Telemetry\AggregateEnqueuedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\AggregateProcessedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\AggregateProcessingDelayIdentity.cs" />
@@ -206,12 +206,16 @@
     <Compile Include="Primary\CorporateBusAggregatableMessage.cs" />
     <Compile Include="Transports\CorporateBus\CorporateBusMessage.cs" />
     <Compile Include="Transports\CorporateBus\CorporateBusOperationsReceiver.cs" />
-    <Compile Include="Transports\SQLStore\IOperationSerializer.cs" />
+    <Compile Include="Transports\EntityTypeParser.cs" />
+    <Compile Include="Transports\IEntityTypeParser.cs" />
+    <Compile Include="Transports\IEventDispatcher.cs" />
+    <Compile Include="Transports\SQLStore\IEntityReferenceSerializer.cs" />
+    <Compile Include="Transports\SQLStore\IEventSerializer.cs" />
     <Compile Include="Transports\ServiceBus\ServiceBusOperationsReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\ServiceBus\UnknownEntityType.cs" />
     <Compile Include="Transports\SQLStore\IdentityGenerator.cs" />
     <Compile Include="Transports\SQLStore\IIdentityGenerator.cs" />
-    <Compile Include="Transports\IOperationSender.cs" />
+    <Compile Include="Transports\IEventSender.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreReceiver.cs" />
     <Compile Include="Transports\SQLStore\Schema.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreReceiverTelemetryDecorator.cs" />

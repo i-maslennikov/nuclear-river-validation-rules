@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using NuClear.CustomerIntelligence.Domain.EntityTypes;
+
+using NUnit.Framework;
 
 using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
 using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
@@ -18,7 +20,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryGroup>(1)
-                          .VerifyDistinct(Aggregate.Initialize<CI::CategoryGroup>(1));
+                          .VerifyDistinct(Aggregate.Initialize(EntityTypeCategoryGroup.Instance, 1));
         }
 
         [Test]
@@ -29,7 +31,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryGroup>(1)
-                          .VerifyDistinct(Aggregate.Destroy<CI::CategoryGroup>(1));
+                          .VerifyDistinct(Aggregate.Destroy(EntityTypeCategoryGroup.Instance, 1));
         }
 
         [Test]
@@ -42,13 +44,13 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryGroup>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI::CategoryGroup>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeCategoryGroup.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateClientAndFirmIfCategoryGroupUpdated()
         {
-            SourceDb.Has(new Erm::CategoryGroup { Id = 1, Name = "Name", Rate = 1 })
+            SourceDb.Has(new Erm::CategoryGroup { Id = 1, Name = "Name 2", Rate = 1 })
                  .Has(new Erm::CategoryOrganizationUnit { Id = 1, CategoryGroupId = 1, CategoryId = 1, OrganizationUnitId = 1 })
                  .Has(new Erm::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 1 })
                  .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
@@ -65,9 +67,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::CategoryGroup>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI::Firm>(1),
-                                          Aggregate.Recalculate<CI::Client>(1),
-                                          Aggregate.Recalculate<CI::CategoryGroup>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1),
+                                          Aggregate.Recalculate(EntityTypeClient.Instance, 1),
+                                          Aggregate.Recalculate(EntityTypeCategoryGroup.Instance, 1));
         }
     }
 }
