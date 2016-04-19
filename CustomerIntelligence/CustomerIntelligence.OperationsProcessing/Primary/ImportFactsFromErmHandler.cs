@@ -54,14 +54,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                                                    .Cast<OperationAggregatableMessage<SyncDataObjectCommand>>()
                                                    .ToArray();
 
-                var bucketIds = processingResultsMap.Keys.ToArray();
-                if (result.Count > 1000 * bucketIds.Count)
-                {
-                    _tracer.Warn($"Messages produced huge operation amount: from {bucketIds.Count} TUCs to {result.Count} commands\n" +
-                        string.Join(", ", bucketIds));
-                }
-
-                Handle(messages.SelectMany(message => message.Commands).ToArray());
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands).ToArray());
 
                 var eldestOperationPerformTime = messages.Min(message => message.OperationTime);
                 _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);
@@ -75,7 +68,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<SyncDataObjectCommand> commands)
+        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<SyncDataObjectCommand> commands)
         {
             _tracer.Debug("Executing fact commands started");
 
@@ -99,6 +92,13 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                 }
             }
 
+            var resultedEvents = events.Distinct().ToArray();
+            if (resultedEvents.Length > 1000 * bucketIds.Count)
+            {
+                _tracer.Warn($"Messages produced huge operation amount: from {bucketIds.Count} TUCs to {resultedEvents.Length} commands\n" +
+                             string.Join(", ", bucketIds));
+            }
+
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);
 
             // We always need to use different transaction scope to operate with operation sender because it has its own store
@@ -106,7 +106,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
                 _tracer.Debug("Pushing messages");
-                DispatchEvents(events.Distinct().ToArray());
+                DispatchEvents(resultedEvents);
                 pushTransaction.Complete();
             }
 
