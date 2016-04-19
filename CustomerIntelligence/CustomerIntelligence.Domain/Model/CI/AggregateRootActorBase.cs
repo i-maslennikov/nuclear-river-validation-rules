@@ -27,8 +27,8 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
         {
             var events = new List<IEvent>();
 
-            var commandGroups = commands.GroupBy(x => x.GetType())
-                                        .OrderByDescending(x => x.Key, new AggregateCommandPriorityComparer());
+            var commandGroups = commands.GroupBy(x => x.GetType());
+                                        //.OrderByDescending(x => x.Key, new AggregateCommandPriorityComparer());
             foreach (var commandGroup in commandGroups)
             {
                 IActor actor;

@@ -1,9 +1,6 @@
-﻿using Moq;
-
+﻿using NuClear.CustomerIntelligence.Domain.Events;
+using NuClear.CustomerIntelligence.Domain.Model.Facts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
-using NuClear.Replication.OperationsProcessing.Transports;
-using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Common.Metadata.Model.Operations;
 
 using NUnit.Framework;
@@ -14,55 +11,75 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports.SQL
     public class XmlOperationSerializerTests
     {
         [Test]
-        public void ShouldDealWithInitializeAggregate()
+        public void ShouldWorkWithDataObjectCreatedEvent()
         {
-            var m = new Mock<IEntityTypeParser>();
-            m.Setup(x => x.Parse(It.IsAny<int>())).Returns<int>(id => new UnknownEntityType(id));
-            var serializer = new XmlEventSerializer(new EntityReferenceSerializer(m.Object));
+            var serializer = new XmlEventSerializer();
+            var @event = new DataObjectCreatedEvent(typeof(Firm), 1L);
 
-            var pbo = serializer.Serialize(new InitializeAggregate(new EntityReference(new UnknownEntityType(1), 1L)));
-            var reference = serializer.Deserialize(pbo);
+            var serialized = serializer.Serialize(@event);
+            var deserialized = serializer.Deserialize(serialized);
 
-            Assert.That(reference, Is.EqualTo(new InitializeAggregate(new EntityReference(new UnknownEntityType(1), 1L))));
+            Assert.That(deserialized, Is.EqualTo(@event));
         }
 
         [Test]
-        public void ShouldDealWithRecalculateAggregate()
+        public void ShouldWorkWithDataObjectUpdatedEvent()
         {
-            var m = new Mock<IEntityTypeParser>();
-            m.Setup(x => x.Parse(It.IsAny<int>())).Returns<int>(id => new UnknownEntityType(id));
-            var serializer = new XmlEventSerializer(new EntityReferenceSerializer(m.Object));
+            var serializer = new XmlEventSerializer();
+            var @event = new DataObjectUpdatedEvent(typeof(Firm), 1L);
 
-            var pbo = serializer.Serialize(new RecalculateAggregate(new EntityReference(new UnknownEntityType(1), 1L)));
-            var reference = serializer.Deserialize(pbo);
+            var serialized = serializer.Serialize(@event);
+            var deserialized = serializer.Deserialize(serialized);
 
-            Assert.That(reference, Is.EqualTo(new RecalculateAggregate(new EntityReference(new UnknownEntityType(1), 1L))));
+            Assert.That(deserialized, Is.EqualTo(@event));
         }
 
         [Test]
-        public void ShouldDealWithDestroyAggregate()
+        public void ShouldWorkWithDataObjectDeletedEvent()
         {
-            var m = new Mock<IEntityTypeParser>();
-            m.Setup(x => x.Parse(It.IsAny<int>())).Returns<int>(id => new UnknownEntityType(id));
-            var serializer = new XmlEventSerializer(new EntityReferenceSerializer(m.Object));
+            var serializer = new XmlEventSerializer();
+            var @event = new DataObjectDeletedEvent(typeof(Firm), 1L);
 
-            var pbo = serializer.Serialize(new DestroyAggregate(new EntityReference(new UnknownEntityType(1), 1L)));
-            var reference = serializer.Deserialize(pbo);
+            var serialized = serializer.Serialize(@event);
+            var deserialized = serializer.Deserialize(serialized);
 
-            Assert.That(reference, Is.EqualTo(new DestroyAggregate(new EntityReference(new UnknownEntityType(1), 1L))));
+            Assert.That(deserialized, Is.EqualTo(@event));
         }
 
         [Test]
-        public void ShouldDealWithRecalculateAggregatePart()
+        public void ShouldWorkWithDataObjectReplacedEvent()
         {
-            var m = new Mock<IEntityTypeParser>();
-            m.Setup(x => x.Parse(It.IsAny<int>())).Returns<int>(id => new UnknownEntityType(id));
-            var serializer = new XmlEventSerializer(new EntityReferenceSerializer(m.Object));
+            var serializer = new XmlEventSerializer();
+            var @event = new DataObjectReplacedEvent(typeof(Firm), 1L);
 
-            var pbo = serializer.Serialize(new RecalculateAggregatePart(new EntityReference(new UnknownEntityType(1), 1L), new EntityReference(new UnknownEntityType(2), 2L)));
-            var reference = serializer.Deserialize(pbo);
+            var serialized = serializer.Serialize(@event);
+            var deserialized = serializer.Deserialize(serialized);
 
-            Assert.That(reference, Is.EqualTo(new RecalculateAggregatePart(new EntityReference(new UnknownEntityType(1), 1L), new EntityReference(new UnknownEntityType(2), 2L))));
+            Assert.That(deserialized, Is.EqualTo(@event));
+        }
+
+        [Test]
+        public void ShouldWorkWithRelatedDataObjectOutdatedEventOfLong()
+        {
+            var serializer = new XmlEventSerializer();
+            var @event = new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), 1L);
+
+            var serialized = serializer.Serialize(@event);
+            var deserialized = serializer.Deserialize(serialized);
+
+            Assert.That(deserialized, Is.EqualTo(@event));
+        }
+
+        [Test]
+        public void ShouldWorkWithRelatedDataObjectOutdatedEventOfStatisticsKey()
+        {
+            var serializer = new XmlEventSerializer();
+            var @event = new RelatedDataObjectOutdatedEvent<StatisticsKey>(typeof(Firm), new StatisticsKey { ProjectId = 1L, CategoryId = 1L });
+
+            var serialized = serializer.Serialize(@event);
+            var deserialized = serializer.Deserialize(serialized);
+
+            Assert.That(deserialized, Is.EqualTo(@event));
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NuClear.CustomerIntelligence.Domain.Commands
+using NuClear.CustomerIntelligence.Domain.Commands;
+
+namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public class AggregateCommandPriorityComparer : IComparer<Type>
     {

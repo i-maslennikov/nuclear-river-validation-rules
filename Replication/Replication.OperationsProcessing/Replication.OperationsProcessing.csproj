@@ -220,7 +220,6 @@
     <Compile Include="Transports\SQLStore\Schema.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreSender.cs" />
-    <Compile Include="Transports\SQLStore\XmlEventSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

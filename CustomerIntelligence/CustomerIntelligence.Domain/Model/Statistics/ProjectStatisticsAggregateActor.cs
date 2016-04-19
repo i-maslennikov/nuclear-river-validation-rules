@@ -13,7 +13,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
 {
-    public class ProjectStatisticsAggregate : IAggregateRootActor
+    public class ProjectStatisticsAggregateActor : IAggregateRootActor
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<ProjectStatistics> _projectStatisticsBulkRepository;
@@ -21,7 +21,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
         private readonly IBulkRepository<FirmForecast> _firmForecastBulkRepository;
         private readonly IBulkRepository<FirmCategory3> _firmCategory3BulkRepository;
 
-        public ProjectStatisticsAggregate(
+        public ProjectStatisticsAggregateActor(
             IQuery query,
             IBulkRepository<ProjectStatistics> projectStatisticsBulkRepository,
             IBulkRepository<ProjectCategoryStatistics> projectCategoryStatisticsBulkRepository,
