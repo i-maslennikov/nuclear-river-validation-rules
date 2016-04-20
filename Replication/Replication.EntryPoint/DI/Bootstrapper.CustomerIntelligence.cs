@@ -52,6 +52,7 @@ using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
+using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
@@ -311,7 +312,12 @@ namespace NuClear.Replication.EntryPoint.DI
                                                                                                new CustomerIntelligenceFactTypePriorityComparer(),
                                                                                                new FactMetadataUriProvider())))
                 .RegisterType<IImportDocumentMetadataProcessorFactory, UnityImportDocumentMetadataProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IAggregatesConstructor, AggregatesConstructor<CustomerIntelligenceSubDomain>>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IAggregatesConstructor>(entryPointSpecificLifetimeManagerFactory(),
+                                                      new InjectionFactory(c => new AggregatesConstructor<CustomerIntelligenceSubDomain>(
+                                                                                    c.Resolve<IMetadataProvider>(),
+                                                                                    c.Resolve<IAggregateProcessorFactory>(),
+                                                                                    c.Resolve<IEntityTypeMappingRegistry<CustomerIntelligenceSubDomain>>(),
+                                                                                    new AggregateMetadataUriProvider())))
                 .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IFactDependencyProcessorFactory, UnityFactDependencyProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IFactProcessorFactory, UnityFactProcessorFactory>(entryPointSpecificLifetimeManagerFactory());

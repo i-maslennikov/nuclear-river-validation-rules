@@ -7,7 +7,7 @@ using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
         {
             try
             {
-                foreach (var message in messages.OfType<OperationAggregatableMessage<AggregateOperation>>())
+                foreach (var message in messages.OfType<OperationAggregatableMessage<IOperation>>())
                 {
                     _aggregatesConstructor.Execute(message.Operations);
 

@@ -9,26 +9,33 @@ using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Transports;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.Telemetry;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Primary
 {
     public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
     {
         private readonly IFactsReplicator _factsReplicator;
-        private readonly IOperationSender _aggregateSender;
+        private readonly IOperationSender _operationSender;
+        private readonly IOperationDispatcher _operationDispatcher;
         private readonly ITracer _tracer;
+        private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromErmHandler(
             IFactsReplicator factsReplicator,
-            IOperationSender aggregateSender,
+            IOperationSender operationSender,
+            ITelemetryPublisher telemetryPublisher,
+            IOperationDispatcher operationDispatcher,
             ITracer tracer)
         {
-            _aggregateSender = aggregateSender;
-            _tracer = tracer;
+            _operationSender = operationSender;
+            _telemetryPublisher = telemetryPublisher;
             _factsReplicator = factsReplicator;
+            _operationDispatcher = operationDispatcher;
+            _tracer = tracer;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -39,7 +46,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                                                    .Cast<OperationAggregatableMessage<FactOperation>>()
                                                    .ToArray();
 
-                Handle(messages.SelectMany(message => message.Operations).ToArray());
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Operations).ToArray());
+
+                var eldestOperationPerformTime = messages.Min(message => message.OperationTime);
+                //_telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
@@ -50,20 +60,41 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<FactOperation> operations)
+        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<FactOperation> operations)
         {
+            _tracer.Debug("Handing fact operations started");
             var result = _factsReplicator.Replicate(operations);
-            var aggregates = result.OfType<AggregateOperation>().ToArray();
+
+            if (result.Count > 1000 * bucketIds.Count)
+            {
+                _tracer.Warn($"Messages produced huge operation amount: from {bucketIds.Count} TUCs to {result.Count} commands\n" +
+                    string.Join(", ", bucketIds));
+            }
+
+            //_telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(operations.Count);
 
             // We always need to use different transaction scope to operate with operation sender because it has its own store
             using (var pushTransaction = new TransactionScope(TransactionScopeOption.RequiresNew,
                                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
-                _tracer.Debug("Pushing events for aggregates recalculation");
-                _aggregateSender.Push(aggregates, AggregatesFlow.Instance);
-
+                _tracer.Debug("Pushing messages");
+                DispatchOperations(result);
                 pushTransaction.Complete();
             }
+
+            _tracer.Debug("Handing fact operations finished");
+        }
+
+        private void DispatchOperations(IEnumerable<IOperation> opertaions)
+        {
+            var dispatched = _operationDispatcher.Dispatch(opertaions);
+            foreach (var pair in dispatched)
+            {
+                _operationSender.Push(pair.Value, pair.Key);
+            }
+
+            //_telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(dispatched[StatisticsFlow.Instance].Count);
+            //_telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(dispatched[AggregatesFlow.Instance].Count);
         }
     }
 }

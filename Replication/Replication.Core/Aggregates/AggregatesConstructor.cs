@@ -4,11 +4,10 @@ using System.Linq;
 using System.Transactions;
 
 using NuClear.Metamodeling.Elements;
-using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core.API.Aggregates;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
@@ -21,12 +20,14 @@ namespace NuClear.Replication.Core.Aggregates
         private readonly IMetadataProvider _metadataProvider;
         private readonly IAggregateProcessorFactory _aggregateProcessorFactory;
         private readonly IEntityTypeMappingRegistry<TSubDomain> _entityTypeMappingRegistry;
+        private readonly IMetadataUriProvider _uriProvider;
 
-        public AggregatesConstructor(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory, IEntityTypeMappingRegistry<TSubDomain> entityTypeMappingRegistry)
+        public AggregatesConstructor(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory, IEntityTypeMappingRegistry<TSubDomain> entityTypeMappingRegistry, IMetadataUriProvider uriProvider)
         {
             _metadataProvider = metadataProvider;
             _aggregateProcessorFactory = aggregateProcessorFactory;
             _entityTypeMappingRegistry = entityTypeMappingRegistry;
+            _uriProvider = uriProvider;
         }
 
         public void Execute(IReadOnlyCollection<IOperation> commands)
@@ -124,7 +125,7 @@ namespace NuClear.Replication.Core.Aggregates
         private IAggregateProcessor CreateProcessor(Type aggregate)
         {
             IMetadataElement aggregateMetadata;
-            var metadataId = ReplicationMetadataIdentity.Instance.Id.WithRelative(new Uri($"Aggregates/{aggregate.Name}", UriKind.Relative));
+            var metadataId = _uriProvider.GetFor(aggregate);
             if (!_metadataProvider.TryGetMetadata(metadataId, out aggregateMetadata))
             {
                 throw new NotSupportedException($"The aggregate of type '{aggregate.Name}' is not supported.");
