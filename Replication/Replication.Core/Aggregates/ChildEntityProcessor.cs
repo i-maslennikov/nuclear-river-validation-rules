@@ -43,13 +43,13 @@ namespace NuClear.Replication.Core.Aggregates
             _childEntity.Destroy(spec);
         }
 
-        public void Recalculate(IReadOnlyCollection<IGrouping<TParentEntityKey, object>> entityKeys)
+        public void Recalculate(IDictionary<TParentEntityKey, IReadOnlyCollection<object>> entityKeys)
         {
             FindSpecification<TChildEntity> spec = null;
             foreach (var entityKey in entityKeys)
             {
                 var byParent = _mapSpecification.Map(new [] { entityKey.Key });
-                var bySelf = _findSpecificationProvider.Create(entityKey.Cast<TChildEntityKey>());
+                var bySelf = _findSpecificationProvider.Create(entityKey.Value.Cast<TChildEntityKey>());
 
                 spec = spec == null
                            ? byParent & bySelf

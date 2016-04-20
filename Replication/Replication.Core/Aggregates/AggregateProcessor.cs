@@ -5,6 +5,7 @@ using System.Linq;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.Utils.Collections;
 
 namespace NuClear.Replication.Core.Aggregates
 {
@@ -46,7 +47,7 @@ namespace NuClear.Replication.Core.Aggregates
 
         public void Recalculate(Type partType, IReadOnlyCollection<RecalculateAggregatePart> commands)
         {
-            var keys = commands.GroupBy(x => (TRootKey)x.AggregateRoot.EntityKey, x => x.Entity.EntityKey).ToArray();
+            var keys = commands.GroupBy(x => (TRootKey)x.AggregateRoot.EntityKey, x => x.Entity.EntityKey).ToDictionary(x => x.Key, x => x.AsReadOnlyCollection());
             var processor = _childEntityProcessors.Single(x => x.EntityType == partType);
             processor.Recalculate(keys);
         }
