@@ -30,29 +30,25 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Facts
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Firm> dataObjects)
             => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Firm), x.Id)).ToArray();
 
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Firm> dataObjects)
-        {
-            var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<Firm>(x => ids.Contains(x.Id));
-
-            IEnumerable<IEvent> events = from firm in _query.For(specification)
-                                         join project in _query.For<Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
-                                         join firmAddress in _query.For<FirmAddress>() on firm.Id equals firmAddress.FirmId
-                                         join firmAddressCategory in _query.For<CategoryFirmAddress>() on firmAddress.Id equals firmAddressCategory.FirmAddressId
-                                         select new RelatedDataObjectOutdatedEvent<StatisticsKey>(
-                                             typeof(ProjectCategoryStatistics),
-                                             new StatisticsKey { ProjectId = project.Id, CategoryId = firmAddressCategory.CategoryId });
-
-            events = events.Concat(from firm in _query.For(specification)
-                                   where firm.ClientId != null
-                                   select new RelatedDataObjectOutdatedEvent<long>(typeof(Client), firm.ClientId.Value));
-            return events.ToArray();
-        }
-
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Firm> dataObjects)
             => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Firm), x.Id)).ToArray();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Firm> dataObjects)
             => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Firm), x.Id)).ToArray();
+
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Firm> dataObjects)
+        {
+            var ids = dataObjects.Select(x => x.Id).ToArray();
+            var specification = new FindSpecification<Firm>(x => ids.Contains(x.Id));
+
+            IEnumerable<IEvent> events = Specs.Map.Facts.ToStatistics.ByFirm(specification)
+                                              .Map(_query)
+                                              .Select(x => new RelatedDataObjectOutdatedEvent<StatisticsKey>(typeof(ProjectCategoryStatistics), x));
+
+            events = events.Concat(Specs.Map.Facts.ToClientAggregate.ByFirm(specification)
+                                        .Map(_query)
+                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x)));
+            return events.ToArray();
+        }
     }
 }

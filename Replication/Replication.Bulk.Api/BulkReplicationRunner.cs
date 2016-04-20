@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
-using NuClear.Replication.Bulk.Metadata;
+using NuClear.Replication.Bulk.API.Commands;
 using NuClear.Replication.Bulk.API.Factories;
+using NuClear.Replication.Bulk.API.Metadata;
 using NuClear.Replication.Bulk.API.Storage;
 
 namespace NuClear.Replication.Bulk.API
@@ -35,33 +36,29 @@ namespace NuClear.Replication.Bulk.API
             }
 
             var storageDescriptor = bulkReplicationMetadata.Features.OfType<StorageDescriptorFeature>().Single(x => x.Direction == ReplicationDirection.To);
-            var context = bulkReplicationMetadata.Elements.Single();
             using (_viewRemover.TemporaryRemoveViews(storageDescriptor.ConnectionStringName, bulkReplicationMetadata.EssentialViews))
             {
-                Parallel.ForEach(context.Elements,
-                                 element =>
+                Parallel.ForEach(bulkReplicationMetadata.DataObjectTypes,
+                                 dataObjectType =>
                                  {
                                      using (var bulkReplicatorFactory = CreateReplicatorFactory(bulkReplicationMetadata))
                                      {
                                          var sw = Stopwatch.StartNew();
-                                         var replicators = bulkReplicatorFactory.Create(element);
-                                         foreach (var replicator in replicators)
-                                         {
-                                             replicator.Replicate();
-                                         }
+                                         var actor = bulkReplicatorFactory.Create(dataObjectType);
+                                         actor.ExecuteCommands(new[] { new CreateDataObjectsInBulkCommand() });
 
                                          sw.Stop();
-                                         Console.WriteLine($"{element.Identity.Id}: {sw.Elapsed.TotalSeconds} seconds");
+                                         Console.WriteLine($"{dataObjectType.FullName}: {sw.Elapsed.TotalSeconds} seconds");
                                      }
                                  });
             }
         }
 
-        private IBulkReplicatorFactory CreateReplicatorFactory(BulkReplicationMetadataElement bulkReplicationMetadata)
+        private BulkCreateDataObjectsActorFactory CreateReplicatorFactory(BulkReplicationMetadataElement bulkReplicationMetadata)
         {
             var sourceStorageDescriptor = bulkReplicationMetadata.Features.OfType<StorageDescriptorFeature>().Single(x => x.Direction == ReplicationDirection.From);
             var targetStorageDescriptor = bulkReplicationMetadata.Features.OfType<StorageDescriptorFeature>().Single(x => x.Direction == ReplicationDirection.To);
-            return new RoutingBulkReplicatorFactory(_dataConnectionFactory.CreateConnection(sourceStorageDescriptor), _dataConnectionFactory.CreateConnection(targetStorageDescriptor));
+            return new BulkCreateDataObjectsActorFactory(_dataConnectionFactory.CreateConnection(sourceStorageDescriptor), _dataConnectionFactory.CreateConnection(targetStorageDescriptor));
         }
     }
 }

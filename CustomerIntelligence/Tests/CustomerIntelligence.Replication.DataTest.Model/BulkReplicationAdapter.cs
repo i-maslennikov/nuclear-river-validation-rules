@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain;
-using NuClear.CustomerIntelligence.StateInitialization;
+using NuClear.CustomerIntelligence.StateInitialization.EntryPoint;
 using NuClear.DataTest.Metamodel;
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.Metamodeling.Processors;
@@ -9,7 +8,6 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Replication.Bulk.API;
 using NuClear.Replication.Bulk.API.Storage;
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.ConnectionStrings;
 
 using DataConnectionFactory = NuClear.Replication.Bulk.API.Factories.DataConnectionFactory;
@@ -19,14 +17,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
     static class ReplicationMetdataProvider
     {
         public static readonly MetadataProvider Instance
-            = new MetadataProvider(
-                new IMetadataSource[]
-                {
-                    new BulkReplicationMetadataSource(),
-                    new FactsReplicationMetadataSource(),
-                    new AggregateConstructionMetadataSource(),
-                },
-                new IMetadataProcessor[] { new TunedReferencesEvaluatorProcessor() });
+            = new MetadataProvider(new IMetadataSource[] { new BulkReplicationMetadataSource() }, new IMetadataProcessor[0]);
     }
 
     public sealed class BulkReplicationAdapter<T> : ITestAction

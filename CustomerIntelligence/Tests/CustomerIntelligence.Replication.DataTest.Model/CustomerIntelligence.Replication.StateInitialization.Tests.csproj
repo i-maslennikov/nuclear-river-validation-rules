@@ -112,9 +112,9 @@
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
       <Name>CustomerIntelligence.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence.StateInitialization\CustomerIntelligence.StateInitialization.csproj">
-      <Project>{0af71ae8-390e-4911-b243-255536509210}</Project>
-      <Name>CustomerIntelligence.StateInitialization</Name>
+    <ProjectReference Include="..\..\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.EntryPoint.csproj">
+      <Project>{c6de2a90-b4b9-4cd5-aef0-7e6607b102a0}</Project>
+      <Name>CustomerIntelligence.StateInitialization.EntryPoint</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>

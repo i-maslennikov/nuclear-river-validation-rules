@@ -3,7 +3,7 @@
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Storage.API.ConnectionStrings;
 
-namespace NuClear.Replication.Bulk.Metadata
+namespace NuClear.Replication.Bulk.API.Metadata
 {
     public class StorageDescriptorFeature : IMetadataFeature
     {
@@ -15,7 +15,7 @@ namespace NuClear.Replication.Bulk.Metadata
         }
 
         public ReplicationDirection Direction { get; private set; }
-        
+
         public IConnectionStringIdentity ConnectionStringName { get; private set; }
 
         public MappingSchema MappingSchema { get; private set; }

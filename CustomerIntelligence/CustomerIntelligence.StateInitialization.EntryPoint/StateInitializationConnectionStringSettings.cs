@@ -6,7 +6,7 @@ using System.Linq;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.Storage.API.ConnectionStrings;
 
-namespace NuClear.CustomerIntelligence.StateInitialization
+namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
 {
     public sealed class StateInitializationConnectionStringSettings : ConnectionStringSettingsAspect
     {

@@ -2,28 +2,19 @@
 using System.Configuration;
 using System.Diagnostics;
 
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Replication.Bulk.API;
 using NuClear.Replication.Bulk.API.Factories;
 using NuClear.Replication.Bulk.API.Storage;
-using NuClear.River.Common.Metadata;
 
 namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
 {
     public sealed class Program
     {
         private static readonly MetadataProvider DefaultProvider
-            = new MetadataProvider(
-                new IMetadataSource[]
-                {
-                    new BulkReplicationMetadataSource(),
-                    new FactsReplicationMetadataSource(),
-                    new AggregateConstructionMetadataSource(),
-                },
-                new IMetadataProcessor[] { new TunedReferencesEvaluatorProcessor() });
+            = new MetadataProvider(new IMetadataSource[] { new BulkReplicationMetadataSource() }, new IMetadataProcessor[0]);
 
         public static void Main(string[] args)
         {

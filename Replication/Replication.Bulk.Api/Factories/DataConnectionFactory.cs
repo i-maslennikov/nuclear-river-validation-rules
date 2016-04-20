@@ -3,7 +3,7 @@
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 
-using NuClear.Replication.Bulk.Metadata;
+using NuClear.Replication.Bulk.API.Metadata;
 using NuClear.Storage.API.ConnectionStrings;
 
 namespace NuClear.Replication.Bulk.API.Factories

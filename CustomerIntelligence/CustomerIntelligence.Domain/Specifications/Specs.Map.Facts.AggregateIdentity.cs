@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Domain.Events;
-using NuClear.CustomerIntelligence.Domain.Model.Bit;
 using NuClear.CustomerIntelligence.Domain.Model.Facts;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
@@ -19,7 +17,6 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
             {
                 public static class ToClientAggregate
                 {
-                    [Obsolete]
                     public static MapSpecification<IQuery, IEnumerable<long>> ByFirm(FindSpecification<Firm> specification)
                     {
                         return new MapSpecification<IQuery, IEnumerable<long>>(
@@ -336,7 +333,6 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
 
                 public static partial class ToStatistics
                 {
-                    [Obsolete]
                     public static MapSpecification<IQuery, IEnumerable<StatisticsKey>> ByFirm(FindSpecification<Firm> specification)
                     {
                         return new MapSpecification<IQuery, IEnumerable<StatisticsKey>>(
@@ -367,6 +363,7 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                  select new StatisticsKey { ProjectId = project.Id, CategoryId = firmAddressCategory.CategoryId });
                     }
 
+                    [Obsolete]
                     public static MapSpecification<IQuery, IEnumerable<long>> ByProject(FindSpecification<Project> specification)
                     {
                         return new MapSpecification<IQuery, IEnumerable<long>>(q => q.For(specification).Select(x => x.Id));

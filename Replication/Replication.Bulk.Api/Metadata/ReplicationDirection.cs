@@ -1,4 +1,4 @@
-﻿namespace NuClear.Replication.Bulk.Metadata
+﻿namespace NuClear.Replication.Bulk.API.Metadata
 {
     public enum ReplicationDirection
     {
