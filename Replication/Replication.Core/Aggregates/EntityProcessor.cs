@@ -33,11 +33,12 @@ namespace NuClear.Replication.Core.Aggregates
         {
             var mergeResult = _aggregateChangesDetector.DetectChanges(specification);
 
+            ApplyChangesToValueObjects(mergeResult.Complement.ToArray());
+
             _repository.Delete(mergeResult.Complement);
             _repository.Create(mergeResult.Difference);
             _repository.Update(mergeResult.Intersection);
 
-            ApplyChangesToValueObjects(mergeResult.Complement.ToArray());
             ApplyChangesToValueObjects(mergeResult.Difference.ToArray());
             ApplyChangesToValueObjects(mergeResult.Intersection.ToArray());
         }
@@ -46,9 +47,9 @@ namespace NuClear.Replication.Core.Aggregates
         {
             var mergeResult = _aggregateChangesDetector.DetectChanges(specification);
 
-            _repository.Delete(mergeResult.Complement);
-
             ApplyChangesToValueObjects(mergeResult.Complement.ToArray());
+
+            _repository.Delete(mergeResult.Complement);
         }
 
         private void ApplyChangesToValueObjects(IReadOnlyCollection<TEntity> changes)
