@@ -8,7 +8,7 @@ using NuClear.Replication.Core.API;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
-    public class UnityDataObjectsActorFactory : IDataObjectsActorFactory
+    public sealed class UnityDataObjectsActorFactory : IDataObjectsActorFactory
     {
         private static readonly HashSet<Type> DataObjectsToReplace =
             new HashSet<Type> { typeof(FirmCategoryForecast), typeof(FirmForecast), typeof(FirmCategoryStatistics), typeof(ProjectCategoryStatistics) };

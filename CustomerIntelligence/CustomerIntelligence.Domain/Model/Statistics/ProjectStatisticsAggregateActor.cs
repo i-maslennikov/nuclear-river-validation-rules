@@ -14,7 +14,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
 {
-    public class ProjectStatisticsAggregateActor : IAggregateRootActor
+    public sealed class ProjectStatisticsAggregateActor : IAggregateRootActor
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<ProjectStatistics> _projectStatisticsBulkRepository;
@@ -65,7 +65,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
                         new FirmForecastAccessor(_query))
                 };
 
-        private class ProjectStatisticsActor : AggregateRootActorBase<ProjectStatistics>
+        private sealed class ProjectStatisticsActor : AggregateRootActorBase<ProjectStatistics>
         {
             public ProjectStatisticsActor(
                 IQuery query,
@@ -76,7 +76,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
             }
         }
 
-        private class ProjectCategoryStatisticsActor : IEntityActor
+        private sealed class ProjectCategoryStatisticsActor : IEntityActor
         {
             private readonly IQuery _query;
             private readonly IBulkRepository<ProjectCategoryStatistics> _projectCategoryStatisticsBulkRepository;
@@ -117,7 +117,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
                     };
         }
 
-        private class ProjectStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectStatistics>
+        private sealed class ProjectStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectStatistics>
         {
             private readonly IQuery _query;
 
@@ -134,7 +134,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
             }
         }
 
-        private class ProjectCategoryStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectCategoryStatistics>
+        private sealed class ProjectCategoryStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectCategoryStatistics>
         {
             private readonly IQuery _query;
 
@@ -149,7 +149,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
                 => Specs.Find.CI.ProjectCategoryStatistics(commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray());
         }
 
-        private class FirmForecastAccessor : IStorageBasedDataObjectAccessor<FirmForecast>
+        private sealed class FirmForecastAccessor : IStorageBasedDataObjectAccessor<FirmForecast>
         {
             private readonly IQuery _query;
 
@@ -164,7 +164,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
                 => Specs.Find.CI.FirmForecast(commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray());
         }
 
-        private class FirmCategory3Accessor : IStorageBasedDataObjectAccessor<FirmCategory3>
+        private sealed class FirmCategory3Accessor : IStorageBasedDataObjectAccessor<FirmCategory3>
         {
             private readonly IQuery _query;
 

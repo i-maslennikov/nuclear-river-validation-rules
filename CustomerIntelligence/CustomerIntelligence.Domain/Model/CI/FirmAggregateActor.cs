@@ -81,7 +81,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                         new FirmTerritoryAccessor(_query))
                 };
 
-        private class FirmActor : AggregateRootActorBase<Firm>
+        private sealed class FirmActor : AggregateRootActorBase<Firm>
         {
             public FirmActor(IQuery query, IBulkRepository<Firm> projectCategoryStatisticsBulkRepository, IEqualityComparerFactory equalityComparerFactory)
                 : base(query, projectCategoryStatisticsBulkRepository, equalityComparerFactory, new FirmAccessor(query))
@@ -89,7 +89,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
             }
         }
 
-        public class FirmAccessor : IStorageBasedDataObjectAccessor<Firm>
+        public sealed class FirmAccessor : IStorageBasedDataObjectAccessor<Firm>
         {
             private readonly IQuery _query;
 
@@ -104,7 +104,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                 => new FindSpecification<Firm>(x => commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().Contains(x.Id));
         }
 
-        public class FirmActivityAccessor : IStorageBasedDataObjectAccessor<FirmActivity>
+        public sealed class FirmActivityAccessor : IStorageBasedDataObjectAccessor<FirmActivity>
         {
             private readonly IQuery _query;
 
@@ -119,7 +119,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                 => Specs.Find.CI.FirmActivities(commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray());
         }
 
-        public class FirmBalanceAccessor : IStorageBasedDataObjectAccessor<FirmBalance>
+        public sealed class FirmBalanceAccessor : IStorageBasedDataObjectAccessor<FirmBalance>
         {
             private readonly IQuery _query;
 
@@ -134,7 +134,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                 => Specs.Find.CI.FirmBalances(commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray());
         }
 
-        public class FirmCategory1Accessor : IStorageBasedDataObjectAccessor<FirmCategory1>
+        public sealed class FirmCategory1Accessor : IStorageBasedDataObjectAccessor<FirmCategory1>
         {
             private readonly IQuery _query;
 
@@ -149,7 +149,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                 => Specs.Find.CI.FirmCategories1(commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray());
         }
 
-        public class FirmCategory2Accessor : IStorageBasedDataObjectAccessor<FirmCategory2>
+        public sealed class FirmCategory2Accessor : IStorageBasedDataObjectAccessor<FirmCategory2>
         {
             private readonly IQuery _query;
 
@@ -164,7 +164,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
                 => Specs.Find.CI.FirmCategories2(commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray());
         }
 
-        public class FirmTerritoryAccessor : IStorageBasedDataObjectAccessor<FirmTerritory>
+        public sealed class FirmTerritoryAccessor : IStorageBasedDataObjectAccessor<FirmTerritory>
         {
             private readonly IQuery _query;
 

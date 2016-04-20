@@ -95,7 +95,9 @@
     <Compile Include="Model\Bit\ProjectCategoryStatisticsAccessor.cs" />
     <Compile Include="Model\CI\AggregateRootActorBase.cs" />
     <Compile Include="Model\CI\CategoryGroup.cs" />
+    <Compile Include="Model\CI\CategoryGroupAggregateActor.cs" />
     <Compile Include="Model\CI\Client.cs" />
+    <Compile Include="Model\CI\ClientAggregateActor.cs" />
     <Compile Include="Model\CI\ClientContact.cs" />
     <Compile Include="Model\CI\Firm.cs" />
     <Compile Include="Model\CI\FirmActivity.cs" />
@@ -103,6 +105,8 @@
     <Compile Include="Model\CI\FirmBalance.cs" />
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
+    <Compile Include="Model\CI\ProjectAggregateActor.cs" />
+    <Compile Include="Model\CI\TerritoryAggregateActor.cs" />
     <Compile Include="Model\Facts\AccountAccessor.cs" />
     <Compile Include="Model\Facts\ActivityAccessor.cs" />
     <Compile Include="Model\Facts\BranchOfficeOrganizationUnitAccessor.cs" />
