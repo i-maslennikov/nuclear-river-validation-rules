@@ -116,6 +116,7 @@
     <Compile Include="Model\Facts\CategoryOrganizationUnitAccessor.cs" />
     <Compile Include="Model\Facts\ClientAccessor.cs" />
     <Compile Include="Model\Facts\ContactAccessor.cs" />
+    <Compile Include="Model\Facts\DataObjectTypesProvider.cs" />
     <Compile Include="Model\Facts\FirmAddressAccessor.cs" />
     <Compile Include="Model\Facts\FirmContactAccessor.cs" />
     <Compile Include="Model\Facts\LegalPersonAccessor.cs" />

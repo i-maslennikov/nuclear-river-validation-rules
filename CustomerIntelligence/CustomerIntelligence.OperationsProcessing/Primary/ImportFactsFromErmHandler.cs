@@ -4,7 +4,6 @@ using System.Linq;
 using System.Transactions;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
@@ -75,17 +74,15 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             var events = Enumerable.Empty<IEvent>();
             using (Probe.Create("ETL1 Transforming"))
             {
-                var slices = commands.GroupBy(x => x.DataObjectType)
-                                       .OrderByDescending(slice => slice.Key, new CustomerIntelligenceFactTypePriorityComparer());
-                foreach (var slice in slices)
+                var actors = _dataObjectsActorFactory.Create();
+                foreach (var actor in actors)
                 {
-                    var dataObjectType = slice.Key;
-                    using (Probe.Create("ETL1 Transforming", dataObjectType.Name))
+                    var actorType = actor.GetType().FullName;
+                    using (Probe.Create("ETL1 Transforming", actorType))
                     {
-                        var actor = _dataObjectsActorFactory.Create(dataObjectType);
-                        foreach (var batch in slice.Distinct().CreateBatches(_replicationSettings.ReplicationBatchSize))
+                        _tracer.Debug($"Applying changes to target facts storage with actor {actorType}");
+                        foreach(var batch in commands.CreateBatches(_replicationSettings.ReplicationBatchSize))
                         {
-                            _tracer.Debug("Apply changes to target facts storage");
                             events = events.Concat(actor.ExecuteCommands(batch));
                         }
                     }

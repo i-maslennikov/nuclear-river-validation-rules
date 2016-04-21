@@ -7,27 +7,16 @@ using System.Linq;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 
-using NuClear.Storage.API.ConnectionStrings;
-
 namespace NuClear.Replication.Bulk.API.Storage
 {
-    public sealed class ViewRemover
+    public static class ViewRemover
     {
-        private readonly IConnectionStringSettings _connectionStringSettings;
-
-        public ViewRemover(IConnectionStringSettings connectionStringSettings)
+        public static IDisposable TemporaryRemoveViews(string connectionString)
         {
-            _connectionStringSettings = connectionStringSettings;
-        }
-
-        public IDisposable TemporaryRemoveViews(IConnectionStringIdentity connectionStringIdentity, IEnumerable<string> essentialViewNames)
-        {
-            var connectionString = _connectionStringSettings.GetConnectionString(connectionStringIdentity);
             var database = GetDatabase(connectionString);
             var views = new List<StringCollection>();
             foreach (var view in database.Views.Cast<View>()
-                .Where(v => !v.IsSystemObject)
-                .Where(v => !essentialViewNames.Contains($"{v.Schema}.{v.Name}", StringComparer.InvariantCultureIgnoreCase)).ToArray())
+                .Where(v => !v.IsSystemObject))
             {
                 views.Add(view.Script());
                 view.Drop();

@@ -11,12 +11,12 @@ using NuClear.River.Common.Metadata;
 
 namespace NuClear.Replication.Bulk.API.Actors
 {
-    public class BulkCreateDataObjectsActor<TDataObject> : IActor where TDataObject : class
+    public sealed class ReplaceDataObjectsInBulkActor<TDataObject> : IActor where TDataObject : class
     {
         private readonly IQueryable<TDataObject> _source;
         private readonly DataConnection _target;
 
-        public BulkCreateDataObjectsActor(IStorageBasedDataObjectAccessor<TDataObject> dataObjectAccessor, DataConnection target)
+        public ReplaceDataObjectsInBulkActor(IStorageBasedDataObjectAccessor<TDataObject> dataObjectAccessor, DataConnection target)
         {
             _source = dataObjectAccessor.GetSource();
             _target = target;
@@ -24,7 +24,7 @@ namespace NuClear.Replication.Bulk.API.Actors
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var casted = commands.OfType<CreateDataObjectsInBulkCommand>();
+            var casted = commands.OfType<ReplaceDataObjectsInBulkCommand>();
             if (casted.Count() != 1)
             {
                 return Array.Empty<IEvent>();

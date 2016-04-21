@@ -108,6 +108,10 @@
       <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
       <Name>Replication.Bulk.API</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Replication\Replication.Core.API\Replication.Core.API.csproj">
+      <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
+      <Name>Replication.Core.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
       <Name>CustomerIntelligence.Domain</Name>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
@@ -49,15 +48,12 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             {
                 foreach (var message in messages)
                 {
-                    var commandGroups = message.Commands.Cast<IDataObjectCommand>().GroupBy(x => x.DataObjectType);
-                    foreach (var commandGroup in commandGroups)
+                    var actors = _dataObjectsActorFactory.Create();
+                    foreach (var actor in actors)
                     {
-                        var actor = _dataObjectsActorFactory.Create(commandGroup.Key);
+                        var events = actor.ExecuteCommands(message.Commands);
 
-                        var commands = commandGroup.ToArray();
-                        var events = actor.ExecuteCommands(commands);
-
-                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(commands.Length);
+                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(message.Commands.Count);
                         DispatchOperations(events);
                     }
                 }

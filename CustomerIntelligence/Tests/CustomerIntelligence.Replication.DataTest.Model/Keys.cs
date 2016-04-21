@@ -1,17 +1,25 @@
-﻿namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
+﻿using NuClear.CustomerIntelligence.Storage;
+using NuClear.Replication.Bulk.API.Commands;
+using NuClear.Replication.Bulk.API.Storage;
+
+namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {
     public interface IKey
     {
-        string Key { get; }
+        ReplaceDataObjectsInBulkCommand Command { get; }
     }
 
     public sealed class Facts : IKey
     {
-        public string Key => "-fact";
+        public ReplaceDataObjectsInBulkCommand Command => new ReplaceDataObjectsInBulkCommand(
+            new StorageDescriptor(ContextName.Erm, Schema.Erm),
+            new StorageDescriptor(ContextName.Facts, Schema.Facts));
     }
 
     public sealed class CustomerIntelligence : IKey
     {
-        public string Key => "-ci";
+        public ReplaceDataObjectsInBulkCommand Command => new ReplaceDataObjectsInBulkCommand(
+            new StorageDescriptor(ContextName.Facts, Schema.Facts),
+            new StorageDescriptor(ContextName.CustomerIntelligence, Schema.CustomerIntelligence));
     }
 }

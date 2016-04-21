@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace NuClear.Replication.Core.API
 {
     public interface IDataObjectsActorFactory
     {
-        IActor Create(Type dataObjectType);
+        IReadOnlyCollection<IActor> Create();
     }
 }
