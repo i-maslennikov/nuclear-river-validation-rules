@@ -27,7 +27,7 @@ go
 
 create table PriceContext.Position(
     Id bigint not null,
-    PositionCategoryId bigint not null, -- в erm назван CategoryId
+    CategoryCode bigint not null,
     IsControlledByAmount bit not null,
     IsComposite bit not null,
     CompareMode int not null,

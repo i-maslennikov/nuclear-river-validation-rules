@@ -200,7 +200,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                             q => q.For<Facts::Position>().Select(x => new Aggregates::Position
                                 {
                                     Id = x.Id,
-                                    PositionCategoryId = x.PositionCategoryId,
+                                    CategoryCode = x.CategoryCode,
                                     IsControlledByAmount = x.IsControlledByAmount,
                                     Name = x.Name
                                 }));

@@ -213,8 +213,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(IgnoredPosition))
             .Erm(
-                new Erm::Position { Id = 1, IsActive = false, IsDeleted = false },
-                new Erm::Position { Id = 2, IsActive = true, IsDeleted = true }
+                new Erm::Position { Id = 2, IsDeleted = true }
                 )
             .Fact(
                 );
@@ -224,20 +223,20 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(ReplicatedPosition))
             .Erm(
-                new Erm::Position { Id = 33, IsActive = true, BindingObjectTypeEnum = 33 },
-                new Erm::Position { Id = 34, IsActive = true, BindingObjectTypeEnum = 34 },
-                new Erm::Position { Id = 1, IsActive = true, BindingObjectTypeEnum = 1 },
+                new Erm::Position { Id = 33, BindingObjectTypeEnum = 33 },
+                new Erm::Position { Id = 34, BindingObjectTypeEnum = 34 },
+                new Erm::Position { Id = 1, BindingObjectTypeEnum = 1 },
 
-                new Erm::Position { Id = 6, IsActive = true, BindingObjectTypeEnum = 6 },
-                new Erm::Position { Id = 35, IsActive = true, BindingObjectTypeEnum = 35 },
+                new Erm::Position { Id = 6, BindingObjectTypeEnum = 6 },
+                new Erm::Position { Id = 35, BindingObjectTypeEnum = 35 },
 
-                new Erm::Position { Id = 7, IsActive = true, BindingObjectTypeEnum = 7 },
-                new Erm::Position { Id = 8, IsActive = true, BindingObjectTypeEnum = 8 },
+                new Erm::Position { Id = 7, BindingObjectTypeEnum = 7 },
+                new Erm::Position { Id = 8, BindingObjectTypeEnum = 8 },
 
-                new Erm::Position { Id = 36, IsActive = true, BindingObjectTypeEnum = 36 },
-                new Erm::Position { Id = 37, IsActive = true, BindingObjectTypeEnum = 37 },
+                new Erm::Position { Id = 36, BindingObjectTypeEnum = 36 },
+                new Erm::Position { Id = 37, BindingObjectTypeEnum = 37 },
 
-                new Erm::Position { Id = 999, IsActive = true, BindingObjectTypeEnum = 999, CategoryId = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" }
+                new Erm::Position { Id = 999, BindingObjectTypeEnum = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" }
                 )
             .Fact(
                 new Facts::Position { Id = 33, CompareMode = 1 },
@@ -253,7 +252,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::Position { Id = 36, CompareMode = 4 },
                 new Facts::Position { Id = 37, CompareMode = 4 },
 
-                new Facts::Position { Id = 999, CompareMode = 0, PositionCategoryId = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" }
+                new Facts::Position { Id = 999, CompareMode = 0, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" }
                 );
 
         // ReSharper disable once UnusedMember.Local

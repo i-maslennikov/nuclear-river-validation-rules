@@ -84,7 +84,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Position>> Position =
                         new MapSpecification<IQuery, IQueryable<Facts::Position>>(
                             q => q.For<Erm::Position>()
-                                  .Where(entity => entity.IsActive && !entity.IsDeleted)
+                                  .Where(entity => !entity.IsDeleted)
                                   .Select(Transform.Position));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Price>> Price =
@@ -228,7 +228,7 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                           (int)CompareMode.None
                                          ,
                                     IsControlledByAmount = x.IsControlledByAmount,
-                                    PositionCategoryId = x.CategoryId,
+                                    CategoryCode = x.CategoryCode
                                 };
 
                         public static readonly Expression<Func<Erm::Price, Facts::Price>> Price =
