@@ -39,15 +39,10 @@ namespace NuClear.ValidationRules.Domain
                                 .HasSource(Specs.Map.Erm.ToFacts.DeniedPosition)
                                 .HasDependentEntity(EntityTypePrice.Instance, Specs.Map.Facts.ToPriceAggregate.ByDeniedPosition),
 
-                            FactMetadata<GlobalAssociatedPosition>
+                            FactMetadata<RulesetRule>
                                 .Config
-                                .HasSource(Specs.Map.Erm.ToFacts.GlobalAssociatedPosition)
-                                .HasDependentEntity(EntityTypeRuleset.Instance, Specs.Map.Facts.ToRulesetAggregate.ByGlobalAssociatedPosition),
-
-                            FactMetadata<GlobalDeniedPosition>
-                                .Config
-                                .HasSource(Specs.Map.Erm.ToFacts.GlobalDeniedPosition)
-                                .HasDependentEntity(EntityTypeRuleset.Instance, Specs.Map.Facts.ToRulesetAggregate.ByGlobalDeniedPosition),
+                                .HasSource(Specs.Map.Erm.ToFacts.RulesetRule)
+                                .HasDependentEntity(EntityTypeRuleset.Instance, Specs.Map.Facts.ToRulesetAggregate.ByRulesetRule),
 
                             FactMetadata<Category>
                                 .Config

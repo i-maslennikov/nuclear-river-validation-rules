@@ -26,13 +26,9 @@ namespace NuClear.ValidationRules.Domain.Specifications
                     return new FindSpecification<Aggregates::AdvertisementAmountRestriction>(x => aggregateIds.Contains(x.PriceId));
                 }
 
-                public static FindSpecification<Aggregates::RulesetDeniedPosition> RulesetDeniedPositions(IReadOnlyCollection<long> aggregateIds)
+                public static FindSpecification<Aggregates::RulesetRule> RulesetRules(IReadOnlyCollection<long> aggregateIds)
                 {
-                    return new FindSpecification<Aggregates::RulesetDeniedPosition>(x => aggregateIds.Contains(x.RulesetId));
-                }
-                public static FindSpecification<Aggregates::RulesetAssociatedPosition> RulesetAssociatedPositions(IReadOnlyCollection<long> aggregateIds)
-                {
-                    return new FindSpecification<Aggregates::RulesetAssociatedPosition>(x => aggregateIds.Contains(x.RulesetId));
+                    return new FindSpecification<Aggregates::RulesetRule>(x => aggregateIds.Contains(x.RulesetId));
                 }
 
                 public static FindSpecification<Aggregates::OrderPosition> OrderPositions(IReadOnlyCollection<long> aggregateIds)

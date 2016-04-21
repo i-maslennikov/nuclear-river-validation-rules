@@ -34,9 +34,9 @@ namespace NuClear.ValidationRules.OperationsProcessing
 
                     .Allow<AssignIdentity, EntityTypeOrder>()
 
-                    .Allow<PublishGlobalAssociatedDeniedRulesIdentity>()
+                    .Allow<PublishRulesetIdentity>()
 
-                    .Ignore<ManageGlobalAssociatedDeniedDraftRulesIdentity>()
+                    .Ignore<ManageDraftRulesetIdentity>()
                 };
 
             Metadata = metadataElements.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);

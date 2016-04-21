@@ -32,8 +32,7 @@ namespace NuClear.ValidationRules.Domain
                                      AggregateMetadata<Ruleset, long>
                                          .Config
                                          .HasSource(Specs.Map.Facts.ToAggregates.Rulesets)
-                                         .HasValueObject(Specs.Map.Facts.ToAggregates.RulesetDeniedPositions, Specs.Find.Aggs.RulesetDeniedPositions)
-                                         .HasValueObject(Specs.Map.Facts.ToAggregates.RulesetAssociatedPositions, Specs.Find.Aggs.RulesetAssociatedPositions),
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.RulesetRules, Specs.Find.Aggs.RulesetRules),
 
                                      AggregateMetadata<Order, long>
                                          .Config

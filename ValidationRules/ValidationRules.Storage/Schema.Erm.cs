@@ -20,8 +20,12 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<AssociatedPositionsGroup>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositionsGroups").HasPrimaryKey(x => x.Id);
                 config.Entity<AssociatedPosition>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<DeniedPosition>().HasSchemaName(BillingSchema).HasTableName("DeniedPositions").HasPrimaryKey(x => x.Id);
-                config.Entity<GlobalAssociatedPosition>().HasSchemaName(BillingSchema).HasTableName("GlobalAssociatedPositions").HasPrimaryKey(x => x.Id);
-                config.Entity<GlobalDeniedPosition>().HasSchemaName(BillingSchema).HasTableName("GlobalDeniedPositions").HasPrimaryKey(x => x.Id);
+                config.Entity<Ruleset>().HasSchemaName(BillingSchema).HasTableName("Rulesets").HasPrimaryKey(x => x.Id);
+                config.Entity<RulesetRule>().HasSchemaName(BillingSchema).HasTableName("RulesetRules")
+                      .HasPrimaryKey(x => x.RulesetId)
+                      .HasPrimaryKey(x => x.RuleType)
+                      .HasPrimaryKey(x => x.DependentPositionId)
+                      .HasPrimaryKey(x => x.PrincipalPositionId);
                 config.Entity<Order>().HasSchemaName(BillingSchema).HasTableName("Orders").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPosition>().HasSchemaName(BillingSchema).HasTableName("OrderPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPositionAdvertisement>().HasSchemaName(BillingSchema).HasTableName("OrderPositionAdvertisement").HasPrimaryKey(x => x.Id);

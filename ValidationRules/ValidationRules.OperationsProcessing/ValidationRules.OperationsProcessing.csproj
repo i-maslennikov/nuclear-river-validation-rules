@@ -97,9 +97,9 @@
     <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
     <Compile Include="Identities\Flows\AggregatesFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
-    <Compile Include="Identities\Operations\ManageGlobalAssociatedDeniedDraftRulesIdentity.cs" />
+    <Compile Include="Identities\Operations\ManageDraftRulesetIdentity.cs" />
     <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
-    <Compile Include="Identities\Operations\PublishGlobalAssociatedDeniedRulesIdentity.cs" />
+    <Compile Include="Identities\Operations\PublishRulesetIdentity.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />

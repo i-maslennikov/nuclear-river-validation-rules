@@ -110,62 +110,32 @@ namespace NuClear.ValidationRules.Replication.Tests
             }
         }
 
-        class GlobalAssociatedPositionTests
+        class RulesetRuleTests
         {
             [Test]
             public void Create()
             {
-                CommandValidation<GlobalAssociatedPosition>
+                CommandValidation<RulesetRule>
                     .Given()
-                    .Create(new GlobalAssociatedPosition { Id = 1, RulesetId = 1 })
+                    .Create(new RulesetRule { Id = 1 })
                     .Expect(Recalculate<EntityTypeRuleset>(1));
             }
 
             [Test]
             public void Update()
             {
-                CommandValidation<GlobalAssociatedPosition>
-                    .Given(new GlobalAssociatedPosition { Id = 1, RulesetId = 1 })
-                    .Update(new GlobalAssociatedPosition { Id = 1, RulesetId = 2 })
+                CommandValidation<RulesetRule>
+                    .Given(new RulesetRule { Id = 1 })
+                    .Update(new RulesetRule { Id = 2 })
                     .Expect(Recalculate<EntityTypeRuleset>(1), Recalculate<EntityTypeRuleset>(2));
             }
 
             [Test]
             public void Delete()
             {
-                CommandValidation<GlobalAssociatedPosition>
-                    .Given(new GlobalAssociatedPosition { Id = 1, RulesetId = 1 })
-                    .Delete(new GlobalAssociatedPosition { Id = 1, RulesetId = 1 })
-                    .Expect(Recalculate<EntityTypeRuleset>(1));
-            }
-        }
-
-        class GlobalDeniedPositionTests
-        {
-            [Test]
-            public void Create()
-            {
-                CommandValidation<GlobalDeniedPosition>
-                    .Given()
-                    .Create(new GlobalDeniedPosition { Id = 1, RulesetId = 1 })
-                    .Expect(Recalculate<EntityTypeRuleset>(1));
-            }
-
-            [Test]
-            public void Update()
-            {
-                CommandValidation<GlobalDeniedPosition>
-                    .Given(new GlobalDeniedPosition { Id = 1, RulesetId = 1 })
-                    .Update(new GlobalDeniedPosition { Id = 1, RulesetId = 2 })
-                    .Expect(Recalculate<EntityTypeRuleset>(1), Recalculate<EntityTypeRuleset>(2));
-            }
-
-            [Test]
-            public void Delete()
-            {
-                CommandValidation<GlobalDeniedPosition>
-                    .Given(new GlobalDeniedPosition { Id = 1, RulesetId = 1 })
-                    .Delete(new GlobalDeniedPosition { Id = 1, RulesetId = 1 })
+                CommandValidation<RulesetRule>
+                    .Given(new RulesetRule { Id = 1 })
+                    .Delete(new RulesetRule { Id = 1 })
                     .Expect(Recalculate<EntityTypeRuleset>(1));
             }
         }

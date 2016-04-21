@@ -33,10 +33,7 @@ namespace NuClear.ValidationRules.Storage
                       .HasSchemaName(PriceAggregateSchema)
                       .HasPrimaryKey(x => x.Id);
 
-                config.Entity<RulesetDeniedPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
-
-                config.Entity<RulesetAssociatedPosition>()
+                config.Entity<RulesetRule>()
                       .HasSchemaName(PriceAggregateSchema);
 
                 config.Entity<Order>()

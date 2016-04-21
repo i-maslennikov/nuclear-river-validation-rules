@@ -15,8 +15,7 @@ if object_id('PriceAggregate.PriceAssociatedPosition') is not null drop table Pr
 if object_id('PriceAggregate.AdvertisementAmountRestriction') is not null drop table PriceAggregate.AdvertisementAmountRestriction
 if object_id('PriceAggregate.Price') is not null drop table PriceAggregate.Price
 
-if object_id('PriceAggregate.RulesetDeniedPosition') is not null drop table PriceAggregate.RulesetDeniedPosition
-if object_id('PriceAggregate.RulesetAssociatedPosition') is not null drop table PriceAggregate.RulesetAssociatedPosition
+if object_id('PriceAggregate.RulesetRule') is not null drop table PriceAggregate.RulesetRule
 if object_id('PriceAggregate.Ruleset') is not null drop table PriceAggregate.Ruleset
 
 go
@@ -65,22 +64,14 @@ create table PriceAggregate.Ruleset(
 )
 go
 
-create table PriceAggregate.RulesetDeniedPosition(
+create table PriceAggregate.RulesetRule(
 	RulesetId bigint NOT NULL,
-	DeniedPositionId bigint NOT NULL,
+	RuleType int NOT NULL,
+	DependentPositionId bigint NOT NULL,
     PrincipalPositionId bigint NOT NULL,
     ObjectBindingType int NOT NULL
 )
-create index IX_RulesetDeniedPosition_RulesetId ON PriceAggregate.RulesetDeniedPosition (RulesetId)
-go
-
-create table PriceAggregate.RulesetAssociatedPosition(
-	RulesetId bigint NOT NULL,
-    AssociatedPositionId bigint NOT NULL,
-    PrincipalPositionId bigint NOT NULL,
-    ObjectBindingType int NOT NULL
-)
-create index IX_RulesetAssociatedPosition_RulesetId ON PriceAggregate.RulesetAssociatedPosition (RulesetId)
+create index IX_RulesetRule_RulesetId ON PriceAggregate.RulesetRule (RulesetId)
 go
 
 -- order aggregate

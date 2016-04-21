@@ -64,8 +64,6 @@
     <Compile Include="AggregateConstructionMetadataSource.cs" />
     <Compile Include="Commands\RecalculateAggregateCommandFactory.cs" />
     <Compile Include="Commands\RecalculatePeriodCommandFactory.cs" />
-    <Compile Include="EntityTypes\EntityTypeGlobalDeniedPosition.cs" />
-    <Compile Include="EntityTypes\EntityTypeGlobalAssociatedPosition.cs" />
     <Compile Include="EntityTypes\EntityTypeOrderPeriod.cs" />
     <Compile Include="EntityTypes\EntityTypeAssociatedPosition.cs" />
     <Compile Include="EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
@@ -81,12 +79,11 @@
     <Compile Include="EntityTypes\EntityTypePricePosition.cs" />
     <Compile Include="EntityTypes\EntityTypeProject.cs" />
     <Compile Include="FactMetadataUriProvider.cs" />
-    <Compile Include="Model\Aggregates\RulesetDeniedPosition.cs" />
-    <Compile Include="Model\Aggregates\RulesetAssociatedPosition.cs" />
+    <Compile Include="Model\Aggregates\RulesetRule.cs" />
     <Compile Include="Model\Aggregates\Ruleset.cs" />
     <Compile Include="Model\FactTypePriorityComparer.cs" />
-    <Compile Include="Model\Erm\GlobalDeniedPosition.cs" />
-    <Compile Include="Model\Erm\GlobalAssociatedPosition.cs" />
+    <Compile Include="Model\Erm\Ruleset.cs" />
+    <Compile Include="Model\Erm\RulesetRule.cs" />
     <Compile Include="Model\PeriodId.cs" />
     <Compile Include="Model\PeriodIdentityProvider.cs" />
     <Compile Include="Model\Enums\CompareMode.cs" />
@@ -101,8 +98,7 @@
     <Compile Include="Model\Aggregates\Price.cs" />
     <Compile Include="Model\Aggregates\PricePeriod.cs" />
     <Compile Include="Model\Aggregates\AdvertisementAmountRestriction.cs" />
-    <Compile Include="Model\Facts\GlobalAssociatedPosition.cs" />
-    <Compile Include="Model\Facts\GlobalDeniedPosition.cs" />
+    <Compile Include="Model\Facts\RulesetRule.cs" />
     <Compile Include="Model\IErmFactObject.cs" />
     <Compile Include="FactsReplicationMetadataSource.cs" />
     <Compile Include="Model\Erm\AssociatedPosition.cs" />

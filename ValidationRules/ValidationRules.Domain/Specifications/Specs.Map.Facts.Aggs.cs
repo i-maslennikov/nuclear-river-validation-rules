@@ -68,56 +68,32 @@ namespace NuClear.ValidationRules.Domain.Specifications
                         = new MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>>(
                             q =>
                             {
-                                var associated = q.For<Facts::GlobalDeniedPosition>().Select(x => x.RulesetId);
-                                var denied = q.For<Facts::GlobalAssociatedPosition>().Select(x => x.RulesetId);
-
-                                return associated.Union(denied).OrderByDescending(x => x).Take(1).Select(x => new Aggregates::Ruleset
+                                return q.For<Facts::RulesetRule>().OrderByDescending(x => x.Priority).Take(1).Select(x => new Aggregates::Ruleset
                                 {
-                                    Id = x
+                                    Id = x.Id
                                 });
                             });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::RulesetDeniedPosition>> RulesetDeniedPositions
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::RulesetDeniedPosition>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::RulesetRule>> RulesetRules
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::RulesetRule>>(
                             q =>
                                 {
-                                    var queгу = q.For<Facts::GlobalDeniedPosition>();
+                                    var queгу = q.For<Facts::RulesetRule>();
 
                                     return queгу
                                             .Select(x => new
                                             {
-                                                Position = x,
-                                                MaxRulesetId = queгу.Max(y => y.RulesetId)
+                                                Rule = x,
+                                                MaxPriority = queгу.Max(y => y.Priority)
                                             })
-                                            .Where(x => x.Position.RulesetId == x.MaxRulesetId)
-                                            .Select(x => x.Position)
-                                            .Select(x => new Aggregates::RulesetDeniedPosition
+                                            .Where(x => x.Rule.Priority == x.MaxPriority)
+                                            .Select(x => x.Rule)
+                                            .Select(x => new Aggregates::RulesetRule
                                             {
-                                                RulesetId = x.RulesetId,
-                                                DeniedPositionId = x.DeniedPositionId,
-                                                PrincipalPositionId = x.PrincipalPositionId,
-                                                ObjectBindingType = x.ObjectBindingType,
-                                            });
-                                });
+                                                RulesetId = x.Id,
+                                                RuleType = x.RuleType,
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::RulesetAssociatedPosition>> RulesetAssociatedPositions
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::RulesetAssociatedPosition>>(
-                            q =>
-                                {
-                                    var queгу = q.For<Facts::GlobalAssociatedPosition>();
-
-                                    return queгу
-                                            .Select(x => new
-                                            {
-                                                Position = x,
-                                                MaxRulesetId = queгу.Max(y => y.RulesetId)
-                                            })
-                                            .Where(x => x.Position.RulesetId == x.MaxRulesetId)
-                                            .Select(x => x.Position)
-                                            .Select(x => new Aggregates::RulesetAssociatedPosition
-                                            {
-                                                RulesetId = x.RulesetId,
-                                                AssociatedPositionId = x.AssociatedPositionId,
+                                                DependentPositionId = x.DependentPositionId,
                                                 PrincipalPositionId = x.PrincipalPositionId,
                                                 ObjectBindingType = x.ObjectBindingType,
                                             });

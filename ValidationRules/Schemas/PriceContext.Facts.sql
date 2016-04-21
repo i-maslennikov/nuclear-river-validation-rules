@@ -13,8 +13,7 @@ if object_id('PriceContext.Price') is not null drop table PriceContext.Price
 if object_id('PriceContext.Project') is not null drop table PriceContext.Project
 if object_id('PriceContext.Position') is not null drop table PriceContext.Position
 if object_id('PriceContext.Category') is not null drop table PriceContext.Category
-if object_id('PriceContext.GlobalAssociatedPosition') is not null drop table PriceContext.GlobalAssociatedPosition
-if object_id('PriceContext.GlobalDeniedPosition') is not null drop table PriceContext.GlobalDeniedPosition
+if object_id('PriceContext.RulesetRule') is not null drop table PriceContext.RulesetRule
 go
 
 create table PriceContext.Price(
@@ -138,24 +137,13 @@ create table PriceContext.Category(
 create index IX_Category_ParentId ON PriceContext.Category (ParentId)
 go
 
-create table PriceContext.GlobalAssociatedPosition(
+create table PriceContext.RulesetRule(
 	Id bigint not null,
-	RulesetId bigint not null,
-    AssociatedPositionId bigint not null,
+	RuleType int not null,
+    DependentPositionId bigint not null,
     PrincipalPositionId bigint not null,
-    ObjectBindingType int not null,
-	constraint PK_GlobalAssociatedPosition primary key (Id)
+	[Priority] int not null,
+    ObjectBindingType int not null
 )
-create index IX_GlobalAssociatedPosition_RulesetId ON PriceContext.GlobalAssociatedPosition (RulesetId)
-go
-
-create table PriceContext.GlobalDeniedPosition(
-	Id bigint not null,
-	RulesetId bigint not null,
-    DeniedPositionId bigint not null,
-    PrincipalPositionId bigint not null,
-    ObjectBindingType int not null,
-	constraint PK_GlobalDeniedPosition primary key (Id)
-)
-create index IX_GlobalDeniedPosition_RulesetId ON PriceContext.GlobalDeniedPosition (RulesetId)
+create index IX_RulesetRule_Id ON PriceContext.RulesetRule (Id)
 go

@@ -93,45 +93,26 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 );
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement IgnoredGlobalAssociatedPosition
+        private static ArrangeMetadataElement IgnoredRuleset
         => ArrangeMetadataElement.Config
-            .Name(nameof(IgnoredGlobalAssociatedPosition))
+            .Name(nameof(IgnoredRuleset))
             .Erm(
-                new Erm::GlobalAssociatedPosition { Id = 1, IsDeleted = true, RulesetId = 1},
-                new Erm::GlobalAssociatedPosition { Id = 2, IsDeleted = false, RulesetId = 0 }
+                new Erm::Ruleset { Id = 1, IsDeleted = true },
+                new Erm::RulesetRule { RulesetId = 1},
+                new Erm::RulesetRule { RulesetId = 0 }
                 )
             .Fact();
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement ReplicatedGlobalAssociatedPosition
+        private static ArrangeMetadataElement Ruleset
         => ArrangeMetadataElement.Config
-            .Name(nameof(ReplicatedGlobalAssociatedPosition))
+            .Name(nameof(Ruleset))
             .Erm(
-                new Erm::GlobalAssociatedPosition { Id = 1, RulesetId = 1, AssociatedPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
+                new Erm::Ruleset { Id = 1 },
+                new Erm::RulesetRule { RulesetId = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
                 )
             .Fact(
-                new Facts::GlobalAssociatedPosition { Id = 1, RulesetId = 1, AssociatedPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
-                );
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement IgnoredGlobalDeniedPosition
-        => ArrangeMetadataElement.Config
-            .Name(nameof(IgnoredGlobalDeniedPosition))
-            .Erm(
-                new Erm::GlobalDeniedPosition { Id = 1, IsDeleted = true, RulesetId = 1 },
-                new Erm::GlobalDeniedPosition { Id = 2, IsDeleted = false, RulesetId = 0 }
-                )
-            .Fact();
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement ReplicatedGlobalDeniedPosition
-        => ArrangeMetadataElement.Config
-            .Name(nameof(ReplicatedGlobalDeniedPosition))
-            .Erm(
-                new Erm::GlobalDeniedPosition { Id = 1, RulesetId = 1, DeniedPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
-                )
-            .Fact(
-                new Facts::GlobalDeniedPosition { Id = 1, RulesetId = 1, DeniedPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
+                new Facts::RulesetRule { Id = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
                 );
 
         // ReSharper disable once UnusedMember.Local

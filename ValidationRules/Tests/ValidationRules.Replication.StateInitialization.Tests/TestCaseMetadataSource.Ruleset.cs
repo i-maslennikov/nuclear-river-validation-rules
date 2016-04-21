@@ -8,28 +8,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement RulesetDeniedPositionTests
+        private static ArrangeMetadataElement RulesetRulesTests
         => ArrangeMetadataElement.Config
-        .Name(nameof(RulesetDeniedPositionTests))
+        .Name(nameof(RulesetRulesTests))
         .Fact(
-            new Facts::GlobalDeniedPosition { RulesetId = 1, Id = 1 },
-            new Facts::GlobalDeniedPosition { RulesetId = 2, PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, Id = 2}
+            new Facts::RulesetRule { Id = 1, Priority = 1 },
+            new Facts::RulesetRule { Id = 2, PrincipalPositionId = 1, DependentPositionId = 2, ObjectBindingType = 3, Priority = 2 }
             )
         .Aggregate(
-            new Aggs::RulesetDeniedPosition { RulesetId = 2, PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3},
-            new Aggs::Ruleset { Id = 2 }
-            );
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement RulesetAssociatedPositionTests
-        => ArrangeMetadataElement.Config
-        .Name(nameof(RulesetAssociatedPositionTests))
-        .Fact(
-            new Facts::GlobalAssociatedPosition { RulesetId = 1, Id = 1 },
-            new Facts::GlobalAssociatedPosition { RulesetId = 2, PrincipalPositionId = 1, AssociatedPositionId = 2, ObjectBindingType = 3, Id = 2 }
-            )
-        .Aggregate(
-            new Aggs::RulesetAssociatedPosition { RulesetId = 2, PrincipalPositionId = 1, AssociatedPositionId = 2, ObjectBindingType = 3 },
+            new Aggs::RulesetRule { RulesetId = 2, PrincipalPositionId = 1, DependentPositionId = 2, ObjectBindingType = 3 },
             new Aggs::Ruleset { Id = 2 }
             );
     }
