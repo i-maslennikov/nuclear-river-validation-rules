@@ -201,6 +201,31 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                                         OrganizationUnitId = x.start.OrganizationUnitId
                                                     });
                                 });
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::OrderPeriod>> OrderPeriods
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPeriod>>(
+                            q =>
+                            {
+                                var dates = q.For<Facts::Order>()
+                                             .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                             .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                             .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, OrganizationUnitId = x.OrganizationUnitId }))
+                                             .Distinct()
+                                             .Select(x => new { x.Date, x.OrganizationUnitId });
+
+                                var result = q.For<Facts::Order>()
+                                              .SelectMany(order => dates.Where(date =>
+                                                                               date.OrganizationUnitId == order.DestOrganizationUnitId &&
+                                                                               order.BeginDistributionDate <= date.Date && date.Date < order.EndDistributionDateFact)
+                                                                        .Select(x => new Aggregates::OrderPeriod
+                                                                            {
+                                                                                OrderId = order.Id,
+                                                                                OrganizationUnitId = order.DestOrganizationUnitId,
+                                                                                Start = x.Date
+                                                                            }));
+
+                                return result;
+                            });
                 }
             }
         }

@@ -2,6 +2,7 @@
 using System.Linq;
 
 using NuClear.Storage.API.Specifications;
+using NuClear.ValidationRules.Domain.Model;
 
 namespace NuClear.ValidationRules.Domain.Specifications
 {
@@ -39,6 +40,11 @@ namespace NuClear.ValidationRules.Domain.Specifications
                 public static FindSpecification<Aggregates::OrderPrice> OrderPrices(IReadOnlyCollection<long> aggregateIds)
                 {
                     return new FindSpecification<Aggregates::OrderPrice>(x => aggregateIds.Contains(x.OrderId));
+                }
+
+                public static FindSpecification<Aggregates.OrderPeriod> OrderPeriods(IReadOnlyCollection<PeriodKey> aggregateIds)
+                {
+                    return new FindSpecification<Aggregates::OrderPeriod>(x => aggregateIds.Any(id => id.OrganizationUnitId == x.OrganizationUnitId && id.Start == x.Start));
                 }
             }
         }
