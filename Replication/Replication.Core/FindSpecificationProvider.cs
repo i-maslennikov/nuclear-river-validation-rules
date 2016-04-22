@@ -9,7 +9,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core
 {
-    internal sealed class FindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T, TKey>
+    public sealed class FindSpecificationProvider<T, TKey> : IFindSpecificationProvider<T, TKey>
         where T : IIdentifiable<TKey>
     {
         private readonly IIdentityProvider<TKey> _identityProvider;

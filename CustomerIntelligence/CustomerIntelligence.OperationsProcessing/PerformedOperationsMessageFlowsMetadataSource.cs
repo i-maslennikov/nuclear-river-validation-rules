@@ -40,7 +40,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
 
                                         MessageFlowMetadata.Config.For<StatisticsFlow>()
                                                            .Receiver<SqlStoreReceiverTelemetryDecorator>()
-                                                           .Accumulator<StatisticsOperationAccumulator<StatisticsFlow>>()
+                                                           .Accumulator<AggregateOperationAccumulator<StatisticsFlow>>()
                                                            .Handler<StatisticsAggregatableMessageHandler>()
                                                            .To.Primary().Flow<StatisticsFlow>().Connect());
 

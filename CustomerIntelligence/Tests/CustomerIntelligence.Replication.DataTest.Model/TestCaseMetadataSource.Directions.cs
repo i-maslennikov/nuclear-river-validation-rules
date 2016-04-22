@@ -21,6 +21,6 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                               .Source(ContextName.Bit)
                               .Target(ContextName.Statistics)
                               .Require(ContextName.Facts)
-                              .Action<BulkReplicationAdapter<Statistics>>();
+                              .Action<BulkReplicationAdapter<CustomerIntelligence>>();
     }
 }

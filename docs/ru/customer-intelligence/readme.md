@@ -1,0 +1,1 @@
+![required text](https://immense-sea-86195.herokuapp.com/2gis/nuclear-river/feature/statistics-metadata/docs/ru/customer-intelligence/aggregate.puml)

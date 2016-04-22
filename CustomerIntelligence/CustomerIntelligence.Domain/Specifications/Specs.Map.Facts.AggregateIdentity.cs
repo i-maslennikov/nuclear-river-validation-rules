@@ -362,11 +362,9 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                                  select new StatisticsKey { ProjectId = project.Id, CategoryId = firmAddressCategory.CategoryId });
                     }
 
-                    public static MapSpecification<IQuery, IEnumerable<StatisticsKey>> ByProject(FindSpecification<Project> specification)
+                    public static MapSpecification<IQuery, IEnumerable<long>> ByProject(FindSpecification<Project> specification)
                     {
-                        return new MapSpecification<IQuery, IEnumerable<StatisticsKey>>(
-                            q => from project in q.For(specification)
-                                 select new StatisticsKey { ProjectId = project.Id, CategoryId = null });
+                        return new MapSpecification<IQuery, IEnumerable<long>>(q => q.For(specification).Select(x => x.Id));
                     }
                 }
             }

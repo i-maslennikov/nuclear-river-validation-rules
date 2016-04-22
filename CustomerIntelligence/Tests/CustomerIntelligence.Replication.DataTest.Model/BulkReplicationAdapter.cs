@@ -5,31 +5,33 @@ using NuClear.CustomerIntelligence.StateInitialization;
 using NuClear.DataTest.Metamodel;
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.Metamodeling.Processors;
-using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Replication.Bulk.API;
 using NuClear.Replication.Bulk.API.Storage;
+using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.ConnectionStrings;
 
 using DataConnectionFactory = NuClear.Replication.Bulk.API.Factories.DataConnectionFactory;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {
-    public sealed class BulkReplicationAdapter<T> : ITestAction
-        where T : IKey, new()
+    static class ReplicationMetdataProvider
     {
-        private static readonly MetadataProvider DefaultProvider
+        public static readonly MetadataProvider Instance
             = new MetadataProvider(
                 new IMetadataSource[]
                 {
                     new BulkReplicationMetadataSource(),
                     new FactsReplicationMetadataSource(),
                     new AggregateConstructionMetadataSource(),
-                    new StatisticsRecalculationMetadataSource(),
                 },
-                new IMetadataProcessor[] { new ReferencesEvaluatorProcessor() });
+                new IMetadataProcessor[] { new TunedReferencesEvaluatorProcessor() });
+    }
 
+    public sealed class BulkReplicationAdapter<T> : ITestAction
+        where T : IKey, new()
+    {
         private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly T _key;
 
@@ -38,7 +40,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
             _key = new T();
             _connectionStringSettings = MappedConnectionStringSettings.CreateMappedSettings(
                 connectionStringSettings,
-                metadata, 
+                metadata,
                 metadataProvider.GetMetadataSet<SchemaMetadataIdentity>().Metadata.Values.Cast<SchemaMetadataElement>().ToDictionary(x => x.Context, x => x));
         }
 
@@ -46,7 +48,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
         {
             var viewRemover = new ViewRemover(_connectionStringSettings);
             var connectionFactory = new DataConnectionFactory(_connectionStringSettings);
-            var runner = new BulkReplicationRunner(DefaultProvider, connectionFactory, viewRemover);
+            var runner = new BulkReplicationRunner(ReplicationMetdataProvider.Instance, connectionFactory, viewRemover);
 
             runner.Run(_key.Key);
         }

@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using NuClear.CustomerIntelligence.Domain.EntityTypes;
+
+using NUnit.Framework;
 
 using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
 using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
@@ -23,8 +25,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             Transformation.Create(Query, RepositoryFactory)
                           .ApplyChanges<Facts::FirmAddress>(1)
-                          .VerifyDistinct(Aggregate.Recalculate<CI::Firm>(1),
-                                          Aggregate.Recalculate<CI::Client>(1));
+                          .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1),
+                                          Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
     }
 }

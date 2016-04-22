@@ -14,9 +14,4 @@
     {
         public string Key => "-ci";
     }
-
-    public sealed class Statistics : IKey
-    {
-        public string Key => "-statistics";
-    }
 }

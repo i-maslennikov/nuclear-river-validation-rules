@@ -6,69 +6,121 @@ using System.Transactions;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
+using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Identities;
+using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core.Aggregates
 {
-    public sealed class AggregatesConstructor : IAggregatesConstructor
+    public sealed class AggregatesConstructor<TSubDomain> : IAggregatesConstructor
+        where TSubDomain : ISubDomain
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly IAggregateProcessorFactory _aggregateProcessorFactory;
+        private readonly IEntityTypeMappingRegistry<TSubDomain> _entityTypeMappingRegistry;
 
-        public AggregatesConstructor(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory)
+        public AggregatesConstructor(IMetadataProvider metadataProvider, IAggregateProcessorFactory aggregateProcessorFactory, IEntityTypeMappingRegistry<TSubDomain> entityTypeMappingRegistry)
         {
             _metadataProvider = metadataProvider;
             _aggregateProcessorFactory = aggregateProcessorFactory;
+            _entityTypeMappingRegistry = entityTypeMappingRegistry;
         }
 
-        public void Execute(IEnumerable<AggregateOperation> commands)
+        public void Execute(IReadOnlyCollection<IOperation> commands)
         {
             using (Probe.Create("ETL2 Transforming"))
             {
-                var slices = commands.GroupBy(x => new { Operation = x.GetType(), x.AggregateType })
-                                     .OrderByDescending(x => x.Key.Operation, new AggregateOperationPriorityComparer());
+                var commandsByType = commands.GroupBy(x => x.GetType()).OrderBy(x => x.Key, new AggregateOperationPriorityComparer());
 
-                foreach (var slice in slices)
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+                                                              new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
                 {
-                    Execute(slice.Key.Operation, slice.Key.AggregateType, slice);
+                    foreach (var group in commandsByType)
+                    {
+                        if (group.Key == typeof(InitializeAggregate))
+                        {
+                            Execute(group.Cast<InitializeAggregate>());
+                        }
+                        else if (group.Key == typeof(RecalculateAggregate))
+                        {
+                            Execute(group.Cast<RecalculateAggregate>());
+                        }
+                        else if (group.Key == typeof(DestroyAggregate))
+                        {
+                            Execute(group.Cast<DestroyAggregate>());
+                        }
+                        else if(group.Key == typeof(RecalculateAggregatePart))
+                        {
+                            Execute(group.Cast<RecalculateAggregatePart>());
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"The command of type {group.Key.Name} is not supported");
+                        }
+                    }
+
+                    transaction.Complete();
                 }
             }
         }
 
-        private void Execute(Type command, Type aggregate, IEnumerable<AggregateOperation> commands)
+        private void Execute(IEnumerable<InitializeAggregate> enumerable)
         {
-            var processor = CreateProcessor(aggregate);
-
-            using (var transaction = new TransactionScope(TransactionScopeOption.Required,
-                                                          new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
             {
-                using (Probe.Create($"ETL2 {command.Name} {aggregate.Name}"))
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Initialize {type.Name}"))
                 {
-                    if (command == typeof(InitializeAggregate))
-                    {
-                        processor.Initialize(commands.Cast<InitializeAggregate>().ToArray());
-                    }
-                    else if (command == typeof(RecalculateAggregate))
-                    {
-                        processor.Recalculate(commands.Cast<RecalculateAggregate>().ToArray());
-                    }
-                    else if (command == typeof(DestroyAggregate))
-                    {
-                        processor.Destroy(commands.Cast<DestroyAggregate>().ToArray());
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException($"The command of type {command.Name} is not supported");
-                    }
+                    processor.Initialize(slice.ToArray());
                 }
-
-                transaction.Complete();
             }
         }
 
+        private void Execute(IEnumerable<RecalculateAggregate> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
+            {
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Recalculate {type.Name}"))
+                {
+                    processor.Recalculate(slice.ToArray());
+                }
+            }
+        }
+
+        private void Execute(IEnumerable<DestroyAggregate> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => c.AggregateRoot.EntityType))
+            {
+                var type = ParseEntityType(slice.Key);
+                var processor = CreateProcessor(type);
+                using (Probe.Create($"ETL2 Destroy {type.Name}"))
+                {
+                    processor.Destroy(slice.ToArray());
+                }
+            }
+        }
+
+        private void Execute(IEnumerable<RecalculateAggregatePart> enumerable)
+        {
+            foreach (var slice in enumerable.GroupBy(c => new { AggregateRootType = c.AggregateRoot.EntityType, c.Entity.EntityType }))
+            {
+                var aggregateType = ParseEntityType(slice.Key.AggregateRootType);
+                var entityType = ParseEntityType(slice.Key.EntityType);
+                var processor = CreateProcessor(aggregateType);
+                using (Probe.Create($"ETL2 Recalculate {aggregateType.Name} Part {entityType.Name}"))
+                {
+                    processor.Recalculate(entityType, slice.ToArray());
+                }
+            }
+        }
+
+        // todo: если перевести метаданные на идентификаоры, основанные не на тменах типов, а идентификаторах - то от этого парсинга можно избавиться
         private IAggregateProcessor CreateProcessor(Type aggregate)
         {
             IMetadataElement aggregateMetadata;
@@ -80,6 +132,17 @@ namespace NuClear.Replication.Core.Aggregates
 
             var processor = _aggregateProcessorFactory.Create(aggregateMetadata);
             return processor;
+        }
+
+        private Type ParseEntityType(IEntityType entityType)
+        {
+            Type type;
+            if (_entityTypeMappingRegistry.TryGetEntityType(entityType, out type))
+            {
+                return type;
+            }
+
+            throw new ArgumentException($"unknown entity type id {entityType.Id}");
         }
     }
 }

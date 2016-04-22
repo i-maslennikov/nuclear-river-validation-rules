@@ -51,15 +51,21 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
 
                 public static FindSpecification<FirmCategory3> FirmCategory3(IReadOnlyCollection<StatisticsKey> entityIds)
                 {
-                    return new FindSpecification<FirmCategory3>(
-                        x => entityIds.Contains(new StatisticsKey { ProjectId = x.ProjectId, CategoryId = x.CategoryId })
-                             || entityIds.Contains(new StatisticsKey { ProjectId = x.ProjectId, CategoryId = null }));
+                    var spec = entityIds.GroupBy(x => x.ProjectId, x => x.CategoryId)
+                                        .Aggregate(new FindSpecification<FirmCategory3>(x => false),
+                                                   (acc, idsGroup) => acc | new FindSpecification<FirmCategory3>(x => x.ProjectId == idsGroup.Key && idsGroup.Contains(x.CategoryId)));
+
+                    return spec;
                 }
 
-                public static FindSpecification<FirmForecast> FirmForecast(IReadOnlyCollection<StatisticsKey> entityIds)
+                public static FindSpecification<FirmForecast> FirmForecast(IReadOnlyCollection<long> aggregateIds)
                 {
-                    return new FindSpecification<FirmForecast>(
-                        x => entityIds.Contains(new StatisticsKey { ProjectId = x.ProjectId, CategoryId = null }));
+                    return new FindSpecification<FirmForecast>(x => aggregateIds.Contains(x.ProjectId));
+                }
+
+                public static FindSpecification<ProjectCategoryStatistics> ProjectCategoryStatistics(IReadOnlyCollection<long> aggregateIds)
+                {
+                    return new FindSpecification<ProjectCategoryStatistics>(x => aggregateIds.Contains(x.ProjectId));
                 }
             }
         }

@@ -5,8 +5,10 @@ using System.Linq.Expressions;
 using Moq;
 
 using NuClear.CustomerIntelligence.Domain;
+using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.Metamodeling.Elements;
+using NuClear.Model.Common.Entities;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
@@ -32,7 +34,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Facts::Client { Id = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Client>(1)
+                          .Initialize<CI::Client>(EntityTypeClient.Instance, 1)
                           .Verify<CI::Client>(m => m.Add(It.Is(Predicate.Match(new CI::Client { Id = 1 }))));
         }
 
@@ -43,7 +45,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new Facts::Contact { Id = 1, ClientId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Client>(1)
+                          .Initialize<CI::Client>(EntityTypeClient.Instance, 1)
                           .Verify<CI::Client>(m => m.Add(It.Is(Predicate.Match(new CI::Client { Id = 1 }))))
                           .Verify<CI::ClientContact>(m => m.Add(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 1, ContactId = 1 }))));
         }
@@ -55,7 +57,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::Client { Id = 1, Name = "old name" });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Client>(1)
+                          .Recalculate<CI::Client>(EntityTypeClient.Instance, 1)
                           .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 1, Name = "new name" }))));
         }
 
@@ -74,9 +76,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new CI::ClientContact { ClientId = 3, ContactId = 3 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Client>(1)
-                          .Recalculate<CI::Client>(2)
-                          .Recalculate<CI::Client>(3)
+                          .Recalculate<CI::Client>(EntityTypeClient.Instance, 1)
+                          .Recalculate<CI::Client>(EntityTypeClient.Instance, 2)
+                          .Recalculate<CI::Client>(EntityTypeClient.Instance, 3)
                           .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 1 }))))
                           .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 2 }))))
                           .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 3 }))))
@@ -90,7 +92,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::Client { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Client>(1)
+                          .Destroy<CI::Client>(EntityTypeClient.Instance, 1)
                           .Verify<CI::Client>(m => m.Delete(It.Is(Predicate.Match(new CI::Client { Id = 1 }))));
         }
 
@@ -101,7 +103,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new CI::ClientContact { ClientId = 1, ContactId = 1 });
 
             Transformation.Create(Query)
-                .Destroy<CI::Client>(1)
+                .Destroy<CI::Client>(EntityTypeClient.Instance, 1)
                 .Verify<CI::Client>(m => m.Delete(It.Is(Predicate.Match(new CI::Client { Id = 1 }))))
                 .Verify<CI::ClientContact>(m => m.Delete(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 1, ContactId = 1 }))));
         }
@@ -113,7 +115,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new Facts::Firm { Id = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Firm>(1)
+                          .Initialize<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Add(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))));
         }
 
@@ -129,7 +131,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Firm>(1)
+                          .Initialize<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Add(It.Is(Predicate.Match(new CI::Firm { Id = 1, ProjectId = 1, ClientId = 1 }))))
                           .Verify<CI::FirmBalance>(m => m.Add(It.Is(Predicate.Match(new CI::FirmBalance { ProjectId = 1, FirmId = 1, AccountId = 1, Balance = 123.45m }))));
         }
@@ -143,7 +145,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Firm>(1)
+                          .Initialize<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Add(It.Is(Predicate.Match(new CI::Firm { Id = 1, ClientId = 1 }))))
                           .Verify<CI::Client>(m => m.Add(It.Is(Predicate.Match(new CI::Client { Id = 1 }))), Times.Never);
         }
@@ -157,7 +159,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::Firm { Id = 1 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(1)
+                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))));
         }
 
@@ -183,7 +185,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new CI::FirmBalance { FirmId = 3, ProjectId = 1, Balance = 123 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(1, 2, 3)
+                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1, 2, 3)
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1, ClientId = 1, ProjectId = 1 }))))
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 2, ClientId = 2, ProjectId = 1 }))))
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 3, ProjectId = 1 }))))
@@ -222,9 +224,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new CI::FirmCategory2 { FirmId = 2, CategoryId = 3 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(1)
-                          .Recalculate<CI::Firm>(2)
-                          .Recalculate<CI::Firm>(3)
+                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1)
+                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 2)
+                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 3)
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1, AddressCount = 1 }))))
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 2, AddressCount = 1 }))))
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 3 }))))
@@ -251,7 +253,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new CI::Client { Id = 1 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(1)
+                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1, ClientId = 1 }))))
                           .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 1 }))), Times.Never);
         }
@@ -266,7 +268,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new CI::FirmTerritory { FirmId = 1, TerritoryId = 3 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(1)
+                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::FirmTerritory>(m => m.Add(It.Is(Predicate.Match(new CI::FirmTerritory { FirmId = 1, TerritoryId = 2 }))))
                           .Verify<CI::FirmTerritory>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmTerritory { FirmId = 1, TerritoryId = 3 }))));
         }
@@ -277,7 +279,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::Firm { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Firm>(1)
+                          .Destroy<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))));
         }
 
@@ -288,7 +290,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new CI::FirmBalance { FirmId = 1, Balance = 123 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Firm>(1)
+                          .Destroy<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))))
                           .Verify<CI::FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 1, Balance = 123 }))));
         }
@@ -302,7 +304,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     ;
 
             Transformation.Create(Query)
-                          .Destroy<CI::Firm>(1)
+                          .Destroy<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))))
                           .Verify<CI::FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 }))))
                           .Verify<CI::FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 }))))
@@ -316,7 +318,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new CI::Client { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Firm>(1)
+                          .Destroy<CI::Firm>(EntityTypeFirm.Instance, 1)
                           .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1, ClientId = 1 }))))
                           .Verify<CI::Client>(m => m.Delete(It.Is(Predicate.Match(new CI::Client { Id = 1 }))), Times.Never);
         }
@@ -327,7 +329,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Facts::Project { Id = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Project>(1)
+                          .Initialize<CI::Project>(EntityTypeProject.Instance, 1)
                           .Verify<CI::Project>(m => m.Add(It.Is(Predicate.Match(new CI::Project { Id = 1 }))));
         }
 
@@ -338,7 +340,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::Project { Id = 1, Name = "old name" });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Project>(1)
+                          .Recalculate<CI::Project>(EntityTypeProject.Instance, 1)
                           .Verify<CI::Project>(m => m.Update(It.Is(Predicate.Match(new CI::Project { Id = 1, Name = "new name" }))));
         }
 
@@ -348,7 +350,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::Project { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Project>(1)
+                          .Destroy<CI::Project>(EntityTypeProject.Instance, 1)
                           .Verify<CI::Project>(m => m.Delete(It.Is(Predicate.Match(new CI::Project { Id = 1 }))));
         }
 
@@ -359,7 +361,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new Facts::Territory { Id = 2, OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Territory>(2)
+                          .Initialize<CI::Territory>(EntityTypeTerritory.Instance, 2)
                           .Verify<CI::Territory>(m => m.Add(It.Is(Predicate.Match(new CI::Territory { Id = 2, ProjectId = 1 }))));
         }
 
@@ -372,7 +374,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::Territory { Id = 1, Name = "old name" });
 
             Transformation.Create(Query)
-                .Recalculate<CI::Territory>(1)
+                .Recalculate<CI::Territory>(EntityTypeTerritory.Instance, 1)
                 .Verify<CI::Territory>(m => m.Update(It.Is(Predicate.Match(new CI::Territory { Id = 1, ProjectId = 1, Name = "new name" }))));
         }
 
@@ -382,7 +384,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::Territory { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Territory>(1)
+                          .Destroy<CI::Territory>(EntityTypeTerritory.Instance, 1)
                           .Verify<CI::Territory>(m => m.Delete(It.Is(Predicate.Match(new CI::Territory { Id = 1 }))));
         }
 
@@ -392,7 +394,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             SourceDb.Has(new Facts::CategoryGroup { Id = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::CategoryGroup>(1)
+                          .Initialize<CI::CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
                           .Verify<CI::CategoryGroup>(m => m.Add(It.Is(Predicate.Match(new CI::CategoryGroup { Id = 1 }))));
         }
 
@@ -403,7 +405,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::CategoryGroup { Id = 1, Name = "old name" });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::CategoryGroup>(1)
+                          .Recalculate<CI::CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
                           .Verify<CI::CategoryGroup>(m => m.Update(It.Is(Predicate.Match(new CI::CategoryGroup { Id = 1, Name = "new name" }))));
         }
 
@@ -413,7 +415,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             TargetDb.Has(new CI::CategoryGroup { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::CategoryGroup>(1)
+                          .Destroy<CI::CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
                           .Verify<CI::CategoryGroup>(x => x.Delete(It.Is(Predicate.Match(new CI::CategoryGroup { Id = 1 }))));
         }
 
@@ -439,19 +441,19 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 return new Transformation(query);
             }
 
-            public Transformation Initialize<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<long>
+            public Transformation Initialize<TAggregate>(IEntityType entityType, params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
-                return Do<TAggregate>(x => x.Initialize(ids.Select(id => new InitializeAggregate(typeof(TAggregate), id)).ToArray()));
+                return Do<TAggregate>(x => x.Initialize(ids.Select(id => new InitializeAggregate(new EntityReference(entityType, id))).ToArray()));
             }
 
-            public Transformation Recalculate<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<long>
+            public Transformation Recalculate<TAggregate>(IEntityType entityType, params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
-                return Do<TAggregate>(x => x.Recalculate(ids.Select(id => new RecalculateAggregate(typeof(TAggregate), id)).ToArray()));
+                return Do<TAggregate>(x => x.Recalculate(ids.Select(id => new RecalculateAggregate(new EntityReference(entityType, id))).ToArray()));
             }
 
-            public Transformation Destroy<TAggregate>(params long[] ids) where TAggregate : class, IIdentifiable<long>
+            public Transformation Destroy<TAggregate>(IEntityType entityType, params long[] ids) where TAggregate : class, IIdentifiable<long>
             {
-                return Do<TAggregate>(x => x.Destroy(ids.Select(id => new DestroyAggregate(typeof(TAggregate), id)).ToArray()));
+                return Do<TAggregate>(x => x.Destroy(ids.Select(id => new DestroyAggregate(new EntityReference(entityType, id))).ToArray()));
             }
 
             public Transformation Verify<T>(Expression<Action<IRepository<T>>> expression)
@@ -509,28 +511,31 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 {
                     var aggregateMetadata = (AggregateMetadata<TAggregate, long>)metadata;
 
-                    return new AggregateProcessor<TAggregate, long>(
+                    var findSpecProvider = new FindSpecificationProvider<TAggregate, long>(new DefaultIdentityProvider());
+                    var rootEntityPricessor = new EntityProcessor<TAggregate>(
+                        _repositoryFactory.Create<TAggregate>(),
                         new DataChangesDetector<TAggregate>(aggregateMetadata.MapSpecificationProviderForSource,
                                                             aggregateMetadata.MapSpecificationProviderForTarget,
                                                             _comparerFactory.CreateIdentityComparer<TAggregate>(),
                                                             _query),
-                        _repositoryFactory.Create<TAggregate>(),
-                        metadata.Elements.OfType<IValueObjectMetadata>().Select(x => CreateFactory(x).Create(x)).ToArray(),
-                        new AggregateFindSpecificationProvider<TAggregate, long>(new DefaultIdentityProvider()));
+                        metadata.Elements.OfType<IValueObjectMetadata>().Select(x => CreateFactory(x).Create(x)).ToArray());
+
+                    return new AggregateProcessor<TAggregate, long>(findSpecProvider, rootEntityPricessor, new IChildEntityProcessor<long>[0]);
                 }
 
-                private IValueObjectProcessorFactory CreateFactory(IValueObjectMetadata metadata)
+                private IValueObjectProcessorFactory<TAggregate> CreateFactory(IValueObjectMetadata metadata)
                 {
-                    return (IValueObjectProcessorFactory)Activator.CreateInstance(
-                        typeof(ValueObjectProcessorFactory<,>).MakeGenericType(metadata.GetType().GenericTypeArguments),
+                    return (IValueObjectProcessorFactory<TAggregate>)Activator.CreateInstance(
+                        typeof(ValueObjectProcessorFactory<,>).MakeGenericType(typeof(TAggregate), metadata.ValueObjectType),
                         _query,
                         _repositoryFactory,
                         _comparerFactory);
                 }
             }
 
-            private class ValueObjectProcessorFactory<TValueObject, TEntityKey> : IValueObjectProcessorFactory
+            private class ValueObjectProcessorFactory<TAggregate, TValueObject> : IValueObjectProcessorFactory<TAggregate>
                 where TValueObject : class, IObject
+                where TAggregate : IIdentifiable<long>
             {
                 private readonly IQuery _query;
                 private readonly IRepositoryFactory _repositoryFactory;
@@ -543,21 +548,21 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     _comparerFactory = comparerFactory;
                 }
 
-                public IValueObjectProcessor Create(IValueObjectMetadata metadata)
+                public IValueObjectProcessor<TAggregate> Create(IValueObjectMetadata metadata)
                 {
-                    return Create((ValueObjectMetadata<TValueObject, TEntityKey>)metadata);
+                    return Create((ValueObjectMetadata<TValueObject, long>)metadata);
                 }
 
-                private IValueObjectProcessor Create(ValueObjectMetadata<TValueObject, TEntityKey> metadata)
+                private IValueObjectProcessor<TAggregate> Create(ValueObjectMetadata<TValueObject, long> metadata)
                 {
-                    return new ValueObjectProcessor<TValueObject>(
+                    return new ValueObjectProcessor<TAggregate, TValueObject>(
                         new DataChangesDetector<TValueObject>(
                             metadata.MapSpecificationProviderForSource,
                             metadata.MapSpecificationProviderForTarget,
                             _comparerFactory.CreateCompleteComparer<TValueObject>(),
                             _query),
                         _repositoryFactory.Create<TValueObject>(),
-                        new ValueObjectFindSpecificationProvider<TValueObject, TEntityKey>(metadata));
+                        new ValueObjectFindSpecificationProvider<TValueObject, TAggregate, long>(metadata, new DefaultIdentityProvider()));
                 }
             }
         }
