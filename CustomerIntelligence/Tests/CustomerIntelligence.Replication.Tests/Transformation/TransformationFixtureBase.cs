@@ -1,7 +1,5 @@
 ﻿using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.Model.Common.Entities;
-using NuClear.River.Common.Metadata.Model;
-using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {

@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class CategoryOrganizationUnit : IErmObject
+    public sealed class CategoryOrganizationUnit
     {
         public CategoryOrganizationUnit()
         {

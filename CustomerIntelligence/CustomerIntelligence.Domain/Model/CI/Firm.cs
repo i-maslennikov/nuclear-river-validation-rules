@@ -1,10 +1,8 @@
 ﻿using System;
 
-using NuClear.River.Common.Metadata.Model;
-
 namespace NuClear.CustomerIntelligence.Domain.Model.CI
 {
-    public sealed class Firm : ICustomerIntelligenceAggregatePart, IAggregateRoot
+    public sealed class Firm
     {
         public long Id { get; set; }
 
@@ -27,7 +25,7 @@ namespace NuClear.CustomerIntelligence.Domain.Model.CI
         public long? ClientId { get; set; }
 
         public long ProjectId { get; set; }
-        
+
         public long OwnerId { get; set; }
     }
 }

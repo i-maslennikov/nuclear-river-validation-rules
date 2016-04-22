@@ -1,10 +1,8 @@
 ﻿using System;
 
-using NuClear.River.Common.Metadata.Model;
-
 namespace NuClear.CustomerIntelligence.Domain.Model.CI
 {
-    public sealed class FirmActivity : ICustomerIntelligenceAggregatePart, IAggregateValueObject
+    public sealed class FirmActivity
     {
         public long FirmId { get; set; }
 

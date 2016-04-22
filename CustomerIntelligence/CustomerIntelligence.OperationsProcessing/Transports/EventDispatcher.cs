@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Events;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Flows;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.River.Common.Metadata;
-using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
 {

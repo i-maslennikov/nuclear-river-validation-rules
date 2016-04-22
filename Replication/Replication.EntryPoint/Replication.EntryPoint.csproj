@@ -300,13 +300,7 @@
     <Compile Include="Factories\Messaging\Receiver\MessageFlowReceiverResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Transformer\PrimaryMessageTransformerResolveStrategy.cs" />
     <Compile Include="Factories\Replication\UnityAggregateActorFactory.cs" />
-    <Compile Include="Factories\Replication\UnityChildEntityProcessorFactory.cs" />
-    <Compile Include="Factories\Replication\UnityEntityProcessorFactory.cs" />
     <Compile Include="Factories\Replication\UnityDataObjectsActorFactory.cs" />
-    <Compile Include="Factories\Replication\UnityAggregateProcessorFactory.cs" />
-    <Compile Include="Factories\Replication\UnityFactDependencyProcessorFactory.cs" />
-    <Compile Include="Factories\Replication\UnityFactProcessorFactory.cs" />
-    <Compile Include="Factories\Replication\UnityValueObjectProcessorFactory.cs" />
     <Compile Include="Factories\UnityCorporateBusMessageFlowReceiverFactory.cs" />
     <Compile Include="Factories\UnityServiceBusMessageFlowReceiverFactory.cs" />
     <Compile Include="Jobs\ReportingJob.cs" />

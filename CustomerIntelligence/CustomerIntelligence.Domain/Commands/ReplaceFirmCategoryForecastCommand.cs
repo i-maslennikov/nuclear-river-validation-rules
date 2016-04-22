@@ -1,11 +1,9 @@
-﻿﻿using System;
-
 ﻿using NuClear.CustomerIntelligence.Domain.DTO;
-﻿using NuClear.Replication.Core.API.Commands;
+﻿using NuClear.River.Common.Metadata;
 
 namespace NuClear.CustomerIntelligence.Domain.Commands
 {
-    public class ReplaceFirmCategoryForecastCommand : IDataObjectCommand
+    public class ReplaceFirmCategoryForecastCommand : ICommand
     {
         public ReplaceFirmCategoryForecastCommand(FirmForecast firmForecast)
         {
@@ -13,7 +11,5 @@ namespace NuClear.CustomerIntelligence.Domain.Commands
         }
 
         public FirmForecast FirmForecast { get; }
-
-        public Type DataObjectType => typeof(Model.Bit.FirmCategoryForecast);
     }
 }

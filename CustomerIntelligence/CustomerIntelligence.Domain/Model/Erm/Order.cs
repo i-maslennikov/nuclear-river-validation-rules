@@ -2,7 +2,7 @@
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class Order : IErmObject
+    public sealed class Order
     {
         public Order()
         {

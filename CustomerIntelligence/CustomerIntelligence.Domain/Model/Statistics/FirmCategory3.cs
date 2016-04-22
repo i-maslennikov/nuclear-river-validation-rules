@@ -1,8 +1,6 @@
-﻿using NuClear.River.Common.Metadata.Model;
-
-namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
+﻿namespace NuClear.CustomerIntelligence.Domain.Model.Statistics
 {
-    public sealed class FirmCategory3 : ICustomerIntelligenceAggregatePart, IAggregateValueObject
+    public sealed class FirmCategory3
     {
         public long ProjectId { get; set; }
 

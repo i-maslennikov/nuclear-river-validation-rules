@@ -11,8 +11,6 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.API.Settings;
 using NuClear.Replication.Core.Facts;
-using NuClear.River.Common.Metadata.Model;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Tracing.API;
 
 using NUnit.Framework;

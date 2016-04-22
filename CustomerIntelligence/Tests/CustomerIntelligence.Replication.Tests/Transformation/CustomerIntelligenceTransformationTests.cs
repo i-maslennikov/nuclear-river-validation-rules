@@ -14,8 +14,6 @@ using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.Replication.Core.API.DataObjects;
 using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Model;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 

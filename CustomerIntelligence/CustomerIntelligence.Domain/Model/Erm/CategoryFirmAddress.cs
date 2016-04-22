@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class CategoryFirmAddress : IErmObject
+    public sealed class CategoryFirmAddress
     {
         public CategoryFirmAddress()
         {

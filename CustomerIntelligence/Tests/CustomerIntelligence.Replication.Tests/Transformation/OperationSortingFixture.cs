@@ -4,7 +4,6 @@ using NuClear.CustomerIntelligence.Domain.Model;
 using NuClear.CustomerIntelligence.Domain.Model.Facts;
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
-using NuClear.River.Common.Metadata.Model.Operations;
 
 using NUnit.Framework;
 

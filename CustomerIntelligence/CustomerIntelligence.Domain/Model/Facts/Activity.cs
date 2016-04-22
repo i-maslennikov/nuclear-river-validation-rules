@@ -2,7 +2,7 @@
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Facts
 {
-    public sealed class Activity : IErmFactObject
+    public sealed class Activity
     {
         public long Id { get; set; }
 

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 
 using NuClear.CustomerIntelligence.Domain.Model.Facts;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 

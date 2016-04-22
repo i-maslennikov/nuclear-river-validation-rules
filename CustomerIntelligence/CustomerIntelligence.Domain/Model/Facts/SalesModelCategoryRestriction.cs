@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Facts
 {
-    public sealed class SalesModelCategoryRestriction : IErmFactObject
+    public sealed class SalesModelCategoryRestriction
     {
         public long Id { get; set; }
         public long CategoryId { get; set; }

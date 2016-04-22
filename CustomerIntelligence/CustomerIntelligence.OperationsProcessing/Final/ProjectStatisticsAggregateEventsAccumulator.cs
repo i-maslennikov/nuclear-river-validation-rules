@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Domain.Events;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
@@ -9,7 +10,6 @@ using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
-using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {

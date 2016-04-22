@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.River.Common.Metadata.Model;
-
 namespace NuClear.CustomerIntelligence.Replication.Tests
 {
     static class QueryableExtensions

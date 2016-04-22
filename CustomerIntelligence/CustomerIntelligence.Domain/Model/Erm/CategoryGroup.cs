@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class CategoryGroup : IErmObject
+    public sealed class CategoryGroup
     {
         public CategoryGroup()
         {

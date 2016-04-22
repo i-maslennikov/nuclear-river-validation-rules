@@ -17,7 +17,7 @@ namespace NuClear.CustomerIntelligence.Domain.Accessors
         public FindSpecification<ProjectCategoryStatistics> GetFindSpecification(ICommand command)
         {
             var replaceCommand = (ReplaceRubricPopularityCommand)command;
-            return Specs.Find.Bit.ProjectCategoryStatistics.ByBitDto(replaceCommand.RubricPopularity);
+            return new FindSpecification<ProjectCategoryStatistics>(x => x.ProjectId == replaceCommand.RubricPopularity.ProjectId);
         }
 
         public IReadOnlyCollection<ProjectCategoryStatistics> GetDataObjects(ICommand command)

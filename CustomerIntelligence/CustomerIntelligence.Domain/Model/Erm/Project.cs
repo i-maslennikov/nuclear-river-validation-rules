@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class Project : IErmObject
+    public sealed class Project
     {
         public Project()
         {

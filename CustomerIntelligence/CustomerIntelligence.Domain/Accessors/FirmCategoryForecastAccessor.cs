@@ -17,7 +17,7 @@ namespace NuClear.CustomerIntelligence.Domain.Accessors
         public FindSpecification<FirmCategoryForecast> GetFindSpecification(ICommand command)
         {
             var replaceCommand = (ReplaceFirmCategoryForecastCommand)command;
-            return Specs.Find.Bit.FirmCategoryForecast.ByBitDto(replaceCommand.FirmForecast);
+            return new FindSpecification<FirmCategoryForecast>(x => x.ProjectId == replaceCommand.FirmForecast.ProjectId);
         }
 
         public IReadOnlyCollection<FirmCategoryForecast> GetDataObjects(ICommand command)

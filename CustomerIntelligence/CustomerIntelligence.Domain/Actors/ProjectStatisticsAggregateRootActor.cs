@@ -9,7 +9,6 @@ using NuClear.Replication.Core.API.Actors;
 using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Replication.Core.API.Equality;
 using NuClear.River.Common.Metadata;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 

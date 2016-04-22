@@ -1,12 +1,9 @@
-﻿using System;
-
-using NuClear.CustomerIntelligence.Domain.DTO;
-using NuClear.CustomerIntelligence.Domain.Model.Bit;
-using NuClear.Replication.Core.API.Commands;
+﻿using NuClear.CustomerIntelligence.Domain.DTO;
+using NuClear.River.Common.Metadata;
 
 namespace NuClear.CustomerIntelligence.Domain.Commands
 {
-    public class ReplaceRubricPopularityCommand : IDataObjectCommand
+    public class ReplaceRubricPopularityCommand : ICommand
     {
         public ReplaceRubricPopularityCommand(RubricPopularity rubricPopularity)
         {
@@ -14,6 +11,5 @@ namespace NuClear.CustomerIntelligence.Domain.Commands
         }
 
         public RubricPopularity RubricPopularity { get; }
-        public Type DataObjectType => typeof(ProjectCategoryStatistics);
     }
 }

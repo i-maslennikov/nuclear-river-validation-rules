@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Facts
 {
-    public sealed class LegalPerson : IErmFactObject
+    public sealed class LegalPerson
     {
         public long Id { get; set; }
 

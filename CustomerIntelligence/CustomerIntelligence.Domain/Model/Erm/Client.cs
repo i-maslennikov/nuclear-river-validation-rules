@@ -2,7 +2,7 @@
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class Client : IErmObject
+    public sealed class Client
     {
         public Client()
         {

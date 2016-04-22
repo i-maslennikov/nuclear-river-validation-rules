@@ -4,8 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using NuClear.River.Common.Metadata.Model;
-
 namespace NuClear.CustomerIntelligence.Replication.Tests
 {
     internal static class IdentityExtensions

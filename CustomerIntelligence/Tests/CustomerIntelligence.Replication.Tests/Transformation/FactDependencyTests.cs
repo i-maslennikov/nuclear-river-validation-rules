@@ -14,8 +14,6 @@ using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Features;
-using NuClear.River.Common.Metadata.Model;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 
 using NUnit.Framework;

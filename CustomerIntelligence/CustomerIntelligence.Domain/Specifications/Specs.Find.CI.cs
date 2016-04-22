@@ -4,7 +4,6 @@ using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Model.CI;
 using NuClear.CustomerIntelligence.Domain.Model.Statistics;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Domain.Specifications

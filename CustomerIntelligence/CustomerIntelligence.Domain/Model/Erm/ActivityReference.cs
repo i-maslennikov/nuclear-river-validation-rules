@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public abstract class ActivityReference : IErmValueObject
+    public abstract class ActivityReference
     {
         public long ActivityId { get; set; }
         public int Reference { get; set; }

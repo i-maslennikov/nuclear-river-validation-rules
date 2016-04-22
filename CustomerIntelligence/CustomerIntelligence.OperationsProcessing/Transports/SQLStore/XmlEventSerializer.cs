@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
+using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Events;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Common.Metadata;
-using NuClear.River.Common.Metadata.Model.Operations;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
 {

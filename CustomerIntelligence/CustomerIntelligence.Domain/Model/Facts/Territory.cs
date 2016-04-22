@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Facts
 {
-    public sealed class Territory : IErmFactObject
+    public sealed class Territory
     {
         public long Id { get; set; }
 

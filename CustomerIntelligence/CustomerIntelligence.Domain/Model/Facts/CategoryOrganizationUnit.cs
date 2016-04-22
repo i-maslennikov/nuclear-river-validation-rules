@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Facts
 {
-    public sealed class CategoryOrganizationUnit : IErmFactObject
+    public sealed class CategoryOrganizationUnit
     {
         public long Id { get; set; }
 

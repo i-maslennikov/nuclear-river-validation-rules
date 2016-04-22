@@ -2,7 +2,7 @@
 
 namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public abstract class ActivityBase : IErmObject
+    public abstract class ActivityBase
     {
         public long Id { get; set; }
         public int Status { get; set; }

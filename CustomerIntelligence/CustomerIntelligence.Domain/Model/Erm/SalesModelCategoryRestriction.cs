@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class SalesModelCategoryRestriction : IErmObject
+    public sealed class SalesModelCategoryRestriction
     {
         public long Id { get; set; }
         public long CategoryId { get; set; }

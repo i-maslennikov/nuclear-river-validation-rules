@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Bit
 {
-    public sealed class FirmCategoryForecast : IBitFactObject
+    public sealed class FirmCategoryForecast
     {
         public long FirmId { get; set; }
         public long ProjectId { get; set; }

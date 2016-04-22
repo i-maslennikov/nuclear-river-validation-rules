@@ -121,7 +121,6 @@
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
     <Compile Include="ErmToFactsEntityTypeExplicitMapping.cs" />
-    <Compile Include="Final\AggregateCommandPriorityComparer.cs" />
     <Compile Include="Final\CommonEventsAccumulator.cs" />
     <Compile Include="Final\AggregateCommandsHandler.cs" />
     <Compile Include="Final\ProjectStatisticsAggregateEventsAccumulator.cs" />
@@ -182,7 +181,6 @@
     <Compile Include="Primary\Parsers\RubricPopularityCorporateBusMessageParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transports\EventDispatcher.cs" />
-    <Compile Include="Transports\SQLStore\EntityReferenceSerializer.cs" />
     <Compile Include="Transports\SQLStore\XmlEventSerializer.cs" />
   </ItemGroup>
   <ItemGroup>

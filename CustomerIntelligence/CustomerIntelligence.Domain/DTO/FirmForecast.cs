@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Domain.Model;
-
 namespace NuClear.CustomerIntelligence.Domain.DTO
 {
-    public sealed class FirmForecast : IBitDto
+    public sealed class FirmForecast
     {
         public long ProjectId { get; set; }
         public IReadOnlyCollection<Firm> Firms { get; set; }

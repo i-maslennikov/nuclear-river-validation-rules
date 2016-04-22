@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class Contact : IErmObject
+    public sealed class Contact
     {
         public Contact()
         {

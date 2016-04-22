@@ -1,6 +1,6 @@
 ﻿namespace NuClear.CustomerIntelligence.Domain.Model.Erm
 {
-    public sealed class Territory : IErmObject
+    public sealed class Territory
     {
         public Territory()
         {

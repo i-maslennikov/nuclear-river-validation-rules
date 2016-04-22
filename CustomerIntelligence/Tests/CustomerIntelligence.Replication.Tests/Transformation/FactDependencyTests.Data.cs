@@ -3,7 +3,6 @@ using System.Collections;
 
 using Moq;
 
-using NuClear.River.Common.Metadata.Model;
 using NuClear.Storage.API.Readings;
 
 using NUnit.Framework;

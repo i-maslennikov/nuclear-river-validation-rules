@@ -9,7 +9,6 @@ using NuClear.CustomerIntelligence.Domain.Model.Facts;
 using NuClear.CustomerIntelligence.Domain.Specifications;
 using NuClear.Replication.Core.API.DataObjects;
 using NuClear.River.Common.Metadata;
-using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 

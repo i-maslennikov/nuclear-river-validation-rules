@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Domain.Model;
-
 namespace NuClear.CustomerIntelligence.Domain.DTO
 {
-    public sealed class FirmPopularity : IBitDto
+    public sealed class FirmPopularity
     {
         public long ProjectId { get; set; }
 

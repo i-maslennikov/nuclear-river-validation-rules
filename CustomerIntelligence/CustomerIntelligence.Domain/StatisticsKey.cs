@@ -1,4 +1,4 @@
-﻿namespace NuClear.River.Common.Metadata.Model.Operations
+﻿namespace NuClear.CustomerIntelligence.Domain
 {
     public sealed class StatisticsKey
     {
