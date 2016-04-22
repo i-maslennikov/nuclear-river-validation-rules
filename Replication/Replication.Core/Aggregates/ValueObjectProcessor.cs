@@ -2,6 +2,7 @@
 
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.Replication.Core.API.DataObjects;
 using NuClear.River.Common.Metadata.Model;
 
 namespace NuClear.Replication.Core.Aggregates

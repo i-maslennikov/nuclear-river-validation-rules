@@ -10,7 +10,7 @@ using LinqToDB.DataProvider.SqlServer;
 using NuClear.Replication.Bulk.API.Commands;
 using NuClear.Replication.Bulk.API.Factories;
 using NuClear.Replication.Bulk.API.Storage;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Actors;
 using NuClear.River.Common.Metadata;
 
 namespace NuClear.Replication.Bulk.API

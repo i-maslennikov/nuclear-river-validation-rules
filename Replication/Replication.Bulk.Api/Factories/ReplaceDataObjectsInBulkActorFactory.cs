@@ -8,6 +8,8 @@ using NuClear.Replication.Bulk.API.Actors;
 using NuClear.Replication.Bulk.API.Commands;
 using NuClear.Replication.Bulk.API.Storage;
 using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Actors;
+using NuClear.Replication.Core.API.DataObjects;
 
 namespace NuClear.Replication.Bulk.API.Factories
 {

@@ -6,7 +6,8 @@ using LinqToDB;
 using LinqToDB.Data;
 
 using NuClear.Replication.Bulk.API.Commands;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Actors;
+using NuClear.Replication.Core.API.DataObjects;
 using NuClear.River.Common.Metadata;
 
 namespace NuClear.Replication.Bulk.API.Actors

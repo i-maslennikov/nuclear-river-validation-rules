@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Practices.Unity;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.CustomerIntelligence.Domain.Model.Bit;
 using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.Actors;
+using NuClear.Replication.Core.API.DataObjects;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
     public sealed class UnityDataObjectsActorFactory : IDataObjectsActorFactory
     {
-        private static readonly HashSet<Type> DataObjectsToReplace =
-            new HashSet<Type> { typeof(FirmCategoryForecast), typeof(FirmForecast), typeof(FirmCategoryStatistics), typeof(ProjectCategoryStatistics) };
-
         private readonly IUnityContainer _unityContainer;
         private readonly IDataObjectTypesProvider _dataObjectTypesProvider;
 
@@ -42,7 +39,7 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
                                                       .ToArray();
             foreach (var dataObjectType in dataObjectTypes)
             {
-                var actor = (IActor)_unityContainer.Resolve(typeof(ReplaceMemoryBasedDataObjectsActor<>).MakeGenericType(dataObjectType));
+                var actor = (IActor)_unityContainer.Resolve(typeof(ReplaceDataObjectsActor<>).MakeGenericType(dataObjectType));
                 actors.Add(actor);
             }
 

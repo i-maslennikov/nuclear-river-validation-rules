@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain;
-using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.Metamodeling.Elements;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
 using NuClear.River.Common.Metadata.Elements;
@@ -22,7 +22,6 @@ using NUnit.Framework;
 
 using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
 using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
-using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation

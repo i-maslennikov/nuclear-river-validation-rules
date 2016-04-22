@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using NuClear.CustomerIntelligence.Domain.Model.Facts;
 using NuClear.Replication.Bulk.API.Commands;
 using NuClear.Replication.Bulk.API.Factories;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.DataObjects;
 
 using DataObjectTypesProvider = NuClear.Replication.Bulk.API.DataObjectTypesProvider;
 
@@ -19,12 +19,12 @@ namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
                 return new DataObjectTypesProvider(
                     new List<Type>
                         {
-                            typeof(Client),
-                            typeof(Firm),
-                            typeof(Territory),
                             typeof(Project),
                             typeof(Category),
                             typeof(CategoryGroup),
+                            typeof(Territory),
+                            typeof(Client),
+                            typeof(Firm),
                             typeof(Account),
                             typeof(Activity),
                             typeof(CategoryFirmAddress),

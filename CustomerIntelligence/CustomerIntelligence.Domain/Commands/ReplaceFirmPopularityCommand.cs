@@ -2,6 +2,7 @@
 
 using NuClear.CustomerIntelligence.Domain.DTO;
 using NuClear.CustomerIntelligence.Domain.Model.Bit;
+using NuClear.Replication.Core.API.Commands;
 
 namespace NuClear.CustomerIntelligence.Domain.Commands
 {

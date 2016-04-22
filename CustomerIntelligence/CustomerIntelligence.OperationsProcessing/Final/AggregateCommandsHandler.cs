@@ -7,7 +7,7 @@ using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
-using NuClear.Replication.Core.API.Aggregates;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
 using NuClear.Telemetry;
@@ -18,13 +18,13 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public sealed class AggregateCommandsHandler : IMessageProcessingHandler
     {
-        private readonly IAggregateCommandActorFactory _aggregateCommandActorFactory;
+        private readonly IAggregateActorFactory _aggregateActorFactory;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
-        public AggregateCommandsHandler(IAggregateCommandActorFactory aggregateCommandActorFactory, ITracer tracer, ITelemetryPublisher telemetryPublisher)
+        public AggregateCommandsHandler(IAggregateActorFactory aggregateActorFactory, ITracer tracer, ITelemetryPublisher telemetryPublisher)
         {
-            _aggregateCommandActorFactory = aggregateCommandActorFactory;
+            _aggregateActorFactory = aggregateActorFactory;
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
         }
@@ -40,12 +40,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             {
                 foreach (var message in messages.Cast<OperationAggregatableMessage<IAggregateCommand>>())
                 {
-                    var commandGroups = message.Commands
-                                               .GroupBy(x => new { CommandType = x.GetType(), x.AggregateRootType })
-                                               .OrderByDescending(x => x.Key.CommandType, new AggregateCommandPriorityComparer());
+                    var commandGroups = message.Commands.GroupBy(x => x.AggregateRootType);
                     foreach (var commandGroup in commandGroups)
                     {
-                        ExecuteCommands(commandGroup.Key.CommandType, commandGroup.Key.AggregateRootType, commandGroup.ToArray());
+                        ExecuteCommands(commandGroup.Key, commandGroup.ToArray());
                     }
 
                     _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Commands.Count);
@@ -61,15 +59,15 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             }
         }
 
-        private void ExecuteCommands(Type commandType, Type aggregateRootType, IReadOnlyCollection<IAggregateCommand> commands)
+        private void ExecuteCommands(Type aggregateRootType, IReadOnlyCollection<IAggregateCommand> commands)
         {
             using (var transaction = new TransactionScope(
                 TransactionScopeOption.Required,
                 new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
-                using (Probe.Create($"ETL2 {commandType.Name} {aggregateRootType.Name}"))
+                using (Probe.Create($"ETL2 {aggregateRootType.Name}"))
                 {
-                    var actor = _aggregateCommandActorFactory.Create(commandType, aggregateRootType);
+                    var actor = _aggregateActorFactory.Create(aggregateRootType);
                     actor.ExecuteCommands(commands);
                 }
 

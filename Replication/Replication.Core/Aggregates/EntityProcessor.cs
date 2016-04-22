@@ -3,6 +3,7 @@ using System.Linq;
 
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Aggregates;
+using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.Aggregates

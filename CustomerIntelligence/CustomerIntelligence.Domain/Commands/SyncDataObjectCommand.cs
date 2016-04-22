@@ -1,8 +1,10 @@
 ﻿using System;
 
+using NuClear.Replication.Core.API.Commands;
+
 namespace NuClear.CustomerIntelligence.Domain.Commands
 {
-    public sealed class SyncDataObjectCommand : IDataObjectCommand
+    public sealed class SyncDataObjectCommand : SyncDataObjectCommandBase
     {
         public SyncDataObjectCommand(Type dataObjectType, long dataObjectId)
         {
@@ -10,7 +12,7 @@ namespace NuClear.CustomerIntelligence.Domain.Commands
             DataObjectId = dataObjectId;
         }
 
-        public Type DataObjectType { get; }
+        public override Type DataObjectType { get; }
         public long DataObjectId { get; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;

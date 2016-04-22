@@ -1,5 +1,5 @@
 ﻿using NuClear.Replication.Bulk.API.Commands;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.DataObjects;
 
 namespace NuClear.Replication.Bulk.API.Factories
 {

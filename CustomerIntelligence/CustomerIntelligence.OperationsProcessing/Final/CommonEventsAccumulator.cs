@@ -15,10 +15,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
     public sealed class CommonEventsAccumulator :
         MessageProcessingContextAccumulatorBase<CommonEventsFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<IAggregateCommand>>
     {
-        private static readonly IReadOnlyDictionary<Type, Type> AggregateRootTypes
+        private static readonly IReadOnlyDictionary<Type, Type> AggregateRoots
             = new Dictionary<Type, Type>
                 {
-                    { typeof(Domain.Model.Facts.Firm), typeof(Domain.Model.CI.Firm) }
+                    { typeof(Domain.Model.Facts.Firm), typeof(Domain.Model.CI.Firm) },
+                    { typeof(Domain.Model.Facts.Client), typeof(Domain.Model.CI.Client) },
+                    { typeof(Domain.Model.Facts.Project), typeof(Domain.Model.CI.Project) },
+                    { typeof(Domain.Model.Facts.Territory), typeof(Domain.Model.CI.Territory) },
+                    { typeof(Domain.Model.Facts.CategoryGroup), typeof(Domain.Model.CI.CategoryGroup) },
                 };
 
         private readonly IEventSerializer _serializer;
@@ -37,28 +41,28 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 var createdEvent = @event as DataObjectCreatedEvent;
                 if (createdEvent != null)
                 {
-                    commands.Add(new InitializeAggregateCommand(AggregateRootTypes[createdEvent.DataObjectType], createdEvent.DataObjectId));
+                    commands.Add(new InitializeAggregateCommand(AggregateRoots[createdEvent.DataObjectType], createdEvent.DataObjectId));
                     continue;
                 }
 
                 var updatedEvent = @event as DataObjectUpdatedEvent;
                 if (updatedEvent != null)
                 {
-                    commands.Add(new RecalculateAggregateCommand(AggregateRootTypes[updatedEvent.DataObjectType], updatedEvent.DataObjectId));
+                    commands.Add(new RecalculateAggregateCommand(AggregateRoots[updatedEvent.DataObjectType], updatedEvent.DataObjectId));
                     continue;
                 }
 
                 var deletedEvent = @event as DataObjectDeletedEvent;
                 if (deletedEvent != null)
                 {
-                    commands.Add(new DestroyAggregateCommand(AggregateRootTypes[deletedEvent.DataObjectType], deletedEvent.DataObjectId));
+                    commands.Add(new DestroyAggregateCommand(AggregateRoots[deletedEvent.DataObjectType], deletedEvent.DataObjectId));
                     continue;
                 }
 
                 var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
                 if (outdatedEvent != null)
                 {
-                    commands.Add(new RecalculateAggregateCommand(AggregateRootTypes[outdatedEvent.RelatedDataObjectType], outdatedEvent.RelatedDataObjectId));
+                    commands.Add(new RecalculateAggregateCommand(AggregateRoots[outdatedEvent.RelatedDataObjectType], outdatedEvent.RelatedDataObjectId));
                     continue;
                 }
             }

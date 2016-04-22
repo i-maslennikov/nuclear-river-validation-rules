@@ -1,4 +1,4 @@
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.DataObjects;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.Storage.API.Readings;
 

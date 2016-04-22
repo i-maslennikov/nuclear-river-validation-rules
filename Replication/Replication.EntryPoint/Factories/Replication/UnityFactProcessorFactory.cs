@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Practices.Unity;
 
 using NuClear.Metamodeling.Elements;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Replication.Core.API.Equality;
 using NuClear.Replication.Core.API.Facts;
 using NuClear.Replication.Core.Facts;
