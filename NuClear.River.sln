@@ -67,7 +67,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{02A5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{D4238D0C-3315-4449-B1AE-80F716D58D04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replication", "CustomerIntelligence\CustomerIntelligence.Domain\CustomerIntelligence.Replication.csproj", "{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replication", "CustomerIntelligence\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj", "{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Storage", "CustomerIntelligence\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj", "{FA1074A6-B89D-45DF-9B73-6881BEF46E33}"
 EndProject

@@ -343,7 +343,7 @@
       <Project>{d4238d0c-3315-4449-b1ae-80f716d58d04}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CustomerIntelligence.Domain\CustomerIntelligence.Replication.csproj">
+    <ProjectReference Include="..\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj">
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
       <Name>CustomerIntelligence.Replication</Name>
     </ProjectReference>

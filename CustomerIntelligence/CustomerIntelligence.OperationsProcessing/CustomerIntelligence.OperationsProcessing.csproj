@@ -221,7 +221,7 @@
       <Project>{8e3d39d6-6bee-4edc-ace0-8c24ca929164}</Project>
       <Name>Replication.OperationsProcessing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CustomerIntelligence.Domain\CustomerIntelligence.Replication.csproj">
+    <ProjectReference Include="..\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj">
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
       <Name>CustomerIntelligence.Replication</Name>
     </ProjectReference>
