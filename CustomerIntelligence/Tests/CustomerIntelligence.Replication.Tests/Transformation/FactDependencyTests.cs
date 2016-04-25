@@ -5,8 +5,8 @@ using System.Linq;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Metamodeling.Elements;
-using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.DataObjects;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 
 using NUnit.Framework;

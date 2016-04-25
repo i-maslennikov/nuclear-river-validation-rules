@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.Actors;
-using NuClear.Replication.Core.API.DataObjects;
-using NuClear.Replication.Core.API.Equality;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.Actors;
+using NuClear.Replication.Core.DataObjects;
+using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.CustomerIntelligence.Domain.Actors

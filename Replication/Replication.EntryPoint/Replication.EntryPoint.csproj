@@ -355,9 +355,9 @@
       <Project>{fa1074a6-b89d-45df-9b73-6881bef46e33}</Project>
       <Name>CustomerIntelligence.Storage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Replication.Core.API\Replication.Core.API.csproj">
+    <ProjectReference Include="..\Replication.Core\Replication.Core.csproj">
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
-      <Name>Replication.Core.API</Name>
+      <Name>Replication.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Replication.OperationsProcessing\Replication.OperationsProcessing.csproj">
       <Project>{8e3d39d6-6bee-4edc-ace0-8c24ca929164}</Project>

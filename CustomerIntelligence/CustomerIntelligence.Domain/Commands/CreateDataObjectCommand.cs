@@ -1,6 +1,6 @@
 ﻿using System;
 
-using NuClear.Replication.Core.API.Commands;
+using NuClear.Replication.Core.Commands;
 
 namespace NuClear.CustomerIntelligence.Domain.Commands
 {

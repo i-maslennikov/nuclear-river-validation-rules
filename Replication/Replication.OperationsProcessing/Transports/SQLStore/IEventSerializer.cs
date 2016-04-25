@@ -1,5 +1,5 @@
 ﻿using NuClear.OperationsProcessing.Transports.SQLStore.Final;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
 {

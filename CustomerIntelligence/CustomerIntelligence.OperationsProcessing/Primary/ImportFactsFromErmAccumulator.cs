@@ -6,7 +6,7 @@ using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Model.Common.Entities;
 using NuClear.OperationsTracking.API.UseCases;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Telemetry;

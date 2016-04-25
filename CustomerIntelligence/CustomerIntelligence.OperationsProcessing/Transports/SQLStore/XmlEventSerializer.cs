@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Events;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore

@@ -224,9 +224,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Replication.Core.API\Replication.Core.API.csproj">
+    <ProjectReference Include="..\Replication.Core\Replication.Core.csproj">
       <Project>{E45717BE-86C8-425B-BB13-0E69053EF040}</Project>
-      <Name>Replication.Core.API</Name>
+      <Name>Replication.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

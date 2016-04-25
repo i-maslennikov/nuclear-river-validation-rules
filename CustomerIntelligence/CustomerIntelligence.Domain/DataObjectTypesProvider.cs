@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
-using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.DataObjects;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.DataObjects;
 
 namespace NuClear.CustomerIntelligence.Domain
 {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 using NuClear.CustomerIntelligence.Storage.Model.CI;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
-using NuClear.Replication.Bulk.API.Commands;
-using NuClear.Replication.Bulk.API.Factories;
-using NuClear.Replication.Core.API.DataObjects;
+using NuClear.Replication.Core.DataObjects;
+using NuClear.StateInitialization.Core.Commands;
+using NuClear.StateInitialization.Core.Factories;
 
 using CategoryGroup = NuClear.CustomerIntelligence.Storage.Model.Facts.CategoryGroup;
 using Client = NuClear.CustomerIntelligence.Storage.Model.Facts.Client;
-using DataObjectTypesProvider = NuClear.Replication.Bulk.API.DataObjectTypesProvider;
+using DataObjectTypesProvider = NuClear.StateInitialization.Core.DataObjectTypesProvider;
 using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
 using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
 using Territory = NuClear.CustomerIntelligence.Storage.Model.Facts.Territory;

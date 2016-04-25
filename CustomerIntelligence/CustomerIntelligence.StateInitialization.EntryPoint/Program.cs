@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using NuClear.CustomerIntelligence.Storage;
-using NuClear.Replication.Bulk.API;
-using NuClear.Replication.Bulk.API.Commands;
-using NuClear.Replication.Bulk.API.Storage;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
+using NuClear.StateInitialization.Core;
+using NuClear.StateInitialization.Core.Commands;
+using NuClear.StateInitialization.Core.Storage;
 
 namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
 {

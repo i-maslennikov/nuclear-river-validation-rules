@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.Practices.Unity;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.Actors;
-using NuClear.Replication.Core.API.DataObjects;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.Actors;
+using NuClear.Replication.Core.DataObjects;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {

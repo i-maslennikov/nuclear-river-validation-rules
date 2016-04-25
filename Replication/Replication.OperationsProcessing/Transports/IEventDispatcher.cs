@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using NuClear.Messaging.API.Flows;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
 
 namespace NuClear.Replication.OperationsProcessing.Transports
 {

@@ -4,7 +4,7 @@ using System.Linq;
 
 using NuClear.Messaging.API.Flows;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
 using NuClear.Storage.API.Writings;
 using NuClear.Telemetry.Probing;
 

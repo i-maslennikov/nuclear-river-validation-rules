@@ -1,6 +1,6 @@
 ﻿using System;
 
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
 
 namespace NuClear.CustomerIntelligence.Domain.Events
 {

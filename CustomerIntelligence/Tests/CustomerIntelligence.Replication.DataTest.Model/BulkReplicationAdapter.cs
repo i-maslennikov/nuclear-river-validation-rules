@@ -1,6 +1,6 @@
 ﻿using NuClear.CustomerIntelligence.StateInitialization.EntryPoint;
 using NuClear.DataTest.Metamodel.Dsl;
-using NuClear.Replication.Bulk.API;
+using NuClear.StateInitialization.Core;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {

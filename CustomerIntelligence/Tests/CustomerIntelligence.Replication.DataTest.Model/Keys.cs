@@ -1,6 +1,6 @@
 ﻿using NuClear.CustomerIntelligence.Storage;
-using NuClear.Replication.Bulk.API.Commands;
-using NuClear.Replication.Bulk.API.Storage;
+using NuClear.StateInitialization.Core.Commands;
+using NuClear.StateInitialization.Core.Storage;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {

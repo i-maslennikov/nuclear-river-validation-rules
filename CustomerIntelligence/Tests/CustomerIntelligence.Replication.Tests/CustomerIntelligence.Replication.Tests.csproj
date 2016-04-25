@@ -154,9 +154,9 @@
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>
       <Name>CustomerIntelligence.Storage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Replication\Replication.Core.API\Replication.Core.API.csproj">
+    <ProjectReference Include="..\..\..\Replication\Replication.Core\Replication.Core.csproj">
       <Project>{E45717BE-86C8-425B-BB13-0E69053EF040}</Project>
-      <Name>Replication.Core.API</Name>
+      <Name>Replication.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

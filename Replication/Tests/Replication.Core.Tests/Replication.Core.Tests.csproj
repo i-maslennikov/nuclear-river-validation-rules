@@ -60,9 +60,9 @@
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
       <Name>Common.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Replication.Core.API\Replication.Core.API.csproj">
+    <ProjectReference Include="..\..\Replication.Core\Replication.Core.csproj">
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
-      <Name>Replication.Core.API</Name>
+      <Name>Replication.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

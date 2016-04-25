@@ -4,7 +4,7 @@ using System.Configuration;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.IdentityService.Client.Settings;
 using NuClear.OperationsLogging.Transports.ServiceBus;
-using NuClear.Replication.Core.API.Settings;
+using NuClear.Replication.Core.Settings;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.River.Common.Settings;
 using NuClear.Settings;

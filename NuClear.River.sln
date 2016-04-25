@@ -73,7 +73,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Storag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.OperationsProcessing", "CustomerIntelligence\CustomerIntelligence.OperationsProcessing\CustomerIntelligence.OperationsProcessing.csproj", "{794F43F6-E4F3-4A80-A2B0-195D3560CB35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Core.API", "Replication\Replication.Core.API\Replication.Core.API.csproj", "{E45717BE-86C8-425B-BB13-0E69053EF040}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Core", "Replication\Replication.Core\Replication.Core.csproj", "{E45717BE-86C8-425B-BB13-0E69053EF040}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.OperationsProcessing.Tests", "CustomerIntelligence\Tests\CustomerIntelligence.OperationsProcessing.Tests\CustomerIntelligence.OperationsProcessing.Tests.csproj", "{19CFD12D-582D-4685-A40B-7E3A13B9C5D3}"
 EndProject
@@ -93,7 +93,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F1BB08E3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replication.StateInitialization.Tests", "CustomerIntelligence\Tests\CustomerIntelligence.Replication.DataTest.Model\CustomerIntelligence.Replication.StateInitialization.Tests.csproj", "{04BC80F1-62A5-489C-916A-9F090AED7CF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Bulk.API", "Replication\Replication.Bulk.API\Replication.Bulk.API.csproj", "{55B42FA4-EC9E-4F22-95ED-C219637699FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateInitialization.Core", "StateInitialization\StateInitialization.Core\StateInitialization.Core.csproj", "{55B42FA4-EC9E-4F22-95ED-C219637699FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.StateInitialization.EntryPoint", "CustomerIntelligence\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.EntryPoint.csproj", "{C6DE2A90-B4B9-4CD5-AEF0-7E6607B102A0}"
 EndProject
@@ -114,6 +114,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{98AD53CC-0508-413C-8541-0F9374CA20F2}"
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Querying", "Querying\Packaging\Querying\Querying.nuproj", "{48631A28-4D1F-4B49-B5D8-392071B232C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StateInitialization", "StateInitialization", "{E0765131-F072-42B9-A8B3-65396FF44DBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -242,7 +244,7 @@ Global
 		{814C4FAC-A5D7-4557-A0A4-E79FEBCE6156} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
 		{F1BB08E3-5A59-42F0-887A-14A26AD4D729} = {77AAFA66-EC7B-44AD-80A2-58B6E5A5A3A9}
 		{04BC80F1-62A5-489C-916A-9F090AED7CF9} = {814C4FAC-A5D7-4557-A0A4-E79FEBCE6156}
-		{55B42FA4-EC9E-4F22-95ED-C219637699FD} = {B2560A63-4013-4556-8DF7-26F711AEED01}
+		{55B42FA4-EC9E-4F22-95ED-C219637699FD} = {E0765131-F072-42B9-A8B3-65396FF44DBE}
 		{C6DE2A90-B4B9-4CD5-AEF0-7E6607B102A0} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
 		{37156BD5-AA7A-463C-9A8A-926F81D4B599} = {A9028F36-80AC-4111-B38B-D40DA3CD43B8}
 		{A9028F36-80AC-4111-B38B-D40DA3CD43B8} = {B2560A63-4013-4556-8DF7-26F711AEED01}

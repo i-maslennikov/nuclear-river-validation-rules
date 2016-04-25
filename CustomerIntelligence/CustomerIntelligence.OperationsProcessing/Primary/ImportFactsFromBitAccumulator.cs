@@ -8,7 +8,7 @@ using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.CustomerIntelligence.OperationsProcessing.Primary.Parsers;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Messaging.Transports.CorporateBus.API;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Tracing.API;

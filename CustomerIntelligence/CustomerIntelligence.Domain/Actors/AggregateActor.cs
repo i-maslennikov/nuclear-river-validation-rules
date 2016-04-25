@@ -2,8 +2,8 @@
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.Actors;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.Actors;
 
 namespace NuClear.CustomerIntelligence.Domain.Actors
 {

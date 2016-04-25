@@ -4,7 +4,7 @@ using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Events;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Flows;
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing.Transports;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports

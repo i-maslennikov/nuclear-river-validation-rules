@@ -7,7 +7,7 @@ using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
-using NuClear.Replication.Core.API.Settings;
+using NuClear.Replication.Core.Settings;
 using NuClear.Tracing.API;
 
 using NUnit.Framework;

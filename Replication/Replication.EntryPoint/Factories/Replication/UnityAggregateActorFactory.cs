@@ -6,8 +6,8 @@ using Microsoft.Practices.Unity;
 using NuClear.CustomerIntelligence.Domain.Actors;
 using NuClear.CustomerIntelligence.Storage.Model.CI;
 using NuClear.CustomerIntelligence.Storage.Model.Statistics;
-using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.Actors;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.Actors;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {

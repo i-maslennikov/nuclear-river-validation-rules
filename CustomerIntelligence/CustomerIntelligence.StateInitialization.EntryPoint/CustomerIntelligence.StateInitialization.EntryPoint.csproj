@@ -56,13 +56,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Replication\Replication.Bulk.Api\Replication.Bulk.API.csproj">
+    <ProjectReference Include="..\..\StateInitialization\StateInitialization.Core\StateInitialization.Core.csproj">
       <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
-      <Name>Replication.Bulk.API</Name>
+      <Name>StateInitialization.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Replication\Replication.Core.API\Replication.Core.API.csproj">
+    <ProjectReference Include="..\..\Replication\Replication.Core\Replication.Core.csproj">
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
-      <Name>Replication.Core.API</Name>
+      <Name>Replication.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
       <Project>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</Project>

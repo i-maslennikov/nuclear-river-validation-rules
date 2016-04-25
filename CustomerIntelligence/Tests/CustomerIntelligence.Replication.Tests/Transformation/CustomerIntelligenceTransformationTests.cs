@@ -9,8 +9,8 @@ using NuClear.CustomerIntelligence.Storage.Model.CI;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Metamodeling.Elements;
 using NuClear.Model.Common.Entities;
-using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.DataObjects;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 

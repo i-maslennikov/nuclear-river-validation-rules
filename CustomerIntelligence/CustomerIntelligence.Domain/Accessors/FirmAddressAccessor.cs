@@ -7,8 +7,8 @@ using NuClear.CustomerIntelligence.Domain.Events;
 using NuClear.CustomerIntelligence.Domain.Specifications;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
-using NuClear.Replication.Core.API;
-using NuClear.Replication.Core.API.DataObjects;
+using NuClear.Replication.Core;
+using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
