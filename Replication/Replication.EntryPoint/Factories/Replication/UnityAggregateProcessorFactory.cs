@@ -10,6 +10,7 @@ using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API.Aggregates;
 using NuClear.River.Common.Metadata.Elements;
 using NuClear.River.Common.Metadata.Model;
+using NuClear.ValidationRules.Domain.Model;
 
 namespace NuClear.Replication.EntryPoint.Factories.Replication
 {
@@ -25,13 +26,20 @@ namespace NuClear.Replication.EntryPoint.Factories.Replication
         public IAggregateProcessor Create(IMetadataElement metadata)
         {
             var am = (IAggregateMetadata)metadata;
-            if (am.EntityKeyType != typeof(long))
+            if (am.EntityKeyType == typeof(long))
             {
-                throw new ArgumentException($"требуются доработки для поддержки ключа {am.EntityKeyType.Name}");
+                var factory = (IAggregateProcessorFactory)_unityContainer.Resolve(typeof(UnityAggregateProcessorFactory<,>).MakeGenericType(am.EntityType, am.EntityKeyType));
+                return factory.Create(am);
             }
 
-            var factory = (IAggregateProcessorFactory)_unityContainer.Resolve(typeof(UnityAggregateProcessorFactory<,>).MakeGenericType(am.EntityType, am.EntityKeyType));
-            return factory.Create(am);
+            if (am.EntityKeyType == typeof(PeriodKey))
+            {
+                var factory = (IAggregateProcessorFactory)_unityContainer.Resolve(typeof(UnityAggregateProcessorFactory<,>).MakeGenericType(am.EntityType, am.EntityKeyType));
+                return factory.Create(am);
+            }
+
+
+            throw new ArgumentException($"требуются доработки для поддержки ключа {am.EntityKeyType.Name}");
         }
     }
 
