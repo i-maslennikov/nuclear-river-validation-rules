@@ -238,17 +238,22 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                                  .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, OrganizationUnitId = x.OrganizationUnitId }))
                                                  .Distinct();
 
-                                    var result = dates.Select(date => new Aggregates::PricePeriod
-                                        {
-                                            PriceId =
-                                                q.For<Facts::Price>()
-                                                 .Where(price => price.OrganizationUnitId == date.OrganizationUnitId && price.BeginDate <= date.Date)
-                                                 .OrderByDescending(price => price.BeginDate)
-                                                 .FirstOrDefault()
-                                                 .Id,
-                                            OrganizationUnitId = date.OrganizationUnitId,
-                                            Start = date.Date,
-                                        });
+                                    var result = dates.Select(date => new
+                                                                    {
+                                                                        PriceId = (long?)q.For<Facts::Price>()
+                                                                                            .Where(price => price.OrganizationUnitId == date.OrganizationUnitId && price.BeginDate <= date.Date)
+                                                                                            .OrderByDescending(price => price.BeginDate)
+                                                                                            .FirstOrDefault()
+                                                                                            .Id,
+                                                                        Period = date
+                                                                    })
+                                                      .Where(x => x.PriceId.HasValue)
+                                                      .Select(x => new Aggregates::PricePeriod
+                                                                    {
+                                                                        OrganizationUnitId = x.Period.OrganizationUnitId,
+                                                                        PriceId = x.PriceId.Value,
+                                                                        Start = x.Period.Date
+                                                                    });
 
                                     return result;
                                 });
