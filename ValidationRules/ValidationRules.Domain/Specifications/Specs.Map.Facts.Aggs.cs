@@ -189,7 +189,6 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                                  .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
                                                  .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
                                                  .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, OrganizationUnitId = x.OrganizationUnitId }))
-                                                 .Select(x => new { x.Date, x.OrganizationUnitId })
                                                  .OrderBy(x => x.Date)
                                                  .Distinct();
 
@@ -210,8 +209,10 @@ namespace NuClear.ValidationRules.Domain.Specifications
                                              .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
                                              .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
                                              .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, OrganizationUnitId = x.OrganizationUnitId }))
-                                             .Distinct()
-                                             .Select(x => new { x.Date, x.OrganizationUnitId });
+                                             .Distinct();
+
+                                // https://github.com/linq2db/linq2db/issues/356
+                                dates = dates.Select(x => new { x.Date, x.OrganizationUnitId });
 
                                 var result = q.For<Facts::Order>()
                                               .SelectMany(order => dates.Where(date =>
@@ -226,6 +227,31 @@ namespace NuClear.ValidationRules.Domain.Specifications
 
                                 return result;
                             });
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::PricePeriod>> PricePeriods
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::PricePeriod>>(
+                            q =>
+                                {
+                                    var dates = q.For<Facts::Order>()
+                                                 .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                                 .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, OrganizationUnitId = x.OrganizationUnitId }))
+                                                 .Distinct();
+
+                                    var result = dates.Select(date => new Aggregates::PricePeriod
+                                        {
+                                            PriceId =
+                                                q.For<Facts::Price>()
+                                                 .Where(price => price.OrganizationUnitId == date.OrganizationUnitId && price.BeginDate <= date.Date)
+                                                 .OrderByDescending(price => price.BeginDate)
+                                                 .FirstOrDefault()
+                                                 .Id,
+                                            OrganizationUnitId = date.OrganizationUnitId,
+                                            Start = date.Date,
+                                        });
+
+                                    return result;
+                                });
                 }
             }
         }

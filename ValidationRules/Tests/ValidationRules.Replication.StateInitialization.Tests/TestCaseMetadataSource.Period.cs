@@ -44,16 +44,30 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                                      .Name(nameof(SinglePricePeriod))
                                      .Aggregate(
-                                                new Aggregates::Price(),
+                                                new Aggregates::Price { Id = 1 },
+                                                new Aggregates::Price { Id = 2 },
                                                 new Aggregates::Period
-                                                {
-                                                    Start = DateTime.Parse("2011-01-01T00:00:00"),
-                                                    End = DateTime.MaxValue,
-                                                })
+                                                    {
+                                                        Start = DateTime.Parse("2011-01-01T00:00:00"),
+                                                        End = DateTime.Parse("2011-02-01T00:00:00"),
+                                                    },
+                                                new Aggregates::Period
+                                                    {
+                                                        Start = DateTime.Parse("2011-02-01T00:00:00"),
+                                                        End = DateTime.MaxValue,
+                                                    },
+                                                new Aggregates::PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-01-01T00:00:00") },
+                                                new Aggregates::PricePeriod { PriceId = 2, Start = DateTime.Parse("2011-02-01T00:00:00") })
                                      .Fact(
                                            new Facts::Price
-                                           {
-                                               BeginDate = DateTime.Parse("2011-01-01T00:00:00"),
-                                           });
+                                               {
+                                                   Id = 1,
+                                                   BeginDate = DateTime.Parse("2011-01-01T00:00:00"),
+                                               },
+                                           new Facts::Price
+                                               {
+                                                   Id = 2,
+                                                   BeginDate = DateTime.Parse("2011-02-01T00:00:00"),
+                                               });
     }
 }

@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.Domain
                                      AggregateMetadata<Period, PeriodKey>
                                          .Config
                                          .HasSource(Specs.Map.Facts.ToAggregates.Periods)
-                                         //.HasValueObject(Specs.Map.Facts.ToAggregates.PricePeriods, Specs.Find.Aggs.PricePeriods)
+                                         .HasValueObject(Specs.Map.Facts.ToAggregates.PricePeriods, Specs.Find.Aggs.PricePeriods)
                                          .HasValueObject(Specs.Map.Facts.ToAggregates.OrderPeriods, Specs.Find.Aggs.OrderPeriods));
 
         public AggregateConstructionMetadataSource()

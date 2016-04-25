@@ -42,9 +42,14 @@ namespace NuClear.ValidationRules.Domain.Specifications
                     return new FindSpecification<Aggregates::OrderPrice>(x => aggregateIds.Contains(x.OrderId));
                 }
 
-                public static FindSpecification<Aggregates.OrderPeriod> OrderPeriods(IReadOnlyCollection<PeriodKey> aggregateIds)
+                public static FindSpecification<Aggregates::OrderPeriod> OrderPeriods(IReadOnlyCollection<PeriodKey> aggregateIds)
                 {
                     return new FindSpecification<Aggregates::OrderPeriod>(x => aggregateIds.Any(id => id.OrganizationUnitId == x.OrganizationUnitId && id.Start == x.Start));
+                }
+
+                public static FindSpecification<Aggregates::PricePeriod> PricePeriods(IReadOnlyCollection<PeriodKey> aggregateIds)
+                {
+                    return new FindSpecification<Aggregates::PricePeriod>(x => aggregateIds.Any(id => id.OrganizationUnitId == x.OrganizationUnitId && id.Start == x.Start));
                 }
             }
         }
