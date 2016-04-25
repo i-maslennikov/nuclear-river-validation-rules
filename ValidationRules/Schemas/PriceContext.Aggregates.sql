@@ -113,7 +113,6 @@ create table PriceAggregate.OrderPeriod(
     OrderId bigint NOT NULL,
     OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
-    [End] datetime2(2) NOT NULL,
 )
 go
 
@@ -121,7 +120,6 @@ create table PriceAggregate.PricePeriod(
     PriceId bigint NOT NULL,
     OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
-    [End] datetime2(2) NOT NULL,
 )
 go
 
