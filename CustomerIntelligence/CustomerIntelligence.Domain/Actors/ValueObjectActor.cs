@@ -7,7 +7,7 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 
-namespace NuClear.CustomerIntelligence.Domain.Actors
+namespace NuClear.CustomerIntelligence.Replication.Actors
 {
     public sealed class ValueObjectActor<TDataObject> : DataObjectsActorBase<TDataObject> where TDataObject : class
     {

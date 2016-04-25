@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{3E0E
 		Replication\Schemas\Transport.sql = Replication\Schemas\Transport.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.EntryPoint", "Replication\Replication.EntryPoint\Replication.EntryPoint.csproj", "{C332689C-FFAB-44D4-91BD-920B134C0982}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replication.Host", "CustomerIntelligence\CustomerIntelligence.Replication.Host\CustomerIntelligence.Replication.Host.csproj", "{C332689C-FFAB-44D4-91BD-920B134C0982}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.OperationsProcessing", "Replication\Replication.OperationsProcessing\Replication.OperationsProcessing.csproj", "{8E3D39D6-6BEE-4EDC-ACE0-8C24CA929164}"
 EndProject
@@ -67,7 +67,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{02A5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{D4238D0C-3315-4449-B1AE-80F716D58D04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Domain", "CustomerIntelligence\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj", "{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replication", "CustomerIntelligence\CustomerIntelligence.Domain\CustomerIntelligence.Replication.csproj", "{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Storage", "CustomerIntelligence\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj", "{FA1074A6-B89D-45DF-9B73-6881BEF46E33}"
 EndProject
@@ -95,7 +95,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateInitialization.Core", "StateInitialization\StateInitialization.Core\StateInitialization.Core.csproj", "{55B42FA4-EC9E-4F22-95ED-C219637699FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.StateInitialization.EntryPoint", "CustomerIntelligence\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.EntryPoint.csproj", "{C6DE2A90-B4B9-4CD5-AEF0-7E6607B102A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.StateInitialization.Host", "CustomerIntelligence\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.Host.csproj", "{C6DE2A90-B4B9-4CD5-AEF0-7E6607B102A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Core.Tests", "Replication\Tests\Replication.Core.Tests\Replication.Core.Tests.csproj", "{37156BD5-AA7A-463C-9A8A-926F81D4B599}"
 EndProject
@@ -229,7 +229,7 @@ Global
 		{1FB39973-A18A-4764-96D5-6F3347FF3EE6} = {F1BB08E3-5A59-42F0-887A-14A26AD4D729}
 		{4D48AAC9-C244-41A3-9E89-187860717B1F} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
 		{3E0E1141-0E55-4BB4-AA1F-80BF236D43B2} = {B2560A63-4013-4556-8DF7-26F711AEED01}
-		{C332689C-FFAB-44D4-91BD-920B134C0982} = {B2560A63-4013-4556-8DF7-26F711AEED01}
+		{C332689C-FFAB-44D4-91BD-920B134C0982} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
 		{8E3D39D6-6BEE-4EDC-ACE0-8C24CA929164} = {B2560A63-4013-4556-8DF7-26F711AEED01}
 		{F3C74BF1-8646-4DB6-AECB-42E10F8542B6} = {8F3C0046-1F47-4C8E-8B03-D35E96686C6F}
 		{8A646634-2535-493C-A699-90B4D1C40A83} = {8F3C0046-1F47-4C8E-8B03-D35E96686C6F}

@@ -1,4 +1,4 @@
-﻿namespace NuClear.CustomerIntelligence.Domain
+﻿namespace NuClear.CustomerIntelligence.Replication
 {
     public sealed class StatisticsKey
     {

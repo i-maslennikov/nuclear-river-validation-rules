@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Xml.Linq;
 
-using NuClear.CustomerIntelligence.Domain.DTO;
 using NuClear.CustomerIntelligence.OperationsProcessing.Primary.Parsers;
 using NuClear.CustomerIntelligence.OperationsProcessing.Tests.Properties;
+using NuClear.CustomerIntelligence.Replication.DTO;
 
 using NUnit.Framework;
 

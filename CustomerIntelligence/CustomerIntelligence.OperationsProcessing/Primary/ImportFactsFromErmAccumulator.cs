@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
+using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Model.Common.Entities;
 using NuClear.OperationsTracking.API.UseCases;
@@ -18,7 +18,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
     /// <summary>
     /// Applies filter for TUC and maps them to SyncFactCommand
     /// </summary>
-    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, OperationAggregatableMessage<ICommand>>
+    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, AggregatableMessage<ICommand>>
     {
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
@@ -37,7 +37,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             _useCaseFiltrator = useCaseFiltrator;
         }
 
-        protected override OperationAggregatableMessage<ICommand> Process(TrackedUseCase message)
+        protected override AggregatableMessage<ICommand> Process(TrackedUseCase message)
         {
             _tracer.DebugFormat("Processing TUC {0}", message.Id);
 
@@ -50,7 +50,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
             _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Length);
 
-            return new OperationAggregatableMessage<ICommand>
+            return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
                 Commands = commands,

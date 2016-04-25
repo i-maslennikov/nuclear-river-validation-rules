@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.CustomerIntelligence.Domain.Specifications
+namespace NuClear.CustomerIntelligence.Replication.Specifications
 {
     public static partial class Specs
     {

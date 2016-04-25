@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
+using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.CustomerIntelligence.Storage.Model.Statistics;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
@@ -37,7 +37,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         {
             try
             {
-                foreach (var message in messages.Cast<OperationAggregatableMessage<IAggregateCommand>>())
+                foreach (var message in messages.Cast<AggregatableMessage<IAggregateCommand>>())
                 {
                     var actor = _aggregateActorFactory.Create(typeof(ProjectStatistics));
                     actor.ExecuteCommands(message.Commands);

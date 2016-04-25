@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NuClear.CustomerIntelligence.Replication</RootNamespace>
+    <AssemblyName>2GIS.NuClear.CustomerIntelligence.Replication</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>default</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Accessors\AccountAccessor.cs" />
+    <Compile Include="Accessors\ActivityAccessor.cs" />
+    <Compile Include="Accessors\BranchOfficeOrganizationUnitAccessor.cs" />
+    <Compile Include="Accessors\CategoryAccessor.cs" />
+    <Compile Include="Accessors\CategoryFirmAddressAccessor.cs" />
+    <Compile Include="Accessors\CategoryGroupAccessor.cs" />
+    <Compile Include="Accessors\CategoryOrganizationUnitAccessor.cs" />
+    <Compile Include="Accessors\ClientAccessor.cs" />
+    <Compile Include="Accessors\ContactAccessor.cs" />
+    <Compile Include="Accessors\FirmAccessor.cs" />
+    <Compile Include="Accessors\FirmAddressAccessor.cs" />
+    <Compile Include="Accessors\FirmCategoryForecastAccessor.cs" />
+    <Compile Include="Accessors\FirmCategoryStatisticsAccessor.cs" />
+    <Compile Include="Accessors\FirmContactAccessor.cs" />
+    <Compile Include="Accessors\FirmForecastAccessor.cs" />
+    <Compile Include="Accessors\LegalPersonAccessor.cs" />
+    <Compile Include="Accessors\OrderAccessor.cs" />
+    <Compile Include="Accessors\ProjectAccessor.cs" />
+    <Compile Include="Accessors\ProjectCategoryStatisticsAccessor.cs" />
+    <Compile Include="Accessors\SalesModelCategoryRestrictionAccessor.cs" />
+    <Compile Include="Accessors\TerritoryAccessor.cs" />
+    <Compile Include="Actors\AggregateActor.cs" />
+    <Compile Include="Actors\CategoryGroupAggregateRootActor.cs" />
+    <Compile Include="Actors\ClientAggregateRootActor.cs" />
+    <Compile Include="Actors\EntityActorBase.cs" />
+    <Compile Include="Actors\FirmAggregateRootActor.cs" />
+    <Compile Include="Actors\ProjectAggregateRootActor.cs" />
+    <Compile Include="Actors\ProjectStatisticsAggregateRootActor.cs" />
+    <Compile Include="Actors\TerritoryAggregateRootActor.cs" />
+    <Compile Include="Actors\ValueObjectActor.cs" />
+    <Compile Include="Commands\CreateDataObjectCommand.cs" />
+    <Compile Include="Commands\DeleteDataObjectCommand.cs" />
+    <Compile Include="Commands\DestroyAggregateCommand.cs" />
+    <Compile Include="Commands\IAggregateCommand.cs" />
+    <Compile Include="Commands\InitializeAggregateCommand.cs" />
+    <Compile Include="Commands\RecalculateAggregateCommand.cs" />
+    <Compile Include="Commands\RecalculateEntityCommand.cs" />
+    <Compile Include="Commands\ReplaceFirmCategoryForecastCommand.cs" />
+    <Compile Include="Commands\ReplaceFirmForecastCommand.cs" />
+    <Compile Include="Commands\ReplaceFirmPopularityCommand.cs" />
+    <Compile Include="Commands\ReplaceRubricPopularityCommand.cs" />
+    <Compile Include="Commands\SyncDataObjectCommand.cs" />
+    <Compile Include="DataObjectTypesProvider.cs" />
+    <Compile Include="DTO\RubricPopularity.cs" />
+    <Compile Include="DTO\FirmForecast.cs" />
+    <Compile Include="DTO\FirmPopularity.cs" />
+    <Compile Include="EntityTypeIds.cs" />
+    <Compile Include="Events\DataObjectCreatedEvent.cs" />
+    <Compile Include="Events\DataObjectDeletedEvent.cs" />
+    <Compile Include="Events\DataObjectReplacedEvent.cs" />
+    <Compile Include="Events\DataObjectUpdatedEvent.cs" />
+    <Compile Include="Events\RelatedDataObjectOutdatedEvent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Specifications\Specs.Find.CI.cs" />
+    <Compile Include="Specifications\Specs.Find.Erm.cs" />
+    <Compile Include="Specifications\Specs.Map.Bit.cs" />
+    <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
+    <Compile Include="Specifications\Specs.Map.Facts.AggregateIdentity.cs" />
+    <Compile Include="Specifications\Specs.Map.Facts.CI.cs" />
+    <Compile Include="StatisticsKey.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="2GIS.NuClear.Model.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Settings.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.Settings.API.1.2.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.Storage.API.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Replication\Replication.Core\Replication.Core.csproj">
+      <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
+      <Name>Replication.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
+      <Project>{fa1074a6-b89d-45df-9b73-6881bef46e33}</Project>
+      <Name>CustomerIntelligence.Storage</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

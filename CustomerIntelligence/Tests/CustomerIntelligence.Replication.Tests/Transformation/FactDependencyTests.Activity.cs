@@ -1,6 +1,5 @@
 ﻿using System;
 
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 

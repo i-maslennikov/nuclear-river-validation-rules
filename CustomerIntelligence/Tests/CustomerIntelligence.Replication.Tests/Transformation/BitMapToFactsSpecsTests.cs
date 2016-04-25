@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.DTO;
-using NuClear.CustomerIntelligence.Domain.Specifications;
+using NuClear.CustomerIntelligence.Replication.DTO;
+using NuClear.CustomerIntelligence.Replication.Specifications;
 
 using NUnit.Framework;
 

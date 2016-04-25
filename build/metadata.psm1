@@ -26,7 +26,7 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 			$entryPointsMetadata += Get-WebMetadata $Context
 		}
 
-		'Replication.EntryPoint' {
+		'CustomerIntelligence.Replication.Host' {
 			$Context.EntryPoint = $_
 			$entryPointsMetadata += Get-TaskServiceMetadata $Context
 		}
@@ -49,10 +49,10 @@ function Get-BulkToolMetadata ($UpdateSchemas, $Context){
 	}
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
-	$Context.EntryPoint = 'CustomerIntelligence.StateInitialization.EntryPoint'
+	$Context.EntryPoint = 'CustomerIntelligence.StateInitialization.Host'
 	$metadata += Get-TransformMetadata $Context
 
-	return @{ 'CustomerIntelligence.StateInitialization.EntryPoint' = $metadata }
+	return @{ 'CustomerIntelligence.StateInitialization.Host' = $metadata }
 }
 
 function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
@@ -141,7 +141,7 @@ $AllSchemas = @(
 
 $AllEntryPoints = @(
 	'CustomerIntelligence.Querying.Host'
-	'Replication.EntryPoint'
+	'CustomerIntelligence.Replication.Host'
 	'ConvertUseCasesService'
 )
 

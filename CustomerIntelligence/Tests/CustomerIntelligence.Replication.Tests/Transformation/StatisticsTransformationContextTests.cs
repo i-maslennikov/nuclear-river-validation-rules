@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Domain.Specifications;
+using NuClear.CustomerIntelligence.Replication.Specifications;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.CustomerIntelligence.Storage.Model.Statistics;

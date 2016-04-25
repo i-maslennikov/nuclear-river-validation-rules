@@ -1,5 +1,4 @@
-﻿using NuClear.CustomerIntelligence.Domain;
-using NuClear.Metamodeling.Processors;
+﻿using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 

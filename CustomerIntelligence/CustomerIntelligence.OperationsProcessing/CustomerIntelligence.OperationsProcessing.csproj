@@ -120,40 +120,40 @@
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
-    <Compile Include="EntityTypes\EntityTypeAccount.cs" />
-    <Compile Include="EntityTypes\EntityTypeActivity.cs" />
-    <Compile Include="EntityTypes\EntityTypeAppointment.cs" />
-    <Compile Include="EntityTypes\EntityTypeBill.cs" />
-    <Compile Include="EntityTypes\EntityTypeBranchOfficeOrganizationUnit.cs" />
-    <Compile Include="EntityTypes\EntityTypeBuilding.cs" />
-    <Compile Include="EntityTypes\EntityTypeCategory.cs" />
-    <Compile Include="EntityTypes\EntityTypeCategoryFirmAddress.cs" />
-    <Compile Include="EntityTypes\EntityTypeCategoryGroup.cs" />
-    <Compile Include="EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
-    <Compile Include="EntityTypes\EntityTypeClient.cs" />
-    <Compile Include="EntityTypes\EntityTypeContact.cs" />
-    <Compile Include="EntityTypes\EntityTypeDeal.cs" />
-    <Compile Include="EntityTypes\EntityTypeFirm.cs" />
-    <Compile Include="EntityTypes\EntityTypeFirmAddress.cs" />
-    <Compile Include="EntityTypes\EntityTypeFirmContact.cs" />
-    <Compile Include="EntityTypes\EntityTypeLegalPerson.cs" />
-    <Compile Include="EntityTypes\EntityTypeLegalPersonProfile.cs" />
-    <Compile Include="EntityTypes\EntityTypeLetter.cs" />
-    <Compile Include="EntityTypes\EntityTypeLock.cs" />
-    <Compile Include="EntityTypes\EntityTypeOrder.cs" />
-    <Compile Include="EntityTypes\EntityTypeOrderPosition.cs" />
-    <Compile Include="EntityTypes\EntityTypePhonecall.cs" />
-    <Compile Include="EntityTypes\EntityTypeProject.cs" />
-    <Compile Include="EntityTypes\EntityTypeProjectCategoryStatistics.cs" />
-    <Compile Include="EntityTypes\EntityTypeProjectStatistics.cs" />
-    <Compile Include="EntityTypes\EntityTypeSalesModelCategoryRestriction.cs" />
-    <Compile Include="EntityTypes\EntityTypeTask.cs" />
-    <Compile Include="EntityTypes\EntityTypeTerritory.cs" />
     <Compile Include="ErmToFactsEntityTypeExplicitMapping.cs" />
     <Compile Include="Final\CommonEventsAccumulator.cs" />
     <Compile Include="Final\AggregateCommandsHandler.cs" />
     <Compile Include="Final\ProjectStatisticsAggregateEventsAccumulator.cs" />
     <Compile Include="Final\ProjectStatisticsAggregateCommandsHandler.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAccount.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeActivity.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAppointment.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBill.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBranchOfficeOrganizationUnit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBuilding.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategory.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategoryFirmAddress.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategoryGroup.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeClient.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeContact.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeDeal.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeFirm.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeFirmAddress.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeFirmContact.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLegalPerson.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLegalPersonProfile.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLetter.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLock.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePhonecall.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeProject.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeProjectCategoryStatistics.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeProjectStatistics.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeSalesModelCategoryRestriction.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeTask.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeTerritory.cs" />
     <Compile Include="Identities\Flows\CommonEventsFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromBitFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
@@ -221,9 +221,9 @@
       <Project>{8e3d39d6-6bee-4edc-ace0-8c24ca929164}</Project>
       <Name>Replication.OperationsProcessing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
+    <ProjectReference Include="..\CustomerIntelligence.Domain\CustomerIntelligence.Replication.csproj">
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
-      <Name>CustomerIntelligence.Domain</Name>
+      <Name>CustomerIntelligence.Replication</Name>
     </ProjectReference>
     <ProjectReference Include="..\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
       <Project>{fa1074a6-b89d-45df-9b73-6881bef46e33}</Project>
@@ -235,9 +235,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Identities\EntityTypes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

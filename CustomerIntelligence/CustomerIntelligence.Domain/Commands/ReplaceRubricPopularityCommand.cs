@@ -1,7 +1,7 @@
-﻿using NuClear.CustomerIntelligence.Domain.DTO;
+﻿using NuClear.CustomerIntelligence.Replication.DTO;
 using NuClear.Replication.Core;
 
-namespace NuClear.CustomerIntelligence.Domain.Commands
+namespace NuClear.CustomerIntelligence.Replication.Commands
 {
     public class ReplaceRubricPopularityCommand : ICommand
     {

@@ -14,7 +14,7 @@ using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
 using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
 using Territory = NuClear.CustomerIntelligence.Storage.Model.Facts.Territory;
 
-namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
+namespace NuClear.CustomerIntelligence.StateInitialization.Host
 {
     public class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
     {

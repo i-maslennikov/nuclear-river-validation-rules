@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.DTO;
+using NuClear.CustomerIntelligence.Replication.DTO;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.Storage.API.Specifications;
 
-using FirmForecast = NuClear.CustomerIntelligence.Domain.DTO.FirmForecast;
+using FirmForecast = NuClear.CustomerIntelligence.Replication.DTO.FirmForecast;
 
-namespace NuClear.CustomerIntelligence.Domain.Specifications
+namespace NuClear.CustomerIntelligence.Replication.Specifications
 {
     public static partial class Specs
     {

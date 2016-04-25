@@ -8,7 +8,7 @@ using NuClear.StateInitialization.Core;
 using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.Storage;
 
-namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
+namespace NuClear.CustomerIntelligence.StateInitialization.Host
 {
     public sealed class Program
     {

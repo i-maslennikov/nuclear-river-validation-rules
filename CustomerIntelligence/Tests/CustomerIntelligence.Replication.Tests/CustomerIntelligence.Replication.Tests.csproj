@@ -146,9 +146,9 @@
       <Project>{d4238d0c-3315-4449-b1ae-80f716d58d04}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
+    <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Replication.csproj">
       <Project>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</Project>
-      <Name>CustomerIntelligence.Domain</Name>
+      <Name>CustomerIntelligence.Replication</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>

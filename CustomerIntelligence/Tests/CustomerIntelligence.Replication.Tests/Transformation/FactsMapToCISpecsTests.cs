@@ -4,7 +4,7 @@ using System.Linq;
 
 using Moq;
 
-using NuClear.CustomerIntelligence.Domain.Specifications;
+using NuClear.CustomerIntelligence.Replication.Specifications;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.CI;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;

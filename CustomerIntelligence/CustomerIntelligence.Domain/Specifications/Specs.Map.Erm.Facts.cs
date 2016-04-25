@@ -22,7 +22,7 @@ using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
 using SalesModelCategoryRestriction = NuClear.CustomerIntelligence.Storage.Model.Facts.SalesModelCategoryRestriction;
 using Territory = NuClear.CustomerIntelligence.Storage.Model.Facts.Territory;
 
-namespace NuClear.CustomerIntelligence.Domain.Specifications
+namespace NuClear.CustomerIntelligence.Replication.Specifications
 {
     public static partial class Specs
     {

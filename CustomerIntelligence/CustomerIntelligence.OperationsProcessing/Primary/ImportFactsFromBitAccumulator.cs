@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Xml.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.CustomerIntelligence.Domain.DTO;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.CustomerIntelligence.OperationsProcessing.Primary.Parsers;
+using NuClear.CustomerIntelligence.Replication.Commands;
+using NuClear.CustomerIntelligence.Replication.DTO;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Messaging.Transports.CorporateBus.API;
 using NuClear.Replication.Core;

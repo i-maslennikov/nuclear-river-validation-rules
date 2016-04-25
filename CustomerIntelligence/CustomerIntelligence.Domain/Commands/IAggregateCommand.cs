@@ -2,7 +2,7 @@
 
 using NuClear.Replication.Core;
 
-namespace NuClear.CustomerIntelligence.Domain.Commands
+namespace NuClear.CustomerIntelligence.Replication.Commands
 {
     public interface IAggregateCommand : ICommand
     {

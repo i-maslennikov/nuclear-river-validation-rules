@@ -1,4 +1,4 @@
-﻿using NuClear.CustomerIntelligence.StateInitialization.EntryPoint;
+﻿using NuClear.CustomerIntelligence.StateInitialization.Host;
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.StateInitialization.Core;
 

@@ -71,7 +71,7 @@ function Get-TargetHostsMetadata ($Context){
 	switch ($Context.EnvType) {
 		'Production' {
 			switch ($Context.EntryPoint){
-				'Replication.EntryPoint'{
+				'CustomerIntelligence.Replication.Host'{
 					return @{ 'TargetHosts' = @('uk-erm-sb01', 'uk-erm-sb03', 'uk-erm-sb04') }
 				}
 				{ @('ConvertUseCasesService', 'ConvertUseCasesServiceProduction') -contains $_ } {
@@ -98,16 +98,16 @@ function Get-TargetHostsMetadata ($Context){
 
 function Get-ServiceNameMetadata ($Context) {
 	switch ($Context.EntryPoint) {
-		'Replication.EntryPoint' {
+		'CustomerIntelligence.Replication.Host' {
 			return @{
-				'ServiceName' = 'AdvSearch'
-				'ServiceDisplayName' = '2GIS ERM AdvancedSearch Replication Service'
+				'ServiceName' = 'CustomerIntelligence.Replication.Host'
+				'ServiceDisplayName' = 'CustomerIntelligence Replication Host Service'
 			}
 		}
 		{ @('ConvertUseCasesService', 'ConvertUseCasesServiceProduction') -contains $_ } {
 			return @{
 				'ServiceName' = 'ConvertUseCases'
-				'ServiceDisplayName' = '2GIS ERM AdvancedSearch Convert UseCases Service'
+				'ServiceDisplayName' = 'NuClear River Convert UseCases Service'
 			}
 		}
 	}

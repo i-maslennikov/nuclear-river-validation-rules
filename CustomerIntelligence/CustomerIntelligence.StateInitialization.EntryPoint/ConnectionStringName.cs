@@ -1,4 +1,4 @@
-﻿namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
+﻿namespace NuClear.CustomerIntelligence.StateInitialization.Host
 {
     public class ConnectionStringName
     {

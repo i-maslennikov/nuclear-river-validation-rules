@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.CustomerIntelligence.Domain.Events;
-using NuClear.CustomerIntelligence.Domain.Specifications;
+using NuClear.CustomerIntelligence.Replication.Commands;
+using NuClear.CustomerIntelligence.Replication.Events;
+using NuClear.CustomerIntelligence.Replication.Specifications;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Replication.Core;
@@ -11,7 +11,7 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.CustomerIntelligence.Domain.Accessors
+namespace NuClear.CustomerIntelligence.Replication.Accessors
 {
     public sealed class ProjectAccessor : IStorageBasedDataObjectAccessor<Project>, IDataChangesHandler<Project>
     {

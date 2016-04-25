@@ -2,7 +2,7 @@
 
 using NuClear.Replication.Core.Commands;
 
-namespace NuClear.CustomerIntelligence.Domain.Commands
+namespace NuClear.CustomerIntelligence.Replication.Commands
 {
     public sealed class SyncDataObjectCommand : SyncDataObjectCommandBase
     {

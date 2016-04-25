@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain;
-using NuClear.CustomerIntelligence.Domain.Specifications;
+using NuClear.CustomerIntelligence.Replication.Specifications;
 using NuClear.CustomerIntelligence.Storage.Model.Erm;
 
 using NUnit.Framework;

@@ -3,13 +3,13 @@ using System.Linq;
 
 using Moq;
 
-using NuClear.CustomerIntelligence.Domain.DTO;
+using NuClear.CustomerIntelligence.Replication.DTO;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.Metamodeling.Elements;
 
 using NUnit.Framework;
 
-using FirmForecast = NuClear.CustomerIntelligence.Domain.DTO.FirmForecast;
+using FirmForecast = NuClear.CustomerIntelligence.Replication.DTO.FirmForecast;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation

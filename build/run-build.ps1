@@ -9,7 +9,7 @@ if ($Properties.Count -eq 0){
  	$Properties.EnvironmentName = 'Test.20'
 	$Properties.EntryPoints = @(
 		'CustomerIntelligence.Querying.Host'
-		'Replication.EntryPoint'
+		'CustomerIntelligence.Replication.Host'
 	)
 	#$Properties.UseCaseRoute = 'ERM'
 	#$Properties.UpdateSchemas = 'CustomerIntelligence'

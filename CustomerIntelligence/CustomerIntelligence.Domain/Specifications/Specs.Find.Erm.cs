@@ -1,7 +1,7 @@
 ﻿using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Storage.API.Specifications;
 
-namespace NuClear.CustomerIntelligence.Domain.Specifications
+namespace NuClear.CustomerIntelligence.Replication.Specifications
 {
     public static partial class Specs
     {

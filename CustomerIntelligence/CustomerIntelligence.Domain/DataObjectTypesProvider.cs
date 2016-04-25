@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
+using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
 
-namespace NuClear.CustomerIntelligence.Domain
+namespace NuClear.CustomerIntelligence.Replication
 {
     public class DataObjectTypesProvider : IDataObjectTypesProvider
     {

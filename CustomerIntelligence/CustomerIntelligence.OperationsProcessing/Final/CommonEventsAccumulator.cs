@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.CustomerIntelligence.Domain.Events;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
+using NuClear.CustomerIntelligence.Replication.Commands;
+using NuClear.CustomerIntelligence.Replication.Events;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.OperationsProcessing;
@@ -13,7 +13,7 @@ using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public sealed class CommonEventsAccumulator :
-        MessageProcessingContextAccumulatorBase<CommonEventsFlow, PerformedOperationsFinalProcessingMessage, OperationAggregatableMessage<IAggregateCommand>>
+        MessageProcessingContextAccumulatorBase<CommonEventsFlow, PerformedOperationsFinalProcessingMessage, AggregatableMessage<IAggregateCommand>>
     {
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRoots
             = new Dictionary<Type, Type>
@@ -32,7 +32,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             _serializer = serializer;
         }
 
-        protected override OperationAggregatableMessage<IAggregateCommand> Process(PerformedOperationsFinalProcessingMessage message)
+        protected override AggregatableMessage<IAggregateCommand> Process(PerformedOperationsFinalProcessingMessage message)
         {
             var events = message.FinalProcessings.Select(x => _serializer.Deserialize(x)).ToArray();
             var commands = new List<IAggregateCommand>();
@@ -67,7 +67,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 }
             }
 
-            return new OperationAggregatableMessage<IAggregateCommand>
+            return new AggregatableMessage<IAggregateCommand>
                 {
                     TargetFlow = MessageFlow,
                     Commands = commands,

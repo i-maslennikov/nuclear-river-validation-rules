@@ -180,7 +180,7 @@
     <Compile Include="Metadata\ReceiverTypeFeature.cs" />
     <Compile Include="Metadata\TunedReferencesEvaluatorProcessor.cs" />
     <Compile Include="OperationIdentityRegistryFactory.cs" />
-    <Compile Include="OperationAggregatableMessage.cs" />
+    <Compile Include="AggregatableMessage.cs" />
     <Compile Include="Primary\IEntityTypeExplicitMapping.cs" />
     <Compile Include="Primary\IOperationRegistry.cs" />
     <Compile Include="Primary\OperationRegistry.cs" />

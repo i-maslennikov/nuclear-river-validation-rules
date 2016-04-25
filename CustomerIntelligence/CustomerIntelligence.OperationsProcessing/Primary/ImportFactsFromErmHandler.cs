@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
+using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
@@ -49,7 +49,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             try
             {
                 var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<OperationAggregatableMessage<SyncDataObjectCommand>>()
+                                                   .Cast<AggregatableMessage<SyncDataObjectCommand>>()
                                                    .ToArray();
 
                 Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands).ToArray());

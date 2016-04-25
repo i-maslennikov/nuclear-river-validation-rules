@@ -2,7 +2,7 @@
 
 using NuClear.Replication.Core;
 
-namespace NuClear.CustomerIntelligence.Domain.Events
+namespace NuClear.CustomerIntelligence.Replication.Events
 {
     public class DataObjectDeletedEvent : IEvent
     {

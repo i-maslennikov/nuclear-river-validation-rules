@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
+using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
@@ -38,7 +38,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         {
             try
             {
-                foreach (var message in messages.Cast<OperationAggregatableMessage<IAggregateCommand>>())
+                foreach (var message in messages.Cast<AggregatableMessage<IAggregateCommand>>())
                 {
                     var commandGroups = message.Commands.GroupBy(x => x.AggregateRootType);
                     foreach (var commandGroup in commandGroups)

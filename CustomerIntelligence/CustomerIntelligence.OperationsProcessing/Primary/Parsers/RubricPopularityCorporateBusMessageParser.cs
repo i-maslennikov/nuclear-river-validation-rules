@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 
-using NuClear.CustomerIntelligence.Domain.DTO;
+using NuClear.CustomerIntelligence.Replication.DTO;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary.Parsers
 {

@@ -16,7 +16,7 @@ using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
 using ProjectCategoryStatistics = NuClear.CustomerIntelligence.Storage.Model.Statistics.ProjectCategoryStatistics;
 using Territory = NuClear.CustomerIntelligence.Storage.Model.CI.Territory;
 
-namespace NuClear.CustomerIntelligence.Domain.Specifications
+namespace NuClear.CustomerIntelligence.Replication.Specifications
 {
     public static partial class Specs
     {

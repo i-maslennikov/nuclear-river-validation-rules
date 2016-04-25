@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NuClear.CustomerIntelligence.Domain.DTO
+namespace NuClear.CustomerIntelligence.Replication.DTO
 {
     public sealed class FirmForecast
     {

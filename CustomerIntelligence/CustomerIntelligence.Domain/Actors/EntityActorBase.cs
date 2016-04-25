@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Commands;
+using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 
-namespace NuClear.CustomerIntelligence.Domain.Actors
+namespace NuClear.CustomerIntelligence.Replication.Actors
 {
     public abstract class EntityActorBase<TDataObject> : IEntityActor
         where TDataObject : class

@@ -31,21 +31,21 @@ Task Take-ODataOffline -Precondition { $Metadata['CustomerIntelligence.Querying.
 	Take-WebsiteOffline 'CustomerIntelligence.Querying.Host'
 }
 
-Task QueueBuild-TaskService -Precondition { $Metadata['Replication.EntryPoint'] } {
-	$projectFileName = Get-ProjectFileName 'Replication' 'Replication.EntryPoint'
-	QueueBuild-AppPackage $projectFileName 'Replication.EntryPoint'
+Task QueueBuild-TaskService -Precondition { $Metadata['CustomerIntelligence.Replication.Host'] } {
+	$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Replication.Host'
+	QueueBuild-AppPackage $projectFileName 'CustomerIntelligence.Replication.Host'
 }
 
-Task Deploy-TaskService -Depends Import-WinServiceModule, Take-TaskServiceOffline -Precondition { $Metadata['Replication.EntryPoint'] } {
-	Deploy-WinService 'Replication.EntryPoint'
+Task Deploy-TaskService -Depends Import-WinServiceModule, Take-TaskServiceOffline -Precondition { $Metadata['CustomerIntelligence.Replication.Host'] } {
+	Deploy-WinService 'CustomerIntelligence.Replication.Host'
 }
 
-Task Take-TaskServiceOffline -Depends Import-WinServiceModule -Precondition { $Metadata['Replication.EntryPoint'] } {
-	Take-WinServiceOffline 'Replication.EntryPoint'
+Task Take-TaskServiceOffline -Depends Import-WinServiceModule -Precondition { $Metadata['CustomerIntelligence.Replication.Host'] } {
+	Take-WinServiceOffline 'CustomerIntelligence.Replication.Host'
 }
 
 Task Import-WinServiceModule {
-	Load-WinServiceModule 'Replication.EntryPoint'
+	Load-WinServiceModule 'CustomerIntelligence.Replication.Host'
 }
 
 Task Build-Queue { Invoke-MSBuildQueue }

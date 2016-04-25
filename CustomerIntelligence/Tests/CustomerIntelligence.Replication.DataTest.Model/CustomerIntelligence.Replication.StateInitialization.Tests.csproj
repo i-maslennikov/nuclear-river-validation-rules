@@ -112,13 +112,13 @@
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
       <Name>Replication.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
+    <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Replication.csproj">
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
-      <Name>CustomerIntelligence.Domain</Name>
+      <Name>CustomerIntelligence.Replication</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.EntryPoint.csproj">
+    <ProjectReference Include="..\..\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.Host.csproj">
       <Project>{c6de2a90-b4b9-4cd5-aef0-7e6607b102a0}</Project>
-      <Name>CustomerIntelligence.StateInitialization.EntryPoint</Name>
+      <Name>CustomerIntelligence.StateInitialization.Host</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>
