@@ -52,7 +52,8 @@ namespace NuClear.ValidationRules.Domain
                             FactMetadata<Order>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Order)
-                                .HasMatchedEntity(EntityTypeOrder.Instance),
+                                .HasMatchedEntity(EntityTypeOrder.Instance)
+                                .HasDependentEntity(EntityTypePeriod.Instance, Specs.Map.Facts.ToPeriodAggregate.ByOrder),
 
                             FactMetadata<OrderPosition>
                                 .Config
@@ -73,17 +74,18 @@ namespace NuClear.ValidationRules.Domain
                             FactMetadata<Price>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Price)
-                                .HasMatchedEntity(EntityTypePrice.Instance),
+                                .HasMatchedEntity(EntityTypePrice.Instance)
+                                .HasDependentEntity(EntityTypePeriod.Instance, Specs.Map.Facts.ToPeriodAggregate.ByPrice),
 
                             FactMetadata<PricePosition>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.PricePosition)
                                 .HasDependentEntity(EntityTypePrice.Instance, Specs.Map.Facts.ToPriceAggregate.ByPricePosition),
 
-                            // TODO: attach to period aggregate
                             FactMetadata<OrganizationUnit>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.OrganizationUnit),
+
                             FactMetadata<Project>
                                 .Config
                                 .HasSource(Specs.Map.Erm.ToFacts.Project)

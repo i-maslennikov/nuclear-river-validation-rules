@@ -37,8 +37,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
                     return new PeriodKey
                     {
                         OrganizationUnitId = (long)element.Attribute("organizationUnit"),
-                        Start = DateTime.Parse(element.Attribute("start").Value),
-                        End = DateTime.Parse(element.Attribute("end").Value)
+                        Start = DateTime.Parse(element.Attribute("start").Value)
                     };
                 default:
                     throw new ArgumentException($"Can not deserialize key of type {element.Attribute("type").Value}", nameof(element));
@@ -70,8 +69,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
                     {
                         new XAttribute("type", "PeriodKey"),
                         new XAttribute("organizationUnit", periodKey.OrganizationUnitId),
-                        new XAttribute("start", periodKey.Start.ToString("o")),
-                        new XAttribute("end", periodKey.End.ToString("o")),
+                        new XAttribute("start", periodKey.Start.ToString("o"))
                     };
             }
 

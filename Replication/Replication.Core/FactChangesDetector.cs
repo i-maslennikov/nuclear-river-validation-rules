@@ -26,7 +26,7 @@ namespace NuClear.Replication.Core
         public MergeResult<T> DetectChanges(FindSpecification<T> specification)
         {
             var preresult = _dataChangesDetector.DetectChanges(specification);
-            return MergeTool.Merge(preresult.Difference, preresult.Complement, _identityComparer);
+            return preresult;//MergeTool.Merge(preresult.Difference, preresult.Complement, _identityComparer);
         }
     }
 }

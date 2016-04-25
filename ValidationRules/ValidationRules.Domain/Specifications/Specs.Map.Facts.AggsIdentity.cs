@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
+using NuClear.ValidationRules.Domain.Model;
 
 namespace NuClear.ValidationRules.Domain.Specifications
 {
@@ -114,6 +116,80 @@ namespace NuClear.ValidationRules.Domain.Specifications
                             q => (from rulesetRule in q.For<Facts::RulesetRule>()
                                   select rulesetRule.Id).Distinct()
                         );
+                    }
+                }
+
+                public static class ToPeriodAggregate
+                {
+                    public static MapSpecification<IQuery, IEnumerable<PeriodKey>> ByPrice(FindSpecification<Facts::Price> specification)
+                        => new MapSpecification<IQuery, IEnumerable<PeriodKey>>(
+                            q =>
+                                {
+                                    var ranges = q.For<Facts::Price>()
+                                                  .Where(specification)
+                                                  .GroupBy(x => x.OrganizationUnitId, x => x.BeginDate)
+                                                  .ToDictionary(x => x.Key, x => x.Min());
+
+                                    var dates = q.For<Facts::Order>()
+                                                 .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                                 .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, OrganizationUnitId = x.OrganizationUnitId }))
+                                                 .GroupBy(x => x.OrganizationUnitId, x => x.Date)
+                                                 .ToDictionary(x => x.Key, x => x.Distinct());
+
+                                    var result = ranges.Join(dates,
+                                                             x => x.Key,
+                                                             x => x.Key,
+                                                             (range, date) => date.Value
+                                                                                  .Where(d => range.Value <= d)
+                                                                                  .Select(d => new PeriodKey { OrganizationUnitId = range.Key, Start = d }))
+                                                       .SelectMany(x => x)
+                                                       .Distinct(new PeriodKeyEqualityComparer());
+
+                                    return result;
+                                }
+                            );
+
+                    public static MapSpecification<IQuery, IEnumerable<PeriodKey>> ByOrder(FindSpecification<Facts::Order> specification)
+                        => new MapSpecification<IQuery, IEnumerable<PeriodKey>>(
+                            q =>
+                                {
+                                    var ranges = q.For<Facts::Order>()
+                                                  .Where(specification)
+                                                  .GroupBy(x => x.DestOrganizationUnitId, x => new { Start = x.BeginDistributionDate, End = x.EndDistributionDateFact })
+                                                  .ToDictionary(x => x.Key, x => x.Distinct());
+
+                                    var dates = q.For<Facts::Order>()
+                                                 .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                                 .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, OrganizationUnitId = x.OrganizationUnitId }))
+                                                 .GroupBy(x => x.OrganizationUnitId, x => x.Date)
+                                                 .ToDictionary(x => x.Key, x => x.Distinct());
+
+                                    var result = ranges.Join(dates,
+                                                             x => x.Key,
+                                                             x => x.Key,
+                                                             (range, date) => date.Value
+                                                                                  .Where(d => range.Value.Any(r => r.Start <= d && d <= r.End))
+                                                                                  .Select(d => new PeriodKey { OrganizationUnitId = range.Key, Start = d }))
+                                                       .SelectMany(x => x)
+                                                       .Distinct(new PeriodKeyEqualityComparer());
+
+                                    return result;
+                                }
+                            );
+
+                    private class PeriodKeyEqualityComparer : IEqualityComparer<PeriodKey>
+                    {
+                        public bool Equals(PeriodKey x, PeriodKey y)
+                        {
+                            return x.OrganizationUnitId == y.OrganizationUnitId && x.Start == y.Start;
+                        }
+
+                        public int GetHashCode(PeriodKey obj)
+                        {
+                            return obj.OrganizationUnitId.GetHashCode() ^ obj.Start.GetHashCode();
+                        }
                     }
                 }
             }
