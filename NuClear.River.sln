@@ -95,7 +95,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateInitialization.Core", "StateInitialization\StateInitialization.Core\StateInitialization.Core.csproj", "{55B42FA4-EC9E-4F22-95ED-C219637699FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.StateInitialization.Host", "CustomerIntelligence\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.Host.csproj", "{C6DE2A90-B4B9-4CD5-AEF0-7E6607B102A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.StateInitialization.Host", "CustomerIntelligence\CustomerIntelligence.StateInitialization.Host\CustomerIntelligence.StateInitialization.Host.csproj", "{C6DE2A90-B4B9-4CD5-AEF0-7E6607B102A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Core.Tests", "Replication\Tests\Replication.Core.Tests\Replication.Core.Tests.csproj", "{37156BD5-AA7A-463C-9A8A-926F81D4B599}"
 EndProject

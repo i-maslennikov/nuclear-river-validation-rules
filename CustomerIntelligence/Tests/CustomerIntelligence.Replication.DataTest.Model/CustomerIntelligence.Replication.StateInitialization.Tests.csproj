@@ -116,7 +116,7 @@
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
       <Name>CustomerIntelligence.Replication</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.Host.csproj">
+    <ProjectReference Include="..\..\CustomerIntelligence.StateInitialization.Host\CustomerIntelligence.StateInitialization.Host.csproj">
       <Project>{c6de2a90-b4b9-4cd5-aef0-7e6607b102a0}</Project>
       <Name>CustomerIntelligence.StateInitialization.Host</Name>
     </ProjectReference>
