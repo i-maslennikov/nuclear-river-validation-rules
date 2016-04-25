@@ -108,11 +108,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(Ruleset))
             .Erm(
-                new Erm::Ruleset { Id = 1 },
-                new Erm::RulesetRule { RulesetId = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
+                new Erm::Ruleset { Id = 1, Priority = 1 },
+                new Erm::RulesetRule { RulesetId = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
+                new Erm::Ruleset { Id = 2, Priority = 2 },
+                new Erm::RulesetRule { RulesetId = 2, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
                 )
             .Fact(
-                new Facts::RulesetRule { Id = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
+                new Facts::RulesetRule { Id = 1, Priority = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
+                new Facts::RulesetRule { Id = 2, Priority = 2, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
                 );
 
         // ReSharper disable once UnusedMember.Local
