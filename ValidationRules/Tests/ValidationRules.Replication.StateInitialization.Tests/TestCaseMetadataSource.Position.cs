@@ -3,7 +3,7 @@
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     using Facts = Domain.Model.Facts;
-    using Aggs = Domain.Model.Aggregates;
+    using Aggregates = Domain.Model.Aggregates;
 
     public sealed partial class TestCaseMetadataSource
     {
@@ -15,7 +15,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             new Facts::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
             )
         .Aggregate(
-            new Aggs::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
+            new Aggregates::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
             );
     }
 }

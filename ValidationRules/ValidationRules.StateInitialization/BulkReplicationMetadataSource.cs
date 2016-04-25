@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.StateInitialization
                                               .UsingMetadataOfKind<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextFacts),
 
                 BulkReplicationMetadataElement.Config
-                                              .CommandlineKey("-aggs")
+                                              .CommandlineKey("-aggregates")
                                               .From(FactsConnectionStringIdentity.Instance, Schema.Facts)
                                               .To(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates)
                                               .UsingMetadataOfKind<ReplicationMetadataIdentity>(ReplicationMetadataName.PriceContextAggregates),

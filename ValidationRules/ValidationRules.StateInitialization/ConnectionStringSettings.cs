@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.StateInitialization
                         {
                             { "Erm", ErmConnectionStringIdentity.Instance },
                             { "Facts", FactsConnectionStringIdentity.Instance },
-                            { "Aggs", AggregatesConnectionStringIdentity.Instance },
+                            { "Aggregates", AggregatesConnectionStringIdentity.Instance },
                         };
 
             return available.Join(known, x => x.Key, x => x.Key, (x, y) => Tuple.Create(y.Value, x.Value)).ToDictionary(x => x.Item1, x => x.Item2);

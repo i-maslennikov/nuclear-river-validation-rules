@@ -12,7 +12,7 @@ namespace NuClear.ValidationRules.Storage.Identitites.Connections
 
         public override string Description
         {
-            get { return "Aggs DB connection string"; }
+            get { return "Aggregates DB connection string"; }
         }
     }
 }

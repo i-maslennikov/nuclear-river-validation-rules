@@ -5,7 +5,7 @@ using NuClear.DataTest.Metamodel.Dsl;
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     using Facts = Domain.Model.Facts;
-    using Aggs = Domain.Model.Aggregates;
+    using Aggregates = Domain.Model.Aggregates;
 
     public sealed partial class TestCaseMetadataSource
     {
@@ -41,23 +41,23 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             )
         .Aggregate(
             // OrderPositionAdvertisement
-            new Aggs::OrderPosition { PackagePositionId = 2, ItemPositionId = 3, Category3Id = 10, FirmAddressId = 11 },
-            new Aggs::AdvertisementAmountRestriction { PositionId = 2 },
+            new Aggregates::OrderPosition { PackagePositionId = 2, ItemPositionId = 3, Category3Id = 10, FirmAddressId = 11 },
+            new Aggregates::AdvertisementAmountRestriction { PositionId = 2 },
 
             // OrderPosition
-            new Aggs::OrderPosition { PackagePositionId = 3, ItemPositionId = 3 },
-            new Aggs::AdvertisementAmountRestriction { PositionId = 3 },
-            new Aggs::Position { Id = 3 },
+            new Aggregates::OrderPosition { PackagePositionId = 3, ItemPositionId = 3 },
+            new Aggregates::AdvertisementAmountRestriction { PositionId = 3 },
+            new Aggregates::Position { Id = 3 },
 
             // OrderPositionAdvertisement & OrderPosition
-            new Aggs::OrderPosition { PackagePositionId = 4, ItemPositionId = 5, Category3Id = 10, FirmAddressId = 11 },
-            new Aggs::OrderPosition { PackagePositionId = 4, ItemPositionId = 4 },
-            new Aggs::AdvertisementAmountRestriction { PositionId = 4 },
-            new Aggs::Position { Id = 4 },
+            new Aggregates::OrderPosition { PackagePositionId = 4, ItemPositionId = 5, Category3Id = 10, FirmAddressId = 11 },
+            new Aggregates::OrderPosition { PackagePositionId = 4, ItemPositionId = 4 },
+            new Aggregates::AdvertisementAmountRestriction { PositionId = 4 },
+            new Aggregates::Position { Id = 4 },
 
             // OrderPositionAdvertisement & Category1
-            new Aggs::OrderPosition { Category3Id = 3, Category1Id = 1 },
-            new Aggs::AdvertisementAmountRestriction()
+            new Aggregates::OrderPosition { Category3Id = 3, Category1Id = 1 },
+            new Aggregates::AdvertisementAmountRestriction()
             );
 
         // ReSharper disable once UnusedMember.Local
@@ -77,17 +77,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                            new Facts::PricePosition { Id = 20, PriceId = 3, PositionId = 1 },
                                            new Facts::PricePosition { Id = 21, PriceId = 3, PositionId = 2 })
                                      .Aggregate(
-                                                new Aggs::Period { Start = DateTime.MinValue, End = DateTime.MaxValue },
+                                                new Aggregates::Period { Start = DateTime.MinValue, End = DateTime.MaxValue },
 
                                                 // 1 order, 1 price position
-                                                new Aggs::OrderPrice { OrderId = 1, PriceId = 2 },
-                                                new Aggs::AdvertisementAmountRestriction { PriceId = 2 },
-                                                new Aggs::Order { Id = 1 },
+                                                new Aggregates::OrderPrice { OrderId = 1, PriceId = 2 },
+                                                new Aggregates::AdvertisementAmountRestriction { PriceId = 2 },
+                                                new Aggregates::Order { Id = 1 },
 
                                                 // 1 order, 2 price positions
-                                                new Aggs::OrderPrice { OrderId = 2, PriceId = 3 },
-                                                new Aggs::AdvertisementAmountRestriction { PriceId = 3, PositionId = 1 },
-                                                new Aggs::AdvertisementAmountRestriction { PriceId = 3, PositionId = 2 },
-                                                new Aggs::Order { Id = 2 });
+                                                new Aggregates::OrderPrice { OrderId = 2, PriceId = 3 },
+                                                new Aggregates::AdvertisementAmountRestriction { PriceId = 3, PositionId = 1 },
+                                                new Aggregates::AdvertisementAmountRestriction { PriceId = 3, PositionId = 2 },
+                                                new Aggregates::Order { Id = 2 });
     }
 }

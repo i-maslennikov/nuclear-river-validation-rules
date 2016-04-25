@@ -12,6 +12,6 @@
 
     public sealed class Aggregates : IKey
     {
-        public string Key => "-aggs";
+        public string Key => "-aggregates";
     }
 }

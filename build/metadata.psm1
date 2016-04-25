@@ -43,16 +43,15 @@ function Get-BulkToolMetadata ($UpdateSchemas, $Context){
 
 	$arguments = @()
 	switch($UpdateSchemas){
-		'ERM' { $arguments += @('-fact', '-ci', '-statistics') }
-		'BIT' { $arguments += @('-statistics') }
-		'CustomerIntelligence' { $arguments += @('-ci', '-statistics') }
+		'PriceContext' { $arguments += @('-facts', '-aggregates') }
+		'PriceAggregate' { $arguments += @('-aggregates') }
 	}
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
-	$Context.EntryPoint = 'CustomerIntelligence.StateInitialization.EntryPoint'
+	$Context.EntryPoint = 'ValidationRules.StateInitialization.EntryPoint'
 	$metadata += Get-TransformMetadata $Context
 
-	return @{ 'CustomerIntelligence.StateInitialization.EntryPoint' = $metadata }
+	return @{ 'ValidationRules.StateInitialization.EntryPoint' = $metadata }
 }
 
 function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
@@ -64,10 +63,10 @@ function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 		$metadata += @{
 			'UpdateSchemas' = @{
 				'Schemas' = $UpdateSchemas
+				# map db schema to connection string name
 				'ConnectionString' = @{
-					'ERM' = 'Facts'
-					'BIT' = 'Facts'
-					'CustomerIntelligence' = 'CustomerIntelligence'
+					'PriceContext' = 'Facts'
+					'PriceAggregate' = 'Aggregates'
 				}
 			}
 		}
@@ -134,9 +133,8 @@ function Parse-EnvironmentMetadata ($Properties) {
 }
 
 $AllSchemas = @(
-	'ERM'
-	'BIT'
-	'CustomerIntelligence'
+	'PriceContext'
+	'PriceAggregate'
 )
 
 $AllEntryPoints = @(

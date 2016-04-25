@@ -64,7 +64,8 @@ Task Create-Topics -Precondition { $Metadata['ConvertUseCasesService'] -and $Met
 	[xml]$config = Get-Content $configFileName -Raw
 
 	$useCaseRouteMetadata = $Metadata.UseCaseRoute
-
+	$sourceConnectionString = Get-ConnectionString $config 'Source'
+	
 	if ($useCaseRouteMetadata.RouteName -notmatch 'ERMProduction'){
 
 		$productionConfig = Get-ConvertUseCasesServiceConfig 'ConvertUseCasesServiceProduction'
@@ -72,9 +73,9 @@ Task Create-Topics -Precondition { $Metadata['ConvertUseCasesService'] -and $Met
 
 		$productionRouteMetadata = $Metadata.ProductionUseCaseRoute
 		Delete-Subscription $productionConnectionString $productionRouteMetadata.SourceTopic $productionRouteMetadata.SourceSubscription
+		Delete-Subscription $sourceConnectionString $productionRouteMetadata.DestTopic $productionRouteMetadata.DestSubscription
 	}
 
-	$sourceConnectionString = Get-ConnectionString $config 'Source'
 	Create-Topic $sourceConnectionString $useCaseRouteMetadata.SourceTopic -Properties @{
 		'EnableBatchedOperations' = $true
 		'SupportOrdering' = $true
