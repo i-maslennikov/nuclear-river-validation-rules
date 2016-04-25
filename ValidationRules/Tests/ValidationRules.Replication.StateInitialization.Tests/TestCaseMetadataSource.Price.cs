@@ -15,7 +15,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
         .Name(nameof(Period))
         .Fact(
-            new Facts::Price { Id = 1 },
+            new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
             new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 2, MinAdvertisementAmount = 100, MaxAdvertisementAmount = 500 },
 
             // associated
@@ -36,7 +36,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             new Aggs::PriceDeniedPosition { PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, PriceId = 1 },
 
             // сопутствующий хлам
-            new Aggs::Period { End = DateTime.MaxValue }
+            new Aggs::Period { Start = DateTime.Parse("2012-12-12"), End = DateTime.MaxValue },
+            new Aggs::PricePeriod { PriceId = 1, Start = DateTime.Parse("2012-12-12") }
             );
     }
 }
