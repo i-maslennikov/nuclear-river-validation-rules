@@ -4,7 +4,6 @@ using System.Linq;
 using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Domain.Model.Statistics;
 using NuClear.CustomerIntelligence.Domain.Specifications;
-using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Actors;
 using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Replication.Core.API.Equality;

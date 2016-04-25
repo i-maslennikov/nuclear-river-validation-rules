@@ -5,7 +5,7 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.River.Common.Metadata.Identities;
 
-namespace NuClear.CustomerIntelligence.Domain
+namespace NuClear.CustomerIntelligence.Querying.Host
 {
     public partial class QueryingMetadataSource : MetadataSourceBase<QueryingMetadataIdentity>
     {

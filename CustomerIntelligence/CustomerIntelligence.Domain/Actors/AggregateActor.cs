@@ -11,11 +11,13 @@ namespace NuClear.CustomerIntelligence.Domain.Actors
     {
         private readonly LeafToRootActor _leafToRootActor;
         private readonly RootToLeafActor _rootToLeafActor;
+        private readonly SubrootToLeafActor _subrootToLeafActor;
 
         public AggregateActor(IAggregateRootActor aggregateRootActor)
         {
             _leafToRootActor = new LeafToRootActor(aggregateRootActor);
             _rootToLeafActor = new RootToLeafActor(aggregateRootActor);
+            _subrootToLeafActor = new SubrootToLeafActor(aggregateRootActor.GetEntityActors());
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -32,7 +34,7 @@ namespace NuClear.CustomerIntelligence.Domain.Actors
             events.AddRange(_rootToLeafActor.ExecuteCommands(recalculateAggregateCommands));
 
             var recalculateEntityCommands = commands.OfType<RecalculateEntityCommand>().Distinct().ToArray();
-            events.AddRange(_rootToLeafActor.ExecuteCommands(recalculateEntityCommands));
+            events.AddRange(_subrootToLeafActor.ExecuteCommands(recalculateEntityCommands));
 
             return events;
         }

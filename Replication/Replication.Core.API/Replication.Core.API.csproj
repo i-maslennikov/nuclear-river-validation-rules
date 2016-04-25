@@ -75,6 +75,7 @@
     <Compile Include="Actors\LeafToRootActor.cs" />
     <Compile Include="Actors\ReplaceDataObjectsActor.cs" />
     <Compile Include="Actors\RootToLeafActor.cs" />
+    <Compile Include="Actors\SubrootToLeafActor.cs" />
     <Compile Include="Actors\SyncDataObjectsActor.cs" />
     <Compile Include="Commands\CreateDataObjectCommandBase.cs" />
     <Compile Include="Commands\DeleteDataObjectCommandBase.cs" />

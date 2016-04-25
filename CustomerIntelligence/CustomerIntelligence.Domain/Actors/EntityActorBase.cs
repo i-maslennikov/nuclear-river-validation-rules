@@ -59,8 +59,8 @@ namespace NuClear.CustomerIntelligence.Domain.Actors
             else if (commandType == typeof(RecalculateAggregateCommand))
             {
                 dataObjectCommands = commands.OfType<RecalculateAggregateCommand>()
-                                           .Select(x => new SyncDataObjectCommand(x.AggregateRootType, x.AggregateRootId))
-                                           .ToArray();
+                                             .Select(x => new SyncDataObjectCommand(x.AggregateRootType, x.AggregateRootId))
+                                             .ToArray();
 
                 dataObjectActor = new SyncDataObjectsActor<TDataObject>(
                     _query,
@@ -71,8 +71,8 @@ namespace NuClear.CustomerIntelligence.Domain.Actors
             else if (commandType == typeof(RecalculateEntityCommand))
             {
                 dataObjectCommands = commands.OfType<RecalculateEntityCommand>()
-                                           .Select(x => new SyncDataObjectCommand(x.EntityType, x.AggregateRootId))
-                                           .ToArray();
+                                             .Select(x => new SyncDataObjectCommand(x.EntityType, x.EntityId))
+                                             .ToArray();
 
                 dataObjectActor = new SyncDataObjectsActor<TDataObject>(
                     _query,

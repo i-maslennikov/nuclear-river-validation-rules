@@ -1,7 +1,7 @@
 ﻿using NuClear.River.Common.Metadata.Builders;
 using NuClear.River.Common.Metadata.Elements;
 
-namespace NuClear.CustomerIntelligence.Domain
+namespace NuClear.CustomerIntelligence.Querying.Host
 {
     partial class QueryingMetadataSource
     {
