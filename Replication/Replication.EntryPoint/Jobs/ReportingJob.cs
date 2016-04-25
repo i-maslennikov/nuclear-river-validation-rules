@@ -7,7 +7,7 @@ using Microsoft.ServiceBus;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Jobs;
 using NuClear.Messaging.Transports.ServiceBus.API;
-using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
+using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.Security.API;
 using NuClear.Storage.API.ConnectionStrings;

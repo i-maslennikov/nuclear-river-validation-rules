@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.API.DataObjects

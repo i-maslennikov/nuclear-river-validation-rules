@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Transactions;
 
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 

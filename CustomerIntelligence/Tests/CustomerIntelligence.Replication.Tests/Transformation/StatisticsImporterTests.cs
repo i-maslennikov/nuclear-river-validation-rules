@@ -3,16 +3,13 @@ using System.Linq;
 
 using Moq;
 
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.DTO;
+using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.Metamodeling.Elements;
-using NuClear.Replication.Core.API.Facts;
-using NuClear.Replication.Core.Facts;
-using NuClear.River.Common.Metadata.Elements;
 
 using NUnit.Framework;
 
-using Bit = NuClear.CustomerIntelligence.Domain.Model.Bit;
+using FirmForecast = NuClear.CustomerIntelligence.Domain.DTO.FirmForecast;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
@@ -46,21 +43,21 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                         }
                 };
 
-            SourceDb.Has(new Bit::FirmCategoryStatistics { ProjectId = 1, FirmId = 7 },
-                         new Bit::FirmCategoryStatistics { ProjectId = 2, FirmId = 8 });
+            SourceDb.Has(new FirmCategoryStatistics { ProjectId = 1, FirmId = 7 },
+                         new FirmCategoryStatistics { ProjectId = 2, FirmId = 8 });
 
-            var importer = CreateProcessor<FirmPopularity, Bit::FirmCategoryStatistics>(repositoryFactory);
+            var importer = CreateProcessor<FirmPopularity, FirmCategoryStatistics>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
 
             // Assert
             Assert.That(operations.Count(), Is.EqualTo(1));
-            repositoryFactory.Verify<Bit::FirmCategoryStatistics>(
-                m => m.Delete(It.Is(Predicate.Match(new Bit::FirmCategoryStatistics { ProjectId = 1, FirmId = 7 }))),
+            repositoryFactory.Verify<FirmCategoryStatistics>(
+                m => m.Delete(It.Is(Predicate.Match(new FirmCategoryStatistics { ProjectId = 1, FirmId = 7 }))),
                 Times.AtLeastOnce);
-            repositoryFactory.Verify<Bit::FirmCategoryStatistics>(
-                m => m.Add(It.Is(Predicate.Match(new Bit::FirmCategoryStatistics { ProjectId = 1, FirmId = 2, CategoryId = 3, Hits = 4, Shows = 5 }))),
+            repositoryFactory.Verify<FirmCategoryStatistics>(
+                m => m.Add(It.Is(Predicate.Match(new FirmCategoryStatistics { ProjectId = 1, FirmId = 2, CategoryId = 3, Hits = 4, Shows = 5 }))),
                 Times.AtLeastOnce);
         }
 
@@ -82,21 +79,21 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                         }
                 };
 
-            SourceDb.Has(new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 7 },
-                         new Bit::ProjectCategoryStatistics { ProjectId = 2, CategoryId = 7 });
+            SourceDb.Has(new ProjectCategoryStatistics { ProjectId = 1, CategoryId = 7 },
+                         new ProjectCategoryStatistics { ProjectId = 2, CategoryId = 7 });
 
-            var importer = CreateProcessor<RubricPopularity, Bit::ProjectCategoryStatistics>(repositoryFactory);
+            var importer = CreateProcessor<RubricPopularity, ProjectCategoryStatistics>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
 
             // Assert
             Assert.That(operations.Count(), Is.EqualTo(1));
-            repositoryFactory.Verify<Bit::ProjectCategoryStatistics>(
-                m => m.Delete(It.Is(Predicate.Match(new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 7 }))),
+            repositoryFactory.Verify<ProjectCategoryStatistics>(
+                m => m.Delete(It.Is(Predicate.Match(new ProjectCategoryStatistics { ProjectId = 1, CategoryId = 7 }))),
                 Times.AtLeastOnce);
-            repositoryFactory.Verify<Bit::ProjectCategoryStatistics>(
-                m => m.Add(It.Is(Predicate.Match(new Bit::ProjectCategoryStatistics { ProjectId = 1, CategoryId = 2, AdvertisersCount = 3 }))),
+            repositoryFactory.Verify<ProjectCategoryStatistics>(
+                m => m.Add(It.Is(Predicate.Match(new ProjectCategoryStatistics { ProjectId = 1, CategoryId = 2, AdvertisersCount = 3 }))),
                 Times.AtLeastOnce);
         }
 
@@ -128,22 +125,22 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                         }
                 };
 
-            SourceDb.Has(new Bit::FirmForecast { ProjectId = 1, FirmId = 1 },
-                         new Bit::FirmForecast { ProjectId = 2, FirmId = 2 });
+            SourceDb.Has(new Storage.Model.Bit.FirmForecast { ProjectId = 1, FirmId = 1 },
+                         new Storage.Model.Bit.FirmForecast { ProjectId = 2, FirmId = 2 });
 
-            var importer = CreateProcessor<FirmForecast, Bit::FirmForecast>(repositoryFactory);
+            var importer = CreateProcessor<FirmForecast, Storage.Model.Bit.FirmForecast>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
 
             // Assert
             Assert.That(operations.Count(), Is.EqualTo(1));
-            repositoryFactory.Verify<Bit::FirmForecast>(
-                m => m.Delete(It.Is(Predicate.Match(new Bit::FirmForecast { ProjectId = 1, FirmId = 1 }))), Times.AtLeastOnce);
-            repositoryFactory.Verify<Bit::FirmForecast>(
-                m => m.Delete(It.Is(Predicate.Match(new Bit::FirmForecast { ProjectId = 2, FirmId = 2 }))), Times.Never);
-            repositoryFactory.Verify<Bit::FirmForecast>(
-                m => m.Add(It.Is(Predicate.Match(new Bit::FirmForecast { ProjectId = 1, FirmId = 1, ForecastClick = 1, ForecastAmount = 1 }))), Times.AtLeastOnce);
+            repositoryFactory.Verify<Storage.Model.Bit.FirmForecast>(
+                m => m.Delete(It.Is(Predicate.Match(new Storage.Model.Bit.FirmForecast { ProjectId = 1, FirmId = 1 }))), Times.AtLeastOnce);
+            repositoryFactory.Verify<Storage.Model.Bit.FirmForecast>(
+                m => m.Delete(It.Is(Predicate.Match(new Storage.Model.Bit.FirmForecast { ProjectId = 2, FirmId = 2 }))), Times.Never);
+            repositoryFactory.Verify<Storage.Model.Bit.FirmForecast>(
+                m => m.Add(It.Is(Predicate.Match(new Storage.Model.Bit.FirmForecast { ProjectId = 1, FirmId = 1, ForecastClick = 1, ForecastAmount = 1 }))), Times.AtLeastOnce);
         }
 
         [Test]
@@ -174,22 +171,22 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                         }
             };
 
-            SourceDb.Has(new Bit::FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1 },
-                         new Bit::FirmCategoryForecast { ProjectId = 2, FirmId = 2, CategoryId = 1 });
+            SourceDb.Has(new FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1 },
+                         new FirmCategoryForecast { ProjectId = 2, FirmId = 2, CategoryId = 1 });
 
-            var importer = CreateProcessor<FirmForecast, Bit::FirmCategoryForecast>(repositoryFactory);
+            var importer = CreateProcessor<FirmForecast, FirmCategoryForecast>(repositoryFactory);
 
             // Act
             var operations = importer.Import(dto).ToArray();
 
             // Assert
             Assert.That(operations.Count(), Is.EqualTo(1));
-            repositoryFactory.Verify<Bit::FirmCategoryForecast>(
-                m => m.Delete(It.Is(Predicate.Match(new Bit::FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1 }))), Times.AtLeastOnce);
-            repositoryFactory.Verify<Bit::FirmCategoryForecast>(
-                m => m.Delete(It.Is(Predicate.Match(new Bit::FirmCategoryForecast { ProjectId = 2, FirmId = 2, CategoryId = 1 }))), Times.Never);
-            repositoryFactory.Verify<Bit::FirmCategoryForecast>(
-                m => m.Add(It.Is(Predicate.Match(new Bit::FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1, ForecastClick = 1, ForecastAmount = 1 }))), Times.AtLeastOnce);
+            repositoryFactory.Verify<FirmCategoryForecast>(
+                m => m.Delete(It.Is(Predicate.Match(new FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1 }))), Times.AtLeastOnce);
+            repositoryFactory.Verify<FirmCategoryForecast>(
+                m => m.Delete(It.Is(Predicate.Match(new FirmCategoryForecast { ProjectId = 2, FirmId = 2, CategoryId = 1 }))), Times.Never);
+            repositoryFactory.Verify<FirmCategoryForecast>(
+                m => m.Add(It.Is(Predicate.Match(new FirmCategoryForecast { ProjectId = 1, FirmId = 1, CategoryId = 1, ForecastClick = 1, ForecastAmount = 1 }))), Times.AtLeastOnce);
         }
 
         private IImportDocumentMetadataProcessor CreateProcessor<TDto, TFact>(IRepositoryFactory repositoryFactory)

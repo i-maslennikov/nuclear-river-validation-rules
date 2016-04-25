@@ -16,7 +16,11 @@ namespace NuClear.Replication.OperationsProcessing.Primary
         private readonly IEntityTypeExplicitMapping _entityTypeExplicitMapping;
         private readonly IOperationRegistry<TSubDomain> _operationsRegistry;
 
-        public TrackedUseCaseFiltrator(ITracer tracer, IEntityTypeMappingRegistry<TSubDomain> entityTypeRegistry, IEntityTypeExplicitMapping entityTypeExplicitMapping, IOperationRegistry<TSubDomain> operationsRegistry)
+        public TrackedUseCaseFiltrator(
+            ITracer tracer,
+            IEntityTypeMappingRegistry<TSubDomain> entityTypeRegistry,
+            IEntityTypeExplicitMapping entityTypeExplicitMapping,
+            IOperationRegistry<TSubDomain> operationsRegistry)
         {
             _tracer = tracer;
             _entityTypeRegistry = entityTypeRegistry;

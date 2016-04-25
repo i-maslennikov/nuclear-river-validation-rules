@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Domain.Model.Facts;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 

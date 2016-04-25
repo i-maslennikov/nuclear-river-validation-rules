@@ -2,24 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain;
-using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.Storage;
+using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Metamodeling.Elements;
-using NuClear.Replication.Core;
-using NuClear.Replication.Core.Aggregates;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.DataObjects;
-using NuClear.Replication.Core.API.Facts;
-using NuClear.Replication.Core.Facts;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Features;
 using NuClear.Storage.API.Readings;
 
 using NUnit.Framework;
 
-using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
-using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
+using BranchOfficeOrganizationUnit = NuClear.CustomerIntelligence.Storage.Model.Facts.BranchOfficeOrganizationUnit;
+using CategoryFirmAddress = NuClear.CustomerIntelligence.Storage.Model.Facts.CategoryFirmAddress;
+using FirmAddress = NuClear.CustomerIntelligence.Storage.Model.Facts.FirmAddress;
+using LegalPerson = NuClear.CustomerIntelligence.Storage.Model.Facts.LegalPerson;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
@@ -30,712 +25,712 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldInitializeClientIfClientCreated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1 });
+            SourceDb.Has(new Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Client>(1)
+                          .ApplyChanges<Storage.Model.Facts.Client>(1)
                           .VerifyDistinct(Aggregate.Initialize(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateClientIfClientUpdated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1, Name = "asdf" });
-            TargetDb.Has(new Facts::Client { Id = 1 });
+            SourceDb.Has(new Client { Id = 1, Name = "asdf" });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Client>(1)
+                          .ApplyChanges<Storage.Model.Facts.Client>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldDestroyClientIfClientDeleted()
         {
-            TargetDb.Has(new Facts::Client { Id = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Client>(1)
+                          .ApplyChanges<Storage.Model.Facts.Client>(1)
                           .VerifyDistinct(Aggregate.Destroy(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateClientIfFirmCreated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 2, ClientId = 1 });
-            TargetDb.Has(new Facts::Client { Id = 1 });
+            SourceDb.Has(new Firm { Id = 2, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Firm>(2)
+                          .ApplyChanges<Storage.Model.Facts.Firm>(2)
                           .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateClientIfFirmUpdated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 2, ClientId = 3 });
+            SourceDb.Has(new Firm { Id = 2, ClientId = 3 });
 
-            TargetDb.Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Firm>(2)
+                          .ApplyChanges<Storage.Model.Facts.Firm>(2)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2), Aggregate.Recalculate(EntityTypeClient.Instance, 3));
         }
 
         [Test]
         public void ShouldRecalculateClientIfFirmDeleted()
         {
-            TargetDb.Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Firm>(2)
+                          .ApplyChanges<Storage.Model.Facts.Firm>(2)
                           .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldInitializeFirmIfFirmCreated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 });
+            SourceDb.Has(new Firm { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Firm>(1)
+                          .ApplyChanges<Storage.Model.Facts.Firm>(1)
                           .VerifyDistinct(Aggregate.Initialize(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfFirmUpdated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1, Name = "asdf" });
-            TargetDb.Has(new Facts::Firm { Id = 1 });
+            SourceDb.Has(new Firm { Id = 1, Name = "asdf" });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Firm>(1)
+                          .ApplyChanges<Storage.Model.Facts.Firm>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldDestroyFirmIfFirmDeleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Firm>(1)
+                          .ApplyChanges<Storage.Model.Facts.Firm>(1)
                           .VerifyDistinct(Aggregate.Destroy(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfAccountCreated()
         {
-            SourceDb.Has(new Erm::Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 });
+            SourceDb.Has(new Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 });
 
-            TargetDb.Has(new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::LegalPerson { Id = 1, ClientId = 1 })
-                   .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
+            TargetDb.Has(new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new LegalPerson { Id = 1, ClientId = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Account>(1)
+                          .ApplyChanges<Storage.Model.Facts.Account>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfAccountUpdated()
         {
-            SourceDb.Has(new Erm::Account { Id = 1, LegalPersonId = 2, BranchOfficeOrganizationUnitId = 1 });
+            SourceDb.Has(new Account { Id = 1, LegalPersonId = 2, BranchOfficeOrganizationUnitId = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 2, OrganizationUnitId = 1 })
-                   .Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Client { Id = 2 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::LegalPerson { Id = 1, ClientId = 1 })
-                   .Has(new Facts::LegalPerson { Id = 2, ClientId = 2 })
-                   .Has(new Facts::Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 2, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 2 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
+                   .Has(new LegalPerson { Id = 1, ClientId = 1 })
+                   .Has(new LegalPerson { Id = 2, ClientId = 2 })
+                   .Has(new Storage.Model.Facts.Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Account>(1)
+                          .ApplyChanges<Storage.Model.Facts.Account>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfAccountDeleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 2, OrganizationUnitId = 1 })
-                   .Has(new Facts::Client { Id = 2 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 3, OrganizationUnitId = 1 })
-                   .Has(new Facts::LegalPerson { Id = 4, ClientId = 2 })
-                   .Has(new Facts::Account { Id = 5, LegalPersonId = 4, BranchOfficeOrganizationUnitId = 3 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 2, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 2 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 3, OrganizationUnitId = 1 })
+                   .Has(new LegalPerson { Id = 4, ClientId = 2 })
+                   .Has(new Storage.Model.Facts.Account { Id = 5, LegalPersonId = 4, BranchOfficeOrganizationUnitId = 3 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Account>(5)
+                          .ApplyChanges<Storage.Model.Facts.Account>(5)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfBranchOfficeOrganizationUnitCreated()
         {
-            SourceDb.Has(new Erm::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 });
+            SourceDb.Has(new Storage.Model.Erm.BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 });
 
-            TargetDb.Has(new Facts::Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 })
-                   .Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::LegalPerson { Id = 1, ClientId = 1 })
-                   .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new LegalPerson { Id = 1, ClientId = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(1)
+                          .ApplyChanges<BranchOfficeOrganizationUnit>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateDetachedFirmIfBranchOfficeOrganizationUnitCreated()
         {
-            SourceDb.Has(new Erm::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 });
+            SourceDb.Has(new Storage.Model.Erm.BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(1)
+                          .ApplyChanges<BranchOfficeOrganizationUnit>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfBranchOfficeOrganizationUnitUpdated()
         {
-            SourceDb.Has(new Erm::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 2 });
+            SourceDb.Has(new Storage.Model.Erm.BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 2 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 1, OrganizationUnitId = 2 })
-                   .Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::LegalPerson { Id = 1, ClientId = 1 })
-                   .Has(new Facts::Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 1, OrganizationUnitId = 2 })
+                   .Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
+                   .Has(new LegalPerson { Id = 1, ClientId = 1 })
+                   .Has(new Storage.Model.Facts.Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(1)
+                          .ApplyChanges<BranchOfficeOrganizationUnit>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateDetachedFirmIfBranchOfficeOrganizationUnitUpdated()
         {
-            SourceDb.Has(new Erm::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 2 });
+            SourceDb.Has(new Storage.Model.Erm.BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 2 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 1, OrganizationUnitId = 2 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 1, OrganizationUnitId = 2 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(1)
+                          .ApplyChanges<BranchOfficeOrganizationUnit>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfBranchOfficeOrganizationUnitDeleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 2, OrganizationUnitId = 1 })
-                   .Has(new Facts::Client { Id = 2 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 3, OrganizationUnitId = 1 })
-                   .Has(new Facts::LegalPerson { Id = 4, ClientId = 2 })
-                   .Has(new Facts::Account { Id = 5, LegalPersonId = 4, BranchOfficeOrganizationUnitId = 3 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 2, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 2 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 3, OrganizationUnitId = 1 })
+                   .Has(new LegalPerson { Id = 4, ClientId = 2 })
+                   .Has(new Storage.Model.Facts.Account { Id = 5, LegalPersonId = 4, BranchOfficeOrganizationUnitId = 3 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(3)
+                          .ApplyChanges<BranchOfficeOrganizationUnit>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateDetachedFirmIfBranchOfficeOrganizationUnitDeleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 2, OrganizationUnitId = 1 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 3, OrganizationUnitId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 2, OrganizationUnitId = 1 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 3, OrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::BranchOfficeOrganizationUnit>(3)
+                          .ApplyChanges<BranchOfficeOrganizationUnit>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel3Created()
         {
-            SourceDb.Has(new Erm::Category { Id = 3, Level = 3, ParentId = 2 });
+            SourceDb.Has(new Category { Id = 3, Level = 3, ParentId = 2 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 1, Level = 1 })
-                   .Has(new Facts::Category { Id = 2, Level = 2, ParentId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 1, Level = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 2, Level = 2, ParentId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(3)
+                          .ApplyChanges<Storage.Model.Facts.Category>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel2Created()
         {
-            SourceDb.Has(new Erm::Category { Id = 2, Level = 2, ParentId = 1 });
+            SourceDb.Has(new Category { Id = 2, Level = 2, ParentId = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 1, Level = 1 })
-                   .Has(new Facts::Category { Id = 3, Level = 3, ParentId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 1, Level = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 3, Level = 3, ParentId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(2)
+                          .ApplyChanges<Storage.Model.Facts.Category>(2)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel1Created()
         {
-            SourceDb.Has(new Erm::Category { Id = 1, Level = 1 });
+            SourceDb.Has(new Category { Id = 1, Level = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 2, Level = 2, ParentId = 1 })
-                   .Has(new Facts::Category { Id = 3, Level = 3, ParentId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 2, Level = 2, ParentId = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 3, Level = 3, ParentId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(1)
+                          .ApplyChanges<Storage.Model.Facts.Category>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel3Updated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 })
-                 .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
-                 .Has(new Erm::Category { Id = 1, Level = 1 },
-                      new Erm::Category { Id = 2, Level = 2, ParentId = 1 },
-                      new Erm::Category { Id = 3, Level = 3, ParentId = 2, Name = "asdf" });
+            SourceDb.Has(new Firm { Id = 1 })
+                 .Has(new Storage.Model.Erm.FirmAddress { Id = 1, FirmId = 1 })
+                 .Has(new Category { Id = 1, Level = 1 },
+                      new Category { Id = 2, Level = 2, ParentId = 1 },
+                      new Category { Id = 3, Level = 3, ParentId = 2, Name = "asdf" });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 1, Level = 1 })
-                   .Has(new Facts::Category { Id = 2, Level = 2, ParentId = 1 })
-                   .Has(new Facts::Category { Id = 3, Level = 3, ParentId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 1, Level = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 2, Level = 2, ParentId = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 3, Level = 3, ParentId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(3)
+                          .ApplyChanges<Storage.Model.Facts.Category>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel2Updated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 })
-                 .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
-                 .Has(new Erm::Category { Id = 1, Level = 1 },
-                      new Erm::Category { Id = 2, Level = 2, ParentId = 1, Name = "asdf" });
+            SourceDb.Has(new Firm { Id = 1 })
+                 .Has(new Storage.Model.Erm.FirmAddress { Id = 1, FirmId = 1 })
+                 .Has(new Category { Id = 1, Level = 1 },
+                      new Category { Id = 2, Level = 2, ParentId = 1, Name = "asdf" });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 1, Level = 1 })
-                   .Has(new Facts::Category { Id = 2, Level = 2, ParentId = 1 })
-                   .Has(new Facts::Category { Id = 3, Level = 3, ParentId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 1, Level = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 2, Level = 2, ParentId = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 3, Level = 3, ParentId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(2)
+                          .ApplyChanges<Storage.Model.Facts.Category>(2)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel1Updated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 })
-                 .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 })
-                 .Has(new Erm::Category { Id = 1, Level = 1, Name = "asdf" });
+            SourceDb.Has(new Firm { Id = 1 })
+                 .Has(new Storage.Model.Erm.FirmAddress { Id = 1, FirmId = 1 })
+                 .Has(new Category { Id = 1, Level = 1, Name = "asdf" });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 1, Level = 1 })
-                   .Has(new Facts::Category { Id = 2, Level = 2, ParentId = 1 })
-                   .Has(new Facts::Category { Id = 3, Level = 3, ParentId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 1, Level = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 2, Level = 2, ParentId = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 3, Level = 3, ParentId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(1)
+                          .ApplyChanges<Storage.Model.Facts.Category>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel3Deleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 1, Level = 1 })
-                   .Has(new Facts::Category { Id = 2, Level = 2, ParentId = 1 })
-                   .Has(new Facts::Category { Id = 3, Level = 3, ParentId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 1, Level = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 2, Level = 2, ParentId = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 3, Level = 3, ParentId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(3)
+                          .ApplyChanges<Storage.Model.Facts.Category>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel2Deleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 1, Level = 1 })
-                   .Has(new Facts::Category { Id = 2, Level = 2, ParentId = 1 })
-                   .Has(new Facts::Category { Id = 3, Level = 3, ParentId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 1, Level = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 2, Level = 2, ParentId = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 3, Level = 3, ParentId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(2)
+                          .ApplyChanges<Storage.Model.Facts.Category>(2)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOfLevel1Deleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
-                   .Has(new Facts::Category { Id = 1, Level = 1 })
-                   .Has(new Facts::Category { Id = 2, Level = 2, ParentId = 1 })
-                   .Has(new Facts::Category { Id = 3, Level = 3, ParentId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 3 })
+                   .Has(new Storage.Model.Facts.Category { Id = 1, Level = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 2, Level = 2, ParentId = 1 })
+                   .Has(new Storage.Model.Facts.Category { Id = 3, Level = 3, ParentId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Category>(1)
+                          .ApplyChanges<Storage.Model.Facts.Category>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryFirmAddressCreated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 })
-                 .Has(new Erm::FirmAddress { Id = 2, FirmId = 1 })
-                 .Has(new Erm::CategoryFirmAddress { Id = 3, FirmAddressId = 2 });
+            SourceDb.Has(new Firm { Id = 1 })
+                 .Has(new Storage.Model.Erm.FirmAddress { Id = 2, FirmId = 1 })
+                 .Has(new Storage.Model.Erm.CategoryFirmAddress { Id = 3, FirmAddressId = 2 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 2, FirmId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 2, FirmId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::CategoryFirmAddress>(3)
+                          .ApplyChanges<CategoryFirmAddress>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryFirmAddressUpdated()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 }, new Erm::Firm { Id = 2 })
-                 .Has(new Erm::FirmAddress { Id = 1, FirmId = 1 }, new Erm::FirmAddress { Id = 2, FirmId = 2 })
-                 .Has(new Erm::CategoryFirmAddress { Id = 1, FirmAddressId = 2 });
+            SourceDb.Has(new Firm { Id = 1 }, new Firm { Id = 2 })
+                 .Has(new Storage.Model.Erm.FirmAddress { Id = 1, FirmId = 1 }, new Storage.Model.Erm.FirmAddress { Id = 2, FirmId = 2 })
+                 .Has(new Storage.Model.Erm.CategoryFirmAddress { Id = 1, FirmAddressId = 2 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::FirmAddress { Id = 2, FirmId = 2 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new FirmAddress { Id = 2, FirmId = 2 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::CategoryFirmAddress>(1)
+                          .ApplyChanges<CategoryFirmAddress>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryFirmAddressDeleted()
         {
-            SourceDb.Has(new Erm::Firm { Id = 1 })
-                 .Has(new Erm::FirmAddress { Id = 2, FirmId = 1 });
+            SourceDb.Has(new Firm { Id = 1 })
+                 .Has(new Storage.Model.Erm.FirmAddress { Id = 2, FirmId = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 2, FirmId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 3, FirmAddressId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 2, FirmId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 3, FirmAddressId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::CategoryFirmAddress>(3)
+                          .ApplyChanges<CategoryFirmAddress>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOrganizationUnitCreated()
         {
-            SourceDb.Has(new Erm::CategoryOrganizationUnit { Id = 6, OrganizationUnitId = 1, CategoryId = 2 });
+            SourceDb.Has(new CategoryOrganizationUnit { Id = 6, OrganizationUnitId = 1, CategoryId = 2 });
 
-            TargetDb.Has(new Facts::Firm { Id = 3, OrganizationUnitId = 1 })
-                   .Has(new Facts::FirmAddress { Id = 4, FirmId = 3 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 5, FirmAddressId = 4, CategoryId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 3, OrganizationUnitId = 1 })
+                   .Has(new FirmAddress { Id = 4, FirmId = 3 })
+                   .Has(new CategoryFirmAddress { Id = 5, FirmAddressId = 4, CategoryId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::CategoryOrganizationUnit>(6)
+                          .ApplyChanges<Storage.Model.Facts.CategoryOrganizationUnit>(6)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOrganizationUnitUpdated()
         {
-            SourceDb.Has(new Erm::CategoryOrganizationUnit { Id = 1, OrganizationUnitId = 2, CategoryId = 1 });
+            SourceDb.Has(new CategoryOrganizationUnit { Id = 1, OrganizationUnitId = 2, CategoryId = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::Firm { Id = 2, OrganizationUnitId = 2 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::FirmAddress { Id = 2, FirmId = 2 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 1 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 1 })
-                   .Has(new Facts::CategoryOrganizationUnit { Id = 1, OrganizationUnitId = 1, CategoryId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, OrganizationUnitId = 2 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new FirmAddress { Id = 2, FirmId = 2 })
+                   .Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 1 })
+                   .Has(new CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 1 })
+                   .Has(new Storage.Model.Facts.CategoryOrganizationUnit { Id = 1, OrganizationUnitId = 1, CategoryId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::CategoryOrganizationUnit>(1)
+                          .ApplyChanges<Storage.Model.Facts.CategoryOrganizationUnit>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfCategoryOrganizationUnitDeleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 3, OrganizationUnitId = 1 })
-                   .Has(new Facts::FirmAddress { Id = 4, FirmId = 3 })
-                   .Has(new Facts::CategoryFirmAddress { Id = 5, FirmAddressId = 4, CategoryId = 2 })
-                   .Has(new Facts::CategoryOrganizationUnit { Id = 6, OrganizationUnitId = 1, CategoryId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 3, OrganizationUnitId = 1 })
+                   .Has(new FirmAddress { Id = 4, FirmId = 3 })
+                   .Has(new CategoryFirmAddress { Id = 5, FirmAddressId = 4, CategoryId = 2 })
+                   .Has(new Storage.Model.Facts.CategoryOrganizationUnit { Id = 6, OrganizationUnitId = 1, CategoryId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::CategoryOrganizationUnit>(6)
+                          .ApplyChanges<Storage.Model.Facts.CategoryOrganizationUnit>(6)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfClientCreated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1 });
+            SourceDb.Has(new Client { Id = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Client>(1)
+                          .ApplyChanges<Storage.Model.Facts.Client>(1)
                           .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfClientUpdated()
         {
-            SourceDb.Has(new Erm::Client { Id = 1, Name = "asdf" });
+            SourceDb.Has(new Client { Id = 1, Name = "asdf" });
 
-            TargetDb.Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Firm { Id = 1, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Client>(1)
+                          .ApplyChanges<Storage.Model.Facts.Client>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfClientDeleted()
         {
-            TargetDb.Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Client>(1)
+                          .ApplyChanges<Storage.Model.Facts.Client>(1)
                           .VerifyDistinct(op => op is RecalculateAggregate, Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfContactCreated()
         {
-            SourceDb.Has(new Erm::Contact { Id = 3, ClientId = 1 });
+            SourceDb.Has(new Contact { Id = 3, ClientId = 1 });
 
-            TargetDb.Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Contact>(3)
+                          .ApplyChanges<Storage.Model.Facts.Contact>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfContactUpdated()
         {
-            SourceDb.Has(new Erm::Contact { Id = 1, ClientId = 2 });
+            SourceDb.Has(new Contact { Id = 1, ClientId = 2 });
 
-            TargetDb.Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Client { Id = 2 })
-                   .Has(new Facts::Firm { Id = 1, ClientId = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 2 })
-                   .Has(new Facts::Contact { Id = 1, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 2 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 2 })
+                   .Has(new Storage.Model.Facts.Contact { Id = 1, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Contact>(1)
+                          .ApplyChanges<Storage.Model.Facts.Contact>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeClient.Instance, 2), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfContactDeleted()
         {
-            TargetDb.Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 1 })
-                   .Has(new Facts::Contact { Id = 3, ClientId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 1 })
+                   .Has(new Storage.Model.Facts.Contact { Id = 3, ClientId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Contact>(3)
+                          .ApplyChanges<Storage.Model.Facts.Contact>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfFirmAddressCreated()
         {
-            SourceDb.Has(new Erm::FirmAddress { Id = 2, FirmId = 1 });
-            TargetDb.Has(new Facts::Firm { Id = 1 });
+            SourceDb.Has(new Storage.Model.Erm.FirmAddress { Id = 2, FirmId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::FirmAddress>(2)
+                          .ApplyChanges<FirmAddress>(2)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfFirmAddressUpdated()
         {
-            SourceDb.Has(new Erm::FirmAddress { Id = 1, FirmId = 2 });
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 });
+            SourceDb.Has(new Storage.Model.Erm.FirmAddress { Id = 1, FirmId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::FirmAddress>(1)
+                          .ApplyChanges<FirmAddress>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfFirmAddressDeleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 2, FirmId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 2, FirmId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::FirmAddress>(2)
+                          .ApplyChanges<FirmAddress>(2)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfFirmContactCreated()
         {
-            SourceDb.Has(new Erm::FirmContact { Id = 3, FirmAddressId = 2, ContactType = 1 });
+            SourceDb.Has(new FirmContact { Id = 3, FirmAddressId = 2, ContactType = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 2, FirmId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 2, FirmId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::FirmContact>(3)
+                          .ApplyChanges<Storage.Model.Facts.FirmContact>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfFirmContactUpdated()
         {
-            SourceDb.Has(new Erm::FirmContact { Id = 1, FirmAddressId = 2, ContactType = 1 });
+            SourceDb.Has(new FirmContact { Id = 1, FirmAddressId = 2, ContactType = 1 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2 })
-                   .Has(new Facts::FirmAddress { Id = 1, FirmId = 1 })
-                   .Has(new Facts::FirmAddress { Id = 2, FirmId = 2 })
-                   .Has(new Facts::FirmContact { Id = 1, FirmAddressId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2 })
+                   .Has(new FirmAddress { Id = 1, FirmId = 1 })
+                   .Has(new FirmAddress { Id = 2, FirmId = 2 })
+                   .Has(new Storage.Model.Facts.FirmContact { Id = 1, FirmAddressId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::FirmContact>(1)
+                          .ApplyChanges<Storage.Model.Facts.FirmContact>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfFirmContactDeleted()
         {
-            SourceDb.Has(new Erm::FirmContact { Id = 3, FirmAddressId = 2 });
+            SourceDb.Has(new FirmContact { Id = 3, FirmAddressId = 2 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::FirmAddress { Id = 2, FirmId = 1 })
-                   .Has(new Facts::FirmContact { Id = 3, FirmAddressId = 2 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new FirmAddress { Id = 2, FirmId = 1 })
+                   .Has(new Storage.Model.Facts.FirmContact { Id = 3, FirmAddressId = 2 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::FirmContact>(3)
+                          .ApplyChanges<Storage.Model.Facts.FirmContact>(3)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfLegalPersonCreated()
         {
-            SourceDb.Has((new Erm::LegalPerson { Id = 1, ClientId = 1 }));
+            SourceDb.Has((new Storage.Model.Erm.LegalPerson { Id = 1, ClientId = 1 }));
 
-            TargetDb.Has(new Facts::Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::LegalPerson>(1)
+                          .ApplyChanges<LegalPerson>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfLegalPersonUpdated()
         {
-            SourceDb.Has(new Erm::LegalPerson { Id = 1, ClientId = 2 });
+            SourceDb.Has(new Storage.Model.Erm.LegalPerson { Id = 1, ClientId = 2 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::Firm { Id = 2, ClientId = 2, OrganizationUnitId = 1 })
-                   .Has(new Facts::Client { Id = 1 })
-                   .Has(new Facts::Client { Id = 2 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
-                   .Has(new Facts::LegalPerson { Id = 1, ClientId = 1 })
-                   .Has(new Facts::Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2, ClientId = 2, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 2 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
+                   .Has(new LegalPerson { Id = 1, ClientId = 1 })
+                   .Has(new Storage.Model.Facts.Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::LegalPerson>(1)
+                          .ApplyChanges<LegalPerson>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfLegalPersonDeleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1, ClientId = 2, OrganizationUnitId = 1 })
-                   .Has(new Facts::Client { Id = 2 })
-                   .Has(new Facts::BranchOfficeOrganizationUnit { Id = 3, OrganizationUnitId = 1 })
-                   .Has(new Facts::LegalPerson { Id = 4, ClientId = 2 })
-                   .Has(new Facts::Account { Id = 5, LegalPersonId = 4, BranchOfficeOrganizationUnitId = 3 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 2, OrganizationUnitId = 1 })
+                   .Has(new Storage.Model.Facts.Client { Id = 2 })
+                   .Has(new BranchOfficeOrganizationUnit { Id = 3, OrganizationUnitId = 1 })
+                   .Has(new LegalPerson { Id = 4, ClientId = 2 })
+                   .Has(new Storage.Model.Facts.Account { Id = 5, LegalPersonId = 4, BranchOfficeOrganizationUnitId = 3 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::LegalPerson>(4)
+                          .ApplyChanges<LegalPerson>(4)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfOrderCreated()
         {
-            SourceDb.Has(new Erm::Order { Id = 2, FirmId = 1, WorkflowStepId = 4 });
-            TargetDb.Has(new Facts::Firm { Id = 1 });
+            SourceDb.Has(new Order { Id = 2, FirmId = 1, WorkflowStepId = 4 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Order>(2)
+                          .ApplyChanges<Storage.Model.Facts.Order>(2)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfOrderUpdated()
         {
-            SourceDb.Has(new Erm::Order { Id = 1, FirmId = 2, WorkflowStepId = 4 });
+            SourceDb.Has(new Order { Id = 1, FirmId = 2, WorkflowStepId = 4 });
 
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::Firm { Id = 2 })
-                   .Has(new Facts::Order { Id = 1, FirmId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new Storage.Model.Facts.Firm { Id = 2 })
+                   .Has(new Storage.Model.Facts.Order { Id = 1, FirmId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Order>(1)
+                          .ApplyChanges<Storage.Model.Facts.Order>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1), Aggregate.Recalculate(EntityTypeFirm.Instance, 2));
         }
 
         [Test]
         public void ShouldRecalculateFirmIfOrderDeleted()
         {
-            TargetDb.Has(new Facts::Firm { Id = 1 })
-                   .Has(new Facts::Order { Id = 2, FirmId = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Firm { Id = 1 })
+                   .Has(new Storage.Model.Facts.Order { Id = 2, FirmId = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Order>(2)
+                          .ApplyChanges<Storage.Model.Facts.Order>(2)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 1));
         }
 

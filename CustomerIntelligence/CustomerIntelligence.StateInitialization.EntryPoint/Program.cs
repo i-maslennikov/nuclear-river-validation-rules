@@ -6,7 +6,7 @@ using NuClear.CustomerIntelligence.Storage;
 using NuClear.Replication.Bulk.API;
 using NuClear.Replication.Bulk.API.Commands;
 using NuClear.Replication.Bulk.API.Storage;
-using NuClear.River.Common.Metadata;
+using NuClear.Replication.Core.API;
 
 namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
 {

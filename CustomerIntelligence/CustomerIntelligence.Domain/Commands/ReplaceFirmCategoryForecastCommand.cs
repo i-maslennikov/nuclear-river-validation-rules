@@ -1,5 +1,5 @@
 ﻿using NuClear.CustomerIntelligence.Domain.DTO;
-﻿using NuClear.River.Common.Metadata;
+using NuClear.Replication.Core.API;
 
 namespace NuClear.CustomerIntelligence.Domain.Commands
 {

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Model;
-using NuClear.CustomerIntelligence.Domain.Model.Facts;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
 

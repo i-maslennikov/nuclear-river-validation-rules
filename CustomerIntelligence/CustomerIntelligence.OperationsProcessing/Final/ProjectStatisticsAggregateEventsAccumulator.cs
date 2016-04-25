@@ -21,10 +21,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRootTypes
             = new Dictionary<Type, Type>
                 {
-                    { typeof(Domain.Model.Bit.FirmCategoryForecast), typeof(Domain.Model.Statistics.ProjectStatistics) },
-                    { typeof(Domain.Model.Bit.FirmCategoryStatistics), typeof(Domain.Model.Statistics.ProjectStatistics) },
-                    { typeof(Domain.Model.Bit.FirmForecast), typeof(Domain.Model.Statistics.ProjectStatistics) },
-                    { typeof(Domain.Model.Bit.ProjectCategoryStatistics), typeof(Domain.Model.Statistics.ProjectStatistics) }
+                    { typeof(Storage.Model.Bit.FirmCategoryForecast), typeof(Storage.Model.Statistics.ProjectStatistics) },
+                    { typeof(Storage.Model.Bit.FirmCategoryStatistics), typeof(Storage.Model.Statistics.ProjectStatistics) },
+                    { typeof(Storage.Model.Bit.FirmForecast), typeof(Storage.Model.Statistics.ProjectStatistics) },
+                    { typeof(Storage.Model.Bit.ProjectCategoryStatistics), typeof(Storage.Model.Statistics.ProjectStatistics) }
                 };
 
         public ProjectStatisticsAggregateEventsAccumulator(IEventSerializer serializer)

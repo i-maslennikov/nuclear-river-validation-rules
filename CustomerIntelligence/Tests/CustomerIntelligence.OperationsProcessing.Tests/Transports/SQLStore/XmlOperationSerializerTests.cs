@@ -1,6 +1,5 @@
 ﻿using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Events;
-using NuClear.CustomerIntelligence.Domain.Model.Facts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
 
 using NUnit.Framework;

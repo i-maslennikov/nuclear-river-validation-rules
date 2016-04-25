@@ -6,10 +6,9 @@ using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core.API;
-using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
 using NuClear.Replication.OperationsProcessing.Primary;
+using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
-using NuClear.River.Common.Metadata;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 

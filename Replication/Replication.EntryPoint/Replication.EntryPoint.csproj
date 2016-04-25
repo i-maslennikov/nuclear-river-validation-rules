@@ -339,10 +339,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Metadata\Common.Metadata.csproj">
-      <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
-      <Name>Common.Metadata</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{d4238d0c-3315-4449-b1ae-80f716d58d04}</Project>
       <Name>Common</Name>
@@ -362,10 +358,6 @@
     <ProjectReference Include="..\Replication.Core.API\Replication.Core.API.csproj">
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
       <Name>Replication.Core.API</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Replication.Core\Replication.Core.csproj">
-      <Project>{d3cf7e9e-4a8e-4583-a951-50ca940bd353}</Project>
-      <Name>Replication.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Replication.OperationsProcessing\Replication.OperationsProcessing.csproj">
       <Project>{8e3d39d6-6bee-4edc-ace0-8c24ca929164}</Project>

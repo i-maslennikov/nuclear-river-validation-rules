@@ -3,12 +3,10 @@ using System.Collections;
 
 using Moq;
 
+using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Storage.API.Readings;
 
 using NUnit.Framework;
-
-using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
-using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
@@ -29,55 +27,55 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 const int NotNull = 1;
 
                 // insert
-                yield return CaseToVerifyElementInsertion<Erm::Account, Facts::Account>(new Erm::Account { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::BranchOfficeOrganizationUnit, Facts::BranchOfficeOrganizationUnit>(new Erm::BranchOfficeOrganizationUnit { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::Category, Facts::Category>(new Erm::Category { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::CategoryFirmAddress, Facts::CategoryFirmAddress>(new Erm::CategoryFirmAddress { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::CategoryGroup, Facts::CategoryGroup>(new Erm::CategoryGroup { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::CategoryOrganizationUnit, Facts::CategoryOrganizationUnit>(new Erm::CategoryOrganizationUnit { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::Client, Facts::Client>(new Erm::Client { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::Contact, Facts::Contact>(new Erm::Contact { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::Firm, Facts::Firm>(new Erm::Firm { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::FirmAddress, Facts::FirmAddress>(new Erm::FirmAddress { Id = 1 });
-                yield return CaseToVerifyElementInsertion<Erm::FirmContact, Facts::FirmContact>(new Erm::FirmContact { Id = 1, ContactType = 1, FirmAddressId = NotNull });
-                yield return CaseToVerifyElementInsertion<Erm::LegalPerson, Facts::LegalPerson>(new Erm::LegalPerson { Id = 1, ClientId = NotNull });
-                yield return CaseToVerifyElementInsertion<Erm::Order, Facts::Order>(new Erm::Order { Id = 1, WorkflowStepId = 4 });
-                yield return CaseToVerifyElementInsertion<Erm::Project, Facts::Project>(new Erm::Project { Id = 1, OrganizationUnitId = NotNull });
-                yield return CaseToVerifyElementInsertion<Erm::Territory, Facts::Territory>(new Erm::Territory { Id = 1 });
+                yield return CaseToVerifyElementInsertion<Account, Storage.Model.Facts.Account>(new Account { Id = 1 });
+                yield return CaseToVerifyElementInsertion<BranchOfficeOrganizationUnit, Storage.Model.Facts.BranchOfficeOrganizationUnit>(new BranchOfficeOrganizationUnit { Id = 1 });
+                yield return CaseToVerifyElementInsertion<Category, Storage.Model.Facts.Category>(new Category { Id = 1 });
+                yield return CaseToVerifyElementInsertion<CategoryFirmAddress, Storage.Model.Facts.CategoryFirmAddress>(new CategoryFirmAddress { Id = 1 });
+                yield return CaseToVerifyElementInsertion<CategoryGroup, Storage.Model.Facts.CategoryGroup>(new CategoryGroup { Id = 1 });
+                yield return CaseToVerifyElementInsertion<CategoryOrganizationUnit, Storage.Model.Facts.CategoryOrganizationUnit>(new CategoryOrganizationUnit { Id = 1 });
+                yield return CaseToVerifyElementInsertion<Client, Storage.Model.Facts.Client>(new Client { Id = 1 });
+                yield return CaseToVerifyElementInsertion<Contact, Storage.Model.Facts.Contact>(new Contact { Id = 1 });
+                yield return CaseToVerifyElementInsertion<Firm, Storage.Model.Facts.Firm>(new Firm { Id = 1 });
+                yield return CaseToVerifyElementInsertion<FirmAddress, Storage.Model.Facts.FirmAddress>(new FirmAddress { Id = 1 });
+                yield return CaseToVerifyElementInsertion<FirmContact, Storage.Model.Facts.FirmContact>(new FirmContact { Id = 1, ContactType = 1, FirmAddressId = NotNull });
+                yield return CaseToVerifyElementInsertion<LegalPerson, Storage.Model.Facts.LegalPerson>(new LegalPerson { Id = 1, ClientId = NotNull });
+                yield return CaseToVerifyElementInsertion<Order, Storage.Model.Facts.Order>(new Order { Id = 1, WorkflowStepId = 4 });
+                yield return CaseToVerifyElementInsertion<Project, Storage.Model.Facts.Project>(new Project { Id = 1, OrganizationUnitId = NotNull });
+                yield return CaseToVerifyElementInsertion<Territory, Storage.Model.Facts.Territory>(new Territory { Id = 1 });
 
                 // update
-                yield return CaseToVerifyElementUpdate(new Erm::Account { Id = 1 }, new Facts::Account { Id = 1, Balance = 1});
-                yield return CaseToVerifyElementUpdate(new Erm::BranchOfficeOrganizationUnit { Id = 1 }, new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1});
-                yield return CaseToVerifyElementUpdate(new Erm::Category { Id = 1 }, new Facts::Category { Id = 1, Name = "asdf" });
-                yield return CaseToVerifyElementUpdate(new Erm::CategoryFirmAddress { Id = 1 }, new Facts::CategoryFirmAddress { Id = 1, CategoryId = 1});
-                yield return CaseToVerifyElementUpdate(new Erm::CategoryGroup { Id = 1 }, new Facts::CategoryGroup { Id = 1, Name = "asdf" });
-                yield return CaseToVerifyElementUpdate(new Erm::CategoryOrganizationUnit { Id = 1 }, new Facts::CategoryOrganizationUnit { Id = 1, CategoryId = 1});
-                yield return CaseToVerifyElementUpdate(new Erm::Client { Id = 1 }, new Facts::Client { Id = 1, Name = "asdf" });
-                yield return CaseToVerifyElementUpdate(new Erm::Contact { Id = 1 }, new Facts::Contact { Id = 1, ClientId = 1});
-                yield return CaseToVerifyElementUpdate(new Erm::Firm { Id = 1 }, new Facts::Firm { Id = 1, ClientId = 1});
-                yield return CaseToVerifyElementUpdate(new Erm::FirmAddress { Id = 1 }, new Facts::FirmAddress { Id = 1, FirmId = 1 });
-                yield return CaseToVerifyElementUpdate(new Erm::FirmContact { Id = 1, ContactType = 1, FirmAddressId = NotNull }, new Facts::FirmContact { Id = 1, HasPhone = false, FirmAddressId = NotNull});
-                yield return CaseToVerifyElementUpdate(new Erm::LegalPerson { Id = 1, ClientId = NotNull }, new Facts::LegalPerson { Id = 1, ClientId = 2 });
-                yield return CaseToVerifyElementUpdate(new Erm::Order { Id = 1, WorkflowStepId = 4 }, new Facts::Order { Id = 1, FirmId = 1 });
-                yield return CaseToVerifyElementUpdate(new Erm::Project { Id = 1, OrganizationUnitId = NotNull }, new Facts::Project { Id = 1, Name = "asdf" });
-                yield return CaseToVerifyElementUpdate(new Erm::Territory { Id = 1 }, new Facts::Territory { Id = 1, Name = "asdf" });
+                yield return CaseToVerifyElementUpdate(new Account { Id = 1 }, new Storage.Model.Facts.Account { Id = 1, Balance = 1});
+                yield return CaseToVerifyElementUpdate(new BranchOfficeOrganizationUnit { Id = 1 }, new Storage.Model.Facts.BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1});
+                yield return CaseToVerifyElementUpdate(new Category { Id = 1 }, new Storage.Model.Facts.Category { Id = 1, Name = "asdf" });
+                yield return CaseToVerifyElementUpdate(new CategoryFirmAddress { Id = 1 }, new Storage.Model.Facts.CategoryFirmAddress { Id = 1, CategoryId = 1});
+                yield return CaseToVerifyElementUpdate(new CategoryGroup { Id = 1 }, new Storage.Model.Facts.CategoryGroup { Id = 1, Name = "asdf" });
+                yield return CaseToVerifyElementUpdate(new CategoryOrganizationUnit { Id = 1 }, new Storage.Model.Facts.CategoryOrganizationUnit { Id = 1, CategoryId = 1});
+                yield return CaseToVerifyElementUpdate(new Client { Id = 1 }, new Storage.Model.Facts.Client { Id = 1, Name = "asdf" });
+                yield return CaseToVerifyElementUpdate(new Contact { Id = 1 }, new Storage.Model.Facts.Contact { Id = 1, ClientId = 1});
+                yield return CaseToVerifyElementUpdate(new Firm { Id = 1 }, new Storage.Model.Facts.Firm { Id = 1, ClientId = 1});
+                yield return CaseToVerifyElementUpdate(new FirmAddress { Id = 1 }, new Storage.Model.Facts.FirmAddress { Id = 1, FirmId = 1 });
+                yield return CaseToVerifyElementUpdate(new FirmContact { Id = 1, ContactType = 1, FirmAddressId = NotNull }, new Storage.Model.Facts.FirmContact { Id = 1, HasPhone = false, FirmAddressId = NotNull});
+                yield return CaseToVerifyElementUpdate(new LegalPerson { Id = 1, ClientId = NotNull }, new Storage.Model.Facts.LegalPerson { Id = 1, ClientId = 2 });
+                yield return CaseToVerifyElementUpdate(new Order { Id = 1, WorkflowStepId = 4 }, new Storage.Model.Facts.Order { Id = 1, FirmId = 1 });
+                yield return CaseToVerifyElementUpdate(new Project { Id = 1, OrganizationUnitId = NotNull }, new Storage.Model.Facts.Project { Id = 1, Name = "asdf" });
+                yield return CaseToVerifyElementUpdate(new Territory { Id = 1 }, new Storage.Model.Facts.Territory { Id = 1, Name = "asdf" });
 
                 // delete
-                yield return CaseToVerifyElementDeletion(new Facts::Account { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::BranchOfficeOrganizationUnit { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::Category { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::CategoryFirmAddress { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::CategoryGroup { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::CategoryOrganizationUnit { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::Client { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::Contact { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::Firm { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::FirmAddress { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::FirmContact { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::LegalPerson { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::Order { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::Project { Id = 1 });
-                yield return CaseToVerifyElementDeletion(new Facts::Territory { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.Account { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.BranchOfficeOrganizationUnit { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.Category { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.CategoryFirmAddress { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.CategoryGroup { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.CategoryOrganizationUnit { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.Client { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.Contact { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.Firm { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.FirmAddress { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.FirmContact { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.LegalPerson { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.Order { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.Project { Id = 1 });
+                yield return CaseToVerifyElementDeletion(new Storage.Model.Facts.Territory { Id = 1 });
             }
         }
 

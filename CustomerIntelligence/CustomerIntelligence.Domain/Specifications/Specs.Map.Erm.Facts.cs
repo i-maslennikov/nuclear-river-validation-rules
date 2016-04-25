@@ -1,8 +1,26 @@
 ﻿using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Model.Facts;
+using NuClear.CustomerIntelligence.Storage.Model.Erm;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
+
+using Account = NuClear.CustomerIntelligence.Storage.Model.Facts.Account;
+using BranchOfficeOrganizationUnit = NuClear.CustomerIntelligence.Storage.Model.Facts.BranchOfficeOrganizationUnit;
+using Category = NuClear.CustomerIntelligence.Storage.Model.Facts.Category;
+using CategoryFirmAddress = NuClear.CustomerIntelligence.Storage.Model.Facts.CategoryFirmAddress;
+using CategoryGroup = NuClear.CustomerIntelligence.Storage.Model.Facts.CategoryGroup;
+using CategoryOrganizationUnit = NuClear.CustomerIntelligence.Storage.Model.Facts.CategoryOrganizationUnit;
+using Client = NuClear.CustomerIntelligence.Storage.Model.Facts.Client;
+using Contact = NuClear.CustomerIntelligence.Storage.Model.Facts.Contact;
+using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
+using FirmAddress = NuClear.CustomerIntelligence.Storage.Model.Facts.FirmAddress;
+using FirmContact = NuClear.CustomerIntelligence.Storage.Model.Facts.FirmContact;
+using LegalPerson = NuClear.CustomerIntelligence.Storage.Model.Facts.LegalPerson;
+using Order = NuClear.CustomerIntelligence.Storage.Model.Facts.Order;
+using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
+using SalesModelCategoryRestriction = NuClear.CustomerIntelligence.Storage.Model.Facts.SalesModelCategoryRestriction;
+using Territory = NuClear.CustomerIntelligence.Storage.Model.Facts.Territory;
 
 namespace NuClear.CustomerIntelligence.Domain.Specifications
 {
@@ -205,8 +223,8 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                         IQueryable<T> activities,
                         IQueryable<TReference> firmReferences,
                         IQueryable<TReference> clientReferences)
-                        where T : Model.Erm.ActivityBase
-                        where TReference : Model.Erm.ActivityReference
+                        where T : ActivityBase
+                        where TReference : ActivityReference
                     {
                         // TODO {all, 19.08.2015}: Используется FirstOrDefault вместо DefaultIdEmpty из-за бага в данных Erm
                         // В Erm есть Activity, у которых более одного клиента/фирмы в RegardingObjects. Вероятно, во время миграции.

@@ -18,11 +18,11 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRoots
             = new Dictionary<Type, Type>
                 {
-                    { typeof(Domain.Model.Facts.Firm), typeof(Domain.Model.CI.Firm) },
-                    { typeof(Domain.Model.Facts.Client), typeof(Domain.Model.CI.Client) },
-                    { typeof(Domain.Model.Facts.Project), typeof(Domain.Model.CI.Project) },
-                    { typeof(Domain.Model.Facts.Territory), typeof(Domain.Model.CI.Territory) },
-                    { typeof(Domain.Model.Facts.CategoryGroup), typeof(Domain.Model.CI.CategoryGroup) },
+                    { typeof(Storage.Model.Facts.Firm), typeof(Storage.Model.CI.Firm) },
+                    { typeof(Storage.Model.Facts.Client), typeof(Storage.Model.CI.Client) },
+                    { typeof(Storage.Model.Facts.Project), typeof(Storage.Model.CI.Project) },
+                    { typeof(Storage.Model.Facts.Territory), typeof(Storage.Model.CI.Territory) },
+                    { typeof(Storage.Model.Facts.CategoryGroup), typeof(Storage.Model.CI.CategoryGroup) },
                 };
 
         private readonly IEventSerializer _serializer;

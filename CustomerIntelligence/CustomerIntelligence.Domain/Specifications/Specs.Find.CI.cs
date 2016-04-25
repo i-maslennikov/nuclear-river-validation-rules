@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.Model.CI;
-using NuClear.CustomerIntelligence.Domain.Model.Statistics;
+using NuClear.CustomerIntelligence.Storage.Model.CI;
+using NuClear.CustomerIntelligence.Storage.Model.Statistics;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Domain.Specifications

@@ -75,8 +75,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Operat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Core.API", "Replication\Replication.Core.API\Replication.Core.API.csproj", "{E45717BE-86C8-425B-BB13-0E69053EF040}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Core", "Replication\Replication.Core\Replication.Core.csproj", "{D3CF7E9E-4A8E-4583-A951-50CA940BD353}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.OperationsProcessing.Tests", "CustomerIntelligence\Tests\CustomerIntelligence.OperationsProcessing.Tests\CustomerIntelligence.OperationsProcessing.Tests.csproj", "{19CFD12D-582D-4685-A40B-7E3A13B9C5D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replication.Tests", "CustomerIntelligence\Tests\CustomerIntelligence.Replication.Tests\CustomerIntelligence.Replication.Tests.csproj", "{25AACA77-648A-4462-8EC1-709963219C8E}"
@@ -95,7 +93,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F1BB08E3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replication.StateInitialization.Tests", "CustomerIntelligence\Tests\CustomerIntelligence.Replication.DataTest.Model\CustomerIntelligence.Replication.StateInitialization.Tests.csproj", "{04BC80F1-62A5-489C-916A-9F090AED7CF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Bulk.API", "Replication\Replication.Bulk.Api\Replication.Bulk.API.csproj", "{55B42FA4-EC9E-4F22-95ED-C219637699FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Replication.Bulk.API", "Replication\Replication.Bulk.API\Replication.Bulk.API.csproj", "{55B42FA4-EC9E-4F22-95ED-C219637699FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.StateInitialization.EntryPoint", "CustomerIntelligence\CustomerIntelligence.StateInitialization.EntryPoint\CustomerIntelligence.StateInitialization.EntryPoint.csproj", "{C6DE2A90-B4B9-4CD5-AEF0-7E6607B102A0}"
 EndProject
@@ -167,10 +165,6 @@ Global
 		{E45717BE-86C8-425B-BB13-0E69053EF040}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E45717BE-86C8-425B-BB13-0E69053EF040}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E45717BE-86C8-425B-BB13-0E69053EF040}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3CF7E9E-4A8E-4583-A951-50CA940BD353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3CF7E9E-4A8E-4583-A951-50CA940BD353}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3CF7E9E-4A8E-4583-A951-50CA940BD353}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3CF7E9E-4A8E-4583-A951-50CA940BD353}.Release|Any CPU.Build.0 = Release|Any CPU
 		{19CFD12D-582D-4685-A40B-7E3A13B9C5D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{19CFD12D-582D-4685-A40B-7E3A13B9C5D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19CFD12D-582D-4685-A40B-7E3A13B9C5D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -242,7 +236,6 @@ Global
 		{FA1074A6-B89D-45DF-9B73-6881BEF46E33} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
 		{794F43F6-E4F3-4A80-A2B0-195D3560CB35} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
 		{E45717BE-86C8-425B-BB13-0E69053EF040} = {B2560A63-4013-4556-8DF7-26F711AEED01}
-		{D3CF7E9E-4A8E-4583-A951-50CA940BD353} = {B2560A63-4013-4556-8DF7-26F711AEED01}
 		{19CFD12D-582D-4685-A40B-7E3A13B9C5D3} = {814C4FAC-A5D7-4557-A0A4-E79FEBCE6156}
 		{25AACA77-648A-4462-8EC1-709963219C8E} = {814C4FAC-A5D7-4557-A0A4-E79FEBCE6156}
 		{CAA90CA3-1FAB-43E0-A369-62BFB8092596} = {814C4FAC-A5D7-4557-A0A4-E79FEBCE6156}

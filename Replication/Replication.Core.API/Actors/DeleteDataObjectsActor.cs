@@ -4,7 +4,6 @@ using System.Linq;
 using NuClear.Replication.Core.API.Commands;
 using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Replication.Core.API.Equality;
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.API.Actors

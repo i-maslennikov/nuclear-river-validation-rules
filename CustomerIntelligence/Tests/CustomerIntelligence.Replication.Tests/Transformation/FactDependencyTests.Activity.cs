@@ -1,13 +1,13 @@
 ﻿using System;
 
 using NuClear.CustomerIntelligence.Domain;
-using NuClear.CustomerIntelligence.Domain.EntityTypes;
-using NuClear.CustomerIntelligence.Domain.Model.Erm;
+using NuClear.CustomerIntelligence.Storage.Model.Erm;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
 
 using NUnit.Framework;
 
-using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
-using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
+using Client = NuClear.CustomerIntelligence.Storage.Model.Facts.Client;
+using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
@@ -25,14 +25,14 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                  .Has(new AppointmentReference { ActivityId = 1, Reference = RegardingObjectReference, ReferencedObjectId = 2, ReferencedType = EntityTypeIds.Client },
                       new AppointmentReference { ActivityId = 1, Reference = RegardingObjectReference, ReferencedObjectId = 3, ReferencedType = EntityTypeIds.Firm });
 
-            TargetDb.Has(new Facts::Activity { Id = 1, ClientId = 2, FirmId = 3, ModifiedOn = DateTimeOffset.Now.AddDays(-1) });
-            TargetDb.Has(new Facts::Client { Id = 2 });
-            TargetDb.Has(new Facts::Firm { Id = 3 });
-            TargetDb.Has(new Facts::Firm { Id = 4, ClientId = 2 });
-            TargetDb.Has(new Facts::Firm { Id = 5 });
+            TargetDb.Has(new Activity { Id = 1, ClientId = 2, FirmId = 3, ModifiedOn = DateTimeOffset.Now.AddDays(-1) });
+            TargetDb.Has(new Client { Id = 2 });
+            TargetDb.Has(new Firm { Id = 3 });
+            TargetDb.Has(new Firm { Id = 4, ClientId = 2 });
+            TargetDb.Has(new Firm { Id = 5 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Activity>(1)
+                          .ApplyChanges<Activity>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3),
                                           Aggregate.Recalculate(EntityTypeFirm.Instance, 4));
         }
@@ -44,27 +44,27 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                  .Has(new AppointmentReference { ActivityId = 1, Reference = RegardingObjectReference, ReferencedObjectId = 2, ReferencedType = EntityTypeIds.Client },
                       new AppointmentReference { ActivityId = 1, Reference = RegardingObjectReference, ReferencedObjectId = 3, ReferencedType = EntityTypeIds.Firm });
 
-            TargetDb.Has(new Facts::Client { Id = 2 });
-            TargetDb.Has(new Facts::Firm { Id = 3 });
-            TargetDb.Has(new Facts::Firm { Id = 4, ClientId = 2 });
-            TargetDb.Has(new Facts::Firm { Id = 5 });
+            TargetDb.Has(new Client { Id = 2 });
+            TargetDb.Has(new Firm { Id = 3 });
+            TargetDb.Has(new Firm { Id = 4, ClientId = 2 });
+            TargetDb.Has(new Firm { Id = 5 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Activity>(1)
+                          .ApplyChanges<Activity>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3),
                                           Aggregate.Recalculate(EntityTypeFirm.Instance, 4));
         }
         [Test]
         public void ShouldRecalculateFirmsIfActivityDeleted()
         {
-            TargetDb.Has(new Facts::Activity { Id = 1, ClientId = 2, FirmId = 3, ModifiedOn = DateTimeOffset.Now });
-            TargetDb.Has(new Facts::Client { Id = 2 });
-            TargetDb.Has(new Facts::Firm { Id = 3 });
-            TargetDb.Has(new Facts::Firm { Id = 4, ClientId = 2 });
-            TargetDb.Has(new Facts::Firm { Id = 5 });
+            TargetDb.Has(new Activity { Id = 1, ClientId = 2, FirmId = 3, ModifiedOn = DateTimeOffset.Now });
+            TargetDb.Has(new Client { Id = 2 });
+            TargetDb.Has(new Firm { Id = 3 });
+            TargetDb.Has(new Firm { Id = 4, ClientId = 2 });
+            TargetDb.Has(new Firm { Id = 5 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Activity>(1)
+                          .ApplyChanges<Activity>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeFirm.Instance, 3),
                                           Aggregate.Recalculate(EntityTypeFirm.Instance, 4));
         }

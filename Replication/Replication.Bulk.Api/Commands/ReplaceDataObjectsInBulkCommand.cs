@@ -1,5 +1,5 @@
 ﻿using NuClear.Replication.Bulk.API.Storage;
-using NuClear.River.Common.Metadata;
+using NuClear.Replication.Core.API;
 
 namespace NuClear.Replication.Bulk.API.Commands
 {

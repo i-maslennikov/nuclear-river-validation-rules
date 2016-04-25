@@ -4,11 +4,11 @@ using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
 using NuClear.CustomerIntelligence.Domain.Events;
-using NuClear.CustomerIntelligence.Domain.Model.Bit;
-using NuClear.CustomerIntelligence.Domain.Model.Facts;
 using NuClear.CustomerIntelligence.Domain.Specifications;
+using NuClear.CustomerIntelligence.Storage.Model.Bit;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.DataObjects;
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 

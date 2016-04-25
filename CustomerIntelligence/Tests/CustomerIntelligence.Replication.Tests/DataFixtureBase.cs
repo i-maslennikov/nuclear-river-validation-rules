@@ -8,7 +8,7 @@ using LinqToDB.Data;
 
 using Moq;
 
-using NuClear.Replication.Core;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.CustomerIntelligence.Domain.Model.Bit;
-using NuClear.CustomerIntelligence.Domain.Model.Facts;
+using NuClear.CustomerIntelligence.Storage.Model.Bit;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.DataObjects;
-using NuClear.River.Common.Metadata;
 
 namespace NuClear.CustomerIntelligence.Domain
 {

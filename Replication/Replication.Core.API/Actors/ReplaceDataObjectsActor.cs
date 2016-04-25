@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Transactions;
 
 using NuClear.Replication.Core.API.DataObjects;
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 
 namespace NuClear.Replication.Core.API.Actors

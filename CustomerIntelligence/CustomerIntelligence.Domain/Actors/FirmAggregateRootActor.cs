@@ -2,12 +2,12 @@
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.Commands;
-using NuClear.CustomerIntelligence.Domain.Model.CI;
 using NuClear.CustomerIntelligence.Domain.Specifications;
+using NuClear.CustomerIntelligence.Storage.Model.CI;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Actors;
 using NuClear.Replication.Core.API.DataObjects;
 using NuClear.Replication.Core.API.Equality;
-using NuClear.River.Common.Metadata;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 

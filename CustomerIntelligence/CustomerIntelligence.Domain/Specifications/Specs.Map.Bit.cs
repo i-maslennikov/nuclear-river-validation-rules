@@ -2,25 +2,26 @@
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain.DTO;
+using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.Storage.API.Specifications;
+
+using FirmForecast = NuClear.CustomerIntelligence.Domain.DTO.FirmForecast;
 
 namespace NuClear.CustomerIntelligence.Domain.Specifications
 {
-    using Bit = NuClear.CustomerIntelligence.Domain.Model.Bit;
-
     public static partial class Specs
     {
         public static partial class Map
         {
             public static partial class Bit
             {
-                public static MapSpecification<FirmPopularity, IReadOnlyCollection<Bit::FirmCategoryStatistics>> FirmCategoryStatistics()
+                public static MapSpecification<FirmPopularity, IReadOnlyCollection<FirmCategoryStatistics>> FirmCategoryStatistics()
                 {
-                    return new MapSpecification<FirmPopularity, IReadOnlyCollection<Bit::FirmCategoryStatistics>>(
+                    return new MapSpecification<FirmPopularity, IReadOnlyCollection<FirmCategoryStatistics>>(
                         dto =>
                         {
                             return dto.Firms
-                                        .SelectMany(x => x.Categories.Select(y => new Bit::FirmCategoryStatistics
+                                        .SelectMany(x => x.Categories.Select(y => new FirmCategoryStatistics
                                             {
                                                 ProjectId = dto.ProjectId,
                                                 FirmId = x.FirmId,
@@ -32,13 +33,13 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                         });
                 }
 
-                public static MapSpecification<RubricPopularity, IReadOnlyCollection<Bit::ProjectCategoryStatistics>> ProjectCategoryStatistics()
+                public static MapSpecification<RubricPopularity, IReadOnlyCollection<ProjectCategoryStatistics>> ProjectCategoryStatistics()
                 {
-                    return new MapSpecification<RubricPopularity, IReadOnlyCollection<Bit::ProjectCategoryStatistics>>(
+                    return new MapSpecification<RubricPopularity, IReadOnlyCollection<ProjectCategoryStatistics>>(
                         dto =>
                             {
                                 return dto.Categories
-                                          .Select(x => new Bit::ProjectCategoryStatistics
+                                          .Select(x => new ProjectCategoryStatistics
                                               {
                                                   ProjectId = dto.ProjectId,
                                                   CategoryId = x.CategoryId,
@@ -48,14 +49,14 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                             });
                 }
 
-                public static MapSpecification<FirmForecast, IReadOnlyCollection<Bit::FirmCategoryForecast>> FirmCategoryForecasts()
+                public static MapSpecification<FirmForecast, IReadOnlyCollection<FirmCategoryForecast>> FirmCategoryForecasts()
                 {
-                    return new MapSpecification<FirmForecast, IReadOnlyCollection<Bit::FirmCategoryForecast>>(
+                    return new MapSpecification<FirmForecast, IReadOnlyCollection<FirmCategoryForecast>>(
                         dto =>
                             {
                                 var forecasts = from firm in dto.Firms
                                                 from category in firm.Categories
-                                                select new Bit::FirmCategoryForecast
+                                                select new FirmCategoryForecast
                                                     {
                                                         ProjectId = dto.ProjectId,
                                                         FirmId = firm.Id,
@@ -68,13 +69,13 @@ namespace NuClear.CustomerIntelligence.Domain.Specifications
                             });
                 }
 
-                public static IMapSpecification<FirmForecast, IReadOnlyCollection<Bit::FirmForecast>> FirmForecasts()
+                public static IMapSpecification<FirmForecast, IReadOnlyCollection<Storage.Model.Bit.FirmForecast>> FirmForecasts()
                 {
-                    return new MapSpecification<FirmForecast, IReadOnlyCollection<Bit::FirmForecast>>(
+                    return new MapSpecification<FirmForecast, IReadOnlyCollection<Storage.Model.Bit.FirmForecast>>(
                         dto =>
                         {
                             var forecasts = from firm in dto.Firms
-                                            select new Bit::FirmForecast
+                                            select new Storage.Model.Bit.FirmForecast
                                             {
                                                 ProjectId = dto.ProjectId,
                                                 FirmId = firm.Id,

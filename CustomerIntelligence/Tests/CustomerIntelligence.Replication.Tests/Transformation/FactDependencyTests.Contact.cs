@@ -1,10 +1,8 @@
-﻿using NuClear.CustomerIntelligence.Domain.EntityTypes;
+﻿using NuClear.CustomerIntelligence.Storage.Model.Erm;
 
 using NUnit.Framework;
 
-using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
-using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
-using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
+using Client = NuClear.CustomerIntelligence.Storage.Model.Facts.Client;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
@@ -15,36 +13,36 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldRecalulateClientIfContactCreated()
         {
-            SourceDb.Has(new Erm::Contact { Id = 1, ClientId = 1 });
+            SourceDb.Has(new Contact { Id = 1, ClientId = 1 });
 
-            TargetDb.Has(new Facts::Client { Id = 1 });
+            TargetDb.Has(new Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Contact>(1)
+                          .ApplyChanges<Storage.Model.Facts.Contact>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalulateClientIfContactDeleted()
         {
-            TargetDb.Has(new Facts::Contact { Id = 1, ClientId = 1 })
-                   .Has(new Facts::Client { Id = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Contact { Id = 1, ClientId = 1 })
+                   .Has(new Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Contact>(1)
+                          .ApplyChanges<Storage.Model.Facts.Contact>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
 
         [Test]
         public void ShouldRecalulateClientIfContactUpdated()
         {
-            SourceDb.Has(new Erm::Contact { Id = 1, ClientId = 1, Website = "asdf" });
+            SourceDb.Has(new Contact { Id = 1, ClientId = 1, Website = "asdf" });
 
-            TargetDb.Has(new Facts::Contact { Id = 1, ClientId = 1 })
-                   .Has(new Facts::Client { Id = 1 });
+            TargetDb.Has(new Storage.Model.Facts.Contact { Id = 1, ClientId = 1 })
+                   .Has(new Client { Id = 1 });
 
             Transformation.Create(Query, RepositoryFactory)
-                          .ApplyChanges<Facts::Contact>(1)
+                          .ApplyChanges<Storage.Model.Facts.Contact>(1)
                           .VerifyDistinct(Aggregate.Recalculate(EntityTypeClient.Instance, 1));
         }
     }

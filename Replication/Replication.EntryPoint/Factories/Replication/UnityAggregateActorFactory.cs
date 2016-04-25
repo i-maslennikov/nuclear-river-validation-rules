@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using Microsoft.Practices.Unity;
 
 using NuClear.CustomerIntelligence.Domain.Actors;
-using NuClear.CustomerIntelligence.Domain.Model.CI;
-using NuClear.CustomerIntelligence.Domain.Model.Statistics;
+using NuClear.CustomerIntelligence.Storage.Model.CI;
+using NuClear.CustomerIntelligence.Storage.Model.Statistics;
 using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.Actors;
 

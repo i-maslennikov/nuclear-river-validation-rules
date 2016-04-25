@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using NuClear.Messaging.API;
 using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.API.Processing;
-using NuClear.River.Common.Metadata;
+using NuClear.Replication.Core.API;
 
 namespace NuClear.Replication.OperationsProcessing
 {

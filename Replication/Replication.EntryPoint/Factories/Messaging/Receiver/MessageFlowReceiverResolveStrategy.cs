@@ -3,7 +3,7 @@ using System.Linq;
 
 using NuClear.Messaging.API.Flows.Metadata;
 using NuClear.Messaging.DI.Factories.Unity.Receivers.Resolvers;
-using NuClear.River.Common.Metadata.Features;
+using NuClear.Replication.OperationsProcessing.Metadata;
 
 namespace NuClear.Replication.EntryPoint.Factories.Messaging.Receiver
 {

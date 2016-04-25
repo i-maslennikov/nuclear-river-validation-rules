@@ -64,10 +64,6 @@
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
       <Name>Replication.Core.API</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Replication.Core\Replication.Core.csproj">
-      <Project>{d3cf7e9e-4a8e-4583-a951-50ca940bd353}</Project>
-      <Name>Replication.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

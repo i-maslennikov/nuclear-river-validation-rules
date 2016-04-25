@@ -1,14 +1,9 @@
 ﻿using System;
 
-using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
+using NuClear.CustomerIntelligence.OperationsProcessing.EntityTypes;
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
-
-using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
-using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
-using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
-using Statistics = NuClear.CustomerIntelligence.Domain.Model.Statistics;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing
 {
@@ -16,26 +11,26 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
     {
         private static readonly Action<EntityTypeMappingRegistryBuilder> ErmTypeMap
             = builder => builder
-                    .AddMapping<EntityTypeAppointment, Erm.Appointment>()
-                    .AddMapping<EntityTypePhonecall, Erm.Phonecall>()
-                    .AddMapping<EntityTypeTask, Erm.Task>()
-                    .AddMapping<EntityTypeLetter, Erm.Letter>()
-                    .AddMapping<EntityTypeAccount, Erm.Account>()
-                    .AddMapping<EntityTypeBranchOfficeOrganizationUnit, Erm.BranchOfficeOrganizationUnit>()
-                    .AddMapping<EntityTypeCategory, Erm.Category>()
-                    .AddMapping<EntityTypeCategoryFirmAddress, Erm.CategoryFirmAddress>()
-                    .AddMapping<EntityTypeCategoryGroup, Erm.CategoryGroup>()
-                    .AddMapping<EntityTypeCategoryOrganizationUnit, Erm.CategoryOrganizationUnit>()
-                    .AddMapping<EntityTypeClient, Erm.Client>()
-                    .AddMapping<EntityTypeContact, Erm.Contact>()
-                    .AddMapping<EntityTypeFirm, Erm.Firm>()
-                    .AddMapping<EntityTypeFirmAddress, Erm.FirmAddress>()
-                    .AddMapping<EntityTypeFirmContact, Erm.FirmContact>()
-                    .AddMapping<EntityTypeLegalPerson, Erm.LegalPerson>()
-                    .AddMapping<EntityTypeOrder, Erm.Order>()
-                    .AddMapping<EntityTypeProject, Erm.Project>()
-                    .AddMapping<EntityTypeTerritory, Erm.Territory>()
-                    .AddMapping<EntityTypeSalesModelCategoryRestriction, Erm.SalesModelCategoryRestriction>()
+                    .AddMapping<EntityTypeAppointment, Storage.Model.Erm.Appointment>()
+                    .AddMapping<EntityTypePhonecall, Storage.Model.Erm.Phonecall>()
+                    .AddMapping<EntityTypeTask, Storage.Model.Erm.Task>()
+                    .AddMapping<EntityTypeLetter, Storage.Model.Erm.Letter>()
+                    .AddMapping<EntityTypeAccount, Storage.Model.Erm.Account>()
+                    .AddMapping<EntityTypeBranchOfficeOrganizationUnit, Storage.Model.Erm.BranchOfficeOrganizationUnit>()
+                    .AddMapping<EntityTypeCategory, Storage.Model.Erm.Category>()
+                    .AddMapping<EntityTypeCategoryFirmAddress, Storage.Model.Erm.CategoryFirmAddress>()
+                    .AddMapping<EntityTypeCategoryGroup, Storage.Model.Erm.CategoryGroup>()
+                    .AddMapping<EntityTypeCategoryOrganizationUnit, Storage.Model.Erm.CategoryOrganizationUnit>()
+                    .AddMapping<EntityTypeClient, Storage.Model.Erm.Client>()
+                    .AddMapping<EntityTypeContact, Storage.Model.Erm.Contact>()
+                    .AddMapping<EntityTypeFirm, Storage.Model.Erm.Firm>()
+                    .AddMapping<EntityTypeFirmAddress, Storage.Model.Erm.FirmAddress>()
+                    .AddMapping<EntityTypeFirmContact, Storage.Model.Erm.FirmContact>()
+                    .AddMapping<EntityTypeLegalPerson, Storage.Model.Erm.LegalPerson>()
+                    .AddMapping<EntityTypeOrder, Storage.Model.Erm.Order>()
+                    .AddMapping<EntityTypeProject, Storage.Model.Erm.Project>()
+                    .AddMapping<EntityTypeTerritory, Storage.Model.Erm.Territory>()
+                    .AddMapping<EntityTypeSalesModelCategoryRestriction, Storage.Model.Erm.SalesModelCategoryRestriction>()
                     .AddAsVirtual(EntityTypeBuilding.Instance)
                     .AddAsVirtual(EntityTypeDeal.Instance)
                     .AddAsVirtual(EntityTypeOrderPosition.Instance)
@@ -45,42 +40,42 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> FactsTypeMap
             = builder => builder
-                    .AddMapping<EntityTypeActivity, Facts.Activity>()
-                    .AddMapping<EntityTypeAccount, Facts.Account>()
-                    .AddMapping<EntityTypeBranchOfficeOrganizationUnit, Facts.BranchOfficeOrganizationUnit>()
-                    .AddMapping<EntityTypeCategory, Facts.Category>()
-                    .AddMapping<EntityTypeCategoryFirmAddress, Facts.CategoryFirmAddress>()
-                    .AddMapping<EntityTypeCategoryGroup, Facts.CategoryGroup>()
-                    .AddMapping<EntityTypeCategoryOrganizationUnit, Facts.CategoryOrganizationUnit>()
-                    .AddMapping<EntityTypeClient, Facts.Client>()
-                    .AddMapping<EntityTypeContact, Facts.Contact>()
-                    .AddMapping<EntityTypeFirm, Facts.Firm>()
-                    .AddMapping<EntityTypeFirmAddress, Facts.FirmAddress>()
-                    .AddMapping<EntityTypeFirmContact, Facts.FirmContact>()
-                    .AddMapping<EntityTypeLegalPerson, Facts.LegalPerson>()
-                    .AddMapping<EntityTypeOrder, Facts.Order>()
-                    .AddMapping<EntityTypeProject, Facts.Project>()
-                    .AddMapping<EntityTypeTerritory, Facts.Territory>()
-                    .AddMapping<EntityTypeSalesModelCategoryRestriction, Facts.SalesModelCategoryRestriction>();
+                    .AddMapping<EntityTypeActivity, Storage.Model.Facts.Activity>()
+                    .AddMapping<EntityTypeAccount, Storage.Model.Facts.Account>()
+                    .AddMapping<EntityTypeBranchOfficeOrganizationUnit, Storage.Model.Facts.BranchOfficeOrganizationUnit>()
+                    .AddMapping<EntityTypeCategory, Storage.Model.Facts.Category>()
+                    .AddMapping<EntityTypeCategoryFirmAddress, Storage.Model.Facts.CategoryFirmAddress>()
+                    .AddMapping<EntityTypeCategoryGroup, Storage.Model.Facts.CategoryGroup>()
+                    .AddMapping<EntityTypeCategoryOrganizationUnit, Storage.Model.Facts.CategoryOrganizationUnit>()
+                    .AddMapping<EntityTypeClient, Storage.Model.Facts.Client>()
+                    .AddMapping<EntityTypeContact, Storage.Model.Facts.Contact>()
+                    .AddMapping<EntityTypeFirm, Storage.Model.Facts.Firm>()
+                    .AddMapping<EntityTypeFirmAddress, Storage.Model.Facts.FirmAddress>()
+                    .AddMapping<EntityTypeFirmContact, Storage.Model.Facts.FirmContact>()
+                    .AddMapping<EntityTypeLegalPerson, Storage.Model.Facts.LegalPerson>()
+                    .AddMapping<EntityTypeOrder, Storage.Model.Facts.Order>()
+                    .AddMapping<EntityTypeProject, Storage.Model.Facts.Project>()
+                    .AddMapping<EntityTypeTerritory, Storage.Model.Facts.Territory>()
+                    .AddMapping<EntityTypeSalesModelCategoryRestriction, Storage.Model.Facts.SalesModelCategoryRestriction>();
 
         // only aggregates
         private static readonly Action<EntityTypeMappingRegistryBuilder> CustomerIntelligenceTypeMap
             = builder => builder
-                    .AddMapping<EntityTypeCategoryGroup, CI.CategoryGroup>()
-                    .AddMapping<EntityTypeClient, CI.Client>()
-                    .AddMapping<EntityTypeFirm, CI.Firm>()
-                    .AddMapping<EntityTypeProject, CI.Project>()
-                    .AddMapping<EntityTypeTerritory, CI.Territory>()
-                    .AddMapping<EntityTypeProjectStatistics, Statistics.ProjectStatistics>()
-                    .AddMapping<EntityTypeProjectCategoryStatistics, Statistics.ProjectCategoryStatistics>()
-                    .AddAsPersistenceOnly(typeof(CI.ClientContact))
-                    .AddAsPersistenceOnly(typeof(CI.ProjectCategory))
-                    .AddAsPersistenceOnly(typeof(CI.FirmActivity))
-                    .AddAsPersistenceOnly(typeof(CI.FirmBalance))
-                    .AddAsPersistenceOnly(typeof(CI.FirmCategory1))
-                    .AddAsPersistenceOnly(typeof(CI.FirmCategory2))
-                    .AddAsPersistenceOnly(typeof(CI.FirmTerritory))
-                    .AddAsPersistenceOnly(typeof(Statistics.FirmCategory3));
+                    .AddMapping<EntityTypeCategoryGroup, Storage.Model.CI.CategoryGroup>()
+                    .AddMapping<EntityTypeClient, Storage.Model.CI.Client>()
+                    .AddMapping<EntityTypeFirm, Storage.Model.CI.Firm>()
+                    .AddMapping<EntityTypeProject, Storage.Model.CI.Project>()
+                    .AddMapping<EntityTypeTerritory, Storage.Model.CI.Territory>()
+                    .AddMapping<EntityTypeProjectStatistics, Storage.Model.Statistics.ProjectStatistics>()
+                    .AddMapping<EntityTypeProjectCategoryStatistics, Storage.Model.Statistics.ProjectCategoryStatistics>()
+                    .AddAsPersistenceOnly(typeof(Storage.Model.CI.ClientContact))
+                    .AddAsPersistenceOnly(typeof(Storage.Model.CI.ProjectCategory))
+                    .AddAsPersistenceOnly(typeof(Storage.Model.CI.FirmActivity))
+                    .AddAsPersistenceOnly(typeof(Storage.Model.CI.FirmBalance))
+                    .AddAsPersistenceOnly(typeof(Storage.Model.CI.FirmCategory1))
+                    .AddAsPersistenceOnly(typeof(Storage.Model.CI.FirmCategory2))
+                    .AddAsPersistenceOnly(typeof(Storage.Model.CI.FirmTerritory))
+                    .AddAsPersistenceOnly(typeof(Storage.Model.Statistics.FirmCategory3));
 
         public static IEntityTypeMappingRegistry<ErmSubDomain> CreateErmContext()
         {

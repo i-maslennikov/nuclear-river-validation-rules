@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
+using NuClear.CustomerIntelligence.OperationsProcessing.EntityTypes;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Operations;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Model.Common.Operations.Identity.Generic;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Replication.OperationsProcessing.Metadata;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing
 {

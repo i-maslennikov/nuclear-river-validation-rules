@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Domain.EntityTypes;
+using NuClear.CustomerIntelligence.OperationsProcessing.EntityTypes;
 using NuClear.Model.Common.Entities;
 using NuClear.Replication.OperationsProcessing.Primary;
 

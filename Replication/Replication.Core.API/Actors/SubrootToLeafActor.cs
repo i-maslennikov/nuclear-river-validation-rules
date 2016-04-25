@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.River.Common.Metadata;
-
 namespace NuClear.Replication.Core.API.Actors
 {
     public sealed class SubrootToLeafActor : IActor

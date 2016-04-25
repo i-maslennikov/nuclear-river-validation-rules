@@ -56,10 +56,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Metadata\Common.Metadata.csproj">
-      <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
-      <Name>Common.Metadata</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Replication\Replication.Bulk.Api\Replication.Bulk.API.csproj">
       <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
       <Name>Replication.Bulk.API</Name>

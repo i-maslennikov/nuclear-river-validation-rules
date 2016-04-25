@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Domain.Model.Facts;
+using NuClear.CustomerIntelligence.Storage.Model.CI;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Replication.Bulk.API.Commands;
 using NuClear.Replication.Bulk.API.Factories;
 using NuClear.Replication.Core.API.DataObjects;
 
+using CategoryGroup = NuClear.CustomerIntelligence.Storage.Model.Facts.CategoryGroup;
+using Client = NuClear.CustomerIntelligence.Storage.Model.Facts.Client;
 using DataObjectTypesProvider = NuClear.Replication.Bulk.API.DataObjectTypesProvider;
+using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
+using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
+using Territory = NuClear.CustomerIntelligence.Storage.Model.Facts.Territory;
 
 namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
 {
@@ -42,17 +48,17 @@ namespace NuClear.CustomerIntelligence.StateInitialization.EntryPoint
                 return new DataObjectTypesProvider(
                     new List<Type>
                         {
-                            typeof(Domain.Model.CI.Firm),
-                            typeof(Domain.Model.CI.FirmActivity),
-                            typeof(Domain.Model.CI.FirmBalance),
-                            typeof(Domain.Model.CI.FirmCategory1),
-                            typeof(Domain.Model.CI.FirmCategory2),
-                            typeof(Domain.Model.CI.FirmTerritory),
-                            typeof(Domain.Model.CI.Client),
-                            typeof(Domain.Model.CI.ClientContact),
-                            typeof(Domain.Model.CI.ProjectCategory),
-                            typeof(Domain.Model.CI.Territory),
-                            typeof(Domain.Model.CI.CategoryGroup)
+                            typeof(Storage.Model.CI.Firm),
+                            typeof(FirmActivity),
+                            typeof(FirmBalance),
+                            typeof(FirmCategory1),
+                            typeof(FirmCategory2),
+                            typeof(FirmTerritory),
+                            typeof(Storage.Model.CI.Client),
+                            typeof(ClientContact),
+                            typeof(ProjectCategory),
+                            typeof(Storage.Model.CI.Territory),
+                            typeof(Storage.Model.CI.CategoryGroup)
                         });
             }
 

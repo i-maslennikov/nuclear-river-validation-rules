@@ -1,5 +1,4 @@
-﻿using NuClear.CustomerIntelligence.Domain.EntityTypes;
-using NuClear.Model.Common.Entities;
+﻿using NuClear.Model.Common.Entities;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {

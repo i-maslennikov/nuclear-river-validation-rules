@@ -4,23 +4,23 @@ using System.Linq.Expressions;
 
 using Moq;
 
-using NuClear.CustomerIntelligence.Domain;
-using NuClear.CustomerIntelligence.Domain.EntityTypes;
 using NuClear.CustomerIntelligence.Storage;
+using NuClear.CustomerIntelligence.Storage.Model.CI;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Metamodeling.Elements;
 using NuClear.Model.Common.Entities;
-using NuClear.Replication.Core;
-using NuClear.Replication.Core.Aggregates;
-using NuClear.Replication.Core.API.Aggregates;
+using NuClear.Replication.Core.API;
 using NuClear.Replication.Core.API.DataObjects;
-using NuClear.River.Common.Metadata.Elements;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 
 using NUnit.Framework;
 
-using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
-using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
+using CategoryGroup = NuClear.CustomerIntelligence.Storage.Model.Facts.CategoryGroup;
+using Client = NuClear.CustomerIntelligence.Storage.Model.Facts.Client;
+using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
+using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
+using Territory = NuClear.CustomerIntelligence.Storage.Model.Facts.Territory;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {
@@ -30,392 +30,392 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldInitializeClient()
         {
-            SourceDb.Has(new Facts::Client { Id = 1 });
+            SourceDb.Has(new Client { Id = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Client>(EntityTypeClient.Instance, 1)
-                          .Verify<CI::Client>(m => m.Add(It.Is(Predicate.Match(new CI::Client { Id = 1 }))));
+                          .Initialize<Storage.Model.CI.Client>(EntityTypeClient.Instance, 1)
+                          .Verify<Storage.Model.CI.Client>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1 }))));
         }
 
         [Test]
         public void ShouldInitializeClientHavingContact()
         {
-            SourceDb.Has(new Facts::Client { Id = 1 })
-                    .Has(new Facts::Contact { Id = 1, ClientId = 1 });
+            SourceDb.Has(new Client { Id = 1 })
+                    .Has(new Contact { Id = 1, ClientId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Client>(EntityTypeClient.Instance, 1)
-                          .Verify<CI::Client>(m => m.Add(It.Is(Predicate.Match(new CI::Client { Id = 1 }))))
-                          .Verify<CI::ClientContact>(m => m.Add(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 1, ContactId = 1 }))));
+                          .Initialize<Storage.Model.CI.Client>(EntityTypeClient.Instance, 1)
+                          .Verify<Storage.Model.CI.Client>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1 }))))
+                          .Verify<ClientContact>(m => m.Add(It.Is(Predicate.Match(new ClientContact { ClientId = 1, ContactId = 1 }))));
         }
 
         [Test]
         public void ShouldRecalculateClient()
         {
-            SourceDb.Has(new Facts::Client { Id = 1, Name = "new name" });
-            TargetDb.Has(new CI::Client { Id = 1, Name = "old name" });
+            SourceDb.Has(new Client { Id = 1, Name = "new name" });
+            TargetDb.Has(new Storage.Model.CI.Client { Id = 1, Name = "old name" });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Client>(EntityTypeClient.Instance, 1)
-                          .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 1, Name = "new name" }))));
+                          .Recalculate<Storage.Model.CI.Client>(EntityTypeClient.Instance, 1)
+                          .Verify<Storage.Model.CI.Client>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1, Name = "new name" }))));
         }
 
         [Test]
         public void ShouldRecalculateClientHavingContact()
         {
-            SourceDb.Has(new Facts::Client { Id = 1 },
-                         new Facts::Client { Id = 2 },
-                         new Facts::Client { Id = 3 })
-                    .Has(new Facts::Contact { Id = 1, ClientId = 1 },
-                         new Facts::Contact { Id = 2, ClientId = 2 });
-            TargetDb.Has(new CI::Client { Id = 1 },
-                         new CI::Client { Id = 2 },
-                         new CI::Client { Id = 3 })
-                    .Has(new CI::ClientContact { ClientId = 2, ContactId = 2 },
-                         new CI::ClientContact { ClientId = 3, ContactId = 3 });
+            SourceDb.Has(new Client { Id = 1 },
+                         new Client { Id = 2 },
+                         new Client { Id = 3 })
+                    .Has(new Contact { Id = 1, ClientId = 1 },
+                         new Contact { Id = 2, ClientId = 2 });
+            TargetDb.Has(new Storage.Model.CI.Client { Id = 1 },
+                         new Storage.Model.CI.Client { Id = 2 },
+                         new Storage.Model.CI.Client { Id = 3 })
+                    .Has(new ClientContact { ClientId = 2, ContactId = 2 },
+                         new ClientContact { ClientId = 3, ContactId = 3 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Client>(EntityTypeClient.Instance, 1)
-                          .Recalculate<CI::Client>(EntityTypeClient.Instance, 2)
-                          .Recalculate<CI::Client>(EntityTypeClient.Instance, 3)
-                          .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 1 }))))
-                          .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 2 }))))
-                          .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 3 }))))
-                          .Verify<CI::ClientContact>(m => m.Add(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 1, ContactId = 1 }))))
-                          .Verify<CI::ClientContact>(m => m.Delete(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 3, ContactId = 3 }))));
+                          .Recalculate<Storage.Model.CI.Client>(EntityTypeClient.Instance, 1)
+                          .Recalculate<Storage.Model.CI.Client>(EntityTypeClient.Instance, 2)
+                          .Recalculate<Storage.Model.CI.Client>(EntityTypeClient.Instance, 3)
+                          .Verify<Storage.Model.CI.Client>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1 }))))
+                          .Verify<Storage.Model.CI.Client>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 2 }))))
+                          .Verify<Storage.Model.CI.Client>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 3 }))))
+                          .Verify<ClientContact>(m => m.Add(It.Is(Predicate.Match(new ClientContact { ClientId = 1, ContactId = 1 }))))
+                          .Verify<ClientContact>(m => m.Delete(It.Is(Predicate.Match(new ClientContact { ClientId = 3, ContactId = 3 }))));
         }
 
         [Test]
         public void ShouldDestroyClient()
         {
-            TargetDb.Has(new CI::Client { Id = 1 });
+            TargetDb.Has(new Storage.Model.CI.Client { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Client>(EntityTypeClient.Instance, 1)
-                          .Verify<CI::Client>(m => m.Delete(It.Is(Predicate.Match(new CI::Client { Id = 1 }))));
+                          .Destroy<Storage.Model.CI.Client>(EntityTypeClient.Instance, 1)
+                          .Verify<Storage.Model.CI.Client>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1 }))));
         }
 
         [Test]
         public void ShouldDestroyClientHavingContact()
         {
-            TargetDb.Has(new CI::Client { Id = 1 })
-                    .Has(new CI::ClientContact { ClientId = 1, ContactId = 1 });
+            TargetDb.Has(new Storage.Model.CI.Client { Id = 1 })
+                    .Has(new ClientContact { ClientId = 1, ContactId = 1 });
 
             Transformation.Create(Query)
-                .Destroy<CI::Client>(EntityTypeClient.Instance, 1)
-                .Verify<CI::Client>(m => m.Delete(It.Is(Predicate.Match(new CI::Client { Id = 1 }))))
-                .Verify<CI::ClientContact>(m => m.Delete(It.Is(Predicate.Match(new CI::ClientContact { ClientId = 1, ContactId = 1 }))));
+                .Destroy<Storage.Model.CI.Client>(EntityTypeClient.Instance, 1)
+                .Verify<Storage.Model.CI.Client>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1 }))))
+                .Verify<ClientContact>(m => m.Delete(It.Is(Predicate.Match(new ClientContact { ClientId = 1, ContactId = 1 }))));
         }
 
         [Test]
         public void ShouldInitializeFirm()
         {
-            SourceDb.Has(new Facts::Project { OrganizationUnitId = 1 })
-                    .Has(new Facts::Firm { Id = 1, OrganizationUnitId = 1 });
+            SourceDb.Has(new Project { OrganizationUnitId = 1 })
+                    .Has(new Firm { Id = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Add(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))));
+                          .Initialize<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1 }))));
         }
 
         [Test]
         public void ShouldInitializeFirmHavingBalance()
         {
-            SourceDb.Has(new Facts::Project { Id = 1, OrganizationUnitId = 1 })
+            SourceDb.Has(new Project { Id = 1, OrganizationUnitId = 1 })
 
-                    .Has(new Facts::Client { Id = 1 })
-                    .Has(new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
-                    .Has(new Facts::LegalPerson { Id = 1, ClientId = 1 })
-                    .Has(new Facts::Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, Balance = 123.45m })
-                    .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
+                    .Has(new Client { Id = 1 })
+                    .Has(new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
+                    .Has(new LegalPerson { Id = 1, ClientId = 1 })
+                    .Has(new Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, Balance = 123.45m })
+                    .Has(new Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Add(It.Is(Predicate.Match(new CI::Firm { Id = 1, ProjectId = 1, ClientId = 1 }))))
-                          .Verify<CI::FirmBalance>(m => m.Add(It.Is(Predicate.Match(new CI::FirmBalance { ProjectId = 1, FirmId = 1, AccountId = 1, Balance = 123.45m }))));
+                          .Initialize<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1, ProjectId = 1, ClientId = 1 }))))
+                          .Verify<FirmBalance>(m => m.Add(It.Is(Predicate.Match(new FirmBalance { ProjectId = 1, FirmId = 1, AccountId = 1, Balance = 123.45m }))));
         }
 
         [Test]
         public void ShouldInitializeFirmHavingClient()
         {
-            SourceDb.Has(new Facts::Category { Id = 1, Level = 3 })
-                    .Has(new Facts::Project { OrganizationUnitId = 1 })
-                    .Has(new Facts::Client { Id = 1 })
-                    .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
+            SourceDb.Has(new Category { Id = 1, Level = 3 })
+                    .Has(new Project { OrganizationUnitId = 1 })
+                    .Has(new Client { Id = 1 })
+                    .Has(new Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Add(It.Is(Predicate.Match(new CI::Firm { Id = 1, ClientId = 1 }))))
-                          .Verify<CI::Client>(m => m.Add(It.Is(Predicate.Match(new CI::Client { Id = 1 }))), Times.Never);
+                          .Initialize<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1, ClientId = 1 }))))
+                          .Verify<Storage.Model.CI.Client>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1 }))), Times.Never);
         }
 
         [Test]
         public void ShouldRecalculateFirm()
         {
-            SourceDb.Has(new Facts::Project { OrganizationUnitId = 1 })
-                    .Has(new Facts::Firm { Id = 1, OrganizationUnitId = 1 });
+            SourceDb.Has(new Project { OrganizationUnitId = 1 })
+                    .Has(new Firm { Id = 1, OrganizationUnitId = 1 });
 
-            TargetDb.Has(new CI::Firm { Id = 1 });
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))));
+                          .Recalculate<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1 }))));
         }
 
         [Test]
         public void ShouldRecalculateFirmHavingBalance()
         {
-            SourceDb.Has(new Facts::Project { Id = 1, OrganizationUnitId = 1 })
-                    .Has(new Facts::Client { Id = 1 },
-                         new Facts::Client { Id = 2 })
-                    .Has(new Facts::BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
-                    .Has(new Facts::LegalPerson { Id = 1, ClientId = 1 },
-                         new Facts::LegalPerson { Id = 2, ClientId = 2 })
-                    .Has(new Facts::Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, Balance = 123 },
-                         new Facts::Account { Id = 2, LegalPersonId = 2, BranchOfficeOrganizationUnitId = 1, Balance = 456 })
-                    .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 },
-                         new Facts::Firm { Id = 2, ClientId = 2, OrganizationUnitId = 1 },
-                         new Facts::Firm { Id = 3, OrganizationUnitId = 1 });
+            SourceDb.Has(new Project { Id = 1, OrganizationUnitId = 1 })
+                    .Has(new Client { Id = 1 },
+                         new Client { Id = 2 })
+                    .Has(new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 1 })
+                    .Has(new LegalPerson { Id = 1, ClientId = 1 },
+                         new LegalPerson { Id = 2, ClientId = 2 })
+                    .Has(new Account { Id = 1, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, Balance = 123 },
+                         new Account { Id = 2, LegalPersonId = 2, BranchOfficeOrganizationUnitId = 1, Balance = 456 })
+                    .Has(new Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 },
+                         new Firm { Id = 2, ClientId = 2, OrganizationUnitId = 1 },
+                         new Firm { Id = 3, OrganizationUnitId = 1 });
 
-            TargetDb.Has(new CI::Firm { Id = 1 },
-                         new CI::Firm { Id = 2 },
-                         new CI::Firm { Id = 3 })
-                    .Has(new CI::FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 123 },
-                         new CI::FirmBalance { FirmId = 3, ProjectId = 1, Balance = 123 });
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1 },
+                         new Storage.Model.CI.Firm { Id = 2 },
+                         new Storage.Model.CI.Firm { Id = 3 })
+                    .Has(new FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 123 },
+                         new FirmBalance { FirmId = 3, ProjectId = 1, Balance = 123 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1, 2, 3)
-                          .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1, ClientId = 1, ProjectId = 1 }))))
-                          .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 2, ClientId = 2, ProjectId = 1 }))))
-                          .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 3, ProjectId = 1 }))))
-                          .Verify<CI::FirmBalance>(m => m.Add(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 1, AccountId = 1, ProjectId = 1, Balance = 123 }))))
-                          .Verify<CI::FirmBalance>(m => m.Add(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 456 }))))
-                          .Verify<CI::FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 3, ProjectId = 1, Balance = 123 }))))
-                          .Verify<CI::FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 123 }))));
+                          .Recalculate<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1, 2, 3)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1, ClientId = 1, ProjectId = 1 }))))
+                          .Verify<Storage.Model.CI.Firm>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 2, ClientId = 2, ProjectId = 1 }))))
+                          .Verify<Storage.Model.CI.Firm>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 3, ProjectId = 1 }))))
+                          .Verify<FirmBalance>(m => m.Add(It.Is(Predicate.Match(new FirmBalance { FirmId = 1, AccountId = 1, ProjectId = 1, Balance = 123 }))))
+                          .Verify<FirmBalance>(m => m.Add(It.Is(Predicate.Match(new FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 456 }))))
+                          .Verify<FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new FirmBalance { FirmId = 3, ProjectId = 1, Balance = 123 }))))
+                          .Verify<FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new FirmBalance { FirmId = 2, AccountId = 2, ProjectId = 1, Balance = 123 }))));
         }
 
         [Test]
         public void ShouldRecalculateFirmHavingCategory()
         {
-            SourceDb.Has(new Facts::Category { Id = 1, Level = 1 },
-                         new Facts::Category { Id = 2, Level = 1 },
-                         new Facts::Category { Id = 3, Level = 2, ParentId = 1 },
-                         new Facts::Category { Id = 4, Level = 2, ParentId = 2 },
-                         new Facts::Category { Id = 5, Level = 3, ParentId = 3 },
-                         new Facts::Category { Id = 6, Level = 3, ParentId = 4 });
-            SourceDb.Has(new Facts::CategoryOrganizationUnit { Id = 1, CategoryId = 5, OrganizationUnitId = 1 },
-                         new Facts::CategoryOrganizationUnit { Id = 2, CategoryId = 6, OrganizationUnitId = 1 });
-            SourceDb.Has(new Facts::Project { OrganizationUnitId = 1 });
-            SourceDb.Has(new Facts::FirmAddress { Id = 1, FirmId = 1 },
-                         new Facts::FirmAddress { Id = 2, FirmId = 2 });
-            SourceDb.Has(new Facts::CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 5 },
-                         new Facts::CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 6 });
-            SourceDb.Has(new Facts::Firm { Id = 1, OrganizationUnitId = 1 },
-                         new Facts::Firm { Id = 2, OrganizationUnitId = 1 },
-                         new Facts::Firm { Id = 3, OrganizationUnitId = 1 });
+            SourceDb.Has(new Category { Id = 1, Level = 1 },
+                         new Category { Id = 2, Level = 1 },
+                         new Category { Id = 3, Level = 2, ParentId = 1 },
+                         new Category { Id = 4, Level = 2, ParentId = 2 },
+                         new Category { Id = 5, Level = 3, ParentId = 3 },
+                         new Category { Id = 6, Level = 3, ParentId = 4 });
+            SourceDb.Has(new CategoryOrganizationUnit { Id = 1, CategoryId = 5, OrganizationUnitId = 1 },
+                         new CategoryOrganizationUnit { Id = 2, CategoryId = 6, OrganizationUnitId = 1 });
+            SourceDb.Has(new Project { OrganizationUnitId = 1 });
+            SourceDb.Has(new FirmAddress { Id = 1, FirmId = 1 },
+                         new FirmAddress { Id = 2, FirmId = 2 });
+            SourceDb.Has(new CategoryFirmAddress { Id = 1, FirmAddressId = 1, CategoryId = 5 },
+                         new CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 6 });
+            SourceDb.Has(new Firm { Id = 1, OrganizationUnitId = 1 },
+                         new Firm { Id = 2, OrganizationUnitId = 1 },
+                         new Firm { Id = 3, OrganizationUnitId = 1 });
 
-            TargetDb.Has(new CI::Firm { Id = 1 },
-                         new CI::Firm { Id = 2 },
-                         new CI::Firm { Id = 3 })
-                    .Has(new CI::FirmCategory1 { FirmId = 1, CategoryId = 2 },
-                         new CI::FirmCategory1 { FirmId = 2, CategoryId = 1 })
-                    .Has(new CI::FirmCategory2 { FirmId = 1, CategoryId = 4 },
-                         new CI::FirmCategory2 { FirmId = 2, CategoryId = 3 });
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1 },
+                         new Storage.Model.CI.Firm { Id = 2 },
+                         new Storage.Model.CI.Firm { Id = 3 })
+                    .Has(new FirmCategory1 { FirmId = 1, CategoryId = 2 },
+                         new FirmCategory1 { FirmId = 2, CategoryId = 1 })
+                    .Has(new FirmCategory2 { FirmId = 1, CategoryId = 4 },
+                         new FirmCategory2 { FirmId = 2, CategoryId = 3 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 2)
-                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 3)
-                          .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1, AddressCount = 1 }))))
-                          .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 2, AddressCount = 1 }))))
-                          .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 3 }))))
-                          .Verify<CI::FirmCategory1>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 }))))
-                          .Verify<CI::FirmCategory1>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 2, CategoryId = 2 }))))
-                          .Verify<CI::FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 1, CategoryId = 2 }))))
-                          .Verify<CI::FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 2, CategoryId = 1 }))))
-                          .Verify<CI::FirmCategory2>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 1, CategoryId = 3 }))))
-                          .Verify<CI::FirmCategory2>(m => m.Add(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 2, CategoryId = 4 }))))
-                          .Verify<CI::FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 1, CategoryId = 4 }))))
-                          .Verify<CI::FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 2, CategoryId = 3 }))))
+                          .Recalculate<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Recalculate<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 2)
+                          .Recalculate<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 3)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1, AddressCount = 1 }))))
+                          .Verify<Storage.Model.CI.Firm>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 2, AddressCount = 1 }))))
+                          .Verify<Storage.Model.CI.Firm>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 3 }))))
+                          .Verify<FirmCategory1>(m => m.Add(It.Is(Predicate.Match(new FirmCategory1 { FirmId = 1, CategoryId = 1 }))))
+                          .Verify<FirmCategory1>(m => m.Add(It.Is(Predicate.Match(new FirmCategory1 { FirmId = 2, CategoryId = 2 }))))
+                          .Verify<FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new FirmCategory1 { FirmId = 1, CategoryId = 2 }))))
+                          .Verify<FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new FirmCategory1 { FirmId = 2, CategoryId = 1 }))))
+                          .Verify<FirmCategory2>(m => m.Add(It.Is(Predicate.Match(new FirmCategory2 { FirmId = 1, CategoryId = 3 }))))
+                          .Verify<FirmCategory2>(m => m.Add(It.Is(Predicate.Match(new FirmCategory2 { FirmId = 2, CategoryId = 4 }))))
+                          .Verify<FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new FirmCategory2 { FirmId = 1, CategoryId = 4 }))))
+                          .Verify<FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new FirmCategory2 { FirmId = 2, CategoryId = 3 }))))
                           ;
         }
 
         [Test]
         public void ShouldRecalculateFirmHavingClient()
         {
-            SourceDb.Has(new Facts::Category { Id = 1, Level = 3 })
-                    .Has(new Facts::Project { OrganizationUnitId = 1 })
-                    .Has(new Facts::Client { Id = 1 })
-                    .Has(new Facts::Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
+            SourceDb.Has(new Category { Id = 1, Level = 3 })
+                    .Has(new Project { OrganizationUnitId = 1 })
+                    .Has(new Client { Id = 1 })
+                    .Has(new Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
 
-            TargetDb.Has(new CI::Firm { Id = 1 })
-                    .Has(new CI::Client { Id = 1 });
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1 })
+                    .Has(new Storage.Model.CI.Client { Id = 1 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Update(It.Is(Predicate.Match(new CI::Firm { Id = 1, ClientId = 1 }))))
-                          .Verify<CI::Client>(m => m.Update(It.Is(Predicate.Match(new CI::Client { Id = 1 }))), Times.Never);
+                          .Recalculate<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1, ClientId = 1 }))))
+                          .Verify<Storage.Model.CI.Client>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1 }))), Times.Never);
         }
 
         [Test]
         public void ShouldRecalculateFirmHavingTerritory()
         {
-            SourceDb.Has(new Facts::Firm { Id = 1 })
-                    .Has(new Facts::FirmAddress { FirmId = 1, TerritoryId = 2 });
+            SourceDb.Has(new Firm { Id = 1 })
+                    .Has(new FirmAddress { FirmId = 1, TerritoryId = 2 });
 
-            TargetDb.Has(new CI::Firm { Id = 1 })
-                    .Has(new CI::FirmTerritory { FirmId = 1, TerritoryId = 3 });
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1 })
+                    .Has(new FirmTerritory { FirmId = 1, TerritoryId = 3 });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::FirmTerritory>(m => m.Add(It.Is(Predicate.Match(new CI::FirmTerritory { FirmId = 1, TerritoryId = 2 }))))
-                          .Verify<CI::FirmTerritory>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmTerritory { FirmId = 1, TerritoryId = 3 }))));
+                          .Recalculate<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<FirmTerritory>(m => m.Add(It.Is(Predicate.Match(new FirmTerritory { FirmId = 1, TerritoryId = 2 }))))
+                          .Verify<FirmTerritory>(m => m.Delete(It.Is(Predicate.Match(new FirmTerritory { FirmId = 1, TerritoryId = 3 }))));
         }
 
         [Test]
         public void ShouldDestroyFirm()
         {
-            TargetDb.Has(new CI::Firm { Id = 1 });
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))));
+                          .Destroy<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1 }))));
         }
 
         [Test]
         public void ShouldDestroyFirmHavingBalance()
         {
-            TargetDb.Has(new CI::Firm { Id = 1 })
-                    .Has(new CI::FirmBalance { FirmId = 1, Balance = 123 });
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1 })
+                    .Has(new FirmBalance { FirmId = 1, Balance = 123 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))))
-                          .Verify<CI::FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmBalance { FirmId = 1, Balance = 123 }))));
+                          .Destroy<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1 }))))
+                          .Verify<FirmBalance>(m => m.Delete(It.Is(Predicate.Match(new FirmBalance { FirmId = 1, Balance = 123 }))));
         }
 
         [Test]
         public void ShouldDestroyFirmHavingCategory()
         {
-            TargetDb.Has(new CI::Firm { Id = 1 })
-                    .Has(new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 })
-                    .Has(new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 })
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1 })
+                    .Has(new FirmCategory1 { FirmId = 1, CategoryId = 1 })
+                    .Has(new FirmCategory2 { FirmId = 1, CategoryId = 2 })
                     ;
 
             Transformation.Create(Query)
-                          .Destroy<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1 }))))
-                          .Verify<CI::FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 }))))
-                          .Verify<CI::FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 }))))
+                          .Destroy<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1 }))))
+                          .Verify<FirmCategory1>(m => m.Delete(It.Is(Predicate.Match(new FirmCategory1 { FirmId = 1, CategoryId = 1 }))))
+                          .Verify<FirmCategory2>(m => m.Delete(It.Is(Predicate.Match(new FirmCategory2 { FirmId = 1, CategoryId = 2 }))))
                           ;
         }
 
         [Test]
         public void ShouldDestroyFirmHavingClient()
         {
-            TargetDb.Has(new CI::Firm { Id = 1, ClientId = 1 })
-                    .Has(new CI::Client { Id = 1 });
+            TargetDb.Has(new Storage.Model.CI.Firm { Id = 1, ClientId = 1 })
+                    .Has(new Storage.Model.CI.Client { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Firm>(EntityTypeFirm.Instance, 1)
-                          .Verify<CI::Firm>(m => m.Delete(It.Is(Predicate.Match(new CI::Firm { Id = 1, ClientId = 1 }))))
-                          .Verify<CI::Client>(m => m.Delete(It.Is(Predicate.Match(new CI::Client { Id = 1 }))), Times.Never);
+                          .Destroy<Storage.Model.CI.Firm>(EntityTypeFirm.Instance, 1)
+                          .Verify<Storage.Model.CI.Firm>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Firm { Id = 1, ClientId = 1 }))))
+                          .Verify<Storage.Model.CI.Client>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Client { Id = 1 }))), Times.Never);
         }
 
         [Test]
         public void ShouldInitializeProject()
         {
-            SourceDb.Has(new Facts::Project { Id = 1 });
+            SourceDb.Has(new Project { Id = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Project>(EntityTypeProject.Instance, 1)
-                          .Verify<CI::Project>(m => m.Add(It.Is(Predicate.Match(new CI::Project { Id = 1 }))));
+                          .Initialize<Storage.Model.CI.Project>(EntityTypeProject.Instance, 1)
+                          .Verify<Storage.Model.CI.Project>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.Project { Id = 1 }))));
         }
 
         [Test]
         public void ShouldRecalculateProject()
         {
-            SourceDb.Has(new Facts::Project { Id = 1, Name = "new name" });
-            TargetDb.Has(new CI::Project { Id = 1, Name = "old name" });
+            SourceDb.Has(new Project { Id = 1, Name = "new name" });
+            TargetDb.Has(new Storage.Model.CI.Project { Id = 1, Name = "old name" });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::Project>(EntityTypeProject.Instance, 1)
-                          .Verify<CI::Project>(m => m.Update(It.Is(Predicate.Match(new CI::Project { Id = 1, Name = "new name" }))));
+                          .Recalculate<Storage.Model.CI.Project>(EntityTypeProject.Instance, 1)
+                          .Verify<Storage.Model.CI.Project>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Project { Id = 1, Name = "new name" }))));
         }
 
         [Test]
         public void ShouldDestroyProject()
         {
-            TargetDb.Has(new CI::Project { Id = 1 });
+            TargetDb.Has(new Storage.Model.CI.Project { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Project>(EntityTypeProject.Instance, 1)
-                          .Verify<CI::Project>(m => m.Delete(It.Is(Predicate.Match(new CI::Project { Id = 1 }))));
+                          .Destroy<Storage.Model.CI.Project>(EntityTypeProject.Instance, 1)
+                          .Verify<Storage.Model.CI.Project>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Project { Id = 1 }))));
         }
 
         [Test]
         public void ShouldInitializeTerritory()
         {
-            SourceDb.Has(new Facts::Project { Id = 1, OrganizationUnitId = 1 })
-                    .Has(new Facts::Territory { Id = 2, OrganizationUnitId = 1 });
+            SourceDb.Has(new Project { Id = 1, OrganizationUnitId = 1 })
+                    .Has(new Territory { Id = 2, OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::Territory>(EntityTypeTerritory.Instance, 2)
-                          .Verify<CI::Territory>(m => m.Add(It.Is(Predicate.Match(new CI::Territory { Id = 2, ProjectId = 1 }))));
+                          .Initialize<Storage.Model.CI.Territory>(EntityTypeTerritory.Instance, 2)
+                          .Verify<Storage.Model.CI.Territory>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.Territory { Id = 2, ProjectId = 1 }))));
         }
 
         [Test]
         public void ShouldRecalculateTerritory()
         {
-            SourceDb.Has(new Facts::Project { Id = 1, OrganizationUnitId = 1 })
-                    .Has(new Facts::Territory { Id = 1, OrganizationUnitId = 1, Name = "new name" });
+            SourceDb.Has(new Project { Id = 1, OrganizationUnitId = 1 })
+                    .Has(new Territory { Id = 1, OrganizationUnitId = 1, Name = "new name" });
 
-            TargetDb.Has(new CI::Territory { Id = 1, Name = "old name" });
+            TargetDb.Has(new Storage.Model.CI.Territory { Id = 1, Name = "old name" });
 
             Transformation.Create(Query)
-                .Recalculate<CI::Territory>(EntityTypeTerritory.Instance, 1)
-                .Verify<CI::Territory>(m => m.Update(It.Is(Predicate.Match(new CI::Territory { Id = 1, ProjectId = 1, Name = "new name" }))));
+                .Recalculate<Storage.Model.CI.Territory>(EntityTypeTerritory.Instance, 1)
+                .Verify<Storage.Model.CI.Territory>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.Territory { Id = 1, ProjectId = 1, Name = "new name" }))));
         }
 
         [Test]
         public void ShouldDestroyTerritory()
         {
-            TargetDb.Has(new CI::Territory { Id = 1 });
+            TargetDb.Has(new Storage.Model.CI.Territory { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::Territory>(EntityTypeTerritory.Instance, 1)
-                          .Verify<CI::Territory>(m => m.Delete(It.Is(Predicate.Match(new CI::Territory { Id = 1 }))));
+                          .Destroy<Storage.Model.CI.Territory>(EntityTypeTerritory.Instance, 1)
+                          .Verify<Storage.Model.CI.Territory>(m => m.Delete(It.Is(Predicate.Match(new Storage.Model.CI.Territory { Id = 1 }))));
         }
 
         [Test]
         public void ShouldInitializeCategoryGroup()
         {
-            SourceDb.Has(new Facts::CategoryGroup { Id = 1 });
+            SourceDb.Has(new CategoryGroup { Id = 1 });
 
             Transformation.Create(Query)
-                          .Initialize<CI::CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
-                          .Verify<CI::CategoryGroup>(m => m.Add(It.Is(Predicate.Match(new CI::CategoryGroup { Id = 1 }))));
+                          .Initialize<Storage.Model.CI.CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
+                          .Verify<Storage.Model.CI.CategoryGroup>(m => m.Add(It.Is(Predicate.Match(new Storage.Model.CI.CategoryGroup { Id = 1 }))));
         }
 
         [Test]
         public void ShouldRecalculateCategoryGroup()
         {
-            SourceDb.Has(new Facts::CategoryGroup { Id = 1, Name = "new name" });
-            TargetDb.Has(new CI::CategoryGroup { Id = 1, Name = "old name" });
+            SourceDb.Has(new CategoryGroup { Id = 1, Name = "new name" });
+            TargetDb.Has(new Storage.Model.CI.CategoryGroup { Id = 1, Name = "old name" });
 
             Transformation.Create(Query)
-                          .Recalculate<CI::CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
-                          .Verify<CI::CategoryGroup>(m => m.Update(It.Is(Predicate.Match(new CI::CategoryGroup { Id = 1, Name = "new name" }))));
+                          .Recalculate<Storage.Model.CI.CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
+                          .Verify<Storage.Model.CI.CategoryGroup>(m => m.Update(It.Is(Predicate.Match(new Storage.Model.CI.CategoryGroup { Id = 1, Name = "new name" }))));
         }
 
         [Test]
         public void ShouldDestroyCategoryGroup()
         {
-            TargetDb.Has(new CI::CategoryGroup { Id = 1 });
+            TargetDb.Has(new Storage.Model.CI.CategoryGroup { Id = 1 });
 
             Transformation.Create(Query)
-                          .Destroy<CI::CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
-                          .Verify<CI::CategoryGroup>(x => x.Delete(It.Is(Predicate.Match(new CI::CategoryGroup { Id = 1 }))));
+                          .Destroy<Storage.Model.CI.CategoryGroup>(EntityTypeCategoryGroup.Instance, 1)
+                          .Verify<Storage.Model.CI.CategoryGroup>(x => x.Delete(It.Is(Predicate.Match(new Storage.Model.CI.CategoryGroup { Id = 1 }))));
         }
 
         #region Transformation

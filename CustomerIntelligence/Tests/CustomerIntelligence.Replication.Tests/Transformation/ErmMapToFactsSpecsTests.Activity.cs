@@ -3,10 +3,9 @@ using System.Linq;
 
 using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Domain.Specifications;
+using NuClear.CustomerIntelligence.Storage.Model.Erm;
 
 using NUnit.Framework;
-
-using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {
@@ -15,30 +14,30 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         [Test]
         public void ShouldTransformAppointmentToActivity()
         {
-            ShouldTransform<Erm::Appointment, Erm::AppointmentReference>();
+            ShouldTransform<Appointment, AppointmentReference>();
         }
 
         [Test]
         public void ShouldTransformPhonecallToActivity()
         {
-            ShouldTransform<Erm::Phonecall, Erm::PhonecallReference>();
+            ShouldTransform<Phonecall, PhonecallReference>();
         }
 
         [Test]
         public void ShouldTransformTaskToActivity()
         {
-            ShouldTransform<Erm::Task, Erm::TaskReference>();
+            ShouldTransform<Task, TaskReference>();
         }
 
         [Test]
         public void ShouldTransformLetterToActivity()
         {
-            ShouldTransform<Erm::Letter, Erm::LetterReference>();
+            ShouldTransform<Letter, LetterReference>();
         }
 
         private void ShouldTransform<TActivity, TActivityReference>()
-            where TActivity : Erm::ActivityBase, new()
-            where TActivityReference : Erm::ActivityReference, new()
+            where TActivity : ActivityBase, new()
+            where TActivityReference : ActivityReference, new()
         {
             const int ActivityStatusCompleted = 2;
             const int RegardingObjectReference = 1;
