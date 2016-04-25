@@ -21,33 +21,63 @@ namespace NuClear.ValidationRules.Storage
                       .HasPrimaryKey(x => x.Id);
 
                 config.Entity<PriceDeniedPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.PriceId)
+                      .HasPrimaryKey(x => x.PrincipalPositionId)
+                      .HasPrimaryKey(x => x.DeniedPositionId)
+                      .HasPrimaryKey(x => x.ObjectBindingType);
 
                 config.Entity<PriceAssociatedPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.PriceId)
+                      .HasPrimaryKey(x => x.PrincipalPositionId)
+                      .HasPrimaryKey(x => x.AssociatedPositionId)
+                      .HasPrimaryKey(x => x.GroupId)
+                      .HasPrimaryKey(x => x.ObjectBindingType);
 
                 config.Entity<AdvertisementAmountRestriction>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.PriceId)
+                      .HasPrimaryKey(x => x.PositionId)
+                      .HasPrimaryKey(x => x.Min)
+                      .HasPrimaryKey(x => x.Max);
 
                 config.Entity<Ruleset>()
                       .HasSchemaName(PriceAggregateSchema)
                       .HasPrimaryKey(x => x.Id);
 
                 config.Entity<RulesetRule>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.RulesetId)
+                      .HasPrimaryKey(x => x.RuleType)
+                      .HasPrimaryKey(x => x.PrincipalPositionId)
+                      .HasPrimaryKey(x => x.ObjectBindingType)
+                      .HasPrimaryKey(x => x.DependentPositionId);
 
                 config.Entity<Order>()
                       .HasSchemaName(PriceAggregateSchema)
                       .HasPrimaryKey(x => x.Id);
 
                 config.Entity<OrderPeriod>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.Start)
+                      .HasPrimaryKey(x => x.OrganizationUnitId)
+                      .HasPrimaryKey(x => x.OrderId);
 
                 config.Entity<OrderPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.Category1Id)
+                      .HasPrimaryKey(x => x.Category3Id)
+                      .HasPrimaryKey(x => x.CompareMode)
+                      .HasPrimaryKey(x => x.FirmAddressId)
+                      .HasPrimaryKey(x => x.ItemPositionId)
+                      .HasPrimaryKey(x => x.OrderId)
+                      .HasPrimaryKey(x => x.PackagePositionId);
 
                 config.Entity<OrderPrice>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.OrderId)
+                      .HasPrimaryKey(x => x.PriceId);
 
                 config.Entity<Period>()
                       .HasSchemaName(PriceAggregateSchema)
@@ -60,7 +90,10 @@ namespace NuClear.ValidationRules.Storage
                       .HasPrimaryKey(x => x.Id);
 
                 config.Entity<PricePeriod>()
-                      .HasSchemaName(PriceAggregateSchema);
+                      .HasSchemaName(PriceAggregateSchema)
+                      .HasPrimaryKey(x => x.OrganizationUnitId)
+                      .HasPrimaryKey(x => x.PriceId)
+                      .HasPrimaryKey(x => x.Start);
 
                 return schema;
             }
