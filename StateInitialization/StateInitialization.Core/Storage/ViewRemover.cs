@@ -14,15 +14,15 @@ namespace NuClear.StateInitialization.Core.Storage
         public static IDisposable TemporaryRemoveViews(string connectionString)
         {
             var database = GetDatabase(connectionString);
-            var views = new List<StringCollection>();
-            foreach (var view in database.Views.Cast<View>()
-                .Where(v => !v.IsSystemObject))
+            var existingViews = database.Views.Cast<View>().Where(v => !v.IsSystemObject).ToArray();
+            var viewsToRestore = new List<StringCollection>();
+            foreach (var existingView in existingViews)
             {
-                views.Add(view.Script());
-                view.Drop();
+                viewsToRestore.Add(existingView.Script());
+                existingView.Drop();
             }
 
-            return new ViewContainer(connectionString, views);
+            return new ViewContainer(connectionString, viewsToRestore);
         }
 
         private static Database GetDatabase(string connectionString)
