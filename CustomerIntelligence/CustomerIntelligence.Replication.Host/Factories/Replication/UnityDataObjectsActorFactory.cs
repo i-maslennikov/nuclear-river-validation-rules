@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
+using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.DataObjects;
 
 namespace NuClear.CustomerIntelligence.Replication.Host.Factories.Replication
@@ -23,27 +24,21 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Factories.Replication
 
         public IReadOnlyCollection<IActor> Create()
         {
-            var actors = new List<IActor>();
-
-            var dataObjectTypes = _dataObjectTypesProvider.Get<SyncDataObjectCommand>();
-            foreach (var dataObjectType in dataObjectTypes)
+            var dataObjectTypes = _dataObjectTypesProvider.Get<ISyncDataObjectCommand>();
+            if (dataObjectTypes.Any())
             {
-                var actor = (IActor)_unityContainer.Resolve(typeof(SyncDataObjectsActor<>).MakeGenericType(dataObjectType));
-                actors.Add(actor);
+                return dataObjectTypes.Select(dataObjectType => (IActor)_unityContainer.Resolve(typeof(SyncDataObjectsActor<>).MakeGenericType(dataObjectType)))
+                                      .ToArray();
             }
 
-            dataObjectTypes = _dataObjectTypesProvider.Get<ReplaceFirmCategoryForecastCommand>()
-                                                      .Concat(_dataObjectTypesProvider.Get<ReplaceFirmForecastCommand>())
-                                                      .Concat(_dataObjectTypesProvider.Get<ReplaceFirmPopularityCommand>())
-                                                      .Concat(_dataObjectTypesProvider.Get<ReplaceRubricPopularityCommand>())
-                                                      .ToArray();
-            foreach (var dataObjectType in dataObjectTypes)
+            dataObjectTypes = _dataObjectTypesProvider.Get<IReplaceDataObjectCommand>();
+            if (dataObjectTypes.Any())
             {
-                var actor = (IActor)_unityContainer.Resolve(typeof(ReplaceDataObjectsActor<>).MakeGenericType(dataObjectType));
-                actors.Add(actor);
+                return dataObjectTypes.Select(dataObjectType => (IActor)_unityContainer.Resolve(typeof(ReplaceDataObjectsActor<>).MakeGenericType(dataObjectType)))
+                                      .ToArray();
             }
 
-            return actors;
+            return Array.Empty<IActor>();
         }
     }
 }

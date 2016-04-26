@@ -43,7 +43,7 @@ namespace NuClear.StateInitialization.Core
                             actor.ExecuteCommands(new[] { command });
                             sw.Stop();
 
-                            Console.WriteLine($"{GetFriendlyTypeName(actor.GetType())}: {sw.Elapsed.TotalSeconds} seconds");
+                            Console.WriteLine($"{actor.GetType().GetFriendlyName()}: {sw.Elapsed.TotalSeconds} seconds");
                         }
                     }
                     finally
@@ -67,32 +67,6 @@ namespace NuClear.StateInitialization.Core
             connection.AddMappingSchema(storageDescriptor.MappingSchema);
             connection.CommandTimeout = (int)TimeSpan.FromMinutes(30).TotalMilliseconds;
             return connection;
-        }
-
-        private static string GetFriendlyTypeName(Type type)
-        {
-            var friendlyName = type.Name;
-            if (type.IsGenericType)
-            {
-                var backtickIndex = friendlyName.IndexOf('`');
-                if (backtickIndex > 0)
-                {
-                    friendlyName = friendlyName.Remove(backtickIndex);
-                }
-
-                friendlyName += "[";
-
-                var typeParameters = type.GetGenericArguments();
-                for (var i = 0; i < typeParameters.Length; ++i)
-                {
-                    var typeParamName = typeParameters[i].Name;
-                    friendlyName += i == 0 ? typeParamName : "," + typeParamName;
-                }
-
-                friendlyName += "]";
-            }
-
-            return friendlyName;
         }
     }
 }

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Transactions;
 
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
-using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core;
+using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.Settings;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
@@ -49,10 +49,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             try
             {
                 var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<AggregatableMessage<SyncDataObjectCommand>>()
+                                                   .Cast<AggregatableMessage<ICommand>>()
                                                    .ToArray();
 
-                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands).ToArray());
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.Cast<ISyncDataObjectCommand>()).ToArray());
 
                 var eldestOperationPerformTime = messages.Min(message => message.OperationTime);
                 _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);
@@ -66,7 +66,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<SyncDataObjectCommand> commands)
+        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<ISyncDataObjectCommand> commands)
         {
             _tracer.Debug("Executing fact commands started");
 
@@ -76,7 +76,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                 var actors = _dataObjectsActorFactory.Create();
                 foreach (var actor in actors)
                 {
-                    var actorType = actor.GetType().FullName;
+                    var actorType = actor.GetType().GetFriendlyName();
                     using (Probe.Create("ETL1 Transforming", actorType))
                     {
                         _tracer.Debug($"Applying changes to target facts storage with actor {actorType}");

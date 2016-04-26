@@ -4,7 +4,7 @@ using NuClear.Replication.Core.Commands;
 
 namespace NuClear.CustomerIntelligence.Replication.Commands
 {
-    public sealed class SyncDataObjectCommand : SyncDataObjectCommandBase
+    public sealed class SyncDataObjectCommand : ISyncDataObjectCommand
     {
         public SyncDataObjectCommand(Type dataObjectType, long dataObjectId)
         {
@@ -12,7 +12,7 @@ namespace NuClear.CustomerIntelligence.Replication.Commands
             DataObjectId = dataObjectId;
         }
 
-        public override Type DataObjectType { get; }
+        public Type DataObjectType { get; }
         public long DataObjectId { get; }
     }
 }

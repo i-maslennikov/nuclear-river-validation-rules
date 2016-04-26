@@ -25,7 +25,10 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
         public IQueryable<Territory> GetSource() => Specs.Map.Erm.ToFacts.Territories.Map(_query);
 
         public FindSpecification<Territory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            => new FindSpecification<Territory>(x => commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Contains(x.Id));
+        {
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            return new FindSpecification<Territory>(x => ids.Contains(x.Id));
+        }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Territory> dataObjects)
             => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Territory), x.Id)).ToArray();

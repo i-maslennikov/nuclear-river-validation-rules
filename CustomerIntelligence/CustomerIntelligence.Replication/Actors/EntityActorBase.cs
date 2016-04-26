@@ -33,6 +33,11 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
+            if (!commands.Any())
+            {
+                return Array.Empty<IEvent>();
+            }
+
             var commandTypes = commands.GroupBy(x => x.GetType()).Select(x => x.Key).ToArray();
             if (commandTypes.Length != 1)
             {

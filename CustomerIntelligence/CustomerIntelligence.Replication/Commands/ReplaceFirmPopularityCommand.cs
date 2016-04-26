@@ -1,9 +1,9 @@
 ﻿using NuClear.CustomerIntelligence.Replication.DTO;
-using NuClear.Replication.Core;
+using NuClear.Replication.Core.Commands;
 
 namespace NuClear.CustomerIntelligence.Replication.Commands
 {
-    public class ReplaceFirmPopularityCommand : ICommand
+    public class ReplaceFirmPopularityCommand : IReplaceDataObjectCommand
     {
         public ReplaceFirmPopularityCommand(FirmPopularity firmPopularity)
         {

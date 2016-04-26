@@ -37,7 +37,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
         public override IReadOnlyCollection<IActor> GetValueObjectActors() => new IActor[]
             {
-                new ValueObjectActor<ProjectCategory>(_query, _projectCategoryBulkRepository, _equalityComparerFactory, new ProjectCategoryAccessor(_query))
+                new LeafActor<ProjectCategory>(_query, _projectCategoryBulkRepository, _equalityComparerFactory, new ProjectCategoryAccessor(_query))
             };
 
         public sealed class ProjectAccessor : IStorageBasedDataObjectAccessor<Project>
@@ -52,7 +52,10 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             public IQueryable<Project> GetSource() => Specs.Map.Facts.ToCI.Projects.Map(_query);
 
             public FindSpecification<Project> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => new FindSpecification<Project>(x => commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().Contains(x.Id));
+            {
+                var aggregateIds = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Distinct().ToArray();
+                return new FindSpecification<Project>(x => aggregateIds.Contains(x.Id));
+            }
         }
 
         public sealed class ProjectCategoryAccessor : IStorageBasedDataObjectAccessor<ProjectCategory>
@@ -67,7 +70,10 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             public IQueryable<ProjectCategory> GetSource() => Specs.Map.Facts.ToCI.ProjectCategories.Map(_query);
 
             public FindSpecification<ProjectCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => Specs.Find.CI.ProjectCategories(commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray());
+            {
+                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return Specs.Find.CI.ProjectCategories(aggregateIds);
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
 
         private static readonly IReadOnlyDictionary<string, Type> SimpleTypes =
             AppDomain.CurrentDomain.GetAssemblies()
+                     .Where(x => x.FullName.Contains("CustomerIntelligence"))
                      .SelectMany(x => x.ExportedTypes)
                      .Where(x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
                      .ToDictionary(x => x.FullName, x => x);
@@ -176,7 +177,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
 
         private static bool IsEventOfType(XElement @event, Type eventType)
         {
-            return @event.Attribute(EventType).Value == GetFriendlyTypeName(eventType);
+            return @event.Attribute(EventType).Value == eventType.GetFriendlyName();
         }
 
         private static Type ResolveDataObjectType(string typeName)
@@ -190,34 +191,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
             return new PerformedOperationFinalProcessing
                 {
                     OperationId = Guid.NewGuid(),
-                    Context = new XElement("event", new XAttribute(EventType, GetFriendlyTypeName(@event.GetType())), elements).ToString(SaveOptions.DisableFormatting)
+                    Context = new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), elements).ToString(SaveOptions.DisableFormatting)
                 };
-        }
-
-        private static string GetFriendlyTypeName(Type type)
-        {
-            var friendlyName = type.Name;
-            if (type.IsGenericType)
-            {
-                var backtickIndex = friendlyName.IndexOf('`');
-                if (backtickIndex > 0)
-                {
-                    friendlyName = friendlyName.Remove(backtickIndex);
-                }
-
-                friendlyName += "[";
-
-                var typeParameters = type.GetGenericArguments();
-                for (var i = 0; i < typeParameters.Length; ++i)
-                {
-                    var typeParamName = typeParameters[i].Name;
-                    friendlyName += i == 0 ? typeParamName : "," + typeParamName;
-                }
-
-                friendlyName += "]";
-            }
-
-            return friendlyName;
         }
     }
 }

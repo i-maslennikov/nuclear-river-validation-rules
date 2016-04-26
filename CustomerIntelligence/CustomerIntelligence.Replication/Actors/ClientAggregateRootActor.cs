@@ -36,7 +36,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
         public override IReadOnlyCollection<IActor> GetValueObjectActors() => new IActor[]
             {
-                new ValueObjectActor<ClientContact>(_query, _clientContactBulkRepository, _equalityComparerFactory, new ClientContactAccessor(_query))
+                new LeafActor<ClientContact>(_query, _clientContactBulkRepository, _equalityComparerFactory, new ClientContactAccessor(_query))
             };
 
         public sealed class ClientAccessor : IStorageBasedDataObjectAccessor<Client>
@@ -51,7 +51,10 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             public IQueryable<Client> GetSource() => Specs.Map.Facts.ToCI.Clients.Map(_query);
 
             public FindSpecification<Client> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => new FindSpecification<Client>(x => commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().Contains(x.Id));
+            {
+                var aggregateIds = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Distinct().ToArray();
+                return new FindSpecification<Client>(x => aggregateIds.Contains(x.Id));
+            }
         }
 
         public sealed class ClientContactAccessor : IStorageBasedDataObjectAccessor<ClientContact>
@@ -66,7 +69,10 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             public IQueryable<ClientContact> GetSource() => Specs.Map.Facts.ToCI.ClientContacts.Map(_query);
 
             public FindSpecification<ClientContact> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => Specs.Find.CI.ClientContacts(commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray());
+            {
+                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return Specs.Find.CI.ClientContacts(aggregateIds);
+            }
         }
     }
 }

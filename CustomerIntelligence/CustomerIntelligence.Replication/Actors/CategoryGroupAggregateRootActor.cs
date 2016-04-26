@@ -40,7 +40,10 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             public IQueryable<CategoryGroup> GetSource() => Specs.Map.Facts.ToCI.CategoryGroups.Map(_query);
 
             public FindSpecification<CategoryGroup> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => new FindSpecification<CategoryGroup>(x => commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().Contains(x.Id));
+            {
+                var aggregateIds = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Distinct().ToArray();
+                return new FindSpecification<CategoryGroup>(x => aggregateIds.Contains(x.Id));
+            }
         }
     }
 }

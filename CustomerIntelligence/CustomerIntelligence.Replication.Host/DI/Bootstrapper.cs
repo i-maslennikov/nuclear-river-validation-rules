@@ -14,13 +14,17 @@ using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Final;
 using NuClear.CustomerIntelligence.OperationsProcessing.Transports;
 using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
+using NuClear.CustomerIntelligence.Replication.Accessors;
 using NuClear.CustomerIntelligence.Replication.Host.Factories;
 using NuClear.CustomerIntelligence.Replication.Host.Factories.Messaging.Processor;
 using NuClear.CustomerIntelligence.Replication.Host.Factories.Messaging.Receiver;
 using NuClear.CustomerIntelligence.Replication.Host.Factories.Messaging.Transformer;
+using NuClear.CustomerIntelligence.Replication.Host.Factories.Replication;
 using NuClear.CustomerIntelligence.Replication.Host.Settings;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
+using NuClear.CustomerIntelligence.Storage.Model.Bit;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.DI.Unity.Config;
 using NuClear.DI.Unity.Config.RegistrationResolvers;
 using NuClear.IdentityService.Client.Interaction;
@@ -253,7 +257,6 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                                 };
 
             return container
-                .RegisterType<IEqualityComparerFactory, EqualityComparerFactory>(Lifetime.Singleton)
                 .RegisterType<IPendingChangesHandlingStrategy, NullPendingChangesHandlingStrategy>(Lifetime.Singleton)
                 .RegisterType<IStorageMappingDescriptorProvider, StorageMappingDescriptorProvider>(Lifetime.Singleton)
                 .RegisterType<IEntityContainerNameResolver, DefaultEntityContainerNameResolver>(Lifetime.Singleton)
@@ -278,21 +281,57 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
 
         private static IUnityContainer ConfigureReplication(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
         {
-            return container;
-            /*
-                .RegisterType<IFactsReplicator, FactsReplicator>(entryPointSpecificLifetimeManagerFactory(),
-                                                                 new InjectionFactory(c => new FactsReplicator(
-                                                                                               c.Resolve<ITracer>(),
-                                                                                               c.Resolve<IReplicationSettings>(),
-                                                                                               c.Resolve<IMetadataProvider>(),
-                                                                                               c.Resolve<IFactProcessorFactory>(),
-                                                                                               new CustomerIntelligenceFactTypePriorityComparer())))
+            return container
+                .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
+                .RegisterType<IEventSerializer, XmlEventSerializer>(Lifetime.Singleton)
+                .RegisterType<IEqualityComparerFactory, EqualityComparerFactory>(Lifetime.Singleton)
+
+                .RegisterType<IStorageBasedDataObjectAccessor<Account>, AccountAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Activity>, ActivityAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<BranchOfficeOrganizationUnit>, BranchOfficeOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Category>, CategoryAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<CategoryFirmAddress>, CategoryFirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<CategoryGroup>, CategoryGroupAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<CategoryOrganizationUnit>, CategoryOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Client>, ClientAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Contact>, ContactAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Firm>, FirmAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<FirmAddress>, FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<FirmContact>, FirmContactAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<LegalPerson>, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Order>, OrderAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Project>, ProjectAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<SalesModelCategoryRestriction>, SalesModelCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Territory>, TerritoryAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IMemoryBasedDataObjectAccessor<FirmCategoryForecast>, FirmCategoryForecastAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IMemoryBasedDataObjectAccessor<FirmCategoryStatistics>, FirmCategoryStatisticsAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IMemoryBasedDataObjectAccessor<FirmForecast>, FirmForecastAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IMemoryBasedDataObjectAccessor<ProjectCategoryStatistics>, ProjectCategoryStatisticsAccessor>(entryPointSpecificLifetimeManagerFactory())
+
+                .RegisterType<IDataChangesHandler<Account>, AccountAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Activity>, ActivityAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<BranchOfficeOrganizationUnit>, BranchOfficeOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Category>, CategoryAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<CategoryFirmAddress>, CategoryFirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<CategoryGroup>, CategoryGroupAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<CategoryOrganizationUnit>, CategoryOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Client>, ClientAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Contact>, ContactAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Firm>, FirmAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<FirmAddress>, FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<FirmContact>, FirmContactAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<LegalPerson>, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Order>, OrderAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Project>, ProjectAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<SalesModelCategoryRestriction>, SalesModelCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Territory>, TerritoryAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<FirmCategoryForecast>, FirmCategoryForecastAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<FirmCategoryStatistics>, FirmCategoryStatisticsAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<FirmForecast>, FirmForecastAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<ProjectCategoryStatistics>, ProjectCategoryStatisticsAccessor>(entryPointSpecificLifetimeManagerFactory())
+
                 .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IAggregatesConstructor, AggregatesConstructor<CustomerIntelligenceSubDomain>>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IAggregateProcessorFactory, UnityAggregateProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IFactDependencyProcessorFactory, UnityFactDependencyProcessorFactory>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IFactProcessorFactory, UnityFactProcessorFactory>(entryPointSpecificLifetimeManagerFactory());
-                */
+                .RegisterType<IAggregateActorFactory, UnityAggregateActorFactory>(entryPointSpecificLifetimeManagerFactory());
         }
 
         private static IUnityContainer ConfigureReadWriteModels(this IUnityContainer container)

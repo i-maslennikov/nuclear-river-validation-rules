@@ -61,7 +61,6 @@
     <Compile Include="Actors\ProjectAggregateRootActor.cs" />
     <Compile Include="Actors\ProjectStatisticsAggregateRootActor.cs" />
     <Compile Include="Actors\TerritoryAggregateRootActor.cs" />
-    <Compile Include="Actors\ValueObjectActor.cs" />
     <Compile Include="Commands\CreateDataObjectCommand.cs" />
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
     <Compile Include="Commands\DestroyAggregateCommand.cs" />

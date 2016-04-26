@@ -41,7 +41,10 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             public IQueryable<Territory> GetSource() => Specs.Map.Facts.ToCI.Territories.Map(_query);
 
             public FindSpecification<Territory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => new FindSpecification<Territory>(x => commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().Contains(x.Id));
+            {
+                var aggregateIds = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Distinct().ToArray();
+                return new FindSpecification<Territory>(x => aggregateIds.Contains(x.Id));
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core.Commands;
@@ -39,9 +40,14 @@ namespace NuClear.Replication.Core.Actors
 
         public override IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var commandsToExecute = commands.OfType<CreateDataObjectCommandBase>()
+            var commandsToExecute = commands.OfType<ICreateDataObjectCommand>()
                                             .Where(x => x.DataObjectType == typeof(TDataObject))
                                             .ToArray();
+
+            if (!commandsToExecute.Any())
+            {
+                return Array.Empty<IEvent>();
+            }
 
             var changes = DetectChanges(commandsToExecute, _equalityComparerFactory.CreateIdentityComparer<TDataObject>());
 

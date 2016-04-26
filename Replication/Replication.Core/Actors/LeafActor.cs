@@ -1,21 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 
-namespace NuClear.CustomerIntelligence.Replication.Actors
+namespace NuClear.Replication.Core.Actors
 {
-    public sealed class ValueObjectActor<TDataObject> : DataObjectsActorBase<TDataObject> where TDataObject : class
+    public sealed class LeafActor<TDataObject> : DataObjectsActorBase<TDataObject> where TDataObject : class
     {
         private readonly IBulkRepository<TDataObject> _bulkRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IDataChangesHandler<TDataObject> _dataChangesHandler;
 
-        public ValueObjectActor(
+        public LeafActor(
             IQuery query,
             IBulkRepository<TDataObject> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
@@ -28,7 +27,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             _dataChangesHandler = dataChangesHandler;
         }
 
-        public ValueObjectActor(
+        public LeafActor(
            IQuery query,
            IBulkRepository<TDataObject> bulkRepository,
            IEqualityComparerFactory equalityComparerFactory,
@@ -39,6 +38,11 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
         public override IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
+            if (!commands.Any())
+            {
+                return Array.Empty<IEvent>();
+            }
+
             var events = new List<IEvent>();
 
             var changes = DetectChanges(commands, _equalityComparerFactory.CreateCompleteComparer<TDataObject>());

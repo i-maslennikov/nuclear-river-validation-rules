@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Replication.Core;
+using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.DataObjects;
 
 namespace NuClear.CustomerIntelligence.Replication
@@ -13,7 +13,7 @@ namespace NuClear.CustomerIntelligence.Replication
     {
         public IReadOnlyCollection<Type> Get<TCommand>() where TCommand : ICommand
         {
-            if (typeof(TCommand) == typeof(SyncDataObjectCommand))
+            if (typeof(ISyncDataObjectCommand).IsAssignableFrom(typeof(TCommand)))
             {
                 return new List<Type>
                     {
@@ -36,24 +36,15 @@ namespace NuClear.CustomerIntelligence.Replication
                     };
             }
 
-            if (typeof(TCommand) == typeof(ReplaceFirmCategoryForecastCommand))
+            if (typeof(IReplaceDataObjectCommand).IsAssignableFrom(typeof(TCommand)))
             {
-                return new List<Type> { typeof(FirmCategoryForecast) };
-            }
-
-            if (typeof(TCommand) == typeof(ReplaceFirmForecastCommand))
-            {
-                return new List<Type> { typeof(FirmForecast) };
-            }
-
-            if (typeof(TCommand) == typeof(FirmCategoryStatistics))
-            {
-                return new List<Type> { typeof(FirmCategoryForecast) };
-            }
-
-            if (typeof(TCommand) == typeof(ReplaceRubricPopularityCommand))
-            {
-                return new List<Type> { typeof(ProjectCategoryStatistics) };
+                return new List<Type>
+                    {
+                        typeof(FirmCategoryForecast),
+                        typeof(FirmForecast),
+                        typeof(FirmCategoryStatistics),
+                        typeof(ProjectCategoryStatistics)
+                    };
             }
 
             throw new ArgumentException($"Unkown command type {typeof(TCommand).FullName}");

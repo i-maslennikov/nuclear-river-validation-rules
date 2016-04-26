@@ -23,8 +23,11 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
 
         public IQueryable<Client> GetSource() => Specs.Map.Erm.ToFacts.Clients.Map(_query);
 
-        public FindSpecification<Client> GetFindSpecification(IReadOnlyCollection<ICommand> commands) =>
-            new FindSpecification<Client>(x => commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Contains(x.Id));
+        public FindSpecification<Client> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+        {
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            return new FindSpecification<Client>(x => ids.Contains(x.Id));
+        }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Client> dataObjects)
             => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Client), x.Id)).ToArray();
