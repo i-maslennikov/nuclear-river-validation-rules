@@ -4,10 +4,10 @@ using System.Data.SqlClient;
 
 using Microsoft.ServiceBus;
 
-using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Jobs;
 using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
+using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.River.Common.Identities.Connections;
 using NuClear.Security.API;
 using NuClear.Storage.API.ConnectionStrings;
@@ -24,6 +24,7 @@ namespace NuClear.Replication.EntryPoint.Jobs
     {
         private readonly ITelemetryPublisher _telemetry;
         private readonly IServiceBusMessageReceiverSettings _serviceBusMessageReceiverSettings;
+        private readonly IFlowLengthReporter _flowLengthReporter;
         private readonly NamespaceManager _manager;
         private readonly SqlConnection _sqlConnection;
 
@@ -32,11 +33,13 @@ namespace NuClear.Replication.EntryPoint.Jobs
                             IUserImpersonationService userImpersonationService,
                             ITelemetryPublisher telemetry,
                             IConnectionStringSettings connectionStringSettings,
-                            IServiceBusMessageReceiverSettings serviceBusMessageReceiverSettings)
+                            IServiceBusMessageReceiverSettings serviceBusMessageReceiverSettings,
+                            IFlowLengthReporter flowLengthReporter)
             : base(signInService, userImpersonationService, tracer)
         {
             _telemetry = telemetry;
             _serviceBusMessageReceiverSettings = serviceBusMessageReceiverSettings;
+            _flowLengthReporter = flowLengthReporter;
             _manager = NamespaceManager.CreateFromConnectionString(connectionStringSettings.GetConnectionString(ServiceBusConnectionStringIdentity.Instance));
             _sqlConnection = new SqlConnection(connectionStringSettings.GetConnectionString(TransportConnectionStringIdentity.Instance));
         }
@@ -83,19 +86,22 @@ namespace NuClear.Replication.EntryPoint.Jobs
             var command = new SqlCommand(CommandText, _sqlConnection);
             command.Parameters.Add("@flowId", SqlDbType.UniqueIdentifier);
 
-            command.Parameters["@flowId"].Value = AggregatesFlow.Instance.Id;
-            _telemetry.Publish<FinalProcessingAggregateQueueLengthIdentity>((int)command.ExecuteScalar());
-
-            command.Parameters["@flowId"].Value = StatisticsFlow.Instance.Id;
-            _telemetry.Publish<FinalProcessingStatisticsQueueLengthIdentity>((int)command.ExecuteScalar());
+            foreach (var flow in _flowLengthReporter.SqlFlows)
+            {
+                command.Parameters["@flowId"].Value = flow.Id;
+                _flowLengthReporter.ReportFlowLength(flow, (int)command.ExecuteScalar());
+            }
 
             _sqlConnection.Close();
         }
 
         private void ReportPrimaryProcessingQueueLength()
         {
-            var subscription = _manager.GetSubscription(_serviceBusMessageReceiverSettings.TransportEntityPath, ImportFactsFromErmFlow.Instance.Id.ToString());
-            _telemetry.Publish<PrimaryProcessingQueueLengthIdentity>(subscription.MessageCountDetails.ActiveMessageCount);
+            foreach (var flow in _flowLengthReporter.SeriviceBusFlows)
+            {
+                var subscription = _manager.GetSubscription(_serviceBusMessageReceiverSettings.TransportEntityPath, flow.Id.ToString());
+                _flowLengthReporter.ReportFlowLength(flow, (int)subscription.MessageCountDetails.ActiveMessageCount);
+            }
         }
     }
 }

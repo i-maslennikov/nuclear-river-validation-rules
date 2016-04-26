@@ -195,6 +195,7 @@
     <Compile Include="Transports\CorporateBus\CorporateBusOperationsReceiver.cs" />
     <Compile Include="Transports\EntityTypeParser.cs" />
     <Compile Include="Transports\IEntityTypeParser.cs" />
+    <Compile Include="Transports\IFlowLengthReporter.cs" />
     <Compile Include="Transports\IOperationDispatcher.cs" />
     <Compile Include="Transports\SQLStore\IEntityReferenceSerializer.cs" />
     <Compile Include="Transports\SQLStore\IOperationSerializer.cs" />
