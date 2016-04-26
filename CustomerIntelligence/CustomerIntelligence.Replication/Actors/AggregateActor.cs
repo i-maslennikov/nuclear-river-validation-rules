@@ -24,17 +24,51 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
         {
             var events = new List<IEvent>();
 
-            var destroyAggregateCommands = commands.OfType<DestroyAggregateCommand>().Distinct().ToArray();
-            events.AddRange(_leafToRootActor.ExecuteCommands(destroyAggregateCommands));
+            IReadOnlyCollection<ICommand> commandsToExecute =
+                commands.OfType<DestroyAggregateCommand>()
+                        .Distinct()
+                        .Aggregate(new List<ICommand>(),
+                                   (result, next) =>
+                                       {
+                                           result.Add(new DeleteDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
+                                           result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
+                                           return result;
+                                       })
+                        .ToArray();
+            events.AddRange(_leafToRootActor.ExecuteCommands(commandsToExecute));
 
-            var initializeAggregateCommands = commands.OfType<InitializeAggregateCommand>().Distinct().ToArray();
-            events.AddRange(_rootToLeafActor.ExecuteCommands(initializeAggregateCommands));
+            commandsToExecute = commands.OfType<InitializeAggregateCommand>().Distinct()
+                                        .Aggregate(new List<ICommand>(),
+                                                   (result, next) =>
+                                                       {
+                                                           result.Add(new CreateDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
+                                                           result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
+                                                           return result;
+                                                       })
+                                        .ToArray();
+            events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
-            var recalculateAggregateCommands = commands.OfType<RecalculateAggregateCommand>().Distinct().ToArray();
-            events.AddRange(_rootToLeafActor.ExecuteCommands(recalculateAggregateCommands));
+            commandsToExecute = commands.OfType<RecalculateAggregateCommand>()
+                                        .Aggregate(new List<ICommand>(),
+                                                   (result, next) =>
+                                                       {
+                                                           result.Add(new SyncDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
+                                                           result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
+                                                           return result;
+                                                       })
+                                        .ToArray();
+            events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
-            var recalculateEntityCommands = commands.OfType<RecalculateEntityCommand>().Distinct().ToArray();
-            events.AddRange(_subrootToLeafActor.ExecuteCommands(recalculateEntityCommands));
+            commandsToExecute = commands.OfType<RecalculateEntityCommand>()
+                                        .Aggregate(new List<ICommand>(),
+                                                   (result, next) =>
+                                                       {
+                                                           result.Add(new SyncDataObjectCommand(next.EntityType, next.EntityId));
+                                                           result.Add(new ReplaceValueObjectCommand(next.AggregateRootId, next.EntityId));
+                                                           return result;
+                                                       })
+                                        .ToArray();
+            events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
 
             return events;
         }

@@ -1,4 +1,7 @@
-﻿using NuClear.CustomerIntelligence.Replication.DTO;
+﻿using System;
+
+using NuClear.CustomerIntelligence.Replication.DTO;
+using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.Replication.Core.Commands;
 
 namespace NuClear.CustomerIntelligence.Replication.Commands
@@ -11,5 +14,6 @@ namespace NuClear.CustomerIntelligence.Replication.Commands
         }
 
         public FirmPopularity FirmPopularity { get; }
+        public Type DataObjectType => typeof(FirmCategoryStatistics);
     }
 }

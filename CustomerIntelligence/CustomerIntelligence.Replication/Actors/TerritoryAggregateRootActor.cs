@@ -42,7 +42,11 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<Territory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
                 return new FindSpecification<Territory>(x => aggregateIds.Contains(x.Id));
             }
         }

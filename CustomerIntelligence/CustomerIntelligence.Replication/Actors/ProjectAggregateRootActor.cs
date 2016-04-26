@@ -37,7 +37,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
         public override IReadOnlyCollection<IActor> GetValueObjectActors() => new IActor[]
             {
-                new LeafActor<ProjectCategory>(_query, _projectCategoryBulkRepository, _equalityComparerFactory, new ProjectCategoryAccessor(_query))
+                new ValueObjectActor<ProjectCategory>(_query, _projectCategoryBulkRepository, _equalityComparerFactory, new ProjectCategoryAccessor(_query))
             };
 
         public sealed class ProjectAccessor : IStorageBasedDataObjectAccessor<Project>
@@ -53,7 +53,11 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<Project> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
                 return new FindSpecification<Project>(x => aggregateIds.Contains(x.Id));
             }
         }
@@ -71,7 +75,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<ProjectCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.CI.ProjectCategories(aggregateIds);
             }
         }

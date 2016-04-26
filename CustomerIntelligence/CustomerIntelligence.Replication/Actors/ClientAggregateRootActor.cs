@@ -36,7 +36,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
         public override IReadOnlyCollection<IActor> GetValueObjectActors() => new IActor[]
             {
-                new LeafActor<ClientContact>(_query, _clientContactBulkRepository, _equalityComparerFactory, new ClientContactAccessor(_query))
+                new ValueObjectActor<ClientContact>(_query, _clientContactBulkRepository, _equalityComparerFactory, new ClientContactAccessor(_query))
             };
 
         public sealed class ClientAccessor : IStorageBasedDataObjectAccessor<Client>
@@ -52,7 +52,11 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<Client> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
                 return new FindSpecification<Client>(x => aggregateIds.Contains(x.Id));
             }
         }
@@ -70,7 +74,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<ClientContact> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.CI.ClientContacts(aggregateIds);
             }
         }

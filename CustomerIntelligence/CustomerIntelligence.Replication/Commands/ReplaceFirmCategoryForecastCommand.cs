@@ -1,4 +1,6 @@
-﻿using NuClear.CustomerIntelligence.Replication.DTO;
+﻿using System;
+
+using NuClear.CustomerIntelligence.Replication.DTO;
 using NuClear.Replication.Core.Commands;
 
 namespace NuClear.CustomerIntelligence.Replication.Commands
@@ -11,5 +13,6 @@ namespace NuClear.CustomerIntelligence.Replication.Commands
         }
 
         public FirmForecast FirmForecast { get; }
+        public Type DataObjectType => typeof(Storage.Model.Bit.FirmCategoryForecast);
     }
 }

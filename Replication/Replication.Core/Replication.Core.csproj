@@ -68,6 +68,7 @@
     <Compile Include="Actors\CreateDataObjectsActor.cs" />
     <Compile Include="Actors\DataObjectsActorBase.cs" />
     <Compile Include="Actors\DeleteDataObjectsActor.cs" />
+    <Compile Include="Actors\EntityActorBase.cs" />
     <Compile Include="Actors\IActor.cs" />
     <Compile Include="Actors\IAggregateActor.cs" />
     <Compile Include="Actors\IAggregateRootActor.cs" />
@@ -77,11 +78,13 @@
     <Compile Include="Actors\RootToLeafActor.cs" />
     <Compile Include="Actors\SubrootToLeafActor.cs" />
     <Compile Include="Actors\SyncDataObjectsActor.cs" />
-    <Compile Include="Actors\LeafActor.cs" />
+    <Compile Include="Actors\ValueObjectActor.cs" />
     <Compile Include="BulkRepository.cs" />
+    <Compile Include="Commands\IAggregateCommand.cs" />
     <Compile Include="Commands\ICreateDataObjectCommand.cs" />
     <Compile Include="Commands\IDeleteDataObjectCommand.cs" />
     <Compile Include="Commands\IReplaceDataObjectCommand.cs" />
+    <Compile Include="Commands\IReplaceValueObjectCommand.cs" />
     <Compile Include="Commands\ISyncDataObjectCommand.cs" />
     <Compile Include="DataObjects\DataChangesDetector.cs" />
     <Compile Include="DataObjects\IBulkRepository.cs" />

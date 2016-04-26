@@ -56,7 +56,6 @@
     <Compile Include="Actors\AggregateActor.cs" />
     <Compile Include="Actors\CategoryGroupAggregateRootActor.cs" />
     <Compile Include="Actors\ClientAggregateRootActor.cs" />
-    <Compile Include="Actors\EntityActorBase.cs" />
     <Compile Include="Actors\FirmAggregateRootActor.cs" />
     <Compile Include="Actors\ProjectAggregateRootActor.cs" />
     <Compile Include="Actors\ProjectStatisticsAggregateRootActor.cs" />
@@ -64,8 +63,8 @@
     <Compile Include="Commands\CreateDataObjectCommand.cs" />
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
     <Compile Include="Commands\DestroyAggregateCommand.cs" />
-    <Compile Include="Commands\IAggregateCommand.cs" />
     <Compile Include="Commands\InitializeAggregateCommand.cs" />
+    <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
     <Compile Include="Commands\RecalculateAggregateCommand.cs" />
     <Compile Include="Commands\RecalculateEntityCommand.cs" />
     <Compile Include="Commands\ReplaceFirmCategoryForecastCommand.cs" />

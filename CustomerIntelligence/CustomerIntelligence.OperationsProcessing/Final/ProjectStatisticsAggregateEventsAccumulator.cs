@@ -8,6 +8,7 @@ using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.CustomerIntelligence.Replication.Events;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
+using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 

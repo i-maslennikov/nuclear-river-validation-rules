@@ -49,11 +49,11 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
-                    new LeafActor<FirmActivity>(_query, _firmActivityBulkRepository, _equalityComparerFactory, new FirmActivityAccessor(_query)),
-                    new LeafActor<FirmBalance>(_query, _firmBalanceBulkRepository, _equalityComparerFactory, new FirmBalanceAccessor(_query)),
-                    new LeafActor<FirmCategory1>(_query, _firmCategory1BulkRepository, _equalityComparerFactory, new FirmCategory1Accessor(_query)),
-                    new LeafActor<FirmCategory2>(_query, _firmCategory2BulkRepository, _equalityComparerFactory, new FirmCategory2Accessor(_query)),
-                    new LeafActor<FirmTerritory>(_query, _firmFirmTerritoryBulkRepository, _equalityComparerFactory, new FirmTerritoryAccessor(_query))
+                    new ValueObjectActor<FirmActivity>(_query, _firmActivityBulkRepository, _equalityComparerFactory, new FirmActivityAccessor(_query)),
+                    new ValueObjectActor<FirmBalance>(_query, _firmBalanceBulkRepository, _equalityComparerFactory, new FirmBalanceAccessor(_query)),
+                    new ValueObjectActor<FirmCategory1>(_query, _firmCategory1BulkRepository, _equalityComparerFactory, new FirmCategory1Accessor(_query)),
+                    new ValueObjectActor<FirmCategory2>(_query, _firmCategory2BulkRepository, _equalityComparerFactory, new FirmCategory2Accessor(_query)),
+                    new ValueObjectActor<FirmTerritory>(_query, _firmFirmTerritoryBulkRepository, _equalityComparerFactory, new FirmTerritoryAccessor(_query))
                 };
 
         public sealed class FirmAccessor : IStorageBasedDataObjectAccessor<Firm>
@@ -69,7 +69,11 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<Firm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
                 return new FindSpecification<Firm>(x => aggregateIds.Contains(x.Id));
             }
         }
@@ -87,7 +91,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<FirmActivity> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.CI.FirmActivities(aggregateIds);
             }
         }
@@ -105,7 +109,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<FirmBalance> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.CI.FirmBalances(aggregateIds);
             }
         }
@@ -123,7 +127,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<FirmCategory1> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.CI.FirmCategories1(aggregateIds);
             }
         }
@@ -141,7 +145,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<FirmCategory2> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.CI.FirmCategories2(aggregateIds);
             }
         }
@@ -159,7 +163,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<FirmTerritory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<IAggregateCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.CI.FirmTerritories(aggregateIds);
             }
         }

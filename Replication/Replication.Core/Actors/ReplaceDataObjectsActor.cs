@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Transactions;
 
+using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 
@@ -29,6 +31,15 @@ namespace NuClear.Replication.Core.Actors
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
+            var commandsToExecute = commands.OfType<IReplaceDataObjectCommand>()
+                                           .Where(x => x.DataObjectType == typeof(TDataObject))
+                                           .ToArray();
+
+            if (!commandsToExecute.Any())
+            {
+                return Array.Empty<IEvent>();
+            }
+
             var events = new List<IEvent>();
             foreach (var command in commands)
             {

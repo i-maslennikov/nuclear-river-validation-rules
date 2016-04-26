@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
-using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core;
+using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;

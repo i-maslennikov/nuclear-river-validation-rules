@@ -1,5 +1,7 @@
 ﻿using System;
 
+using NuClear.Replication.Core.Commands;
+
 namespace NuClear.CustomerIntelligence.Replication.Commands
 {
     public class RecalculateEntityCommand : IAggregateCommand
