@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 using NuClear.Metamodeling.Elements.Aspects.Features;
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.Querying.Metadata.Elements;
 
-namespace NuClear.River.Common.Metadata.Features
+namespace NuClear.Querying.Metadata.Features
 {
     public sealed class EntityIdentityFeature : IUniqueMetadataFeature
     {

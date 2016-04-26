@@ -6,7 +6,7 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
 
-namespace NuClear.River.Common.Metadata.Elements
+namespace NuClear.Querying.Metadata.Elements
 {
     public abstract class BaseMetadataElement<TElement, TBuilder> : MetadataElement<TElement, TBuilder>
         where TElement : MetadataElement<TElement, TBuilder>

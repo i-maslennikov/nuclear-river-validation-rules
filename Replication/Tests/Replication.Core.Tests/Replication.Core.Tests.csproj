@@ -56,9 +56,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
+    <ProjectReference Include="..\..\..\Common.Metadata\Querying.Metadata.csproj">
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
-      <Name>Common.Metadata</Name>
+      <Name>Querying.Metadata</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Replication.Core\Replication.Core.csproj">
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
-using NuClear.River.Common.Metadata.Builders;
-using NuClear.River.Common.Metadata.Features;
+using NuClear.Querying.Metadata.Builders;
+using NuClear.Querying.Metadata.Features;
 
-namespace NuClear.River.Common.Metadata.Elements
+namespace NuClear.Querying.Metadata.Elements
 {
     public sealed class EntityPropertyElement : BaseMetadataElement<EntityPropertyElement, EntityPropertyElementBuilder>
     {

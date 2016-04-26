@@ -1,5 +1,5 @@
-﻿using NuClear.River.Common.Metadata.Builders;
-using NuClear.River.Common.Metadata.Elements;
+﻿using NuClear.Querying.Metadata.Builders;
+using NuClear.Querying.Metadata.Elements;
 
 namespace NuClear.CustomerIntelligence.Querying.Host
 {

@@ -11,7 +11,7 @@ using Newtonsoft.Json.Serialization;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Aspects.Features;
 
-namespace NuClear.River.Common.Metadata.Tests
+namespace NuClear.Querying.Metadata.Metadata.Tests
 {
     internal static class MetadataExtensions
     {

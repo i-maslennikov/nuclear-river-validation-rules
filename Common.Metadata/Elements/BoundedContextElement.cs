@@ -2,9 +2,9 @@
 
 using NuClear.Metamodeling.Elements.Aspects.Features;
 using NuClear.Metamodeling.Elements.Identities;
-using NuClear.River.Common.Metadata.Builders;
+using NuClear.Querying.Metadata.Builders;
 
-namespace NuClear.River.Common.Metadata.Elements
+namespace NuClear.Querying.Metadata.Elements
 {
     public sealed class BoundedContextElement : BaseMetadataElement<BoundedContextElement, BoundedContextElementBuilder>
     {

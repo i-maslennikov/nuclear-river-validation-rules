@@ -5,7 +5,7 @@ using NuClear.Metamodeling.Elements;
 
 using NUnit.Framework;
 
-namespace NuClear.River.Common.Metadata.Tests
+namespace NuClear.Querying.Metadata.Metadata.Tests
 {
     internal abstract class BaseMetadataFixture<TMetadataElement, TBuilder>
         where TMetadataElement : MetadataElement

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Identities;
 
 namespace NuClear.CustomerIntelligence.Querying.Host
 {

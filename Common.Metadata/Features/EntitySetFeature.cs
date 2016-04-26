@@ -2,7 +2,7 @@
 
 using NuClear.Metamodeling.Elements.Aspects.Features;
 
-namespace NuClear.River.Common.Metadata.Features
+namespace NuClear.Querying.Metadata.Features
 {
     public sealed class EntitySetFeature : IUniqueMetadataFeature
     {

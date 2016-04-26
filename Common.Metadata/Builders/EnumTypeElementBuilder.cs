@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities;
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.Querying.Metadata.Elements;
 
-namespace NuClear.River.Common.Metadata.Builders
+namespace NuClear.Querying.Metadata.Builders
 {
     public sealed class EnumTypeElementBuilder : MetadataElementBuilder<EnumTypeElementBuilder, EnumTypeElement>
     {

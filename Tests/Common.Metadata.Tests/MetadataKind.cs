@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NuClear.River.Common.Metadata.Tests
+namespace NuClear.Querying.Metadata.Metadata.Tests
 {
     [Flags]
     internal enum MetadataKind

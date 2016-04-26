@@ -2,12 +2,12 @@
 using System.Collections;
 using System.Linq;
 
-using NuClear.River.Common.Metadata.Builders;
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.Querying.Metadata.Builders;
+using NuClear.Querying.Metadata.Elements;
 
 using NUnit.Framework;
 
-namespace NuClear.River.Common.Metadata.Tests
+namespace NuClear.Querying.Metadata.Metadata.Tests
 {
     [TestFixture]
     internal class StructuralModelMetadataTests : BaseMetadataFixture<StructuralModelElement, StructuralModelElementBuilder>

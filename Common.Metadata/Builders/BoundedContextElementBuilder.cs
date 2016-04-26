@@ -5,11 +5,11 @@ using System.Linq;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Features;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Features;
+using NuClear.Querying.Metadata.Identities;
 
-namespace NuClear.River.Common.Metadata.Builders
+namespace NuClear.Querying.Metadata.Builders
 {
     public sealed class BoundedContextElementBuilder : MetadataElementBuilder<BoundedContextElementBuilder, BoundedContextElement>
     {

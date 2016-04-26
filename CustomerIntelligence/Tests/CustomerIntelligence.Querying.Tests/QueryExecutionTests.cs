@@ -9,7 +9,7 @@ using Microsoft.OData.Edm;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.Edm;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Identities;
 
 using NUnit.Framework;
 

@@ -4,10 +4,10 @@ using System.Linq;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Features;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Features;
 
-namespace NuClear.River.Common.Metadata.Builders
+namespace NuClear.Querying.Metadata.Builders
 {
     public sealed class EntityElementBuilder : MetadataElementBuilder<EntityElementBuilder, EntityElement>
     {

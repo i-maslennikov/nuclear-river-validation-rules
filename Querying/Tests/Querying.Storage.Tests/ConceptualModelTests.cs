@@ -2,7 +2,7 @@
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.Querying.Metadata.Elements;
 
 using NUnit.Framework;
 

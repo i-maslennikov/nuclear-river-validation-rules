@@ -4,7 +4,7 @@ using System.Linq;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities;
 
-namespace NuClear.River.Common.Metadata.Elements
+namespace NuClear.Querying.Metadata.Elements
 {
     public static class MetadataElementExtensions
     {

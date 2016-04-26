@@ -12,9 +12,9 @@ using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.River.Common.Metadata.Builders;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Builders;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Identities;
 
 using NUnit.Framework;
 

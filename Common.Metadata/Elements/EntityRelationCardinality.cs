@@ -1,4 +1,4 @@
-﻿namespace NuClear.River.Common.Metadata.Elements
+﻿namespace NuClear.Querying.Metadata.Elements
 {
     public enum EntityRelationCardinality : byte
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NuClear.River.Common.Metadata.Elements
+namespace NuClear.Querying.Metadata.Elements
 {
     internal static class UriExtensions
     {
