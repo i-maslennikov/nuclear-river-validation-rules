@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Querying.Edm\Querying.Edm.csproj" />
     <ProjectReference Include="..\..\Querying.Http\Querying.Http.csproj" />
+    <ProjectReference Include="..\..\Querying.Metadata\Querying.Metadata.csproj" />
     <ProjectReference Include="..\..\Querying.Storage\Querying.Storage.csproj" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -189,7 +189,7 @@ namespace NuClear.Querying.Edm.Tests
             source.Setup(x => x.Metadata).Returns(new Dictionary<Uri, IMetadataElement>
                                                       {
                                                           {
-                                                              Metadata.Id.For<QueryingMetadataIdentity>(), context
+                                                              Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(), context
                                                           }
                                                       });
 

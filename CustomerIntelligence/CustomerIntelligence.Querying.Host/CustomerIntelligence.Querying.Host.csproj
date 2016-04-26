@@ -244,7 +244,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Metadata\Querying.Metadata.csproj">
+    <ProjectReference Include="..\..\Querying\Querying.Metadata\Querying.Metadata.csproj">
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
       <Name>Querying.Metadata</Name>
     </ProjectReference>

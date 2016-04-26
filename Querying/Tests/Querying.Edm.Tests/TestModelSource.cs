@@ -81,7 +81,7 @@ namespace NuClear.Querying.Edm.Tests
         {
             var source = new Mock<IMetadataSource>();
             source.Setup(x => x.Kind).Returns(new QueryingMetadataIdentity());
-            source.Setup(x => x.Metadata).Returns(new Dictionary<Uri, IMetadataElement> { { Metadata.Id.For<QueryingMetadataIdentity>(), context } });
+            source.Setup(x => x.Metadata).Returns(new Dictionary<Uri, IMetadataElement> { { Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(), context } });
 
             return source.Object;
         }

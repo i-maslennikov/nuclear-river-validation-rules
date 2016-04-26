@@ -6,7 +6,6 @@ using System.Web.Http.ExceptionHandling;
 using Microsoft.Practices.Unity;
 
 using NuClear.Aggregates.Storage.DI.Unity;
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.DI.Unity.Config;

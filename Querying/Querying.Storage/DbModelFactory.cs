@@ -36,7 +36,7 @@ namespace NuClear.Querying.Storage
 
         public DbCompiledModel Create(string containerName, DbConnection connection)
         {
-            Uri contextId = Metadata.Id.For<QueryingMetadataIdentity>(containerName);
+            Uri contextId = Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(containerName);
 
             DbCompiledModel compiledModel;
             if (_modelsCache.TryGetValue(contextId, out compiledModel))
