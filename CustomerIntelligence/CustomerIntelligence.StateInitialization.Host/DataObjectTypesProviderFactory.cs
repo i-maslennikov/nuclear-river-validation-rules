@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Storage.Model.CI;
+using NuClear.CustomerIntelligence.Replication.Specifications;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Replication.Core.DataObjects;
+using NuClear.StateInitialization.Core;
 using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.Factories;
 
-using CategoryGroup = NuClear.CustomerIntelligence.Storage.Model.Facts.CategoryGroup;
-using Client = NuClear.CustomerIntelligence.Storage.Model.Facts.Client;
-using DataObjectTypesProvider = NuClear.StateInitialization.Core.DataObjectTypesProvider;
-using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
-using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
-using Territory = NuClear.CustomerIntelligence.Storage.Model.Facts.Territory;
-
 namespace NuClear.CustomerIntelligence.StateInitialization.Host
 {
-    public class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
+    public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
     {
+        // NOTE: Loading CustomerIntelligence.Replication assembly to AppDomain
+        // ReSharper disable once InconsistentNaming
+        private static readonly Type AssemblyLoadHelperType = typeof(Specs);
+
         public IDataObjectTypesProvider Create(ReplaceDataObjectsInBulkCommand command)
         {
             if (command.TargetStorageDescriptor.ConnectionStringName == ConnectionStringName.Facts)
@@ -49,14 +47,14 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                     new List<Type>
                         {
                             typeof(Storage.Model.CI.Firm),
-                            typeof(FirmActivity),
-                            typeof(FirmBalance),
-                            typeof(FirmCategory1),
-                            typeof(FirmCategory2),
-                            typeof(FirmTerritory),
+                            typeof(Storage.Model.CI.FirmActivity),
+                            typeof(Storage.Model.CI.FirmBalance),
+                            typeof(Storage.Model.CI.FirmCategory1),
+                            typeof(Storage.Model.CI.FirmCategory2),
+                            typeof(Storage.Model.CI.FirmTerritory),
                             typeof(Storage.Model.CI.Client),
-                            typeof(ClientContact),
-                            typeof(ProjectCategory),
+                            typeof(Storage.Model.CI.ClientContact),
+                            typeof(Storage.Model.CI.ProjectCategory),
                             typeof(Storage.Model.CI.Territory),
                             typeof(Storage.Model.CI.CategoryGroup)
                         });
