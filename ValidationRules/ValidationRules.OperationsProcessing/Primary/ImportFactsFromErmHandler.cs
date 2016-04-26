@@ -13,6 +13,8 @@ using NuClear.River.Common.Metadata.Model;
 using NuClear.River.Common.Metadata.Model.Operations;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
+using NuClear.ValidationRules.OperationsProcessing.Identities.Telemetry;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Primary
 {
@@ -49,7 +51,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                 Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Operations).ToArray());
 
                 var eldestOperationPerformTime = messages.Min(message => message.OperationTime);
-                //_telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);
+                _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
@@ -71,7 +73,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                     string.Join(", ", bucketIds));
             }
 
-            //_telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(operations.Count);
+            _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(operations.Count);
 
             // We always need to use different transaction scope to operate with operation sender because it has its own store
             using (var pushTransaction = new TransactionScope(TransactionScopeOption.RequiresNew,
@@ -93,8 +95,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                 _operationSender.Push(pair.Value, pair.Key);
             }
 
-            //_telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(dispatched[StatisticsFlow.Instance].Count);
-            //_telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(dispatched[AggregatesFlow.Instance].Count);
+            _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(dispatched[AggregatesFlow.Instance].Count);
         }
     }
 }

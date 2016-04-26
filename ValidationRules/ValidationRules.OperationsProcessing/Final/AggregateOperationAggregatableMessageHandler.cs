@@ -10,6 +10,7 @@ using NuClear.Replication.OperationsProcessing;
 using NuClear.River.Common.Metadata.Model;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.OperationsProcessing.Identities.Telemetry;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Final
 {
@@ -38,11 +39,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                 foreach (var message in messages.OfType<OperationAggregatableMessage<IOperation>>())
                 {
                     _aggregatesConstructor.Execute(message.Operations);
+                    _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Operations.Count);
 
-                    // TODO: telemetry
-                    //_telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Operations.Count);
-
-                    //_telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
+                    _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
                 }
 
                 return MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded();

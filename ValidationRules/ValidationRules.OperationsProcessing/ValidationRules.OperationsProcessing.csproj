@@ -100,6 +100,13 @@
     <Compile Include="Identities\Operations\ManageDraftRulesetIdentity.cs" />
     <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
     <Compile Include="Identities\Operations\PublishRulesetIdentity.cs" />
+    <Compile Include="Identities\Telemetry\AggregateEnqueuedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\AggregateProcessedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\AggregateProcessingDelayIdentity.cs" />
+    <Compile Include="Identities\Telemetry\ErmEnqueuedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\ErmProcessedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\ErmReceivedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\PrimaryProcessingDelayIdentity.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
