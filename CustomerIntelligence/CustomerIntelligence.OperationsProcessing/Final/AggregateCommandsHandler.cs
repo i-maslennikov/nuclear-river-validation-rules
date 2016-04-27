@@ -42,7 +42,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 foreach (var message in messages.Cast<AggregatableMessage<IAggregateCommand>>())
                 {
                     var commandGroups = message.Commands.GroupBy(x => x.AggregateRootType);
-                    Parallel.ForEach(commandGroups, commandGroup => ExecuteCommands(commandGroup.Key, commandGroup.ToArray()));
+                    foreach (var commandGroup in commandGroups)
+                    {
+                        ExecuteCommands(commandGroup.Key, commandGroup.ToArray());
+                    }
 
                     _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Commands.Count);
                     _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)(DateTime.UtcNow - message.EventHappenedTime).TotalMilliseconds);
