@@ -49,10 +49,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             try
             {
                 var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<AggregatableMessage<ISyncDataObjectCommand>>()
+                                                   .Cast<AggregatableMessage<ICommand>>()
                                                    .ToArray();
 
-                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands).ToArray());
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.Cast<ISyncDataObjectCommand>()).ToArray());
 
                 var oldestEventTime = messages.Min(message => message.EventHappenedTime);
                 _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - oldestEventTime).TotalMilliseconds);
