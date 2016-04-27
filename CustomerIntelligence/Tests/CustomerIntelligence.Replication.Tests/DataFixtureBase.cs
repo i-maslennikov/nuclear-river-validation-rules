@@ -46,30 +46,23 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
             _stubDomainContextProvider.Dispose();
         }
 
-        protected IQuery Query
-        {
-            get { return new Query(_stubDomainContextProvider); }
-        }
+        protected IQuery Query => new Query(_stubDomainContextProvider);
 
-        protected MockLinqToDbDataBuilder SourceDb
-        {
-            get { return _mockLinqToDbDataBuilder; }
-        }
+        protected MockLinqToDbDataBuilder SourceDb => _mockLinqToDbDataBuilder;
 
-        protected MockLinqToDbDataBuilder TargetDb
-        {
-            get { return _mockLinqToDbDataBuilder; }
-        }
+        protected MockLinqToDbDataBuilder TargetDb => _mockLinqToDbDataBuilder;
 
-        protected IRepositoryFactory RepositoryFactory
-        {
-            get { return new LinqToDBRepositoryFactory(_stubDomainContextProvider); }
-        }
+        protected IRepositoryFactory RepositoryFactory => new LinqToDBRepositoryFactory(_stubDomainContextProvider);
 
         [Obsolete("Нужно удалить")]
         protected static IQueryable<T> Inquire<T>(params T[] elements)
         {
             return elements.AsQueryable();
+        }
+
+        protected IEnumerable<long> In(params long[] ids)
+        {
+            return ids;
         }
 
         protected interface IRepositoryFactory
@@ -145,7 +138,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
 				return repository;
 			}
 
-	    class BulkRepositoryStub<T> : IBulkRepository<T> where T : class
+	        private class BulkRepositoryStub<T> : IBulkRepository<T> where T : class
 	        {
 		        private readonly IRepository<T> _repository;
 
@@ -169,7 +162,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
 					Foreach(objects, _repository.Delete);
 				}
 
-		        private void Foreach(IEnumerable<T> objects, Action<T> action)
+		        private static void Foreach(IEnumerable<T> objects, Action<T> action)
 		        {
 			        foreach (var obj in objects)
 			        {

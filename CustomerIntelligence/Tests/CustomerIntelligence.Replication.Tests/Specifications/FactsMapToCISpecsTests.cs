@@ -18,10 +18,10 @@ using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
 using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
 using Territory = NuClear.CustomerIntelligence.Storage.Model.Facts.Territory;
 
-namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
+namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
 {
     [TestFixture, SetCulture("")]
-    internal class FactsMapToCISpecsTests : TransformationFixtureBase
+    internal class FactsMapToCISpecsTests : DataFixtureBase
     {
         [Test]
         public void ShouldTransformCategoryGroup()
@@ -30,7 +30,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new CategoryGroup { Id = 123, Name = "category group", Rate = 1 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.CategoryGroups.Map(x).ById(123), Inquire(new Storage.Model.CI.CategoryGroup { Id = 123, Name = "category group", Rate = 1 }));
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.CategoryGroups.Map(x).By(y => y.Id, 123),
+                                           new[] { new Storage.Model.CI.CategoryGroup { Id = 123, Name = "category group", Rate = 1 } });
         }
 
         [Test]
@@ -40,7 +41,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Client { Id = 1, Name = "a client" });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Clients.Map(x).ById(1), Inquire(new Storage.Model.CI.Client { Name = "a client" }), x => new { x.Name }, "The name should be processed.");
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Clients.Map(x).By(y => y.Id, 1),
+                                           new[] { new Storage.Model.CI.Client { Name = "a client" } },
+                                           x => new { x.Name },
+                                           "The name should be processed.");
         }
 
         [Test]
@@ -51,8 +55,14 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Contact { Id = 3, ClientId = 3 });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.ClientContacts.Map(x).Where(c => c.ClientId == 1), Inquire(new ClientContact { Role = 1 }), x => new { x.Role }, "The role should be processed.")
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.ClientContacts.Map(x).Where(c => c.ClientId == 3), Inquire(new ClientContact { ClientId = 3 }), x => new { x.ClientId }, "The client reference should be processed.");
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.ClientContacts.Map(x).By(c => c.ClientId, 1),
+                                           new[] { new ClientContact { Role = 1 } },
+                                           x => new { x.Role },
+                                           "The role should be processed.")
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.ClientContacts.Map(x).By(c => c.ClientId, 3),
+                                           new[] { new ClientContact { ClientId = 3 } },
+                                           x => new { x.ClientId },
+                                           "The client reference should be processed.");
         }
 
         [Test]
@@ -74,38 +84,37 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                     .Has(new Order { FirmId = 1, EndDistributionDateFact = dayAgo });
 
 			// TODO: split into several tests
-			Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(1),
-                                           Inquire(new Storage.Model.CI.Firm { Name = "1st firm" }),
+            Transformation.Create(Query)
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 1),
+                                           new[] { new Storage.Model.CI.Firm { Name = "1st firm" } },
                                            x => new { x.Name },
                                            "The name should be processed.")
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(1),
-                                           Inquire(new Storage.Model.CI.Firm { CreatedOn = monthAgo }),
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 1),
+                                           new[] { new Storage.Model.CI.Firm { CreatedOn = monthAgo } },
                                            x => new { x.CreatedOn },
                                            "The createdOn should be processed.")
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(1, 2),
-                                           Inquire(new Storage.Model.CI.Firm { LastDisqualifiedOn = dayAgo },
-                                                   new Storage.Model.CI.Firm { LastDisqualifiedOn = now }),
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, In(1, 2)),
+                                           new[] { new Storage.Model.CI.Firm { LastDisqualifiedOn = dayAgo }, new Storage.Model.CI.Firm { LastDisqualifiedOn = now } },
                                            x => new { x.LastDisqualifiedOn },
                                            "The disqualifiedOn should be processed.")
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(1, 2),
-                                           Inquire(new Storage.Model.CI.Firm { LastDistributedOn = dayAgo },
-                                                   new Storage.Model.CI.Firm { LastDistributedOn = null }),
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, In(1, 2)),
+                                           new[] { new Storage.Model.CI.Firm { LastDistributedOn = dayAgo }, new Storage.Model.CI.Firm { LastDistributedOn = null } },
                                            x => new { x.LastDistributedOn },
                                            "The distributedOn should be processed.")
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(1, 2),
-                                           Inquire(new Storage.Model.CI.Firm { AddressCount = 2 },
-                                                   new Storage.Model.CI.Firm { AddressCount = 0 }),
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, In(1, 2)),
+                                           new[] { new Storage.Model.CI.Firm { AddressCount = 2 }, new Storage.Model.CI.Firm { AddressCount = 0 } },
                                            x => new { x.AddressCount },
                                            "The address count should be processed.")
                           .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmTerritories.Map(x),
-                                           Inquire(new FirmTerritory { FirmId = 1, TerritoryId = 1 },
-                                                   new FirmTerritory { FirmId = 1, TerritoryId = 2 }),
-                                           x => new { x.FirmId, x.TerritoryId }, 
+                                           new[] { new FirmTerritory { FirmId = 1, TerritoryId = 1 }, new FirmTerritory { FirmId = 1, TerritoryId = 2 } },
+                                           x => new { x.FirmId, x.TerritoryId },
                                            "Firm territories should be processed.")
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(1, 2),
-                                           Inquire(new Storage.Model.CI.Firm { Id = 1, ClientId = null, ProjectId = 1 },
-                                                   new Storage.Model.CI.Firm { Id = 2, ClientId = 1, ProjectId = 2 }),
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, In(1, 2)),
+                                           new[]
+                                               {
+                                                   new Storage.Model.CI.Firm { Id = 1, ClientId = null, ProjectId = 1 },
+                                                   new Storage.Model.CI.Firm { Id = 2, ClientId = 1, ProjectId = 2 }
+                                               },
                                            x => new { x.Id, x.ClientId, x.ProjectId },
                                            "The references should be processed.");
         }
@@ -126,10 +135,18 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new Contact { Id = 3, ClientId = 3, HasPhone = false, HasWebsite = true });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(1), Inquire(new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = false }), x => new { x.HasPhone, x.HasWebsite })
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(2), Inquire(new Storage.Model.CI.Firm { HasPhone = true, HasWebsite = true }), x => new { x.HasPhone, x.HasWebsite })
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(3), Inquire(new Storage.Model.CI.Firm { HasPhone = true, HasWebsite = true }), x => new { x.HasPhone, x.HasWebsite })
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(4), Inquire(new Storage.Model.CI.Firm { HasPhone = true, HasWebsite = true }), x => new { x.HasPhone, x.HasWebsite });
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 1),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = false } },
+                                           x => new { x.HasPhone, x.HasWebsite })
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 2),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = true, HasWebsite = true } },
+                                           x => new { x.HasPhone, x.HasWebsite })
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 3),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = true, HasWebsite = true } },
+                                           x => new { x.HasPhone, x.HasWebsite })
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 4),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = true, HasWebsite = true } },
+                                           x => new { x.HasPhone, x.HasWebsite });
         }
 
         [Test]
@@ -150,11 +167,21 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new FirmContact { Id = 3, FirmAddressId = 4 });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(1), Inquire(new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = false }), x => new { x.HasPhone, x.HasWebsite })
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(2), Inquire(new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = false }), x => new { x.HasPhone, x.HasWebsite })
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(3), Inquire(new Storage.Model.CI.Firm { HasPhone = true, HasWebsite = false }), x => new { x.HasPhone, x.HasWebsite })
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(4), Inquire(new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = true }), x => new { x.HasPhone, x.HasWebsite })
-                .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).ById(5), Inquire(new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = false }), x => new { x.HasPhone, x.HasWebsite });
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 1),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = false } },
+                                           x => new { x.HasPhone, x.HasWebsite })
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 2),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = false } },
+                                           x => new { x.HasPhone, x.HasWebsite })
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 3),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = true, HasWebsite = false } },
+                                           x => new { x.HasPhone, x.HasWebsite })
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 4),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = true } },
+                                           x => new { x.HasPhone, x.HasWebsite })
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Firms.Map(x).By(y => y.Id, 5),
+                                           new[] { new Storage.Model.CI.Firm { HasPhone = false, HasWebsite = false } },
+                                           x => new { x.HasPhone, x.HasWebsite });
         }
 
         [Test]
@@ -176,12 +203,15 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new Account { Id = 3, Balance = 345, LegalPersonId = 2, BranchOfficeOrganizationUnitId = 2 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmBalances.Map(x).Where(b => new long[] { 1, 2, 3 }.Contains(b.FirmId)).OrderBy(fb => fb.FirmId),
-                                           Inquire(new FirmBalance { FirmId = 1, Balance = 123, AccountId = 1, ProjectId = 1 },
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmBalances.Map(x).By(b => b.FirmId, In(1, 2, 3)).OrderBy(fb => fb.FirmId),
+                                           new[]
+                                               {
+                                                   new FirmBalance { FirmId = 1, Balance = 123, AccountId = 1, ProjectId = 1 },
                                                    new FirmBalance { FirmId = 2, Balance = 345, AccountId = 3, ProjectId = 2 },
                                                    new FirmBalance { FirmId = 3, Balance = 123, AccountId = 1, ProjectId = 1 },
                                                    new FirmBalance { FirmId = 1, Balance = 234, AccountId = 2, ProjectId = 2 },
-                                                   new FirmBalance { FirmId = 3, Balance = 234, AccountId = 2, ProjectId = 2 }),
+                                                   new FirmBalance { FirmId = 3, Balance = 234, AccountId = 2, ProjectId = 2 }
+                                               },
                                            "The balance should be processed.");
         }
 
@@ -198,12 +228,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new CategoryFirmAddress { Id = 2, FirmAddressId = 2, CategoryId = 4 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmCategories1.Map(x).Where(c => c.FirmId == 1),
-                                           Inquire(new FirmCategory1 { FirmId = 1, CategoryId = 1 }),
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmCategories1.Map(x).By(c => c.FirmId, 1),
+                                           new[] { new FirmCategory1 { FirmId = 1, CategoryId = 1 } },
                                            "The firm categories1 should be processed.");
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmCategories2.Map(x).Where(c => c.FirmId == 1),
-                                           Inquire(new FirmCategory2 { FirmId = 1, CategoryId = 2 }),
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.FirmCategories2.Map(x).By(c => c.FirmId, 1),
+                                           new[] { new FirmCategory2 { FirmId = 1, CategoryId = 2 } },
                                            "The firm categories2 should be processed.");
         }
 
@@ -215,9 +245,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Project { Id = 456, Name = "p2", OrganizationUnitId = 1 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Projects.Map(x).ById(123, 456),
-                                           Inquire(new Storage.Model.CI.Project { Id = 123, Name = "p1" },
-                                                   new Storage.Model.CI.Project { Id = 456, Name = "p2" }),
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Projects.Map(x).By(y => y.Id, In(123, 456)),
+                                           new[]
+                                               {
+                                                   new Storage.Model.CI.Project { Id = 123, Name = "p1" },
+                                                   new Storage.Model.CI.Project { Id = 456, Name = "p2" }
+                                               },
                                            "The projects should be processed.");
         }
 
@@ -241,9 +274,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             }
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.ProjectCategories.Map(x).Where(c => c.ProjectId == 1),
-                                           Inquire(new ProjectCategory { ProjectId = 1, CategoryId = 3, SalesModel = 10},
-                                                   new ProjectCategory { ProjectId = 1, CategoryId = 4, SalesModel = 0}));
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.ProjectCategories.Map(x).By(c => c.ProjectId, 1),
+                                           new[]
+                                               {
+                                                   new ProjectCategory { ProjectId = 1, CategoryId = 3, SalesModel = 10 },
+                                                   new ProjectCategory { ProjectId = 1, CategoryId = 4, SalesModel = 0 }
+                                               });
         }
 
         [Test]
@@ -255,12 +291,13 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new Territory { Id = 2, Name = "name2", OrganizationUnitId = 2 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Territories.Map(x).ById(1, 2),
-                                           Inquire(new Storage.Model.CI.Territory { Id = 1, Name = "name1", ProjectId = 1 },
-                                                   new Storage.Model.CI.Territory { Id = 2, Name = "name2", ProjectId = 2 }));
+                          .VerifyTransform(x => Specs.Map.Facts.ToCI.Territories.Map(x).By(y => y.Id, In(1, 2)),
+                                           new[]
+                                               {
+                                                   new Storage.Model.CI.Territory { Id = 1, Name = "name1", ProjectId = 1 },
+                                                   new Storage.Model.CI.Territory { Id = 2, Name = "name2", ProjectId = 2 }
+                                               });
         }
-
-        #region Transformation
 
         private class Transformation
         {
@@ -289,7 +326,5 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 return this;
             }
         }
-
-        #endregion
     }
 }

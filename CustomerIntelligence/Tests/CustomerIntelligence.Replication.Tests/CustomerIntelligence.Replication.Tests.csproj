@@ -102,14 +102,14 @@
     <Compile Include="StubReadableDomainContextProvider.cs" />
     <Compile Include="Transformation\ErmFactsTransformationFixture.cs" />
     <Compile Include="Transformation\StatisticsImporterTests.cs" />
-    <Compile Include="Transformation\BitMapToFactsSpecsTests.cs" />
-    <Compile Include="Transformation\FactsMapToCISpecsTests.cs" />
+    <Compile Include="Specifications\BitMapToFactsSpecsTests.cs" />
+    <Compile Include="Specifications\FactsMapToCISpecsTests.cs" />
     <Compile Include="Transformation\CustomerIntelligenceTransformationTests.cs" />
-    <Compile Include="Transformation\ErmFilteringTests.cs" />
-    <Compile Include="Transformation\ErmMapToFactsSpecsTests.cs" />
+    <Compile Include="Specifications\ErmFilteringTests.cs" />
+    <Compile Include="Specifications\ErmMapToFactsSpecsTests.cs" />
     <Compile Include="Transformation\FactDependencyTests.Data.cs" />
     <Compile Include="Transformation\FactDependencyTests.cs" />
-    <Compile Include="Transformation\ErmMapToFactsSpecsTests.Activity.cs" />
+    <Compile Include="Specifications\ErmMapToFactsSpecsTests.Activity.cs" />
     <Compile Include="Transformation\FactDependencyTests.Activity.cs" />
     <Compile Include="Transformation\FactDependencyTests.FirmAddress.cs" />
     <Compile Include="Transformation\FactDependencyTests.CategoryFirmAddress.cs" />
@@ -159,6 +159,7 @@
       <Name>Replication.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\packages\System.Data.SQLite.Core.1.0.96.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\..\..\packages\System.Data.SQLite.Core.1.0.96.0\build\net451\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

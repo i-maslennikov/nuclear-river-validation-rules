@@ -9,18 +9,18 @@ using NuClear.Storage.API.Specifications;
 
 using NUnit.Framework;
 
-namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
+namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
 {
     [TestFixture]
-    internal class ErmFilteringTests : TransformationFixtureBase
+    internal class ErmFilteringTests : DataFixtureBase
     {
         [Test]
         public void ShouldReadAllActivityTypes()
         {
-            ShouldReadActivity((q, ids) => q.For(Specs.Find.Erm.Appointments()).ById(ids));
-            ShouldReadActivity((q, ids) => q.For(Specs.Find.Erm.Phonecalls()).ById(ids));
-            ShouldReadActivity((q, ids) => q.For(Specs.Find.Erm.Tasks()).ById(ids));
-            ShouldReadActivity((q, ids) => q.For(Specs.Find.Erm.Letters()).ById(ids));
+            ShouldReadActivity((q, ids) => q.For(Specs.Find.Erm.Appointments()).Where(x => ids.Contains(x.Id)));
+            ShouldReadActivity((q, ids) => q.For(Specs.Find.Erm.Phonecalls()).Where(x => ids.Contains(x.Id)));
+            ShouldReadActivity((q, ids) => q.For(Specs.Find.Erm.Tasks()).Where(x => ids.Contains(x.Id)));
+            ShouldReadActivity((q, ids) => q.For(Specs.Find.Erm.Letters()).Where(x => ids.Contains(x.Id)));
         }
 
         [Test]
@@ -32,9 +32,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
             ShouldReadActivityReference(q => q.For(Specs.Find.Erm.ClientLetters()), q => q.For(Specs.Find.Erm.FirmLetters()));
         }
 
-        [TestCaseSource("CommonCases")]
+        [TestCaseSource(nameof(CommonCases))]
         public void CommonFilteringTests<T>(T entity, FindSpecification<T> specification, bool expected)
-            where T : class, IErmObject
+            where T : class
         {
             SourceDb.Has(entity);
 
@@ -172,10 +172,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                  .Has(new T { Id = 4, IsActive = true, IsDeleted = false, Status = 0 });
 
             Reader.Create(Query)
-                .VerifyRead(x => func(x, new[] { 1L }), Inquire(new T { Id = 1, IsActive = true, IsDeleted = false, Status = ActivityStatusCompleted }))
-                .VerifyRead(x => func(x, new[] { 2L }), Inquire<T>())
-                .VerifyRead(x => func(x, new[] { 3L }), Inquire<T>())
-                .VerifyRead(x => func(x, new[] { 4L }), Inquire<T>());
+                  .VerifyRead(x => func(x, new[] { 1L }), new[] { new T { Id = 1, IsActive = true, IsDeleted = false, Status = ActivityStatusCompleted } })
+                  .VerifyRead(x => func(x, new[] { 2L }), Enumerable.Empty<T>())
+                  .VerifyRead(x => func(x, new[] { 3L }), Enumerable.Empty<T>())
+                  .VerifyRead(x => func(x, new[] { 4L }), Enumerable.Empty<T>());
         }
 
         private void ShouldReadActivityReference<TReference>(Func<IQuery, IEnumerable<TReference>> clientsRefs, Func<IQuery, IEnumerable<TReference>> firmsRefs)
@@ -191,11 +191,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                  .Has(new TReference { Reference = 0, ReferencedType = 0 });
 
             Reader.Create(Query)
-                  .VerifyRead(clientsRefs, Inquire(new TReference { Reference = ReferenceRegardingObject, ReferencedType = EntityTypeIds.Client }))
-                  .VerifyRead(firmsRefs, Inquire(new TReference { Reference = ReferenceRegardingObject, ReferencedType = EntityTypeIds.Firm }));
+                  .VerifyRead(clientsRefs, new[] { new TReference { Reference = ReferenceRegardingObject, ReferencedType = EntityTypeIds.Client } })
+                  .VerifyRead(firmsRefs, new[] { new TReference { Reference = ReferenceRegardingObject, ReferencedType = EntityTypeIds.Firm } });
         }
-
-        #region Reader
 
         private class Reader
         {
@@ -229,7 +227,5 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 return this;
             }
         }
-
-        #endregion
     }
 }

@@ -8,10 +8,10 @@ using NuClear.Storage.API.Readings;
 
 using NUnit.Framework;
 
-namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
+namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
 {
     [TestFixture, SetCulture("")]
-    internal partial class ErmMapToFactsSpecsTests : TransformationFixtureBase
+    internal partial class ErmMapToFactsSpecsTests : DataFixtureBase
     {
         private static readonly DateTimeOffset Date = new DateTimeOffset(2015, 04, 03, 12, 30, 00, new TimeSpan());
 
@@ -22,7 +22,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Account { Id = 1, Balance = 123.45m, LegalPersonId = 2 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.Accounts.Map(q).ById(1), new Storage.Model.Facts.Account { Id = 1, Balance = 123.45m, LegalPersonId = 2 });
+                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.Accounts.Map(q).By(x => x.Id, 1),
+                                           new Storage.Model.Facts.Account { Id = 1, Balance = 123.45m, LegalPersonId = 2 });
         }
 
         [Test]
@@ -30,9 +31,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             SourceDb.Has(
                 new BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 2 });
-            
+
             Transformation.Create(Query)
-                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.BranchOfficeOrganizationUnits.Map(q).ById(1),
+                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.BranchOfficeOrganizationUnits.Map(q).By(x => x.Id, 1),
                                            new Storage.Model.Facts.BranchOfficeOrganizationUnit { Id = 1, OrganizationUnitId = 2 });
         }
 
@@ -43,7 +44,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Category { Id = 1, Level = 2, ParentId = 3 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.Categories.Map(q).ById(1), new Storage.Model.Facts.Category { Id = 1, Level = 2, ParentId = 3 });
+                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.Categories.Map(q).By(x => x.Id, 1),
+                                           new Storage.Model.Facts.Category { Id = 1, Level = 2, ParentId = 3 });
         }
 
         [Test]
@@ -53,7 +55,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new CategoryFirmAddress { Id = 1, CategoryId = 2, FirmAddressId = 3 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.CategoryFirmAddresses.Map(q).ById(1), new Storage.Model.Facts.CategoryFirmAddress { Id = 1, CategoryId = 2, FirmAddressId = 3 });
+                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.CategoryFirmAddresses.Map(q).By(x => x.Id, 1),
+                                           new Storage.Model.Facts.CategoryFirmAddress { Id = 1, CategoryId = 2, FirmAddressId = 3 });
         }
 
         [Test]
@@ -61,9 +64,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
         {
             SourceDb.Has(
                 new CategoryGroup { Id = 1, Name = "name", Rate = 1 });
-            
+
             Transformation.Create(Query)
-                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.CategoryGroups.Map(q).ById(1), new Storage.Model.Facts.CategoryGroup { Id = 1, Name = "name", Rate = 1 });
+                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.CategoryGroups.Map(q).By(x => x.Id, 1),
+                                           new Storage.Model.Facts.CategoryGroup { Id = 1, Name = "name", Rate = 1 });
         }
 
         [Test]
@@ -73,7 +77,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new CategoryOrganizationUnit { Id = 1, CategoryId = 2, CategoryGroupId = 3, OrganizationUnitId = 4 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.CategoryOrganizationUnits.Map(q).ById(1),
+                          .VerifyTransform(q => Specs.Map.Erm.ToFacts.CategoryOrganizationUnits.Map(q).By(x => x.Id, 1),
                                            new Storage.Model.Facts.CategoryOrganizationUnit { Id = 1, CategoryId = 2, CategoryGroupId = 3, OrganizationUnitId = 4 });
         }
 
@@ -88,11 +92,11 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Client { Id = 5, Website = "site" });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).ById(1), new Storage.Model.Facts.Client { Id = 1, Name = "client", LastDisqualifiedOn = Date })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).ById(2), new Storage.Model.Facts.Client { Id = 2, HasPhone = true })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).ById(3), new Storage.Model.Facts.Client { Id = 3, HasPhone = true })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).ById(4), new Storage.Model.Facts.Client { Id = 4, HasPhone = true })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).ById(5), new Storage.Model.Facts.Client { Id = 5, HasWebsite = true });
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).By(y => y.Id, 1), new Storage.Model.Facts.Client { Id = 1, Name = "client", LastDisqualifiedOn = Date })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).By(y => y.Id, 2), new Storage.Model.Facts.Client { Id = 2, HasPhone = true })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).By(y => y.Id, 3), new Storage.Model.Facts.Client { Id = 3, HasPhone = true })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).By(y => y.Id, 4), new Storage.Model.Facts.Client { Id = 4, HasPhone = true })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Clients.Map(x).By(y => y.Id, 5), new Storage.Model.Facts.Client { Id = 5, HasWebsite = true });
         }
 
         [Test]
@@ -110,15 +114,15 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Contact { Id = 9, Website = "site" });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(1), new Storage.Model.Facts.Contact { Id = 1, ClientId = 2 })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(2), new Storage.Model.Facts.Contact { Id = 2, Role = 1 })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(3), new Storage.Model.Facts.Contact { Id = 3, Role = 2 })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(4), new Storage.Model.Facts.Contact { Id = 4, Role = 3 })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(5), new Storage.Model.Facts.Contact { Id = 5, HasPhone = true })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(6), new Storage.Model.Facts.Contact { Id = 6, HasPhone = true })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(7), new Storage.Model.Facts.Contact { Id = 7, HasPhone = true })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(8), new Storage.Model.Facts.Contact { Id = 8, HasPhone = true })
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).ById(9), new Storage.Model.Facts.Contact { Id = 9, HasWebsite = true });
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 1), new Storage.Model.Facts.Contact { Id = 1, ClientId = 2 })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 2), new Storage.Model.Facts.Contact { Id = 2, Role = 1 })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 3), new Storage.Model.Facts.Contact { Id = 3, Role = 2 })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 4), new Storage.Model.Facts.Contact { Id = 4, Role = 3 })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 5), new Storage.Model.Facts.Contact { Id = 5, HasPhone = true })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 6), new Storage.Model.Facts.Contact { Id = 6, HasPhone = true })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 7), new Storage.Model.Facts.Contact { Id = 7, HasPhone = true })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 8), new Storage.Model.Facts.Contact { Id = 8, HasPhone = true })
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Contacts.Map(x).By(y => y.Id, 9), new Storage.Model.Facts.Contact { Id = 9, HasWebsite = true });
         }
 
         [Test]
@@ -128,7 +132,17 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Firm { Id = 1, Name = "firm", CreatedOn = Date, LastDisqualifyTime = Date.AddDays(1), ClientId = 2, OrganizationUnitId = 3, OwnerId = 5 });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.Firms.Map(x).ById(1), new Storage.Model.Facts.Firm { Id = 1, Name = "firm", CreatedOn = Date, LastDisqualifiedOn = Date.AddDays(1), ClientId = 2, OrganizationUnitId = 3, OwnerId = 5 });
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Firms.Map(x).By(y => y.Id, 1),
+                                           new Storage.Model.Facts.Firm
+                                               {
+                                                   Id = 1,
+                                                   Name = "firm",
+                                                   CreatedOn = Date,
+                                                   LastDisqualifiedOn = Date.AddDays(1),
+                                                   ClientId = 2,
+                                                   OrganizationUnitId = 3,
+                                                   OwnerId = 5
+                                               });
         }
 
         [Test]
@@ -138,7 +152,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new FirmAddress { Id = 1, FirmId = 2, TerritoryId = 3 });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmAddresses.Map(x).ById(1), new Storage.Model.Facts.FirmAddress { Id = 1, FirmId = 2, TerritoryId = 3 });
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmAddresses.Map(x).By(y => y.Id, 1),
+                                           new Storage.Model.Facts.FirmAddress { Id = 1, FirmId = 2, TerritoryId = 3 });
         }
 
         [Test]
@@ -153,10 +168,10 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new FirmContact { Id = 4, ContactType = 4, FirmAddressId = NotNull });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmContacts.Map(x).ById(1), new Storage.Model.Facts.FirmContact { Id = 1, HasPhone = true, FirmAddressId = NotNull })
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmContacts.Map(x).ById(2), Enumerable.Empty<Storage.Model.Facts.FirmContact>())
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmContacts.Map(x).ById(3), Enumerable.Empty<Storage.Model.Facts.FirmContact>())
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmContacts.Map(x).ById(4), new Storage.Model.Facts.FirmContact { Id = 4, HasWebsite = true, FirmAddressId = NotNull });
+                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmContacts.Map(x).By(y => y.Id, 1), new Storage.Model.Facts.FirmContact { Id = 1, HasPhone = true, FirmAddressId = NotNull })
+                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmContacts.Map(x).By(y => y.Id, 2), Enumerable.Empty<Storage.Model.Facts.FirmContact>())
+                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmContacts.Map(x).By(y => y.Id, 3), Enumerable.Empty<Storage.Model.Facts.FirmContact>())
+                .VerifyTransform(x => Specs.Map.Erm.ToFacts.FirmContacts.Map(x).By(y => y.Id, 4), new Storage.Model.Facts.FirmContact { Id = 4, HasWebsite = true, FirmAddressId = NotNull });
         }
 
         [Test]
@@ -167,8 +182,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new LegalPerson { Id = 2, ClientId = null });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.LegalPersons.Map(x).ById(1), new Storage.Model.Facts.LegalPerson { Id = 1, ClientId = 2 })
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.LegalPersons.Map(x).ById(2), Enumerable.Empty<Storage.Model.Facts.LegalPerson>());
+                .VerifyTransform(x => Specs.Map.Erm.ToFacts.LegalPersons.Map(x).By(y => y.Id, 1), new Storage.Model.Facts.LegalPerson { Id = 1, ClientId = 2 })
+                .VerifyTransform(x => Specs.Map.Erm.ToFacts.LegalPersons.Map(x).By(y => y.Id, 2), Enumerable.Empty<Storage.Model.Facts.LegalPerson>());
         }
 
         [Test]
@@ -179,8 +194,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Order { Id = 2, EndDistributionDateFact = Date, WorkflowStepId = 4 /* on termination*/, FirmId = 2 });
 
             Transformation.Create(Query)
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.Orders.Map(x).ById(1), Enumerable.Empty<Storage.Model.Facts.Order>())
-                .VerifyTransform(x => Specs.Map.Erm.ToFacts.Orders.Map(x).ById(2), new Storage.Model.Facts.Order { Id = 2, EndDistributionDateFact = Date, FirmId = 2 });
+                .VerifyTransform(x => Specs.Map.Erm.ToFacts.Orders.Map(x).By(y => y.Id, 1), Enumerable.Empty<Storage.Model.Facts.Order>())
+                .VerifyTransform(x => Specs.Map.Erm.ToFacts.Orders.Map(x).By(y => y.Id, 2), new Storage.Model.Facts.Order { Id = 2, EndDistributionDateFact = Date, FirmId = 2 });
         }
 
         [Test]
@@ -190,7 +205,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Project { Id = 1, Name = "name", OrganizationUnitId = 2 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Projects.Map(x).ById(1), new Storage.Model.Facts.Project { Id = 1, Name = "name", OrganizationUnitId = 2 });
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Projects.Map(x).By(y => y.Id, 1),
+                                           new Storage.Model.Facts.Project { Id = 1, Name = "name", OrganizationUnitId = 2 });
         }
 
         [Test]
@@ -200,10 +216,9 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 new Territory { Id = 1, Name = "name", OrganizationUnitId = 2 });
 
             Transformation.Create(Query)
-                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Territories.Map(x).ById(1), new Storage.Model.Facts.Territory { Id = 1, Name = "name", OrganizationUnitId = 2 });
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Territories.Map(x).By(y => y.Id, 1),
+                                           new Storage.Model.Facts.Territory { Id = 1, Name = "name", OrganizationUnitId = 2 });
         }
-
-        #region Transformation
 
         private class Transformation
         {
@@ -227,7 +242,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 
             public Transformation VerifyTransform<T>(Func<IQuery, IEnumerable<T>> reader, params T[] expected)
             {
-                VerifyTransform(reader, expected, x => x, null);
+                VerifyTransform(reader, expected, x => x);
                 return this;
             }
 
@@ -238,7 +253,5 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                 return this;
             }
         }
-
-        #endregion
     }
 }

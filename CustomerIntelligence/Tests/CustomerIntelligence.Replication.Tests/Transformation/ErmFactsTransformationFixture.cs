@@ -15,7 +15,7 @@ using NUnit.Framework;
 namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
 {
     [TestFixture]
-    internal class ErmFactsTransformationFixture : TransformationFixtureBase
+    internal class ErmFactsTransformationFixture : DataFixtureBase
     {
         [Test]
         public void ShouldProcessFactAccordingToPriority()

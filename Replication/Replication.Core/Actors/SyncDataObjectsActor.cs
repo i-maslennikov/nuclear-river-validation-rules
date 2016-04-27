@@ -56,20 +56,23 @@ namespace NuClear.Replication.Core.Actors
                                         _equalityComparerFactory.CreateIdentityComparer<TDataObject>(),
                                         _equalityComparerFactory.CreateCompleteComparer<TDataObject>());
 
-            var toCreate = changes.Difference.ToArray();
-            var toUpdate = changes.Intersection.ToArray();
             var toDelete = changes.Complement.ToArray();
 
-            _bulkRepository.Delete(toCreate);
+            _bulkRepository.Delete(toDelete);
             events.AddRange(_dataChangesHandler.HandleDeletes(toDelete));
             events.AddRange(_dataChangesHandler.HandleRelates(toDelete));
+
+            var toCreate = changes.Difference.ToArray();
 
             _bulkRepository.Create(toCreate);
             events.AddRange(_dataChangesHandler.HandleCreates(toCreate));
             events.AddRange(_dataChangesHandler.HandleRelates(toCreate));
 
+
+            var toUpdate = changes.Intersection.ToArray();
+
             events.AddRange(_dataChangesHandler.HandleRelates(toUpdate));
-            _bulkRepository.Update(toCreate);
+            _bulkRepository.Update(toUpdate);
             events.AddRange(_dataChangesHandler.HandleRelates(toUpdate));
             events.AddRange(_dataChangesHandler.HandleUpdates(toUpdate));
 

@@ -6,7 +6,7 @@ using NuClear.CustomerIntelligence.Storage.Model.Erm;
 
 using NUnit.Framework;
 
-namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
+namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
 {
     internal partial class ErmMapToFactsSpecsTests
     {
@@ -54,25 +54,25 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Transformation
                          new TActivityReference { ActivityId = 2, Reference = RegardingObjectReference, ReferencedObjectId = FirmId, ReferencedType = EntityTypeIds.Firm },
                          new TActivityReference { ActivityId = 3, Reference = RegardingObjectReference, ReferencedObjectId = ClientId, ReferencedType = EntityTypeIds.Client });
 
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(1).Count(), Is.EqualTo(1));
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(1).Single().ClientId, Is.EqualTo(ClientId));
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(1).Single().FirmId, Is.EqualTo(FirmId));
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(1).Single().ModifiedOn, Is.EqualTo(date));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 1).Count(), Is.EqualTo(1));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 1).Single().ClientId, Is.EqualTo(ClientId));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 1).Single().FirmId, Is.EqualTo(FirmId));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 1).Single().ModifiedOn, Is.EqualTo(date));
 
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(2).Count(), Is.EqualTo(1));
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(2).Single().ClientId, Is.Null);
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(2).Single().FirmId, Is.EqualTo(FirmId));
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(2).Single().ModifiedOn, Is.EqualTo(date));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 2).Count(), Is.EqualTo(1));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 2).Single().ClientId, Is.Null);
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 2).Single().FirmId, Is.EqualTo(FirmId));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 2).Single().ModifiedOn, Is.EqualTo(date));
 
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(3).Count(), Is.EqualTo(1));
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(3).Single().ClientId, Is.EqualTo(ClientId));
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(3).Single().FirmId, Is.Null);
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(3).Single().ModifiedOn, Is.EqualTo(date));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 3).Count(), Is.EqualTo(1));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 3).Single().ClientId, Is.EqualTo(ClientId));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 3).Single().FirmId, Is.Null);
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 3).Single().ModifiedOn, Is.EqualTo(date));
 
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(4).Count(), Is.EqualTo(1));
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(4).Single().ClientId, Is.Null);
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(4).Single().FirmId, Is.Null);
-            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).ById(4).Single().ModifiedOn, Is.EqualTo(date));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 4).Count(), Is.EqualTo(1));
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 4).Single().ClientId, Is.Null);
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 4).Single().FirmId, Is.Null);
+            Assert.That(Specs.Map.Erm.ToFacts.Activities.Map(Query).By(x => x.Id, 4).Single().ModifiedOn, Is.EqualTo(date));
         }
    }
 }
