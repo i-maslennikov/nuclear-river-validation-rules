@@ -31,7 +31,13 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                                            .Receiver<SqlStoreReceiverTelemetryDecorator>()
                                                            .Accumulator<AggregateOperationAccumulator<AggregatesFlow>>()
                                                            .Handler<AggregateOperationAggregatableMessageHandler>()
-                                                           .To.Primary().Flow<AggregatesFlow>().Connect());
+                                                           .To.Primary().Flow<AggregatesFlow>().Connect(),
+
+                                        MessageFlowMetadata.Config.For<MessagesFlow>()
+                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
+                                                           .Accumulator<AggregateOperationAccumulator<MessagesFlow>>()
+                                                           .Handler<MessageOperationAggregatableMessageHandler>()
+                                                           .To.Primary().Flow<MessagesFlow>().Connect());
 
         public PerformedOperationsMessageFlowsMetadataSource()
         {

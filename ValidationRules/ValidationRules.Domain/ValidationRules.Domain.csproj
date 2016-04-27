@@ -84,6 +84,8 @@
     <Compile Include="Model\FactTypePriorityComparer.cs" />
     <Compile Include="Model\Erm\Ruleset.cs" />
     <Compile Include="Model\Erm\RulesetRule.cs" />
+    <Compile Include="Model\Messages\HistoryValidationResult.cs" />
+    <Compile Include="Model\Messages\ValidationResult.cs" />
     <Compile Include="Model\PeriodId.cs" />
     <Compile Include="Model\PeriodIdentityProvider.cs" />
     <Compile Include="Model\Enums\CompareMode.cs" />

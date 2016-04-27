@@ -37,6 +37,10 @@ namespace NuClear.Replication.EntryPoint.Settings
                         ConfigurationManager.ConnectionStrings["Aggregates"].ConnectionString
                     },
                     {
+                        MessagesConnectionStringIdentity.Instance,
+                        ConfigurationManager.ConnectionStrings["Messages"].ConnectionString
+                    },
+                    {
                         TransportConnectionStringIdentity.Instance,
                         ConfigurationManager.ConnectionStrings["Transport"].ConnectionString
                     },

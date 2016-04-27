@@ -94,7 +94,9 @@
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
+    <Compile Include="Final\MessageOperationAggregatableMessageHandler.cs" />
     <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
+    <Compile Include="Identities\Flows\MessagesFlow.cs" />
     <Compile Include="Identities\Flows\AggregatesFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
     <Compile Include="Identities\Operations\ManageDraftRulesetIdentity.cs" />
@@ -107,6 +109,8 @@
     <Compile Include="Identities\Telemetry\ErmProcessedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\ErmReceivedOperationCountIdentity.cs" />
     <Compile Include="Identities\Telemetry\FinalProcessingAggregateQueueLengthIdentity.cs" />
+    <Compile Include="Identities\Telemetry\MessageProcessedOperationCountIdentity.cs" />
+    <Compile Include="Identities\Telemetry\MessageProcessingDelayIdentity.cs" />
     <Compile Include="Identities\Telemetry\PrimaryProcessingDelayIdentity.cs" />
     <Compile Include="Identities\Telemetry\PrimaryProcessingQueueLengthIdentity.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
