@@ -39,7 +39,7 @@ namespace NuClear.Replication.Core.Actors
 
         public override IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var commandsToExecute = commands.OfType<IReplaceValueObjectCommand>().ToArray();
+            var commandsToExecute = commands.OfType<IReplaceValueObjectCommand>().Distinct().ToArray();
             if (!commandsToExecute.Any())
             {
                 return Array.Empty<IEvent>();

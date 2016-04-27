@@ -17,6 +17,6 @@ namespace NuClear.Replication.OperationsProcessing
 
         public IReadOnlyCollection<TCommand> Commands { get; set; }
 
-        public DateTime OperationTime { get; set; }
+        public DateTime EventHappenedTime { get; set; }
     }
 }

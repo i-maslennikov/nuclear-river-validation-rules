@@ -37,14 +37,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             _useCaseFiltrator = useCaseFiltrator;
         }
 
-        protected override AggregatableMessage<ICommand> Process(TrackedUseCase message)
+        protected override AggregatableMessage<ICommand> Process(TrackedUseCase @event)
         {
-            _tracer.DebugFormat("Processing TUC {0}", message.Id);
+            _tracer.DebugFormat("Processing TUC {0}", @event.Id);
 
-            var receivedOperationCount = message.Operations.Sum(x => x.AffectedEntities.Changes.Sum(y => y.Value.Sum(z => z.Value.Count)));
+            var receivedOperationCount = @event.Operations.Sum(x => x.AffectedEntities.Changes.Sum(y => y.Value.Sum(z => z.Value.Count)));
             _telemetryPublisher.Publish<ErmReceivedOperationCountIdentity>(receivedOperationCount);
 
-            var changes = _useCaseFiltrator.Filter(message);
+            var changes = _useCaseFiltrator.Filter(@event);
 
             var commands = changes.SelectMany(x => x.Value.Select(y => new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y))).ToArray();
 
@@ -54,7 +54,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             {
                 TargetFlow = MessageFlow,
                 Commands = commands,
-                OperationTime = message.Context.Finished.UtcDateTime,
+                EventHappenedTime = @event.Context.Finished.UtcDateTime,
             };
         }
     }

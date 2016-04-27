@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NuClear.CustomerIntelligence.Replication.Tests
 {
-    static class QueryableExtensions
+    public static class QueryableExtensions
     {
         public static IEnumerable<T> ById<T>(this IQueryable<T> queryable, params long[] ids)
             where T: IIdentifiable<long>

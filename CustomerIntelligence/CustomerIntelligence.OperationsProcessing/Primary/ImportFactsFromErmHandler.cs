@@ -49,13 +49,13 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             try
             {
                 var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<AggregatableMessage<ICommand>>()
+                                                   .Cast<AggregatableMessage<ISyncDataObjectCommand>>()
                                                    .ToArray();
 
-                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.Cast<ISyncDataObjectCommand>()).ToArray());
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands).ToArray());
 
-                var eldestOperationPerformTime = messages.Min(message => message.OperationTime);
-                _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - eldestOperationPerformTime).TotalMilliseconds);
+                var oldestEventTime = messages.Min(message => message.EventHappenedTime);
+                _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - oldestEventTime).TotalMilliseconds);
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
@@ -70,7 +70,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
         {
             _tracer.Debug("Executing fact commands started");
 
-            var events = Enumerable.Empty<IEvent>();
+            var events = new List<IEvent>();
             using (Probe.Create("ETL1 Transforming"))
             {
                 var actors = _dataObjectsActorFactory.Create();
@@ -82,16 +82,15 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                         _tracer.Debug($"Applying changes to target facts storage with actor {actorType}");
                         foreach(var batch in commands.CreateBatches(_replicationSettings.ReplicationBatchSize))
                         {
-                            events = events.Concat(actor.ExecuteCommands(batch));
+                            events.AddRange(actor.ExecuteCommands(batch));
                         }
                     }
                 }
             }
 
-            var resultedEvents = events.Distinct().ToArray();
-            if (resultedEvents.Length > 1000 * bucketIds.Count)
+            if (events.Count > 1000 * bucketIds.Count)
             {
-                _tracer.Warn($"Messages produced huge operation amount: from {bucketIds.Count} TUCs to {resultedEvents.Length} commands\n" +
+                _tracer.Warn($"Messages produced huge events amount: from {bucketIds.Count} TUCs to {events.Count} commands\n" +
                              string.Join(", ", bucketIds));
             }
 
@@ -102,7 +101,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                                                               new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
             {
                 _tracer.Debug("Pushing messages");
-                DispatchEvents(resultedEvents);
+                DispatchEvents(events);
                 pushTransaction.Complete();
             }
 

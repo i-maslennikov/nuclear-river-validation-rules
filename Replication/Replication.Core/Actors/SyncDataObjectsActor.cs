@@ -42,6 +42,7 @@ namespace NuClear.Replication.Core.Actors
         {
             var commandsToExecute = commands.OfType<ISyncDataObjectCommand>()
                                             .Where(x => x.DataObjectType == typeof(TDataObject))
+                                            .Distinct()
                                             .ToArray();
 
             if (!commandsToExecute.Any())

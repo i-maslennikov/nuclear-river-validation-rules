@@ -156,6 +156,10 @@
       <Project>{A16C1EB8-1575-4EAB-8E4D-891BB5C55150}</Project>
       <Name>Querying.Storage</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CustomerIntelligence.Querying.Host\CustomerIntelligence.Querying.Host.csproj">
+      <Project>{4D48AAC9-C244-41A3-9E89-187860717B1F}</Project>
+      <Name>CustomerIntelligence.Querying.Host</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj">
       <Project>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</Project>
       <Name>CustomerIntelligence.Replication</Name>

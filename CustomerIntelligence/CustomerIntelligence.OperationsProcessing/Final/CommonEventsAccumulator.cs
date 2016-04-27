@@ -72,7 +72,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 {
                     TargetFlow = MessageFlow,
                     Commands = commands,
-                    OperationTime = message.FinalProcessings.Min(x => x.CreatedOn)
+                    EventHappenedTime = message.FinalProcessings.Min(x => x.CreatedOn)
                 };
         }
     }

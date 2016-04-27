@@ -42,6 +42,7 @@ namespace NuClear.Replication.Core.Actors
         {
             var commandsToExecute = commands.OfType<ICreateDataObjectCommand>()
                                             .Where(x => x.DataObjectType == typeof(TDataObject))
+                                            .Distinct()
                                             .ToArray();
 
             if (!commandsToExecute.Any())

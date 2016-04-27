@@ -37,7 +37,8 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
                         .ToArray();
             events.AddRange(_leafToRootActor.ExecuteCommands(commandsToExecute));
 
-            commandsToExecute = commands.OfType<InitializeAggregateCommand>().Distinct()
+            commandsToExecute = commands.OfType<InitializeAggregateCommand>()
+                                        .Distinct()
                                         .Aggregate(new List<ICommand>(),
                                                    (result, next) =>
                                                        {
@@ -49,6 +50,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
             commandsToExecute = commands.OfType<RecalculateAggregateCommand>()
+                                        .Distinct()
                                         .Aggregate(new List<ICommand>(),
                                                    (result, next) =>
                                                        {
@@ -60,6 +62,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
             commandsToExecute = commands.OfType<RecalculateEntityCommand>()
+                                        .Distinct()
                                         .Aggregate(new List<ICommand>(),
                                                    (result, next) =>
                                                        {

@@ -43,7 +43,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                     actor.ExecuteCommands(message.Commands);
 
                     _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(message.Commands.Count);
-                    _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - message.OperationTime).TotalMilliseconds);
+                    _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - message.EventHappenedTime).TotalMilliseconds);
                 }
 
                 return MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded();
