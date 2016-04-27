@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Transactions;
 
 using NuClear.Messaging.API.Processing;
@@ -41,10 +42,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 foreach (var message in messages.Cast<AggregatableMessage<IAggregateCommand>>())
                 {
                     var commandGroups = message.Commands.GroupBy(x => x.AggregateRootType);
-                    foreach (var commandGroup in commandGroups)
-                    {
-                        ExecuteCommands(commandGroup.Key, commandGroup.ToArray());
-                    }
+                    Parallel.ForEach(commandGroups, commandGroup => ExecuteCommands(commandGroup.Key, commandGroup.ToArray()));
 
                     _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Commands.Count);
                     _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)(DateTime.UtcNow - message.EventHappenedTime).TotalMilliseconds);

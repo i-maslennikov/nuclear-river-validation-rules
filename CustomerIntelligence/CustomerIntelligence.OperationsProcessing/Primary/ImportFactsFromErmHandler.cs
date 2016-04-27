@@ -73,7 +73,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             var events = new List<IEvent>();
             using (Probe.Create("ETL1 Transforming"))
             {
-                var actors = _dataObjectsActorFactory.Create();
+                var actors = _dataObjectsActorFactory.Create().AsParallel().AsOrdered();
                 foreach (var actor in actors)
                 {
                     var actorType = actor.GetType().GetFriendlyName();
