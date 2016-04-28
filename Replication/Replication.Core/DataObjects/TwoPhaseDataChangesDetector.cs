@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.Replication.Core.DataObjects
@@ -14,10 +13,9 @@ namespace NuClear.Replication.Core.DataObjects
             MapToObjectsSpecProvider<T, T> sourceProvider,
             MapToObjectsSpecProvider<T, T> targetProvider,
             IEqualityComparer<T> identityComparer,
-            IEqualityComparer<T> completeComparer,
-            IQuery query)
+            IEqualityComparer<T> completeComparer)
         {
-            _dataChangesDetector = new DataChangesDetector<T>(sourceProvider, targetProvider, completeComparer, query);
+            _dataChangesDetector = new DataChangesDetector<T>(sourceProvider, targetProvider, completeComparer);
             _identityComparer = identityComparer;
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
@@ -20,10 +19,8 @@ namespace NuClear.Replication.Core.Actors
             _query = query;
             _storageBasedDataObjectAccessor = storageBasedDataObjectAccessor;
 
-            _mapSpecificationProviderForSource = specification => new MapSpecification<IQuery, IEnumerable<TDataObject>>(q => _storageBasedDataObjectAccessor.GetSource().Where(specification));
-
-            var mapSpecification = new MapSpecification<IQuery, IQueryable<TDataObject>>(q => q.For<TDataObject>());
-            _mapSpecificationProviderForTarget = specification => new MapSpecification<IQuery, IEnumerable<TDataObject>>(q => mapSpecification.Map(q).Where(specification));
+            _mapSpecificationProviderForSource = specification => _storageBasedDataObjectAccessor.GetSource().Where(specification);
+            _mapSpecificationProviderForTarget = specification => _query.For<TDataObject>().Where(specification);
         }
 
         public abstract IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands);
@@ -33,8 +30,7 @@ namespace NuClear.Replication.Core.Actors
             var dataChangesDetector = new DataChangesDetector<TDataObject>(
                 _mapSpecificationProviderForSource,
                 _mapSpecificationProviderForTarget,
-                equalityComparer,
-                _query);
+                equalityComparer);
 
             return dataChangesDetector.DetectChanges(_storageBasedDataObjectAccessor.GetFindSpecification(commands));
         }
@@ -42,14 +38,13 @@ namespace NuClear.Replication.Core.Actors
         protected MergeResult<TDataObject> DetectChanges(
             IReadOnlyCollection<ICommand> commands,
             IEqualityComparer<TDataObject> identityEqualityComparer,
-            IEqualityComparer<TDataObject> completEqualityComparer)
+            IEqualityComparer<TDataObject> completeEqualityComparer)
         {
             var dataChangesDetector = new TwoPhaseDataChangesDetector<TDataObject>(
                 _mapSpecificationProviderForSource,
                 _mapSpecificationProviderForTarget,
                 identityEqualityComparer,
-                completEqualityComparer,
-                _query);
+                completeEqualityComparer);
 
             return dataChangesDetector.DetectChanges(_storageBasedDataObjectAccessor.GetFindSpecification(commands));
         }
