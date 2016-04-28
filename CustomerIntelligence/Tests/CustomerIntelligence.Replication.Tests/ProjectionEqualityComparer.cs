@@ -25,12 +25,12 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
             {
                 return true;
             }
-            
+
             if (ReferenceEquals(x, null))
             {
                 return false;
             }
-            
+
             if (ReferenceEquals(y, null))
             {
                 return false;

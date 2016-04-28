@@ -16,6 +16,7 @@ using LinqToDB.Mapping;
 using LinqToDB.SqlQuery;
 
 using NuClear.CustomerIntelligence.Replication.Tests.Data;
+using NuClear.CustomerIntelligence.Storage;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Storage.Core;
@@ -23,7 +24,7 @@ using NuClear.Storage.LinqToDB;
 using NuClear.Storage.LinqToDB.Connections;
 using NuClear.Storage.LinqToDB.Writings;
 
-namespace NuClear.CustomerIntelligence.Replication.Tests
+namespace NuClear.CustomerIntelligence.Replication.Tests.MemoryDb
 {
     public class SqliteDomainContextFactory : IReadableDomainContextFactory, IModifiableDomainContextFactory, IStorageMappingDescriptorProvider, IDisposable
     {
@@ -48,7 +49,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
         private static readonly Lazy<Type[]> Tables = new Lazy<Type[]>(
             () =>
             {
-                var accessor = typeof(EntityTypeIds);
+                var accessor = typeof(Schema);
                 return accessor.Assembly.GetTypes()
                                .Where(t => t.IsClass && !t.Namespace.IsNullOrEmpty() && t.Namespace.Contains("Model"))
                                .ToArray();

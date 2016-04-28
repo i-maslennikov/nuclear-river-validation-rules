@@ -100,10 +100,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Querying\Querying.Metadata\Querying.Metadata.csproj">
-      <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
-      <Name>Querying.Metadata</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\StateInitialization\StateInitialization.Core\StateInitialization.Core.csproj">
       <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
       <Name>StateInitialization.Core</Name>

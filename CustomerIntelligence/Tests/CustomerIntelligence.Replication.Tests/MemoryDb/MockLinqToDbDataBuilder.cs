@@ -3,7 +3,7 @@
 using NuClear.CustomerIntelligence.Replication.Tests.Data;
 using NuClear.Storage.LinqToDB;
 
-namespace NuClear.CustomerIntelligence.Replication.Tests
+namespace NuClear.CustomerIntelligence.Replication.Tests.MemoryDb
 {
     public sealed class MockLinqToDbDataBuilder
     {

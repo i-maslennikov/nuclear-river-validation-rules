@@ -6,7 +6,7 @@ using LinqToDB.Mapping;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.Storage.Core;
 
-namespace NuClear.CustomerIntelligence.Replication.Tests
+namespace NuClear.CustomerIntelligence.Replication.Tests.MemoryDb
 {
     public class StubDomainContextProvider : IReadableDomainContextProvider, IModifiableDomainContextProvider, IDisposable
     {

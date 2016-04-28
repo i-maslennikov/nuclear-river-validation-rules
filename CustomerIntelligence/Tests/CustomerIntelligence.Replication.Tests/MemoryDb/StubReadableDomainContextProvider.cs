@@ -9,7 +9,7 @@ using NuClear.Storage.LinqToDB;
 using NuClear.Storage.LinqToDB.Connections;
 using NuClear.Storage.LinqToDB.Writings;
 
-namespace NuClear.CustomerIntelligence.Replication.Tests
+namespace NuClear.CustomerIntelligence.Replication.Tests.MemoryDb
 {
     public class StubReadableDomainContextProvider : IReadableDomainContextProvider
     {
@@ -30,7 +30,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
             return new LinqToDBDomainContext(connection,
                                              dataContext,
                                              new NullIManagedConnectionStateScopeFactory(),
-                                             new WritingStrategyFactory(), 
+                                             new WritingStrategyFactory(),
                                              new TransactionOptions
                                              {
                                                  IsolationLevel = IsolationLevel.ReadCommitted,

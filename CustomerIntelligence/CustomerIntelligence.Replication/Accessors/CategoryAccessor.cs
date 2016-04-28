@@ -39,9 +39,9 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Category> dataObjects)
         {
             var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<Account>(x => ids.Contains(x.Id));
+            var specification = new FindSpecification<Category>(x => ids.Contains(x.Id));
 
-            return Specs.Map.Facts.ToFirmAggregate.ByAccount(specification)
+            return Specs.Map.Facts.ToFirmAggregate.ByCategory(specification)
                         .Map(_query)
                         .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x))
                         .ToArray();

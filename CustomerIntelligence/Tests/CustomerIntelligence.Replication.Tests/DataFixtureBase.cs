@@ -8,6 +8,7 @@ using LinqToDB.Data;
 
 using Moq;
 
+using NuClear.CustomerIntelligence.Replication.Tests.MemoryDb;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
@@ -54,12 +55,6 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
 
         protected IRepositoryFactory RepositoryFactory => new LinqToDBRepositoryFactory(_stubDomainContextProvider);
 
-        [Obsolete("Нужно удалить")]
-        protected static IQueryable<T> Inquire<T>(params T[] elements)
-        {
-            return elements.AsQueryable();
-        }
-
         protected IEnumerable<long> In(params long[] ids)
         {
             return ids;
@@ -67,8 +62,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
 
         protected interface IRepositoryFactory
         {
-			IBulkRepository<T> Create<T>()
-                where T : class;
+			IBulkRepository<T> Create<T>() where T : class;
 
 	        object Create(Type type);
         }

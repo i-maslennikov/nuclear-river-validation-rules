@@ -58,16 +58,17 @@ namespace NuClear.Replication.Core.Actors
 
             var toDelete = changes.Complement.ToArray();
 
-            _bulkRepository.Delete(toDelete);
-            events.AddRange(_dataChangesHandler.HandleDeletes(toDelete));
             events.AddRange(_dataChangesHandler.HandleRelates(toDelete));
+            _bulkRepository.Delete(toDelete);
+            events.AddRange(_dataChangesHandler.HandleRelates(toDelete));
+            events.AddRange(_dataChangesHandler.HandleDeletes(toDelete));
 
             var toCreate = changes.Difference.ToArray();
 
-            _bulkRepository.Create(toCreate);
-            events.AddRange(_dataChangesHandler.HandleCreates(toCreate));
             events.AddRange(_dataChangesHandler.HandleRelates(toCreate));
-
+            _bulkRepository.Create(toCreate);
+            events.AddRange(_dataChangesHandler.HandleRelates(toCreate));
+            events.AddRange(_dataChangesHandler.HandleCreates(toCreate));
 
             var toUpdate = changes.Intersection.ToArray();
 
