@@ -4,11 +4,10 @@ using System.Diagnostics;
 
 using NuClear.Assembling.TypeProcessing;
 using NuClear.CustomerIntelligence.StateInitialization.Host.Assembling;
-using NuClear.CustomerIntelligence.Storage;
+using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.Replication.Core;
 using NuClear.StateInitialization.Core;
-using NuClear.StateInitialization.Core.Commands;
-using NuClear.StateInitialization.Core.Storage;
+using NuClear.Storage.API.ConnectionStrings;
 
 namespace NuClear.CustomerIntelligence.StateInitialization.Host
 {
@@ -24,14 +23,10 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                 switch (mode)
                 {
                     case "-fact":
-                        commands.Add(new ReplaceDataObjectsInBulkCommand(
-                                         new StorageDescriptor(ConnectionStringName.Erm, Schema.Erm),
-                                         new StorageDescriptor(ConnectionStringName.Facts, Schema.Facts)));
+                        commands.Add(BulkReplicationCommands.ErmToFacts);
                         break;
                     case "-ci":
-                        commands.Add(new ReplaceDataObjectsInBulkCommand(
-                                         new StorageDescriptor(ConnectionStringName.Facts, Schema.Facts),
-                                         new StorageDescriptor(ConnectionStringName.CustomerIntelligence, Schema.CustomerIntelligence)));
+                        commands.Add(BulkReplicationCommands.FactsToCi);
                         break;
                     default:
                         Console.WriteLine($"Unknown argument: {mode}");
@@ -39,7 +34,14 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                 }
             }
 
-            var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory());
+            var connectionStringSettings = new ConnectionStringSettingsAspect(new Dictionary<IConnectionStringIdentity, string>()
+                {
+                    { ErmConnectionStringIdentity.Instance, ConnectionStringName.Erm },
+                    { FactsConnectionStringIdentity.Instance, ConnectionStringName.Facts },
+                    { CustomerIntelligenceConnectionStringIdentity.Instance, ConnectionStringName.CustomerIntelligence },
+                });
+
+            var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), connectionStringSettings);
 
             var sw = Stopwatch.StartNew();
             bulkReplicationActor.ExecuteCommands(commands);

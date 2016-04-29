@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core;
@@ -13,7 +14,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
     {
         public IDataObjectTypesProvider Create(ReplaceDataObjectsInBulkCommand command)
         {
-            if (command.TargetStorageDescriptor.ConnectionStringName == ConnectionStringName.Facts)
+            if (command.TargetStorageDescriptor.ConnectionString is FactsConnectionStringIdentity)
             {
                 return new DataObjectTypesProvider(
                     new List<Type>
@@ -36,7 +37,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                             typeof(SalesModelCategoryRestriction)
                         });
             }
-            if (command.TargetStorageDescriptor.ConnectionStringName == ConnectionStringName.CustomerIntelligence)
+            if (command.TargetStorageDescriptor.ConnectionString is CustomerIntelligenceConnectionStringIdentity)
             {
                 return new DataObjectTypesProvider(
                     new List<Type>

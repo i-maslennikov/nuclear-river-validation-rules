@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 
@@ -12,16 +11,19 @@ using NuClear.Replication.Core.Actors;
 using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.Factories;
 using NuClear.StateInitialization.Core.Storage;
+using NuClear.Storage.API.ConnectionStrings;
 
 namespace NuClear.StateInitialization.Core
 {
     public sealed class BulkReplicationActor : IActor
     {
         private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
+        private readonly IConnectionStringSettings _connectionStringSettings;
 
-        public BulkReplicationActor(IDataObjectTypesProviderFactory dataObjectTypesProviderFactory)
+        public BulkReplicationActor(IDataObjectTypesProviderFactory dataObjectTypesProviderFactory, IConnectionStringSettings connectionStringSettings)
         {
             _dataObjectTypesProviderFactory = dataObjectTypesProviderFactory;
+            _connectionStringSettings = connectionStringSettings;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -57,10 +59,10 @@ namespace NuClear.StateInitialization.Core
             return Array.Empty<IEvent>();
         }
 
-        private static string GetConnectionString(StorageDescriptor storageDescriptor)
-            => ConfigurationManager.ConnectionStrings[storageDescriptor.ConnectionStringName].ConnectionString;
+        private string GetConnectionString(StorageDescriptor storageDescriptor)
+            => _connectionStringSettings.GetConnectionString(storageDescriptor.ConnectionString);
 
-        private static DataConnection CreateDataConnection(StorageDescriptor storageDescriptor)
+        private DataConnection CreateDataConnection(StorageDescriptor storageDescriptor)
         {
             var connectionString = GetConnectionString(storageDescriptor);
             var connection = SqlServerTools.CreateDataConnection(connectionString);
