@@ -9,18 +9,16 @@ namespace NuClear.Replication.Core.Actors
     public abstract class DataObjectsActorBase<TDataObject> : IActor
         where TDataObject : class
     {
-        private readonly IQuery _query;
         private readonly IStorageBasedDataObjectAccessor<TDataObject> _storageBasedDataObjectAccessor;
         private readonly MapToObjectsSpecProvider<TDataObject, TDataObject> _mapSpecificationProviderForSource;
         private readonly MapToObjectsSpecProvider<TDataObject, TDataObject> _mapSpecificationProviderForTarget;
 
         protected DataObjectsActorBase(IQuery query, IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor)
         {
-            _query = query;
             _storageBasedDataObjectAccessor = storageBasedDataObjectAccessor;
 
             _mapSpecificationProviderForSource = specification => _storageBasedDataObjectAccessor.GetSource().Where(specification);
-            _mapSpecificationProviderForTarget = specification => _query.For<TDataObject>().Where(specification);
+            _mapSpecificationProviderForTarget = specification => query.For<TDataObject>().Where(specification);
         }
 
         public abstract IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands);

@@ -30,7 +30,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             var xmls = message.CorporateBusPackage.ConvertToXElements();
 
             var commands = xmls.SelectMany(CreateCommands)
-                               .Where(x => x != null)
                                .ToArray();
 
             return new CorporateBusAggregatableMessage
