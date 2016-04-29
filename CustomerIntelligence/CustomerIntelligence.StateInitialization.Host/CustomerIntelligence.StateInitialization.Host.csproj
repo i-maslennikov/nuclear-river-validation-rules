@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.Assembling.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Assembling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="linq2db, Version=1.0.7.3, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\linq2db.1.0.7.4-beta2\lib\net45\linq2db.dll</HintPath>
       <Private>True</Private>
@@ -44,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ConnectionStringName.cs" />
     <Compile Include="DataObjectTypesProviderFactory.cs" />
+    <Compile Include="Assembling\StateInitializationRoot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

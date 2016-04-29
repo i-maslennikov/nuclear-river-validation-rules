@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.CustomerIntelligence.Replication.Specifications;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core;
@@ -12,10 +11,6 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
 {
     public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
     {
-        // NOTE: Loading CustomerIntelligence.Replication assembly to AppDomain
-        // ReSharper disable once InconsistentNaming
-        private static readonly Type AssemblyLoadHelperType = typeof(Specs);
-
         public IDataObjectTypesProvider Create(ReplaceDataObjectsInBulkCommand command)
         {
             if (command.TargetStorageDescriptor.ConnectionStringName == ConnectionStringName.Facts)

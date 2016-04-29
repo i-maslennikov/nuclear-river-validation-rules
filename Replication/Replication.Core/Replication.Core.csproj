@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.Assembling.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Assembling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.Model.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
       <Private>True</Private>
@@ -79,6 +83,8 @@
     <Compile Include="Actors\SubrootToLeafActor.cs" />
     <Compile Include="Actors\SyncDataObjectsActor.cs" />
     <Compile Include="Actors\ValueObjectActor.cs" />
+    <Compile Include="Assembling\ReplicationAssembly.cs" />
+    <Compile Include="Assembling\ReplicationZone.cs" />
     <Compile Include="BulkRepository.cs" />
     <Compile Include="Commands\IAggregateCommand.cs" />
     <Compile Include="Commands\ICreateDataObjectCommand.cs" />

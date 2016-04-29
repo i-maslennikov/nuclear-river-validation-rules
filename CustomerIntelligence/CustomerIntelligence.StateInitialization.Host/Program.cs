@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
+using NuClear.Assembling.TypeProcessing;
+using NuClear.CustomerIntelligence.StateInitialization.Host.Assembling;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.Replication.Core;
 using NuClear.StateInitialization.Core;
@@ -14,6 +16,8 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
     {
         public static void Main(string[] args)
         {
+            StateInitializationRoot.Instance.PerformTypesMassProcessing(Array.Empty<IMassProcessor>(), true, typeof(object));
+
             var commands = new List<ICommand>();
             foreach (var mode in args)
             {

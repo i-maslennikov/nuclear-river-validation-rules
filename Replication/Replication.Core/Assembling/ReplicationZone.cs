@@ -1,6 +1,6 @@
 ﻿using NuClear.Assembling.Zones;
 
-namespace NuClear.CustomerIntelligence.Replication.Host.DI
+namespace NuClear.Replication.Core.Assembling
 {
     public sealed class ReplicationZone : IZone
     {

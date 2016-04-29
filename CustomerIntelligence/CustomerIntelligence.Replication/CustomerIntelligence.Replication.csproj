@@ -60,6 +60,7 @@
     <Compile Include="Actors\ProjectAggregateRootActor.cs" />
     <Compile Include="Actors\ProjectStatisticsAggregateRootActor.cs" />
     <Compile Include="Actors\TerritoryAggregateRootActor.cs" />
+    <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
     <Compile Include="Commands\CreateDataObjectCommand.cs" />
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
     <Compile Include="Commands\DestroyAggregateCommand.cs" />
@@ -92,6 +93,10 @@
     <Compile Include="StatisticsKey.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.Assembling.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Assembling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.Model.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
       <Private>True</Private>
