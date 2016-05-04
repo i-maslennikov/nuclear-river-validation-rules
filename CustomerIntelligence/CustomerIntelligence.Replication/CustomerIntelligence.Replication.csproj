@@ -88,7 +88,6 @@
     <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Specs.Map.Bit.cs" />
     <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
-    <Compile Include="Specifications\Specs.Map.Facts.AggregateIdentity.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.CI.cs" />
     <Compile Include="StatisticsKey.cs" />
   </ItemGroup>

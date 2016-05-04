@@ -41,10 +41,32 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<Category>(x => ids.Contains(x.Id));
 
-            return Specs.Map.Facts.ToFirmAggregate.ByCategory(specification)
-                        .Map(_query)
-                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x))
-                        .ToArray();
+            var categories1 = _query.For(new FindSpecification<Category>(x => x.Level == 1));
+            var categories2 = _query.For(new FindSpecification<Category>(x => x.Level == 2));
+            var categories3 = _query.For(new FindSpecification<Category>(x => x.Level == 3));
+
+            var level3 = from firmAddress in _query.For<FirmAddress>()
+                         join categoryFirmAddress in _query.For<CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
+                         join category3 in categories3.Where(specification) on categoryFirmAddress.CategoryId equals category3.Id
+                         select firmAddress.FirmId;
+
+            var level2 = from firmAddress in _query.For<FirmAddress>()
+                         join categoryFirmAddress in _query.For<CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
+                         join category3 in categories3 on categoryFirmAddress.CategoryId equals category3.Id
+                         join category2 in categories2.Where(specification) on category3.ParentId equals category2.Id
+                         select firmAddress.FirmId;
+
+            var level1 = from firmAddress in _query.For<FirmAddress>()
+                         join categoryFirmAddress in _query.For<CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
+                         join category3 in categories3 on categoryFirmAddress.CategoryId equals category3.Id
+                         join category2 in categories2 on category3.ParentId equals category2.Id
+                         join category1 in categories1.Where(specification) on category2.ParentId equals category1.Id
+                         select firmAddress.FirmId;
+
+            var firmIds = level3.Union(level2).Union(level1).ToArray();
+
+            return firmIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x))
+                          .ToArray();
         }
     }
 }

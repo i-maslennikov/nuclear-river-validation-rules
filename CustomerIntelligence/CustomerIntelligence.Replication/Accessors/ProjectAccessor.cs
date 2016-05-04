@@ -44,18 +44,23 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<Project>(x => ids.Contains(x.Id));
 
-            IEnumerable<IEvent> events = Specs.Map.Facts.ToStatistics.ByProject(specification)
-                                              .Map(_query)
-                                              .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(ProjectCategoryStatistics), x));
+            // TODO: Is this really needed?
+            var projectIds = _query.For(specification).Select(x => x.Id).ToArray();
 
-            events = events.Concat(Specs.Map.Facts.ToTerritoryAggregate.ByProject(specification)
-                                        .Map(_query)
-                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Territory), x)));
+            var territoryIds = (from project in _query.For(specification)
+                                join territory in _query.For<Territory>() on project.OrganizationUnitId equals territory.OrganizationUnitId
+                                select territory.Id)
+                .ToArray();
 
-            events = events.Concat(Specs.Map.Facts.ToFirmAggregate.ByProject(specification)
-                                        .Map(_query)
-                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)));
-            return events.ToArray();
+            var firmIds = (from project in _query.For(specification)
+                           join firm in _query.For<Firm>() on project.OrganizationUnitId equals firm.OrganizationUnitId
+                           select firm.Id)
+                .ToArray();
+
+            return projectIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(ProjectCategoryStatistics), x))
+                             .Concat(territoryIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Territory), x)))
+                             .Concat(firmIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)))
+                             .ToArray();
         }
     }
 }

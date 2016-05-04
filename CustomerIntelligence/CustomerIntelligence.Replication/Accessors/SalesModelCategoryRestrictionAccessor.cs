@@ -41,10 +41,13 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<SalesModelCategoryRestriction>(x => ids.Contains(x.Id));
 
-            return Specs.Map.Facts.ToProjectAggregate.BySalesModelCategoryRestriction(specification)
-                        .Map(_query)
-                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Project), x))
-                        .ToArray();
+            var projectIds = (from restriction in _query.For(specification)
+                              select restriction.ProjectId)
+                .Distinct()
+                .ToArray();
+
+            return projectIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Project), x))
+                             .ToArray();
         }
     }
 }

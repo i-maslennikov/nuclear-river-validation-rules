@@ -41,18 +41,35 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<CategoryOrganizationUnit>(x => ids.Contains(x.Id));
 
-            IEnumerable<IEvent> events = Specs.Map.Facts.ToProjectAggregate.ByCategoryOrganizationUnit(specification)
-                                              .Map(_query)
-                                              .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Project), x));
+            var projectIds = (from categoryOrganizationUnit in _query.For(specification)
+                              join project in _query.For<Project>() on categoryOrganizationUnit.OrganizationUnitId equals project.OrganizationUnitId
+                              select project.Id)
+                .Distinct()
+                .ToArray();
 
-            events = events.Concat(Specs.Map.Facts.ToFirmAggregate.ByCategoryOrganizationUnit(specification)
-                                        .Map(_query)
-                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)));
+            var firmIds = (from firm in _query.For<Firm>()
+                           join firmAddress in _query.For<FirmAddress>() on firm.Id equals firmAddress.FirmId
+                           join categoryFirmAddress in _query.For<CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
+                           join categoryOrganizationUnit in _query.For(specification)
+                               on categoryFirmAddress.CategoryId equals categoryOrganizationUnit.CategoryId
+                           where firm.OrganizationUnitId == categoryOrganizationUnit.OrganizationUnitId
+                           select firmAddress.FirmId)
+                .Distinct()
+                .ToArray();
 
-            events = events.Concat(Specs.Map.Facts.ToClientAggregate.ByCategoryOrganizationUnit(specification)
-                                        .Map(_query)
-                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x)));
-            return events.ToArray();
+            var clientIds = (from categoryOrganizationUnit in _query.For(specification)
+                             join categoryFirmAddress in _query.For<CategoryFirmAddress>() on categoryOrganizationUnit.CategoryId equals categoryFirmAddress.CategoryId
+                             join firmAddress in _query.For<FirmAddress>() on categoryFirmAddress.FirmAddressId equals firmAddress.Id
+                             join firm in _query.For<Firm>()
+                                 on new { categoryOrganizationUnit.OrganizationUnitId, firmAddress.FirmId } equals new { firm.OrganizationUnitId, FirmId = firm.Id }
+                             where firm.ClientId.HasValue
+                             select firm.ClientId.Value)
+                .ToArray();
+
+            return projectIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Project), x))
+                             .Concat(firmIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)))
+                             .Concat(clientIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x)))
+                             .ToArray();
         }
     }
 }

@@ -41,14 +41,20 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<Contact>(x => ids.Contains(x.Id));
 
-            IEnumerable<IEvent> events = Specs.Map.Facts.ToClientAggregate.ByContacts(specification)
-                                              .Map(_query)
-                                              .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x));
+            var clientIds = (from client in _query.For<Client>()
+                             join contact in _query.For(specification) on client.Id equals contact.ClientId
+                             select client.Id)
+                .ToArray();
 
-            events = events.Concat(Specs.Map.Facts.ToFirmAggregate.ByContacts(specification)
-                                        .Map(_query)
-                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)));
-            return events.ToArray();
+            var firmIds = (from firm in _query.For<Firm>()
+                           join client in _query.For<Client>() on firm.ClientId equals client.Id
+                           join contact in _query.For(specification) on client.Id equals contact.ClientId
+                           select firm.Id)
+                .ToArray();
+
+            return clientIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x))
+                            .Concat(firmIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)))
+                            .ToArray();
         }
     }
 }

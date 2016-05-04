@@ -41,10 +41,18 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<Account>(x => ids.Contains(x.Id));
 
-            return Specs.Map.Facts.ToFirmAggregate.ByAccount(specification)
-                        .Map(_query)
-                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x))
-                        .ToArray();
+            var firmIds = (from account in _query.For(specification)
+                           join legalPerson in _query.For<LegalPerson>() on account.LegalPersonId equals legalPerson.Id
+                           join client in _query.For<Client>() on legalPerson.ClientId equals client.Id
+                           join branchOfficeOrganizationUnit in _query.For<BranchOfficeOrganizationUnit>()
+                               on account.BranchOfficeOrganizationUnitId equals branchOfficeOrganizationUnit.Id
+                           join firm in _query.For<Firm>() on branchOfficeOrganizationUnit.OrganizationUnitId equals firm.OrganizationUnitId
+                           where firm.ClientId == client.Id
+                           select firm.Id)
+                .ToArray();
+
+            return firmIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x))
+                          .ToArray();
         }
     }
 }

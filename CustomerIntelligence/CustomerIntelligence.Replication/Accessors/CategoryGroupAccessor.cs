@@ -43,14 +43,28 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<CategoryGroup>(x => ids.Contains(x.Id));
 
-            IEnumerable<IEvent> events = Specs.Map.Facts.ToFirmAggregate.ByCategoryGroup(specification)
-                                              .Map(_query)
-                                              .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x));
+            var firmIds = (from categoryGroup in _query.For(specification)
+                           join categoryOrganizationUnit in _query.For<CategoryOrganizationUnit>() on categoryGroup.Id equals categoryOrganizationUnit.CategoryId
+                           join categoryFirmAddress in _query.For<CategoryFirmAddress>() on categoryOrganizationUnit.CategoryId equals categoryFirmAddress.CategoryId
+                           join firmAddress in _query.For<FirmAddress>() on categoryFirmAddress.FirmAddressId equals firmAddress.Id
+                           select firmAddress.FirmId)
+                .Distinct()
+                .ToArray();
 
-            events = events.Concat(Specs.Map.Facts.ToClientAggregate.ByCategoryGroup(specification)
-                                        .Map(_query)
-                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x)));
-            return events.ToArray();
+            var clientIds = (from categoryGroup in _query.For(specification)
+                             join categoryOrganizationUnit in _query.For<CategoryOrganizationUnit>() on categoryGroup.Id equals categoryOrganizationUnit.CategoryId
+                             join categoryFirmAddress in _query.For<CategoryFirmAddress>() on categoryOrganizationUnit.CategoryId equals categoryFirmAddress.CategoryId
+                             join firmAddress in _query.For<FirmAddress>() on categoryFirmAddress.FirmAddressId equals firmAddress.Id
+                             join firm in _query.For<Firm>()
+                                 on new { categoryOrganizationUnit.OrganizationUnitId, firmAddress.FirmId } equals new { firm.OrganizationUnitId, FirmId = firm.Id }
+                             where firm.ClientId.HasValue
+                             select firm.ClientId.Value)
+                .Distinct()
+                .ToArray();
+
+            return firmIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x))
+                          .Concat(clientIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x)))
+                          .ToArray();
         }
     }
 }

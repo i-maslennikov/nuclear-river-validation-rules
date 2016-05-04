@@ -42,18 +42,28 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<FirmAddress>(x => ids.Contains(x.Id));
 
-            IEnumerable<IEvent> events = Specs.Map.Facts.ToStatistics.ByFirmAddress(specification)
-                                              .Map(_query)
-                                              .Select(x => new RelatedDataObjectOutdatedEvent<StatisticsKey>(typeof(ProjectCategoryStatistics), x));
+            var complexIds = (from firm in _query.For<Firm>()
+                              join project in _query.For<Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
+                              join firmAddress in _query.For(specification) on firm.Id equals firmAddress.FirmId
+                              join firmAddressCategory in _query.For<CategoryFirmAddress>() on firmAddress.Id equals firmAddressCategory.FirmAddressId
+                              select new StatisticsKey { ProjectId = project.Id, CategoryId = firmAddressCategory.CategoryId })
+                .ToArray();
 
-            events = events.Concat(Specs.Map.Facts.ToFirmAggregate.ByFirmAddress(specification)
-                                        .Map(_query)
-                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)));
+            var firmIds = (from firmAddress in _query.For(specification)
+                           select firmAddress.FirmId)
+                .ToArray();
 
-            events = events.Concat(Specs.Map.Facts.ToClientAggregate.ByFirmAddress(specification)
-                                        .Map(_query)
-                                        .Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x)));
-            return events.ToArray();
+            var clientIds = (from firmAddress in _query.For(specification)
+                             join firm in _query.For<Firm>() on firmAddress.FirmId equals firm.Id
+                             where firm.ClientId.HasValue
+                             select firm.ClientId.Value)
+                .ToArray();
+
+            return Enumerable.Empty<IEvent>()
+                             .Concat(complexIds.Select(x => new RelatedDataObjectOutdatedEvent<StatisticsKey>(typeof(ProjectCategoryStatistics), x)))
+                             .Concat(firmIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)))
+                             .Concat(clientIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Client), x)))
+                             .ToArray();
         }
     }
 }
