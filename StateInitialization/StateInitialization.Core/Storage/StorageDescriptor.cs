@@ -1,16 +1,18 @@
 ﻿using LinqToDB.Mapping;
 
+using NuClear.Storage.API.ConnectionStrings;
+
 namespace NuClear.StateInitialization.Core.Storage
 {
     public sealed class StorageDescriptor
     {
-        public StorageDescriptor(string connectionStringName, MappingSchema mappingSchema)
+        public StorageDescriptor(IConnectionStringIdentity connectionString, MappingSchema mappingSchema)
         {
-            ConnectionStringName = connectionStringName;
+            ConnectionString = connectionString;
             MappingSchema = mappingSchema;
         }
 
-        public string ConnectionStringName { get; }
+        public IConnectionStringIdentity ConnectionString { get; }
         public MappingSchema MappingSchema { get; }
     }
 }
