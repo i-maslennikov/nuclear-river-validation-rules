@@ -50,12 +50,18 @@ namespace NuClear.Replication.Core.Actors
                 return Array.Empty<IEvent>();
             }
 
+            var events = new List<IEvent>();
+
             var changes = DetectChanges(commandsToExecute, _equalityComparerFactory.CreateIdentityComparer<TDataObject>());
 
             var toDelete = changes.Complement.ToArray();
 
+            events.AddRange(_dataChangesHandler.HandleRelates(toDelete));
+            events.AddRange(_dataChangesHandler.HandleDeletes(toDelete));
             _bulkRepository.Delete(toDelete);
-            return _dataChangesHandler.HandleDeletes(toDelete);
+            events.AddRange(_dataChangesHandler.HandleRelates(toDelete));
+
+            return events;
         }
     }
 }
