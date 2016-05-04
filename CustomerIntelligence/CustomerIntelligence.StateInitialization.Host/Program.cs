@@ -34,7 +34,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                 }
             }
 
-            var connectionStringSettings = new ConnectionStringSettingsAspect(new Dictionary<IConnectionStringIdentity, string>()
+            var connectionStringSettings = new ConnectionStringSettingsAspect(new Dictionary<IConnectionStringIdentity, string>
                 {
                     { ErmConnectionStringIdentity.Instance, ConnectionStringName.Erm },
                     { FactsConnectionStringIdentity.Instance, ConnectionStringName.Facts },
