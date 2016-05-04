@@ -14,7 +14,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Replication.Actors
 {
-    public class CategoryGroupAggregateRootActor : EntityActorBase<CategoryGroup>, IAggregateRootActor
+    public sealed class CategoryGroupAggregateRootActor : EntityActorBase<CategoryGroup>, IAggregateRootActor
     {
         public CategoryGroupAggregateRootActor(
             IQuery query,

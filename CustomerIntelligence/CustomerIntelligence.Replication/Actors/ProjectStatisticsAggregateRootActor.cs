@@ -53,12 +53,11 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
                     new ValueObjectActor<FirmForecast>(_query, _firmForecastBulkRepository, _equalityComparerFactory, new FirmForecastAccessor(_query))
                 };
 
-        private sealed class ProjectCategoryStatisticsActor : EntityActorBase<ProjectCategoryStatistics>
+        public sealed class ProjectCategoryStatisticsActor : EntityActorBase<ProjectCategoryStatistics>
         {
             private readonly IQuery _query;
             private readonly IBulkRepository<FirmCategory3> _firmCategory3BulkRepository;
             private readonly IEqualityComparerFactory _equalityComparerFactory;
-
 
             public ProjectCategoryStatisticsActor(
                 IQuery query,
@@ -79,7 +78,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
                     };
         }
 
-        private sealed class ProjectStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectStatistics>
+        public sealed class ProjectStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectStatistics>
         {
             private readonly IQuery _query;
 
@@ -101,7 +100,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             }
         }
 
-        private sealed class ProjectCategoryStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectCategoryStatistics>
+        public sealed class ProjectCategoryStatisticsAccessor : IStorageBasedDataObjectAccessor<ProjectCategoryStatistics>
         {
             private readonly IQuery _query;
 
@@ -123,7 +122,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             }
         }
 
-        private sealed class FirmForecastAccessor : IStorageBasedDataObjectAccessor<FirmForecast>
+        public sealed class FirmForecastAccessor : IStorageBasedDataObjectAccessor<FirmForecast>
         {
             private readonly IQuery _query;
 
@@ -141,7 +140,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             }
         }
 
-        private sealed class FirmCategory3Accessor : IStorageBasedDataObjectAccessor<FirmCategory3>
+        public sealed class FirmCategory3Accessor : IStorageBasedDataObjectAccessor<FirmCategory3>
         {
             private readonly IQuery _query;
 

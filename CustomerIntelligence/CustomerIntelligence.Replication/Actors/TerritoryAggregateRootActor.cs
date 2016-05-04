@@ -14,7 +14,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Replication.Actors
 {
-    public class TerritoryAggregateRootActor : EntityActorBase<Territory>, IAggregateRootActor
+    public sealed class TerritoryAggregateRootActor : EntityActorBase<Territory>, IAggregateRootActor
     {
         public TerritoryAggregateRootActor(
             IQuery query,

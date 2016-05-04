@@ -27,6 +27,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                             typeof(Firm),
                             typeof(Account),
                             typeof(Activity),
+                            typeof(BranchOfficeOrganizationUnit),
                             typeof(CategoryFirmAddress),
                             typeof(CategoryOrganizationUnit),
                             typeof(Contact),
@@ -50,9 +51,14 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                             typeof(Storage.Model.CI.FirmTerritory),
                             typeof(Storage.Model.CI.Client),
                             typeof(Storage.Model.CI.ClientContact),
+                            typeof(Storage.Model.CI.Project),
                             typeof(Storage.Model.CI.ProjectCategory),
                             typeof(Storage.Model.CI.Territory),
-                            typeof(Storage.Model.CI.CategoryGroup)
+                            typeof(Storage.Model.CI.CategoryGroup),
+                            typeof(Storage.Model.Statistics.ProjectStatistics),
+                            typeof(Storage.Model.Statistics.ProjectCategoryStatistics),
+                            typeof(Storage.Model.Statistics.FirmForecast),
+                            typeof(Storage.Model.Statistics.FirmCategory3),
                         });
             }
 
