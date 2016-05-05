@@ -6,13 +6,13 @@ namespace NuClear.StateInitialization.Core.Storage
 {
     public sealed class StorageDescriptor
     {
-        public StorageDescriptor(IConnectionStringIdentity connectionString, MappingSchema mappingSchema)
+        public StorageDescriptor(IConnectionStringIdentity connectionStringIdentity, MappingSchema mappingSchema)
         {
-            ConnectionString = connectionString;
+            ConnectionStringIdentity = connectionStringIdentity;
             MappingSchema = mappingSchema;
         }
 
-        public IConnectionStringIdentity ConnectionString { get; }
+        public IConnectionStringIdentity ConnectionStringIdentity { get; }
         public MappingSchema MappingSchema { get; }
     }
 }

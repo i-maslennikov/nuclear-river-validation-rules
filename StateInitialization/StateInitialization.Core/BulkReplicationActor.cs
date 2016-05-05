@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 
@@ -62,7 +63,10 @@ namespace NuClear.StateInitialization.Core
         }
 
         private string GetConnectionString(StorageDescriptor storageDescriptor)
-            => _connectionStringSettings.GetConnectionString(storageDescriptor.ConnectionString);
+        {
+            var connectionStringName = _connectionStringSettings.GetConnectionString(storageDescriptor.ConnectionStringIdentity);
+            return ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
+        }
 
         private DataConnection CreateDataConnection(StorageDescriptor storageDescriptor)
         {

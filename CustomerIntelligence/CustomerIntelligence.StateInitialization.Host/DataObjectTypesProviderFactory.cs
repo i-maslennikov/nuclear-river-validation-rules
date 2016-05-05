@@ -14,7 +14,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
     {
         public IDataObjectTypesProvider Create(ReplaceDataObjectsInBulkCommand command)
         {
-            if (command.TargetStorageDescriptor.ConnectionString is FactsConnectionStringIdentity)
+            if (command.TargetStorageDescriptor.ConnectionStringIdentity is FactsConnectionStringIdentity)
             {
                 return new DataObjectTypesProvider(
                     new List<Type>
@@ -38,7 +38,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                             typeof(SalesModelCategoryRestriction)
                         });
             }
-            if (command.TargetStorageDescriptor.ConnectionString is CustomerIntelligenceConnectionStringIdentity)
+            if (command.TargetStorageDescriptor.ConnectionStringIdentity is CustomerIntelligenceConnectionStringIdentity)
             {
                 return new DataObjectTypesProvider(
                     new List<Type>
