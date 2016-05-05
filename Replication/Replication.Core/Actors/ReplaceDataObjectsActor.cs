@@ -54,8 +54,8 @@ namespace NuClear.Replication.Core.Actors
                     var dataObjects = _memoryBasedDataObjectAccessor.GetDataObjects(command);
 
                     _bulkRepository.Create(dataObjects);
-                    events.AddRange(_dataChangesHandler.HandleRelates(dataObjects));
                     events.AddRange(_dataChangesHandler.HandleCreates(dataObjects));
+                    events.AddRange(_dataChangesHandler.HandleRelates(dataObjects));
 
                     transaction.Complete();
                 }
