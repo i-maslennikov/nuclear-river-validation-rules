@@ -42,6 +42,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 foreach (var message in messages.Cast<AggregatableMessage<IAggregateCommand>>())
                 {
                     var commandGroups = message.Commands.GroupBy(x => x.AggregateRootType);
+
+                    // TODO: Can agreggate actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
                     foreach (var commandGroup in commandGroups)
                     {
                         ExecuteCommands(commandGroup.Key, commandGroup.ToArray());

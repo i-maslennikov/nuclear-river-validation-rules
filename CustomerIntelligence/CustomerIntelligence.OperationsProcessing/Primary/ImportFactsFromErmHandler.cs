@@ -73,6 +73,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             var events = new List<IEvent>();
             using (Probe.Create("ETL1 Transforming"))
             {
+                // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
                 var actors = _dataObjectsActorFactory.Create();
                 foreach (var actor in actors)
                 {

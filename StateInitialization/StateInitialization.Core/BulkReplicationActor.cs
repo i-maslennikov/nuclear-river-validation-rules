@@ -38,7 +38,9 @@ namespace NuClear.StateInitialization.Core
                     {
                         var dataObjectTypesProvider = _dataObjectTypesProviderFactory.Create(command);
                         var actorsFactory = new ReplaceDataObjectsInBulkActorFactory(dataObjectTypesProvider, sourceDataConnnection, targetDataConnnection);
-                        var actors = actorsFactory.Create().AsParallel().AsOrdered();
+
+                        // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
+                        var actors = actorsFactory.Create();
                         foreach (var actor in actors)
                         {
                             var sw = Stopwatch.StartNew();
