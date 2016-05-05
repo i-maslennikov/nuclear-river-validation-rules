@@ -65,7 +65,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{02A5
 		CustomerIntelligence\Schemas\ERM.sql = CustomerIntelligence\Schemas\ERM.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{D4238D0C-3315-4449-B1AE-80F716D58D04}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hosting.Common", "Hosting\Hosting.Common\Hosting.Common.csproj", "{D4238D0C-3315-4449-B1AE-80F716D58D04}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerIntelligence.Replication", "CustomerIntelligence\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj", "{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}"
 EndProject
@@ -122,6 +122,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{4CBF48D0-F42C-4560-AEA1-FA06FB1283D9}"
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "StateInitialization", "StateInitialization\Packaging\StateInitialization\StateInitialization.nuproj", "{D5ED5FAC-CBFC-4264-BF15-02689BEC6B36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosting", "Hosting", "{D02635A2-FB92-4A8F-A479-9266C708B57E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{03AB41C0-6F80-4A6F-98A0-6500DFF86453}"
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Hosting.Common", "Hosting\Packaging\Hosting.Common\Hosting.Common.nuproj", "{A1DFBECB-957B-4B79-9C20-1AA9FDAB3681}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -233,6 +239,10 @@ Global
 		{D5ED5FAC-CBFC-4264-BF15-02689BEC6B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5ED5FAC-CBFC-4264-BF15-02689BEC6B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5ED5FAC-CBFC-4264-BF15-02689BEC6B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1DFBECB-957B-4B79-9C20-1AA9FDAB3681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1DFBECB-957B-4B79-9C20-1AA9FDAB3681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1DFBECB-957B-4B79-9C20-1AA9FDAB3681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1DFBECB-957B-4B79-9C20-1AA9FDAB3681}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -248,6 +258,7 @@ Global
 		{F3C74BF1-8646-4DB6-AECB-42E10F8542B6} = {8F3C0046-1F47-4C8E-8B03-D35E96686C6F}
 		{8A646634-2535-493C-A699-90B4D1C40A83} = {8F3C0046-1F47-4C8E-8B03-D35E96686C6F}
 		{02A5AF22-F311-46F6-A155-D022430BD529} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
+		{D4238D0C-3315-4449-B1AE-80F716D58D04} = {D02635A2-FB92-4A8F-A479-9266C708B57E}
 		{B0A258D5-7387-4FB2-BA18-B51550DA3F0B} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
 		{FA1074A6-B89D-45DF-9B73-6881BEF46E33} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
 		{794F43F6-E4F3-4A80-A2B0-195D3560CB35} = {C80A3A09-DFCA-4FDE-8835-39F047FFA4BB}
@@ -273,6 +284,8 @@ Global
 		{8770B501-8EEF-4D8D-9658-452E890B1DD2} = {3EEA8E23-5BFF-4184-B719-1C187249460F}
 		{4CBF48D0-F42C-4560-AEA1-FA06FB1283D9} = {E0765131-F072-42B9-A8B3-65396FF44DBE}
 		{D5ED5FAC-CBFC-4264-BF15-02689BEC6B36} = {4CBF48D0-F42C-4560-AEA1-FA06FB1283D9}
+		{03AB41C0-6F80-4A6F-98A0-6500DFF86453} = {D02635A2-FB92-4A8F-A479-9266C708B57E}
+		{A1DFBECB-957B-4B79-9C20-1AA9FDAB3681} = {03AB41C0-6F80-4A6F-98A0-6500DFF86453}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.ServiceBus.6.0.1304.0\lib\NET45

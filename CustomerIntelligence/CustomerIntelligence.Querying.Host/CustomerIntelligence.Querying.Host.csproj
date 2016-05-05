@@ -248,9 +248,9 @@
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
       <Name>Querying.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\Common.csproj">
+    <ProjectReference Include="..\..\Hosting\Hosting.Common\Hosting.Common.csproj">
       <Project>{d4238d0c-3315-4449-b1ae-80f716d58d04}</Project>
-      <Name>Common</Name>
+      <Name>Hosting.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>

@@ -1,6 +1,6 @@
 ﻿using NuClear.Settings.API;
 
-namespace NuClear.River.Common.Settings
+namespace NuClear.River.Hosting.Common.Settings
 {
     public interface IEnvironmentSettings : ISettings
     {

@@ -97,7 +97,6 @@
     <Compile Include="ExceptionTracer.cs" />
     <Compile Include="HttpConfigurationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -106,10 +105,6 @@
     <ProjectReference Include="..\Querying.Metadata\Querying.Metadata.csproj">
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
       <Name>Querying.Metadata</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common\Common.csproj">
-      <Project>{d4238d0c-3315-4449-b1ae-80f716d58d04}</Project>
-      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Querying.Edm\Querying.Edm.csproj">
       <Project>{135ef4b2-e97c-44b5-a6ac-6e97b103de55}</Project>

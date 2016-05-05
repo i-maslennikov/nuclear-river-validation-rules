@@ -1,7 +1,6 @@
-﻿using NuClear.River.Common.Settings;
-using NuClear.Settings.API;
+﻿using NuClear.Settings.API;
 
-namespace NuClear.Querying.Http
+namespace NuClear.River.Hosting.Common.Settings
 {
     public abstract class SettingsContainer : SettingsContainerBase
     {

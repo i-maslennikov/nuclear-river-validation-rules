@@ -128,9 +128,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Common.csproj">
+    <ProjectReference Include="..\..\..\Hosting\Hosting.Common\Hosting.Common.csproj">
       <Project>{d4238d0c-3315-4449-b1ae-80f716d58d04}</Project>
-      <Name>Common</Name>
+      <Name>Hosting.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj">
       <Project>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</Project>

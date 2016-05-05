@@ -1,7 +1,7 @@
 ﻿using NuClear.Settings;
 using NuClear.Settings.API;
 
-namespace NuClear.River.Common.Settings
+namespace NuClear.River.Hosting.Common.Settings
 {
     public sealed class EnvironmentSettingsAspect : ISettingsAspect, IEnvironmentSettings
     {

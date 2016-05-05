@@ -72,7 +72,7 @@ using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
-using NuClear.River.Common.Identities.Connections;
+using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.Security;
 using NuClear.Security.API;
 using NuClear.Security.API.UserContext;

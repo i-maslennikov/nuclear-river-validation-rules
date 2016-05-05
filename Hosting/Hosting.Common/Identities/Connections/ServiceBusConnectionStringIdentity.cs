@@ -1,7 +1,7 @@
 ﻿using NuClear.Model.Common;
 using NuClear.Storage.API.ConnectionStrings;
 
-namespace NuClear.River.Common.Identities.Connections
+namespace NuClear.River.Hosting.Common.Identities.Connections
 {
     public class ServiceBusConnectionStringIdentity : IdentityBase<ServiceBusConnectionStringIdentity>, IConnectionStringIdentity
     {
