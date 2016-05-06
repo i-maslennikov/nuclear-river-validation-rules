@@ -6,9 +6,11 @@ $ErrorActionPreference = 'Stop'
 Import-Module "$BuildToolsRoot\modules\entrypoint.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\artifacts.psm1" -DisableNameChecking
 
-Task QueueBuild-BulkTool -Precondition { $Metadata['CustomerIntelligence.StateInitialization.Host'] } {
-	$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.StateInitialization.Host'
-	QueueBuild-AppPackage $projectFileName 'CustomerIntelligence.StateInitialization.Host'
+function QueueBuild-BulkTool  {
+	if ($Metadata['CustomerIntelligence.StateInitialization.Host']){
+		$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.StateInitialization.Host'
+		QueueBuild-AppPackage $projectFileName 'CustomerIntelligence.StateInitialization.Host'
+	}
 }
 
 Task Run-BulkTool -Precondition { $Metadata['CustomerIntelligence.StateInitialization.Host'] } {

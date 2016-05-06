@@ -1,9 +1,4 @@
-﻿Set-StrictMode -Version Latest
-$ErrorActionPreference = 'Stop'
-#Requires –Version 3.0
-#------------------------------
-
-# TODO Это временное решение, правильное решение - это создание отдельного сервиса инфраструктуры, общего для advanced search и для ERM
+﻿param ([hashtable]$Properties)
 
 Import-Module "$PSScriptRoot\metadata.web.psm1" -DisableNameChecking
 Import-Module "$PSScriptRoot\metadata.taskservice.psm1" -DisableNameChecking
@@ -13,7 +8,7 @@ Import-Module "$PSScriptRoot\metadata.usecaseroute.psm1" -DisableNameChecking
 function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 
 	$entryPointsMetadata = @{}
-	
+
 	# конвертер нужен всегда, чтобы из него подтянуть connection strings для Create-Topics
 	$Context.EntryPoint = 'ConvertUseCasesService'
 	$entryPointsMetadata += Get-TaskServiceMetadata $Context
@@ -46,6 +41,9 @@ function Get-BulkToolMetadata ($UpdateSchemas, $Context){
 		'ERM' { $arguments += @('-fact', '-ci') }
 		'BIT' { $arguments += @('-ci') }
 		'CustomerIntelligence' { $arguments += @('-ci') }
+		default {
+			return @{}
+		}
 	}
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
@@ -242,4 +240,4 @@ $AllEnvironments = @{
 	'Test.608' = @{ EnvType = 'Test'; Country = 'Kazakhstan'; Index = '608' }
 }
 
-Export-ModuleMember -Function Parse-EnvironmentMetadata
+return Parse-EnvironmentMetadata $Properties
