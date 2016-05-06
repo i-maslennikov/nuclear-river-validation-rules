@@ -1,26 +1,29 @@
 @startuml
 
 package ValidationResultAggregate {
+    object Version {
+        Version
+    }
+    
+    object ErmState {
+        Token
+    }
 
     object ValidationResult {
-        #OrderId
-        #PeriodStart
-        #PeriodEnd
-        #MessageType
-        
+        OrderId
+        PeriodStart
+        PeriodEnd
         ProjectId
+
+        MessageType
+        MessageParams
         
-        IsFailed
-        MessageParams
+        Result
     }
     
-    object HistoryValidationResult {
-        OrderVersion
-        IsFailed
-        MessageParams
-    }
-    
-    ValidationResult *-- HistoryValidationResult
+
+    Version *-- ValidationResult
+    Version *-- ErmState
 }
 
 @enduml
