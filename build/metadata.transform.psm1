@@ -5,6 +5,40 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module "$PSScriptRoot\metadata.usecaseroute.psm1" -DisableNameChecking
 
+$DBSuffixes = @{
+	'Chile' = 'CL'
+	'Cyprus' = 'CY'
+	'Czech' = 'CZ'
+	'Emirates' = 'AE'
+	'Russia' = 'RU'
+	'Ukraine' = 'UA'
+	'Kazakhstan' = 'KZ'
+	'Kyrgyzstan' = 'KG'
+	'Italy' = 'IT'
+}
+
+function Get-DBHostMetadata($Context){
+	switch($Context.EnvType){
+		'Test' {
+			switch($Context.Country){
+				'Russia' { $dbHost = 'uk-sql01' }
+				default { $dbHost = 'uk-erm-sql02' }
+			}
+		}
+		'Edu' {
+			$dbHost = 'uk-erm-edu01'
+		}
+		'Business' {
+			$dbHost = 'uk-erm-edu02'
+		}
+		'Production' {
+			$dbHost = 'uk-sql20\erm'
+		}
+	}
+
+	return @{ 'DBHost' = $dbHost }
+}
+
 function Get-XdtMetadata($Context){
 	$xdt = @()
 
@@ -13,15 +47,15 @@ function Get-XdtMetadata($Context){
 		'ConvertUseCasesService' {
 			switch($Context.EnvType){
 				'Test' {
-					$xdt += @("Templates\ConvertUseCases.$($Context.EnvType).MultiCulture.config")
+					$xdt += @("Templates\ConvertUseCases.Test.config")
+				}
+				'Production' {
+					$xdt += @("ConvertUseCases.Production.config")
 				}
 				default {
-					$xdt += @("ConvertUseCases.$($Context.EnvType).MultiCulture.config")
+					$xdt += @("ConvertUseCases.config")
 				}
 			}
-		}
-		'ConvertUseCasesServiceProduction' {
-			$xdt += @("ConvertUseCases.Production.MultiCulture.config")
 		}
 		default {
 			$xdt += @(
@@ -31,10 +65,13 @@ function Get-XdtMetadata($Context){
 
 			switch($Context.EnvType){
 				'Test' {
-					$xdt += @("Templates\Erm.$($Context.EnvType).$($Context.Country).config")
+					$xdt += @("Templates\Erm.Test.config")
+				}
+				'Production' {
+					$xdt += @("Erm.Production.config")
 				}
 				default {
-					$xdt += @("Erm.$($Context.EnvType).$($Context.Country).config")
+					$xdt += @("Erm.config")
 				}
 			}
 		}
@@ -52,6 +89,10 @@ function Get-RegexMetadata($Context){
 	}
 	if ($Context['Country']){
 		$regex += @{ '{Country}' = $Context['Country'] }
+		$regex += @{ '{DBSuffix}' = $DBSuffixes[$Context['Country']] }
+	}
+	if ($Context['EnvType']){
+		$regex += @{ '{EnvType}' = $Context['EnvType'] }
 	}
 
 	$useCaseRouteMetadata = Get-UseCaseRouteMetadata $Context
@@ -59,6 +100,11 @@ function Get-RegexMetadata($Context){
 		foreach($keyValuePair in $useCaseRouteMetadata.UseCaseRoute.GetEnumerator()){
 			$regex["{$($keyValuePair.Key)}"] = $keyValuePair.Value
 		}
+	}
+
+	$dbHostMetadata = Get-DBHostMetadata $Context
+	foreach($keyValuePair in $dbHostMetadata.GetEnumerator()){
+		$regex["{$($keyValuePair.Key)}"] = $keyValuePair.Value
 	}
 
 	return $regex

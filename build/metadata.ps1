@@ -12,8 +12,13 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	# конвертер нужен всегда, чтобы из него подтянуть connection strings для Create-Topics
 	$Context.EntryPoint = 'ConvertUseCasesService'
 	$entryPointsMetadata += Get-TaskServiceMetadata $Context
-	$Context.EntryPoint = 'ConvertUseCasesServiceProduction'
-	$entryPointsMetadata += Get-TaskServiceMetadata $Context
+
+	# копия конвертера, нацеленная строго на production
+	$tempContext = $Context.Clone()
+	$tempContext.EnvType = 'Production'
+	$tempContext.EntryPoint = 'ConvertUseCasesService'
+	$tempMetadata = Get-TaskServiceMetadata $tempContext
+	$entryPointsMetadata += @{ 'ConvertUseCasesServiceProduction' = $tempMetadata['ConvertUseCasesService'] } 
 
 	switch ($EntryPoints){
 		'CustomerIntelligence.Querying.Host' {

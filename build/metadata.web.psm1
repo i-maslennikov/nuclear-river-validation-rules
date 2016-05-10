@@ -13,7 +13,8 @@ $DomainNames = @{
 	'Russia' = 'ru'
 	'Ukraine' = 'ua'
 	'Kazakhstan' = 'kz'
-}
+	'Kyrgyzstan' = 'kg'
+	'Italy' = 'it'}
 
 function Get-TargetHostsMetadata ($Context) {
 
