@@ -13,7 +13,7 @@ using NuClear.StateInitialization.Core.Storage;
 
 namespace NuClear.StateInitialization.Core.Factories
 {
-    public sealed class ReplaceDataObjectsInBulkActorFactory : IDataObjectsActorFactory
+    public sealed class ReplaceDataObjectsInBulkActorFactory : IDataObjectsActorFactory, IDisposable
     {
         private static readonly IReadOnlyDictionary<Type, Type> AccessorTypes =
             (from type in AppDomain.CurrentDomain.GetAssemblies().Where(x => !x.IsDynamic).SelectMany(x => x.ExportedTypes)
@@ -23,17 +23,19 @@ namespace NuClear.StateInitialization.Core.Factories
                 .ToDictionary(x => x.GenericArgument, x => x.Type);
 
         private readonly IDataObjectTypesProvider _dataObjectTypesProvider;
-        private readonly DataConnection _sourceDataConnection;
-        private readonly DataConnection _targetDataConnection;
+        private readonly Func<DataConnection> _sourceDataConnectionFactory;
+        private readonly Func<DataConnection> _targetDataConnectionFactory;
+
+        private readonly List<IDisposable> _disposables = new List<IDisposable>();
 
         public ReplaceDataObjectsInBulkActorFactory(
             IDataObjectTypesProvider dataObjectTypesProvider,
-            DataConnection sourceDataConnection,
-            DataConnection targetDataConnection)
+            Func<DataConnection> sourceDataConnectionFactory,
+            Func<DataConnection> targetDataConnectionFactory)
         {
             _dataObjectTypesProvider = dataObjectTypesProvider;
-            _sourceDataConnection = sourceDataConnection;
-            _targetDataConnection = targetDataConnection;
+            _sourceDataConnectionFactory = sourceDataConnectionFactory;
+            _targetDataConnectionFactory = targetDataConnectionFactory;
         }
 
         public IReadOnlyCollection<IActor> Create()
@@ -42,14 +44,27 @@ namespace NuClear.StateInitialization.Core.Factories
 
             foreach (var dataObjectType in _dataObjectTypesProvider.Get<ReplaceDataObjectsInBulkCommand>())
             {
+                var sourceDataConnection = _sourceDataConnectionFactory();
+                var targetDataConnection = _targetDataConnectionFactory();
+                _disposables.Add(sourceDataConnection);
+                _disposables.Add(targetDataConnection);
+
                 var accessorType = AccessorTypes[dataObjectType];
-                var accessorInstance = Activator.CreateInstance(accessorType, new LinqToDbQuery(_sourceDataConnection));
+                var accessorInstance = Activator.CreateInstance(accessorType, new LinqToDbQuery(sourceDataConnection));
                 var actorType = typeof(ReplaceDataObjectsInBulkActor<>).MakeGenericType(dataObjectType);
-                var actor = (IActor)Activator.CreateInstance(actorType, accessorInstance, _targetDataConnection);
+                var actor = (IActor)Activator.CreateInstance(actorType, accessorInstance, targetDataConnection);
                 actors.Add(actor);
             }
 
             return actors;
+        }
+
+        public void Dispose()
+        {
+            foreach (var disposable in _disposables)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }

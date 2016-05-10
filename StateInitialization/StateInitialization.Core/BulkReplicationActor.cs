@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
@@ -31,32 +32,28 @@ namespace NuClear.StateInitialization.Core
         {
             foreach (var command in commands.Cast<ReplaceDataObjectsInBulkCommand>())
             {
+                var commandStopwatch = Stopwatch.StartNew();
+
                 using (ViewRemover.TemporaryRemoveViews(GetConnectionString(command.TargetStorageDescriptor)))
+                using (var actorsFactory = new ReplaceDataObjectsInBulkActorFactory(
+                    _dataObjectTypesProviderFactory.Create(command),
+                    () => CreateDataConnection(command.SourceStorageDescriptor),
+                    () => CreateDataConnection(command.TargetStorageDescriptor)))
                 {
-                    var sourceDataConnnection = CreateDataConnection(command.SourceStorageDescriptor);
-                    var targetDataConnnection = CreateDataConnection(command.TargetStorageDescriptor);
-                    try
-                    {
-                        var dataObjectTypesProvider = _dataObjectTypesProviderFactory.Create(command);
-                        var actorsFactory = new ReplaceDataObjectsInBulkActorFactory(dataObjectTypesProvider, sourceDataConnnection, targetDataConnnection);
+                    Parallel.ForEach(actorsFactory.Create(),
+                                     actor =>
+                                         {
+                                             var sw = Stopwatch.StartNew();
+                                             actor.ExecuteCommands(new[] { command });
+                                             sw.Stop();
 
-                        // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
-                        var actors = actorsFactory.Create();
-                        foreach (var actor in actors)
-                        {
-                            var sw = Stopwatch.StartNew();
-                            actor.ExecuteCommands(new[] { command });
-                            sw.Stop();
-
-                            Console.WriteLine($"{actor.GetType().GetFriendlyName()}: {sw.Elapsed.TotalSeconds} seconds");
-                        }
-                    }
-                    finally
-                    {
-                        sourceDataConnnection.Dispose();
-                        targetDataConnnection.Dispose();
-                    }
+                                             Console.WriteLine($"{actor.GetType().GetFriendlyName()}: {sw.Elapsed.TotalSeconds} seconds");
+                                         });
                 }
+
+
+                commandStopwatch.Stop();
+                Console.WriteLine($"[{command.SourceStorageDescriptor.ConnectionStringIdentity}] -> [{command.TargetStorageDescriptor.ConnectionStringIdentity}]: {commandStopwatch.Elapsed.TotalSeconds} seconds");
             }
 
             return Array.Empty<IEvent>();

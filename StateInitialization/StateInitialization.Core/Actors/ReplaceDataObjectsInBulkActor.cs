@@ -12,15 +12,16 @@ using NuClear.StateInitialization.Core.Commands;
 
 namespace NuClear.StateInitialization.Core.Actors
 {
-    public sealed class ReplaceDataObjectsInBulkActor<TDataObject> : IActor where TDataObject : class
+    public sealed class ReplaceDataObjectsInBulkActor<TDataObject> : IActor
+        where TDataObject : class
     {
-        private readonly IQueryable<TDataObject> _source;
-        private readonly DataConnection _target;
+        private readonly IQueryable<TDataObject> _dataObjectsSource;
+        private readonly DataConnection _targetDataConnection;
 
-        public ReplaceDataObjectsInBulkActor(IStorageBasedDataObjectAccessor<TDataObject> dataObjectAccessor, DataConnection target)
+        public ReplaceDataObjectsInBulkActor(IStorageBasedDataObjectAccessor<TDataObject> dataObjectAccessor, DataConnection targetDataConnection)
         {
-            _source = dataObjectAccessor.GetSource();
-            _target = target;
+            _dataObjectsSource = dataObjectAccessor.GetSource();
+            _targetDataConnection = targetDataConnection;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -34,14 +35,14 @@ namespace NuClear.StateInitialization.Core.Actors
             try
             {
                 var options = new BulkCopyOptions { BulkCopyTimeout = 1800 };
-                _target.GetTable<TDataObject>().Delete();
-                _target.BulkCopy(options, _source);
+                _targetDataConnection.GetTable<TDataObject>().Delete();
+                _targetDataConnection.BulkCopy(options, _dataObjectsSource);
 
                 return Array.Empty<IEvent>();
             }
             catch (Exception ex)
             {
-                throw new Exception($"Can not process entity type {typeof(TDataObject).Name}\n{_target.LastQuery}", ex);
+                throw new Exception($"Can not process entity type {typeof(TDataObject).Name}{Environment.NewLine}{_targetDataConnection.LastQuery}", ex);
             }
         }
     }
