@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 
 using NuClear.Assembling.TypeProcessing;
@@ -13,6 +14,15 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
 {
     public sealed class Program
     {
+        private static readonly IConnectionStringSettings ConnectionStringSettings =
+            new ConnectionStringSettingsAspect(
+                new Dictionary<IConnectionStringIdentity, string>
+                    {
+                        { ErmConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Erm) },
+                        { FactsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Facts) },
+                        { CustomerIntelligenceConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.CustomerIntelligence) },
+                    });
+
         public static void Main(string[] args)
         {
             StateInitializationRoot.Instance.PerformTypesMassProcessing(Array.Empty<IMassProcessor>(), true, typeof(object));
@@ -34,18 +44,14 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                 }
             }
 
-            var connectionStringSettings = new ConnectionStringSettingsAspect(new Dictionary<IConnectionStringIdentity, string>
-                {
-                    { ErmConnectionStringIdentity.Instance, ConnectionStringName.Erm },
-                    { FactsConnectionStringIdentity.Instance, ConnectionStringName.Facts },
-                    { CustomerIntelligenceConnectionStringIdentity.Instance, ConnectionStringName.CustomerIntelligence },
-                });
-
-            var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), connectionStringSettings);
+            var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), ConnectionStringSettings);
 
             var sw = Stopwatch.StartNew();
             bulkReplicationActor.ExecuteCommands(commands);
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
+
+        private static string GetConnectionString(string connectionStringName)
+            => ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
     }
 }

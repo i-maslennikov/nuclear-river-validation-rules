@@ -2,9 +2,7 @@
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Replication.Actors;
-using NuClear.CustomerIntelligence.Replication.Assembling;
 using NuClear.CustomerIntelligence.StateInitialization.Host;
-using NuClear.CustomerIntelligence.StateInitialization.Host.Assembling;
 using NuClear.DataTest.Metamodel;
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.Metamodeling.Provider;
@@ -22,8 +20,6 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 
         public BulkReplicationAdapter(ActMetadataElement metadata, IMetadataProvider metadataProvider, ConnectionStringSettingsAspect connectionStringSettings)
         {
-            
-
             _key = new T();
             _connectionStringSettings = MappedConnectionStringSettings.CreateMappedSettings(
                 connectionStringSettings,
