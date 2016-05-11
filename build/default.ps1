@@ -3,13 +3,10 @@ $ErrorActionPreference = 'Stop'
 #Requires –Version 3.0
 #------------------------------
 
-Import-Module "$BuildToolsRoot\modules\msbuild.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\artifacts.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\deploy.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\nuget.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\metadata.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\entrypoint.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\buildqueue.psm1" -DisableNameChecking
+Import-Module "$BuildToolsRoot\modules\deployqueue.psm1" -DisableNameChecking
 
 Include "$BuildToolsRoot\psake\nuget.ps1"
 Include "$BuildToolsRoot\psake\unittests.ps1"
@@ -18,37 +15,49 @@ Include 'updateschemas.ps1'
 Include 'bulktool.ps1'
 Include 'datatest.ps1'
 
-Task QueueBuild-OData -Precondition { $Metadata['CustomerIntelligence.Querying.Host'] } {
-	$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Querying.Host'
-	QueueBuild-WebPackage $projectFileName 'CustomerIntelligence.Querying.Host'
+# OData
+function QueueBuild-OData {
+	if ($Metadata['CustomerIntelligence.Querying.Host']){
+		$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Querying.Host'
+		QueueBuild-WebPackage $projectFileName 'CustomerIntelligence.Querying.Host'
+	}
 }
-Task Deploy-OData -Depends Take-ODataOffline -Precondition { $Metadata['CustomerIntelligence.Querying.Host'] } {
-	Deploy-WebPackage 'CustomerIntelligence.Querying.Host'
-	Validate-WebSite 'CustomerIntelligence.Querying.Host' 'CustomerIntelligence/$metadata'
-}
-
-Task Take-ODataOffline -Precondition { $Metadata['CustomerIntelligence.Querying.Host'] } {
-	Take-WebsiteOffline 'CustomerIntelligence.Querying.Host'
-}
-
-Task QueueBuild-TaskService -Precondition { $Metadata['CustomerIntelligence.Replication.Host'] } {
-	$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Replication.Host'
-	QueueBuild-AppPackage $projectFileName 'CustomerIntelligence.Replication.Host'
+function QueueDeploy-OData {
+	if ($Metadata['CustomerIntelligence.Querying.Host']){
+		QueueDeploy-WebPackage 'CustomerIntelligence.Querying.Host'
+	}
 }
 
-Task Deploy-TaskService -Depends Import-WinServiceModule, Take-TaskServiceOffline -Precondition { $Metadata['CustomerIntelligence.Replication.Host'] } {
-	Deploy-WinService 'CustomerIntelligence.Replication.Host'
+# task service
+function QueueBuild-TaskService {
+	if ($Metadata['CustomerIntelligence.Replication.Host']){
+		$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Replication.Host'
+		QueueBuild-AppPackage $projectFileName 'CustomerIntelligence.Replication.Host'
+	}
+}
+function QueueDeploy-TaskService {
+	if ($Metadata['CustomerIntelligence.Replication.Host']){
+		QueueDeploy-WinService 'CustomerIntelligence.Replication.Host'
+	}
 }
 
-Task Take-TaskServiceOffline -Depends Import-WinServiceModule -Precondition { $Metadata['CustomerIntelligence.Replication.Host'] } {
-	Take-WinServiceOffline 'CustomerIntelligence.Replication.Host'
+Task QueueBuild-Packages {
+
+	QueueBuild-BulkTool
+	QueueBuild-OData
+	QueueBuild-TaskService
+
+	Invoke-MSBuildQueue
 }
 
-Task Import-WinServiceModule {
-	Load-WinServiceModule 'CustomerIntelligence.Replication.Host'
-}
+Task QueueDeploy-Packages {
 
-Task Build-Queue { Invoke-MSBuildQueue }
+	QueueDeploy-ConvertUseCasesService
+	QueueDeploy-OData
+	QueueDeploy-TaskService
+
+	Invoke-DeployQueue
+}
 
 Task Run-DataTests {
 	$projects = Find-Projects '.' '*.StateInitialization.Tests*'
@@ -59,16 +68,10 @@ Task Validate-PullRequest -depends Run-UnitTests, Run-DataTests
 
 Task Build-Packages -depends `
 Build-ConvertUseCasesService, `
-QueueBuild-OData, `
-QueueBuild-TaskService, `
-QueueBuild-BulkTool, `
-Build-Queue
+QueueBuild-Packages
 
 Task Deploy-Packages -depends `
-Take-ODataOffline, `
-Take-TaskServiceOffline, `
 Update-Schemas, `
 Run-BulkTool, `
-Deploy-ConvertUseCasesService, `
-Deploy-OData, `
-Deploy-TaskService
+Create-Topics, `
+QueueDeploy-Packages
