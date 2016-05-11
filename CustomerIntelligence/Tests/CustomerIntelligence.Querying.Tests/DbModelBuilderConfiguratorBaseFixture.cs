@@ -15,9 +15,9 @@ using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.Edm.EF;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Identities;
 using NuClear.Querying.Storage;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Identities;
 
 using NUnit.Framework;
 

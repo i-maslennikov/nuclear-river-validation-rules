@@ -1,7 +1,7 @@
 ﻿using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
 
-using NuClear.ValidationRules.Domain.Model.Messages;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Storage
 {

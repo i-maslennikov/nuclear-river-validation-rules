@@ -7,8 +7,8 @@ using System.Reflection.Emit;
 using NuClear.Metamodeling.Elements.Identities;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.Edm.EF;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Identities;
 
 namespace NuClear.Querying.Edm.Emit
 {

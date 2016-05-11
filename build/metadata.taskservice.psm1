@@ -16,12 +16,8 @@ function Get-QuartzConfigMetadata ($Context){
 					
 					$alterQuartzConfigs = @()
 				}
-				'Emirates' {
-					$quartzConfigs = @('Templates\quartz.Test.Emirates.config')
-					$alterQuartzConfigs = @()
-				}
 				default {
-					$quartzConfigs = @('Templates\quartz.Test.MultiCulture.config')
+					$quartzConfigs = @('Templates\quartz.Test.config')
 					$alterQuartzConfigs = @()
 				}
 			}
@@ -32,12 +28,8 @@ function Get-QuartzConfigMetadata ($Context){
 					$quartzConfigs = @('quartz.Production.Russia.config')
 					$alterQuartzConfigs = @()
 				}
-				'Emirates' {
-					$quartzConfigs = @('quartz.Production.Emirates.config')
-					$alterQuartzConfigs = @()
-				}
 				default {
-					$quartzConfigs = @('quartz.Production.MultiCulture.config')
+					$quartzConfigs = @('quartz.Production.config')
 					$alterQuartzConfigs = @()
 				}
 			}
@@ -48,13 +40,9 @@ function Get-QuartzConfigMetadata ($Context){
 					$quartzConfigs = @("quartz.$($Context.EnvType).Russia.config")
 					$alterQuartzConfigs = @('Templates\quartz.Test.Russia.config')
 				}
-				'Emirates' {
-					$quartzConfigs = @("quartz.$($Context.EnvType).Emirates.config")
-					$alterQuartzConfigs = @('Templates\quartz.Test.Emirates.config')
-				}
 				default {
-					$quartzConfigs = @("quartz.$($Context.EnvType).MultiCulture.config")
-					$alterQuartzConfigs = @('Templates\quartz.Test.MultiCulture.config')
+					$quartzConfigs = @("quartz.$($Context.EnvType).config")
+					$alterQuartzConfigs = @('Templates\quartz.Test.config')
 				}
 			}
 		}
@@ -71,10 +59,10 @@ function Get-TargetHostsMetadata ($Context){
 	switch ($Context.EnvType) {
 		'Production' {
 			switch ($Context.EntryPoint){
-				'Replication.EntryPoint'{
+				'CustomerIntelligence.Replication.Host'{
 					return @{ 'TargetHosts' = @('uk-erm-sb01', 'uk-erm-sb03', 'uk-erm-sb04') }
 				}
-				{ @('ConvertUseCasesService', 'ConvertUseCasesServiceProduction') -contains $_ } {
+				'ConvertUseCasesService' {
 					return @{ 'TargetHosts' = @('uk-erm-sb01') }
 				}
 				default {
@@ -84,6 +72,16 @@ function Get-TargetHostsMetadata ($Context){
 		}
 		'Load' {
 			return @{ 'TargetHosts' = @('uk-erm-iis10', 'uk-erm-iis11', 'uk-erm-iis12') }
+		}
+		'Test' {
+			switch ($Context.Country) {
+				'Russia' {
+					return @{ 'TargetHosts' = @('uk-erm-test03') }
+				}
+				default {
+					return @{ 'TargetHosts' = @('uk-erm-test02') }
+				}
+			}
 		}
 		default {
 			$webMetadata = Get-WebMetadata $Context
@@ -98,16 +96,16 @@ function Get-TargetHostsMetadata ($Context){
 
 function Get-ServiceNameMetadata ($Context) {
 	switch ($Context.EntryPoint) {
-		'Replication.EntryPoint' {
+		'CustomerIntelligence.Replication.Host' {
 			return @{
-				'ServiceName' = 'AdvSearch'
-				'ServiceDisplayName' = '2GIS ERM AdvancedSearch Replication Service'
+				'ServiceName' = 'CustomerIntelligence.Replication.Host'
+				'ServiceDisplayName' = 'CustomerIntelligence Replication Host Service'
 			}
 		}
-		{ @('ConvertUseCasesService', 'ConvertUseCasesServiceProduction') -contains $_ } {
+		'ConvertUseCasesService' {
 			return @{
 				'ServiceName' = 'ConvertUseCases'
-				'ServiceDisplayName' = '2GIS ERM AdvancedSearch Convert UseCases Service'
+				'ServiceDisplayName' = 'NuClear River Convert UseCases Service'
 			}
 		}
 	}

@@ -1,17 +1,20 @@
-﻿namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
+﻿using NuClear.CustomerIntelligence.StateInitialization.Host;
+using NuClear.StateInitialization.Core.Commands;
+
+namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {
     public interface IKey
     {
-        string Key { get; }
+        ReplaceDataObjectsInBulkCommand Command { get; }
     }
 
     public sealed class Facts : IKey
     {
-        public string Key => "-fact";
+        public ReplaceDataObjectsInBulkCommand Command => BulkReplicationCommands.ErmToFacts;
     }
 
     public sealed class CustomerIntelligence : IKey
     {
-        public string Key => "-ci";
+        public ReplaceDataObjectsInBulkCommand Command => BulkReplicationCommands.FactsToCi;
     }
 }

@@ -4,38 +4,36 @@ using NuClear.DataTest.Metamodel.Dsl;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {
-    using Bit = NuClear.CustomerIntelligence.Domain.Model.Bit;
-    using CI = NuClear.CustomerIntelligence.Domain.Model.CI;
-    using Erm = NuClear.CustomerIntelligence.Domain.Model.Erm;
-    using Facts = NuClear.CustomerIntelligence.Domain.Model.Facts;
-    using Statistics = NuClear.CustomerIntelligence.Domain.Model.Statistics;
+    using CI = Storage.Model.CI;
+    using Erm = Storage.Model.Erm;
+    using Facts = Storage.Model.Facts;
 
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement MinimalFirmAggregate
-            => ArrangeMetadataElement.Config
-                                                  .Name(nameof(MinimalFirmAggregate))
-                                                  .IncludeSharedDictionary(CategoryDictionary)
-                                                  .CustomerIntelligence(
-                                                                        new CI::Firm { Id = 1, ClientId = null, CreatedOn = DateTimeOffset.MinValue, AddressCount = 1, CategoryGroupId = 0, Name = "FirmName", HasPhone = false, HasWebsite = false, LastDisqualifiedOn = null, LastDistributedOn = null, ProjectId = 1, OwnerId = 27 },
-                                                                        new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 },
-                                                                        new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 },
-                                                                        new CI::FirmActivity { FirmId = 1, LastActivityOn = null },
-                                                                        new CI::FirmTerritory { FirmId = 1, FirmAddressId = 1, TerritoryId = 1 },
-                                                                        new CI::Project { Id = 1, Name = "ProjectOne" })
-                                                  .Fact(
-                                                        new Facts::Firm { Id = 1, ClientId = null, CreatedOn = DateTimeOffset.MinValue, LastDisqualifiedOn = null, Name = "FirmName", OrganizationUnitId = 1, OwnerId = 27 },
-                                                        new Facts::FirmAddress { Id = 1, FirmId = 1, TerritoryId = 1 },
-                                                        new Facts::CategoryFirmAddress { Id = 1, CategoryId = 3, FirmAddressId = 1 },
-                                                        new Facts::CategoryFirmAddress { Id = 2, CategoryId = 4, FirmAddressId = 1 },
-                                                        new Facts::Project { Id = 1, Name = "ProjectOne", OrganizationUnitId = 1 })
-                                                  .Erm(
-                                                       new Erm::Firm { Id = 1, ClientId = null, ClosedForAscertainment = false, CreatedOn = DateTimeOffset.MinValue, IsActive = true, IsDeleted = false, LastDisqualifyTime = null, Name = "FirmName", OrganizationUnitId = 1, OwnerId = 27 },
-                                                       new Erm::FirmAddress { Id = 1, FirmId = 1, TerritoryId = 1, ClosedForAscertainment = false, IsActive = true, IsDeleted = false },
-                                                       new Erm::CategoryFirmAddress { Id = 1, CategoryId = 3, FirmAddressId = 1, IsActive = true, IsDeleted = false },
-                                                       new Erm::CategoryFirmAddress { Id = 2, CategoryId = 4, FirmAddressId = 1, IsActive = true, IsDeleted = false },
-                                                       new Erm::Project { Id = 1, IsActive = true, Name = "ProjectOne", OrganizationUnitId = 1 });
+        private static ArrangeMetadataElement MinimalFirmAggregate =>
+            ArrangeMetadataElement.Config
+            .Name(nameof(MinimalFirmAggregate))
+            .IncludeSharedDictionary(CategoryDictionary)
+            .CustomerIntelligence(
+                                new CI::Firm { Id = 1, ClientId = null, CreatedOn = DateTimeOffset.MinValue, AddressCount = 1, CategoryGroupId = 0, Name = "FirmName", HasPhone = false, HasWebsite = false, LastDisqualifiedOn = null, LastDistributedOn = null, ProjectId = 1, OwnerId = 27 },
+                                new CI::FirmCategory1 { FirmId = 1, CategoryId = 1 },
+                                new CI::FirmCategory2 { FirmId = 1, CategoryId = 2 },
+                                new CI::FirmActivity { FirmId = 1, LastActivityOn = null },
+                                new CI::FirmTerritory { FirmId = 1, FirmAddressId = 1, TerritoryId = 1 },
+                                new CI::Project { Id = 1, Name = "ProjectOne" })
+            .Fact(
+                new Facts::Firm { Id = 1, ClientId = null, CreatedOn = DateTimeOffset.MinValue, LastDisqualifiedOn = null, Name = "FirmName", OrganizationUnitId = 1, OwnerId = 27 },
+                new Facts::FirmAddress { Id = 1, FirmId = 1, TerritoryId = 1 },
+                new Facts::CategoryFirmAddress { Id = 1, CategoryId = 3, FirmAddressId = 1 },
+                new Facts::CategoryFirmAddress { Id = 2, CategoryId = 4, FirmAddressId = 1 },
+                new Facts::Project { Id = 1, Name = "ProjectOne", OrganizationUnitId = 1 })
+            .Erm(
+                new Erm::Firm { Id = 1, ClientId = null, ClosedForAscertainment = false, CreatedOn = DateTimeOffset.MinValue, IsActive = true, IsDeleted = false, LastDisqualifyTime = null, Name = "FirmName", OrganizationUnitId = 1, OwnerId = 27 },
+                new Erm::FirmAddress { Id = 1, FirmId = 1, TerritoryId = 1, ClosedForAscertainment = false, IsActive = true, IsDeleted = false },
+                new Erm::CategoryFirmAddress { Id = 1, CategoryId = 3, FirmAddressId = 1, IsActive = true, IsDeleted = false },
+                new Erm::CategoryFirmAddress { Id = 2, CategoryId = 4, FirmAddressId = 1, IsActive = true, IsDeleted = false },
+                new Erm::Project { Id = 1, IsActive = true, Name = "ProjectOne", OrganizationUnitId = 1 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement TestFirmAddressCount =>
@@ -48,7 +46,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                 new Facts::FirmAddress { Id = 2, FirmId = 2 },
 
                 new Facts::Firm { Id = 3, Name = "2 addresses" },
-                new Facts::FirmAddress{ Id = 3, FirmId = 3},
+                new Facts::FirmAddress { Id = 3, FirmId = 3 },
                 new Facts::FirmAddress { Id = 4, FirmId = 3 },
 
                 new Facts::Project()
@@ -62,7 +60,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                 new CI::FirmTerritory { FirmId = 2, FirmAddressId = 2 },
                 new CI::FirmActivity { FirmId = 2 },
 
-                new CI::Firm { Id = 3, Name = "2 addresses", AddressCount = 2},
+                new CI::Firm { Id = 3, Name = "2 addresses", AddressCount = 2 },
                 new CI::FirmTerritory { FirmId = 3, FirmAddressId = 3 },
                 new CI::FirmTerritory { FirmId = 3, FirmAddressId = 4 },
                 new CI::FirmActivity { FirmId = 3 },
@@ -81,7 +79,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 
                 new Facts::Firm { Id = 2, Name = "firm contact (no phone, no website)" },
                 new Facts::FirmAddress { Id = 2, FirmId = 2 },
-                new Facts::FirmContact { Id = 2, FirmAddressId = 2},
+                new Facts::FirmContact { Id = 2, FirmAddressId = 2 },
 
                 new Facts::Firm { Id = 3, Name = "firm contact (phone)" },
                 new Facts::FirmAddress { Id = 3, FirmId = 3 },
@@ -92,11 +90,11 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                 new Facts::FirmContact { Id = 4, FirmAddressId = 4, HasWebsite = true },
 
                 // client entities to reference on
-                new Facts::Client { Id = 1, Name = "client (no phone, no website)"},
+                new Facts::Client { Id = 1, Name = "client (no phone, no website)" },
                 new Facts::Client { Id = 2, Name = "client (phone)", HasPhone = true },
                 new Facts::Client { Id = 3, Name = "client (website)", HasWebsite = true },
                 new Facts::Client { Id = 4, Name = "client (no phone, no website), client contact (no phone, no website)" }, new Facts::Contact { Id = 1, ClientId = 4 },
-                new Facts::Client { Id = 5, Name = "client (no phone, no website), client contact (phone)"}, new Facts::Contact { Id = 2, ClientId = 5, HasPhone = true },
+                new Facts::Client { Id = 5, Name = "client (no phone, no website), client contact (phone)" }, new Facts::Contact { Id = 2, ClientId = 5, HasPhone = true },
                 new Facts::Client { Id = 6, Name = "client (no phone, no website), client contact (website)" }, new Facts::Contact { Id = 3, ClientId = 6, HasWebsite = true },
                 new Facts::Client { Id = 7, Name = "client (phone), client contact (no phone, no website)", HasPhone = true }, new Facts::Contact { Id = 4, ClientId = 7 },
                 new Facts::Client { Id = 8, Name = "client (website), client contact (no phone, no website)", HasWebsite = true }, new Facts::Contact { Id = 5, ClientId = 8 },
@@ -164,7 +162,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
             ArrangeMetadataElement.Config
             .Name(nameof(TestFirmLastDisqualifiedOn))
             .Fact(
-                new Facts::Firm { Id = 1, Name= "firm (null), client (null)" },
+                new Facts::Firm { Id = 1, Name = "firm (null), client (null)" },
 
                 new Facts::Firm { Id = 2, ClientId = 2, Name = "firm (null), client (not null)" },
                 new Facts::Client { Id = 2, LastDisqualifiedOn = DateTimeOffset.MaxValue },
@@ -179,7 +177,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                 )
             .CustomerIntelligence(
 
-                new CI::Firm { Id = 1, Name= "firm (null), client (null)", LastDisqualifiedOn = null },
+                new CI::Firm { Id = 1, Name = "firm (null), client (null)", LastDisqualifiedOn = null },
                 new CI::FirmActivity { FirmId = 1 },
 
                 new CI::Firm { Id = 2, ClientId = 2, Name = "firm (null), client (not null)", LastDisqualifiedOn = DateTimeOffset.MaxValue },

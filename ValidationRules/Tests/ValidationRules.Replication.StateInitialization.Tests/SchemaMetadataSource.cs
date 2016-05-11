@@ -7,32 +7,29 @@ using NuClear.Metamodeling.Provider.Sources;
 using NuClear.ValidationRules.Domain.Specifications;
 using NuClear.ValidationRules.Replication.StateInitialization.Tests.Identitites.Connections;
 using NuClear.ValidationRules.Storage;
+using NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
-    using Erm = NuClear.ValidationRules.Domain.Model.Erm;
-    using Facts = NuClear.ValidationRules.Domain.Model.Facts;
-    using Aggregates = NuClear.ValidationRules.Domain.Model.Aggregates;
-
     public class SchemaMetadataSource : MetadataSourceBase<SchemaMetadataIdentity>
     {
         private static readonly SchemaMetadataElement Erm = SchemaMetadataElement.Config
             .For(ContextName.Erm)
             .HasConnectionString<ErmTestConnectionStringIdentity>()
             .HasSchema(Schema.Erm)
-            .HasEntitiesFromNamespace(typeof(Erm::Order).Namespace);
+            .HasEntitiesFromNamespace(typeof(Order).Namespace);
 
         private static readonly SchemaMetadataElement Facts = SchemaMetadataElement.Config
             .For(ContextName.Facts)
             .HasConnectionString<FactsTestConnectionStringIdentity>()
             .HasSchema(Schema.Facts)
-            .HasEntitiesFromNamespace(typeof(Facts::Order).Namespace);
+            .HasEntitiesFromNamespace(typeof(Storage.Model.Facts.Order).Namespace);
 
         private static readonly SchemaMetadataElement CustomerIntelligence = SchemaMetadataElement.Config
             .For(ContextName.Aggregates)
             .HasConnectionString<AggregatesTestConnectionStringIdentity>()
             .HasSchema(Schema.Aggregates)
-            .HasEntitiesFromNamespace(typeof(Aggregates::Order).Namespace);
+            .HasEntitiesFromNamespace(typeof(Storage.Model.Aggregates.Order).Namespace);
 
         public SchemaMetadataSource()
         {

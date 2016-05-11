@@ -3,19 +3,19 @@
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Model.Common.Entities;
 using NuClear.OperationsTracking.API.UseCases;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Primary;
-using NuClear.River.Common.Metadata.Model.Operations;
+using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Telemetry;
+using NuClear.ValidationRules.Replication.Commands;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Primary
 {
-    // todo: является полной копией ImportFactsFromErmAccumulator из CI
-    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, OperationAggregatableMessage<FactOperation>>
+    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, AggregatableMessage<ICommand>>
     {
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
@@ -30,24 +30,24 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             _useCaseFiltrator = useCaseFiltrator;
         }
 
-        protected override OperationAggregatableMessage<FactOperation> Process(TrackedUseCase message)
+        protected override AggregatableMessage<ICommand> Process(TrackedUseCase @event)
         {
-            _tracer.DebugFormat("Processing TUC {0}", message.Id);
+            _tracer.DebugFormat("Processing TUC {0}", @event.Id);
 
-            var receivedOperationCount = message.Operations.Sum(x => x.AffectedEntities.Changes.Sum(y => y.Value.Sum(z => z.Value.Count)));
+            var receivedOperationCount = @event.Operations.Sum(x => x.AffectedEntities.Changes.Sum(y => y.Value.Sum(z => z.Value.Count)));
             _telemetryPublisher.Publish<ErmReceivedOperationCountIdentity>(receivedOperationCount);
 
-            var changes = _useCaseFiltrator.Filter(message);
+            var changes = _useCaseFiltrator.Filter(@event);
 
-            // TODO: вместо кучи factoperation можно передавать одну с dictionary, где уже всё сгруппировано по entity type 
-            var factOperations = changes.SelectMany(x => x.Value.Select(y => new FactOperation(_registry.GetEntityType(x.Key), y))).ToList();
-            _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(factOperations.Count);
 
-            return new OperationAggregatableMessage<FactOperation>
+            var commands = changes.SelectMany(x => x.Value.Select(y => new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y))).ToArray();
+            _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Length);
+
+            return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Operations = factOperations,
-                OperationTime = message.Context.Finished.UtcDateTime,
+                Commands = commands,
+                EventHappenedTime = @event.Context.Finished.UtcDateTime,
             };
         }
     }

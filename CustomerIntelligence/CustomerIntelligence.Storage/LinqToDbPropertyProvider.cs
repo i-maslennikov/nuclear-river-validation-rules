@@ -5,7 +5,7 @@ using System.Reflection;
 
 using LinqToDB.Mapping;
 
-using NuClear.River.Common.Metadata.Equality;
+using NuClear.Replication.Core.Equality;
 
 namespace NuClear.CustomerIntelligence.Storage
 {

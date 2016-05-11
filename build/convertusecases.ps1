@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module "$BuildToolsRoot\modules\nuget.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\artifacts.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\deploy.psm1" -DisableNameChecking
+Import-Module "$BuildToolsRoot\modules\entrypoint.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\transform.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\servicebus.psm1" -DisableNameChecking
 
@@ -100,14 +100,26 @@ Task Create-Topics -Precondition { $Metadata['ConvertUseCasesService'] -and $Met
 	}
 }
 
-Task Deploy-ConvertUseCasesService -Depends Create-Topics -Precondition { $Metadata['ConvertUseCasesService'] -and $Metadata['UseCaseRoute'] } {
-	
-	Load-WinServiceModule 'ConvertUseCasesService'
-	Take-WinServiceOffline 'ConvertUseCasesService'
+function QueueDeploy-ConvertUseCasesService {
+	if ($Metadata['ConvertUseCasesService'] -and $Metadata['UseCaseRoute']){
 
-	if ($Metadata.UseCaseRoute.RouteName -eq 'ERM'){
-		Remove-WinService 'ConvertUseCasesService'
-	} else {
-		Deploy-WinService 'ConvertUseCasesService'
+		if ($Metadata.UseCaseRoute.RouteName -eq 'ERM'){
+			# just remove service without deploy
+			Add-DeployQueue "Delete ConvertUseCasesService" {
+				param($localPSScriptRoot, $localMetadata, $entryPointMetadataKey)
+
+				Import-Module "$localPSScriptRoot\metadata.psm1" -DisableNameChecking
+				Add-Metadata $localMetadata
+
+				Import-Module "$localPSScriptRoot\deploy.psm1" -DisableNameChecking
+
+				Load-WinServiceModule $entryPointMetadataKey
+				Take-WinServiceOffline $entryPointMetadataKey
+				Remove-WinService $entryPointMetadataKey
+		
+			} -ArgumentList @("$BuildToolsRoot\modules", $Metadata, 'ConvertUseCasesService')
+		} else {
+			QueueDeploy-WinService 'ConvertUseCasesService'
+		}
 	}
 }

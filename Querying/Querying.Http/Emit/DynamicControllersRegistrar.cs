@@ -9,9 +9,9 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.Edm.EF;
 using NuClear.Querying.Http.Controllers;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Features;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Features;
+using NuClear.Querying.Metadata.Identities;
 
 namespace NuClear.Querying.Http.Emit
 {

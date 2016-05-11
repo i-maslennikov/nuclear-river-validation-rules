@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.CustomerIntelligence.OperationsProcessing.Primary.Parsers;
+using NuClear.CustomerIntelligence.Replication.Commands;
+using NuClear.CustomerIntelligence.Replication.DTO;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Messaging.Transports.CorporateBus.API;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
-using NuClear.River.Common.Metadata.Model;
 using NuClear.Tracing.API;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 {
-    public sealed class ImportFactsFromBitAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromBitFlow, CorporateBusPerformedOperationsMessage, CorporateBusAggregatableMessage>
+    public sealed class ImportFactsFromBitAccumulator :
+        MessageProcessingContextAccumulatorBase<ImportFactsFromBitFlow, CorporateBusPerformedOperationsMessage, CorporateBusAggregatableMessage>
     {
         private readonly ITracer _tracer;
-
-        private readonly IDictionary<string, ICorporateBusMessageParser> _parsers =
-            new Dictionary<string, ICorporateBusMessageParser>
-                {
-                    { "firmpopularity", new FirmPopularityCorporateBusMessageParser() },
-                    { "rubricpopularity", new RubricPopularityCorporateBusMessageParser() },
-                    { "firmforecast", new FirmForecastCorporateBusMessageParser() },
-                };
 
         public ImportFactsFromBitAccumulator(ITracer tracer)
         {
@@ -33,43 +27,70 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
         protected override CorporateBusAggregatableMessage Process(CorporateBusPerformedOperationsMessage message)
         {
-            var xmls = message.Packages.SelectMany(x => x.ConvertToXElements());
+            var xmls = message.CorporateBusPackage.ConvertToXElements();
 
-            var dtos = xmls.Select(x =>
-                                   {
-                                       IDataTransferObject dto;
-                                       var parsed = TryParseXml(x, out dto);
-                                       return Tuple.Create(parsed, dto);
-                                   })
-                           .Where(x => x.Item1)
-                           .Select(x => x.Item2)
-                           .ToArray();
+            var commands = xmls.SelectMany(CreateCommands)
+                               .ToArray();
 
             return new CorporateBusAggregatableMessage
             {
                 TargetFlow = MessageFlow,
-                Dtos = dtos,
+                Commands = commands
             };
         }
 
-        private bool TryParseXml(XElement xml, out IDataTransferObject dto)
+        private IReadOnlyCollection<ICommand> CreateCommands(XElement xml)
         {
+            var commands = new List<ICommand>();
+
             var corporateBusObjectName = xml.Name.LocalName.ToLowerInvariant();
-            ICorporateBusMessageParser parser;
-            if (!_parsers.TryGetValue(corporateBusObjectName, out parser))
+            switch (corporateBusObjectName)
             {
-                    dto = null;
-                    return false;
+                case "firmpopularity":
+                    FirmPopularity firmPopularity;
+                    if (TryParse<FirmPopularityCorporateBusMessageParser, FirmPopularity>(xml, out firmPopularity))
+                    {
+                        commands.Add(new ReplaceFirmPopularityCommand(firmPopularity));
+                    }
+
+                    break;
+
+                case "rubricpopularity":
+                    RubricPopularity rubricPopularity;
+                    if (TryParse<RubricPopularityCorporateBusMessageParser, RubricPopularity>(xml, out rubricPopularity))
+                    {
+                        commands.Add(new ReplaceRubricPopularityCommand(rubricPopularity));
+                    }
+
+                    break;
+
+                case "firmforecast":
+                    FirmForecast firmForecast;
+                    if (TryParse<FirmForecastCorporateBusMessageParser, FirmForecast>(xml, out firmForecast))
+                    {
+                        commands.Add(new ReplaceFirmForecastCommand(firmForecast));
+                        commands.Add(new ReplaceFirmCategoryForecastCommand(firmForecast));
+                    }
+
+                    break;
             }
 
-            if (!parser.TryParse(xml, out dto))
+            return commands;
+        }
+
+        private bool TryParse<TParser, TResult>(XElement xml, out TResult result)
+            where TResult : class
+            where TParser : ICorporateBusMessageParser<TResult>, new()
         {
-                _tracer.Warn($"Skip {corporateBusObjectName} message due to unsupported format");
-                dto = null;
+            var parser = new TParser();
+            if (!parser.TryParse(xml, out result))
+            {
+                _tracer.Warn($"Skip {xml.Name.LocalName} message due to unsupported format");
+                result = null;
                 return false;
             }
 
-                return true;
-            }
+            return true;
+        }
     }
 }

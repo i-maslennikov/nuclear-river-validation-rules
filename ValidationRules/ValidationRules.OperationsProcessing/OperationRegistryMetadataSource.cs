@@ -5,15 +5,14 @@ using System.Linq;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Model.Common.Operations.Identity.Generic;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Identities;
-using NuClear.ValidationRules.Domain.EntityTypes;
+using NuClear.Replication.OperationsProcessing.Metadata;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
+using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Operations;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
-    public sealed class OperationRegistryMetadataSource : MetadataSourceBase<ReplicationMetadataIdentity>
+    public sealed class OperationRegistryMetadataSource : MetadataSourceBase<OperationRegistryMetadataIdentity>
     {
         public OperationRegistryMetadataSource()
         {

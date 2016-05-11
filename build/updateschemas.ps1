@@ -4,18 +4,16 @@ $ErrorActionPreference = 'Stop'
 #------------------------------
 
 Import-Module "$BuildToolsRoot\modules\entrypoint.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\msbuild.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\artifacts.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\transform.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\sql.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\metadata.psm1" -DisableNameChecking
 
 Task Update-Schemas -Precondition { $Metadata['UpdateSchemas'] } {
 
-	$projectFileName = Get-ProjectFileName 'ValidationRules' 'ValidationRules.StateInitialization.EntryPoint'
+	$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.StateInitialization.Host'
 	$projectDir = Split-Path $projectFileName
 	$configFileName = Join-Path $projectDir 'app.config'
-	[xml]$config = Get-TransformedConfig $configFileName 'ValidationRules.StateInitialization.EntryPoint'
+	[xml]$config = Get-TransformedConfig $configFileName 'CustomerIntelligence.StateInitialization.Host'
 
 	$sqlDir = Join-Path $Metadata.Common.Dir.Solution 'ValidationRules\Schemas'
 	Update-Schemas $config $sqlDir

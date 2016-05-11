@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -8,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("fdc53e42-22c5-4360-9c5a-5c04a8f8f988")]
+[assembly: Guid("ca22b890-fffa-494b-a750-fbe2c1dde998")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -22,5 +21,3 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-[assembly: InternalsVisibleTo("2GIS.NuClear.River.Replication.Tests")]

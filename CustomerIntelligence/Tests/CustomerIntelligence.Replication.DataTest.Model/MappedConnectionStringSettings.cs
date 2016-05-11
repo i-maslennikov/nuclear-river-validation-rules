@@ -31,7 +31,10 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
             _mapping = mapping;
         }
 
-        public static IConnectionStringSettings CreateMappedSettings(IConnectionStringSettings baseSettings, ActMetadataElement actMetadata, IDictionary<string, SchemaMetadataElement> schemaMetadata)
+        public static IConnectionStringSettings CreateMappedSettings(
+            IConnectionStringSettings baseSettings,
+            ActMetadataElement actMetadata,
+            IDictionary<string, SchemaMetadataElement> schemaMetadata)
         {
             var mapping = new Dictionary<IConnectionStringIdentity, IConnectionStringIdentity>();
 

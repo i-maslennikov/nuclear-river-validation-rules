@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 
 using NuClear.Messaging.API.Flows;
+using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Telemetry;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Telemetry;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Transports
 {
@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
             _telemetry = telemetry;
             _flowReporters = new Dictionary<Guid, Action<int>>
                 {
-                    { AggregatesFlow.Instance.Id, length => _telemetry.Publish<FinalProcessingAggregateQueueLengthIdentity>(length) },
+                    { CommonEventsFlow.Instance.Id, length => _telemetry.Publish<FinalProcessingAggregateQueueLengthIdentity>(length) },
                     { ImportFactsFromErmFlow.Instance.Id, length => _telemetry.Publish<PrimaryProcessingQueueLengthIdentity>(length) },
                 };
         }
@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
             => new[] { ImportFactsFromErmFlow.Instance };
 
         public IReadOnlyCollection<IMessageFlow> SqlFlows
-            => new[] { AggregatesFlow.Instance };
+            => new[] { CommonEventsFlow.Instance };
 
         public void ReportFlowLength(IMessageFlow flow, int length)
         {

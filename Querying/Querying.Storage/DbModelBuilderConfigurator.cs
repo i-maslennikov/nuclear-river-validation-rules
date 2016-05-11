@@ -9,7 +9,7 @@ using System.Linq;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider;
 using NuClear.Querying.Edm.EF;
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.Querying.Metadata.Elements;
 
 namespace NuClear.Querying.Storage
 {

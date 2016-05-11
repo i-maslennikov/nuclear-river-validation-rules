@@ -7,7 +7,7 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Querying.Edm;
 using NuClear.Querying.Edm.EF;
 using NuClear.Querying.Edm.Emit;
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.Querying.Metadata.Elements;
 
 namespace NuClear.CustomerIntelligence.Querying.Tests
 {

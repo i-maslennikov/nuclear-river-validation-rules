@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
-using NuClear.Replication.Core.API.Facts;
-using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing.Primary;
+using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
-using NuClear.River.Common.Metadata.Model;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
@@ -18,43 +16,44 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 {
     public sealed class ImportFactsFromBitHandler : IMessageProcessingHandler
     {
-        private readonly IImportDocumentMetadataProcessorFactory _importDocumentMetadataProcessorFactory;
-        private readonly IOperationSender _sender;
-        private readonly IOperationDispatcher _operationDispatcher;
+        private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
+        private readonly IEventSender _eventSender;
+        private readonly IEventDispatcher _eventDispatcher;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromBitHandler(
-            IImportDocumentMetadataProcessorFactory importDocumentMetadataProcessorFactory,
-            IOperationSender sender,
+            IDataObjectsActorFactory dataObjectsActorFactory,
+            IEventSender eventSender,
+            IEventDispatcher eventDispatcher,
             ITelemetryPublisher telemetryPublisher,
-            IOperationDispatcher operationDispatcher,
             ITracer tracer)
         {
-            _importDocumentMetadataProcessorFactory = importDocumentMetadataProcessorFactory;
-            _sender = sender;
+            _dataObjectsActorFactory = dataObjectsActorFactory;
+            _eventSender = eventSender;
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
-            _operationDispatcher = operationDispatcher;
+            _eventDispatcher = eventDispatcher;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
         {
-            return processingResultsMap.Select(pair => Handle(pair.Key, pair.Value));
+            return processingResultsMap.Select(pair => Handle(pair.Key, pair.Value.OfType<CorporateBusAggregatableMessage>()));
         }
 
-        private StageResult Handle(Guid bucketId, IEnumerable<IAggregatableMessage> messages)
+        private StageResult Handle(Guid bucketId, IEnumerable<CorporateBusAggregatableMessage> messages)
         {
             try
             {
-                foreach (var message in messages.OfType<CorporateBusAggregatableMessage>())
+                foreach (var message in messages)
                 {
-                    foreach (var dto in message.Dtos)
+                    var actors = _dataObjectsActorFactory.Create();
+                    foreach (var actor in actors)
                     {
-                        var importer = _importDocumentMetadataProcessorFactory.Create(dto.GetType());
-                        var opertaions = importer.Import(dto);
-                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(1);
-                        DispatchOperations(opertaions);
+                        var events = actor.ExecuteCommands(message.Commands);
+
+                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(message.Commands.Count);
+                        DispatchOperations(events);
                     }
                 }
 
@@ -67,11 +66,11 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
             }
         }
 
-        private void DispatchOperations(IEnumerable<IOperation> opertaions)
+        private void DispatchOperations(IReadOnlyCollection<IEvent> events)
         {
-            foreach (var pair in _operationDispatcher.Dispatch(opertaions))
+            foreach (var pair in _eventDispatcher.Dispatch(events))
             {
-                _sender.Push(pair.Value, pair.Key);
+                _eventSender.Push(pair.Key, pair.Value);
             }
         }
     }

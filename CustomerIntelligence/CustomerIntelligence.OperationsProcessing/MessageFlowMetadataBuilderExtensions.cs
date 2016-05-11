@@ -1,6 +1,6 @@
 ﻿using NuClear.Messaging.API.Flows.Metadata;
 using NuClear.Messaging.API.Receivers;
-using NuClear.River.Common.Metadata.Features;
+using NuClear.Replication.OperationsProcessing.Metadata;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing
 {

@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.Assembling.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Assembling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.Messaging.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Messaging.API.2.0.0\lib\net451\2GIS.NuClear.Messaging.API.dll</HintPath>
       <Private>True</Private>
@@ -43,8 +47,20 @@
       <HintPath>..\..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="2GIS.NuClear.OperationsLogging.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.API.2.0.0\lib\net451\2GIS.NuClear.OperationsLogging.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsLogging.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.Transports.SQLStore.2.0.0\lib\net451\2GIS.NuClear.OperationsLogging.Transports.SQLStore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.API.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsTracking.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7546e3dd2743b918, processorArchitecture=MSIL">
@@ -94,25 +110,29 @@
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
-    <Compile Include="Final\MessageOperationAggregatableMessageHandler.cs" />
-    <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
+    <Compile Include="Final\CommonEventsAccumulator.cs" />
+    <Compile Include="Final\MessageCommandsHandler.cs" />
+    <Compile Include="Final\AggregateCommandsHandler.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategory.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeDeniedPosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePeriod.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrderPositionAdvertisement.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrganizationUnit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePrice.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePricePosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeProject.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeRuleset.cs" />
     <Compile Include="Identities\Flows\MessagesFlow.cs" />
-    <Compile Include="Identities\Flows\AggregatesFlow.cs" />
+    <Compile Include="Identities\Flows\CommonEventsFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
     <Compile Include="Identities\Operations\ManageDraftRulesetIdentity.cs" />
     <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
     <Compile Include="Identities\Operations\PublishRulesetIdentity.cs" />
-    <Compile Include="Identities\Telemetry\AggregateEnqueuedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\AggregateProcessedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\AggregateProcessingDelayIdentity.cs" />
-    <Compile Include="Identities\Telemetry\ErmEnqueuedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\ErmProcessedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\ErmReceivedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\FinalProcessingAggregateQueueLengthIdentity.cs" />
-    <Compile Include="Identities\Telemetry\MessageProcessedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\MessageProcessingDelayIdentity.cs" />
-    <Compile Include="Identities\Telemetry\PrimaryProcessingDelayIdentity.cs" />
-    <Compile Include="Identities\Telemetry\PrimaryProcessingQueueLengthIdentity.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
@@ -120,8 +140,8 @@
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transports\FlowLengthReporter.cs" />
-    <Compile Include="Transports\OperationDispatcher.cs" />
-    <Compile Include="Transports\SQLStore\EntityReferenceSerializer.cs" />
+    <Compile Include="Transports\EventDispatcher.cs" />
+    <Compile Include="Transports\SQLStore\XmlEventSerializer.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -130,11 +150,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Metadata\Common.Metadata.csproj">
+    <ProjectReference Include="..\..\Querying\Querying.Metadata\Querying.Metadata.csproj">
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
       <Name>Common.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Replication\Replication.Core.API\Replication.Core.API.csproj">
+    <ProjectReference Include="..\..\Replication\Replication.Core\Replication.Core.csproj">
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
       <Name>Replication.Core.API</Name>
     </ProjectReference>
@@ -142,9 +162,13 @@
       <Project>{8E3D39D6-6BEE-4EDC-ACE0-8C24CA929164}</Project>
       <Name>Replication.OperationsProcessing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ValidationRules.Domain\ValidationRules.Domain.csproj">
-      <Project>{855b881b-8af1-4e7d-9cb4-9bd8232aafbc}</Project>
-      <Name>ValidationRules.Domain</Name>
+    <ProjectReference Include="..\ValidationRules.Replication\ValidationRules.Replication.csproj">
+      <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
+      <Name>ValidationRules.Replication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidationRules.Storage\ValidationRules.Storage.csproj">
+      <Project>{e799a2ee-408f-467a-8b50-fc729e92d3f3}</Project>
+      <Name>ValidationRules.Storage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

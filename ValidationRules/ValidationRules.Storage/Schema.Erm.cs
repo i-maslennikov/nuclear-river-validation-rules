@@ -1,7 +1,7 @@
 ﻿using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
 
-using NuClear.ValidationRules.Domain.Model.Erm;
+using NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Storage
 {

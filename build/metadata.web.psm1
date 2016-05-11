@@ -13,7 +13,8 @@ $DomainNames = @{
 	'Russia' = 'ru'
 	'Ukraine' = 'ua'
 	'Kazakhstan' = 'kz'
-}
+	'Kyrgyzstan' = 'kg'
+	'Italy' = 'it'}
 
 function Get-TargetHostsMetadata ($Context) {
 
@@ -57,14 +58,21 @@ function Get-TargetHostsMetadata ($Context) {
 }
 
 function Get-ValidateWebsiteMetadata ($Context) {
-	switch($Context.EnvType){
-		{ @('Production', 'Load') -contains $_ } {
-			return @{ 'ValidateWebsite' = $false }
+
+	if ( @('Production', 'Load') -contains $Context.EnvType ){
+		return @{}
+	}
+
+	switch($Context.EntryPoint){
+		'CustomerIntelligence.Querying.Host' {
+			$uriPath = 'CustomerIntelligence/$metadata'
 		}
 		default {
-			return @{ 'ValidateWebsite' = $true }
+			$uriPath = '/'
 		}
 	}
+
+	return @{ 'ValidateUriPath' = $uriPath }
 }
 
 function Get-IisAppPathMetadata ($Context) {

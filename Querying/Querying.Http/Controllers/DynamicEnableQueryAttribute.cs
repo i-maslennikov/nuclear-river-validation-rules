@@ -7,7 +7,7 @@ using System.Web.OData;
 using System.Web.OData.Query;
 
 using NuClear.Metamodeling.Provider;
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.Querying.Metadata.Elements;
 
 namespace NuClear.Querying.Http.Controllers
 {

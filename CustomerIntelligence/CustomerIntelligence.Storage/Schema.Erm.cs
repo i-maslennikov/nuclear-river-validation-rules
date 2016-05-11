@@ -3,7 +3,7 @@
 using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
 
-using NuClear.CustomerIntelligence.Domain.Model.Erm;
+using NuClear.CustomerIntelligence.Storage.Model.Erm;
 
 namespace NuClear.CustomerIntelligence.Storage
 {

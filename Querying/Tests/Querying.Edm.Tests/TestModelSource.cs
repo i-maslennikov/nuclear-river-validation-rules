@@ -11,8 +11,8 @@ using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Identities;
 
 namespace NuClear.Querying.Edm.Tests
 {
@@ -81,7 +81,7 @@ namespace NuClear.Querying.Edm.Tests
         {
             var source = new Mock<IMetadataSource>();
             source.Setup(x => x.Kind).Returns(new QueryingMetadataIdentity());
-            source.Setup(x => x.Metadata).Returns(new Dictionary<Uri, IMetadataElement> { { Metadata.Id.For<QueryingMetadataIdentity>(), context } });
+            source.Setup(x => x.Metadata).Returns(new Dictionary<Uri, IMetadataElement> { { Metamodeling.Elements.Identities.Builder.Metadata.Id.For<QueryingMetadataIdentity>(), context } });
 
             return source.Object;
         }

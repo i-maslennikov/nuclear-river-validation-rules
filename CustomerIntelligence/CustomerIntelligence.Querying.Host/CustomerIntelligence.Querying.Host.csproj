@@ -238,21 +238,19 @@
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="DI\UnityDependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryingMetadataSource.cs" />
+    <Compile Include="QueryingMetadataSource.CustomerIntelligence.cs" />
     <Compile Include="Settings\WebApplicationSettings.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Metadata\Common.Metadata.csproj">
+    <ProjectReference Include="..\..\Querying\Querying.Metadata\Querying.Metadata.csproj">
       <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
-      <Name>Common.Metadata</Name>
+      <Name>Querying.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\Common.csproj">
+    <ProjectReference Include="..\..\Hosting\Hosting.Common\Hosting.Common.csproj">
       <Project>{d4238d0c-3315-4449-b1ae-80f716d58d04}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
-      <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
-      <Name>CustomerIntelligence.Domain</Name>
+      <Name>Hosting.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>

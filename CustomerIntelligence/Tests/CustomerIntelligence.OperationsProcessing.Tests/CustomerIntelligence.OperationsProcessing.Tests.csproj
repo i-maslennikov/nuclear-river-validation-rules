@@ -112,7 +112,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Utils.Legacy, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.Utils.Legacy.1.0.12\lib\net451\2GIS.NuClear.Utils.Legacy.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.Utils.Legacy.1.1.12\lib\net451\2GIS.NuClear.Utils.Legacy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -187,7 +187,6 @@
     </Compile>
     <Compile Include="TrackedUsecases.cs" />
     <Compile Include="Transports\SQLStore\XmlOperationSerializerTests.cs" />
-    <Compile Include="Transports\SQLStore\EntityReferenceSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -196,13 +195,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
+    <ProjectReference Include="..\..\..\Querying\Querying.Metadata\Querying.Metadata.csproj">
       <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
-      <Name>Common.Metadata</Name>
+      <Name>Querying.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
-      <Project>{B0A258D5-7387-4FB2-BA18-B51550DA3F0B}</Project>
-      <Name>CustomerIntelligence.Domain</Name>
+    <ProjectReference Include="..\..\..\Replication\Replication.Core\Replication.Core.csproj">
+      <Project>{E45717BE-86C8-425B-BB13-0E69053EF040}</Project>
+      <Name>Replication.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.OperationsProcessing\CustomerIntelligence.OperationsProcessing.csproj">
       <Project>{794F43F6-E4F3-4A80-A2B0-195D3560CB35}</Project>
@@ -211,6 +210,14 @@
     <ProjectReference Include="..\..\..\Replication\Replication.OperationsProcessing\Replication.OperationsProcessing.csproj">
       <Project>{8E3D39D6-6BEE-4EDC-ACE0-8C24CA929164}</Project>
       <Name>Replication.OperationsProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj">
+      <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
+      <Name>CustomerIntelligence.Replication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
+      <Project>{fa1074a6-b89d-45df-9b73-6881bef46e33}</Project>
+      <Name>CustomerIntelligence.Storage</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

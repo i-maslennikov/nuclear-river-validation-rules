@@ -77,21 +77,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
+    <ProjectReference Include="..\..\..\Querying\Querying.Metadata\Querying.Metadata.csproj">
       <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
       <Name>Common.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Replication\Replication.Core.API\Replication.Core.API.csproj">
+    <ProjectReference Include="..\..\..\Replication\Replication.Core\Replication.Core.csproj">
       <Project>{E45717BE-86C8-425B-BB13-0E69053EF040}</Project>
       <Name>Replication.Core.API</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Replication\Replication.Core\Replication.Core.csproj">
       <Project>{D3CF7E9E-4A8E-4583-A951-50CA940BD353}</Project>
       <Name>Replication.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ValidationRules.Domain\ValidationRules.Domain.csproj">
-      <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
-      <Name>ValidationRules.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

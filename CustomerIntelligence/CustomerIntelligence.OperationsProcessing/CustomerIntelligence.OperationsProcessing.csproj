@@ -80,10 +80,6 @@
       <HintPath>..\..\packages\2GIS.NuClear.Settings.API.1.2.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Storage.API.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Telemetry.0.12.3\lib\net451\2GIS.NuClear.Telemetry.dll</HintPath>
       <Private>True</Private>
@@ -121,12 +117,43 @@
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
     <Compile Include="ErmToFactsEntityTypeExplicitMapping.cs" />
-    <Compile Include="Final\AggregateOperationAggregatableMessageHandler.cs" />
-    <Compile Include="Final\StatisticsAggregatableMessageHandler.cs" />
-    <Compile Include="Identities\Flows\AggregatesFlow.cs" />
+    <Compile Include="Final\CommonEventsAccumulator.cs" />
+    <Compile Include="Final\AggregateCommandsHandler.cs" />
+    <Compile Include="Final\ProjectStatisticsAggregateEventsAccumulator.cs" />
+    <Compile Include="Final\ProjectStatisticsAggregateCommandsHandler.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAccount.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeActivity.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAppointment.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBill.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBranchOfficeOrganizationUnit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBuilding.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategory.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategoryFirmAddress.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategoryGroup.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeClient.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeContact.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeDeal.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeFirm.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeFirmAddress.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeFirmContact.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLegalPerson.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLegalPersonProfile.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLetter.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLock.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypePhonecall.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeProject.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeProjectCategoryStatistics.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeProjectStatistics.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeSalesModelCategoryRestriction.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeTask.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeTerritory.cs" />
+    <Compile Include="Identities\Flows\CommonEventsFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromBitFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />
-    <Compile Include="Identities\Flows\StatisticsFlow.cs" />
+    <Compile Include="Identities\Flows\StatisticsEventsFlow.cs" />
     <Compile Include="Identities\Operations\ActualizeActiveLocksIdentity.cs" />
     <Compile Include="Identities\Operations\ActualizeOrderAggregatedIndicatorsPersistedCacheIdentity.cs" />
     <Compile Include="Identities\Operations\ActualizeOrderAmountToWithdrawIdentity.cs" />
@@ -166,22 +193,6 @@
     <Compile Include="Identities\Operations\TransferLocksToAccountIdentity.cs" />
     <Compile Include="Identities\Operations\UpdateOrderFinancialPerfomanceIdentity.cs" />
     <Compile Include="Identities\Operations\WithdrawFromAccountsIdentity.cs" />
-    <Compile Include="Identities\Telemetry\AggregateEnqueuedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\AggregateProcessedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\AggregateProcessingDelayIdentity.cs" />
-    <Compile Include="Identities\Telemetry\BitStatisticsEntityProcessedCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\ErmEnqueuedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\ErmProcessedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\ErmReceivedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\FinalProcessingAggregateQueueLengthIdentity.cs" />
-    <Compile Include="Identities\Telemetry\FinalProcessingStatisticsQueueLengthIdentity.cs" />
-    <Compile Include="Identities\Telemetry\PrimaryProcessingDelayIdentity.cs" />
-    <Compile Include="Identities\Telemetry\PrimaryProcessingQueueLengthIdentity.cs" />
-    <Compile Include="Identities\Telemetry\ProcessPrivateMemorySizeIdentity.cs" />
-    <Compile Include="Identities\Telemetry\ProcessWorkingSetIdentity.cs" />
-    <Compile Include="Identities\Telemetry\StatisticsEnqueuedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\StatisticsProcessedOperationCountIdentity.cs" />
-    <Compile Include="Identities\Telemetry\StatisticsProcessingDelayIdentity.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
@@ -194,26 +205,26 @@
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Primary\Parsers\RubricPopularityCorporateBusMessageParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Transports\EventDispatcher.cs" />
+    <Compile Include="Transports\SQLStore\XmlEventSerializer.cs" />
     <Compile Include="Transports\FlowLengthReporter.cs" />
-    <Compile Include="Transports\OperationDispatcher.cs" />
-    <Compile Include="Transports\SQLStore\EntityReferenceSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Metadata\Common.Metadata.csproj">
-      <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
-      <Name>Common.Metadata</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Replication\Replication.Core.API\Replication.Core.API.csproj">
+    <ProjectReference Include="..\..\Replication\Replication.Core\Replication.Core.csproj">
       <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
-      <Name>Replication.Core.API</Name>
+      <Name>Replication.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Replication\Replication.OperationsProcessing\Replication.OperationsProcessing.csproj">
       <Project>{8e3d39d6-6bee-4edc-ace0-8c24ca929164}</Project>
       <Name>Replication.OperationsProcessing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
+    <ProjectReference Include="..\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj">
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
-      <Name>CustomerIntelligence.Domain</Name>
+      <Name>CustomerIntelligence.Replication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
+      <Project>{fa1074a6-b89d-45df-9b73-6881bef46e33}</Project>
+      <Name>CustomerIntelligence.Storage</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -222,9 +233,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Identities\EntityTypes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,39 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
-using NuClear.CustomerIntelligence.Domain;
-using NuClear.CustomerIntelligence.StateInitialization;
+using NuClear.CustomerIntelligence.Replication.Actors;
+using NuClear.CustomerIntelligence.StateInitialization.Host;
 using NuClear.DataTest.Metamodel;
 using NuClear.DataTest.Metamodel.Dsl;
-using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
-using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Replication.Bulk.API;
-using NuClear.Replication.Bulk.API.Storage;
-using NuClear.River.Common.Metadata;
+using NuClear.StateInitialization.Core;
 using NuClear.Storage.API.ConnectionStrings;
-
-using DataConnectionFactory = NuClear.Replication.Bulk.API.Factories.DataConnectionFactory;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 {
-    static class ReplicationMetdataProvider
-    {
-        public static readonly MetadataProvider Instance
-            = new MetadataProvider(
-                new IMetadataSource[]
-                {
-                    new BulkReplicationMetadataSource(),
-                    new FactsReplicationMetadataSource(),
-                    new AggregateConstructionMetadataSource(),
-                },
-                new IMetadataProcessor[] { new TunedReferencesEvaluatorProcessor() });
-    }
-
     public sealed class BulkReplicationAdapter<T> : ITestAction
         where T : IKey, new()
     {
-        private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly T _key;
+        private readonly IConnectionStringSettings _connectionStringSettings;
+        private readonly Type _anchor = typeof(AggregateActor);
 
         public BulkReplicationAdapter(ActMetadataElement metadata, IMetadataProvider metadataProvider, ConnectionStringSettingsAspect connectionStringSettings)
         {
@@ -46,11 +29,8 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
 
         public void Act()
         {
-            var viewRemover = new ViewRemover(_connectionStringSettings);
-            var connectionFactory = new DataConnectionFactory(_connectionStringSettings);
-            var runner = new BulkReplicationRunner(ReplicationMetdataProvider.Instance, connectionFactory, viewRemover);
-
-            runner.Run(_key.Key);
+            var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), _connectionStringSettings);
+            bulkReplicationActor.ExecuteCommands(new[] { _key.Command });
         }
     }
 }

@@ -6,7 +6,6 @@ using System.Web.Http.ExceptionHandling;
 using Microsoft.Practices.Unity;
 
 using NuClear.Aggregates.Storage.DI.Unity;
-using NuClear.CustomerIntelligence.Domain;
 using NuClear.CustomerIntelligence.Storage;
 using NuClear.CustomerIntelligence.Storage.Identitites.Connections;
 using NuClear.DI.Unity.Config;
@@ -19,8 +18,8 @@ using NuClear.Querying.Edm.Emit;
 using NuClear.Querying.Http;
 using NuClear.Querying.Http.Emit;
 using NuClear.Querying.Storage;
-using NuClear.River.Common.Identities.Connections;
-using NuClear.River.Common.Settings;
+using NuClear.River.Hosting.Common.Identities.Connections;
+using NuClear.River.Hosting.Common.Settings;
 using NuClear.Settings.API;
 using NuClear.Settings.Unity;
 using NuClear.Storage.API.ConnectionStrings;

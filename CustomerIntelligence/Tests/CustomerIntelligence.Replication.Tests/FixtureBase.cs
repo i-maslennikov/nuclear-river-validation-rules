@@ -3,19 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-using NuClear.River.Common.Metadata.Model;
-
 namespace NuClear.CustomerIntelligence.Replication.Tests
 {
     internal abstract class FixtureBase
     {
         protected static class Predicate
         {
-            public static Expression<Func<T, bool>> ById<T>(long id) where T : IIdentifiable<long>
-            {
-                return new DefaultIdentityProvider().Create<T, long>(id);
-            }
-
             public static Expression<Func<T, bool>> Match<T>(T expected)
             {
                 return Match(expected, x => x);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.Messaging.API.Flows;
-using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
+using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Telemetry;
 
@@ -19,8 +19,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             _telemetry = telemetry;
             _flowReporters = new Dictionary<Guid, Action<int>>
                 {
-                    { AggregatesFlow.Instance.Id, length => _telemetry.Publish<FinalProcessingAggregateQueueLengthIdentity>(length) },
-                    { StatisticsFlow.Instance.Id, length => _telemetry.Publish<FinalProcessingStatisticsQueueLengthIdentity>(length) },
+                    { CommonEventsFlow.Instance.Id, length => _telemetry.Publish<FinalProcessingAggregateQueueLengthIdentity>(length) },
+                    { StatisticsEventsFlow.Instance.Id, length => _telemetry.Publish<FinalProcessingStatisticsQueueLengthIdentity>(length) },
                     { ImportFactsFromErmFlow.Instance.Id, length => _telemetry.Publish<PrimaryProcessingQueueLengthIdentity>(length) },
                 };
         }
@@ -29,7 +29,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             => new[] { ImportFactsFromErmFlow.Instance };
 
         public IReadOnlyCollection<IMessageFlow> SqlFlows
-            => new IMessageFlow[] { AggregatesFlow.Instance, StatisticsFlow.Instance };
+            => new IMessageFlow[] { CommonEventsFlow.Instance, StatisticsEventsFlow.Instance };
 
         public void ReportFlowLength(IMessageFlow flow, int length)
         {

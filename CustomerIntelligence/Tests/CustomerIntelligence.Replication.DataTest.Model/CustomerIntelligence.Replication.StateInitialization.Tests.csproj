@@ -100,21 +100,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
-      <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
-      <Name>Common.Metadata</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Replication\Replication.Bulk.Api\Replication.Bulk.API.csproj">
+    <ProjectReference Include="..\..\..\StateInitialization\StateInitialization.Core\StateInitialization.Core.csproj">
       <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
-      <Name>Replication.Bulk.API</Name>
+      <Name>StateInitialization.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence.Domain\CustomerIntelligence.Domain.csproj">
+    <ProjectReference Include="..\..\..\Replication\Replication.Core\Replication.Core.csproj">
+      <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
+      <Name>Replication.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CustomerIntelligence.Replication\CustomerIntelligence.Replication.csproj">
       <Project>{b0a258d5-7387-4fb2-ba18-b51550da3f0b}</Project>
-      <Name>CustomerIntelligence.Domain</Name>
+      <Name>CustomerIntelligence.Replication</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CustomerIntelligence.StateInitialization\CustomerIntelligence.StateInitialization.csproj">
-      <Project>{0af71ae8-390e-4911-b243-255536509210}</Project>
-      <Name>CustomerIntelligence.StateInitialization</Name>
+    <ProjectReference Include="..\..\CustomerIntelligence.StateInitialization.Host\CustomerIntelligence.StateInitialization.Host.csproj">
+      <Project>{c6de2a90-b4b9-4cd5-aef0-7e6607b102a0}</Project>
+      <Name>CustomerIntelligence.StateInitialization.Host</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CustomerIntelligence.Storage\CustomerIntelligence.Storage.csproj">
       <Project>{FA1074A6-B89D-45DF-9B73-6881BEF46E33}</Project>

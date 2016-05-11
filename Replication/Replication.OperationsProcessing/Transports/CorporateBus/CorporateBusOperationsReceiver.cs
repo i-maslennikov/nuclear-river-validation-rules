@@ -35,7 +35,7 @@ namespace NuClear.Replication.OperationsProcessing.Transports.CorporateBus
                 return new CorporateBusPerformedOperationsMessage[0];
             }
 
-            return new []{ new CorporateBusPerformedOperationsMessage(new[] { corporateBusPackage }) };
+            return new[] { new CorporateBusPerformedOperationsMessage(corporateBusPackage) };
         }
 
         protected override void Complete(

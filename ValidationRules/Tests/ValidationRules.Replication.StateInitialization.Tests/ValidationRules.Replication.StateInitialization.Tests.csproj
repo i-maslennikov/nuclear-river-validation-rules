@@ -90,21 +90,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
+    <ProjectReference Include="..\..\..\Querying\Querying.Metadata\Querying.Metadata.csproj">
       <Project>{2EBD563D-A59B-4FB8-AED6-0340D136F72C}</Project>
       <Name>Common.Metadata</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Replication\Replication.Bulk.Api\Replication.Bulk.Api.csproj">
+    <ProjectReference Include="..\..\..\StateInitialization\StateInitialization.Core\StateInitialization.Core.csproj">
       <Project>{55b42fa4-ec9e-4f22-95ed-c219637699fd}</Project>
       <Name>Replication.Bulk.Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ValidationRules.Domain\ValidationRules.Domain.csproj">
-      <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
-      <Name>ValidationRules.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ValidationRules.StateInitialization\ValidationRules.StateInitialization.csproj">
-      <Project>{9E9B56F6-6CE7-4134-8FEA-7D7D0D0D0C7F}</Project>
-      <Name>ValidationRules.StateInitialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ValidationRules.Storage\ValidationRules.Storage.csproj">
       <Project>{E799A2EE-408F-467A-8B50-FC729E92D3F3}</Project>

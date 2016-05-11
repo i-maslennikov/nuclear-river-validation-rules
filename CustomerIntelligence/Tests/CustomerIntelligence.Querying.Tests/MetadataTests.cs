@@ -3,9 +3,9 @@
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Features;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Features;
+using NuClear.Querying.Metadata.Identities;
 
 using NUnit.Framework;
 

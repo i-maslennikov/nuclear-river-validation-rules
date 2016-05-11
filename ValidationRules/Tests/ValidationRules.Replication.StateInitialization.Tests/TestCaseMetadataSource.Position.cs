@@ -1,10 +1,8 @@
 ﻿using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
-    using Facts = Domain.Model.Facts;
-    using Aggregates = Domain.Model.Aggregates;
-
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
@@ -12,10 +10,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
         .Name(nameof(Position))
         .Fact(
-            new Facts::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
+            new Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
             )
         .Aggregate(
-            new Aggregates::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
+            new Storage.Model.Aggregates.Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
             );
     }
 }

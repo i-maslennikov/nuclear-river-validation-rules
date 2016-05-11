@@ -9,7 +9,7 @@ if ($Properties.Count -eq 0){
  	$Properties.EnvironmentName = 'Test.20'
 	$Properties.EntryPoints = @(
 		'CustomerIntelligence.Querying.Host'
-		'Replication.EntryPoint'
+		'CustomerIntelligence.Replication.Host'
 	)
 	#$Properties.UseCaseRoute = 'ERM'
 	#$Properties.UpdateSchemas = 'CustomerIntelligence'
@@ -36,8 +36,11 @@ $Properties.BuildFile = Join-Path $PSScriptRoot 'default.ps1'
 	& $NugetPath @('restore', $solution.FullName, '-NonInteractive', '-Verbosity', 'quiet')
 }
 
-Import-Module "${env:UserProfile}\.nuget\packages\2GIS.NuClear.BuildTools\0.2.36\tools\buildtools.psm1" -DisableNameChecking -Force
-Import-Module "$PSScriptRoot\metadata.psm1" -DisableNameChecking -Force
+$packageName = "2GIS.NuClear.BuildTools"
+$packageVersion = (ConvertFrom-Json (Get-Content "$PSScriptRoot\project.json" -Raw)).dependencies.PSObject.Properties[$packageName].Value
+Import-Module "${env:UserProfile}\.nuget\packages\$packageName\$packageVersion\tools\buildtools.psm1" -DisableNameChecking -Force
 
-Add-Metadata (Parse-EnvironmentMetadata $Properties)
+$metadata = & "$PSScriptRoot\metadata.ps1" $Properties
+Add-Metadata $metadata
+
 Run-Build $TaskList $Properties

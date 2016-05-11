@@ -6,7 +6,7 @@ using System.Web.OData;
 using Microsoft.OData.Edm;
 
 using NuClear.Metamodeling.Elements;
-using NuClear.River.Common.Metadata.Elements;
+using NuClear.Querying.Metadata.Elements;
 
 namespace NuClear.Querying.Edm.Tests
 {

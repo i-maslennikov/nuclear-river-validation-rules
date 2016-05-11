@@ -1,33 +1,33 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.Replication.Core.API;
+using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Writings;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.Core
 {
-    public class BulkRepository<TTarget> : IBulkRepository<TTarget> 
-        where TTarget : class
+    public class BulkRepository<TDataObject> : IBulkRepository<TDataObject>
+        where TDataObject : class
     {
-        private readonly IRepository<TTarget> _repository;
+        private readonly IRepository<TDataObject> _repository;
 
-        public BulkRepository(IRepository<TTarget> repository)
+        public BulkRepository(IRepository<TDataObject> repository)
         {
             _repository = repository;
         }
 
-        public void Create(IEnumerable<TTarget> objects)
+        public void Create(IEnumerable<TDataObject> objects)
         {
-            using (Probe.Create("Inserting", typeof(TTarget).Name))
+            using (Probe.Create("Inserting", typeof(TDataObject).Name))
             {
                 _repository.AddRange(objects);
                 _repository.Save();
             }
         }
 
-        public void Update(IEnumerable<TTarget> objects)
+        public void Update(IEnumerable<TDataObject> objects)
         {
-            using (Probe.Create("Updating", typeof(TTarget).Name))
+            using (Probe.Create("Updating", typeof(TDataObject).Name))
             {
                 foreach (var obj in objects)
                 {
@@ -38,9 +38,9 @@ namespace NuClear.Replication.Core
             }
         }
 
-        public void Delete(IEnumerable<TTarget> objects)
+        public void Delete(IEnumerable<TDataObject> objects)
         {
-            using (Probe.Create("Deleting", typeof(TTarget).Name))
+            using (Probe.Create("Deleting", typeof(TDataObject).Name))
             {
                 _repository.DeleteRange(objects);
                 _repository.Save();

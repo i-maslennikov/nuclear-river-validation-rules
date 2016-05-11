@@ -5,8 +5,7 @@ using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Metamodeling.Provider;
 using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Replication.OperationsProcessing.Metadata;
 
 namespace NuClear.Replication.OperationsProcessing.Primary
 {

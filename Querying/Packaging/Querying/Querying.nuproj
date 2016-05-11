@@ -11,7 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Querying.Edm\Querying.Edm.csproj" />
     <ProjectReference Include="..\..\Querying.Http\Querying.Http.csproj" />
+    <ProjectReference Include="..\..\Querying.Metadata\Querying.Metadata.csproj" />
+    <ProjectReference Include="..\..\Querying.Storage\Querying.Storage.csproj" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>48631a28-4d1f-4b49-b5d8-392071b232c3</ProjectGuid>
@@ -22,7 +25,7 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>NuClear.River.Querying</Id>
-    <Version>0.0.0-beta</Version>
+    <Version>0.0.0</Version>
     <Title>$(Id)</Title>
     <Authors>2GIS</Authors>
     <Owners>$(Authors)</Owners>

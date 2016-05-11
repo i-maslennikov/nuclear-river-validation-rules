@@ -57,12 +57,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common.Metadata\Common.Metadata.csproj">
-      <Project>{2ebd563d-a59b-4fb8-aed6-0340d136f72c}</Project>
-      <Name>Common.Metadata</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Replication.Core\Replication.Core.csproj">
-      <Project>{d3cf7e9e-4a8e-4583-a951-50ca940bd353}</Project>
+      <Project>{e45717be-86c8-425b-bb13-0e69053ef040}</Project>
       <Name>Replication.Core</Name>
     </ProjectReference>
   </ItemGroup>

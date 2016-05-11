@@ -4,7 +4,7 @@ using System.Linq;
 using NuClear.Messaging.API;
 using NuClear.Messaging.API.Receivers;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
-using NuClear.Replication.OperationsProcessing.Identities.Telemetry;
+using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 

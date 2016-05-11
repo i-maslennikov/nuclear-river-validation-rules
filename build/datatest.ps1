@@ -3,12 +3,10 @@ $ErrorActionPreference = 'Stop'
 #Requires –Version 3.0
 #------------------------------
 
-Import-Module "$BuildToolsRoot\modules\metadata.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\transform.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\entrypoint.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\artifacts.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\unittests.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\nuget.psm1" -DisableNameChecking
+Import-Module "$BuildToolsRoot\modules\msbuild.psm1" -DisableNameChecking
+Import-Module "$BuildToolsRoot\modules\buildqueue.psm1" -DisableNameChecking
+Import-Module "$BuildToolsRoot\modules\metadata.psm1" -DisableNameChecking
 
 $RunnerPackageInfo = Get-PackageInfo '2Gis.NuClear.DataTest'
 $RunnerPath = Join-Path $RunnerPackageInfo.VersionedDir "tools\2Gis.NuClear.DataTest.Runner.exe"

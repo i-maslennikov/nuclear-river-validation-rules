@@ -10,8 +10,8 @@ using Microsoft.OData.Edm.Validation;
 
 using NuClear.Metamodeling.Elements.Identities.Builder;
 using NuClear.Querying.Edm;
-using NuClear.River.Common.Metadata.Elements;
-using NuClear.River.Common.Metadata.Identities;
+using NuClear.Querying.Metadata.Elements;
+using NuClear.Querying.Metadata.Identities;
 
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
