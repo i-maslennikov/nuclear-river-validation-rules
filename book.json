@@ -2,9 +2,7 @@
     "title": "NuClear River Documentation",
     "description": "NuClear River Documentation",
     "plugins": [
-        "28msec",
         "richquotes",
-        "-image-captions",
         "printlinks",
         "video",
         "prism",
