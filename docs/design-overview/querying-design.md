@@ -2,7 +2,7 @@
 
 We started to explore **Querying** component in [high-level overview article](README.md) with the following bounded context:
 
-![image](../diagrams/conceptual-model-example.png)
+![image](../media/conceptual-model-example.png)
 
 Just to remind, it's conceptual model's description looks like this::
 
