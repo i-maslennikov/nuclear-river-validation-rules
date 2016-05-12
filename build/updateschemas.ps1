@@ -4,8 +4,6 @@ $ErrorActionPreference = 'Stop'
 #------------------------------
 
 Import-Module "$BuildToolsRoot\modules\entrypoint.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\msbuild.psm1" -DisableNameChecking
-Import-Module "$BuildToolsRoot\modules\artifacts.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\transform.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\sql.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\metadata.psm1" -DisableNameChecking
