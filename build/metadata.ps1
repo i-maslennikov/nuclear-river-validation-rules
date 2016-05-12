@@ -38,17 +38,14 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	return $entryPointsMetadata
 }
 
-function Get-BulkToolMetadata ($UpdateSchemas, $Context){
+function Get-BulkToolMetadata ($updateSchemasMetadata, $Context){
 	$metadata = @{}
 
 	$arguments = @()
-	switch($UpdateSchemas){
+	switch(@($updateSchemasMetadata.Keys)){
 		'ERM' { $arguments += @('-fact', '-ci') }
 		'BIT' { $arguments += @('-ci') }
 		'CustomerIntelligence' { $arguments += @('-ci') }
-		default {
-			return @{}
-		}
 	}
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
@@ -61,21 +58,16 @@ function Get-BulkToolMetadata ($UpdateSchemas, $Context){
 function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 	$metadata = @{}
 
-	[string[]]$UpdateSchemas = $AllSchemas | where { $UpdateSchemas -contains $_ }
-	if ($UpdateSchemas -and $UpdateSchemas.Count -ne 0){
-
-		$metadata += @{
-			'UpdateSchemas' = @{
-				'Schemas' = $UpdateSchemas
-				'ConnectionString' = @{
-					'ERM' = 'Facts'
-					'BIT' = 'Facts'
-					'CustomerIntelligence' = 'CustomerIntelligence'
-				}
-			}
+	$updateSchemasMetadata = @{ }
+	foreach ($schema in $AllSchemas.GetEnumerator()){
+		if ($UpdateSchemas -contains $schema.Key){
+			$updateSchemasMetadata.Add($schema.Key, $schema.Value)
 		}
-		$metadata += Get-BulkToolMetadata $UpdateSchemas $Context
-		return $metadata
+	}
+
+	if ($updateSchemasMetadata.Count -ne 0){
+		$metadata += @{ 'UpdateSchemas' = $updateSchemasMetadata }
+		$metadata += Get-BulkToolMetadata $updateSchemasMetadata $Context
 	}
 
 	return $metadata
@@ -136,11 +128,12 @@ function Parse-EnvironmentMetadata ($Properties) {
 	return $environmentMetadata
 }
 
-$AllSchemas = @(
-	'ERM'
-	'BIT'
-	'CustomerIntelligence'
-)
+$AllSchemas = @{
+	'ERM' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'CustomerIntelligence\Schemas\ERM.sql' }
+	'BIT' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'CustomerIntelligence\Schemas\BIT.sql' }
+	'Transport' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Replication\Schemas\Transport.sql' }
+	'CustomerIntelligence' = @{ ConnectionStringKey = 'CustomerIntelligence'; SqlFile = 'CustomerIntelligence\Schemas\CustomerIntelligence.sql' }
+}
 
 $AllEntryPoints = @(
 	'CustomerIntelligence.Querying.Host'
