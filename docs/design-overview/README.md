@@ -15,7 +15,7 @@ It's important that [metadata descriptions][metadata-descriptions] describe not 
 
 Here is the example. Say, bounded context looks like this:
 
-![image](../diagrams/conceptual-model-example.png)
+![image](../media/conceptual-model-example.png)
 
 Here we have one aggregate - `Project`. It has two entities except aggregate root - `Category` and `Firm`, and two value objects - `FirmBalance` and `FirmCategory` that related to `Firm` entity.
 
