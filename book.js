@@ -1,7 +1,7 @@
 var pkg = require('./package.json');
 
 module.exports = {
-        root: './docs',
+    root: './docs',
     title: 'NuClear River Documentation',
 
     // Enforce use of GitBook v3
