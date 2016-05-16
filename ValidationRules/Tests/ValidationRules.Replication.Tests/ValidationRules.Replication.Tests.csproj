@@ -58,6 +58,10 @@
       <HintPath>..\..\..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -72,8 +76,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandValidation.cs" />
-    <Compile Include="FactDependencyTests.cs" />
+    <Compile Include="Actors\ActorFixtureBase.cs" />
+    <Compile Include="Actors\SyncDataObjectsActorTests.cs" />
+    <Compile Include="DataFixtureBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +94,14 @@
       <Project>{D3CF7E9E-4A8E-4583-A951-50CA940BD353}</Project>
       <Name>Replication.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ValidationRules.Replication\ValidationRules.Replication.csproj">
+      <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
+      <Name>ValidationRules.Replication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ValidationRules.Storage\ValidationRules.Storage.csproj">
+      <Project>{e799a2ee-408f-467a-8b50-fc729e92d3f3}</Project>
+      <Name>ValidationRules.Storage</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -96,6 +109,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

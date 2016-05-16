@@ -9,6 +9,7 @@ namespace NuClear.ValidationRules.Storage
     {
         private const string BillingSchema = "Billing";
         private const string BusinessDirectorySchema = "BusinessDirectory";
+        private const string OrderValidationSchema = "OrderValidation";
 
         public static MappingSchema Erm
         {
@@ -20,8 +21,8 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<AssociatedPositionsGroup>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositionsGroups").HasPrimaryKey(x => x.Id);
                 config.Entity<AssociatedPosition>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<DeniedPosition>().HasSchemaName(BillingSchema).HasTableName("DeniedPositions").HasPrimaryKey(x => x.Id);
-                config.Entity<Ruleset>().HasSchemaName(BillingSchema).HasTableName("Rulesets").HasPrimaryKey(x => x.Id);
-                config.Entity<RulesetRule>().HasSchemaName(BillingSchema).HasTableName("RulesetRules")
+                config.Entity<Ruleset>().HasSchemaName(OrderValidationSchema).HasTableName("Rulesets").HasPrimaryKey(x => x.Id);
+                config.Entity<RulesetRule>().HasSchemaName(OrderValidationSchema).HasTableName("RulesetRules")
                       .HasPrimaryKey(x => x.RulesetId)
                       .HasPrimaryKey(x => x.RuleType)
                       .HasPrimaryKey(x => x.DependentPositionId)

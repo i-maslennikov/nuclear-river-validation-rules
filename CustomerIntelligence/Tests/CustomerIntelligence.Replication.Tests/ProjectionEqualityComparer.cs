@@ -13,7 +13,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
         {
             if (projector == null)
             {
-                throw new ArgumentNullException("projector");
+                throw new ArgumentNullException(nameof(projector));
             }
 
             _projector = projector;
@@ -51,7 +51,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests
         {
             if (obj.Equals(default(T)))
             {
-                throw new ArgumentNullException("obj");
+                throw new ArgumentNullException(nameof(obj));
             }
 
             return obj.GetHashCode();

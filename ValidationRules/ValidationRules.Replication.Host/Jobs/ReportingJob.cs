@@ -17,7 +17,7 @@ using NuClear.Tracing.API;
 
 using Quartz;
 
-namespace NuClear.CustomerIntelligence.Replication.Host.Jobs
+namespace NuClear.ValidationRules.Replication.Host.Jobs
 {
     [DisallowConcurrentExecution]
     public sealed class ReportingJob : TaskServiceJobBase

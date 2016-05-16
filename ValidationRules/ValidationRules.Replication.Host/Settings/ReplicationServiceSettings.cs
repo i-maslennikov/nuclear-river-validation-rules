@@ -37,6 +37,10 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
                         ConfigurationManager.ConnectionStrings["Aggregates"].ConnectionString
                     },
                     {
+                        MessagesConnectionStringIdentity.Instance,
+                        ConfigurationManager.ConnectionStrings["Messages"].ConnectionString
+                    },
+                    {
                         TransportConnectionStringIdentity.Instance,
                         ConfigurationManager.ConnectionStrings["Transport"].ConnectionString
                     },

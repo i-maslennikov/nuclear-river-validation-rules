@@ -1,53 +1,36 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using NuClear.DataTest.Metamodel;
 using NuClear.DataTest.Metamodel.Dsl;
-using NuClear.Metamodeling.Processors;
-using NuClear.Metamodeling.Processors.Concrete;
 using NuClear.Metamodeling.Provider;
-using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Replication.Bulk.API;
-using NuClear.Replication.Bulk.API.Storage;
+using NuClear.StateInitialization.Core;
 using NuClear.Storage.API.ConnectionStrings;
-using NuClear.ValidationRules.Domain;
-using NuClear.ValidationRules.StateInitialization;
-
-using DataConnectionFactory = NuClear.Replication.Bulk.API.Factories.DataConnectionFactory;
+using NuClear.ValidationRules.Replication.Actors;
+using NuClear.ValidationRules.StateInitialization.Host;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     public sealed class BulkReplicationAdapter<T> : ITestAction
         where T : IKey, new()
     {
-        private static readonly MetadataProvider DefaultProvider
-            = new MetadataProvider(
-                new IMetadataSource[]
-                    {
-                        new BulkReplicationMetadataSource(),
-                        new FactsReplicationMetadataSource(),
-                        new AggregateConstructionMetadataSource()
-                    },
-                new IMetadataProcessor[] { new ReferencesEvaluatorProcessor() });
-
-        private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly T _key;
+        private readonly IConnectionStringSettings _connectionStringSettings;
+        private readonly Type _anchor = typeof(AggregateActor);
 
         public BulkReplicationAdapter(ActMetadataElement metadata, IMetadataProvider metadataProvider, ConnectionStringSettingsAspect connectionStringSettings)
         {
             _key = new T();
             _connectionStringSettings = MappedConnectionStringSettings.CreateMappedSettings(
                 connectionStringSettings,
-                metadata, 
+                metadata,
                 metadataProvider.GetMetadataSet<SchemaMetadataIdentity>().Metadata.Values.Cast<SchemaMetadataElement>().ToDictionary(x => x.Context, x => x));
         }
 
         public void Act()
         {
-            var viewRemover = new ViewRemover(_connectionStringSettings);
-            var connectionFactory = new DataConnectionFactory(_connectionStringSettings);
-            var runner = new BulkReplicationRunner(DefaultProvider, connectionFactory, viewRemover);
-
-            runner.Run(_key.Key);
+            var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), _connectionStringSettings);
+            bulkReplicationActor.ExecuteCommands(new[] { _key.Command });
         }
     }
 }

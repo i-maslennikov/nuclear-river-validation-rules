@@ -38,16 +38,13 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	return $entryPointsMetadata
 }
 
-function Get-BulkToolMetadata ($UpdateSchemas, $Context){
+function Get-BulkToolMetadata ($updateSchemasMetadata, $Context){
 	$metadata = @{}
 
 	$arguments = @()
-	switch($UpdateSchemas){
+	switch(@($updateSchemasMetadata.Keys)){
 		'PriceContext' { $arguments += @('-facts', '-aggregate') }
-		'PriceAggregate' { $arguments += @('-aggregates') }
-		default {
-			return @{}
-		}
+		'PriceAggregate' { $arguments += @('-aggregate') }
 	}
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
@@ -60,22 +57,16 @@ function Get-BulkToolMetadata ($UpdateSchemas, $Context){
 function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 	$metadata = @{}
 
-	[string[]]$UpdateSchemas = $AllSchemas | where { $UpdateSchemas -contains $_ }
-	if ($UpdateSchemas -and $UpdateSchemas.Count -ne 0){
-
-		$metadata += @{
-			'UpdateSchemas' = @{
-				'Schemas' = $UpdateSchemas
-
-				# map db schema to connection string name
-				'ConnectionString' = @{
-					'PriceContext' = 'Facts'
-					'PriceAggregate' = 'Aggregates'
-				}
-			}
+	$updateSchemasMetadata = @{ }
+	foreach ($schema in $AllSchemas.GetEnumerator()){
+		if ($UpdateSchemas -contains $schema.Key){
+			$updateSchemasMetadata.Add($schema.Key, $schema.Value)
 		}
-		$metadata += Get-BulkToolMetadata $UpdateSchemas $Context
-		return $metadata
+	}
+
+	if ($updateSchemasMetadata.Count -ne 0){
+		$metadata += @{ 'UpdateSchemas' = $updateSchemasMetadata }
+		$metadata += Get-BulkToolMetadata $updateSchemasMetadata $Context
 	}
 
 	return $metadata
@@ -129,17 +120,14 @@ function Parse-EnvironmentMetadata ($Properties) {
 		}
 		$environmentMetadata += Get-UpdateSchemasMetadata $updateSchemas $context
 	}
-    else {
-        $environmentMetadata += Get-BulkToolMetadata '' $context
-    }
 
 	return $environmentMetadata
 }
 
-$AllSchemas = @(
-	'PriceContext'
-	'PriceAggregate'
-)
+$AllSchemas = @{
+	'PriceContext' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'ValidationRules\Schemas\PriceContext.sql' }
+	'PriceAggregate' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'ValidationRules\Schemas\PriceAggregate.sql' }
+}
 
 $AllEntryPoints = @(
 	'CustomerIntelligence.Querying.Host'

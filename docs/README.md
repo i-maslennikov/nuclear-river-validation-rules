@@ -1,5 +1,5 @@
-![](../media/nuclear-logo.png)
-# NuClear River Documentation
+![](media/nuclear-logo.png)
+# NuClear River
 
 > **Warning** This documentation is a work in progress.
 
@@ -17,7 +17,7 @@ If the answer is yes, then you may find it useful to apply CQRS implementation p
 
 Here is the big picture how **NuClear River** can be used in your environment:
 
-![image](diagrams/nuclear-river-big-picture.png)
+![image](media/nuclear-river-big-picture.png)
 
 Basically, to build Read Model you do not need anything other than events that generated as the result of commands execution in the the source system. Structure of these events may be different, but they must contain identities of entities that has been changed. In some cases they can contain detailed changes descriptions, but it is not necessary.
 

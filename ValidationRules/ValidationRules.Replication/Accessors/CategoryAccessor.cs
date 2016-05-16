@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
             // нет, не требуется - это должно быть поддержано на уровне вычисления сообщений, а для пересчёта заказа не требуется.
 
             var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<DeniedPosition>(x => ids.Contains(x.Id));
+            var specification = new FindSpecification<Category>(x => ids.Contains(x.Id));
 
             var orderIds = (from category in _query.For(specification)
                             join opa in _query.For<OrderPositionAdvertisement>() on category.Id equals opa.CategoryId

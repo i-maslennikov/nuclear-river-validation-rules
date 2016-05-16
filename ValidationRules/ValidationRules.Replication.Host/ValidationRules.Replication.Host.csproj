@@ -329,6 +329,9 @@
     <Compile Include="Factories\Replication\UnityAggregateActorFactory.cs" />
     <Compile Include="Factories\Replication\UnityDataObjectsActorFactory.cs" />
     <Compile Include="Factories\UnityServiceBusMessageFlowReceiverFactory.cs" />
+    <Compile Include="Jobs\DebugTestJob.cs" />
+    <Compile Include="Jobs\ProcessingJob.cs" />
+    <Compile Include="Jobs\ReportingJob.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplicationService.cs">

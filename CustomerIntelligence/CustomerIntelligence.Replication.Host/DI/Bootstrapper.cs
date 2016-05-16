@@ -197,7 +197,8 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
             container.RegisterType<IOperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.Resolve<OperationIdentityRegistryFactory>().RegistryFor<FactsSubDomain>()))
                     .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
                     .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton)
-                    .RegisterType<IEventDispatcher, EventDispatcher>(Lifetime.Singleton);
+                    .RegisterType<IEventDispatcher, EventDispatcher>(Lifetime.Singleton)
+                    .RegisterType<IFlowLengthReporter, FlowLengthReporter>(Lifetime.Singleton);
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);

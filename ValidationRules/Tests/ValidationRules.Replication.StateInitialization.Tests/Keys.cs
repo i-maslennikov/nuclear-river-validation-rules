@@ -1,17 +1,20 @@
-﻿namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
+﻿using NuClear.StateInitialization.Core.Commands;
+using NuClear.ValidationRules.StateInitialization.Host;
+
+namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     public interface IKey
     {
-        string Key { get; }
+        ReplaceDataObjectsInBulkCommand Command { get; }
     }
 
     public sealed class Facts : IKey
     {
-        public string Key => "-facts";
+        public ReplaceDataObjectsInBulkCommand Command => BulkReplicationCommands.ErmToFacts;
     }
 
     public sealed class Aggregates : IKey
     {
-        public string Key => "-aggregates";
+        public ReplaceDataObjectsInBulkCommand Command => BulkReplicationCommands.FactsToAggregates;
     }
 }

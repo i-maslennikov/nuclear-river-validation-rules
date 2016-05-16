@@ -42,7 +42,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Position> dataObjects)
         {
             var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<Order>(x => ids.Contains(x.Id));
+            var specification = new FindSpecification<Position>(x => ids.Contains(x.Id));
 
             var viaOrderPositionAdvertisement
                 = from position in _query.For(specification)

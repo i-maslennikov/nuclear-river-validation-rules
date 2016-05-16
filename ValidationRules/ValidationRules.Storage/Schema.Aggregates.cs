@@ -66,13 +66,11 @@ namespace NuClear.ValidationRules.Storage
 
                 config.Entity<OrderPosition>()
                       .HasSchemaName(PriceAggregateSchema)
-                      .HasPrimaryKey(x => x.Category1Id)
-                      .HasPrimaryKey(x => x.Category3Id)
-                      .HasPrimaryKey(x => x.CompareMode)
-                      .HasPrimaryKey(x => x.FirmAddressId)
-                      .HasPrimaryKey(x => x.ItemPositionId)
                       .HasPrimaryKey(x => x.OrderId)
-                      .HasPrimaryKey(x => x.PackagePositionId);
+                      .HasPrimaryKey(x => x.ItemPositionId)
+                      .HasPrimaryKey(x => x.CompareMode)
+                      .HasPrimaryKey(x => x.Category3Id)
+                      .HasPrimaryKey(x => x.FirmAddressId);
 
                 config.Entity<OrderPrice>()
                       .HasSchemaName(PriceAggregateSchema)

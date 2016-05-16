@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using NuClear.DataTest.Metamodel;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.ValidationRules.Domain.Specifications;
 using NuClear.ValidationRules.Replication.StateInitialization.Tests.Identitites.Connections;
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Model.Erm;
