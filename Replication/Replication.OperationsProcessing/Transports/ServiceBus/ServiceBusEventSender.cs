@@ -36,15 +36,26 @@ namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
             {
                 var sender = _factory.Create(targetFlow);
                 var transportMessages = events.Select(x => ServiceBusEventMessage.Create(Guid.NewGuid(), _serializer.Serialize(x)));
-                using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions {IsolationLevel = IsolationLevel.Serializable}))
+
+                // FAIL: ServiceBus (целиком или реализация клиента?) не поддерживает отправку более 100 сообщений в одной транзакции с одной стороны и не позволяет убрать транзакцию совсем с другой.
+                // т.е. TransactionScope есть, но транзакционности - нет. Это может привести к дублированию сообщений в топике (различные по идентификатору, но одинаковые по содержимому).
+
+                foreach (var batch in CreateBatches(transportMessages, 100))
                 {
-                    if (!sender.TrySend(transportMessages.Select(x => x.BrokeredMessage)))
+                    using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
                     {
-                        throw new Exception("Can not send events");
+                        if (!sender.TrySend(batch.Select(x => x.BrokeredMessage)))
+                        {
+                            throw new Exception("Can not send events");
+                        }
+
+                        scope.Complete();
                     }
-                    scope.Complete();
                 }
             }
         }
+
+        private static IEnumerable<IEnumerable<T>> CreateBatches<T>(IEnumerable<T> enumerable, int count)
+            => enumerable.Select((item, index) => new { Item = item, BatchNumber = index / count }).GroupBy(x => x.BatchNumber, x => x.Item);
     }
 }
