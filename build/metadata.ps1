@@ -121,9 +121,6 @@ function Parse-EnvironmentMetadata ($Properties) {
 		}
 		$environmentMetadata += Get-UpdateSchemasMetadata $updateSchemas $context
 	}
-    else {
-        $environmentMetadata += Get-BulkToolMetadata '' $context
-    }
 
 	return $environmentMetadata
 }
