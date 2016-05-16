@@ -47,9 +47,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
             {
                 For(Specs.Find.Erm.Accounts())
                     .Entity(new Account { Id = 1 }, true, "по умолчанию")
-                    .Entity(new Account { Id = 2, IsActive = false, IsDeleted = false }, false, "неактивный")
-                    .Entity(new Account { Id = 3, IsActive = true, IsDeleted = true }, false, "удалённый")
-                    .Entity(new Account { Id = 4, IsActive = false, IsDeleted = true }, false, "неактивный и удалённый"),
+                    .Entity(new Account { Id = 2, IsArchived = true }, false, "архивный"),
 
                 For(Specs.Find.Erm.BranchOfficeOrganizationUnits())
                     .Entity(new BranchOfficeOrganizationUnit { Id = 1 }, true, "по умолчанию")

@@ -11,9 +11,8 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                   .Fact(
                                         new Account { Id = 1 })
                                   .Erm(
-                                       new Storage.Model.Erm.Account { Id = 1, IsActive = true, IsDeleted = false },
-                                       new Storage.Model.Erm.Account { Id = 2, IsActive = true, IsDeleted = true },
-                                       new Storage.Model.Erm.Account { Id = 3, IsActive = false, IsDeleted = false });
+                                       new Storage.Model.Erm.Account { Id = 1, IsArchived = false },
+                                       new Storage.Model.Erm.Account { Id = 2, IsArchived = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement IgnoredBranchOfficeOrganizationUnit =>

@@ -14,7 +14,7 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
 
                 public static FindSpecification<Account> Accounts()
                 {
-                    return new FindSpecification<Account>(x => x.IsActive && !x.IsDeleted);
+                    return new FindSpecification<Account>(x => !x.IsArchived);
                 }
 
                 public static FindSpecification<Category> Categories()
