@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 using NuClear.Messaging.API.Flows;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
@@ -14,12 +15,12 @@ namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
     {
         private readonly IIdentityGenerator _identityGenerator;
         private readonly IRepository<PerformedOperationFinalProcessing> _repository;
-        private readonly IEventSerializer _serializer;
+        private readonly IXmlEventSerializer _serializer;
 
         public SqlStoreSender(
             IIdentityGenerator identityGenerator,
             IRepository<PerformedOperationFinalProcessing> repository,
-            IEventSerializer serializer)
+            IXmlEventSerializer serializer)
         {
             _identityGenerator = identityGenerator;
             _repository = repository;
@@ -32,10 +33,17 @@ namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
         {
             using (Probe.Create($"Send {typeof(TEvent).Name}"))
             {
-                var transportMessages = events.Select(x => _serializer.Serialize(x));
-                Save(transportMessages.ToArray(), targetFlow.Id);
+                var transportMessages = events.Select(x => Serialize(x)).ToArray();
+                Save(transportMessages, targetFlow.Id);
             }
         }
+
+        private PerformedOperationFinalProcessing Serialize(IEvent @event)
+            => new PerformedOperationFinalProcessing
+                {
+                    OperationId = Guid.NewGuid(),
+                    Context = _serializer.Serialize(@event).ToString(SaveOptions.DisableFormatting)
+                };
 
         private void Save(IReadOnlyCollection<PerformedOperationFinalProcessing> transportMessages, Guid targetFlowId)
         {

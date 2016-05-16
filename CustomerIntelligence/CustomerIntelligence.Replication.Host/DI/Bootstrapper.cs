@@ -13,7 +13,6 @@ using NuClear.CustomerIntelligence.OperationsProcessing;
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Final;
 using NuClear.CustomerIntelligence.OperationsProcessing.Transports;
-using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
 using NuClear.CustomerIntelligence.Replication.Accessors;
 using NuClear.CustomerIntelligence.Replication.Host.Factories;
 using NuClear.CustomerIntelligence.Replication.Host.Factories.Messaging.Processor;
@@ -71,6 +70,7 @@ using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
+using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.Security;
@@ -210,8 +210,8 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                      .RegisterTypeWithDependencies(typeof(ServiceBusOperationsReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
-                     .RegisterType<IEventSender, SqlStoreSender>(Lifetime.PerScope)
-                     .RegisterType<IEventSerializer, XmlEventSerializer>();
+                     .RegisterType<IEventSender, ServiceBusEventSender>(Lifetime.PerScope)
+                     .RegisterType<IXmlEventSerializer, XmlEventSerializer>();
 
             // final
             container.RegisterTypeWithDependencies(typeof(SqlStoreReceiverTelemetryDecorator), Lifetime.PerScope, null)
@@ -223,7 +223,8 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                             .RegisterType(typeof(CorporateBusMessageFlowReceiver), Lifetime.PerResolve)
                             .RegisterType<IServiceBusLockRenewer, NullServiceBusLockRenewer>(Lifetime.Singleton)
                             .RegisterType<ICorporateBusMessageFlowReceiverFactory, UnityCorporateBusMessageFlowReceiverFactory>(Lifetime.PerScope)
-                            .RegisterType<IServiceBusMessageFlowReceiverFactory, UnityServiceBusMessageFlowReceiverFactory>(Lifetime.PerScope)
+                            .RegisterType<IServiceBusSettingsFactory, ServiceBusSettingsFactory>(Lifetime.Singleton)
+                            .RegisterType<IServiceBusMessageFlowReceiverFactory, ServiceBusMessageFlowReceiverFactory>(Lifetime.PerScope)
                             .RegisterType<IMessageProcessingStagesFactory, UnityMessageProcessingStagesFactory>(Lifetime.PerScope)
                             .RegisterType<IMessageFlowProcessorFactory, UnityMessageFlowProcessorFactory>(Lifetime.PerScope)
                             .RegisterType<IMessageReceiverFactory, UnityMessageReceiverFactory>(Lifetime.PerScope)
@@ -283,7 +284,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
         {
             return container
                 .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
-                .RegisterType<IEventSerializer, XmlEventSerializer>(Lifetime.Singleton)
+                .RegisterType<IXmlEventSerializer, XmlEventSerializer>()
                 .RegisterType<IEqualityComparerFactory, EqualityComparerFactory>(Lifetime.Singleton)
 
                 .RegisterType<IStorageBasedDataObjectAccessor<Account>, AccountAccessor>(entryPointSpecificLifetimeManagerFactory())

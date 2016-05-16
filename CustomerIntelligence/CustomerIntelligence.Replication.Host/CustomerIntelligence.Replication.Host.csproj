@@ -300,8 +300,8 @@
     <Compile Include="Factories\Messaging\Transformer\PrimaryMessageTransformerResolveStrategy.cs" />
     <Compile Include="Factories\Replication\UnityAggregateActorFactory.cs" />
     <Compile Include="Factories\Replication\UnityDataObjectsActorFactory.cs" />
+    <Compile Include="Factories\ServiceBusSettingsFactory.cs" />
     <Compile Include="Factories\UnityCorporateBusMessageFlowReceiverFactory.cs" />
-    <Compile Include="Factories\UnityServiceBusMessageFlowReceiverFactory.cs" />
     <Compile Include="Jobs\ReportingJob.cs" />
     <Compile Include="Jobs\DebugTestJob.cs" />
     <Compile Include="Jobs\ProcessingJob.cs" />

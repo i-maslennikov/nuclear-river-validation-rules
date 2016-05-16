@@ -11,7 +11,6 @@ using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing
 {
@@ -33,13 +32,13 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                                                            .To.Primary().Flow<ImportFactsFromBitFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<CommonEventsFlow>()
-                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
+                                                           .Receiver<ServiceBusEventReceiverTelemetryDecorator>()
                                                            .Accumulator<CommonEventsAccumulator>()
                                                            .Handler<AggregateCommandsHandler>()
                                                            .To.Primary().Flow<CommonEventsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<StatisticsEventsFlow>()
-                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
+                                                           .Receiver<ServiceBusEventReceiverTelemetryDecorator>()
                                                            .Accumulator<ProjectStatisticsAggregateEventsAccumulator>()
                                                            .Handler<ProjectStatisticsAggregateCommandsHandler>()
                                                            .To.Primary().Flow<StatisticsEventsFlow>().Connect());
