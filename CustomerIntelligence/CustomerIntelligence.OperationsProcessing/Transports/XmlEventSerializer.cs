@@ -193,6 +193,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
         }
 
         private static XElement CreateRecord(IEvent @event, IReadOnlyCollection<XElement> elements)
-            => new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), elements);
+            => new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), new XAttribute(EventTime, @event.Time), elements);
     }
 }
