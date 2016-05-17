@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\2GIS.NuClear.Assembling.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Assembling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.DI.Unity, Version=0.0.0.0, Culture=neutral, PublicKeyToken=6d0bf831df25c59b, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\2GIS.NuClear.DI.Unity.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.DI.Unity.dll</HintPath>
       <Private>True</Private>
@@ -67,17 +71,21 @@
       <HintPath>..\..\..\packages\2GIS.NuClear.OperationsLogging.Transports.ServiceBus.2.0.0\lib\net451\2GIS.NuClear.OperationsLogging.Transports.ServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="2GIS.NuClear.OperationsLogging.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\2GIS.NuClear.OperationsLogging.Transports.SQLStore.2.0.0\lib\net451\2GIS.NuClear.OperationsLogging.Transports.SQLStore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.OperationsProcessing.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.OperationsProcessing.2.0.1-adjust-with-rive0007\lib\net451\2GIS.NuClear.OperationsProcessing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.OperationsProcessing.API.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.OperationsProcessing.API.2.0.1-adjust-with-rive0007\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.2.0.1-adjust-with-rive0007\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsTracking, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7546e3dd2743b918, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\2GIS.NuClear.OperationsTracking.2.0.0\lib\net451\2GIS.NuClear.OperationsTracking.dll</HintPath>
