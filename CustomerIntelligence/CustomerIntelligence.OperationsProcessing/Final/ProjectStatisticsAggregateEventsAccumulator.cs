@@ -29,7 +29,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 {
                     TargetFlow = MessageFlow,
                     Commands = CreateCommands(message.Event),
-                    EventHappenedTime = message.EventHappenedTime,
+                    EventHappenedTime = message.Event.Time,
                 };
 
         private static IReadOnlyCollection<IAggregateCommand> CreateCommands(IEvent @event)

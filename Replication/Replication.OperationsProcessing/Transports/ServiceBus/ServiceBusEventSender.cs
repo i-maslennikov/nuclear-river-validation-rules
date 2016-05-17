@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
+
+using Microsoft.ServiceBus.Messaging;
 
 using NuClear.Messaging.API.Flows;
+using NuClear.OperationsLogging.Transports.ServiceBus;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Telemetry.Probing;
@@ -35,16 +37,16 @@ namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
             using (Probe.Create($"Send {typeof(TEvent).Name}"))
             {
                 var sender = _factory.Create(targetFlow);
-                var transportMessages = events.Select(x => ServiceBusEventMessage.Create(Guid.NewGuid(), _serializer.Serialize(x)));
+                var transportMessages = events.Select(x => new BrokeredMessage(_serializer.Serialize(x)));
 
                 // FAIL: ServiceBus (целиком или реализация клиента?) не поддерживает отправку более 100 сообщений в одной транзакции с одной стороны и не позволяет убрать транзакцию совсем с другой.
                 // т.е. TransactionScope есть, но транзакционности - нет. Это может привести к дублированию сообщений в топике (различные по идентификатору, но одинаковые по содержимому).
 
                 foreach (var batch in CreateBatches(transportMessages, 100))
                 {
-                    using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
+                    using (var scope = new ServiceBusLoggingSession())
                     {
-                        if (!sender.TrySend(batch.Select(x => x.BrokeredMessage)))
+                        if (!sender.TrySend(batch))
                         {
                             throw new Exception("Can not send events");
                         }

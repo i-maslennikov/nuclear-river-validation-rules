@@ -20,7 +20,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
             PerformedOperations.Flows
                                .Primary(
                                         MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
-                                                           .Receiver<ServiceBusOperationsReceiverTelemetryDecorator>()
+                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
                                                            .Accumulator<ImportFactsFromErmAccumulator>()
                                                            .Handler<ImportFactsFromErmHandler>()
                                                            .To.Primary().Flow<ImportFactsFromErmFlow>().Connect(),
@@ -32,13 +32,13 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                                                            .To.Primary().Flow<ImportFactsFromBitFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<CommonEventsFlow>()
-                                                           .Receiver<ServiceBusEventReceiverTelemetryDecorator>()
+                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
                                                            .Accumulator<CommonEventsAccumulator>()
                                                            .Handler<AggregateCommandsHandler>()
                                                            .To.Primary().Flow<CommonEventsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<StatisticsEventsFlow>()
-                                                           .Receiver<ServiceBusEventReceiverTelemetryDecorator>()
+                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
                                                            .Accumulator<ProjectStatisticsAggregateEventsAccumulator>()
                                                            .Handler<ProjectStatisticsAggregateCommandsHandler>()
                                                            .To.Primary().Flow<StatisticsEventsFlow>().Connect());

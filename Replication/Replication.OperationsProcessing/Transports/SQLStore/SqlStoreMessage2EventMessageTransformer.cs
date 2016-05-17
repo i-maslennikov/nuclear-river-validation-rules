@@ -19,7 +19,6 @@ namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
         protected override EventMessage Transform(PerformedOperationsFinalProcessingMessage originalMessage)
             => new EventMessage(
                 originalMessage.FinalProcessings.Single().OperationId,
-                originalMessage.FinalProcessings.Single().CreatedOn,
                 Deserialize(originalMessage.FinalProcessings.Single().Context));
 
         private IEvent Deserialize(string message)

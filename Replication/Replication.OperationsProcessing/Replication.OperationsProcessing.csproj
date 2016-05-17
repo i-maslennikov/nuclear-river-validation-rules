@@ -73,11 +73,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.API.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.API.2.0.1-adjust-with-rive0006\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.ServiceBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.2.0.1-adjust-with-rive0006\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
@@ -211,18 +211,14 @@
     <Compile Include="Transports\ServiceBus\BrokeredMessage2EventMessageTransformer.cs" />
     <Compile Include="EventMessage.cs" />
     <Compile Include="Transports\ServiceBus\Factories\IServiceBusSettingsFactory.cs" />
-    <Compile Include="Transports\ServiceBus\ServiceBusEventMessage.cs" />
-    <Compile Include="Transports\ServiceBus\ServiceBusEventReceiver.cs" />
     <Compile Include="Transports\ServiceBus\ServiceBusEventSender.cs" />
     <Compile Include="Transports\ServiceBus\Factories\ServiceBusMessageFlowReceiverFactory.cs" />
     <Compile Include="Transports\ServiceBus\Factories\ServiceBusMessageSenderFactory.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreMessage2EventMessageTransformer.cs" />
-    <Compile Include="Transports\ServiceBus\ServiceBusOperationsReceiverTelemetryDecorator.cs" />
-    <Compile Include="Transports\ServiceBus\UnknownEntityType.cs" />
+    <Compile Include="Transports\ServiceBus\ServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\SQLStore\IdentityGenerator.cs" />
     <Compile Include="Transports\SQLStore\IIdentityGenerator.cs" />
     <Compile Include="Transports\IEventSender.cs" />
-    <Compile Include="Transports\ServiceBus\ServiceBusEventReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreReceiver.cs" />
     <Compile Include="Transports\SQLStore\Schema.cs" />
     <Compile Include="Transports\SQLStore\SqlStoreReceiverTelemetryDecorator.cs" />

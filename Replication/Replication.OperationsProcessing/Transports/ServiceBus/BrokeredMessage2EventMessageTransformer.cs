@@ -3,11 +3,12 @@ using System.Xml.Linq;
 using Microsoft.ServiceBus.Messaging;
 
 using NuClear.Messaging.API.Processing.Actors.Transformers;
+using NuClear.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.Core;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
 {
-    public sealed class BrokeredMessage2EventMessageTransformer : MessageTransformerBase<ServiceBusEventMessage, EventMessage>
+    public sealed class BrokeredMessage2EventMessageTransformer : MessageTransformerBase<BrokeredMessageDecorator, EventMessage>
     {
         private readonly IXmlEventSerializer _eventSerializer;
 
@@ -16,8 +17,8 @@ namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
             _eventSerializer = eventSerializer;
         }
 
-        protected override EventMessage Transform(ServiceBusEventMessage originalMessage)
-            => new EventMessage(originalMessage.Id, originalMessage.EventHappenedTime, Deserialize(originalMessage.BrokeredMessage));
+        protected override EventMessage Transform(BrokeredMessageDecorator originalMessage)
+            => new EventMessage(originalMessage.Id, Deserialize(originalMessage.Message));
 
         private IEvent Deserialize(BrokeredMessage message)
             => _eventSerializer.Deserialize(message.GetBody<XElement>());

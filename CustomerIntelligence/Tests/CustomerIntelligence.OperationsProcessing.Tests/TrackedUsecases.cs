@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using NuClear.CustomerIntelligence.OperationsProcessing.Identities.EntityTypes;
 using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.Model.Common.Operations.Identity.Generic;
 using NuClear.OperationsTracking.API.Changes;
 using NuClear.OperationsTracking.API.UseCases;
-using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests
 {
@@ -14,7 +14,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests
     {
         public static TrackedUseCase UpdateFirms()
         {
-            var entityType = new UnknownEntityType(1);
+            var entityType = new EntityTypeFirm();
             var operationIdentity = new StrictOperationIdentity(UpdateIdentity.Instance, new EntitySet(entityType));
             var changes = new[]
                           {

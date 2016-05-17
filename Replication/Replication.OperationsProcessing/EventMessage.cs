@@ -10,16 +10,13 @@ namespace NuClear.Replication.OperationsProcessing
     /// </summary>
     public sealed class EventMessage : MessageBase
     {
-        public EventMessage(Guid id, DateTime eventHappenedTime, IEvent @event)
+        public EventMessage(Guid id, IEvent @event)
         {
             Id = id;
             Event = @event;
-            EventHappenedTime = eventHappenedTime;
         }
 
         public override Guid Id { get; }
-
-        public DateTime EventHappenedTime { get; }
 
         public IEvent Event { get; }
     }
