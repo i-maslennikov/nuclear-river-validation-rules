@@ -38,7 +38,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                 var eventTime = @event.Attribute(EventTime);
                 if (dataObjectType != null && dataObjectId != null)
                 {
-                    return new DataObjectCreatedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, DateTime.Parse(eventTime.Value));
+                    return new DataObjectCreatedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, (DateTime)eventTime);
                 }
             }
 
@@ -49,7 +49,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                 var eventTime = @event.Attribute(EventTime);
                 if (dataObjectType != null && dataObjectId != null)
                 {
-                    return new DataObjectUpdatedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, DateTime.Parse(eventTime.Value));
+                    return new DataObjectUpdatedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, (DateTime)eventTime);
                 }
             }
 
@@ -60,7 +60,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                 var eventTime = @event.Attribute(EventTime);
                 if (dataObjectType != null && dataObjectId != null)
                 {
-                    return new DataObjectDeletedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, DateTime.Parse(eventTime.Value));
+                    return new DataObjectDeletedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, (DateTime)eventTime);
                 }
             }
 
@@ -71,7 +71,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                 var eventTime = @event.Attribute(EventTime);
                 if (dataObjectType != null && dataObjectId != null)
                 {
-                    return new DataObjectReplacedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, DateTime.Parse(eventTime.Value));
+                    return new DataObjectReplacedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, (DateTime)eventTime);
                 }
             }
 
@@ -82,7 +82,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                 var eventTime = @event.Attribute(EventTime);
                 if (relatedDataObjectType != null && relatedDataObjectId != null)
                 {
-                    return new RelatedDataObjectOutdatedEvent<long>(ResolveDataObjectType(relatedDataObjectType.Value), (long)relatedDataObjectId, DateTime.Parse(eventTime.Value));
+                    return new RelatedDataObjectOutdatedEvent<long>(ResolveDataObjectType(relatedDataObjectType.Value), (long)relatedDataObjectId, (DateTime)eventTime);
                 }
             }
 
@@ -99,7 +99,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                         return new RelatedDataObjectOutdatedEvent<StatisticsKey>(
                             ResolveDataObjectType(relatedDataObjectType.Value),
                             new StatisticsKey { ProjectId = (long)statisticsKey.Attribute(ProjectId), CategoryId = (long)statisticsKey.Attribute(CategoryId) },
-                            DateTime.Parse(eventTime.Value));
+                            (DateTime)eventTime);
                     }
                 }
             }
