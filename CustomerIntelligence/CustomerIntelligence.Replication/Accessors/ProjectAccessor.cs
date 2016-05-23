@@ -44,8 +44,10 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var specification = new FindSpecification<Project>(x => ids.Contains(x.Id));
 
-            // TODO: Is this really needed?
-            var projectIds = _query.For(specification).Select(x => x.Id).ToArray();
+            var complexIds = (from project in _query.For(specification)
+                              join categoryOrganizationUnit in _query.For<CategoryOrganizationUnit>() on project.OrganizationUnitId equals categoryOrganizationUnit.OrganizationUnitId
+                              select new StatisticsKey { ProjectId = project.Id, CategoryId = categoryOrganizationUnit.CategoryId })
+                .ToArray();
 
             var territoryIds = (from project in _query.For(specification)
                                 join territory in _query.For<Territory>() on project.OrganizationUnitId equals territory.OrganizationUnitId
@@ -57,7 +59,8 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
                            select firm.Id)
                 .ToArray();
 
-            return projectIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(ProjectCategoryStatistics), x))
+            return Enumerable.Empty<IEvent>()
+                             .Concat(complexIds.Select(x => new RelatedDataObjectOutdatedEvent<StatisticsKey>(typeof(ProjectCategoryStatistics), x)))
                              .Concat(territoryIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Territory), x)))
                              .Concat(firmIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Firm), x)))
                              .ToArray();

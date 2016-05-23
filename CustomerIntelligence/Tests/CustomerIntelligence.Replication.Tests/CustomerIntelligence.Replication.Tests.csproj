@@ -42,23 +42,23 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.0\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.API.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.API.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.LinqToDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.0\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
+      <HintPath>..\..\..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\2GIS.NuClear.Tracing.API.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="linq2db, Version=1.0.7.3, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\linq2db.1.0.7.4-beta2\lib\net45\linq2db.dll</HintPath>
+    <Reference Include="linq2db, Version=1.0.7.4, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\linq2db.1.0.7.5-alpha2\lib\net45\linq2db.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
