@@ -16,8 +16,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Actors
 
             Actor.Create(Query, RepositoryFactory)
                  .Sync<Project>(1)
-                 .VerifyDistinct(DataObject.RelatedDataObjectOutdated<ProjectCategoryStatistics>(1),
-                                 DataObject.Created<Project>(1));
+                 .VerifyDistinct(DataObject.Created<Project>(1));
         }
 
         [Test]
@@ -27,8 +26,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Actors
 
             Actor.Create(Query, RepositoryFactory)
                  .Sync<Project>(1)
-                 .VerifyDistinct(DataObject.RelatedDataObjectOutdated<ProjectCategoryStatistics>(1),
-                                 DataObject.Deleted<Project>(1));
+                 .VerifyDistinct(DataObject.Deleted<Project>(1));
         }
 
         [Test]
@@ -44,8 +42,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Actors
 
             Actor.Create(Query, RepositoryFactory)
                  .Sync<Project>(1)
-                 .VerifyDistinct(DataObject.RelatedDataObjectOutdated<ProjectCategoryStatistics>(1),
-                                 DataObject.RelatedDataObjectOutdated<Territory>(1),
+                 .VerifyDistinct(DataObject.RelatedDataObjectOutdated<Territory>(1),
                                  DataObject.RelatedDataObjectOutdated<Firm>(1),
                                  DataObject.RelatedDataObjectOutdated<Territory>(2),
                                  DataObject.RelatedDataObjectOutdated<Firm>(2),

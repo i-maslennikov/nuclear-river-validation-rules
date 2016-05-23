@@ -99,13 +99,13 @@ function Get-ServiceNameMetadata ($Context) {
 		'ValidationRules.Replication.Host' {
 			return @{
 				'ServiceName' = 'ValidationRules.Replication.Host'
-				'ServiceDisplayName' = 'ValidationRules Replication Host Service'
+				'ServiceDisplayName' = '2GIS NuClear River ValidationRules Replication Host Service'
 			}
 		}
 		'ConvertUseCasesService' {
 			return @{
 				'ServiceName' = 'ConvertUseCases'
-				'ServiceDisplayName' = 'NuClear River Convert UseCases Service'
+				'ServiceDisplayName' = '2GIS NuClear River Convert UseCases Service'
 			}
 		}
 	}
