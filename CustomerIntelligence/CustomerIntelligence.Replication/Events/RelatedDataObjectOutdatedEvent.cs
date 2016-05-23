@@ -7,7 +7,7 @@ namespace NuClear.CustomerIntelligence.Replication.Events
     public class RelatedDataObjectOutdatedEvent<TDataObjectId> : IEvent
     {
         public RelatedDataObjectOutdatedEvent(Type relatedDataObjectType, TDataObjectId relatedDataObjectId)
-            : this(relatedDataObjectType, relatedDataObjectId, DateTime.Now)
+            : this(relatedDataObjectType, relatedDataObjectId, DateTime.UtcNow)
         {
         }
 

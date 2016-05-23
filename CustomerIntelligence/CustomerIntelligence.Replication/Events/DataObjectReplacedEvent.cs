@@ -7,7 +7,7 @@ namespace NuClear.CustomerIntelligence.Replication.Events
     public class DataObjectReplacedEvent : IEvent
     {
         public DataObjectReplacedEvent(Type dataObjectType, long dataObjectId)
-            : this(dataObjectType, dataObjectId, DateTime.Now)
+            : this(dataObjectType, dataObjectId, DateTime.UtcNow)
         {
         }
 

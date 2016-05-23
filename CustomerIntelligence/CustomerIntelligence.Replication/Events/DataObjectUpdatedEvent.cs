@@ -7,7 +7,7 @@ namespace NuClear.CustomerIntelligence.Replication.Events
     public class DataObjectUpdatedEvent : IEvent
     {
         public DataObjectUpdatedEvent(Type dataObjectType, long dataObjectId)
-            : this(dataObjectType, dataObjectId, DateTime.Now)
+            : this(dataObjectType, dataObjectId, DateTime.UtcNow)
         {
         }
 
