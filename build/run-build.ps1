@@ -8,11 +8,11 @@ if ($TaskList.Count -eq 0){
 if ($Properties.Count -eq 0){
  	$Properties.EnvironmentName = 'Test.20'
 	$Properties.EntryPoints = @(
-		'CustomerIntelligence.Querying.Host'
-		'CustomerIntelligence.Replication.Host'
+		'ValidationRules.Querying.Host'
+		'ValidationRules.Replication.Host'
 	)
 	#$Properties.UseCaseRoute = 'ERM'
-	#$Properties.UpdateSchemas = 'CustomerIntelligence'
+	#$Properties.UpdateSchemas = 'PriceAggregate'
 }
 
 Set-StrictMode -Version Latest

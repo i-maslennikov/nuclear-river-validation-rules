@@ -17,27 +17,27 @@ Include 'datatest.ps1'
 
 # OData
 function QueueBuild-OData {
-	if ($Metadata['CustomerIntelligence.Querying.Host']){
-		$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Querying.Host'
-		QueueBuild-WebPackage $projectFileName 'CustomerIntelligence.Querying.Host'
+	if ($Metadata['ValidationRules.Querying.Host']){
+		$projectFileName = Get-ProjectFileName 'ValidationRules' 'ValidationRules.Querying.Host'
+		QueueBuild-WebPackage $projectFileName 'ValidationRules.Querying.Host'
 	}
 }
 function QueueDeploy-OData {
-	if ($Metadata['CustomerIntelligence.Querying.Host']){
-		QueueDeploy-WebPackage 'CustomerIntelligence.Querying.Host'
+	if ($Metadata['ValidationRules.Querying.Host']){
+		QueueDeploy-WebPackage 'ValidationRules.Querying.Host'
 	}
 }
 
 # task service
 function QueueBuild-TaskService {
-	if ($Metadata['CustomerIntelligence.Replication.Host']){
-		$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.Replication.Host'
-		QueueBuild-AppPackage $projectFileName 'CustomerIntelligence.Replication.Host'
+	if ($Metadata['ValidationRules.Replication.Host']){
+		$projectFileName = Get-ProjectFileName 'ValidationRules' 'ValidationRules.Replication.Host'
+		QueueBuild-AppPackage $projectFileName 'ValidationRules.Replication.Host'
 	}
 }
 function QueueDeploy-TaskService {
-	if ($Metadata['CustomerIntelligence.Replication.Host']){
-		QueueDeploy-WinService 'CustomerIntelligence.Replication.Host'
+	if ($Metadata['ValidationRules.Replication.Host']){
+		QueueDeploy-WinService 'ValidationRules.Replication.Host'
 	}
 }
 

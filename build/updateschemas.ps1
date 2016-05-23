@@ -8,12 +8,12 @@ Import-Module "$BuildToolsRoot\modules\transform.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\sql.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\metadata.psm1" -DisableNameChecking
 
-Task Update-Schemas -Precondition { $Metadata['CustomerIntelligence.StateInitialization.Host'] -and $Metadata['UpdateSchemas'] } {
+Task Update-Schemas -Precondition { $Metadata['ValidationRules.StateInitialization.Host'] -and $Metadata['UpdateSchemas'] } {
 
-	$projectFileName = Get-ProjectFileName 'CustomerIntelligence' 'CustomerIntelligence.StateInitialization.Host'
+	$projectFileName = Get-ProjectFileName 'ValidationRules' 'ValidationRules.StateInitialization.Host'
 	$projectDir = Split-Path $projectFileName
 	$configFileName = Join-Path $projectDir 'app.config'
-	[xml]$config = Get-TransformedConfig $configFileName 'CustomerIntelligence.StateInitialization.Host'
+	[xml]$config = Get-TransformedConfig $configFileName 'ValidationRules.StateInitialization.Host'
 
 	Update-Schemas $config
 }

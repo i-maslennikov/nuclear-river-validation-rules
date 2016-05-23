@@ -59,7 +59,7 @@ function Get-TargetHostsMetadata ($Context){
 	switch ($Context.EnvType) {
 		'Production' {
 			switch ($Context.EntryPoint){
-				'CustomerIntelligence.Replication.Host'{
+				'ValidationRules.Replication.Host'{
 					return @{ 'TargetHosts' = @('uk-erm-sb01', 'uk-erm-sb03', 'uk-erm-sb04') }
 				}
 				'ConvertUseCasesService' {
@@ -96,10 +96,10 @@ function Get-TargetHostsMetadata ($Context){
 
 function Get-ServiceNameMetadata ($Context) {
 	switch ($Context.EntryPoint) {
-		'CustomerIntelligence.Replication.Host' {
+		'ValidationRules.Replication.Host' {
 			return @{
-				'ServiceName' = 'CustomerIntelligence.Replication.Host'
-				'ServiceDisplayName' = 'CustomerIntelligence Replication Host Service'
+				'ServiceName' = 'ValidationRules.Replication.Host'
+				'ServiceDisplayName' = 'ValidationRules Replication Host Service'
 			}
 		}
 		'ConvertUseCasesService' {

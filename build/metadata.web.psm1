@@ -64,8 +64,8 @@ function Get-ValidateWebsiteMetadata ($Context) {
 	}
 
 	switch($Context.EntryPoint){
-		'CustomerIntelligence.Querying.Host' {
-			$uriPath = 'CustomerIntelligence/$metadata'
+		'ValidationRules.Querying.Host' {
+			$uriPath = 'ValidationRules/$metadata'
 		}
 		default {
 			$uriPath = '/'
@@ -78,7 +78,7 @@ function Get-ValidateWebsiteMetadata ($Context) {
 function Get-IisAppPathMetadata ($Context) {
 
 	switch ($Context.EntryPoint) {
-		'CustomerIntelligence.Querying.Host' { $prefix = "search$($Context['Index']).api" }
+		'ValidationRules.Querying.Host' { $prefix = "search$($Context['Index']).api" }
 		default {
 			return @{}
 		}

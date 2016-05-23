@@ -21,12 +21,12 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	$entryPointsMetadata += @{ 'ConvertUseCasesServiceProduction' = $tempMetadata['ConvertUseCasesService'] } 
 
 	switch ($EntryPoints){
-		'CustomerIntelligence.Querying.Host' {
+		'ValidationRules.Querying.Host' {
 			$Context.EntryPoint = $_
 			$entryPointsMetadata += Get-WebMetadata $Context
 		}
 
-		'CustomerIntelligence.Replication.Host' {
+		'ValidationRules.Replication.Host' {
 			$Context.EntryPoint = $_
 			$entryPointsMetadata += Get-TaskServiceMetadata $Context
 		}
@@ -48,10 +48,10 @@ function Get-BulkToolMetadata ($updateSchemasMetadata, $Context){
 	}
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
-	$Context.EntryPoint = 'CustomerIntelligence.StateInitialization.Host'
+	$Context.EntryPoint = 'ValidationRules.StateInitialization.Host'
 	$metadata += Get-TransformMetadata $Context
 
-	return @{ 'CustomerIntelligence.StateInitialization.Host' = $metadata }
+	return @{ 'ValidationRules.StateInitialization.Host' = $metadata }
 }
 
 function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
@@ -127,11 +127,13 @@ function Parse-EnvironmentMetadata ($Properties) {
 $AllSchemas = @{
 	'PriceContext' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'ValidationRules\Schemas\PriceContext.sql' }
 	'PriceAggregate' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'ValidationRules\Schemas\PriceAggregate.sql' }
+
+	'Transport' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Replication\Schemas\Transport.sql' }
 }
 
 $AllEntryPoints = @(
-	'CustomerIntelligence.Querying.Host'
-	'CustomerIntelligence.Replication.Host'
+	'ValidationRules.Querying.Host'
+	'ValidationRules.Replication.Host'
 	'ConvertUseCasesService'
 )
 
