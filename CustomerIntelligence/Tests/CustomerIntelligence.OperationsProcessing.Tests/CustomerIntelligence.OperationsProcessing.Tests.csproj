@@ -194,7 +194,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="TrackedUsecases.cs" />
-    <Compile Include="Transports\SQLStore\XmlOperationSerializerTests.cs" />
+    <Compile Include="Transports\XmlOperationSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

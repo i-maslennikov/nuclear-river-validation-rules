@@ -5,7 +5,7 @@ using NuClear.CustomerIntelligence.Storage.Model.Facts;
 
 using NUnit.Framework;
 
-namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports.SQLStore
+namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports
 {
     [TestFixture]
     public class XmlOperationSerializerTests
