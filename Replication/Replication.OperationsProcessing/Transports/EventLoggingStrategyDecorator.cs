@@ -5,7 +5,7 @@ using System.Linq;
 using NuClear.OperationsLogging.API;
 using NuClear.Telemetry.Probing;
 
-namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
+namespace NuClear.Replication.OperationsProcessing.Transports
 {
     public sealed class EventLoggingStrategyDecorator<TEvent> : IEventLoggingStrategy<TEvent>
     {

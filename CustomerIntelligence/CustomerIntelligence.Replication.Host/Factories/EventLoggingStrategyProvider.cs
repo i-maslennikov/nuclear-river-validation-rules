@@ -11,7 +11,7 @@ using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.OperationsLogging.API;
 using NuClear.OperationsLogging.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Telemetry;
-using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
+using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Telemetry;
 
