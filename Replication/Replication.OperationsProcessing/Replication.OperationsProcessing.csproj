@@ -215,7 +215,6 @@
     <Compile Include="Transports\ServiceBus\Factories\IServiceBusSettingsFactory.cs" />
     <Compile Include="Transports\ServiceBus\EventLoggingStrategyDecorator.cs" />
     <Compile Include="Transports\ServiceBus\Factories\ServiceBusMessageFlowReceiverFactory.cs" />
-    <Compile Include="Transports\ServiceBus\Factories\ServiceBusMessageSenderFactory.cs" />
     <Compile Include="Transports\ServiceBus\ServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\SQLStore\IdentityGenerator.cs" />
     <Compile Include="Transports\SQLStore\IIdentityGenerator.cs" />
