@@ -276,7 +276,6 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
         {
             return container
                 .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
-                .RegisterType<IXmlEventSerializer, XmlEventSerializer>()
                 .RegisterType<IEqualityComparerFactory, EqualityComparerFactory>(Lifetime.Singleton)
 
                 .RegisterType<IStorageBasedDataObjectAccessor<Account>, AccountAccessor>(entryPointSpecificLifetimeManagerFactory())
