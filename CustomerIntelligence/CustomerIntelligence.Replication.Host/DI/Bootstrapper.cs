@@ -26,7 +26,6 @@ using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.DI.Unity.Config;
 using NuClear.DI.Unity.Config.RegistrationResolvers;
-using NuClear.IdentityService.Client.Interaction;
 using NuClear.Jobs.Schedulers;
 using NuClear.Jobs.Unity;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
@@ -58,6 +57,9 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
 using NuClear.Model.Common.Operations.Identity;
+using NuClear.OperationsLogging;
+using NuClear.OperationsLogging.API;
+using NuClear.OperationsLogging.Transports.ServiceBus;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
 using NuClear.Replication.Core;
@@ -71,8 +73,6 @@ using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
-using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.Security;
 using NuClear.Security.API;
 using NuClear.Security.API.UserContext;
@@ -95,7 +95,6 @@ using NuClear.WCF.Client.Config;
 using Quartz.Spi;
 
 using Schema = NuClear.CustomerIntelligence.Storage.Schema;
-using TransportSchema = NuClear.Replication.OperationsProcessing.Transports.SQLStore.Schema;
 
 namespace NuClear.CustomerIntelligence.Replication.Host.DI
 {
@@ -118,7 +117,6 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                      .ConfigureTracing(tracer, tracerContextManager)
                      .ConfigureSecurityAspects()
                      .ConfigureQuartz()
-                     .ConfigureIdentityInfrastructure()
                      .ConfigureWcf()
                      .ConfigureOperationsProcessing()
                      .ConfigureStorage(storageSettings, EntryPointSpecificLifetimeManagerFactory)
@@ -186,18 +184,11 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                 .RegisterType<IClientProxyFactory, ClientProxyFactory>(Lifetime.Singleton);
         }
 
-        private static IUnityContainer ConfigureIdentityInfrastructure(this IUnityContainer container)
-        {
-            return container.RegisterType<IIdentityGenerator, IdentityGenerator>(Lifetime.Singleton)
-                            .RegisterType<IIdentityServiceClient, IdentityServiceClient>(Lifetime.Singleton);
-        }
-
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
             container.RegisterType<IOperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.Resolve<OperationIdentityRegistryFactory>().RegistryFor<FactsSubDomain>()))
                     .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
-                    .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton)
-                    .RegisterType<IEventDispatcher, EventDispatcher>(Lifetime.Singleton);
+                    .RegisterType<IEntityTypeExplicitMapping, ErmToFactsEntityTypeExplicitMapping>(Lifetime.Singleton);
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);
@@ -210,13 +201,15 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                      .RegisterTypeWithDependencies(typeof(ServiceBusMessageReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
-                     .RegisterType<IEventSender, ServiceBusEventSender>(Lifetime.PerScope)
                      .RegisterType<IXmlEventSerializer, XmlEventSerializer>();
 
             // final
-            container.RegisterTypeWithDependencies(typeof(SqlStoreReceiverTelemetryDecorator), Lifetime.PerScope, null)
-                     .RegisterTypeWithDependencies(typeof(AggregateCommandsHandler), Lifetime.PerResolve, null);
+            container.RegisterTypeWithDependencies(typeof(AggregateCommandsHandler), Lifetime.PerResolve, null);
 
+            container.RegisterType<IEventLoggingStrategyProvider, EventLoggingStrategyProvider>()
+                     .RegisterType<IEvent2BrokeredMessageConverter<IEvent>, Event2BrokeredMessageConverter>()
+                     .RegisterType<IEventLogger, EventLogger>()
+                     .RegisterType<IServiceBusMessageSender, ServiceBusMessageSender>();
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(typeof(IUserContext)), Lifetime.Singleton)
                             .RegisterType(typeof(ServiceBusMessageFlowReceiver), Lifetime.Singleton)
@@ -254,7 +247,6 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                                     { Scope.Erm, Schema.Erm },
                                     { Scope.Facts, Schema.Facts },
                                     { Scope.CustomerIntelligence, Schema.CustomerIntelligence },
-                                    { Scope.Transport, TransportSchema.Transport },
                                 };
 
             return container
@@ -342,14 +334,12 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                     { Scope.Erm, ErmConnectionStringIdentity.Instance },
                     { Scope.Facts, FactsConnectionStringIdentity.Instance },
                     { Scope.CustomerIntelligence, CustomerIntelligenceConnectionStringIdentity.Instance },
-                    { Scope.Transport, TransportConnectionStringIdentity.Instance }
                 };
 
             var writeConnectionStringNameMap = new Dictionary<string, IConnectionStringIdentity>
                 {
                     { Scope.Facts, FactsConnectionStringIdentity.Instance },
                     { Scope.CustomerIntelligence, CustomerIntelligenceConnectionStringIdentity.Instance },
-                    { Scope.Transport, TransportConnectionStringIdentity.Instance }
                 };
 
             return container.RegisterInstance<IConnectionStringIdentityResolver>(new ConnectionStringIdentityResolver(readConnectionStringNameMap, writeConnectionStringNameMap));
@@ -367,7 +357,6 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
             public const string Erm = "Erm";
             public const string Facts = "Facts";
             public const string CustomerIntelligence = "CustomerIntelligence";
-            public const string Transport = "Transport";
         }
     }
 }
