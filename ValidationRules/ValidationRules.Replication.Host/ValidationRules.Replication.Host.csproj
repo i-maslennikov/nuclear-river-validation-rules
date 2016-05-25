@@ -39,11 +39,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="2GIS.NuClear.Aggregates, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Aggregates.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Aggregates.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Aggregates.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Aggregates.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Aggregates.Storage.DI.Unity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Aggregates.Storage.DI.Unity.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Aggregates.Storage.DI.Unity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
@@ -159,15 +159,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.LinqToDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.0\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -210,8 +210,8 @@
       <HintPath>..\..\packages\Common.Logging.Log4Net1213.3.1.0\lib\net40\Common.Logging.Log4Net1213.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="linq2db, Version=1.0.7.3, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\linq2db.1.0.7.4-beta2\lib\net45\linq2db.dll</HintPath>
+    <Reference Include="linq2db, Version=1.0.7.4, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\linq2db.1.0.7.5-alpha2\lib\net45\linq2db.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -286,7 +286,9 @@
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="quartz.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
