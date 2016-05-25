@@ -18,6 +18,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
         private const string DataObjectId = "dataObjectId";
         private const string RelatedDataObjectType = "relatedDataObjectType";
         private const string RelatedDataObjectId = "relatedDataObjectId";
+        private const string State = "state";
 
         private const string PeriodKey = "periodKey";
         private const string OrganizationUnitId = "organizationUnitId";
@@ -95,7 +96,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
 
             if (IsEventOfType(@event, typeof(StateIncrementedEvent)))
             {
-                var states = @event.Elements("state").Select(x => new Guid(x.Value));
+                var states = @event.Elements(State).Select(x => new Guid(x.Value));
                 return new StateIncrementedEvent(states.ToArray());
             }
 
@@ -165,7 +166,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
             var stateIncrementedEvent = @event as StateIncrementedEvent;
             if (stateIncrementedEvent != null)
             {
-                return CreateRecord(stateIncrementedEvent, stateIncrementedEvent.IncludedTokens.Select(guid => new XElement("state", guid.ToString())).ToArray());
+                return CreateRecord(stateIncrementedEvent, stateIncrementedEvent.IncludedTokens.Select(guid => new XElement(State, guid.ToString())).ToArray());
             }
 
             throw new ArgumentException($"Unknown event type: {@event.GetType().Name}", nameof(@event));
