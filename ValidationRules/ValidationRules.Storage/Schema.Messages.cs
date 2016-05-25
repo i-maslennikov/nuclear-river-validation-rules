@@ -16,20 +16,15 @@ namespace NuClear.ValidationRules.Storage
                 var schema = new MappingSchema(new SqlServerMappingSchema());
                 var config = schema.GetFluentMappingBuilder();
 
-                config.Entity<ValidationResult>()
+                config.Entity<Version>()
                       .HasSchemaName(MessagesSchema)
-                      .HasPrimaryKey(x => x.OrderId)
-                      .HasPrimaryKey(x => x.MessageType)
-                      .HasPrimaryKey(x => x.PeriodStart)
-                      .HasPrimaryKey(x => x.PeriodEnd);
+                      .HasPrimaryKey(x => x.Id);
 
-                config.Entity<HistoryValidationResult>()
-                      .HasSchemaName(MessagesSchema)
-                      .HasPrimaryKey(x => x.OrderVersion)
-                      .HasPrimaryKey(x => x.MessageType)
-                      .HasPrimaryKey(x => x.PeriodStart)
-                      .HasPrimaryKey(x => x.PeriodEnd)
-                      .HasPrimaryKey(x => x.OrderVersion);
+                config.Entity<Version.ErmState>()
+                      .HasSchemaName(MessagesSchema);
+
+                config.Entity<Version.ValidationResult>()
+                      .HasSchemaName(MessagesSchema);
 
                 return schema;
             }
