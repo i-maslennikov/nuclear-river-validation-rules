@@ -85,6 +85,10 @@ namespace NuClear.ValidationRules.Replication.Actors
                                         .ToArray();
             events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
 
+            commandsToExecute = commands.OfType<IncrementAggregateStateCommand>()
+                                        .ToArray();
+            events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
+
             return events;
         }
     }

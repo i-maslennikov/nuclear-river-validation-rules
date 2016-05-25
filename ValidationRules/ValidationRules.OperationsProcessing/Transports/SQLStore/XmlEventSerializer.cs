@@ -93,6 +93,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
                 }
             }
 
+            if (IsEventOfType(@event, typeof(StateIncrementedEvent)))
+            {
+                var states = @event.Elements("state").Select(x => new Guid(x.Value));
+                return new StateIncrementedEvent(states.ToArray());
+            }
+
             throw new ArgumentException($"Event is unknown or cannot be deserialized: {@event}", nameof(@event));
         }
 
@@ -154,6 +160,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
                                                                       new XAttribute(OrganizationUnitId, complexOutdatedEvent.RelatedDataObjectId.OrganizationUnitId),
                                                                       new XAttribute(Start, complexOutdatedEvent.RelatedDataObjectId.Start)))
                                         });
+            }
+
+            var stateIncrementedEvent = @event as StateIncrementedEvent;
+            if (stateIncrementedEvent != null)
+            {
+                return CreateRecord(stateIncrementedEvent, stateIncrementedEvent.IncludedTokens.Select(guid => new XElement("state", guid.ToString())).ToArray());
             }
 
             throw new ArgumentException($"Unknown event type: {@event.GetType().Name}", nameof(@event));

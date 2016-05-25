@@ -10,9 +10,11 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
+using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Final
 {
@@ -20,13 +22,15 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
     {
         private readonly IAggregateActorFactory _aggregateActorFactory;
         private readonly ITelemetryPublisher _telemetryPublisher;
+        private readonly IEventSender _eventSender;
         private readonly ITracer _tracer;
 
-        public AggregateCommandsHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer)
+        public AggregateCommandsHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer, IEventSender eventSender)
         {
             _aggregateActorFactory = aggregateActorFactory;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
+            _eventSender = eventSender;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -63,6 +67,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
 
         private void ExecuteCommands(Type aggregateRootType, IReadOnlyCollection<IAggregateCommand> commands)
         {
+            var events = new List<IEvent>();
             using (var transaction = new TransactionScope(
                 TransactionScopeOption.Required,
                 new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
@@ -70,11 +75,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                 using (Probe.Create($"ETL2 {aggregateRootType.Name}"))
                 {
                     var actor = _aggregateActorFactory.Create(aggregateRootType);
-                    actor.ExecuteCommands(commands);
+                    events.AddRange(actor.ExecuteCommands(commands));
                 }
 
                 transaction.Complete();
             }
+
+            _eventSender.Push(MessagesFlow.Instance, events);
         }
     }
 }

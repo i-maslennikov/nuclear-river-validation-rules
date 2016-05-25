@@ -7,7 +7,6 @@ using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.Settings;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
@@ -52,7 +51,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                                                    .Cast<AggregatableMessage<ICommand>>()
                                                    .ToArray();
 
-                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.Cast<ISyncDataObjectCommand>()).ToArray());
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands).ToArray());
 
                 var oldestEventTime = messages.Min(message => message.EventHappenedTime);
                 _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - oldestEventTime).TotalMilliseconds);
@@ -66,7 +65,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<ISyncDataObjectCommand> commands)
+        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<ICommand> commands)
         {
             _tracer.Debug("Handing fact operations started");
 

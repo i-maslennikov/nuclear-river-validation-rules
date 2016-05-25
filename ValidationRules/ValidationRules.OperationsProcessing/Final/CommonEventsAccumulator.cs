@@ -73,6 +73,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                     commands.Add(new RecalculatePeriodAggregateCommand(outdatedPeriodEvent.RelatedDataObjectId));
                     continue;
                 }
+
+                var stateIncrementedEvent = @event as StateIncrementedEvent;
+                if (stateIncrementedEvent != null)
+                {
+                    commands.Add(new IncrementAggregateStateCommand(stateIncrementedEvent.IncludedTokens));
+                    continue;
+                }
+
             }
 
             return new AggregatableMessage<IAggregateCommand>

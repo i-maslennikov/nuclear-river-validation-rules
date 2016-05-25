@@ -8,6 +8,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.DataObjects;
+using NuClear.ValidationRules.Replication.Actors;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 {
@@ -28,6 +29,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
             if (dataObjectTypes.Any())
             {
                 return dataObjectTypes.Select(dataObjectType => (IActor)_unityContainer.Resolve(typeof(SyncDataObjectsActor<>).MakeGenericType(dataObjectType)))
+                                      .Concat(new[] { _unityContainer.Resolve<IncrementStateActor>() })
                                       .ToArray();
             }
 
@@ -35,6 +37,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
             if (dataObjectTypes.Any())
             {
                 return dataObjectTypes.Select(dataObjectType => (IActor)_unityContainer.Resolve(typeof(ReplaceDataObjectsActor<>).MakeGenericType(dataObjectType)))
+                                      .Concat(new[] { _unityContainer.Resolve<IncrementStateActor>() })
                                       .ToArray();
             }
 

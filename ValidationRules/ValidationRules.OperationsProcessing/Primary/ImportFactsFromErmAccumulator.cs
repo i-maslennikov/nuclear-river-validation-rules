@@ -39,8 +39,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
 
             var changes = _useCaseFiltrator.Filter(@event);
 
+            var incrementState = new ICommand[] { new IncrementStateCommand(@event.Id) };
 
-            var commands = changes.SelectMany(x => x.Value.Select(y => new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y))).ToArray();
+            var commands = changes.SelectMany(x => x.Value.Select(y => (ICommand)new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y)))
+                                  .Concat(incrementState)
+                                  .ToArray();
+
             _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Length);
 
             return new AggregatableMessage<ICommand>
