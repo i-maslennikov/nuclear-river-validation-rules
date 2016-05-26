@@ -249,6 +249,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                                     { Scope.Erm, Schema.Erm },
                                     { Scope.Facts, Schema.Facts },
                                     { Scope.Aggregates, Schema.Aggregates },
+                                    { Scope.Messages, Schema.Messages },
                                     { Scope.Transport, TransportSchema.Transport },
                                 };
 
@@ -321,6 +322,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                     { Scope.Erm, ErmConnectionStringIdentity.Instance },
                     { Scope.Facts, FactsConnectionStringIdentity.Instance },
                     { Scope.Aggregates, AggregatesConnectionStringIdentity.Instance },
+                    { Scope.Messages, AggregatesConnectionStringIdentity.Instance },
                     { Scope.Transport, TransportConnectionStringIdentity.Instance }
                 };
 
@@ -328,6 +330,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 {
                     { Scope.Facts, FactsConnectionStringIdentity.Instance },
                     { Scope.Aggregates, AggregatesConnectionStringIdentity.Instance },
+                    { Scope.Messages, AggregatesConnectionStringIdentity.Instance },
                     { Scope.Transport, TransportConnectionStringIdentity.Instance }
                 };
 
@@ -346,6 +349,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             public const string Erm = "Erm";
             public const string Facts = "Facts";
             public const string Aggregates = "Aggregates";
+            public const string Messages = "Messages";
             public const string Transport = "Transport";
         }
     }

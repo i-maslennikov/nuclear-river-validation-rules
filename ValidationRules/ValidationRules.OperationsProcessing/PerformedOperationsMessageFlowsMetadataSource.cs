@@ -10,6 +10,7 @@ using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.ValidationRules.OperationsProcessing.AfterFinal;
 using NuClear.ValidationRules.OperationsProcessing.Final;
 
 namespace NuClear.ValidationRules.OperationsProcessing
@@ -30,13 +31,13 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                                            .Receiver<SqlStoreReceiverTelemetryDecorator>()
                                                            .Accumulator<CommonEventsAccumulator>()
                                                            .Handler<AggregateCommandsHandler>()
-                                                           .To.Primary().Flow<CommonEventsFlow>().Connect()
+                                                           .To.Primary().Flow<CommonEventsFlow>().Connect(),
 
-                                        //MessageFlowMetadata.Config.For<MessagesFlow>()
-                                        //                   .Receiver<SqlStoreReceiverTelemetryDecorator>()
-                                        //                   .Accumulator<AggregateOperationAccumulator<MessagesFlow>>()
-                                        //                   .Handler<MessageOperationAggregatableMessageHandler>()
-                                        //                   .To.Primary().Flow<MessagesFlow>().Connect()
+                                        MessageFlowMetadata.Config.For<MessagesFlow>()
+                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
+                                                           .Accumulator<MessageEventsAccumulator>()
+                                                           .Handler<MessageCommandsHandler>()
+                                                           .To.Primary().Flow<MessagesFlow>().Connect()
                                        );
 
         public PerformedOperationsMessageFlowsMetadataSource()

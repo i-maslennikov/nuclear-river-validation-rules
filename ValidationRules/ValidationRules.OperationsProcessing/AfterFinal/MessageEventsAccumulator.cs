@@ -15,7 +15,7 @@ using NuClear.ValidationRules.Replication.Events;
 namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
 {
     public sealed class MessageEventsAccumulator :
-        MessageProcessingContextAccumulatorBase<CommonEventsFlow, PerformedOperationsFinalProcessingMessage, AggregatableMessage<IValidationRuleCommand>>
+        MessageProcessingContextAccumulatorBase<MessagesFlow, PerformedOperationsFinalProcessingMessage, AggregatableMessage<IValidationRuleCommand>>
     {
         private readonly IEventSerializer _serializer;
 
@@ -36,7 +36,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                     commands.Add(new CreateNewVersionCommand(stateIncrementedEvent.IncludedTokens));
                     continue;
                 }
-
             }
 
             return new AggregatableMessage<IValidationRuleCommand>

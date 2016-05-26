@@ -11,6 +11,7 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
         private const string Facts = "Facts";
         private const string Aggregates = "Aggregates";
         private const string Transport = "Transport";
+        private const string Messages = "Messages";
 
         public string Resolve(Type objType)
         {
@@ -27,6 +28,11 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
             if (objType.Namespace.Contains(Aggregates))
             {
                 return Aggregates;
+            }
+
+            if (objType.Namespace.Contains(Messages))
+            {
+                return Messages;
             }
 
             if (objType == typeof(PerformedOperationFinalProcessing))
