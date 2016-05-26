@@ -30,12 +30,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             var commands = new List<IValidationRuleCommand>();
             foreach (var @event in events)
             {
-                //var stateIncrementedEvent = @event as StateIncrementedEvent;
-                //if (stateIncrementedEvent != null)
-                //{
-                //    commands.Add(new CreateNewVersionCommand(stateIncrementedEvent.IncludedTokens));
-                //    continue;
-                //}
+                var stateIncrementedEvent = @event as StateIncrementedEvent;
+                if (stateIncrementedEvent != null)
+                {
+                    commands.Add(new CreateNewVersionCommand(stateIncrementedEvent.IncludedTokens));
+                    continue;
+                }
 
             }
 
