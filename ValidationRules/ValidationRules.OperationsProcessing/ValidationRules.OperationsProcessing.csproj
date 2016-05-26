@@ -106,12 +106,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AfterFinal\MessageEventsAccumulator.cs" />
     <Compile Include="Contexts\AggregateSubDomain.cs" />
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
     <Compile Include="Final\CommonEventsAccumulator.cs" />
-    <Compile Include="Final\MessageCommandsHandler.cs" />
+    <Compile Include="AfterFinal\MessageCommandsHandler.cs" />
     <Compile Include="Final\AggregateCommandsHandler.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
