@@ -26,7 +26,8 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<PriceAssociatedPosition>()
                       .HasSchemaName(PriceAggregateSchema);
 
-                config.Entity<AdvertisementAmountRestriction>();
+                config.Entity<AdvertisementAmountRestriction>()
+                      .HasSchemaName(PriceAggregateSchema);
 
                 config.Entity<Ruleset>()
                       .HasSchemaName(PriceAggregateSchema)
