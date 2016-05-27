@@ -322,7 +322,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                     { Scope.Erm, ErmConnectionStringIdentity.Instance },
                     { Scope.Facts, FactsConnectionStringIdentity.Instance },
                     { Scope.Aggregates, AggregatesConnectionStringIdentity.Instance },
-                    { Scope.Messages, AggregatesConnectionStringIdentity.Instance },
+                    { Scope.Messages, MessagesConnectionStringIdentity.Instance },
                     { Scope.Transport, TransportConnectionStringIdentity.Instance }
                 };
 
@@ -330,7 +330,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 {
                     { Scope.Facts, FactsConnectionStringIdentity.Instance },
                     { Scope.Aggregates, AggregatesConnectionStringIdentity.Instance },
-                    { Scope.Messages, AggregatesConnectionStringIdentity.Instance },
+                    { Scope.Messages, MessagesConnectionStringIdentity.Instance },
                     { Scope.Transport, TransportConnectionStringIdentity.Instance }
                 };
 
