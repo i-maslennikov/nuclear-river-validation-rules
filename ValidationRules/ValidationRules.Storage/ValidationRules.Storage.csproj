@@ -68,8 +68,8 @@
     <Compile Include="Model\Aggregates\ErmState.cs" />
     <Compile Include="Model\Aggregates\Order.cs" />
     <Compile Include="Model\Aggregates\OrderPeriod.cs" />
+    <Compile Include="Model\Aggregates\OrderPricePosition.cs" />
     <Compile Include="Model\Aggregates\OrderPosition.cs" />
-    <Compile Include="Model\Aggregates\OrderPrice.cs" />
     <Compile Include="Model\Aggregates\Period.cs" />
     <Compile Include="Model\Aggregates\Position.cs" />
     <Compile Include="Model\Aggregates\Price.cs" />

@@ -17,20 +17,20 @@ namespace NuClear.ValidationRules.Replication.Actors
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<OrderPosition> _orderPositionBulkRepository;
-        private readonly IBulkRepository<OrderPrice> _orderPriceBulkRepository;
+        private readonly IBulkRepository<OrderPricePosition> _orderPricePositionBulkRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public OrderAggregateRootActor(
             IQuery query,
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<OrderPosition> orderPositionBulkRepository,
-            IBulkRepository<OrderPrice> orderPriceBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
+            IBulkRepository<OrderPricePosition> orderPricePositionBulkRepository,
+        IEqualityComparerFactory equalityComparerFactory)
             : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
             _query = query;
             _orderPositionBulkRepository = orderPositionBulkRepository;
-            _orderPriceBulkRepository = orderPriceBulkRepository;
+            _orderPricePositionBulkRepository = orderPricePositionBulkRepository;
             _equalityComparerFactory = equalityComparerFactory;
         }
 
@@ -41,7 +41,7 @@ namespace NuClear.ValidationRules.Replication.Actors
             => new IActor[]
                 {
                     new ValueObjectActor<OrderPosition>(_query, _orderPositionBulkRepository, _equalityComparerFactory, new OrderPositionAccessor(_query)),
-                    new ValueObjectActor<OrderPrice>(_query, _orderPriceBulkRepository, _equalityComparerFactory, new OrderPriceAccessor(_query)),
+                    new ValueObjectActor<OrderPricePosition>(_query, _orderPricePositionBulkRepository, _equalityComparerFactory, new OrderPricePositionAccessor(_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -84,21 +84,21 @@ namespace NuClear.ValidationRules.Replication.Actors
             }
         }
 
-        public sealed class OrderPriceAccessor : IStorageBasedDataObjectAccessor<OrderPrice>
+        public sealed class OrderPricePositionAccessor : IStorageBasedDataObjectAccessor<OrderPricePosition>
         {
             private readonly IQuery _query;
 
-            public OrderPriceAccessor(IQuery query)
+            public OrderPricePositionAccessor(IQuery query)
             {
                 _query = query;
             }
 
-            public IQueryable<OrderPrice> GetSource() => Specs.Map.Facts.ToAggregates.OrderPrices.Map(_query);
+            public IQueryable<OrderPricePosition> GetSource() => Specs.Map.Facts.ToAggregates.OrderPricePositions.Map(_query);
 
-            public FindSpecification<OrderPrice> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<OrderPricePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return Specs.Find.Aggs.OrderPrices(aggregateIds);
+                return Specs.Find.Aggs.OrderPricePositions(aggregateIds);
             }
         }
     }

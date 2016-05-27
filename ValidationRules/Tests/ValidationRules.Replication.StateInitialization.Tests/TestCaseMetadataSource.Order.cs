@@ -65,32 +65,33 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderPriceTest
-            => ArrangeMetadataElement.Config
-                                     .Name(nameof(OrderPriceTest))
-                                     .Fact(
-                                           // 1 order, 1 price position
-                                           new Order { Id = 1 },
-                                           new OrderPosition { Id = 10, OrderId = 1, PricePositionId = 10 },
-                                           new PricePosition { Id = 10, PriceId = 2 },
+        => ArrangeMetadataElement.Config
+        .Name(nameof(OrderPriceTest))
+        .Fact(
+            // 1 order, 1 price position
+            new Order { Id = 1 },
+            new OrderPosition { Id = 10, OrderId = 1, PricePositionId = 10 },
+            new PricePosition { Id = 10, PriceId = 2 },
 
-                                           // 1 order, 2 price positions
-                                           new Order { Id = 2 },
-                                           new OrderPosition { Id = 20, OrderId = 2, PricePositionId = 20 },
-                                           new OrderPosition { Id = 21, OrderId = 2, PricePositionId = 21 },
-                                           new PricePosition { Id = 20, PriceId = 3, PositionId = 1 },
-                                           new PricePosition { Id = 21, PriceId = 3, PositionId = 2 })
-                                     .Aggregate(
-                                                new Period { Start = DateTime.MinValue, End = DateTime.MaxValue },
+            // 1 order, 2 price positions
+            new Order { Id = 2 },
+            new OrderPosition { Id = 20, OrderId = 2, PricePositionId = 20 },
+            new OrderPosition { Id = 21, OrderId = 2, PricePositionId = 21 },
+            new PricePosition { Id = 20, PriceId = 3, PositionId = 1 },
+            new PricePosition { Id = 21, PriceId = 3, PositionId = 2 })
+        .Aggregate(
+            new Period { Start = DateTime.MinValue, End = DateTime.MaxValue },
 
-                                                // 1 order, 1 price position
-                                                new OrderPrice { OrderId = 1, PriceId = 2 },
-                                                new AdvertisementAmountRestriction { PriceId = 2 },
-                                                new Storage.Model.Aggregates.Order { Id = 1 },
+            // 1 order, 1 price position
+            new OrderPricePosition { OrderId = 1, OrderPositionId = 10, PriceId = 2 },
+            new AdvertisementAmountRestriction { PriceId = 2 },
+            new Storage.Model.Aggregates.Order { Id = 1 },
 
-                                                // 1 order, 2 price positions
-                                                new OrderPrice { OrderId = 2, PriceId = 3 },
-                                                new AdvertisementAmountRestriction { PriceId = 3, PositionId = 1 },
-                                                new AdvertisementAmountRestriction { PriceId = 3, PositionId = 2 },
-                                                new Storage.Model.Aggregates.Order { Id = 2 });
+            // 1 order, 2 price positions
+            new OrderPricePosition { OrderId = 2, OrderPositionId = 20, PriceId = 3 },
+            new OrderPricePosition { OrderId = 2, OrderPositionId = 21, PriceId = 3 },
+            new AdvertisementAmountRestriction { PriceId = 3, PositionId = 1 },
+            new AdvertisementAmountRestriction { PriceId = 3, PositionId = 2 },
+            new Storage.Model.Aggregates.Order { Id = 2 });
     }
 }

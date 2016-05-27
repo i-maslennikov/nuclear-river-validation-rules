@@ -155,21 +155,17 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     return opas.Union(pkgs);
                                 });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::OrderPrice>> OrderPrices
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPrice>>(
-                            q =>
-                                {
-                                    var orderPrices = from order in q.For<Facts::Order>()
-                                                      join orderPosition in q.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                                                      join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
-                                                      select new Aggregates::OrderPrice
-                                                          {
-                                                              OrderId = order.Id,
-                                                              PriceId = pricePosition.PriceId
-                                                          };
-
-                                    return orderPrices.Distinct();
-                                });
+                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::OrderPricePosition>> OrderPricePositions
+                        = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPricePosition>>(
+                            q => from order in q.For<Facts::Order>()
+                                 join orderPosition in q.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                                 join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                                 select new Aggregates::OrderPricePosition
+                                     {
+                                         OrderId = order.Id,
+                                         OrderPositionId = orderPosition.Id,
+                                         PriceId = pricePosition.PriceId
+                                 });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Position>> Positions
                         = new MapSpecification<IQuery, IQueryable<Aggregates::Position>>(

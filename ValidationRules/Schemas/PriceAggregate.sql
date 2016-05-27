@@ -7,6 +7,7 @@ if object_id('PriceAggregate.PricePeriod') is not null drop table PriceAggregate
 if object_id('PriceAggregate.Period') is not null drop table PriceAggregate.Period
 
 if object_id('PriceAggregate.OrderPrice') is not null drop table PriceAggregate.OrderPrice
+if object_id('PriceAggregate.OrderPricePosition') is not null drop table PriceAggregate.OrderPricePosition
 if object_id('PriceAggregate.OrderPosition') is not null drop table PriceAggregate.OrderPosition
 if object_id('PriceAggregate.[Order]') is not null drop table PriceAggregate.[Order]
 
@@ -94,11 +95,12 @@ create table PriceAggregate.OrderPosition(
 create index IX_OrderPosition_OrderId ON PriceAggregate.OrderPosition (OrderId)
 go
 
-create table PriceAggregate.OrderPrice(
+create table PriceAggregate.OrderPricePosition(
     OrderId bigint NOT NULL,
-    PriceId bigint NOT NULL
+	OrderPositionId bigint NOT NULL,
+	PriceId bigint NOT NULL
 )
-create index IX_OrderPrice_OrderId ON PriceAggregate.OrderPrice (OrderId)
+create index IX_OrderPricePosition_OrderId ON PriceAggregate.OrderPricePosition (OrderId)
 go
 
 -- period aggregate

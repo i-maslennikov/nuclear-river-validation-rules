@@ -53,7 +53,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.PriceAssociatedPosition))
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPeriod))
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPosition))
-                .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPrice))
+                .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPricePosition))
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.PricePeriod));
 
         public static IEntityTypeMappingRegistry<ErmSubDomain> CreateErmContext()

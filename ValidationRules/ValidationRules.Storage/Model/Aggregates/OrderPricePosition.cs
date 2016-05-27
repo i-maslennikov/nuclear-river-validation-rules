@@ -1,11 +1,12 @@
 namespace NuClear.ValidationRules.Storage.Model.Aggregates
 {
     /// <summary>
-    /// Связь заказа с прайс-листом, вычиляется на ознове позиций заказа из ERM
+    /// Связь заказа с его позицией и позицией прайс-листа
     /// </summary>
-    public sealed class OrderPrice
+    public sealed class OrderPricePosition
     {
         public long OrderId { get; set; }
+        public long OrderPositionId { get; set; }
         public long PriceId { get; set; }
     }
 }
