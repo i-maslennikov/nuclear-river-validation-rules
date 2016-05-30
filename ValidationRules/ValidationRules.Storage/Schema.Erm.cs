@@ -15,7 +15,7 @@ namespace NuClear.ValidationRules.Storage
         {
             get
             {
-                var schema = new MappingSchema(new SqlServerMappingSchema());
+                var schema = new MappingSchema(nameof(Erm), new SqlServerMappingSchema());
                 var config = schema.GetFluentMappingBuilder();
 
                 config.Entity<AssociatedPositionsGroup>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositionsGroups").HasPrimaryKey(x => x.Id);

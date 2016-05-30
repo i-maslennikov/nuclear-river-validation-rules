@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Storage
         {
             get
             {
-                var schema = new MappingSchema(new SqlServerMappingSchema());
+                var schema = new MappingSchema(nameof(Facts), new SqlServerMappingSchema());
                 var config = schema.GetFluentMappingBuilder();
 
                 config.Entity<AssociatedPositionsGroup>()
