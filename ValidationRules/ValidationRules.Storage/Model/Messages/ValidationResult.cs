@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace NuClear.ValidationRules.Storage.Model.Messages
 {
@@ -17,7 +18,7 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public long VersionId { get; set; }
 
             public int MessageType { get; set; }
-            public string MessageParams { get; set; }
+            public XElement MessageParams { get; set; }
             public int Result { get; set; }
 
             public long OrderId { get; set; }
