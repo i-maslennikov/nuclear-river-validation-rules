@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public long OrderId { get; set; }
             public DateTime PeriodStart { get; set; }
             public DateTime PeriodEnd { get; set; }
-            public long ProjectId { get; set; }
+            public long OrganizationUnitId { get; set; }
         }
     }
 }
