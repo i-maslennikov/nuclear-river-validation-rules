@@ -43,8 +43,8 @@ function Get-BulkToolMetadata ($updateSchemasMetadata, $Context){
 
 	$arguments = @()
 	switch(@($updateSchemasMetadata.Keys)){
-		'PriceContext' { $arguments += @('-facts', '-aggregate') }
-		'PriceAggregate' { $arguments += @('-aggregate') }
+		'PriceContext' { $arguments += @('-facts', '-aggregates') }
+		'PriceAggregate' { $arguments += @('-aggregates') }
 	}
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
