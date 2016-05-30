@@ -20,12 +20,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
         private readonly CreateNewVersionActor _createNewVersionActor;
+        private readonly AdvertisementAmountActor _advertisementAmountActor;
 
-        public MessageCommandsHandler(ITelemetryPublisher telemetryPublisher, ITracer tracer, CreateNewVersionActor createNewVersionActor)
+        public MessageCommandsHandler(ITelemetryPublisher telemetryPublisher, ITracer tracer, CreateNewVersionActor createNewVersionActor, AdvertisementAmountActor advertisementAmountActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
             _createNewVersionActor = createNewVersionActor;
+            _advertisementAmountActor = advertisementAmountActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -54,12 +56,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
 
         private void Handle(IReadOnlyCollection<IValidationRuleCommand> commands)
         {
+            // Транзакция важна для запросов в пространстве Messages, запросы в PriceAggregate нужно выполнять без транзакции, хотя в идеале хотелось бы две независимые транзакции.
             var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
-                // todo: передать сообщения бизнес-логике.
-
                 // Думаю, пока достаточно указывать вызваемые акторы явно, о фабриках подумаем позже.
+                _advertisementAmountActor.ExecuteCommands(commands);
 
                 // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
                 // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
