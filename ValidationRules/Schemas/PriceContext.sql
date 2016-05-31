@@ -40,8 +40,8 @@ create table PriceContext.PricePosition(
     Id bigint not null,
     PriceId bigint not null,
     PositionId bigint not null,
-    MinAdvertisementAmount int not null,
-    MaxAdvertisementAmount int not null,
+    MinAdvertisementAmount int null,
+    MaxAdvertisementAmount int null,
     constraint PK_PricePosition primary key (Id)
 )
 create index IX_PricePosition_PriceId ON PriceContext.PricePosition (PriceId)

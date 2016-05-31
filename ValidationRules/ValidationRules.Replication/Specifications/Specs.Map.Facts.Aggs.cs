@@ -60,8 +60,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                 {
                                     PriceId = x.PriceId,
                                     PositionId = x.PositionId,
-                                    Max = x.MaxAdvertisementAmount,
-                                    Min = x.MinAdvertisementAmount
+                                    Max = x.MaxAdvertisementAmount ?? int.MaxValue,
+                                    Min = x.MinAdvertisementAmount ?? 0,
+                                    MissingMinimalRestriction = q.For<Facts::Position>().Single(pos => pos.Id == x.PositionId).IsControlledByAmount && x.MinAdvertisementAmount == null
                                 }));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>> Rulesets

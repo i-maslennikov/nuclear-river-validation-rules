@@ -213,8 +213,8 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             x => new Facts::PricePosition
                                 {
                                     Id = x.Id,
-                                    MaxAdvertisementAmount = x.MaxAdvertisementAmount ?? int.MaxValue,
-                                    MinAdvertisementAmount = x.MinAdvertisementAmount ?? 0,
+                                    MaxAdvertisementAmount = x.MaxAdvertisementAmount,
+                                    MinAdvertisementAmount = x.MinAdvertisementAmount,
                                     PositionId = x.PositionId,
                                     PriceId = x.PriceId,
                                 };

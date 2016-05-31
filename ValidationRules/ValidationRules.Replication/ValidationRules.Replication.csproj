@@ -68,6 +68,7 @@
     <Compile Include="Accessors\DeniedPositionAccessor.cs" />
     <Compile Include="Accessors\AssociatedPositionsGroupAccessor.cs" />
     <Compile Include="Accessors\AssociatedPositionAccessor.cs" />
+    <Compile Include="Actors\AdvertisementAmountRestrictionIntegrityActor.cs" />
     <Compile Include="Actors\AdvertisementAmountActor.cs" />
     <Compile Include="Actors\AggregateActor.cs" />
     <Compile Include="Actors\ErmStateAggregateRootActor.cs" />

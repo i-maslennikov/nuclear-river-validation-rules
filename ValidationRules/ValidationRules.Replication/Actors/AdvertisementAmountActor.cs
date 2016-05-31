@@ -35,7 +35,8 @@ namespace NuClear.ValidationRules.Replication.Actors
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).First().Id;
+            // todo: привести в соответствие с созданием новой версии
+            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0;
 
             IReadOnlyCollection<Version.ValidationResult> sourceObjects;
             using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
