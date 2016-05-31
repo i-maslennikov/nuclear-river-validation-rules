@@ -71,7 +71,9 @@
     <Compile Include="Actors\AdvertisementAmountRestrictionIntegrityActor.cs" />
     <Compile Include="Actors\AdvertisementAmountActor.cs" />
     <Compile Include="Actors\AggregateActor.cs" />
-    <Compile Include="Actors\RefereceCurrentPriceListActor.cs" />
+    <Compile Include="Actors\OrderPositionCorrespontToInactivePositionActor.cs" />
+    <Compile Include="Actors\OrderPositionDoesntCorrespontToActualPriceActor.cs" />
+    <Compile Include="Actors\OrderPositionsDoesntCorrespontToActualPriceActor.cs" />
     <Compile Include="Actors\ErmStateAggregateRootActor.cs" />
     <Compile Include="Actors\IncrementStateActor.cs" />
     <Compile Include="Actors\RulesetAggregateRootActor.cs" />

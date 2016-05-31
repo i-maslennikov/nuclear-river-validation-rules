@@ -103,6 +103,7 @@ create table PriceAggregate.OrderPricePosition(
 	PriceId bigint NULL
 )
 create index IX_OrderPricePosition_OrderId ON PriceAggregate.OrderPricePosition (OrderId)
+create index IX_OrderPricePosition_PriceId ON PriceAggregate.OrderPricePosition (PriceId)
 go
 
 -- period aggregate
@@ -110,6 +111,7 @@ create table PriceAggregate.Period(
     OrganizationUnitId bigint NOT NULL,
     [Start] datetime2(2) NOT NULL,
     [End] datetime2(2) NOT NULL,
+	constraint PK_Period primary key (OrganizationUnitId, [Start])
 )
 go
 
@@ -118,6 +120,8 @@ create table PriceAggregate.OrderPeriod(
     OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
 )
+create index IX_OrderPeriod_OrderId ON PriceAggregate.OrderPeriod (OrderId)
+create index IX_OrderPeriod_OrganizationUnitId_Start ON PriceAggregate.OrderPeriod (OrganizationUnitId, Start)
 go
 
 create table PriceAggregate.PricePeriod(
@@ -125,6 +129,8 @@ create table PriceAggregate.PricePeriod(
     OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
 )
+create index IX_PricePeriod_PriceId ON PriceAggregate.PricePeriod (PriceId)
+create index IX_PricePeriod_OrganizationUnitId_Start ON PriceAggregate.PricePeriod (OrganizationUnitId, Start)
 go
 
 -- position aggregate
