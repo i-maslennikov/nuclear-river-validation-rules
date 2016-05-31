@@ -10,6 +10,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
             public static class Erm
             {
                 private const int RulesetDraftPriority = 0;
+                private const int OrderStateArchive = 6;
 
                 public static FindSpecification<AssociatedPosition> AssociatedPositions()
                 {
@@ -38,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
 
                 public static FindSpecification<Order> Orders()
                 {
-                    return new FindSpecification<Order>(x => x.IsActive && !x.IsDeleted);
+                    return new FindSpecification<Order>(x => x.IsActive && !x.IsDeleted && x.WorkflowStepId != OrderStateArchive);
                 }
 
                 public static FindSpecification<OrderPosition> OrderPositions()
