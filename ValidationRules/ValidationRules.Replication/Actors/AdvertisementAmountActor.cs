@@ -16,6 +16,12 @@ namespace NuClear.ValidationRules.Replication.Actors
 {
     public sealed class AdvertisementAmountActor : IActor
     {
+        // todo: даже эта проверка может быть разделена на две схожие:
+        // проверка на минимальное и проверка на максимальное количество рекламы.
+        // в чём разница? по первой менее критичная ошибка (warning в режиме единичной проверки в erm),
+        // заказ с такой ошибкой может быть одобрен.
+        // а вот заказ с позицией, превышающей лимит - одобрен быть не может.
+
         private const int MessageTypeId = 1;
 
         private readonly IQuery _query;
