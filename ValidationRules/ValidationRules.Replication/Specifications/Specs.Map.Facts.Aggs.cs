@@ -160,12 +160,14 @@ namespace NuClear.ValidationRules.Replication.Specifications
                         = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPricePosition>>(
                             q => from order in q.For<Facts::Order>()
                                  join orderPosition in q.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                                 join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                                 from pricePosition in q.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
+                                 from position in q.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId).DefaultIfEmpty()
                                  select new Aggregates::OrderPricePosition
-                                     {
-                                         OrderId = order.Id,
-                                         OrderPositionId = orderPosition.Id,
-                                         PriceId = pricePosition.PriceId
+                                 {
+                                    OrderId = order.Id,
+                                    OrderPositionId = orderPosition.Id,
+                                    PositionName = position.Name,
+                                    PriceId = pricePosition.PriceId
                                  });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Position>> Positions

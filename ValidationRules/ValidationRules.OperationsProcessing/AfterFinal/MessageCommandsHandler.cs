@@ -22,14 +22,22 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly CreateNewVersionActor _createNewVersionActor;
         private readonly AdvertisementAmountActor _advertisementAmountActor;
         private readonly AdvertisementAmountRestrictionIntegrityActor _restrictionIntegrityActor;
+        private readonly RefereceCurrentPriceListActor _refereceCurrentPriceListActor;
 
-        public MessageCommandsHandler(ITelemetryPublisher telemetryPublisher, ITracer tracer, CreateNewVersionActor createNewVersionActor, AdvertisementAmountActor advertisementAmountActor, AdvertisementAmountRestrictionIntegrityActor restrictionIntegrityActor)
+        public MessageCommandsHandler(
+            ITelemetryPublisher telemetryPublisher,
+            ITracer tracer,
+            CreateNewVersionActor createNewVersionActor,
+            AdvertisementAmountActor advertisementAmountActor,
+            AdvertisementAmountRestrictionIntegrityActor restrictionIntegrityActor,
+            RefereceCurrentPriceListActor refereceCurrentPriceListActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
             _createNewVersionActor = createNewVersionActor;
             _advertisementAmountActor = advertisementAmountActor;
             _restrictionIntegrityActor = restrictionIntegrityActor;
+            _refereceCurrentPriceListActor = refereceCurrentPriceListActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -65,6 +73,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 // Думаю, пока достаточно указывать вызваемые акторы явно, о фабриках подумаем позже.
                 _advertisementAmountActor.ExecuteCommands(commands);
                 _restrictionIntegrityActor.ExecuteCommands(commands);
+                _refereceCurrentPriceListActor.ExecuteCommands(commands);
 
                 // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
                 // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.

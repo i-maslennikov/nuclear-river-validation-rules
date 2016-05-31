@@ -99,7 +99,8 @@ go
 create table PriceAggregate.OrderPricePosition(
     OrderId bigint NOT NULL,
 	OrderPositionId bigint NOT NULL,
-	PriceId bigint NOT NULL
+	PositionName nvarchar(max) NULL,
+	PriceId bigint NULL
 )
 create index IX_OrderPricePosition_OrderId ON PriceAggregate.OrderPricePosition (OrderId)
 go
