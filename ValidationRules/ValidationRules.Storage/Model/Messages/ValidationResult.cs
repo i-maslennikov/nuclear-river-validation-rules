@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public long VersionId { get; set; }
 
             public int MessageType { get; set; }
-            public XElement MessageParams { get; set; }
+            public XDocument MessageParams { get; set; }
             public int Result { get; set; }
 
             public long OrderId { get; set; }

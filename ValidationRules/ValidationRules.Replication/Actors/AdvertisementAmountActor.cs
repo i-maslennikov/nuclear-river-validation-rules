@@ -94,18 +94,18 @@ namespace NuClear.ValidationRules.Replication.Actors
                                   {
                                       MessageType = MessageTypeId,
                                       MessageParams =
-                                          new XElement("empty",
-                                                       new XAttribute("min", voilation.Min),
-                                                       new XAttribute("max", voilation.Max),
-                                                       new XAttribute("count", voilation.Count),
-                                                       new XAttribute("name", position.Name)),
+                                          new XDocument(new XElement("empty",
+                                                                     new XAttribute("min", voilation.Min),
+                                                                     new XAttribute("max", voilation.Max),
+                                                                     new XAttribute("count", voilation.Count),
+                                                                     new XAttribute("name", position.Name))),
                                       OrderId = order.OrderId,
                                       PeriodStart = voilation.Key.Start,
                                       PeriodEnd = voilation.Key.End,
                                       OrganizationUnitId = voilation.Key.OrganizationUnitId,
                                       Result = 1,
                                       VersionId = version
-                              };
+                                  };
 
             return ruleResults;
         }
