@@ -22,7 +22,7 @@ create table Messages.ValidationResult(
     VersionId bigint NOT NULL,
 
     MessageType int NOT NULL,
-    MessageParams xml NULL,
+    MessageParams xml NOT NULL,
     Result int NOT NULL,
 
     OrderId bigint NOT NULL,
