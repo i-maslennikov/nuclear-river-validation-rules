@@ -1,5 +1,7 @@
-﻿using LinqToDB.DataProvider.SqlServer;
+﻿using LinqToDB;
+using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
+using LinqToDB.SqlQuery;
 
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
@@ -52,6 +54,10 @@ namespace NuClear.CustomerIntelligence.Storage
                 config.Entity<FirmForecast>().HasSchemaName(BitSchema)
                       .Property(x => x.ProjectId).IsPrimaryKey()
                       .Property(x => x.FirmId).IsPrimaryKey();
+
+                schema.SetDataType(typeof(decimal), new SqlDataType(DataType.Decimal, 19, 4));
+                schema.SetDataType(typeof(decimal?), new SqlDataType(DataType.Decimal, 19, 4));
+                schema.SetDataType(typeof(string), new SqlDataType(DataType.NVarChar, int.MaxValue));
 
                 return schema;
             }
