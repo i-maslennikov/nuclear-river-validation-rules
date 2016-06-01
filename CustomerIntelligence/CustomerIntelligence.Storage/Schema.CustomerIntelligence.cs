@@ -1,5 +1,7 @@
-﻿using LinqToDB.DataProvider.SqlServer;
+﻿using LinqToDB;
+using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
+using LinqToDB.SqlQuery;
 
 using NuClear.CustomerIntelligence.Storage.Model.CI;
 using NuClear.CustomerIntelligence.Storage.Model.Statistics;
@@ -57,6 +59,9 @@ namespace NuClear.CustomerIntelligence.Storage
                     .HasPrimaryKey(x => x.FirmId)
                     .HasPrimaryKey(x => x.CategoryId);
 
+                schema.SetDataType(typeof(decimal), new SqlDataType(DataType.Decimal, 19, 4));
+                schema.SetDataType(typeof(decimal?), new SqlDataType(DataType.Decimal, 19, 4));
+                schema.SetDataType(typeof(string), new SqlDataType(DataType.NVarChar, int.MaxValue));
 
                 return schema;
             }
