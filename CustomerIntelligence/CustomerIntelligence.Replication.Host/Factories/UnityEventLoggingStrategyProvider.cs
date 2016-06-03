@@ -17,13 +17,13 @@ using NuClear.Telemetry;
 
 namespace NuClear.CustomerIntelligence.Replication.Host.Factories
 {
-    public sealed class EventLoggingStrategyProvider : IEventLoggingStrategyProvider
+    public sealed class UnityEventLoggingStrategyProvider : IEventLoggingStrategyProvider
     {
         private readonly IUnityContainer _unityContainer;
         private readonly IServiceBusSettingsFactory _settingsFactory;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
-        public EventLoggingStrategyProvider(IUnityContainer unityContainer, IServiceBusSettingsFactory settingsFactory, ITelemetryPublisher telemetryPublisher)
+        public UnityEventLoggingStrategyProvider(IUnityContainer unityContainer, IServiceBusSettingsFactory settingsFactory, ITelemetryPublisher telemetryPublisher)
         {
             _unityContainer = unityContainer;
             _settingsFactory = settingsFactory;

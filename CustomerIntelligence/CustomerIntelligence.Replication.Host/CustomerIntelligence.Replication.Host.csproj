@@ -299,7 +299,7 @@
     <Compile Include="DI\ReplicationHostAssembly.cs" />
     <Compile Include="DI\ReplicationRoot.cs" />
     <Compile Include="DI\UnityContainerExtensions.cs" />
-    <Compile Include="Factories\EventLoggingStrategyProvider.cs" />
+    <Compile Include="Factories\UnityEventLoggingStrategyProvider.cs" />
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Receiver\MessageFlowReceiverResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Transformer\PrimaryMessageTransformerResolveStrategy.cs" />

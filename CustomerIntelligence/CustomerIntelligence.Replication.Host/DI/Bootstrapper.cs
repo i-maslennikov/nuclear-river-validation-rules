@@ -206,7 +206,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
             // final
             container.RegisterTypeWithDependencies(typeof(AggregateCommandsHandler), Lifetime.PerResolve, null);
 
-            container.RegisterType<IEventLoggingStrategyProvider, EventLoggingStrategyProvider>()
+            container.RegisterType<IEventLoggingStrategyProvider, UnityEventLoggingStrategyProvider>()
                      .RegisterType<IEvent2BrokeredMessageConverter<IEvent>, Event2BrokeredMessageConverter>()
                      .RegisterType<IEventLogger, EventLogger>()
                      .RegisterType<IServiceBusMessageSender, ServiceBusMessageSender>();
