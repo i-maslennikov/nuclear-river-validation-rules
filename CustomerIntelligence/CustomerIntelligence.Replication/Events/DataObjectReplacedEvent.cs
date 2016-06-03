@@ -11,16 +11,16 @@ namespace NuClear.CustomerIntelligence.Replication.Events
         {
         }
 
-        public DataObjectReplacedEvent(Type dataObjectType, long dataObjectId, DateTime eventTime)
+        public DataObjectReplacedEvent(Type dataObjectType, long dataObjectId, DateTime eventHappenedTime)
         {
             DataObjectType = dataObjectType;
             DataObjectId = dataObjectId;
-            Time = eventTime;
+            HappenedTime = eventHappenedTime;
         }
 
         public Type DataObjectType { get; }
         public long DataObjectId { get; }
-        public DateTime Time { get; }
+        public DateTime HappenedTime { get; }
 
         public override bool Equals(object obj)
         {
