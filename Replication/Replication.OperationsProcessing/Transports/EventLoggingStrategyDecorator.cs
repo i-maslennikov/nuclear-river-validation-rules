@@ -22,7 +22,7 @@ namespace NuClear.Replication.OperationsProcessing.Transports
 
         public bool TryLog(IReadOnlyCollection<TEvent> events, out string report)
         {
-            using (Probe.Create("Send events"))
+            using (Probe.Create("Log events"))
             {
                 var flowEvents = events.Where(_filter).ToArray();
                 _reportMessageCount.Invoke(flowEvents.Length);
