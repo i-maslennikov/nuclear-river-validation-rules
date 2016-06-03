@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.OperationsLogging.API;
@@ -7,26 +6,29 @@ using NuClear.Telemetry.Probing;
 
 namespace NuClear.Replication.OperationsProcessing.Transports
 {
-    public sealed class EventLoggingStrategyDecorator<TEvent> : IEventLoggingStrategy<TEvent>
+    public class EventLoggingStrategyDecorator<TEvent> : IEventLoggingStrategy<TEvent>
     {
         private readonly IEventLoggingStrategy<TEvent> _strategy;
-        private readonly Func<TEvent, bool> _filter;
-        private readonly Action<long> _reportMessageCount;
+        private readonly IFlowAspect<TEvent> _flowAspect;
 
-        public EventLoggingStrategyDecorator(IEventLoggingStrategy<TEvent> strategy, Func<TEvent, bool> filter, Action<long> reportMessageCount)
+        public EventLoggingStrategyDecorator(IEventLoggingStrategy<TEvent> strategy, IFlowAspect<TEvent> flowAspect)
         {
             _strategy = strategy;
-            _filter = filter;
-            _reportMessageCount = reportMessageCount;
+            _flowAspect = flowAspect;
         }
 
         public bool TryLog(IReadOnlyCollection<TEvent> events, out string report)
         {
             using (Probe.Create("Log events"))
             {
-                var flowEvents = events.Where(_filter).ToArray();
-                _reportMessageCount.Invoke(flowEvents.Length);
-                return _strategy.TryLog(flowEvents, out report);
+                var flowEvents = events.Where(_flowAspect.ShouldEventBeLogged).ToArray();
+                if (_strategy.TryLog(flowEvents, out report))
+                {
+                    _flowAspect.ReportMessageLoggedCount(flowEvents.Length);
+                    return true;
+                }
+
+                return false;
             }
         }
 

@@ -208,6 +208,7 @@
     <Compile Include="Transports\CorporateBus\CorporateBusOperationsReceiver.cs" />
     <Compile Include="Transports\IEventDispatcher.cs" />
     <Compile Include="Transports\IEventSender.cs" />
+    <Compile Include="Transports\IFlowAspect.cs" />
     <Compile Include="Transports\IXmlEventSerializer.cs" />
     <Compile Include="Transports\ServiceBus\BrokeredMessage2EventMessageTransformer.cs" />
     <Compile Include="EventMessage.cs" />

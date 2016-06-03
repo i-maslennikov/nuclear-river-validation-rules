@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Practices.Unity;
@@ -21,20 +20,23 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Factories
     {
         private readonly IUnityContainer _unityContainer;
         private readonly IServiceBusSettingsFactory _settingsFactory;
-        private readonly ITelemetryPublisher _telemetryPublisher;
 
-        public UnityEventLoggingStrategyProvider(IUnityContainer unityContainer, IServiceBusSettingsFactory settingsFactory, ITelemetryPublisher telemetryPublisher)
+        public UnityEventLoggingStrategyProvider(IUnityContainer unityContainer, IServiceBusSettingsFactory settingsFactory)
         {
             _unityContainer = unityContainer;
             _settingsFactory = settingsFactory;
-            _telemetryPublisher = telemetryPublisher;
         }
 
         public IReadOnlyCollection<IEventLoggingStrategy<TEvent>> Get<TEvent>(IReadOnlyCollection<TEvent> events)
         {
-            var flows = new IMessageFlow[] { CommonEventsFlow.Instance, StatisticsEventsFlow.Instance };
-            return flows.Select(flow => new { Flow = flow, Strategy = ResolveServiceBusStrategy<TEvent>(flow) })
-                        .Select(x => DecorateStrategy(x.Strategy, x.Flow))
+            var flows = new Dictionary<IMessageFlow, IFlowAspect<TEvent>>
+                {
+                    { CommonEventsFlow.Instance, _unityContainer.Resolve<CommonEventsFlowAspect<TEvent>>() },
+                    { StatisticsEventsFlow.Instance, _unityContainer.Resolve<StatisticsFlowAspect<TEvent>>() }
+                };
+
+            return flows.Select(flow => new { Strategy = ResolveServiceBusStrategy<TEvent>(flow.Key), Aspect = flow.Value })
+                        .Select(x => DecorateStrategy(x.Strategy, x.Aspect))
                         .ToArray();
         }
 
@@ -45,46 +47,44 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Factories
             return strategy;
         }
 
-        private IEventLoggingStrategy<TEvent> DecorateStrategy<TEvent>(IEventLoggingStrategy<TEvent> strategy, IMessageFlow flow)
+        private IEventLoggingStrategy<TEvent> DecorateStrategy<TEvent>(IEventLoggingStrategy<TEvent> strategy, IFlowAspect<TEvent> flow)
         {
-            return new EventLoggingStrategyDecorator<TEvent>(strategy, CreateFilter<TEvent>(flow), CreateReporter(flow));
+            return new EventLoggingStrategyDecorator<TEvent>(strategy, flow);
         }
 
-        private Func<TEvent, bool> CreateFilter<TEvent>(IMessageFlow flow)
+        private class CommonEventsFlowAspect<TEvent> : IFlowAspect<TEvent>
         {
-            return e => CheckIfEventMatchesFlow(e, flow);
-        }
+            private readonly ITelemetryPublisher _telemetryPublisher;
 
-        private Action<long> CreateReporter(IMessageFlow flow)
-        {
-            if (Equals(flow, CommonEventsFlow.Instance))
+            public CommonEventsFlowAspect(ITelemetryPublisher telemetryPublisher)
             {
-                return count => _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(count);
+                _telemetryPublisher = telemetryPublisher;
             }
 
-            if (Equals(flow, StatisticsEventsFlow.Instance))
-            {
-                return count => _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(count);
-            }
-
-            throw new ArgumentException($"Unsupported flow {flow}", nameof(flow));
-        }
-
-        public bool CheckIfEventMatchesFlow<TEvent>(TEvent @event, IMessageFlow flow)
-        {
-            if (Equals(flow, StatisticsEventsFlow.Instance))
-            {
-                return @event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>;
-            }
-
-            if (Equals(flow, CommonEventsFlow.Instance))
-            {
+            public bool ShouldEventBeLogged(TEvent @event)
                 // Инвертировать условие для StatisticsEventsFlow не лучшая идея в общем случае,
                 // но лучшее решение для того, чтобы гарантировать сохранение логики (в которой, кажется, есть ошибка)
-                return !(@event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>);
+                => !(@event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>);
+
+            public void ReportMessageLoggedCount(long count)
+                => _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(count);
+
+        }
+
+        private class StatisticsFlowAspect<TEvent> : IFlowAspect<TEvent>
+        {
+            private readonly ITelemetryPublisher _telemetryPublisher;
+
+            public StatisticsFlowAspect(ITelemetryPublisher telemetryPublisher)
+            {
+                _telemetryPublisher = telemetryPublisher;
             }
 
-            throw new ArgumentException($"Unsupported flow {flow}", nameof(flow));
+            public bool ShouldEventBeLogged(TEvent @event)
+                => @event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>;
+
+            public void ReportMessageLoggedCount(long count)
+                => _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(count);
         }
     }
 }
