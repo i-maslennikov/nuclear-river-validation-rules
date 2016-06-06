@@ -285,5 +285,30 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::Project { Id = 1, OrganizationUnitId = 1 }
                 );
 
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement IgnoredPrice
+        => ArrangeMetadataElement.Config
+            .Name(nameof(IgnoredPrice))
+            .Erm(
+                new Erm::Price { Id = 1, IsActive = false, IsDeleted = false, IsPublished = true },
+                new Erm::Price { Id = 2, IsActive = true, IsDeleted = true, IsPublished = true },
+                new Erm::Price { Id = 3, IsActive = true, IsDeleted = false, IsPublished = false }
+                )
+            .Fact(
+                );
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement ReplicatedPrice
+        => ArrangeMetadataElement.Config
+            .Name(nameof(ReplicatedPrice))
+            .Erm(
+                new Erm::Price { Id = 2, IsActive = true, IsDeleted = false, IsPublished = true, OrganizationUnitId = 1 },
+                new Erm::Project { OrganizationUnitId = 1, IsActive = true }
+                )
+            .Fact(
+                new Facts::Price { Id = 2 },
+                new Facts::Project { OrganizationUnitId = 1 }
+                );
+
     }
 }

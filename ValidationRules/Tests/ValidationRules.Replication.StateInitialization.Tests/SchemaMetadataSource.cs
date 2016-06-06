@@ -6,7 +6,6 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.ValidationRules.Replication.StateInitialization.Tests.Identitites.Connections;
 using NuClear.ValidationRules.Storage;
-using NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -15,20 +14,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static readonly SchemaMetadataElement Erm = SchemaMetadataElement.Config
             .For(ContextName.Erm)
             .HasConnectionString<ErmTestConnectionStringIdentity>()
-            .HasSchema(Schema.Erm)
-            .HasEntitiesFromNamespace(typeof(Order).Namespace);
+            .HasSchema(Schema.Erm);
 
         private static readonly SchemaMetadataElement Facts = SchemaMetadataElement.Config
             .For(ContextName.Facts)
             .HasConnectionString<FactsTestConnectionStringIdentity>()
-            .HasSchema(Schema.Facts)
-            .HasEntitiesFromNamespace(typeof(Storage.Model.Facts.Order).Namespace);
+            .HasSchema(Schema.Facts);
 
         private static readonly SchemaMetadataElement CustomerIntelligence = SchemaMetadataElement.Config
             .For(ContextName.Aggregates)
             .HasConnectionString<AggregatesTestConnectionStringIdentity>()
-            .HasSchema(Schema.Aggregates)
-            .HasEntitiesFromNamespace(typeof(Storage.Model.Aggregates.Order).Namespace);
+            .HasSchema(Schema.Aggregates);
 
         public SchemaMetadataSource()
         {
