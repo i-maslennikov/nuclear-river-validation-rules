@@ -241,7 +241,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement TestFirmLead =>
             ArrangeMetadataElement.Config
-            .Name(nameof(TestFirmAddressCount))
+            .Name(nameof(TestFirmLead))
             .Fact(
                 new Facts::Lead { Id = 1, FirmId = 2, OwnerId = 27, Type = LeadType.Hot },
                 new Facts::Lead { Id = 2, FirmId = 2, OwnerId = 3, Type = LeadType.Hot }
