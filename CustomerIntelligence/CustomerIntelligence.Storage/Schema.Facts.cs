@@ -56,6 +56,10 @@ namespace NuClear.CustomerIntelligence.Storage
                       .Property(x => x.ProjectId).IsPrimaryKey()
                       .Property(x => x.FirmId).IsPrimaryKey();
 
+                schema.SetDataType(typeof(decimal), new SqlDataType(DataType.Decimal, 19, 4));
+                schema.SetDataType(typeof(decimal?), new SqlDataType(DataType.Decimal, 19, 4));
+                schema.SetDataType(typeof(string), new SqlDataType(DataType.NVarChar, int.MaxValue));
+
                 return schema;
             }
         }
