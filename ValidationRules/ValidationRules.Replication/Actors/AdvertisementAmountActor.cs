@@ -64,13 +64,12 @@ namespace NuClear.ValidationRules.Replication.Actors
             // у CategoryCode есть имя, которое даже не хранится в erm, а вычисляется как FirstOf<Position>
             // это приводит к group by и агрегации (в erm делается то же самое, но это не оправдание)
 
-            var restrictionGrid = from position in query.For<Position>().Where(x => x.IsControlledByAmount)
-                                  join restriction in query.For<AdvertisementAmountRestriction>().Where(x => x.Min > 0 && x.Max < int.MaxValue) on position.Id equals restriction.PositionId
+            var restrictionGrid = from restriction in query.For<AdvertisementAmountRestriction>()
                                   join price in query.For<Price>() on restriction.PriceId equals price.Id
                                   join pp in query.For<PricePeriod>() on price.Id equals pp.PriceId
                                   join period in query.For<Period>() on new { pp.Start, pp.ProjectId } equals new { period.Start, period.ProjectId }
-                                  group new { period.Start, period.End, period.ProjectId, position.CategoryCode, restriction.Min, restriction.Max, position.Name }
-                                      by new { period.Start, period.End, period.ProjectId, position.CategoryCode } into groups
+                                  group new { period.Start, period.End, period.ProjectId, restriction.CategoryCode, restriction.Min, restriction.Max, restriction.CategoryName }
+                                      by new { period.Start, period.End, period.ProjectId, restriction.CategoryCode } into groups
                                   select new { groups.Key, Min = groups.Min(x => x.Min), Max = groups.Max(x => x.Max) };
 
             var saleGrid = from position in query.For<Position>().Where(x => x.IsControlledByAmount)

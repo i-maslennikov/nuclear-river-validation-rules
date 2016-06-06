@@ -57,15 +57,14 @@ namespace NuClear.ValidationRules.Replication.Actors
             // todo: Заказы тут вообще не при делах.
             // Нужно доработать схему, чтобы как минимум поле OrderId стало не обязательным, а как максимум появилась система тегов.
 
-            var ruleResults = from position in query.For<Position>().Where(x => x.IsControlledByAmount)
-                              join restriction in query.For<AdvertisementAmountRestriction>().Where(x => x.MissingMinimalRestriction) on position.Id equals restriction.PositionId
+            var ruleResults = from restriction in query.For<AdvertisementAmountRestriction>().Where(x => x.MissingMinimalRestriction)
                               join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
                               join period in query.For<Period>() on new { pp.Start, pp.ProjectId } equals new { period.Start, period.ProjectId }
                               join op in query.For<OrderPeriod>() on new { pp.Start, pp.ProjectId } equals new { op.Start, op.ProjectId }
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
-                                      MessageParams = new XDocument(new XElement("empty", new XAttribute("name", position.Name))),
+                                      MessageParams = new XDocument(new XElement("empty", new XAttribute("name", restriction.CategoryName))),
                                       OrderId = op.OrderId,
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,

@@ -58,13 +58,17 @@ namespace NuClear.ValidationRules.Replication.Specifications
                         = new MapSpecification<IQuery, IQueryable<Aggregates::AdvertisementAmountRestriction>>(
                             q => from pricePosition in q.For<Facts::PricePosition>()
                                  join position in q.For<Facts::Position>().Where(x => x.IsControlledByAmount) on pricePosition.PositionId equals position.Id
+                                 group new { pricePosition.PriceId, position.CategoryCode, position.Name, pricePosition.MinAdvertisementAmount, pricePosition.MaxAdvertisementAmount }
+                                     by new { pricePosition.PriceId, position.CategoryCode }
+                                     into groups
                                  select new Aggregates::AdvertisementAmountRestriction
                                      {
-                                         PriceId = pricePosition.PriceId,
-                                         PositionId = pricePosition.PositionId,
-                                         Max = pricePosition.MaxAdvertisementAmount ?? int.MaxValue,
-                                         Min = pricePosition.MinAdvertisementAmount ?? 0,
-                                         MissingMinimalRestriction = pricePosition.MinAdvertisementAmount == null
+                                         PriceId = groups.Key.PriceId,
+                                         CategoryCode = groups.Key.CategoryCode,
+                                         CategoryName = groups.Select(x => x.Name).OrderBy(x => x.Length).FirstOrDefault(),
+                                         Max = groups.Min(x => x.MaxAdvertisementAmount) ?? int.MaxValue,
+                                         Min = groups.Max(x => x.MinAdvertisementAmount) ?? 0,
+                                         MissingMinimalRestriction = groups.Any(x => x.MinAdvertisementAmount == null)
                                      });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>> Rulesets

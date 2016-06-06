@@ -51,7 +51,8 @@ go
 
 create table PriceAggregate.AdvertisementAmountRestriction(
     PriceId bigint NOT NULL,
-    PositionId bigint NOT NULL,
+    CategoryCode bigint NOT NULL,
+    CategoryName nvarchar(max) NOT NULL,
     [Min] int NOT NULL,
     [Max] int NOT NULL,
     MissingMinimalRestriction bit NOT NULL,
