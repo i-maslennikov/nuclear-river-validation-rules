@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                 var findSpecification = periodKeys.Aggregate(new FindSpecification<Period>(x => true),
                                                              (spec, periodKey) =>
                                                              spec |
-                                                             new FindSpecification<Period>(x => x.OrganizationUnitId == periodKey.OrganizationUnitId && x.Start == periodKey.Start));
+                                                             new FindSpecification<Period>(x => x.ProjectId == periodKey.ProjectId && x.Start == periodKey.Start));
                 return findSpecification;
             }
         }

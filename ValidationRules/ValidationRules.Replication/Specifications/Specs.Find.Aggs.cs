@@ -44,16 +44,16 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 public static FindSpecification<Aggregates::OrderPeriod> OrderPeriods(IReadOnlyCollection<PeriodKey> aggregateIds)
                 {
                     var result = new FindSpecification<Aggregates::OrderPeriod>(x => false);
-                    result = aggregateIds.GroupBy(x => x.OrganizationUnitId, x => x.Start)
-                                         .Aggregate(result, (current, group) => current | (new FindSpecification<Aggregates.OrderPeriod>(x => x.OrganizationUnitId == group.Key) & new FindSpecification<Aggregates.OrderPeriod>(x => group.Contains(x.Start))));
+                    result = aggregateIds.GroupBy(x => x.ProjectId, x => x.Start)
+                                         .Aggregate(result, (current, group) => current | (new FindSpecification<Aggregates.OrderPeriod>(x => x.ProjectId == group.Key) & new FindSpecification<Aggregates.OrderPeriod>(x => group.Contains(x.Start))));
                     return result;
                 }
 
                 public static FindSpecification<Aggregates::PricePeriod> PricePeriods(IReadOnlyCollection<PeriodKey> aggregateIds)
                 {
                     var result = new FindSpecification<Aggregates::PricePeriod>(x => false);
-                    result = aggregateIds.GroupBy(x => x.OrganizationUnitId, x => x.Start)
-                                         .Aggregate(result, (current, group) => current | (new FindSpecification<Aggregates.PricePeriod>(x => x.OrganizationUnitId == group.Key) & new FindSpecification<Aggregates.PricePeriod>(x => group.Contains(x.Start))));
+                    result = aggregateIds.GroupBy(x => x.ProjectId, x => x.Start)
+                                         .Aggregate(result, (current, group) => current | (new FindSpecification<Aggregates.PricePeriod>(x => x.ProjectId == group.Key) & new FindSpecification<Aggregates.PricePeriod>(x => group.Contains(x.Start))));
                     return result;
                 }
             }

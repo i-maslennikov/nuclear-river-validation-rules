@@ -10,12 +10,12 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public bool Equals(PeriodKey x, PeriodKey y)
         {
-            return x.OrganizationUnitId == y.OrganizationUnitId && x.Start == y.Start;
+            return x.ProjectId == y.ProjectId && x.Start == y.Start;
         }
 
         public int GetHashCode(PeriodKey obj)
         {
-            return obj.OrganizationUnitId.GetHashCode() ^ obj.Start.GetHashCode();
+            return obj.ProjectId.GetHashCode() ^ obj.Start.GetHashCode();
         }
     }
 }

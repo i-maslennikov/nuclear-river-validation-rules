@@ -60,7 +60,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                                                                        OrderId = x.OrderId,
                                                                        PeriodEnd = x.PeriodEnd,
                                                                        PeriodStart = x.PeriodStart,
-                                                                       OrganizationUnitId = x.OrganizationUnitId,
+                                                                       ProjectId = x.ProjectId,
                                                                        Result = x.Result
                                                                    });
             _validationResultRepository.AddRange(nextVersionResults);

@@ -18,7 +18,7 @@ go
 
 create table PriceContext.Price(
     Id bigint not null,
-    OrganizationUnitId bigint not null,
+    ProjectId bigint not null,
     BeginDate datetime2(2) not null,
     constraint PK_Price primary key (Id)
 )
@@ -80,8 +80,8 @@ go
 create table PriceContext.[Order](
     Id bigint not null,
     FirmId bigint not null,
-    DestOrganizationUnitId bigint not null,
-    SourceOrganizationUnitId bigint not null,
+    DestProjectId bigint not null,
+    SourceProjectId bigint not null,
     OwnerId bigint not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDateFact datetime2(2) not null,

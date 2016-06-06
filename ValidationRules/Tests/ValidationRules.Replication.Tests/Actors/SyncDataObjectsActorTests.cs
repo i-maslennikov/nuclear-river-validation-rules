@@ -215,7 +215,8 @@ namespace NuClear.ValidationRules.Replication.Tests.Actors
         public void ShouldInitializeOrderIfOrderCreated()
         {
             Store.Builder
-                .Has(new Storage.Model.Erm.Order { Id = 1, IsActive = true });
+                .Has(new Storage.Model.Erm.Order { Id = 1, DestOrganizationUnitId = 1, SourceOrganizationUnitId = 1, IsActive = true})
+                .Has(new Storage.Model.Erm.Project { Id = 1, OrganizationUnitId = 1, IsActive = true });
 
             Actor.Create(Store)
                  .Sync<Order>(1)
@@ -226,8 +227,9 @@ namespace NuClear.ValidationRules.Replication.Tests.Actors
         public void ShouldRecalculateOrderIfOrderUpdated()
         {
             Store.Builder
-                .Has(new Storage.Model.Erm.Order { Id = 1, IsActive = true })
-                .Has(new Order { Id = 1 });
+                .Has(new Storage.Model.Erm.Order { Id = 1, DestOrganizationUnitId = 1, SourceOrganizationUnitId = 1, IsActive = true })
+                .Has(new Order { Id = 1 })
+                .Has(new Storage.Model.Erm.Project { Id = 1, OrganizationUnitId = 1, IsActive = true });
 
             Actor.Create(Store)
                  .Sync<Order>(1)
@@ -370,7 +372,8 @@ namespace NuClear.ValidationRules.Replication.Tests.Actors
         public void ShouldInitializePriceIfPriceCreated()
         {
             Store.Builder
-                .Has(new Storage.Model.Erm.Price { Id = 4, IsActive = true, IsPublished = true });
+                .Has(new Storage.Model.Erm.Price { Id = 4, OrganizationUnitId = 1, IsActive = true, IsPublished = true })
+                .Has(new Storage.Model.Erm.Project { Id = 1, OrganizationUnitId = 1, IsActive = true });
 
             Actor.Create(Store)
                  .Sync<Price>(4)
@@ -382,7 +385,8 @@ namespace NuClear.ValidationRules.Replication.Tests.Actors
         {
             Store.Builder
                 .Has(new Storage.Model.Erm.Price { Id = 4, OrganizationUnitId = 1, IsActive = true, IsPublished = true })
-                .Has(new Price { Id = 4, OrganizationUnitId = 2 });
+                .Has(new Storage.Model.Erm.Project { Id = 1, OrganizationUnitId = 1, IsActive = true })
+                .Has(new Price { Id = 4, ProjectId = 2 });
 
             Actor.Create(Store)
                  .Sync<Price>(4)

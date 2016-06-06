@@ -60,8 +60,8 @@ namespace NuClear.ValidationRules.Replication.Actors
             var ruleResults = from position in query.For<Position>().Where(x => x.IsControlledByAmount)
                               join restriction in query.For<AdvertisementAmountRestriction>().Where(x => x.MissingMinimalRestriction) on position.Id equals restriction.PositionId
                               join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
-                              join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                              join op in query.For<OrderPeriod>() on new { pp.Start, pp.OrganizationUnitId } equals new { op.Start, op.OrganizationUnitId }
+                              join period in query.For<Period>() on new { pp.Start, pp.ProjectId } equals new { period.Start, period.ProjectId }
+                              join op in query.For<OrderPeriod>() on new { pp.Start, pp.ProjectId } equals new { op.Start, op.ProjectId }
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
@@ -69,7 +69,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                                       OrderId = op.OrderId,
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
-                                      OrganizationUnitId = pp.OrganizationUnitId,
+                                      ProjectId = pp.ProjectId,
                                       Result = 1,
                                       VersionId = version
                                   };

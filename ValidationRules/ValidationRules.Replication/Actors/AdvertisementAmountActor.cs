@@ -68,18 +68,18 @@ namespace NuClear.ValidationRules.Replication.Actors
                                   join restriction in query.For<AdvertisementAmountRestriction>().Where(x => x.Min > 0 && x.Max < int.MaxValue) on position.Id equals restriction.PositionId
                                   join price in query.For<Price>() on restriction.PriceId equals price.Id
                                   join pp in query.For<PricePeriod>() on price.Id equals pp.PriceId
-                                  join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                                  group new { period.Start, period.End, period.OrganizationUnitId, position.CategoryCode, restriction.Min, restriction.Max, position.Name }
-                                      by new { period.Start, period.End, period.OrganizationUnitId, position.CategoryCode } into groups
+                                  join period in query.For<Period>() on new { pp.Start, pp.ProjectId } equals new { period.Start, period.ProjectId }
+                                  group new { period.Start, period.End, period.ProjectId, position.CategoryCode, restriction.Min, restriction.Max, position.Name }
+                                      by new { period.Start, period.End, period.ProjectId, position.CategoryCode } into groups
                                   select new { groups.Key, Min = groups.Min(x => x.Min), Max = groups.Max(x => x.Max) };
 
             var saleGrid = from position in query.For<Position>().Where(x => x.IsControlledByAmount)
                            join orderPosition in query.For<OrderPosition>() on position.Id equals orderPosition.ItemPositionId
                            join order in query.For<Order>() on orderPosition.OrderId equals order.Id
                            join op in query.For<OrderPeriod>() on order.Id equals op.OrderId
-                           join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                           group new { period.Start, period.End, period.OrganizationUnitId, position.CategoryCode }
-                               by new { period.Start, period.End, period.OrganizationUnitId, position.CategoryCode } into groups
+                           join period in query.For<Period>() on new { op.Start, op.ProjectId } equals new { period.Start, period.ProjectId }
+                           group new { period.Start, period.End, period.ProjectId, position.CategoryCode }
+                               by new { period.Start, period.End, period.ProjectId, position.CategoryCode } into groups
                            select new { groups.Key, Count = groups.Count() };
 
             var ruleViolations = from restriction in restrictionGrid
@@ -91,8 +91,8 @@ namespace NuClear.ValidationRules.Replication.Actors
                                   join orderPosition in query.For<OrderPosition>() on position.Id equals orderPosition.ItemPositionId
                                   join order in query.For<Order>() on orderPosition.OrderId equals order.Id
                                   join op in query.For<OrderPeriod>() on order.Id equals op.OrderId
-                                  join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                                  select new { Key = new { period.Start, period.End, period.OrganizationUnitId, position.CategoryCode }, OrderId = order.Id };
+                                  join period in query.For<Period>() on new { op.Start, op.ProjectId } equals new { period.Start, period.ProjectId }
+                                  select new { Key = new { period.Start, period.End, period.ProjectId, position.CategoryCode }, OrderId = order.Id };
 
             var ruleResults = from voilation in ruleViolations
                               from order in orderCategories.Where(x => x.Key == voilation.Key).DefaultIfEmpty()
@@ -109,7 +109,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                                       OrderId = order.OrderId,
                                       PeriodStart = voilation.Key.Start,
                                       PeriodEnd = voilation.Key.End,
-                                      OrganizationUnitId = voilation.Key.OrganizationUnitId,
+                                      ProjectId = voilation.Key.ProjectId,
                                       Result = 1,
                                       VersionId = version
                                   };

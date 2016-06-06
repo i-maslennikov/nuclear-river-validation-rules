@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
         private const string State = "state";
 
         private const string PeriodKey = "periodKey";
-        private const string OrganizationUnitId = "organizationUnitId";
+        private const string ProjectId = "projectId";
         private const string Start = "start";
 
         private static readonly IReadOnlyDictionary<string, Type> SimpleTypes =
@@ -87,7 +87,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
                             ResolveDataObjectType(relatedDataObjectType.Value),
                             new PeriodKey
                                 {
-                                    OrganizationUnitId = (long)statisticsKey.Attribute(OrganizationUnitId),
+                                    ProjectId = (long)statisticsKey.Attribute(ProjectId),
                                     Start = (DateTime)statisticsKey.Attribute(Start)
                                 });
                     }
@@ -158,7 +158,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
                                             new XElement(RelatedDataObjectType, complexOutdatedEvent.RelatedDataObjectType.FullName),
                                             new XElement(RelatedDataObjectId,
                                                          new XElement(PeriodKey,
-                                                                      new XAttribute(OrganizationUnitId, complexOutdatedEvent.RelatedDataObjectId.OrganizationUnitId),
+                                                                      new XAttribute(ProjectId, complexOutdatedEvent.RelatedDataObjectId.ProjectId),
                                                                       new XAttribute(Start, complexOutdatedEvent.RelatedDataObjectId.Start)))
                                         });
             }

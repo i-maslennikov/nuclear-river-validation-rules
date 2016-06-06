@@ -54,8 +54,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                 new Period { Start = DateTime.Parse("2011-06-01"), End = DateTime.MaxValue },
 
                                                 // Для второго отделения организации должны быть свои периоды, не влияющие на первое
-                                                new Period { Start = DateTime.Parse("2010-01-01"), End = DateTime.Parse("2010-02-01"), OrganizationUnitId = 1},
-                                                new Period { Start = DateTime.Parse("2010-02-01"), End = DateTime.MaxValue, OrganizationUnitId = 1 },
+                                                new Period { Start = DateTime.Parse("2010-01-01"), End = DateTime.Parse("2010-02-01"), ProjectId = 1},
+                                                new Period { Start = DateTime.Parse("2010-02-01"), End = DateTime.MaxValue, ProjectId = 1 },
 
                                                 new PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-01-01") },
                                                 new PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-02-01") },
@@ -65,24 +65,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                 new PricePeriod { PriceId = 2, Start = DateTime.Parse("2011-05-01") },
                                                 new PricePeriod { PriceId = 2, Start = DateTime.Parse("2011-06-01") },
 
-                                                new PricePeriod { PriceId = 3, Start = DateTime.Parse("2010-01-01"), OrganizationUnitId = 1 },
-                                                new PricePeriod { PriceId = 3, Start = DateTime.Parse("2010-02-01"), OrganizationUnitId = 1 },
+                                                new PricePeriod { PriceId = 3, Start = DateTime.Parse("2010-01-01"), ProjectId = 1 },
+                                                new PricePeriod { PriceId = 3, Start = DateTime.Parse("2010-02-01"), ProjectId = 1 },
 
                                                 new OrderPeriod { OrderId = 1, Start = DateTime.Parse("2011-02-01") },
                                                 new OrderPeriod { OrderId = 1, Start = DateTime.Parse("2011-03-01") },
 
                                                 new OrderPeriod { OrderId = 2, Start = DateTime.Parse("2011-05-01") },
 
-                                                new OrderPeriod { OrderId = 3, Start = DateTime.Parse("2010-01-01"), OrganizationUnitId = 1 }
+                                                new OrderPeriod { OrderId = 3, Start = DateTime.Parse("2010-01-01"), ProjectId = 1 }
+
                                                 )
                                      .Fact(
                                            new Storage.Model.Facts.Price { Id = 1, BeginDate = DateTime.Parse("2011-01-01") },
                                            new Storage.Model.Facts.Price { Id = 2, BeginDate = DateTime.Parse("2011-03-01") },
-                                           new Storage.Model.Facts.Price { Id = 3, OrganizationUnitId = 1, BeginDate = DateTime.Parse("2010-01-01") },
+                                           new Storage.Model.Facts.Price { Id = 3, ProjectId = 1, BeginDate = DateTime.Parse("2010-01-01") },
 
                                            new Storage.Model.Facts.Order { Id = 1, BeginDistributionDate = DateTime.Parse("2011-02-01"), EndDistributionDateFact = DateTime.Parse("2011-04-01") },
                                            new Storage.Model.Facts.Order { Id = 2, BeginDistributionDate = DateTime.Parse("2011-05-01"), EndDistributionDateFact = DateTime.Parse("2011-06-01") },
-                                           new Storage.Model.Facts.Order { Id = 3, DestOrganizationUnitId = 1, BeginDistributionDate = DateTime.Parse("2010-01-01"), EndDistributionDateFact = DateTime.Parse("2010-02-01") }
+                                           new Storage.Model.Facts.Order { Id = 3, DestProjectId = 1, BeginDistributionDate = DateTime.Parse("2010-01-01"), EndDistributionDateFact = DateTime.Parse("2010-02-01") }
                                            );
     }
 }

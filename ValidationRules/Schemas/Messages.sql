@@ -28,6 +28,6 @@ create table Messages.ValidationResult(
     OrderId bigint NOT NULL,
     PeriodStart datetime2(2) NOT NULL,
     PeriodEnd datetime2(2) NOT NULL,
-    OrganizationUnitId bigint NOT NULL,
+    ProjectId bigint NOT NULL,
 )
 go
