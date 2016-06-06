@@ -56,14 +56,16 @@ namespace NuClear.ValidationRules.Replication.Specifications
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::AdvertisementAmountRestriction>> AdvertisementAmountRestrictions
                         = new MapSpecification<IQuery, IQueryable<Aggregates::AdvertisementAmountRestriction>>(
-                            q => q.For<Facts::PricePosition>().Select(x => new Aggregates::AdvertisementAmountRestriction
-                                {
-                                    PriceId = x.PriceId,
-                                    PositionId = x.PositionId,
-                                    Max = x.MaxAdvertisementAmount ?? int.MaxValue,
-                                    Min = x.MinAdvertisementAmount ?? 0,
-                                    MissingMinimalRestriction = q.For<Facts::Position>().Single(pos => pos.Id == x.PositionId).IsControlledByAmount && x.MinAdvertisementAmount == null
-                                }));
+                            q => from pricePosition in q.For<Facts::PricePosition>()
+                                 join position in q.For<Facts::Position>().Where(x => x.IsControlledByAmount) on pricePosition.PositionId equals position.Id
+                                 select new Aggregates::AdvertisementAmountRestriction
+                                     {
+                                         PriceId = pricePosition.PriceId,
+                                         PositionId = pricePosition.PositionId,
+                                         Max = pricePosition.MaxAdvertisementAmount ?? int.MaxValue,
+                                         Min = pricePosition.MinAdvertisementAmount ?? 0,
+                                         MissingMinimalRestriction = pricePosition.MinAdvertisementAmount == null
+                                     });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>> Rulesets
                         = new MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>>(

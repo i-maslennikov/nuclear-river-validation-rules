@@ -11,33 +11,51 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     {
         // todo: по завршении работ с периодами добавить проверку связи прайса и города
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement Period
-        => ArrangeMetadataElement.Config
-        .Name(nameof(Period))
-        .Fact(
-            new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
-            new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 2, MinAdvertisementAmount = 100, MaxAdvertisementAmount = 500 },
+        private static ArrangeMetadataElement Price
+            => ArrangeMetadataElement.Config
+                .Name(nameof(Price))
+                .Fact(
+                    new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
-            // associated
-            new Facts::AssociatedPosition { PositionId = 1, ObjectBindingType = 3, AssociatedPositionsGroupId = 1, Id = 1 },
-            new Facts::AssociatedPositionsGroup { Id = 1, PricePositionId = 1},
+                    // Position без ограничений
+                    new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 2 },
+                    new Facts::Position { Id = 2, IsControlledByAmount = false },
 
-            // denied
-            new Facts::DeniedPosition { PositionId = 1, PositionDeniedId = 2, ObjectBindingType = 3, PriceId = 1, Id = 1 }
-            )
-        .Aggregate(
-            new Storage.Model.Aggregates.Price { Id = 1 },
-            new Aggregates::AdvertisementAmountRestriction { PositionId = 2, PriceId = 1, Min = 100, Max = 500 },
+                    // Position с ограничениями
+                    new Facts::PricePosition { Id = 2, PriceId = 1, PositionId = 3, MinAdvertisementAmount = 1, MaxAdvertisementAmount = 2 },
+                    new Facts::Position { Id = 3, IsControlledByAmount = true },
 
-            // associated
-            new Aggregates::PriceAssociatedPosition { PrincipalPositionId = 1 , AssociatedPositionId = 2, ObjectBindingType = 3, PriceId = 1, GroupId = 1 },
+                    // Некорректная Position с ограничениями
+                    new Facts::PricePosition { Id = 3, PriceId = 1, PositionId = 4, MinAdvertisementAmount = null, MaxAdvertisementAmount = null },
+                    new Facts::Position { Id = 4, IsControlledByAmount = true },
 
-            // denied
-            new Aggregates::PriceDeniedPosition { PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, PriceId = 1 },
+                    // associated
+                    new Facts::AssociatedPosition { PositionId = 1, ObjectBindingType = 3, AssociatedPositionsGroupId = 1, Id = 1 },
+                    new Facts::AssociatedPositionsGroup { Id = 1, PricePositionId = 1},
 
-            // сопутствующий хлам
-            new Aggregates::Period { Start = DateTime.Parse("2012-12-12"), End = DateTime.MaxValue },
-            new Aggregates::PricePeriod { PriceId = 1, Start = DateTime.Parse("2012-12-12") }
-            );
+                    // denied
+                    new Facts::DeniedPosition { PositionId = 1, PositionDeniedId = 2, ObjectBindingType = 3, PriceId = 1, Id = 1 }
+                    )
+                .Aggregate(
+                    new Aggregates::Price { Id = 1 },
+
+                    // associated
+                    new Aggregates::PriceAssociatedPosition { PrincipalPositionId = 1 , AssociatedPositionId = 2, ObjectBindingType = 3, PriceId = 1, GroupId = 1 },
+
+                    // denied
+                    new Aggregates::PriceDeniedPosition { PrincipalPositionId = 1, DeniedPositionId = 2, ObjectBindingType = 3, PriceId = 1 },
+
+                    // ограничения
+                    new Aggregates::AdvertisementAmountRestriction { PositionId = 3, PriceId = 1, Min = 1, Max = 2},
+                    new Aggregates::AdvertisementAmountRestriction { PositionId = 4, PriceId = 1, Max = 2147483647, MissingMinimalRestriction = true }, // null for max means "unlimited", null for min means error
+
+                    // сопутствующий хлам
+                    new Aggregates::Period { Start = DateTime.Parse("2012-12-12"), End = DateTime.MaxValue },
+                    new Aggregates::PricePeriod { PriceId = 1, Start = DateTime.Parse("2012-12-12") },
+
+                    new Aggregates::Position { Id = 2 },
+                    new Aggregates::Position { Id = 3, IsControlledByAmount = true },
+                    new Aggregates::Position { Id = 4, IsControlledByAmount = true }
+                    );
     }
 }

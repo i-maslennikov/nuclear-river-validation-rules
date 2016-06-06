@@ -42,22 +42,18 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         .Aggregate(
             // OrderPositionAdvertisement
             new Aggregates::OrderPosition { PackagePositionId = 2, ItemPositionId = 3, Category3Id = 10, FirmAddressId = 11 },
-            new Aggregates::AdvertisementAmountRestriction { PositionId = 2 },
 
             // OrderPosition
             new Aggregates::OrderPosition { PackagePositionId = 3, ItemPositionId = 3 },
-            new Aggregates::AdvertisementAmountRestriction { PositionId = 3 },
             new Aggregates::Position { Id = 3 },
 
             // OrderPositionAdvertisement & OrderPosition
             new Aggregates::OrderPosition { PackagePositionId = 4, ItemPositionId = 5, Category3Id = 10, FirmAddressId = 11 },
             new Aggregates::OrderPosition { PackagePositionId = 4, ItemPositionId = 4 },
-            new Aggregates::AdvertisementAmountRestriction { PositionId = 4 },
             new Aggregates::Position { Id = 4 },
 
             // OrderPositionAdvertisement & Category1
-            new Aggregates::OrderPosition { Category3Id = 3, Category1Id = 1 },
-            new Aggregates::AdvertisementAmountRestriction()
+            new Aggregates::OrderPosition { Category3Id = 3, Category1Id = 1 }
             );
 
         // ReSharper disable once UnusedMember.Local
@@ -81,14 +77,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
             // 1 order, 1 price position
             new Aggregates::OrderPricePosition { OrderId = 1, OrderPositionId = 10, PriceId = 2 },
-            new Aggregates::AdvertisementAmountRestriction { PriceId = 2 },
             new Aggregates::Order { Id = 1 },
 
             // 1 order, 2 price positions
             new Aggregates::OrderPricePosition { OrderId = 2, OrderPositionId = 20, PriceId = 3 },
             new Aggregates::OrderPricePosition { OrderId = 2, OrderPositionId = 21, PriceId = 3 },
-            new Aggregates::AdvertisementAmountRestriction { PriceId = 3, PositionId = 1 },
-            new Aggregates::AdvertisementAmountRestriction { PriceId = 3, PositionId = 2 },
             new Aggregates::Order { Id = 2 });
     }
 }

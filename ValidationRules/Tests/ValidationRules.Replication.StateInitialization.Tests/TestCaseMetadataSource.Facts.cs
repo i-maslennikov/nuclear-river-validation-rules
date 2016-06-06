@@ -138,7 +138,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::Project { Id = 8, OrganizationUnitId = 7, IsActive = true }
                 )
             .Fact(
-                new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestProjectId = 3, EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceProjectId = 8, WorkflowStepId = 8 }
+                new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestProjectId = 3, EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceProjectId = 8, WorkflowStepId = 8 },
+                new Facts::Project { Id = 3, OrganizationUnitId = 2 },
+                new Facts::Project { Id = 8, OrganizationUnitId = 7 }
                 );
 
         // ReSharper disable once UnusedMember.Local
