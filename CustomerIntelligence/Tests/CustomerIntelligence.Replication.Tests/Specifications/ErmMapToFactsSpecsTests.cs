@@ -273,7 +273,6 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
 
             public Transformation VerifyTransform<T, TProjection>(Func<IQuery, IEnumerable<T>> reader, IEnumerable<T> expected, Func<T, TProjection> projector, string message = null)
             {
-                var a = reader(_query).ToArray();
                 // TODO: convert to a custom NUnit constraint, at least for fail logging
                 Assert.That(reader(_query).ToArray, Is.EqualTo(expected.ToArray()).Using(new ProjectionEqualityComparer<T, TProjection>(projector)), message);
                 return this;
