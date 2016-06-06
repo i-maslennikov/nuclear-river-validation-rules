@@ -39,15 +39,14 @@ namespace NuClear.StateInitialization.Core
                     () => CreateDataConnection(command.SourceStorageDescriptor),
                     () => CreateDataConnection(command.TargetStorageDescriptor)))
                 {
-                    Parallel.ForEach(actorsFactory.Create(),
-                                     actor =>
-                                         {
-                                             var sw = Stopwatch.StartNew();
-                                             actor.ExecuteCommands(new[] { command });
-                                             sw.Stop();
+                    foreach (var actor in actorsFactory.Create())
+                    {
+                        var sw = Stopwatch.StartNew();
+                        actor.ExecuteCommands(new[] { command });
+                        sw.Stop();
 
-                                             Console.WriteLine($"{actor.GetType().GetFriendlyName()}: {sw.Elapsed.TotalSeconds} seconds");
-                                         });
+                        Console.WriteLine($"{actor.GetType().GetFriendlyName()}: {sw.Elapsed.TotalSeconds} seconds");
+                    }
                 }
 
 
