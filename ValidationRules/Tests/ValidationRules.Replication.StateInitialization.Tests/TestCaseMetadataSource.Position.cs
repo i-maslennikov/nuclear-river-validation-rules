@@ -1,5 +1,7 @@
 ﻿using NuClear.DataTest.Metamodel.Dsl;
-using NuClear.ValidationRules.Storage.Model.Facts;
+
+using Aggregates = NuClear.ValidationRules.Storage.Model.Aggregates;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -10,10 +12,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
         .Name(nameof(Position))
         .Fact(
-            new Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
+            new Facts::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
             )
         .Aggregate(
-            new Storage.Model.Aggregates.Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
+            new Aggregates::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
             );
     }
 }
