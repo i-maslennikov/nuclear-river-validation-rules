@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Replication.Specifications;
+using NuClear.CustomerIntelligence.Storage.Model.Common;
 using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Storage.API.Readings;
 
@@ -146,6 +147,30 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
         }
 
         [Test]
+        public void ShouldTransformLead()
+        {
+            SourceDb.Has(
+                new Lead
+                {
+                    Id = 1,
+                    FirmId = 2,
+                    OwnerId = 3,
+                    Type = LeadType.Hot,
+                    Status = LeadStatus.Open
+                });
+
+            Transformation.Create(Query)
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Leads.Map(x).By(y => y.Id, 1),
+                                           new Storage.Model.Facts.Lead
+                                           {
+                                               Id = 1,
+                                               FirmId = 2,
+                                               OwnerId = 3,
+                                               Type = LeadType.Hot
+                                           });
+        }
+
+        [Test]
         public void ShouldTransformFirmAddress()
         {
             SourceDb.Has(
@@ -248,6 +273,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
 
             public Transformation VerifyTransform<T, TProjection>(Func<IQuery, IEnumerable<T>> reader, IEnumerable<T> expected, Func<T, TProjection> projector, string message = null)
             {
+                var a = reader(_query).ToArray();
                 // TODO: convert to a custom NUnit constraint, at least for fail logging
                 Assert.That(reader(_query).ToArray, Is.EqualTo(expected.ToArray()).Using(new ProjectionEqualityComparer<T, TProjection>(projector)), message);
                 return this;

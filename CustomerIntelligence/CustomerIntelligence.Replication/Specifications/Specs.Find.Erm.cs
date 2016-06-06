@@ -1,4 +1,5 @@
-﻿using NuClear.CustomerIntelligence.Storage.Model.Erm;
+﻿using NuClear.CustomerIntelligence.Storage.Model.Common;
+using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Replication.Specifications
@@ -45,6 +46,11 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                 public static FindSpecification<Firm> Firms()
                 {
                     return new FindSpecification<Firm>(x => x.IsActive && !x.IsDeleted && !x.ClosedForAscertainment);
+                }
+
+                public static FindSpecification<Lead> Leads()
+                {
+                    return new FindSpecification<Lead>(x => x.Status == LeadStatus.Open);
                 }
 
                 public static FindSpecification<FirmAddress> FirmAddresses()

@@ -34,6 +34,9 @@ namespace NuClear.CustomerIntelligence.Storage
                     .HasSchemaName(CustomerIntelligenceSchema)
                     .HasPrimaryKey(x => x.Id);
 
+                config.Entity<FirmLead>()
+                      .HasSchemaName(CustomerIntelligenceSchema);
+
                 config.Entity<FirmActivity>()
                     .HasSchemaName(CustomerIntelligenceSchema);
 
@@ -73,10 +76,6 @@ namespace NuClear.CustomerIntelligence.Storage
 
                 config.Entity<FirmCategory3>()
                     .HasSchemaName(CustomerIntelligenceSchema);
-
-                schema.SetDataType(typeof(decimal), new SqlDataType(DataType.Decimal, 19, 4));
-                schema.SetDataType(typeof(decimal?), new SqlDataType(DataType.Decimal, 19, 4));
-                schema.SetDataType(typeof(string), new SqlDataType(DataType.NVarChar, int.MaxValue));
 
                 return schema;
             }

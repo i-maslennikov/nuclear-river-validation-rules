@@ -17,6 +17,7 @@ if object_id('ERM.Contact') is not null drop table ERM.Contact
 if object_id('ERM.Firm') is not null drop table ERM.Firm
 if object_id('ERM.FirmAddress') is not null drop table ERM.FirmAddress
 if object_id('ERM.FirmContact') is not null drop table ERM.FirmContact
+if object_id('ERM.Lead') is not null drop table ERM.Lead
 if object_id('ERM.LegalPerson') is not null drop table ERM.LegalPerson
 if object_id('ERM.Order') is not null drop table ERM.[Order]
 if object_id('ERM.Project') is not null drop table ERM.Project
@@ -180,6 +181,16 @@ on ERM.FirmContact (HasPhone, FirmAddressId)
 go
 create nonclustered index IX_FirmContact_HasWebsite_FirmAddressId
 on ERM.FirmContact (HasWebsite,FirmAddressId)
+go
+
+-- Lead
+create table ERM.Lead(
+	Id bigint not null
+    , FirmId bigint not null
+    , OwnerId bigint not null
+    , Type int not null
+    , constraint PK_Leads primary key (Id)
+)
 go
 
 -- LegalPerson

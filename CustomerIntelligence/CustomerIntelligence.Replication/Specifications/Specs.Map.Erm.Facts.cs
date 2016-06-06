@@ -14,6 +14,7 @@ using CategoryOrganizationUnit = NuClear.CustomerIntelligence.Storage.Model.Fact
 using Client = NuClear.CustomerIntelligence.Storage.Model.Facts.Client;
 using Contact = NuClear.CustomerIntelligence.Storage.Model.Facts.Contact;
 using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
+using Lead = NuClear.CustomerIntelligence.Storage.Model.Facts.Lead;
 using FirmAddress = NuClear.CustomerIntelligence.Storage.Model.Facts.FirmAddress;
 using FirmContact = NuClear.CustomerIntelligence.Storage.Model.Facts.FirmContact;
 using LegalPerson = NuClear.CustomerIntelligence.Storage.Model.Facts.LegalPerson;
@@ -164,6 +165,18 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                      HasPhone = firmContact.ContactType == ContactType.Phone,
                                      HasWebsite = firmContact.ContactType == ContactType.Website,
                                      FirmAddressId = firmContact.FirmAddressId.Value,
+                                 });
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Lead>> Leads =
+                        new MapSpecification<IQuery, IQueryable<Lead>>(
+                            q => from lead in q.For(Find.Erm.Leads())
+                                 where lead.FirmId != null
+                                 select new Lead
+                                 {
+                                     Id = lead.Id,
+                                     FirmId = lead.FirmId.Value,
+                                     OwnerId = lead.OwnerId,
+                                     Type = lead.Type
                                  });
 
                     public static readonly MapSpecification<IQuery, IQueryable<LegalPerson>> LegalPersons =

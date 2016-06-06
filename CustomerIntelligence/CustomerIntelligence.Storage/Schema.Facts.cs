@@ -32,6 +32,7 @@ namespace NuClear.CustomerIntelligence.Storage
                 config.Entity<Firm>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<FirmAddress>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<FirmContact>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
+                config.Entity<Lead>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<LegalPerson>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<Order>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<Project>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
@@ -54,10 +55,6 @@ namespace NuClear.CustomerIntelligence.Storage
                 config.Entity<FirmForecast>().HasSchemaName(BitSchema)
                       .Property(x => x.ProjectId).IsPrimaryKey()
                       .Property(x => x.FirmId).IsPrimaryKey();
-
-                schema.SetDataType(typeof(decimal), new SqlDataType(DataType.Decimal, 19, 4));
-                schema.SetDataType(typeof(decimal?), new SqlDataType(DataType.Decimal, 19, 4));
-                schema.SetDataType(typeof(string), new SqlDataType(DataType.NVarChar, int.MaxValue));
 
                 return schema;
             }

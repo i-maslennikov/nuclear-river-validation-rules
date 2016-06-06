@@ -27,6 +27,8 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                 // ReSharper disable once InconsistentNaming
                 public static class ToCI
                 {
+                    private static readonly int ReserveUserId = 27;
+
                     public static readonly MapSpecification<IQuery, IQueryable<CategoryGroup>> CategoryGroups =
                         new MapSpecification<IQuery, IQueryable<CategoryGroup>>(
                             q => from categoryGroup in q.For<Storage.Model.Facts.CategoryGroup>()
@@ -185,6 +187,17 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                       FirmId = firmAddress.FirmId,
                                       CategoryId = category2.Id
                                   }).Distinct());
+
+                    public static readonly MapSpecification<IQuery, IQueryable<FirmLead>> FirmLeads =
+                        new MapSpecification<IQuery, IQueryable<FirmLead>>(
+                            q => from lead in q.For<Lead>()
+                                 select new FirmLead
+                                 {
+                                     FirmId = lead.FirmId,
+                                     LeadId = lead.Id,
+                                     IsInQueue = lead.OwnerId == ReserveUserId,
+                                     Type = lead.Type
+                                 });
 
                     public static readonly MapSpecification<IQuery, IQueryable<FirmTerritory>> FirmTerritories =
                         new MapSpecification<IQuery, IQueryable<FirmTerritory>>(

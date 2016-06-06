@@ -80,6 +80,7 @@
     <Compile Include="Model\CI\FirmCategory1.cs" />
     <Compile Include="Model\CI\FirmCategory2.cs" />
     <Compile Include="Model\CI\FirmTerritory.cs" />
+    <Compile Include="Model\CI\FirmLead.cs" />
     <Compile Include="Model\CI\Project.cs" />
     <Compile Include="Model\CI\ProjectCategory.cs" />
     <Compile Include="Model\CI\Territory.cs" />
@@ -97,6 +98,9 @@
     <Compile Include="Model\Erm\Firm.cs" />
     <Compile Include="Model\Erm\FirmAddress.cs" />
     <Compile Include="Model\Erm\FirmContact.cs" />
+    <Compile Include="Model\Erm\Lead.cs" />
+    <Compile Include="Model\Common\LeadStatus.cs" />
+    <Compile Include="Model\Common\LeadType.cs" />
     <Compile Include="Model\Erm\LegalPerson.cs" />
     <Compile Include="Model\Erm\Order.cs" />
     <Compile Include="Model\Erm\Project.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="Model\Facts\Firm.cs" />
     <Compile Include="Model\Facts\FirmAddress.cs" />
     <Compile Include="Model\Facts\FirmContact.cs" />
+    <Compile Include="Model\Facts\Lead.cs" />
     <Compile Include="Model\Facts\LegalPerson.cs" />
     <Compile Include="Model\Facts\Order.cs" />
     <Compile Include="Model\Facts\Project.cs" />

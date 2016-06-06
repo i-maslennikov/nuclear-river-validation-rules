@@ -296,6 +296,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                 .RegisterType<IStorageBasedDataObjectAccessor<Client>, ClientAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<Contact>, ContactAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<Firm>, FirmAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<Lead>, LeadAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<FirmAddress>, FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<FirmContact>, FirmContactAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<LegalPerson>, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory())
