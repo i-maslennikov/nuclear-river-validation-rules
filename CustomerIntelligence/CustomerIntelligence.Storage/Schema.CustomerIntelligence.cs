@@ -77,6 +77,10 @@ namespace NuClear.CustomerIntelligence.Storage
                 config.Entity<FirmCategory3>()
                     .HasSchemaName(CustomerIntelligenceSchema);
 
+                schema.SetDataType(typeof(decimal), new SqlDataType(DataType.Decimal, 19, 4));
+                schema.SetDataType(typeof(decimal?), new SqlDataType(DataType.Decimal, 19, 4));
+                schema.SetDataType(typeof(string), new SqlDataType(DataType.NVarChar, int.MaxValue));
+
                 return schema;
             }
         }
