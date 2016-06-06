@@ -1,5 +1,6 @@
 ﻿using System;
 
+using NuClear.CustomerIntelligence.Storage.Model.Common;
 using NuClear.DataTest.Metamodel.Dsl;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
@@ -236,6 +237,19 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                 .Fact(
                     new Facts::Activity { Id = 1, FirmId = 1, ModifiedOn = DateTimeOffset.Parse("2010-01-01") })
                 .Mutate(m => m.Update<CI::FirmActivity>(x => x.FirmId == 1, x => x.LastActivityOn = DateTimeOffset.Parse("2010-01-01")));
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement TestFirmLead =>
+            ArrangeMetadataElement.Config
+            .Name(nameof(TestFirmAddressCount))
+            .Fact(
+                new Facts::Lead { Id = 1, FirmId = 2, OwnerId = 27, Type = LeadType.Hot },
+                new Facts::Lead { Id = 2, FirmId = 2, OwnerId = 3, Type = LeadType.Hot }
+                )
+            .CustomerIntelligence(
+                new CI::FirmLead { LeadId = 1, FirmId = 2, IsInQueue = true, Type = LeadType.Hot },
+                new CI::FirmLead { LeadId = 2, FirmId = 2, IsInQueue = false, Type = LeadType.Hot }
+                );
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement BornToFail

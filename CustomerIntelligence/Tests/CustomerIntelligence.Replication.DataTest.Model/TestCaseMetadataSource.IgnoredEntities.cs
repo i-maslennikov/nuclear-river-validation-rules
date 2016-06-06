@@ -1,4 +1,5 @@
-﻿using NuClear.CustomerIntelligence.Storage.Model.Facts;
+﻿using NuClear.CustomerIntelligence.Storage.Model.Common;
+using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.DataTest.Metamodel.Dsl;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
@@ -162,6 +163,16 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                   .Erm(
                                        new Storage.Model.Erm.Territory { Id = 1, IsActive = true },
                                        new Storage.Model.Erm.Territory { Id = 2, IsActive = false });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement IgnoredLead =>
+            ArrangeMetadataElement.Config.Name(nameof(IgnoredLead))
+                                  .Fact(new Lead { Id = 1, FirmId = 2, OwnerId = 3, Type = LeadType.Hot})
+                                  .Erm(
+                                       new Storage.Model.Erm.Lead { Id = 1, FirmId = 2, OwnerId = 3, Status = LeadStatus.Open, Type = LeadType.Hot},
+                                       new Storage.Model.Erm.Lead { Id = 2, FirmId = null, OwnerId = 3, Status = LeadStatus.Open, Type = LeadType.Hot },
+                                       new Storage.Model.Erm.Lead { Id = 1, FirmId = 2, OwnerId = 3, Status = LeadStatus.Closed, Type = LeadType.Hot });
+
     }
 }
 
