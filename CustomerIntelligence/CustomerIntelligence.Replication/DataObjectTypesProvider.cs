@@ -30,10 +30,10 @@ namespace NuClear.CustomerIntelligence.Replication
                         typeof(Contact),
                         typeof(FirmAddress),
                         typeof(FirmContact),
-                        typeof(Lead),
                         typeof(LegalPerson),
                         typeof(Order),
-                        typeof(SalesModelCategoryRestriction)
+                        typeof(SalesModelCategoryRestriction),
+                        typeof(Lead)
                     };
             }
 

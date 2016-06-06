@@ -319,6 +319,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                 .RegisterType<IDataChangesHandler<Client>, ClientAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<Contact>, ContactAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<Firm>, FirmAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<Lead>, LeadAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<FirmAddress>, FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<FirmContact>, FirmContactAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<LegalPerson>, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory())
