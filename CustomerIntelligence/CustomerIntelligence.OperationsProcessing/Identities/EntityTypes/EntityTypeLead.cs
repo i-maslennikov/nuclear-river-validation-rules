@@ -7,6 +7,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Identities.EntityTyp
     {
         public override int Id => EntityTypeIds.Lead;
 
-        public override string Description => "FirmLead";
+        public override string Description => "Lead";
     }
 }
