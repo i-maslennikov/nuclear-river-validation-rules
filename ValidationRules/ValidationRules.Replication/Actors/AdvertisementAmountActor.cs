@@ -60,55 +60,39 @@ namespace NuClear.ValidationRules.Replication.Actors
 
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
         {
-            // возможно, неправильно составл модель: ограничения привязаны к CategoryCode, а не к position
-            // у CategoryCode есть имя, которое даже не хранится в erm, а вычисляется как FirstOf<Position>
-            // это приводит к group by и агрегации (в erm делается то же самое, но это не оправдание)
-
             var restrictionGrid = from restriction in query.For<AdvertisementAmountRestriction>()
-                                  join price in query.For<Price>() on restriction.PriceId equals price.Id
-                                  join pp in query.For<PricePeriod>() on price.Id equals pp.PriceId
-                                  join period in query.For<Period>() on new { pp.Start, pp.ProjectId } equals new { period.Start, period.ProjectId }
-                                  group new { period.Start, period.End, period.ProjectId, restriction.CategoryCode, restriction.Min, restriction.Max, restriction.CategoryName }
-                                      by new { period.Start, period.End, period.ProjectId, restriction.CategoryCode } into groups
-                                  select new { groups.Key, Min = groups.Min(x => x.Min), Max = groups.Max(x => x.Max) };
+                                  join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
+                                  select new { Key = new { pp.Start, pp.ProjectId, restriction.CategoryCode }, restriction.Min, restriction.Max, restriction.CategoryName };
 
-            var saleGrid = from position in query.For<Position>().Where(x => x.IsControlledByAmount)
-                           join orderPosition in query.For<OrderPosition>() on position.Id equals orderPosition.ItemPositionId
-                           join order in query.For<Order>() on orderPosition.OrderId equals order.Id
-                           join op in query.For<OrderPeriod>() on order.Id equals op.OrderId
-                           join period in query.For<Period>() on new { op.Start, op.ProjectId } equals new { period.Start, period.ProjectId }
-                           group new { period.Start, period.End, period.ProjectId, position.CategoryCode }
-                               by new { period.Start, period.End, period.ProjectId, position.CategoryCode } into groups
+            var saleGrid = from position in query.For<AmountControlledPosition>()
+                           join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
+                           group new { op.Start, op.ProjectId, position.CategoryCode }
+                               by new { op.Start, op.ProjectId, position.CategoryCode } into groups
                            select new { groups.Key, Count = groups.Count() };
 
             var ruleViolations = from restriction in restrictionGrid
                                  from sale in saleGrid.Where(x => x.Key == restriction.Key).DefaultIfEmpty()
                                  where sale == null || restriction.Min > sale.Count || sale.Count > restriction.Max
-                                 select new { restriction.Key, restriction.Min, restriction.Max, sale.Count };
+                                 select new { restriction.Key, restriction.Min, restriction.Max, sale.Count, restriction.CategoryName };
 
-            var orderCategories = from position in query.For<Position>().Where(x => x.IsControlledByAmount)
-                                  join orderPosition in query.For<OrderPosition>() on position.Id equals orderPosition.ItemPositionId
-                                  join order in query.For<Order>() on orderPosition.OrderId equals order.Id
-                                  join op in query.For<OrderPeriod>() on order.Id equals op.OrderId
-                                  join period in query.For<Period>() on new { op.Start, op.ProjectId } equals new { period.Start, period.ProjectId }
-                                  select new { Key = new { period.Start, period.End, period.ProjectId, position.CategoryCode }, OrderId = order.Id };
-
-            var ruleResults = from voilation in ruleViolations
-                              from order in orderCategories.Where(x => x.Key == voilation.Key).DefaultIfEmpty()
-                              let position = query.For<Position>().OrderBy(x => x.Name.Length).FirstOrDefault(x => x.CategoryCode == voilation.Key.CategoryCode)
+            var ruleResults = from position in query.For<AmountControlledPosition>()
+                              join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
+                              join violation in ruleViolations on new { op.Start, op.ProjectId, position.CategoryCode } equals
+                                  new { violation.Key.Start, violation.Key.ProjectId, violation.Key.CategoryCode }
+                              join period in query.For<Period>() on new { op.Start, op.ProjectId } equals new { period.Start, period.ProjectId }
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
                                       MessageParams =
                                           new XDocument(new XElement("empty",
-                                                                     new XAttribute("min", voilation.Min),
-                                                                     new XAttribute("max", voilation.Max),
-                                                                     new XAttribute("count", voilation.Count),
-                                                                     new XAttribute("name", position.Name))),
-                                      OrderId = order.OrderId,
-                                      PeriodStart = voilation.Key.Start,
-                                      PeriodEnd = voilation.Key.End,
-                                      ProjectId = voilation.Key.ProjectId,
+                                                                     new XAttribute("min", violation.Min),
+                                                                     new XAttribute("max", violation.Max),
+                                                                     new XAttribute("count", violation.Count),
+                                                                     new XAttribute("name", violation.CategoryName))),
+                                      OrderId = position.OrderId,
+                                      PeriodStart = period.Start,
+                                      PeriodEnd = period.End,
+                                      ProjectId = period.ProjectId,
                                       Result = 1,
                                       VersionId = version
                                   };

@@ -11,6 +11,8 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Aggregates;
 
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
+
 namespace NuClear.ValidationRules.Replication.Actors
 {
     public sealed class PriceAggregateRootActor : EntityActorBase<Price>, IAggregateRootActor
@@ -79,12 +81,28 @@ namespace NuClear.ValidationRules.Replication.Actors
                 _query = query;
             }
 
-            public IQueryable<AdvertisementAmountRestriction> GetSource() => Specs.Map.Facts.ToAggregates.AdvertisementAmountRestrictions.Map(_query);
+            public IQueryable<AdvertisementAmountRestriction> GetSource()
+                => from pricePosition in _query.For<Facts::PricePosition>()
+                   join position in _query.For<Facts::Position>().Where(x => x.IsControlledByAmount) on pricePosition.PositionId equals position.Id
+                   group new { pricePosition.PriceId, position.CategoryCode, position.Name, pricePosition.MinAdvertisementAmount, pricePosition.MaxAdvertisementAmount }
+                       by new { pricePosition.PriceId, position.CategoryCode } into groups
+                   select new AdvertisementAmountRestriction
+                       {
+                           PriceId = groups.Key.PriceId,
+                           CategoryCode = groups.Key.CategoryCode,
+                           CategoryName = (from pp in _query.For<Facts::PricePosition>().Where(x => x.PriceId == groups.Key.PriceId)
+                                           join p in _query.For<Facts::Position>().Where(x => x.IsControlledByAmount && x.CategoryCode == groups.Key.CategoryCode).OrderBy(x => x.Id) on pp.PositionId
+                                               equals p.Id
+                                           select p.Name).First(), // Этот кусок кода достаточно точно отражает текущее поведение в erm, решение лучше - создать справочник и слушать поток flowNomenclatures.NomenclatureCategory
+                       Max = groups.Min(x => x.MaxAdvertisementAmount) ?? int.MaxValue,
+                           Min = groups.Max(x => x.MinAdvertisementAmount) ?? 0,
+                           MissingMinimalRestriction = groups.Any(x => x.MinAdvertisementAmount == null)
+                       };
 
             public FindSpecification<AdvertisementAmountRestriction> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return Specs.Find.Aggs.AdvertisementAmountRestrictions(aggregateIds);
+                return new FindSpecification<AdvertisementAmountRestriction>(x => aggregateIds.Contains(x.PriceId));
             }
         }
 

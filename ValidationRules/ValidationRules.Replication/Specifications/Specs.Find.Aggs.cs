@@ -21,10 +21,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     return new FindSpecification<Aggregates::PriceAssociatedPosition>(x => aggregateIds.Contains(x.PriceId));
                 }
-                public static FindSpecification<Aggregates::AdvertisementAmountRestriction> AdvertisementAmountRestrictions(IReadOnlyCollection<long> aggregateIds)
-                {
-                    return new FindSpecification<Aggregates::AdvertisementAmountRestriction>(x => aggregateIds.Contains(x.PriceId));
-                }
 
                 public static FindSpecification<Aggregates::RulesetRule> RulesetRules(IReadOnlyCollection<long> aggregateIds)
                 {

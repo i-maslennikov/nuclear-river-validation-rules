@@ -44,6 +44,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(Storage.Model.Aggregates.OrderPeriod),
                             typeof(Storage.Model.Aggregates.OrderPosition),
                             typeof(Storage.Model.Aggregates.OrderPricePosition),
+                            typeof(Storage.Model.Aggregates.AmountControlledPosition),
                             typeof(Storage.Model.Aggregates.Period),
                             typeof(Storage.Model.Aggregates.Position),
                             typeof(Storage.Model.Aggregates.Price),

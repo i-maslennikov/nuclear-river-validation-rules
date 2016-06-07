@@ -11,6 +11,8 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Aggregates;
 
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
+
 namespace NuClear.ValidationRules.Replication.Actors
 {
     public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
@@ -18,6 +20,7 @@ namespace NuClear.ValidationRules.Replication.Actors
         private readonly IQuery _query;
         private readonly IBulkRepository<OrderPosition> _orderPositionBulkRepository;
         private readonly IBulkRepository<OrderPricePosition> _orderPricePositionBulkRepository;
+        private readonly IBulkRepository<AmountControlledPosition> _amountControlledPositionBulkRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public OrderAggregateRootActor(
@@ -25,13 +28,15 @@ namespace NuClear.ValidationRules.Replication.Actors
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<OrderPosition> orderPositionBulkRepository,
             IBulkRepository<OrderPricePosition> orderPricePositionBulkRepository,
-        IEqualityComparerFactory equalityComparerFactory)
+            IBulkRepository<AmountControlledPosition> amountControlledPositionBulkRepository,
+            IEqualityComparerFactory equalityComparerFactory)
             : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
             _query = query;
             _orderPositionBulkRepository = orderPositionBulkRepository;
             _orderPricePositionBulkRepository = orderPricePositionBulkRepository;
             _equalityComparerFactory = equalityComparerFactory;
+            _amountControlledPositionBulkRepository = amountControlledPositionBulkRepository;
         }
 
 
@@ -42,6 +47,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                 {
                     new ValueObjectActor<OrderPosition>(_query, _orderPositionBulkRepository, _equalityComparerFactory, new OrderPositionAccessor(_query)),
                     new ValueObjectActor<OrderPricePosition>(_query, _orderPricePositionBulkRepository, _equalityComparerFactory, new OrderPricePositionAccessor(_query)),
+                    new ValueObjectActor<AmountControlledPosition>(_query, _amountControlledPositionBulkRepository, _equalityComparerFactory, new AmountControlledPositionAccessor(_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -99,6 +105,32 @@ namespace NuClear.ValidationRules.Replication.Actors
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.Aggs.OrderPricePositions(aggregateIds);
+            }
+        }
+
+        public sealed class AmountControlledPositionAccessor : IStorageBasedDataObjectAccessor<AmountControlledPosition>
+        {
+            private readonly IQuery _query;
+
+            public AmountControlledPositionAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<AmountControlledPosition> GetSource()
+                => from orderPosition in _query.For<Facts::OrderPosition>()
+                   join adv in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals adv.OrderPositionId
+                   join position in _query.For<Facts::Position>().Where(x => x.IsControlledByAmount) on adv.PositionId equals position.Id
+                   select new AmountControlledPosition
+                       {
+                           OrderId = orderPosition.OrderId,
+                           CategoryCode = position.CategoryCode,
+                       };
+
+            public FindSpecification<AmountControlledPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }
