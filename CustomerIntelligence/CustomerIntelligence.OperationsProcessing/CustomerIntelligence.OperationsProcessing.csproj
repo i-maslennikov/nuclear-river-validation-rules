@@ -167,6 +167,7 @@
     <Compile Include="Identities\Operations\AssignClientRelatedActivitiesIdentity.cs" />
     <Compile Include="Identities\Operations\CalculateClientPromisingIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeDealIdentity.cs" />
+    <Compile Include="Identities\Operations\ChangeLeadFirmIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderAccountIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderBargainIdentity.cs" />
     <Compile Include="Identities\Operations\ChangeOrderLegalPersonIdentity.cs" />
@@ -179,9 +180,11 @@
     <Compile Include="Identities\Operations\CreateClientByFirmIdentity.cs" />
     <Compile Include="Identities\Operations\CreateOrderBillsIdentity.cs" />
     <Compile Include="Identities\Operations\DeleteOrderBillsIdentity.cs" />
+    <Compile Include="Identities\Operations\DequeueLeadIdentity.cs" />
     <Compile Include="Identities\Operations\DetachFirmFromClientIdentity.cs" />
     <Compile Include="Identities\Operations\DisqualifyClientIdentity.cs" />
     <Compile Include="Identities\Operations\DisqualifyFirmIdentity.cs" />
+    <Compile Include="Identities\Operations\DisqualifyLeadIdentity.cs" />
     <Compile Include="Identities\Operations\ImportAdvModelInRubricInfoIdentity.cs" />
     <Compile Include="Identities\Operations\ImportCardForErmIdentity.cs" />
     <Compile Include="Identities\Operations\ImportCardIdentity.cs" />
@@ -191,6 +194,8 @@
     <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
     <Compile Include="Identities\Operations\QualifyClientIdentity.cs" />
     <Compile Include="Identities\Operations\QualifyFirmIdentity.cs" />
+    <Compile Include="Identities\Operations\QualifyLeadIdentity.cs" />
+    <Compile Include="Identities\Operations\RegisterLeadIdentity.cs" />
     <Compile Include="Identities\Operations\RepairOutdatedIdentity.cs" />
     <Compile Include="Identities\Operations\RevertWithdrawFromAccountsIdentity.cs" />
     <Compile Include="Identities\Operations\SetInspectorIdentity.cs" />

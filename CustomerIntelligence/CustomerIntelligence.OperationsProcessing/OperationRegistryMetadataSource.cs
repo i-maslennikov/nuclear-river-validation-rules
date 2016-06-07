@@ -164,6 +164,11 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<SetMainFirmIdentity>()
                         .Allow<ActualizeActiveLocksIdentity>()
                         .Allow<ImportAdvModelInRubricInfoIdentity>()
+                        .Allow<RegisterLeadIdentity>()
+                        .Allow<DequeueLeadIdentity>()
+                        .Allow<QualifyLeadIdentity>()
+                        .Allow<DisqualifyLeadIdentity>()
+                        .Allow<ChangeLeadFirmIdentity>()
 
                         // эти операции станут ignored после того как фирмы будем брать из InfoRussia
                         .Allow<ImportCardForErmIdentity>()
