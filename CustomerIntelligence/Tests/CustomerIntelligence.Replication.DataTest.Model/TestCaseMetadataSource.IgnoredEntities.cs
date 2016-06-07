@@ -157,7 +157,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                   .Erm(new Storage.Model.Erm.SalesModelCategoryRestriction { Id = 1 });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement IgnoredTerritory =>
+        private static ArrangeMetadataElement IgnoredTerritory => 
             ArrangeMetadataElement.Config.Name(nameof(IgnoredTerritory))
                                   .Fact(new Territory { Id = 1 })
                                   .Erm(
@@ -171,7 +171,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                   .Erm(
                                        new Storage.Model.Erm.Lead { Id = 1, FirmId = 2, OwnerId = 3, Status = LeadStatus.Open, Type = LeadType.Hot},
                                        new Storage.Model.Erm.Lead { Id = 2, FirmId = null, OwnerId = 3, Status = LeadStatus.Open, Type = LeadType.Hot },
-                                       new Storage.Model.Erm.Lead { Id = 1, FirmId = 2, OwnerId = 3, Status = LeadStatus.Closed, Type = LeadType.Hot });
+                                       new Storage.Model.Erm.Lead { Id = 3, FirmId = 2, OwnerId = 3, Status = LeadStatus.Closed, Type = LeadType.Hot });
 
     }
 }
