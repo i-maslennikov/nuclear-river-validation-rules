@@ -157,7 +157,7 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                   .Erm(new Storage.Model.Erm.SalesModelCategoryRestriction { Id = 1 });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement IgnoredTerritory => 
+        private static ArrangeMetadataElement IgnoredTerritory =>
             ArrangeMetadataElement.Config.Name(nameof(IgnoredTerritory))
                                   .Fact(new Territory { Id = 1 })
                                   .Erm(

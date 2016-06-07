@@ -1,10 +1,10 @@
-using NuClear.Model.Common.Operations.Identity;
+Ôªøusing NuClear.Model.Common.Operations.Identity;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Identities.Operations
 {
     public class QualifyLeadIdentity : OperationIdentityBase<QualifyLeadIdentity>, INonCoupledOperationIdentity
     {
         public override int Id => OperationIdentityIds.QualifyLeadIdentity;
-        public override string Description => " ‚‡ÎËÙËÍ‡ˆËˇ ÎË‰‡.";
+        public override string Description => "–ö–≤–∞–ª–∏—Ñ–∏–∫–∞—Ü–∏—è –ª–∏–¥–∞.";
     }
 }
