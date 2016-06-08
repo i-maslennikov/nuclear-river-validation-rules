@@ -86,12 +86,14 @@ namespace NuClear.ValidationRules.Replication.Actors
                 // TODO: проблема - не могу получить описание неактивной позиции, так как мы их все отфильтровали на этапе facts
                 MessageParams = null,
 
-                OrderId = orderFirstPeriodDto.OrderId,
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,
 
-                VersionId = version
+                VersionId = version,
+
+                ReferenceType = EntityTypeIds.Order,
+                ReferenceId = orderFirstPeriodDto.OrderId,
             };
 
             return pricePositionIsNotActiveErrors;

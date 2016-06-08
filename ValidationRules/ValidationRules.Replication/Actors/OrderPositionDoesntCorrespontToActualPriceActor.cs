@@ -88,11 +88,13 @@ namespace NuClear.ValidationRules.Replication.Actors
             {
                 MessageType = MessageTypeId,
                 MessageParams = new XDocument(new XElement("empty", new XAttribute("name", orderPricePosition.PositionName))),
-                OrderId = orderFirstPeriodDto.OrderId,
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,
-                VersionId = version
+                VersionId = version,
+
+                ReferenceType = EntityTypeIds.Order,
+                ReferenceId = orderFirstPeriodDto.OrderId,
             };
 
             return orderPositionBadPriceErrors;

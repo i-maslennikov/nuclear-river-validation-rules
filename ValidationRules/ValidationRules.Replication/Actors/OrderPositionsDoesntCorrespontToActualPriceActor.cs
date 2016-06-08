@@ -84,11 +84,13 @@ namespace NuClear.ValidationRules.Replication.Actors
             {
                 MessageType = MessageTypeId,
                 MessageParams = null,
-                OrderId = orderFirstPeriodDto.OrderId,
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,
                 VersionId = version,
+
+                ReferenceType = EntityTypeIds.Order,
+                ReferenceId = orderFirstPeriodDto.OrderId,
             };
 
             return priceNotFoundErrors;

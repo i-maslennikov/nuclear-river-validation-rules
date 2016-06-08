@@ -28,5 +28,8 @@ create table Messages.ValidationResult(
     PeriodStart datetime2(2) NOT NULL,
     PeriodEnd datetime2(2) NOT NULL,
     ProjectId bigint NOT NULL,
+
+    MessageType int NOT NULL,
+    VersionId bigint NOT NULL,
 )
 go

@@ -91,11 +91,13 @@ namespace NuClear.ValidationRules.Replication.Actors
                                                                      new XAttribute("max", violation.Max),
                                                                      new XAttribute("count", violation.Count),
                                                                      new XAttribute("name", violation.CategoryName))),
-                                      OrderId = position.OrderId,
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
                                       ProjectId = period.ProjectId,
-                                      VersionId = version
+                                      VersionId = version,
+
+                                      ReferenceType = EntityTypeIds.Order,
+                                      ReferenceId = position.OrderId,
                                   };
 
             return ruleResults;

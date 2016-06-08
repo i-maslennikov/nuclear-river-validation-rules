@@ -57,10 +57,11 @@ namespace NuClear.ValidationRules.Replication.Actors
                                                                        VersionId = nextVersion.Id,
                                                                        MessageParams = x.MessageParams,
                                                                        MessageType = x.MessageType,
-                                                                       OrderId = x.OrderId,
                                                                        PeriodEnd = x.PeriodEnd,
                                                                        PeriodStart = x.PeriodStart,
                                                                        ProjectId = x.ProjectId,
+                                                                       ReferenceType = x.ReferenceType,
+                                                                       ReferenceId = x.ReferenceId,
                                                                    });
             _validationResultRepository.AddRange(nextVersionResults);
             _validationResultRepository.Save();
