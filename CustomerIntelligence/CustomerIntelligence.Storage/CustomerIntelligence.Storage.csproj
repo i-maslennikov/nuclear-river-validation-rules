@@ -99,8 +99,6 @@
     <Compile Include="Model\Erm\FirmAddress.cs" />
     <Compile Include="Model\Erm\FirmContact.cs" />
     <Compile Include="Model\Erm\Lead.cs" />
-    <Compile Include="Model\Common\LeadStatus.cs" />
-    <Compile Include="Model\Common\LeadType.cs" />
     <Compile Include="Model\Erm\LegalPerson.cs" />
     <Compile Include="Model\Erm\Order.cs" />
     <Compile Include="Model\Erm\Project.cs" />

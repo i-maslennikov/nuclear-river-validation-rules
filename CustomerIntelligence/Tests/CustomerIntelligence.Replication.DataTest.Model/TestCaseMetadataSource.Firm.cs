@@ -1,6 +1,5 @@
 ﻿using System;
 
-using NuClear.CustomerIntelligence.Storage.Model.Common;
 using NuClear.DataTest.Metamodel.Dsl;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
@@ -243,12 +242,12 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
             ArrangeMetadataElement.Config
             .Name(nameof(TestFirmLead))
             .Fact(
-                new Facts::Lead { Id = 1, FirmId = 2, OwnerId = 27, Type = LeadType.Hot },
-                new Facts::Lead { Id = 2, FirmId = 2, OwnerId = 3, Type = LeadType.Hot }
+                new Facts::Lead { Id = 1, FirmId = 2, IsInQueue = true, Type = 1},
+                new Facts::Lead { Id = 2, FirmId = 2, IsInQueue = false, Type = 2 }
                 )
             .CustomerIntelligence(
-                new CI::FirmLead { LeadId = 1, FirmId = 2, IsInQueue = true, Type = LeadType.Hot },
-                new CI::FirmLead { LeadId = 2, FirmId = 2, IsInQueue = false, Type = LeadType.Hot }
+                new CI::FirmLead { LeadId = 1, FirmId = 2, IsInQueue = true, Type = 1 },
+                new CI::FirmLead { LeadId = 2, FirmId = 2, IsInQueue = false, Type = 2 }
                 );
 
         // ReSharper disable once UnusedMember.Local

@@ -33,6 +33,8 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
             {
                 public static class ToFacts
                 {
+                    private static readonly int ReserveUserId = 27;
+
                     public static readonly MapSpecification<IQuery, IQueryable<Activity>> Activities =
                         new MapSpecification<IQuery, IQueryable<Activity>>(
                             q =>
@@ -175,7 +177,7 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                  {
                                      Id = lead.Id,
                                      FirmId = lead.FirmId.Value,
-                                     OwnerId = lead.OwnerId,
+                                     IsInQueue = lead.OwnerId == ReserveUserId,
                                      Type = lead.Type
                                  });
 

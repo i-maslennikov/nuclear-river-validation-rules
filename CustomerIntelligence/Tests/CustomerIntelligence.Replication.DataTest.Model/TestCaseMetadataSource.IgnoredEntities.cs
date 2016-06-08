@@ -1,5 +1,4 @@
-﻿using NuClear.CustomerIntelligence.Storage.Model.Common;
-using NuClear.CustomerIntelligence.Storage.Model.Facts;
+﻿using NuClear.CustomerIntelligence.Storage.Model.Facts;
 using NuClear.DataTest.Metamodel.Dsl;
 
 namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
@@ -167,11 +166,11 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement IgnoredLead =>
             ArrangeMetadataElement.Config.Name(nameof(IgnoredLead))
-                                  .Fact(new Lead { Id = 1, FirmId = 2, OwnerId = 3, Type = LeadType.Hot})
+                                  .Fact(new Lead { Id = 1, FirmId = 2, IsInQueue = false, Type = 1})
                                   .Erm(
-                                       new Storage.Model.Erm.Lead { Id = 1, FirmId = 2, OwnerId = 3, Status = LeadStatus.Open, Type = LeadType.Hot},
-                                       new Storage.Model.Erm.Lead { Id = 2, FirmId = null, OwnerId = 3, Status = LeadStatus.Open, Type = LeadType.Hot },
-                                       new Storage.Model.Erm.Lead { Id = 3, FirmId = 2, OwnerId = 3, Status = LeadStatus.Closed, Type = LeadType.Hot });
+                                       new Storage.Model.Erm.Lead { Id = 1, FirmId = 2, OwnerId = 3, Status = 1, Type = 1},
+                                       new Storage.Model.Erm.Lead { Id = 2, FirmId = null, OwnerId = 3, Status = 1, Type = 1 },
+                                       new Storage.Model.Erm.Lead { Id = 3, FirmId = 2, OwnerId = 3, Status = 2, Type = 1 });
 
     }
 }

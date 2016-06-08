@@ -1,5 +1,4 @@
-﻿using NuClear.CustomerIntelligence.Storage.Model.Common;
-using NuClear.CustomerIntelligence.Storage.Model.Erm;
+﻿using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Storage.API.Specifications;
 
 namespace NuClear.CustomerIntelligence.Replication.Specifications
@@ -12,6 +11,7 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
             {
                 private const int ActivityStatusCompleted = 2;
                 private const int RegardingObjectReference = 1;
+                private const int LeadStatusOpen = 1;
 
                 public static FindSpecification<Account> Accounts()
                 {
@@ -50,7 +50,7 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
 
                 public static FindSpecification<Lead> Leads()
                 {
-                    return new FindSpecification<Lead>(x => x.Status == LeadStatus.Open);
+                    return new FindSpecification<Lead>(x => x.Status == LeadStatusOpen);
                 }
 
                 public static FindSpecification<FirmAddress> FirmAddresses()

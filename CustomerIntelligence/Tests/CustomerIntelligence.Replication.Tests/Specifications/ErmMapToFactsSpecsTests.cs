@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Replication.Specifications;
-using NuClear.CustomerIntelligence.Storage.Model.Common;
 using NuClear.CustomerIntelligence.Storage.Model.Erm;
 using NuClear.Storage.API.Readings;
 
@@ -155,8 +154,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
                     Id = 1,
                     FirmId = 2,
                     OwnerId = 3,
-                    Type = LeadType.Hot,
-                    Status = LeadStatus.Open
+                    Type = 1,
+                    Status = 1
                 });
 
             Transformation.Create(Query)
@@ -165,8 +164,8 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
                                            {
                                                Id = 1,
                                                FirmId = 2,
-                                               OwnerId = 3,
-                                               Type = LeadType.Hot
+                                               IsInQueue = false,
+                                               Type = 1
                                            });
         }
 
