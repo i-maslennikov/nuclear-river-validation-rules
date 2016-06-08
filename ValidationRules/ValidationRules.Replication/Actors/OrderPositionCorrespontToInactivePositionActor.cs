@@ -91,7 +91,6 @@ namespace NuClear.ValidationRules.Replication.Actors
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,
 
-                Result = 1,
                 VersionId = version
             };
 

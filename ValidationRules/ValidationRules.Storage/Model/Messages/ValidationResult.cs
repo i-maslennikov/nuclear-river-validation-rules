@@ -19,7 +19,6 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
 
             public int MessageType { get; set; }
             public XDocument MessageParams { get; set; }
-            public int Result { get; set; }
 
             public long OrderId { get; set; }
             public DateTime PeriodStart { get; set; }

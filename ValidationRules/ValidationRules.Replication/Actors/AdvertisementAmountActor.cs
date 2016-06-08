@@ -85,19 +85,18 @@ namespace NuClear.ValidationRules.Replication.Actors
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
-                                  MessageParams =
+                                      MessageParams =
                                           new XDocument(new XElement("empty",
                                                                      new XAttribute("min", violation.Min),
                                                                      new XAttribute("max", violation.Max),
                                                                      new XAttribute("count", violation.Count),
                                                                      new XAttribute("name", violation.CategoryName))),
-                                  OrderId = position.OrderId,
-                                  PeriodStart = period.Start,
-                                  PeriodEnd = period.End,
-                                  ProjectId = period.ProjectId,
-                                  Result = 1,
-                                  VersionId = version
-                              };
+                                      OrderId = position.OrderId,
+                                      PeriodStart = period.Start,
+                                      PeriodEnd = period.End,
+                                      ProjectId = period.ProjectId,
+                                      VersionId = version
+                                  };
 
             return ruleResults;
         }

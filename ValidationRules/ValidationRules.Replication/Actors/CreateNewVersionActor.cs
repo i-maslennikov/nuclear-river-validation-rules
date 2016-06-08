@@ -61,7 +61,6 @@ namespace NuClear.ValidationRules.Replication.Actors
                                                                        PeriodEnd = x.PeriodEnd,
                                                                        PeriodStart = x.PeriodStart,
                                                                        ProjectId = x.ProjectId,
-                                                                       Result = x.Result
                                                                    });
             _validationResultRepository.AddRange(nextVersionResults);
             _validationResultRepository.Save();

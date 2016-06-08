@@ -71,7 +71,6 @@ namespace NuClear.ValidationRules.Replication.Actors
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
                                       ProjectId = pp.ProjectId,
-                                      Result = 1,
                                       VersionId = version
                                   };
 
