@@ -26,6 +26,10 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<Version.ValidationResult>()
                       .HasSchemaName(MessagesSchema);
 
+                config.Entity<Version.ValidationResultForBulkDelete>()
+                      .HasTableName(nameof(Version.ValidationResult))
+                      .HasSchemaName(MessagesSchema);
+
                 return schema;
             }
         }

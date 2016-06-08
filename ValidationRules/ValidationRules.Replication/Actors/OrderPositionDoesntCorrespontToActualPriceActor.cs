@@ -21,11 +21,13 @@ namespace NuClear.ValidationRules.Replication.Actors
 
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
+        private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
 
-        public OrderPositionDoesntCorrespontToActualPriceActor(IQuery query, IBulkRepository<Version.ValidationResult> repository)
+        public OrderPositionDoesntCorrespontToActualPriceActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
         {
             _query = query;
             _repository = repository;
+            _deleteRepository = deleteRepository;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -46,8 +48,8 @@ namespace NuClear.ValidationRules.Replication.Actors
             }
 
             // Данные в целевых таблицах меняем в одной большой транзакции (сейчас она управляется из хендлера)
-            var targetObjects = _query.For<Version.ValidationResult>().Where(x => x.MessageType == MessageTypeId && x.VersionId == 0).ToArray();
-            _repository.Delete(targetObjects);
+            var forBulkDelete = new Version.ValidationResultForBulkDelete { MessageType = MessageTypeId, VersionId = currentVersion };
+            _deleteRepository.Delete(new[] { forBulkDelete });
             _repository.Create(sourceObjects);
 
             return Array.Empty<IEvent>();

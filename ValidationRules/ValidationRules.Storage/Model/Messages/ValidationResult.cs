@@ -26,5 +26,11 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public DateTime PeriodEnd { get; set; }
             public long ProjectId { get; set; }
         }
+
+        public sealed class ValidationResultForBulkDelete
+        {
+            public int MessageType { get; set; }
+            public long VersionId { get; set; }
+        }
     }
 }
