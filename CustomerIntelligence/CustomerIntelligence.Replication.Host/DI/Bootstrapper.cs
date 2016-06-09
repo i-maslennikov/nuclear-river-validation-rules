@@ -208,7 +208,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
 
             container.RegisterType<IEventLoggingStrategyProvider, UnityEventLoggingStrategyProvider>()
                      .RegisterType<IEvent2BrokeredMessageConverter<IEvent>, Event2BrokeredMessageConverter>()
-                     .RegisterType<IEventLogger, EventLogger>()
+                     .RegisterType<IEventLogger, SequentialEventLogger>()
                      .RegisterType<IServiceBusMessageSender, ServiceBusMessageSender>();
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(typeof(IUserContext)), Lifetime.Singleton)

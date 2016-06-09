@@ -43,7 +43,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Factories
         private IEventLoggingStrategy<TEvent> ResolveServiceBusStrategy<TEvent>(IMessageFlow flow)
         {
             var serviceBusSettings = _settingsFactory.CreateSenderSettings(flow);
-            var strategy = _unityContainer.Resolve<ServiceBusEventLoggingStrategy<TEvent>>(new DependencyOverride<IServiceBusMessageSenderSettings>(serviceBusSettings));
+            var strategy = _unityContainer.Resolve<SessionlessServiceBusEventLoggingStrategy<TEvent>>(new DependencyOverride<IServiceBusMessageSenderSettings>(serviceBusSettings));
             return strategy;
         }
 
