@@ -153,11 +153,19 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
 
             public FindSpecification<FirmCategory3> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>()
+                                           .Where(c => !c.EntityId.HasValue)
+                                           .Select(c => c.AggregateRootId)
+                                           .Distinct()
+                                           .ToArray();
+
                 var entityIds = commands.OfType<ReplaceValueObjectCommand>()
+                                        .Where(c => c.EntityId.HasValue && !aggregateIds.Contains(c.AggregateRootId))
                                         .Select(c => new StatisticsKey { ProjectId = c.AggregateRootId, CategoryId = c.EntityId.Value })
                                         .Distinct()
                                         .ToArray();
-                return Specs.Find.CI.FirmCategory3(entityIds);
+
+                return Specs.Find.CI.FirmCategory3(entityIds) | Specs.Find.CI.FirmCategory3(aggregateIds);
             }
         }
     }
