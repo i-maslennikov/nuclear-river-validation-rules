@@ -42,7 +42,7 @@ namespace NuClear.Replication.Core.Actors
             }
 
             var events = new List<IEvent>();
-            foreach (var command in commands)
+            foreach (var command in commandsToExecute)
             {
                 using (var transaction = new TransactionScope(
                     TransactionScopeOption.Required,
