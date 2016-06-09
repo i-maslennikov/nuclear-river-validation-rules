@@ -106,6 +106,7 @@
     <Compile Include="Model\Facts\OrganizationUnit.cs" />
     <Compile Include="Model\Facts\Position.cs" />
     <Compile Include="Model\Facts\Price.cs" />
+    <Compile Include="Model\Facts\PricePositionNotActive.cs" />
     <Compile Include="Model\Facts\PricePosition.cs" />
     <Compile Include="Model\Facts\Project.cs" />
     <Compile Include="Model\Facts\RulesetRule.cs" />

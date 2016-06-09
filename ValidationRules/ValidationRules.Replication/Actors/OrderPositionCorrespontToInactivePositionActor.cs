@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
+using System.Xml.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
@@ -78,12 +79,14 @@ namespace NuClear.ValidationRules.Replication.Actors
             var pricePositionIsNotActiveErrors =
             from orderFirstPeriodDto in orderFirstPeriodDtos
             join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
-            where orderPricePosition.PriceId == null
+            where !orderPricePosition.IsActive
             select new Version.ValidationResult
             {
                 MessageType = MessageTypeId,
-                // TODO: проблема - не могу получить описание неактивной позиции, так как мы их все отфильтровали на этапе facts
-                MessageParams = null,
+                MessageParams = new XDocument(new XElement("empty",
+                                                new XAttribute("id", orderPricePosition.OrderPositionId),
+                                                new XAttribute("name", orderPricePosition.OrderPositionName)
+                                             )),
 
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,

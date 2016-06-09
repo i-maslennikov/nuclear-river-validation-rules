@@ -140,7 +140,7 @@ namespace NuClear.ValidationRules.Replication.Tests.Actors
         {
             Store.Builder
                 .Has(new Storage.Model.Erm.RulesetRule { RulesetId = 1 })
-                .Has(new Storage.Model.Erm.Ruleset { Id = 1, Priority = 1});
+                .Has(new Storage.Model.Erm.Ruleset { Id = 1, Priority = 1 });
 
             Actor.Create(Store)
                  .Sync<RulesetRule>(1)
@@ -215,7 +215,7 @@ namespace NuClear.ValidationRules.Replication.Tests.Actors
         public void ShouldInitializeOrderIfOrderCreated()
         {
             Store.Builder
-                .Has(new Storage.Model.Erm.Order { Id = 1, DestOrganizationUnitId = 1, SourceOrganizationUnitId = 1, IsActive = true})
+                .Has(new Storage.Model.Erm.Order { Id = 1, DestOrganizationUnitId = 1, SourceOrganizationUnitId = 1, IsActive = true })
                 .Has(new Storage.Model.Erm.Project { Id = 1, OrganizationUnitId = 1, IsActive = true });
 
             Actor.Create(Store)

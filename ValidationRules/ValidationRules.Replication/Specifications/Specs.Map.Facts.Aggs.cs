@@ -100,64 +100,74 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::OrderPosition>> OrderPositions
                         = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPosition>>(
                             q =>
-                                {
-                                    var opas = from opa in q.For<Facts::OrderPositionAdvertisement>()
-                                               join orderPosition in q.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
-                                               select new Aggregates::OrderPosition
-                                                {
-                                                    OrderId = orderPosition.OrderId,
-                                                    ItemPositionId = opa.PositionId,
-                                                    CompareMode = (from position in q.For<Facts::Position>()
-                                                                   where position.Id == opa.PositionId
-                                                                   select position.CompareMode
-                                                                   ).FirstOrDefault(),
-                                                    Category3Id = opa.CategoryId,
-                                                    FirmAddressId = opa.FirmAddressId,
+                            {
+                                var opas = from opa in q.For<Facts::OrderPositionAdvertisement>()
+                                           join orderPosition in q.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
+                                           select new Aggregates::OrderPosition
+                                           {
+                                               OrderId = orderPosition.OrderId,
+                                               ItemPositionId = opa.PositionId,
+                                               CompareMode = (from position in q.For<Facts::Position>()
+                                                              where position.Id == opa.PositionId
+                                                              select position.CompareMode
+                                                               ).FirstOrDefault(),
+                                               Category3Id = opa.CategoryId,
+                                               FirmAddressId = opa.FirmAddressId,
 
-                                                    PackagePositionId = (from pricePosition in q.For<Facts::PricePosition>()
-                                                                        where pricePosition.Id == orderPosition.PricePositionId
-                                                                        select pricePosition.PositionId
-                                                                        ).FirstOrDefault(),
-                                                    Category1Id = (from c3 in q.For<Facts::Category>()
-                                                                    where c3.Id == opa.CategoryId
-                                                                    join c2 in q.For<Facts::Category>() on c3.ParentId equals c2.Id
-                                                                    join c1 in q.For<Facts::Category>() on c2.ParentId equals c1.Id
-                                                                    select c1.Id
-                                                                    ).FirstOrDefault()
-                                                };
+                                               PackagePositionId = (from pricePosition in q.For<Facts::PricePosition>()
+                                                                    where pricePosition.Id == orderPosition.PricePositionId
+                                                                    select pricePosition.PositionId
+                                                                    ).FirstOrDefault(),
+                                               Category1Id = (from c3 in q.For<Facts::Category>()
+                                                              where c3.Id == opa.CategoryId
+                                                              join c2 in q.For<Facts::Category>() on c3.ParentId equals c2.Id
+                                                              join c1 in q.For<Facts::Category>() on c2.ParentId equals c1.Id
+                                                              select c1.Id
+                                                                ).FirstOrDefault()
+                                           };
 
-                                    var pkgs = from orderPosition in q.For<Facts::OrderPosition>()
-                                               join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
-                                               join position in q.For<Facts::Position>() on pricePosition.PositionId equals position.Id
-                                               where position.IsComposite
-                                               select new Aggregates::OrderPosition
-                                                {
-                                                    OrderId = orderPosition.OrderId,
-                                                    ItemPositionId = pricePosition.PositionId,
-                                                    CompareMode = position.CompareMode,
-                                                    Category3Id = null,
-                                                    FirmAddressId = null,
+                                var pkgs = from orderPosition in q.For<Facts::OrderPosition>()
+                                           join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                                           join position in q.For<Facts::Position>() on pricePosition.PositionId equals position.Id
+                                           where position.IsComposite
+                                           select new Aggregates::OrderPosition
+                                           {
+                                               OrderId = orderPosition.OrderId,
+                                               ItemPositionId = pricePosition.PositionId,
+                                               CompareMode = position.CompareMode,
+                                               Category3Id = null,
+                                               FirmAddressId = null,
 
-                                                    PackagePositionId = pricePosition.PositionId,
-                                                    Category1Id = null
-                                                };
+                                               PackagePositionId = pricePosition.PositionId,
+                                               Category1Id = null
+                                           };
 
-                                    return opas.Union(pkgs);
-                                });
+                                return opas.Union(pkgs);
+                            });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::OrderPricePosition>> OrderPricePositions
                         = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPricePosition>>(
-                            q => from order in q.For<Facts::Order>()
-                                 join orderPosition in q.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                                 from pricePosition in q.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
-                                 from position in q.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId).DefaultIfEmpty()
-                                 select new Aggregates::OrderPricePosition
+                            q => q.For<Facts::OrderPosition>().Select(x =>
+                                 new Aggregates::OrderPricePosition
                                  {
-                                    OrderId = order.Id,
-                                    OrderPositionId = orderPosition.Id,
-                                    PositionName = position.Name,
-                                    PriceId = pricePosition.PriceId
-                                 });
+                                    OrderId = x.OrderId,
+                                    OrderPositionId = x.Id,
+                                    OrderPositionName = (from pricePosition in
+                                                             (from pricePosition in q.For<Facts::PricePosition>() select new { pricePosition.Id, pricePosition.PositionId })
+                                                            .Union
+                                                            (from pricePositionNotActive in q.For<Facts::PricePositionNotActive>() select new { pricePositionNotActive.Id, pricePositionNotActive.PositionId })
+                                                         join position in q.For<Facts::Position>() on pricePosition.PositionId equals position.Id
+                                                         where pricePosition.Id == x.PricePositionId
+                                                         select position.Name).FirstOrDefault(),
+                                    PriceId = (from pricePosition in
+                                                             (from pricePosition in q.For<Facts::PricePosition>() select new { pricePosition.Id, pricePosition.PriceId })
+                                                            .Union
+                                                            (from pricePositionNotActive in q.For<Facts::PricePositionNotActive>() select new { pricePositionNotActive.Id, pricePositionNotActive.PriceId })
+                                               where pricePosition.Id == x.PricePositionId
+                                               select pricePosition.PriceId).FirstOrDefault(),
+                                    IsActive = !(from pricePositionNotActive in q.For<Facts::PricePositionNotActive>()
+                                                where pricePositionNotActive.Id == x.PricePositionId select pricePositionNotActive).Any()
+                                 }));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Position>> Positions
                         = new MapSpecification<IQuery, IQueryable<Aggregates::Position>>(

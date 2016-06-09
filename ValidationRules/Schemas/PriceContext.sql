@@ -9,6 +9,7 @@ if object_id('PriceContext.OrderPosition') is not null drop table PriceContext.O
 if object_id('PriceContext.Order') is not null drop table PriceContext.[Order]
 if object_id('PriceContext.OrganizationUnit') is not null drop table PriceContext.OrganizationUnit
 if object_id('PriceContext.PricePosition') is not null drop table PriceContext.PricePosition
+if object_id('PriceContext.PricePositionNotActive') is not null drop table PriceContext.PricePositionNotActive
 if object_id('PriceContext.Price') is not null drop table PriceContext.Price
 if object_id('PriceContext.Project') is not null drop table PriceContext.Project
 if object_id('PriceContext.Position') is not null drop table PriceContext.Position
@@ -46,6 +47,16 @@ create table PriceContext.PricePosition(
 )
 create index IX_PricePosition_PriceId ON PriceContext.PricePosition (PriceId)
 create index IX_PricePosition_PositionId ON PriceContext.PricePosition (PositionId)
+go
+
+create table PriceContext.PricePositionNotActive(
+    Id bigint not null,
+    PriceId bigint not null,
+    PositionId bigint not null,
+    constraint PK_PricePositionNotActive primary key (Id)
+)
+create index IX_PricePositionNotActive_PriceId ON PriceContext.PricePositionNotActive (PriceId)
+create index IX_PricePositionNotActive_PositionId ON PriceContext.PricePositionNotActive (PositionId)
 go
 
 create table PriceContext.AssociatedPositionsGroup(

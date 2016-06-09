@@ -106,12 +106,14 @@ go
 
 create table PriceAggregate.OrderPricePosition(
     OrderId bigint NOT NULL,
-    OrderPositionId bigint NOT NULL,
-    PositionName nvarchar(max) NULL,
-    PriceId bigint NULL
+	OrderPositionId bigint NOT NULL,
+	OrderPositionName nvarchar(max) NULL,
+	PriceId bigint NOT NULL,
+	IsActive bit NOT NULL
 )
 create index IX_OrderPricePosition_OrderId ON PriceAggregate.OrderPricePosition (OrderId)
 create index IX_OrderPricePosition_PriceId ON PriceAggregate.OrderPricePosition (PriceId)
+create index IX_OrderPricePosition_IsActive ON PriceAggregate.OrderPricePosition (IsActive)
 go
 
 -- period aggregate

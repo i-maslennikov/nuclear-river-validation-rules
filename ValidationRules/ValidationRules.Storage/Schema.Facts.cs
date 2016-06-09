@@ -43,6 +43,9 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<PricePosition>()
                       .HasSchemaName(PriceContextSchema)
                       .HasPrimaryKey(x => x.Id);
+                config.Entity<PricePositionNotActive>()
+                      .HasSchemaName(PriceContextSchema)
+                      .HasPrimaryKey(x => x.Id);
                 config.Entity<Project>()
                       .HasSchemaName(PriceContextSchema)
                       .HasPrimaryKey(x => x.Id);

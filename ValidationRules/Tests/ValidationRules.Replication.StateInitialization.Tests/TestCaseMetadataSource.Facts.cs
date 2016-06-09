@@ -98,7 +98,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .Name(nameof(IgnoredRuleset))
             .Erm(
                 new Erm::Ruleset { Id = 1, IsDeleted = true },
-                new Erm::RulesetRule { RulesetId = 1},
+                new Erm::RulesetRule { RulesetId = 1 },
                 new Erm::RulesetRule { RulesetId = 0 }
                 )
             .Fact();

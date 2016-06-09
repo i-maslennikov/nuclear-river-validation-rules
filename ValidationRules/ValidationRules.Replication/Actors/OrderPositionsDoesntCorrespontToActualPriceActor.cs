@@ -15,7 +15,7 @@ namespace NuClear.ValidationRules.Replication.Actors
 {
     public class OrderPositionsDoesntCorrespontToActualPriceActor : IActor
     {
-        // OrderCheckOrderPositionsDoesntCorrespontToActualPrice - Позиции не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа.
+        // OrderCheckOrderPositionsDoesntCorrespontToActualPrice - Заказ не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа.
         private const int MessageTypeId = 3;
 
         private readonly IQuery _query;

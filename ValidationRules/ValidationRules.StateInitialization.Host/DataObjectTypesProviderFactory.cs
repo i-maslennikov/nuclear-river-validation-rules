@@ -30,6 +30,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(Position),
                             typeof(Price),
                             typeof(PricePosition),
+                            typeof(PricePositionNotActive),
                             typeof(Project),
                             typeof(RulesetRule)
                         });

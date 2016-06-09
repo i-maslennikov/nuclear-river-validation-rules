@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             // OrderPositionAdvertisement
             new Facts::OrderPosition { Id = 1, PricePositionId = 1 },
             new Facts::PricePosition { Id = 1, PositionId = 2 },
-            new Facts::OrderPositionAdvertisement {Id = 1, PositionId = 3, CategoryId = 10, FirmAddressId = 11, OrderPositionId = 1 },
+            new Facts::OrderPositionAdvertisement { Id = 1, PositionId = 3, CategoryId = 10, FirmAddressId = 11, OrderPositionId = 1 },
 
             // OrderPosition
             new Facts::OrderPosition { PricePositionId = 2 },
@@ -27,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             // OrderPositionAdvertisement & OrderPosition
             new Facts::OrderPosition { Id = 3, PricePositionId = 3 },
             new Facts::PricePosition { Id = 3, PositionId = 4 },
-            new Facts::OrderPositionAdvertisement {Id = 3, PositionId = 5, CategoryId = 10, FirmAddressId = 11, OrderPositionId = 3 },
+            new Facts::OrderPositionAdvertisement { Id = 3, PositionId = 5, CategoryId = 10, FirmAddressId = 11, OrderPositionId = 3 },
             new Facts::Position { Id = 4, IsComposite = true },
 
             // OrderPositionAdvertisement & Category1
@@ -96,7 +96,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order { Id = 1 },
                     new Aggregates::AmountControlledPosition { OrderId = 1, CategoryCode = 10 },
                     new Aggregates::OrderPricePosition { OrderId = 1, OrderPositionId = 1, PriceId = 1 },
-                    new Aggregates::OrderPosition {OrderId = 1, PackagePositionId = 1, ItemPositionId = 1 },
+                    new Aggregates::OrderPosition { OrderId = 1, PackagePositionId = 1, ItemPositionId = 1 },
 
                     new Aggregates::Position { Id = 1, CategoryCode = 10, IsControlledByAmount = true },
                     new Aggregates::AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10 });

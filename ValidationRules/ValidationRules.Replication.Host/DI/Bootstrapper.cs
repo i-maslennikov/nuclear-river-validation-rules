@@ -294,6 +294,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IStorageBasedDataObjectAccessor<Position>, PositionAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<Price>, PriceAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<PricePosition>, PricePositionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<PricePositionNotActive>, PricePositionNotActiveAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<Project>, ProjectAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<RulesetRule>, RulesetRuleAccessor>(entryPointSpecificLifetimeManagerFactory())
 
@@ -308,6 +309,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IDataChangesHandler<Position>, PositionAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<Price>, PriceAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<PricePosition>, PricePositionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<PricePositionNotActive>, PricePositionNotActiveAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<Project>, ProjectAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<RulesetRule>, RulesetRuleAccessor>(entryPointSpecificLifetimeManagerFactory())
 

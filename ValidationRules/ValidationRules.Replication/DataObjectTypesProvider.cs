@@ -27,6 +27,7 @@ namespace NuClear.ValidationRules.Replication
                         typeof(Position),
                         typeof(Price),
                         typeof(PricePosition),
+                        typeof(PricePositionNotActive),
                         typeof(Project),
                         typeof(RulesetRule),
                     };

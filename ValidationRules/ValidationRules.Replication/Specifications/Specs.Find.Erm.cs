@@ -72,6 +72,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<PricePosition>(x => x.IsActive && !x.IsDeleted);
                 }
 
+                public static FindSpecification<PricePosition> PricePositionsNotActive()
+                {
+                    return new FindSpecification<PricePosition>(x => !x.IsActive || x.IsDeleted);
+                }
+
                 public static FindSpecification<Project> Projects()
                 {
                     return new FindSpecification<Project>(x => x.IsActive && x.OrganizationUnitId != null);

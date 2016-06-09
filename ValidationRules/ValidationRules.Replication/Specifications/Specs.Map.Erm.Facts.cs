@@ -104,6 +104,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             q => q.For(Find.Erm.PricePositions())
                                   .Select(Transform.PricePosition));
 
+                    public static readonly MapSpecification<IQuery, IQueryable<Facts::PricePositionNotActive>> PricePositionNotActive =
+                        new MapSpecification<IQuery, IQueryable<Facts::PricePositionNotActive>>(
+                            q => q.For(Find.Erm.PricePositionsNotActive())
+                                  .Select(Transform.PricePositionNotActive));
+
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Project>> Project =
                         new MapSpecification<IQuery, IQueryable<Facts::Project>>(
                             q => q.For(Find.Erm.Projects())
@@ -215,6 +220,14 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     PositionId = x.PositionId,
                                     PriceId = x.PriceId,
                                 };
+
+                        public static readonly Expression<Func<Erm::PricePosition, Facts::PricePositionNotActive>> PricePositionNotActive =
+                            x => new Facts::PricePositionNotActive
+                            {
+                                Id = x.Id,
+                                PriceId = x.PriceId,
+                                PositionId = x.PositionId,
+                            };
 
                         public static readonly Expression<Func<Erm::Project, Facts::Project>> Project =
                             x => new Facts::Project

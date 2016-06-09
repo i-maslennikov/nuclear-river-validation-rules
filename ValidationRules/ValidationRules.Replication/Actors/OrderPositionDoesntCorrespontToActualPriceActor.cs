@@ -82,12 +82,14 @@ namespace NuClear.ValidationRules.Replication.Actors
             from pricePeriod in query.For<PricePeriod>().Where(x => x.OrganizationUnitId == orderFirstPeriodDto.OrganizationUnitId && x.Start == orderFirstPeriodDto.Start).DefaultIfEmpty()
             join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
             where pricePeriod != null
-            where orderPricePosition.PriceId != null
-            where pricePeriod.PriceId != orderPricePosition.PriceId.Value
+            where pricePeriod.PriceId != orderPricePosition.PriceId
             select new Version.ValidationResult
             {
                 MessageType = MessageTypeId,
-                MessageParams = new XDocument(new XElement("empty", new XAttribute("name", orderPricePosition.PositionName))),
+                MessageParams = new XDocument(new XElement("empty",
+                                                new XAttribute("id", orderPricePosition.OrderPositionId),
+                                                new XAttribute("name", orderPricePosition.OrderPositionName)
+                                             )),
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,

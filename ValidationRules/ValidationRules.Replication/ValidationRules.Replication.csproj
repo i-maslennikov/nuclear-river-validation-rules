@@ -54,6 +54,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accessors\PricePositionNotActive.cs" />
     <Compile Include="Accessors\ProjectAccessor.cs" />
     <Compile Include="Accessors\OrganizationUnitAccessor.cs" />
     <Compile Include="Accessors\CategoryAccessor.cs" />
