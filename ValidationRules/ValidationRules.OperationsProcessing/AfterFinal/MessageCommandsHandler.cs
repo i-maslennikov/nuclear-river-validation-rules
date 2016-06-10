@@ -20,7 +20,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
         private readonly CreateNewVersionActor _createNewVersionActor;
-        private readonly AdvertisementAmountActor _advertisementAmountActor;
+        private readonly MinimumAdvertisementAmountActor _minimumAdvertisementAmountActor;
+        private readonly MaximumAdvertisementAmountActor _maximumAdvertisementAmountActor;
         private readonly AdvertisementAmountRestrictionIntegrityActor _restrictionIntegrityActor;
         private readonly OrderPositionCorrespontToInactivePositionActor _orderPositionCorrespontToInactivePositionActor;
         private readonly OrderPositionDoesntCorrespontToActualPriceActor _orderPositionDoesntCorrespontToActualPriceActor;
@@ -30,7 +31,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer,
             CreateNewVersionActor createNewVersionActor,
-            AdvertisementAmountActor advertisementAmountActor,
+            MinimumAdvertisementAmountActor minimumAdvertisementAmountActor,
+            MaximumAdvertisementAmountActor maximumAdvertisementAmountActor,
             AdvertisementAmountRestrictionIntegrityActor restrictionIntegrityActor,
             OrderPositionCorrespontToInactivePositionActor orderPositionCorrespontToInactivePositionActor,
             OrderPositionDoesntCorrespontToActualPriceActor orderPositionDoesntCorrespontToActualPriceActor,
@@ -39,7 +41,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
             _createNewVersionActor = createNewVersionActor;
-            _advertisementAmountActor = advertisementAmountActor;
+            _minimumAdvertisementAmountActor = minimumAdvertisementAmountActor;
+            _maximumAdvertisementAmountActor = maximumAdvertisementAmountActor;
             _restrictionIntegrityActor = restrictionIntegrityActor;
             _orderPositionCorrespontToInactivePositionActor = orderPositionCorrespontToInactivePositionActor;
             _orderPositionDoesntCorrespontToActualPriceActor = orderPositionDoesntCorrespontToActualPriceActor;
@@ -77,7 +80,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
                 // Думаю, пока достаточно указывать вызваемые акторы явно, о фабриках подумаем позже.
-                _advertisementAmountActor.ExecuteCommands(commands);
+                _minimumAdvertisementAmountActor.ExecuteCommands(commands);
+                _maximumAdvertisementAmountActor.ExecuteCommands(commands);
                 _restrictionIntegrityActor.ExecuteCommands(commands);
                 _orderPositionCorrespontToInactivePositionActor.ExecuteCommands(commands);
                 _orderPositionDoesntCorrespontToActualPriceActor.ExecuteCommands(commands);

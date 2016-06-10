@@ -14,21 +14,18 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.Actors
 {
-    public sealed class AdvertisementAmountActor : IActor
+    /// <summary>
+    /// Для заказов, которые приводят к превышению ограничения на максимальное количесов рекламы в Position.Category должна выводиться ошибка.
+    /// </summary>
+    public sealed class MaximumAdvertisementAmountActor : IActor
     {
-        // todo: даже эта проверка может быть разделена на две схожие:
-        // проверка на минимальное и проверка на максимальное количество рекламы.
-        // в чём разница? по первой менее критичная ошибка (warning в режиме единичной проверки в erm),
-        // заказ с такой ошибкой может быть одобрен.
-        // а вот заказ с позицией, превышающей лимит - одобрен быть не может.
-
         private const int MessageTypeId = 1;
 
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
 
-        public AdvertisementAmountActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
+        public MaximumAdvertisementAmountActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
         {
             _query = query;
             _repository = repository;
@@ -74,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.Actors
 
             var ruleViolations = from restriction in restrictionGrid
                                  from sale in saleGrid.Where(x => x.Key == restriction.Key).DefaultIfEmpty()
-                                 where sale == null || restriction.Min > sale.Count || sale.Count > restriction.Max
+                                 where sale.Count > restriction.Max
                                  select new { restriction.Key, restriction.Min, restriction.Max, sale.Count, restriction.CategoryName };
 
             var ruleResults = from position in query.For<AmountControlledPosition>()
@@ -87,7 +84,6 @@ namespace NuClear.ValidationRules.Replication.Actors
                                       MessageType = MessageTypeId,
                                       MessageParams =
                                           new XDocument(new XElement("empty",
-                                                                     new XAttribute("min", violation.Min),
                                                                      new XAttribute("max", violation.Max),
                                                                      new XAttribute("count", violation.Count),
                                                                      new XAttribute("name", violation.CategoryName))),

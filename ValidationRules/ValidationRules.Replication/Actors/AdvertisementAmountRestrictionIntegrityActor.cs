@@ -14,6 +14,9 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.Actors
 {
+    /// <summary>
+    /// Для прайс-листов, в которых для позиций с контроллируемым количеством не указан минимум должна выводиться ошибка.
+    /// </summary>
     public sealed class AdvertisementAmountRestrictionIntegrityActor : IActor
     {
         private const int MessageTypeId = 2;
@@ -68,7 +71,10 @@ namespace NuClear.ValidationRules.Replication.Actors
                                       PeriodEnd = period.End,
                                       ProjectId = pp.ProjectId,
                                       VersionId = version,
-                                  };
+
+                                      ReferenceType = EntityTypeIds.Project,
+                                      ReferenceId = pp.ProjectId,
+                              };
 
             return ruleResults;
         }

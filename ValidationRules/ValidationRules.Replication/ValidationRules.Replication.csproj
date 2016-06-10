@@ -69,7 +69,8 @@
     <Compile Include="Accessors\AssociatedPositionsGroupAccessor.cs" />
     <Compile Include="Accessors\AssociatedPositionAccessor.cs" />
     <Compile Include="Actors\AdvertisementAmountRestrictionIntegrityActor.cs" />
-    <Compile Include="Actors\AdvertisementAmountActor.cs" />
+    <Compile Include="Actors\MaximumAdvertisementAmountActor.cs" />
+    <Compile Include="Actors\MinimumAdvertisementAmountActor.cs" />
     <Compile Include="Actors\AggregateActor.cs" />
     <Compile Include="Actors\OrderPositionCorrespontToInactivePositionActor.cs" />
     <Compile Include="Actors\OrderPositionDoesntCorrespontToActualPriceActor.cs" />
