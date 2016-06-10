@@ -386,7 +386,7 @@ namespace NuClear.ValidationRules.Replication.Tests.Actors
             Store.Builder
                 .Has(new Storage.Model.Erm.Price { Id = 4, OrganizationUnitId = 1, IsActive = true, IsPublished = true })
                 .Has(new Storage.Model.Erm.Project { Id = 1, OrganizationUnitId = 1, IsActive = true })
-                .Has(new Price { Id = 4, ProjectId = 2 });
+                .Has(new Price { Id = 4, OrganizationUnitId = 2 });
 
             Actor.Create(Store)
                  .Sync<Price>(4)

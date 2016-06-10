@@ -61,12 +61,12 @@ namespace NuClear.ValidationRules.Replication.Actors
         {
             var restrictionGrid = from restriction in query.For<AdvertisementAmountRestriction>()
                                   join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
-                                  select new { Key = new { pp.Start, pp.ProjectId, restriction.CategoryCode }, restriction.Min, restriction.Max, restriction.CategoryName };
+                                  select new { Key = new { pp.Start, pp.OrganizationUnitId, restriction.CategoryCode }, restriction.Min, restriction.Max, restriction.CategoryName };
 
             var saleGrid = from position in query.For<AmountControlledPosition>()
                            join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
-                           group new { op.Start, op.ProjectId, position.CategoryCode }
-                               by new { op.Start, op.ProjectId, position.CategoryCode } into groups
+                           group new { op.Start, op.OrganizationUnitId, position.CategoryCode }
+                               by new { op.Start, op.OrganizationUnitId, position.CategoryCode } into groups
                            select new { groups.Key, Count = groups.Count() };
 
             var ruleViolations = from restriction in restrictionGrid
@@ -76,9 +76,9 @@ namespace NuClear.ValidationRules.Replication.Actors
 
             var ruleResults = from position in query.For<AmountControlledPosition>()
                               join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
-                              join violation in ruleViolations on new { op.Start, op.ProjectId, position.CategoryCode } equals
-                                  new { violation.Key.Start, violation.Key.ProjectId, violation.Key.CategoryCode }
-                              join period in query.For<Period>() on new { op.Start, op.ProjectId } equals new { period.Start, period.ProjectId }
+                              join violation in ruleViolations on new { op.Start, op.OrganizationUnitId, position.CategoryCode } equals
+                                  new { violation.Key.Start, violation.Key.OrganizationUnitId, violation.Key.CategoryCode }
+                              join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,

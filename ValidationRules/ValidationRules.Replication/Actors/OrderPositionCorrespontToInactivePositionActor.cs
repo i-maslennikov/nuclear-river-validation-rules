@@ -65,8 +65,8 @@ namespace NuClear.ValidationRules.Replication.Actors
             var orderFirstPeriodDtos = from orderFirstPeriod in orderFirstPeriods
                                   join order in query.For<Order>() on orderFirstPeriod.OrderId equals order.Id
                                   join period in query.For<Period>()
-                                  on new PeriodKey { ProjectId = orderFirstPeriod.ProjectId, Start = orderFirstPeriod.Start }
-                                  equals new PeriodKey { ProjectId = period.ProjectId, Start = period.Start }
+                                  on new PeriodKey { OrganizationUnitId = orderFirstPeriod.OrganizationUnitId, Start = orderFirstPeriod.Start }
+                                  equals new PeriodKey { OrganizationUnitId = period.OrganizationUnitId, Start = period.Start }
                                   select new
                                   {
                                       OrderId = order.Id,

@@ -32,8 +32,8 @@ create table PriceAggregate.Price(
 go
 
 create table PriceAggregate.PriceDeniedPosition(
-	PriceId bigint NOT NULL,
-	DeniedPositionId bigint NOT NULL,
+    PriceId bigint NOT NULL,
+    DeniedPositionId bigint NOT NULL,
     PrincipalPositionId bigint NOT NULL,
     ObjectBindingType int NOT NULL
 )
@@ -41,11 +41,11 @@ create index IX_PriceDeniedPosition_PriceId ON PriceAggregate.PriceDeniedPositio
 go
 
 create table PriceAggregate.PriceAssociatedPosition(
-	PriceId bigint NOT NULL,
+    PriceId bigint NOT NULL,
     AssociatedPositionId bigint NOT NULL,
     PrincipalPositionId bigint NOT NULL,
     ObjectBindingType int NOT NULL,
-	GroupId bigint NOT NULL
+    GroupId bigint NOT NULL
 )
 create index IX_PriceAssociatedPosition_PriceId ON PriceAggregate.PriceAssociatedPosition (PriceId)
 go
@@ -69,9 +69,9 @@ create table PriceAggregate.Ruleset(
 go
 
 create table PriceAggregate.RulesetRule(
-	RulesetId bigint NOT NULL,
-	RuleType int NOT NULL,
-	DependentPositionId bigint NOT NULL,
+    RulesetId bigint NOT NULL,
+    RuleType int NOT NULL,
+    DependentPositionId bigint NOT NULL,
     PrincipalPositionId bigint NOT NULL,
     ObjectBindingType int NOT NULL
 )
@@ -106,9 +106,9 @@ go
 
 create table PriceAggregate.OrderPricePosition(
     OrderId bigint NOT NULL,
-	OrderPositionId bigint NOT NULL,
-	PositionName nvarchar(max) NULL,
-	PriceId bigint NULL
+    OrderPositionId bigint NOT NULL,
+    PositionName nvarchar(max) NULL,
+    PriceId bigint NULL
 )
 create index IX_OrderPricePosition_OrderId ON PriceAggregate.OrderPricePosition (OrderId)
 create index IX_OrderPricePosition_PriceId ON PriceAggregate.OrderPricePosition (PriceId)
@@ -117,28 +117,29 @@ go
 -- period aggregate
 create table PriceAggregate.Period(
     ProjectId bigint NOT NULL,
+    OrganizationUnitId bigint NOT NULL,
     [Start] datetime2(2) NOT NULL,
     [End] datetime2(2) NOT NULL,
-	constraint PK_Period primary key (ProjectId, [Start])
+    constraint PK_Period primary key (OrganizationUnitId, [Start])
 )
 go
 
 create table PriceAggregate.OrderPeriod(
     OrderId bigint NOT NULL,
-    ProjectId bigint NOT NULL,
+    OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
 )
 create index IX_OrderPeriod_OrderId ON PriceAggregate.OrderPeriod (OrderId)
-create index IX_OrderPeriod_ProjectId_Start ON PriceAggregate.OrderPeriod (ProjectId, Start)
+create index IX_OrderPeriod_OrganizationUnitId_Start ON PriceAggregate.OrderPeriod (OrganizationUnitId, Start)
 go
 
 create table PriceAggregate.PricePeriod(
     PriceId bigint NOT NULL,
-    ProjectId bigint NOT NULL,
+    OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
 )
 create index IX_PricePeriod_PriceId ON PriceAggregate.PricePeriod (PriceId)
-create index IX_PricePeriod_ProjectId_Start ON PriceAggregate.PricePeriod (ProjectId, Start)
+create index IX_PricePeriod_OrganizationUnitId_Start ON PriceAggregate.PricePeriod (OrganizationUnitId, Start)
 go
 
 -- position aggregate

@@ -174,18 +174,20 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             q =>
                                 {
                                     var dates = q.For<Facts::Order>()
-                                                 .Select(x => new { Date = x.BeginDistributionDate, ProjectId = x.DestProjectId })
-                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, ProjectId = x.DestProjectId }))
-                                                 .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.ProjectId }))
+                                                 .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                                 .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
+                                                 .Join(q.For<Facts::Project>(), x => x.OrganizationUnitId, p => p.OrganizationUnitId, (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
                                                  .OrderBy(x => x.Date)
                                                  .Distinct();
 
-                                    return dates.Select(x => new { start = x, end = dates.FirstOrDefault(y => y.Date > x.Date && y.ProjectId == x.ProjectId) })
+                                    return dates.Select(x => new { Start = x, End = dates.FirstOrDefault(y => y.Date > x.Date && y.OrganizationUnitId == x.OrganizationUnitId) })
                                                 .Select(x => new Aggregates::Period
                                                     {
-                                                        Start = x.start.Date,
-                                                        End = x.end != null ? x.end.Date : DateTime.MaxValue,
-                                                        ProjectId = x.start.ProjectId
+                                                        Start = x.Start.Date,
+                                                        End = x.End != null ? x.End.Date : DateTime.MaxValue,
+                                                        OrganizationUnitId = x.Start.OrganizationUnitId,
+                                                        ProjectId = x.Start.ProjectId
                                                     });
                                 });
 
@@ -194,22 +196,22 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             q =>
                             {
                                 var dates = q.For<Facts::Order>()
-                                             .Select(x => new { Date = x.BeginDistributionDate, ProjectId = x.DestProjectId })
-                                             .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, ProjectId = x.DestProjectId }))
-                                             .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.ProjectId }))
+                                             .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                             .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                             .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
                                              .Distinct();
 
                                 // https://github.com/linq2db/linq2db/issues/356
-                                dates = dates.Select(x => new { x.Date, x.ProjectId });
+                                dates = dates.Select(x => new { x.Date, x.OrganizationUnitId });
 
                                 var result = q.For<Facts::Order>()
                                               .SelectMany(order => dates.Where(date =>
-                                                                               date.ProjectId == order.DestProjectId &&
+                                                                               date.OrganizationUnitId == order.DestOrganizationUnitId &&
                                                                                order.BeginDistributionDate <= date.Date && date.Date < order.EndDistributionDateFact)
                                                                         .Select(x => new Aggregates::OrderPeriod
                                                                             {
                                                                                 OrderId = order.Id,
-                                                                                ProjectId = order.DestProjectId,
+                                                                                OrganizationUnitId = order.DestOrganizationUnitId,
                                                                                 Start = x.Date
                                                                             }));
 
@@ -221,15 +223,15 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             q =>
                                 {
                                     var dates = q.For<Facts::Order>()
-                                                 .Select(x => new { Date = x.BeginDistributionDate, ProjectId = x.DestProjectId })
-                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, ProjectId = x.DestProjectId }))
-                                                 .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.ProjectId }))
+                                                 .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                                 .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
                                                  .Distinct();
 
                                     var result = dates.Select(date => new
                                                                     {
                                                                         PriceId = (long?)q.For<Facts::Price>()
-                                                                                            .Where(price => price.ProjectId == date.ProjectId && price.BeginDate <= date.Date)
+                                                                                            .Where(price => price.OrganizationUnitId == date.OrganizationUnitId && price.BeginDate <= date.Date)
                                                                                             .OrderByDescending(price => price.BeginDate)
                                                                                             .FirstOrDefault()
                                                                                             .Id,
@@ -238,7 +240,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                       .Where(x => x.PriceId.HasValue)
                                                       .Select(x => new Aggregates::PricePeriod
                                                                     {
-                                                                        ProjectId = x.Period.ProjectId,
+                                                                        OrganizationUnitId = x.Period.OrganizationUnitId,
                                                                         PriceId = x.PriceId.Value,
                                                                         Start = x.Period.Date
                                                                     });

@@ -58,15 +58,13 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Order>> Order =
                         new MapSpecification<IQuery, IQueryable<Facts::Order>>(
                             q => from order in q.For(Find.Erm.Orders())
-                                 join destProject in q.For(Find.Erm.Projects()) on order.DestOrganizationUnitId equals destProject.OrganizationUnitId
-                                 join sourceProject in q.For(Find.Erm.Projects()) on order.SourceOrganizationUnitId equals sourceProject.OrganizationUnitId
                                  select new Facts::Order
                                      {
                                          Id = order.Id,
                                          FirmId = order.FirmId,
                                          OwnerId = order.OwnerCode,
-                                         DestProjectId = destProject.Id,
-                                         SourceProjectId = sourceProject.Id,
+                                         DestOrganizationUnitId = order.DestOrganizationUnitId,
+                                         SourceOrganizationUnitId = order.SourceOrganizationUnitId,
                                          WorkflowStepId = order.WorkflowStepId,
                                          BeginDistributionDate = order.BeginDistributionDate,
                                          EndDistributionDateFact = order.EndDistributionDateFact + OneSecond,
@@ -98,7 +96,8 @@ namespace NuClear.ValidationRules.Replication.Specifications
 
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Price>> Price =
                         new MapSpecification<IQuery, IQueryable<Facts::Price>>(
-                            q => q.For(Find.Erm.Prices()).Join(q.For(Find.Erm.Projects()), price => price.OrganizationUnitId, project => project.OrganizationUnitId, Transform.Price));
+                            q => q.For(Find.Erm.Prices())
+                                  .Select(Transform.Price));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::PricePosition>> PricePosition =
                         new MapSpecification<IQuery, IQueryable<Facts::PricePosition>>(
@@ -199,12 +198,12 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     CategoryCode = x.CategoryCode
                                 };
 
-                        public static readonly Expression<Func<Erm::Price, Erm::Project, Facts::Price>> Price =
-                            (price, project) => new Facts::Price
+                        public static readonly Expression<Func<Erm::Price, Facts::Price>> Price =
+                            price => new Facts::Price
                                 {
                                     Id = price.Id,
                                     BeginDate = price.BeginDate,
-                                    ProjectId = project.Id,
+                                    OrganizationUnitId = price.OrganizationUnitId,
                                 };
 
                         public static readonly Expression<Func<Erm::PricePosition, Facts::PricePosition>> PricePosition =

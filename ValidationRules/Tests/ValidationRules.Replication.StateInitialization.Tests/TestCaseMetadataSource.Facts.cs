@@ -133,14 +133,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(ReplicatedOrder))
             .Erm(
-                new Erm::Order { Id = 1, IsActive = true, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndDistributionDateFact = DateTime.Parse("2012-01-31T23:59:59"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerCode = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 },
-                new Erm::Project { Id = 3, OrganizationUnitId = 2, IsActive = true },
-                new Erm::Project { Id = 8, OrganizationUnitId = 7, IsActive = true }
+                new Erm::Order { Id = 1, IsActive = true, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndDistributionDateFact = DateTime.Parse("2012-01-31T23:59:59"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerCode = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 }
                 )
             .Fact(
-                new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestProjectId = 3, EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceProjectId = 8, WorkflowStepId = 8 },
-                new Facts::Project { Id = 3, OrganizationUnitId = 2 },
-                new Facts::Project { Id = 8, OrganizationUnitId = 7 }
+                new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 }
                 );
 
         // ReSharper disable once UnusedMember.Local

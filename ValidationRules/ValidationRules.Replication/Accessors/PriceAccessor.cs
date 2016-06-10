@@ -46,14 +46,14 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
             var ranges = _query.For<Price>()
                           .Where(specification)
-                          .GroupBy(x => x.ProjectId, x => x.BeginDate)
+                          .GroupBy(x => x.OrganizationUnitId, x => x.BeginDate)
                           .ToDictionary(x => x.Key, x => x.Min());
 
             var dates = _query.For<Order>()
-                         .Select(x => new { Date = x.BeginDistributionDate, ProjectId = x.DestProjectId })
-                         .Union(_query.For<Order>().Select(x => new { Date = x.EndDistributionDateFact, ProjectId = x.DestProjectId }))
-                         .Union(_query.For<Price>().Select(x => new { Date = x.BeginDate, x.ProjectId }))
-                         .GroupBy(x => x.ProjectId, x => x.Date)
+                         .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                         .Union(_query.For<Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                         .Union(_query.For<Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
+                         .GroupBy(x => x.OrganizationUnitId, x => x.Date)
                          .ToDictionary(x => x.Key, x => x.Distinct());
 
             var periodIds = ranges.Join(dates,
@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                                      x => x.Key,
                                      (range, date) => date.Value
                                                           .Where(d => range.Value <= d)
-                                                          .Select(d => new PeriodKey { ProjectId = range.Key, Start = d }))
+                                                          .Select(d => new PeriodKey { OrganizationUnitId = range.Key, Start = d }))
                                .SelectMany(x => x)
                                .Distinct(PeriodKeyEqualityComparer.Instance);
 

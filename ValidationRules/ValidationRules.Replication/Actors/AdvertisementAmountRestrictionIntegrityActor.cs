@@ -61,19 +61,19 @@ namespace NuClear.ValidationRules.Replication.Actors
         {
             var ruleResults = from restriction in query.For<AdvertisementAmountRestriction>().Where(x => x.MissingMinimalRestriction)
                               join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
-                              join period in query.For<Period>() on new { pp.Start, pp.ProjectId } equals new { period.Start, period.ProjectId }
-                              join op in query.For<OrderPeriod>() on new { pp.Start, pp.ProjectId } equals new { op.Start, op.ProjectId }
+                              join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                              join op in query.For<OrderPeriod>() on new { pp.Start, pp.OrganizationUnitId } equals new { op.Start, op.OrganizationUnitId }
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
                                       MessageParams = new XDocument(new XElement("empty", new XAttribute("name", restriction.CategoryName))),
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
-                                      ProjectId = pp.ProjectId,
+                                      ProjectId = period.ProjectId,
                                       VersionId = version,
 
                                       ReferenceType = EntityTypeIds.Project,
-                                      ReferenceId = pp.ProjectId,
+                                      ReferenceId = period.ProjectId,
                               };
 
             return ruleResults;

@@ -18,7 +18,7 @@ go
 
 create table PriceContext.Price(
     Id bigint not null,
-    ProjectId bigint not null,
+    OrganizationUnitId bigint not null,
     BeginDate datetime2(2) not null,
     constraint PK_Price primary key (Id)
 )
@@ -80,8 +80,8 @@ go
 create table PriceContext.[Order](
     Id bigint not null,
     FirmId bigint not null,
-    DestProjectId bigint not null,
-    SourceProjectId bigint not null,
+    DestOrganizationUnitId bigint not null,
+    SourceOrganizationUnitId bigint not null,
     OwnerId bigint not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDateFact datetime2(2) not null,
@@ -138,11 +138,11 @@ create index IX_Category_ParentId ON PriceContext.Category (ParentId)
 go
 
 create table PriceContext.RulesetRule(
-	Id bigint not null,
-	RuleType int not null,
+    Id bigint not null,
+    RuleType int not null,
     DependentPositionId bigint not null,
     PrincipalPositionId bigint not null,
-	[Priority] int not null,
+    [Priority] int not null,
     ObjectBindingType int not null
 )
 create index IX_RulesetRule_Id ON PriceContext.RulesetRule (Id)

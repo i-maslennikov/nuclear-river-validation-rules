@@ -12,6 +12,7 @@ namespace NuClear.ValidationRules.Storage.Model.Aggregates
     public sealed class Period
     {
         public long ProjectId { get; set; }
+        public long OrganizationUnitId { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
     }
