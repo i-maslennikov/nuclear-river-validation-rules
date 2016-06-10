@@ -187,7 +187,7 @@ go
 create table ERM.Lead(
 	Id bigint not null
     , FirmId bigint not null
-    , OwnerId bigint not null
+    , IsInQueue bigint not null
     , Type int not null
     , constraint PK_Leads primary key (Id)
 )
