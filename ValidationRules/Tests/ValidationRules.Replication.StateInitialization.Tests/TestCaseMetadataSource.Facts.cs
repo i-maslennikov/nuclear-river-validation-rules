@@ -300,12 +300,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(ReplicatedPrice))
             .Erm(
-                new Erm::Price { Id = 2, IsActive = true, IsDeleted = false, IsPublished = true, OrganizationUnitId = 1 },
-                new Erm::Project { OrganizationUnitId = 1, IsActive = true }
-                )
+                new Erm::Price { Id = 2, IsActive = true, IsDeleted = false, IsPublished = true, OrganizationUnitId = 1 })
             .Fact(
-                new Facts::Price { Id = 2 },
-                new Facts::Project { OrganizationUnitId = 1 }
+                new Facts::Price { Id = 2, OrganizationUnitId = 1 }
                 );
 
     }
