@@ -24,7 +24,6 @@ create table Messages.ValidationResult(
     MessageType int NOT NULL,
     MessageParams xml NOT NULL,
 
-    OrderId bigint NOT NULL,
     PeriodStart datetime2(2) NOT NULL,
     PeriodEnd datetime2(2) NOT NULL,
     ProjectId bigint NOT NULL,
