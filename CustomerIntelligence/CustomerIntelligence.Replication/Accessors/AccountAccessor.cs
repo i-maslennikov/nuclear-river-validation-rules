@@ -46,8 +46,7 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
                            join client in _query.For<Client>() on legalPerson.ClientId equals client.Id
                            join branchOfficeOrganizationUnit in _query.For<BranchOfficeOrganizationUnit>()
                                on account.BranchOfficeOrganizationUnitId equals branchOfficeOrganizationUnit.Id
-                           join firm in _query.For<Firm>() on branchOfficeOrganizationUnit.OrganizationUnitId equals firm.OrganizationUnitId
-                           where firm.ClientId == client.Id
+                           join firm in _query.For<Firm>() on client.Id equals firm.ClientId
                            select firm.Id)
                 .ToArray();
 
