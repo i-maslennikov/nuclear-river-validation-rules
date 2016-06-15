@@ -59,7 +59,7 @@ namespace NuClear.Querying.Http.Controllers
 
             if (compatibleParameter != null)
             {
-                actionExecutedContext.Response.Content.Headers.ContentType.Parameters.Add(compatibleParameter);
+                actionExecutedContext.Response?.Content.Headers.ContentType.Parameters.Add(compatibleParameter);
             }
         }
 
@@ -68,10 +68,13 @@ namespace NuClear.Querying.Http.Controllers
         {
             if (actionExecutedContext.Request.Method == HttpMethod.Get)
             {
-                actionExecutedContext.Response.Headers.CacheControl = new CacheControlHeaderValue
+                if (actionExecutedContext.Response != null)
                 {
-                    NoStore = true
-                };
+                    actionExecutedContext.Response.Headers.CacheControl = new CacheControlHeaderValue
+                    {
+                        NoStore = true
+                    };
+                }
             }
         }
     }

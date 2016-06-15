@@ -61,6 +61,11 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                     return spec;
                 }
 
+                public static FindSpecification<FirmCategory3> FirmCategory3(IReadOnlyCollection<long> aggregateIds)
+                {
+                    return new FindSpecification<FirmCategory3>(x => aggregateIds.Contains(x.ProjectId));
+                }
+
                 public static FindSpecification<FirmForecast> FirmForecast(IReadOnlyCollection<long> aggregateIds)
                 {
                     return new FindSpecification<FirmForecast>(x => aggregateIds.Contains(x.ProjectId));
