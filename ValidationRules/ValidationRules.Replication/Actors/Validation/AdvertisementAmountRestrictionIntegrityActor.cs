@@ -21,6 +21,11 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
     {
         private const int MessageTypeId = 2;
 
+        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
+                                                                    .WhenMass(Result.Error)
+                                                                    .WhenMassPrerelease(Result.Error)
+                                                                    .WhenMassRelease(Result.Error);
+
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
@@ -74,6 +79,8 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
 
                                       ReferenceType = EntityTypeIds.Project,
                                       ReferenceId = period.ProjectId,
+
+                                      Result = RuleResult,
                               };
 
             return ruleResults;

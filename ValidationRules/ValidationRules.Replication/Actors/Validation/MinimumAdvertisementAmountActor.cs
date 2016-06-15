@@ -21,6 +21,11 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
     {
         private const int MessageTypeId = 1;
 
+        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
+                                                                    .WhenMass(Result.Error)
+                                                                    .WhenMassPrerelease(Result.Error)
+                                                                    .WhenMassRelease(Result.Error);
+
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
@@ -74,29 +79,56 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                                  where sale == null || restriction.Min > sale.Count
                                  select new { restriction.Key, restriction.Min, restriction.Max, sale.Count, restriction.CategoryName };
 
-            var ruleResults = from position in query.For<AmountControlledPosition>()
-                              join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
-                              join violation in ruleViolations on new { op.Start, op.OrganizationUnitId, position.CategoryCode } equals
-                                  new { violation.Key.Start, violation.Key.OrganizationUnitId, violation.Key.CategoryCode }
-                              join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                              select new Version.ValidationResult
-                                  {
-                                      MessageType = MessageTypeId,
-                                      MessageParams =
-                                          new XDocument(new XElement("empty",
-                                                                     new XAttribute("min", violation.Min),
-                                                                     new XAttribute("count", violation.Count),
-                                                                     new XAttribute("name", violation.CategoryName))),
-                                      PeriodStart = period.Start,
-                                      PeriodEnd = period.End,
-                                      ProjectId = period.ProjectId,
-                                      VersionId = version,
+            var projectRuleViolations = from period in query.For<Period>()
+                                        join violation in ruleViolations on new { period.Start, period.OrganizationUnitId }
+                                            equals new { violation.Key.Start, violation.Key.OrganizationUnitId }
+                                        select new Version.ValidationResult
+                                            {
+                                                MessageType = MessageTypeId,
+                                                MessageParams =
+                                                    new XDocument(new XElement("empty",
+                                                                               new XAttribute("min", violation.Min),
+                                                                               new XAttribute("count", violation.Count),
+                                                                               new XAttribute("name", violation.CategoryName))),
+                                                PeriodStart = period.Start,
+                                                PeriodEnd = period.End,
+                                                ProjectId = period.ProjectId,
+                                                VersionId = version,
 
-                                      ReferenceType = EntityTypeIds.Project,
-                                      ReferenceId = period.ProjectId,
-                                  };
+                                                ReferenceType = EntityTypeIds.Project,
+                                                ReferenceId = period.ProjectId,
 
-            return ruleResults;
+                                                Result = RuleResult,
+                                            };
+
+            var orderRuleViolations = from position in query.For<AmountControlledPosition>()
+                                      join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
+                                      join violation in ruleViolations on new { op.Start, op.OrganizationUnitId, position.CategoryCode }
+                                          equals new { violation.Key.Start, violation.Key.OrganizationUnitId, violation.Key.CategoryCode }
+                                      join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId }
+                                          equals new { period.Start, period.OrganizationUnitId }
+                                      select new Version.ValidationResult
+                                          {
+                                              MessageType = MessageTypeId,
+                                              MessageParams =
+                                                  new XDocument(new XElement("empty",
+                                                                             new XAttribute("min", violation.Min),
+                                                                             new XAttribute("count", violation.Count),
+                                                                             new XAttribute("name", violation.CategoryName))),
+                                              PeriodStart = period.Start,
+                                              PeriodEnd = period.End,
+                                              ProjectId = period.ProjectId,
+                                              VersionId = version,
+
+                                              ReferenceType = EntityTypeIds.Order,
+                                              ReferenceId = position.OrderId,
+
+                                              Result = RuleResult,
+                                          };
+
+            // В projectRuleViolations получаются сообщения с тегом проекта,
+            // в orderRuleViolations получаются сообщения с тегом заказа.
+            return projectRuleViolations.Union(orderRuleViolations);
         }
     }
 }

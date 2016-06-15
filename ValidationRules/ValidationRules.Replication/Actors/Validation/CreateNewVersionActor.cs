@@ -62,6 +62,7 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                                                                        ProjectId = x.ProjectId,
                                                                        ReferenceType = x.ReferenceType,
                                                                        ReferenceId = x.ReferenceId,
+                                                                       Result = x.Result,
                                                                    });
             _validationResultRepository.AddRange(nextVersionResults);
             _validationResultRepository.Save();
