@@ -19,6 +19,11 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
         // OrderCheckOrderPositionCorrespontToInactivePosition - ѕозици€ {OrderPositionId} соответствует скрытой позиции прайс листа. Ќеобходимо указать активную позицию из текущего действующего прайс-листа.
         private const int MessageTypeId = 4;
 
+        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
+                                                                    .WhenMass(Result.Error)
+                                                                    .WhenMassPrerelease(Result.Error)
+                                                                    .WhenMassRelease(Result.Error);
+
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
@@ -96,6 +101,8 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
 
                 ReferenceType = EntityTypeIds.Order,
                 ReferenceId = orderFirstPeriodDto.OrderId,
+
+                Result = RuleResult,
             };
 
             return pricePositionIsNotActiveErrors;

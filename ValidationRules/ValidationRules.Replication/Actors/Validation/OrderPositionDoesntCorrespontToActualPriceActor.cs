@@ -19,6 +19,11 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
         // OrderCheckOrderPositionDoesntCorrespontToActualPrice - Позиция {OrderPositionId} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа.
         private const int MessageTypeId = 5;
 
+        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
+                                                                    .WhenMass(Result.Warning)
+                                                                    .WhenMassPrerelease(Result.Warning)
+                                                                    .WhenMassRelease(Result.Warning); // Немного искажённая трактовка, проверка erm выдаёт ошибку при статусе, отличном от Approved
+
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
@@ -97,6 +102,8 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
 
                 ReferenceType = EntityTypeIds.Order,
                 ReferenceId = orderFirstPeriodDto.OrderId,
+
+                Result = RuleResult,
             };
 
             return orderPositionBadPriceErrors;
