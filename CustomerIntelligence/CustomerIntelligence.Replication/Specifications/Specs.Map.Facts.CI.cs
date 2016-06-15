@@ -2,19 +2,12 @@
 using System.Linq;
 
 using NuClear.CustomerIntelligence.Storage.Model.Bit;
-using NuClear.CustomerIntelligence.Storage.Model.CI;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
-using NuClear.CustomerIntelligence.Storage.Model.Statistics;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
-using CategoryGroup = NuClear.CustomerIntelligence.Storage.Model.CI.CategoryGroup;
-using Client = NuClear.CustomerIntelligence.Storage.Model.CI.Client;
-using Firm = NuClear.CustomerIntelligence.Storage.Model.Facts.Firm;
-using FirmForecast = NuClear.CustomerIntelligence.Storage.Model.Statistics.FirmForecast;
-using Project = NuClear.CustomerIntelligence.Storage.Model.Facts.Project;
-using ProjectCategoryStatistics = NuClear.CustomerIntelligence.Storage.Model.Statistics.ProjectCategoryStatistics;
-using Territory = NuClear.CustomerIntelligence.Storage.Model.CI.Territory;
+using CI = NuClear.CustomerIntelligence.Storage.Model.CI;
+using Statistics = NuClear.CustomerIntelligence.Storage.Model.Statistics;
 
 namespace NuClear.CustomerIntelligence.Replication.Specifications
 {
@@ -27,18 +20,18 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                 // ReSharper disable once InconsistentNaming
                 public static class ToCI
                 {
-                    public static readonly MapSpecification<IQuery, IQueryable<CategoryGroup>> CategoryGroups =
-                        new MapSpecification<IQuery, IQueryable<CategoryGroup>>(
-                            q => from categoryGroup in q.For<Storage.Model.Facts.CategoryGroup>()
-                                 select new CategoryGroup
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::CategoryGroup>> CategoryGroups =
+                        new MapSpecification<IQuery, IQueryable<CI::CategoryGroup>>(
+                            q => from categoryGroup in q.For<CategoryGroup>()
+                                 select new CI::CategoryGroup
                                         {
                                             Id = categoryGroup.Id,
                                             Name = categoryGroup.Name,
                                             Rate = categoryGroup.Rate
                                         });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Client>> Clients =
-                        new MapSpecification<IQuery, IQueryable<Client>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::Client>> Clients =
+                        new MapSpecification<IQuery, IQueryable<CI::Client>>(
                             q =>
                             {
                                 var clientRates = from firm in q.For<Firm>()
@@ -47,13 +40,13 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                                   join categoryOrganizationUnit in q.For<CategoryOrganizationUnit>() on
                                                       new { categoryFirmAddress.CategoryId, firm.OrganizationUnitId }
                                                       equals new { categoryOrganizationUnit.CategoryId, categoryOrganizationUnit.OrganizationUnitId }
-                                                  join categoryGroup in q.For<Storage.Model.Facts.CategoryGroup>() on categoryOrganizationUnit.CategoryGroupId equals categoryGroup.Id
+                                                  join categoryGroup in q.For<CategoryGroup>() on categoryOrganizationUnit.CategoryGroupId equals categoryGroup.Id
                                                   group categoryGroup by firm.ClientId
                                                   into categoryGroups
                                                   select new { ClientId = categoryGroups.Key, CategoryGroupId = categoryGroups.Min(x => x.Id) };
-                                return from client in q.For<Storage.Model.Facts.Client>()
+                                return from client in q.For<Client>()
                                        from rate in clientRates.Where(x => x.ClientId == client.Id).DefaultIfEmpty()
-                                       select new Client
+                                       select new CI::Client
                                               {
                                                   Id = client.Id,
                                                   Name = client.Name,
@@ -61,18 +54,18 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                               };
                             });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<ClientContact>> ClientContacts =
-                        new MapSpecification<IQuery, IQueryable<ClientContact>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::ClientContact>> ClientContacts =
+                        new MapSpecification<IQuery, IQueryable<CI::ClientContact>>(
                             q => from contact in q.For<Contact>()
-                                 select new ClientContact
+                                 select new CI::ClientContact
                                         {
                                             ClientId = contact.ClientId,
                                             ContactId = contact.Id,
                                             Role = contact.Role,
                                         });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Storage.Model.CI.Firm>> Firms =
-                         new MapSpecification<IQuery, IQueryable<Storage.Model.CI.Firm>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::Firm>> Firms =
+                         new MapSpecification<IQuery, IQueryable<CI::Firm>>(
                             q =>
                             {
                                 // FIXME {all, 03.04.2015}: the obtained SQL is too complex and slow
@@ -93,9 +86,9 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                 // TODO {all, 02.04.2015}: CategoryGroupId processing
                                 return from firm in q.For<Firm>()
                                        join project in q.For<Project>() on firm.OrganizationUnitId equals project.OrganizationUnitId
-                                       join client in q.For<Storage.Model.Facts.Client>() on firm.ClientId equals client.Id into clients
-                                       from client in clients.DefaultIfEmpty(new Storage.Model.Facts.Client())
-                                       select new Storage.Model.CI.Firm
+                                       join client in q.For<Client>() on firm.ClientId equals client.Id into clients
+                                       from client in clients.DefaultIfEmpty(new Client())
+                                       select new CI::Firm
                                               {
                                                   Id = firm.Id,
                                                   Name = firm.Name,
@@ -115,7 +108,7 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                                                      join categoryOrganizationUnit in q.For<CategoryOrganizationUnit>() on
                                                                          new { categoryFirmAddress.CategoryId, firm.OrganizationUnitId } equals
                                                                          new { categoryOrganizationUnit.CategoryId, categoryOrganizationUnit.OrganizationUnitId }
-                                                                     join categoryGroup in q.For<Storage.Model.Facts.CategoryGroup>() on categoryOrganizationUnit.CategoryGroupId equals categoryGroup.Id
+                                                                     join categoryGroup in q.For<CategoryGroup>() on categoryOrganizationUnit.CategoryGroupId equals categoryGroup.Id
                                                                      orderby categoryGroup.Rate descending
                                                                      select categoryGroup.Id).FirstOrDefault(),
                                                   ClientId = firm.ClientId,
@@ -124,8 +117,8 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                               };
                             });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<FirmActivity>> FirmActivities =
-                        new MapSpecification<IQuery, IQueryable<FirmActivity>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::FirmActivity>> FirmActivities =
+                        new MapSpecification<IQuery, IQueryable<CI::FirmActivity>>(
                             q =>
                             {
                                 var firmActivities = q.For<Activity>()
@@ -141,7 +134,7 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                        from lastFirmActivity in firmActivities.Where(x => x.FirmId == firm.Id).Select(x => (DateTimeOffset?)x.LastActivityOn).DefaultIfEmpty()
                                        from lastClientActivity in
                                            clientActivities.Where(x => x.ClientId == firm.ClientId).Select(x => (DateTimeOffset?)x.LastActivityOn).DefaultIfEmpty()
-                                       select new FirmActivity
+                                       select new CI::FirmActivity
                                               {
                                                   FirmId = firm.Id,
                                                   LastActivityOn = lastFirmActivity != null && lastClientActivity != null
@@ -150,64 +143,64 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                               };
                             });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<FirmBalance>> FirmBalances =
-                        new MapSpecification<IQuery, IQueryable<FirmBalance>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::FirmBalance>> FirmBalances =
+                        new MapSpecification<IQuery, IQueryable<CI::FirmBalance>>(
                             q => from firm in q.For<Firm>()
-                                 join client in q.For<Storage.Model.Facts.Client>() on firm.ClientId equals client.Id
+                                 join client in q.For<Client>() on firm.ClientId equals client.Id
                                  join legalPerson in q.For<LegalPerson>() on client.Id equals legalPerson.ClientId
                                  join account in q.For<Account>() on legalPerson.Id equals account.LegalPersonId
                                  join branchOfficeOrganizationUnit in q.For<BranchOfficeOrganizationUnit>() on account.BranchOfficeOrganizationUnitId equals branchOfficeOrganizationUnit.Id
                                  join project in q.For<Project>() on branchOfficeOrganizationUnit.OrganizationUnitId equals project.OrganizationUnitId
 
-                                 select new FirmBalance { ProjectId = project.Id, FirmId = firm.Id, AccountId = account.Id, Balance = account.Balance });
+                                 select new CI::FirmBalance { ProjectId = project.Id, FirmId = firm.Id, AccountId = account.Id, Balance = account.Balance });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<FirmCategory1>> FirmCategories1 =
-                        new MapSpecification<IQuery, IQueryable<FirmCategory1>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::FirmCategory1>> FirmCategories1 =
+                        new MapSpecification<IQuery, IQueryable<CI::FirmCategory1>>(
                             q => (from firmAddress in q.For<FirmAddress>()
                                   join categoryFirmAddress in q.For<CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
                                   join category3 in q.For<Category>().Where(x => x.Level == 3) on categoryFirmAddress.CategoryId equals category3.Id
                                   join category2 in q.For<Category>().Where(x => x.Level == 2) on category3.ParentId equals category2.Id
                                   join category1 in q.For<Category>().Where(x => x.Level == 1) on category2.ParentId equals category1.Id
-                                  select new FirmCategory1
+                                  select new CI::FirmCategory1
                                   {
                                       FirmId = firmAddress.FirmId,
                                       CategoryId = category1.Id
                                   }).Distinct());
 
-                    public static readonly MapSpecification<IQuery, IQueryable<FirmCategory2>> FirmCategories2 =
-                        new MapSpecification<IQuery, IQueryable<FirmCategory2>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::FirmCategory2>> FirmCategories2 =
+                        new MapSpecification<IQuery, IQueryable<CI::FirmCategory2>>(
                             q => (from firmAddress in q.For<FirmAddress>()
                                   join categoryFirmAddress in q.For<CategoryFirmAddress>() on firmAddress.Id equals categoryFirmAddress.FirmAddressId
                                   join category3 in q.For<Category>().Where(x => x.Level == 3) on categoryFirmAddress.CategoryId equals category3.Id
                                   join category2 in q.For<Category>().Where(x => x.Level == 2) on category3.ParentId equals category2.Id
-                                  select new FirmCategory2
+                                  select new CI::FirmCategory2
                                   {
                                       FirmId = firmAddress.FirmId,
                                       CategoryId = category2.Id
                                   }).Distinct());
 
-                    public static readonly MapSpecification<IQuery, IQueryable<FirmTerritory>> FirmTerritories =
-                        new MapSpecification<IQuery, IQueryable<FirmTerritory>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::FirmTerritory>> FirmTerritories =
+                        new MapSpecification<IQuery, IQueryable<CI::FirmTerritory>>(
                             q => (from firmAddress in q.For<FirmAddress>()
-                                  select new FirmTerritory { FirmId = firmAddress.FirmId, FirmAddressId = firmAddress.Id, TerritoryId = firmAddress.TerritoryId })
+                                  select new CI::FirmTerritory { FirmId = firmAddress.FirmId, FirmAddressId = firmAddress.Id, TerritoryId = firmAddress.TerritoryId })
                                      .Distinct());
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Storage.Model.CI.Project>> Projects =
-                        new MapSpecification<IQuery, IQueryable<Storage.Model.CI.Project>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::Project>> Projects =
+                        new MapSpecification<IQuery, IQueryable<CI::Project>>(
                             q => from project in q.For<Project>()
-                                 select new Storage.Model.CI.Project
+                                 select new CI::Project
                                         {
                                             Id = project.Id,
                                             Name = project.Name
                                         });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<ProjectCategory>> ProjectCategories =
-                        new MapSpecification<IQuery, IQueryable<ProjectCategory>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::ProjectCategory>> ProjectCategories =
+                        new MapSpecification<IQuery, IQueryable<CI::ProjectCategory>>(
                             q => from project in q.For<Project>()
                                  join categoryOrganizationUnit in q.For<CategoryOrganizationUnit>() on project.OrganizationUnitId equals categoryOrganizationUnit.OrganizationUnitId
                                  join category in q.For<Category>() on categoryOrganizationUnit.CategoryId equals category.Id
                                  from restriction in q.For<SalesModelCategoryRestriction>().Where(x => x.ProjectId == project.Id && x.CategoryId == category.Id).DefaultIfEmpty()
-                                 select new ProjectCategory
+                                 select new CI::ProjectCategory
                                  {
                                      ProjectId = project.Id,
                                      CategoryId = categoryOrganizationUnit.CategoryId,
@@ -217,29 +210,29 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                      SalesModel = restriction == null ? 0 : restriction.SalesModel
                                  });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Territory>> Territories =
-                        new MapSpecification<IQuery, IQueryable<Territory>>(
-                            q => from territory in q.For<Storage.Model.Facts.Territory>()
+                    public static readonly MapSpecification<IQuery, IQueryable<CI::Territory>> Territories =
+                        new MapSpecification<IQuery, IQueryable<CI::Territory>>(
+                            q => from territory in q.For<Territory>()
                                  join project in q.For<Project>() on territory.OrganizationUnitId equals project.OrganizationUnitId
-                                 select new Territory
+                                 select new CI::Territory
                                         {
                                             Id = territory.Id,
                                             Name = territory.Name,
                                             ProjectId = project.Id
                                         });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<ProjectStatistics>> ProjectStatistics =
-                        new MapSpecification<IQuery, IQueryable<ProjectStatistics>>(
-                            q => q.For<Project>().Select(x => new ProjectStatistics { Id = x.Id }));
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::ProjectStatistics>> ProjectStatistics =
+                        new MapSpecification<IQuery, IQueryable<Statistics::ProjectStatistics>>(
+                            q => q.For<Project>().Select(x => new Statistics::ProjectStatistics { Id = x.Id }));
 
-                    public static readonly MapSpecification<IQuery, IQueryable<ProjectCategoryStatistics>> ProjectCategoryStatistics =
-                        new MapSpecification<IQuery, IQueryable<ProjectCategoryStatistics>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::ProjectCategoryStatistics>> ProjectCategoryStatistics =
+                        new MapSpecification<IQuery, IQueryable<Statistics::ProjectCategoryStatistics>>(
                             q => from p in q.For<Project>()
                                  join c in q.For<CategoryOrganizationUnit>() on p.OrganizationUnitId equals c.OrganizationUnitId
-                                 select new ProjectCategoryStatistics { ProjectId = p.Id, CategoryId = c.CategoryId });
+                                 select new Statistics::ProjectCategoryStatistics { ProjectId = p.Id, CategoryId = c.CategoryId });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<FirmCategory3>> FirmCategory3 =
-                        new MapSpecification<IQuery, IQueryable<FirmCategory3>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>> FirmCategory3 =
+                        new MapSpecification<IQuery, IQueryable<Statistics::FirmCategory3>>(
                             q =>
                             {
                                 var firmDtos = from firm in q.For<Firm>()
@@ -269,13 +262,13 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                                   from firmStatistics in q.For<FirmCategoryStatistics>()
                                                                               .Where(x => x.FirmId == firmDto.FirmId && x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
                                                                               .DefaultIfEmpty()
-                                                  from categoryStatistics in q.For<Storage.Model.Bit.ProjectCategoryStatistics>()
+                                                  from categoryStatistics in q.For<ProjectCategoryStatistics>()
                                                                               .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId)
                                                                               .DefaultIfEmpty()
                                                   from forecast in q.For<FirmCategoryForecast>()
                                                                               .Where(x => x.CategoryId == firmDto.CategoryId && x.ProjectId == firmDto.ProjectId && x.FirmId == firmDto.FirmId)
                                                                               .DefaultIfEmpty()
-                                                  select new FirmCategory3
+                                                  select new Statistics::FirmCategory3
                                                   {
                                                       ProjectId = firmDto.ProjectId,
                                                       CategoryId = firmDto.CategoryId,
@@ -292,13 +285,13 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                 return categories3;
                             });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<FirmForecast>> FirmForecast =
-                        new MapSpecification<IQuery, IQueryable<FirmForecast>>(
+                    public static readonly MapSpecification<IQuery, IQueryable<Statistics::FirmForecast>> FirmForecast =
+                        new MapSpecification<IQuery, IQueryable<Statistics::FirmForecast>>(
                             q =>
                             {
                                 var firmDtos = from firm in q.For<Firm>()
-                                               join forecast in q.For<Storage.Model.Bit.FirmForecast>() on firm.Id equals forecast.FirmId
-                                               select new FirmForecast
+                                               join forecast in q.For<FirmForecast>() on firm.Id equals forecast.FirmId
+                                               select new Statistics::FirmForecast
                                                {
                                                    ProjectId = forecast.ProjectId,
                                                    FirmId = firm.Id,
