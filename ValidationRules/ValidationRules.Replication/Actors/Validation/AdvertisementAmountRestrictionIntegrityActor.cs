@@ -12,20 +12,20 @@ using NuClear.ValidationRules.Storage.Model.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication.Actors
+namespace NuClear.ValidationRules.Replication.Actors.Validation
 {
     /// <summary>
-    /// Для проекта, в котором продано недостаточно рекламы в Position.Category должна выводиться ошибка.
+    /// Для прайс-листов, в которых для позиций с контроллируемым количеством не указан минимум должна выводиться ошибка.
     /// </summary>
-    public sealed class MinimumAdvertisementAmountActor : IActor
+    public sealed class AdvertisementAmountRestrictionIntegrityActor : IActor
     {
-        private const int MessageTypeId = 1;
+        private const int MessageTypeId = 2;
 
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
 
-        public MinimumAdvertisementAmountActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
+        public AdvertisementAmountRestrictionIntegrityActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
         {
             _query = query;
             _repository = repository;
@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.Actors
 
             // Данные в целевых таблицах меняем в одной большой транзакции (сейчас она управляется из хендлера)
             var forBulkDelete = new Version.ValidationResultForBulkDelete { MessageType = MessageTypeId, VersionId = currentVersion };
-            _deleteRepository.Delete(new [] { forBulkDelete});
+            _deleteRepository.Delete(new[] { forBulkDelete });
             _repository.Create(sourceObjects);
 
             return Array.Empty<IEvent>();
@@ -59,34 +59,14 @@ namespace NuClear.ValidationRules.Replication.Actors
 
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
         {
-            var restrictionGrid = from restriction in query.For<AdvertisementAmountRestriction>()
-                                  join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
-                                  select new { Key = new { pp.Start, pp.OrganizationUnitId, restriction.CategoryCode }, restriction.Min, restriction.Max, restriction.CategoryName };
-
-            var saleGrid = from position in query.For<AmountControlledPosition>()
-                           join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
-                           group new { op.Start, op.OrganizationUnitId, position.CategoryCode }
-                               by new { op.Start, op.OrganizationUnitId, position.CategoryCode } into groups
-                           select new { groups.Key, Count = groups.Count() };
-
-            var ruleViolations = from restriction in restrictionGrid
-                                 from sale in saleGrid.Where(x => x.Key == restriction.Key).DefaultIfEmpty()
-                                 where sale == null || restriction.Min > sale.Count
-                                 select new { restriction.Key, restriction.Min, restriction.Max, sale.Count, restriction.CategoryName };
-
-            var ruleResults = from position in query.For<AmountControlledPosition>()
-                              join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
-                              join violation in ruleViolations on new { op.Start, op.OrganizationUnitId, position.CategoryCode } equals
-                                  new { violation.Key.Start, violation.Key.OrganizationUnitId, violation.Key.CategoryCode }
-                              join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+            var ruleResults = from restriction in query.For<AdvertisementAmountRestriction>().Where(x => x.MissingMinimalRestriction)
+                              join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
+                              join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                              join op in query.For<OrderPeriod>() on new { pp.Start, pp.OrganizationUnitId } equals new { op.Start, op.OrganizationUnitId }
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
-                                      MessageParams =
-                                          new XDocument(new XElement("empty",
-                                                                     new XAttribute("min", violation.Min),
-                                                                     new XAttribute("count", violation.Count),
-                                                                     new XAttribute("name", violation.CategoryName))),
+                                      MessageParams = new XDocument(new XElement("empty", new XAttribute("name", restriction.CategoryName))),
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
                                       ProjectId = period.ProjectId,
@@ -94,7 +74,7 @@ namespace NuClear.ValidationRules.Replication.Actors
 
                                       ReferenceType = EntityTypeIds.Project,
                                       ReferenceId = period.ProjectId,
-                                  };
+                              };
 
             return ruleResults;
         }

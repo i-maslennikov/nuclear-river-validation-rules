@@ -12,12 +12,12 @@ using NuClear.ValidationRules.Storage.Model.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication.Actors
+namespace NuClear.ValidationRules.Replication.Actors.Validation
 {
     /// <summary>
-    /// Для заказов, которые приводят к превышению ограничения на максимальное количесов рекламы в Position.Category должна выводиться ошибка.
+    /// Для проекта, в котором продано недостаточно рекламы в Position.Category должна выводиться ошибка.
     /// </summary>
-    public sealed class MaximumAdvertisementAmountActor : IActor
+    public sealed class MinimumAdvertisementAmountActor : IActor
     {
         private const int MessageTypeId = 1;
 
@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.Actors
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
 
-        public MaximumAdvertisementAmountActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
+        public MinimumAdvertisementAmountActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
         {
             _query = query;
             _repository = repository;
@@ -71,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.Actors
 
             var ruleViolations = from restriction in restrictionGrid
                                  from sale in saleGrid.Where(x => x.Key == restriction.Key).DefaultIfEmpty()
-                                 where sale.Count > restriction.Max
+                                 where sale == null || restriction.Min > sale.Count
                                  select new { restriction.Key, restriction.Min, restriction.Max, sale.Count, restriction.CategoryName };
 
             var ruleResults = from position in query.For<AmountControlledPosition>()
@@ -84,7 +84,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                                       MessageType = MessageTypeId,
                                       MessageParams =
                                           new XDocument(new XElement("empty",
-                                                                     new XAttribute("max", violation.Max),
+                                                                     new XAttribute("min", violation.Min),
                                                                      new XAttribute("count", violation.Count),
                                                                      new XAttribute("name", violation.CategoryName))),
                                       PeriodStart = period.Start,
@@ -92,8 +92,8 @@ namespace NuClear.ValidationRules.Replication.Actors
                                       ProjectId = period.ProjectId,
                                       VersionId = version,
 
-                                      ReferenceType = EntityTypeIds.Order,
-                                      ReferenceId = position.OrderId,
+                                      ReferenceType = EntityTypeIds.Project,
+                                      ReferenceId = period.ProjectId,
                                   };
 
             return ruleResults;

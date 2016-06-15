@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
+using System.Xml.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
@@ -11,18 +12,18 @@ using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Model.Aggregates;
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication.Actors
+namespace NuClear.ValidationRules.Replication.Actors.Validation
 {
-    public class OrderPositionsDoesntCorrespontToActualPriceActor : IActor
+    public sealed class OrderPositionCorrespontToInactivePositionActor : IActor
     {
-        // OrderCheckOrderPositionsDoesntCorrespontToActualPrice - «аказ не соответствуют актуальному прайс-листу. Ќеобходимо указать позиции из текущего действующего прайс-листа.
-        private const int MessageTypeId = 3;
+        // OrderCheckOrderPositionCorrespontToInactivePosition - ѕозици€ {OrderPositionId} соответствует скрытой позиции прайс листа. Ќеобходимо указать активную позицию из текущего действующего прайс-листа.
+        private const int MessageTypeId = 4;
 
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
 
-        public OrderPositionsDoesntCorrespontToActualPriceActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
+        public OrderPositionCorrespontToInactivePositionActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
         {
             _query = query;
             _repository = repository;
@@ -75,24 +76,29 @@ namespace NuClear.ValidationRules.Replication.Actors
                                       period.End,
                                   };
 
-            var priceNotFoundErrors =
+            var pricePositionIsNotActiveErrors =
             from orderFirstPeriodDto in orderFirstPeriodDtos
-            from pricePeriod in query.For<PricePeriod>().Where(x => x.OrganizationUnitId == orderFirstPeriodDto.ProjectId && x.Start == orderFirstPeriodDto.Start).DefaultIfEmpty()
-            where pricePeriod == null
+            join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
+            where !orderPricePosition.IsActive
             select new Version.ValidationResult
             {
                 MessageType = MessageTypeId,
-                MessageParams = null,
+                MessageParams = new XDocument(new XElement("empty",
+                                                new XAttribute("id", orderPricePosition.OrderPositionId),
+                                                new XAttribute("name", orderPricePosition.OrderPositionName)
+                                             )),
+
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,
+
                 VersionId = version,
 
                 ReferenceType = EntityTypeIds.Order,
                 ReferenceId = orderFirstPeriodDto.OrderId,
             };
 
-            return priceNotFoundErrors;
+            return pricePositionIsNotActiveErrors;
         }
     }
 }

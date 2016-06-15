@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
-using System.Xml.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
@@ -12,18 +11,18 @@ using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Model.Aggregates;
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication.Actors
+namespace NuClear.ValidationRules.Replication.Actors.Validation
 {
-    public sealed class OrderPositionDoesntCorrespontToActualPriceActor : IActor
+    public class OrderPositionsDoesntCorrespontToActualPriceActor : IActor
     {
-        // OrderCheckOrderPositionDoesntCorrespontToActualPrice - Позиция {OrderPositionId} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа.
-        private const int MessageTypeId = 5;
+        // OrderCheckOrderPositionsDoesntCorrespontToActualPrice - Заказ не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа.
+        private const int MessageTypeId = 3;
 
         private readonly IQuery _query;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
 
-        public OrderPositionDoesntCorrespontToActualPriceActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
+        public OrderPositionsDoesntCorrespontToActualPriceActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
         {
             _query = query;
             _repository = repository;
@@ -71,25 +70,19 @@ namespace NuClear.ValidationRules.Replication.Actors
                                   {
                                       OrderId = order.Id,
 
-                                      period.OrganizationUnitId,
                                       period.ProjectId,
                                       period.Start,
                                       period.End,
                                   };
 
-            var orderPositionBadPriceErrors =
+            var priceNotFoundErrors =
             from orderFirstPeriodDto in orderFirstPeriodDtos
-            from pricePeriod in query.For<PricePeriod>().Where(x => x.OrganizationUnitId == orderFirstPeriodDto.OrganizationUnitId && x.Start == orderFirstPeriodDto.Start).DefaultIfEmpty()
-            join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
-            where pricePeriod != null
-            where pricePeriod.PriceId != orderPricePosition.PriceId
+            from pricePeriod in query.For<PricePeriod>().Where(x => x.OrganizationUnitId == orderFirstPeriodDto.ProjectId && x.Start == orderFirstPeriodDto.Start).DefaultIfEmpty()
+            where pricePeriod == null
             select new Version.ValidationResult
             {
                 MessageType = MessageTypeId,
-                MessageParams = new XDocument(new XElement("empty",
-                                                new XAttribute("id", orderPricePosition.OrderPositionId),
-                                                new XAttribute("name", orderPricePosition.OrderPositionName)
-                                             )),
+                MessageParams = null,
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,
@@ -99,7 +92,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                 ReferenceId = orderFirstPeriodDto.OrderId,
             };
 
-            return orderPositionBadPriceErrors;
+            return priceNotFoundErrors;
         }
     }
 }

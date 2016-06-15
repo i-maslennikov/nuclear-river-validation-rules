@@ -10,7 +10,7 @@ using NuClear.Replication.OperationsProcessing;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Telemetry;
-using NuClear.ValidationRules.Replication.Actors;
+using NuClear.ValidationRules.Replication.Actors.Validation;
 using NuClear.ValidationRules.Replication.Commands;
 
 namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal

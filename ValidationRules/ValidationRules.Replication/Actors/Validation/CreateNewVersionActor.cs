@@ -10,7 +10,7 @@ using NuClear.ValidationRules.Replication.Commands;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication.Actors
+namespace NuClear.ValidationRules.Replication.Actors.Validation
 {
     public class CreateNewVersionActor : IActor
     {
