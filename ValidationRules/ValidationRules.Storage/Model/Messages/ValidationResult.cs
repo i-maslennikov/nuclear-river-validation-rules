@@ -26,6 +26,8 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
 
             public int ReferenceType { get; set; }
             public long ReferenceId { get; set; }
+
+            public int Result { get; set; }
         }
 
         public sealed class ValidationResultForBulkDelete

@@ -31,5 +31,7 @@ create table Messages.ValidationResult(
 
     ReferenceType int NOT NULL,
     ReferenceId bigint NOT NULL,
+
+    Result int NOT NULL,
 )
 go
