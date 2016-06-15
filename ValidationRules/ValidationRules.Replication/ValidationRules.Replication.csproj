@@ -107,6 +107,8 @@
     <Compile Include="Commands\SyncDataObjectCommand.cs" />
     <Compile Include="Events\RelatedDataObjectOutdatedEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="ResultBuilder.cs" />
     <Compile Include="Specifications\Specs.Find.Aggs.cs" />
     <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
