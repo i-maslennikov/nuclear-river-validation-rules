@@ -43,10 +43,7 @@ namespace NuClear.CustomerIntelligence.Replication.Accessors
 
             var firmIds = (from account in _query.For(specification)
                            join legalPerson in _query.For<LegalPerson>() on account.LegalPersonId equals legalPerson.Id
-                           join client in _query.For<Client>() on legalPerson.ClientId equals client.Id
-                           join branchOfficeOrganizationUnit in _query.For<BranchOfficeOrganizationUnit>()
-                               on account.BranchOfficeOrganizationUnitId equals branchOfficeOrganizationUnit.Id
-                           join firm in _query.For<Firm>() on client.Id equals firm.ClientId
+                           join firm in _query.For<Firm>() on legalPerson.ClientId equals firm.ClientId
                            select firm.Id)
                 .ToArray();
 
