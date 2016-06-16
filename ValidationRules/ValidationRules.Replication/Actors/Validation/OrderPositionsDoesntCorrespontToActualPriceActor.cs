@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
+using System.Xml.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
@@ -87,7 +88,8 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
             select new Version.ValidationResult
             {
                 MessageType = MessageTypeId,
-                MessageParams = null,
+                MessageParams = new XDocument(new XElement("empty",
+                    new XAttribute("order", orderFirstPeriodDto.OrderId))),
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,
