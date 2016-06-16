@@ -16,6 +16,7 @@ if object_id('PriceAggregate.PriceDeniedPosition') is not null drop table PriceA
 if object_id('PriceAggregate.PriceAssociatedPosition') is not null drop table PriceAggregate.PriceAssociatedPosition
 if object_id('PriceAggregate.AdvertisementAmountRestriction') is not null drop table PriceAggregate.AdvertisementAmountRestriction
 if object_id('PriceAggregate.Price') is not null drop table PriceAggregate.Price
+if object_id('PriceAggregate.AssociatedPositionGroupOvercount') is not null drop table PriceAggregate.AssociatedPositionGroupOvercount
 
 if object_id('PriceAggregate.RulesetRule') is not null drop table PriceAggregate.RulesetRule
 if object_id('PriceAggregate.Ruleset') is not null drop table PriceAggregate.Ruleset
@@ -28,6 +29,13 @@ go
 create table PriceAggregate.Price(
     Id bigint NOT NULL,
     constraint PK_Price primary key (Id)
+)
+go
+
+create table PriceAggregate.AssociatedPositionGroupOvercount(
+    PriceId bigint NOT NULL,
+    PricePositionId bigint NOT NULL,
+    Count int NOT NULL,
 )
 go
 

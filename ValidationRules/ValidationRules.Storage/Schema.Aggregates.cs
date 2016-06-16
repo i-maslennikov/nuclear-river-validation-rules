@@ -20,6 +20,9 @@ namespace NuClear.ValidationRules.Storage
                       .HasSchemaName(PriceAggregateSchema)
                       .HasPrimaryKey(x => x.Id);
 
+                config.Entity<AssociatedPositionGroupOvercount>()
+                      .HasSchemaName(PriceAggregateSchema);
+
                 config.Entity<PriceDeniedPosition>()
                       .HasSchemaName(PriceAggregateSchema);
 

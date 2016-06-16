@@ -68,6 +68,7 @@
     <Compile Include="LinqToDbPropertyProvider.cs" />
     <Compile Include="Model\Aggregates\AdvertisementAmountRestriction.cs" />
     <Compile Include="Model\Aggregates\AmountControlledPosition.cs" />
+    <Compile Include="Model\Aggregates\AssociatedPositionGroupOvercount.cs" />
     <Compile Include="Model\Aggregates\ErmState.cs" />
     <Compile Include="Model\Aggregates\Order.cs" />
     <Compile Include="Model\Aggregates\OrderPeriod.cs" />
