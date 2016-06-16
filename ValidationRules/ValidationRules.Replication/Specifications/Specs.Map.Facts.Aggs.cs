@@ -18,42 +18,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 // ReSharper disable once InconsistentNaming
                 public static class ToAggregates
                 {
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Price>> Prices
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::Price>>(
-                            q => q.For<Facts::Price>().Select(x => new Aggregates::Price
-                                {
-                                    Id = x.Id
-                                }));
-
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::PriceDeniedPosition>> PriceDeniedPositions
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::PriceDeniedPosition>>(
-                            q => q.For<Facts::DeniedPosition>().Select(x => new Aggregates::PriceDeniedPosition
-                            {
-                                PriceId = x.PriceId,
-                                DeniedPositionId = x.PositionDeniedId,
-                                PrincipalPositionId = x.PositionId,
-                                ObjectBindingType = x.ObjectBindingType,
-                            }));
-
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::PriceAssociatedPosition>> PriceAssociatedPositions
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::PriceAssociatedPosition>>(
-                            q =>
-                                {
-                                    var aggs = from associatedPosition in q.For<Facts::AssociatedPosition>()
-                                                join associatedPositionGroup in q.For<Facts::AssociatedPositionsGroup>() on associatedPosition.AssociatedPositionsGroupId equals associatedPositionGroup.Id
-                                                join pricePosition in q.For<Facts::PricePosition>() on associatedPositionGroup.PricePositionId equals pricePosition.Id
-                                                join price in q.For<Facts::Price>() on pricePosition.PriceId equals price.Id
-                                                select new Aggregates::PriceAssociatedPosition
-                                                {
-                                                    PriceId = price.Id,
-                                                    AssociatedPositionId = pricePosition.PositionId,
-                                                    PrincipalPositionId = associatedPosition.PositionId,
-                                                    ObjectBindingType = associatedPosition.ObjectBindingType,
-                                                    GroupId = associatedPositionGroup.Id
-                                                };
-                                    return aggs;
-                                });
-
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>> Rulesets
                         = new MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>>(
                             q =>

@@ -59,7 +59,8 @@ namespace NuClear.ValidationRules.Replication.Actors
                 _query = query;
             }
 
-            public IQueryable<Price> GetSource() => Specs.Map.Facts.ToAggregates.Prices.Map(_query);
+            public IQueryable<Price> GetSource()
+                => _query.For<Facts::Price>().Select(price => new Price { Id = price.Id });
 
             public FindSpecification<Price> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -115,12 +116,20 @@ namespace NuClear.ValidationRules.Replication.Actors
                 _query = query;
             }
 
-            public IQueryable<PriceDeniedPosition> GetSource() => Specs.Map.Facts.ToAggregates.PriceDeniedPositions.Map(_query);
+            public IQueryable<PriceDeniedPosition> GetSource()
+                => _query.For<Facts::DeniedPosition>()
+                         .Select(x => new PriceDeniedPosition
+                             {
+                                 PriceId = x.PriceId,
+                                 DeniedPositionId = x.PositionDeniedId,
+                                 PrincipalPositionId = x.PositionId,
+                                 ObjectBindingType = x.ObjectBindingType,
+                             });
 
             public FindSpecification<PriceDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return Specs.Find.Aggs.PriceDeniedPositions(aggregateIds);
+                return new FindSpecification<PriceDeniedPosition>(x => aggregateIds.Contains(x.PriceId));
             }
         }
 
@@ -133,12 +142,24 @@ namespace NuClear.ValidationRules.Replication.Actors
                 _query = query;
             }
 
-            public IQueryable<PriceAssociatedPosition> GetSource() => Specs.Map.Facts.ToAggregates.PriceAssociatedPositions.Map(_query);
+            public IQueryable<PriceAssociatedPosition> GetSource()
+                => from associatedPosition in _query.For<Facts::AssociatedPosition>()
+                   join associatedPositionGroup in _query.For<Facts::AssociatedPositionsGroup>() on associatedPosition.AssociatedPositionsGroupId equals associatedPositionGroup.Id
+                   join pricePosition in _query.For<Facts::PricePosition>() on associatedPositionGroup.PricePositionId equals pricePosition.Id
+                   join price in _query.For<Facts::Price>() on pricePosition.PriceId equals price.Id
+                   select new PriceAssociatedPosition
+                       {
+                           PriceId = price.Id,
+                           AssociatedPositionId = pricePosition.PositionId,
+                           PrincipalPositionId = associatedPosition.PositionId,
+                           ObjectBindingType = associatedPosition.ObjectBindingType,
+                           GroupId = associatedPositionGroup.Id
+                       };
 
             public FindSpecification<PriceAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return Specs.Find.Aggs.PriceAssociatedPositions(aggregateIds);
+                return new FindSpecification<PriceAssociatedPosition>(x => aggregateIds.Contains(x.PriceId));
             }
         }
     }

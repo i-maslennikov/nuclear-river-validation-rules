@@ -13,15 +13,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
         {
             public static class Aggs
             {
-                public static FindSpecification<Aggregates::PriceDeniedPosition> PriceDeniedPositions(IReadOnlyCollection<long> aggregateIds)
-                {
-                    return new FindSpecification<Aggregates::PriceDeniedPosition>(x => aggregateIds.Contains(x.PriceId));
-                }
-                public static FindSpecification<Aggregates::PriceAssociatedPosition> PriceAssociatedPositions(IReadOnlyCollection<long> aggregateIds)
-                {
-                    return new FindSpecification<Aggregates::PriceAssociatedPosition>(x => aggregateIds.Contains(x.PriceId));
-                }
-
                 public static FindSpecification<Aggregates::RulesetRule> RulesetRules(IReadOnlyCollection<long> aggregateIds)
                 {
                     return new FindSpecification<Aggregates::RulesetRule>(x => aggregateIds.Contains(x.RulesetId));
