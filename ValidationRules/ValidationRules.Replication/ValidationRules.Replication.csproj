@@ -84,6 +84,7 @@
     <Compile Include="Actors\OrderAggregateRootActor.cs" />
     <Compile Include="Actors\PositionAggregateRootActor.cs" />
     <Compile Include="Actors\Validation\CreateNewVersionActor.cs" />
+    <Compile Include="Actors\Validation\ValidationRuleShared.cs" />
     <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
     <Compile Include="Commands\IncrementAggregateStateCommand.cs" />
     <Compile Include="Commands\IncrementStateCommand.cs" />

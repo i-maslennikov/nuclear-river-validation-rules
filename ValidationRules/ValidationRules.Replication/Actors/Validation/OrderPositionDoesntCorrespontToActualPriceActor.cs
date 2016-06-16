@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
 using System.Xml.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
-using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 
 using NuClear.ValidationRules.Storage.Model.Aggregates;
@@ -24,40 +21,16 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                                                                     .WhenMassPrerelease(Result.Warning)
                                                                     .WhenMassRelease(Result.Warning); // Немного искажённая трактовка, проверка erm выдаёт ошибку при статусе, отличном от Approved
 
-        private readonly IQuery _query;
-        private readonly IBulkRepository<Version.ValidationResult> _repository;
-        private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
+        private readonly ValidationRuleShared _validationRuleShared;
 
-        public OrderPositionDoesntCorrespontToActualPriceActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
+        public OrderPositionDoesntCorrespontToActualPriceActor(ValidationRuleShared validationRuleShared)
         {
-            _query = query;
-            _repository = repository;
-            _deleteRepository = deleteRepository;
+            _validationRuleShared = validationRuleShared;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            // todo: привести в соответствие с созданием новой версии
-            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0;
-
-            IReadOnlyCollection<Version.ValidationResult> sourceObjects;
-            using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
-            {
-                // Запрос к данным источника посылаем вне транзакции, большой беды от этого быть не должно.
-                sourceObjects = GetValidationResults(_query, currentVersion).ToArray();
-
-                // todo: удалить, добавлено с целью отладки
-                sourceObjects = sourceObjects.Where(x => x.PeriodStart >= DateTime.Parse("2016-06-01")).ToArray();
-
-                scope.Complete();
-            }
-
-            // Данные в целевых таблицах меняем в одной большой транзакции (сейчас она управляется из хендлера)
-            var forBulkDelete = new Version.ValidationResultForBulkDelete { MessageType = MessageTypeId, VersionId = currentVersion };
-            _deleteRepository.Delete(new[] { forBulkDelete });
-            _repository.Create(sourceObjects);
-
-            return Array.Empty<IEvent>();
+            return _validationRuleShared.ProcessRule(GetValidationResults, MessageTypeId);
         }
 
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
