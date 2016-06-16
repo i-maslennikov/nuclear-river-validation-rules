@@ -128,7 +128,7 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
 
             // В projectRuleViolations получаются сообщения с тегом проекта,
             // в orderRuleViolations получаются сообщения с тегом заказа.
-            return projectRuleViolations.Union(orderRuleViolations);
+            return orderRuleViolations.ToArray().Concat(projectRuleViolations.ToArray()).AsQueryable();
         }
     }
 }
