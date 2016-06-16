@@ -26,6 +26,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly OrderPositionCorrespontToInactivePositionActor _orderPositionCorrespontToInactivePositionActor;
         private readonly OrderPositionDoesntCorrespontToActualPriceActor _orderPositionDoesntCorrespontToActualPriceActor;
         private readonly OrderPositionsDoesntCorrespontToActualPriceActor _orderPositionsDoesntCorrespontToActualPriceActor;
+        private readonly AssociatedPositionsGroupCountActor _associatedPositionsGroupCountActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
@@ -36,7 +37,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             AdvertisementAmountRestrictionIntegrityActor restrictionIntegrityActor,
             OrderPositionCorrespontToInactivePositionActor orderPositionCorrespontToInactivePositionActor,
             OrderPositionDoesntCorrespontToActualPriceActor orderPositionDoesntCorrespontToActualPriceActor,
-            OrderPositionsDoesntCorrespontToActualPriceActor orderPositionsDoesntCorrespontToActualPriceActor)
+            OrderPositionsDoesntCorrespontToActualPriceActor orderPositionsDoesntCorrespontToActualPriceActor,
+            AssociatedPositionsGroupCountActor associatedPositionsGroupCountActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -47,6 +49,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _orderPositionCorrespontToInactivePositionActor = orderPositionCorrespontToInactivePositionActor;
             _orderPositionDoesntCorrespontToActualPriceActor = orderPositionDoesntCorrespontToActualPriceActor;
             _orderPositionsDoesntCorrespontToActualPriceActor = orderPositionsDoesntCorrespontToActualPriceActor;
+            _associatedPositionsGroupCountActor = associatedPositionsGroupCountActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -86,6 +89,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _orderPositionCorrespontToInactivePositionActor.ExecuteCommands(commands);
                 _orderPositionDoesntCorrespontToActualPriceActor.ExecuteCommands(commands);
                 _orderPositionsDoesntCorrespontToActualPriceActor.ExecuteCommands(commands);
+                _associatedPositionsGroupCountActor.ExecuteCommands(commands);
 
                 // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
                 // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
