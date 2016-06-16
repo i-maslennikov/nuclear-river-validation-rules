@@ -21,6 +21,7 @@ namespace NuClear.ValidationRules.Replication.Actors
         private readonly IBulkRepository<AdvertisementAmountRestriction> _advertisementAmountRestrictionBulkRepository;
         private readonly IBulkRepository<PriceDeniedPosition> _priceDeniedPositionBulkRepository;
         private readonly IBulkRepository<PriceAssociatedPosition> _priceAssociatedPositionBulkRepository;
+        private readonly IBulkRepository<AssociatedPositionGroupOvercount> _associatedPositionGroupOvercountRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public PriceAggregateRootActor(
@@ -29,7 +30,8 @@ namespace NuClear.ValidationRules.Replication.Actors
             IBulkRepository<AdvertisementAmountRestriction> advertisementAmountRestrictionBulkRepository,
             IBulkRepository<PriceDeniedPosition> priceDeniedPositionBulkRepository,
             IBulkRepository<PriceAssociatedPosition> priceAssociatedPositionBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
+            IEqualityComparerFactory equalityComparerFactory, 
+            IBulkRepository<AssociatedPositionGroupOvercount> associatedPositionGroupOvercountRepository)
             : base(query, bulkRepository, equalityComparerFactory, new PriceAccessor(query))
         {
             _query = query;
@@ -37,8 +39,8 @@ namespace NuClear.ValidationRules.Replication.Actors
             _priceDeniedPositionBulkRepository = priceDeniedPositionBulkRepository;
             _priceAssociatedPositionBulkRepository = priceAssociatedPositionBulkRepository;
             _equalityComparerFactory = equalityComparerFactory;
+            _associatedPositionGroupOvercountRepository = associatedPositionGroupOvercountRepository;
         }
-
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors() => new IEntityActor[0];
 
@@ -48,6 +50,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                     new ValueObjectActor<AdvertisementAmountRestriction>(_query, _advertisementAmountRestrictionBulkRepository, _equalityComparerFactory, new AdvertisementAmountRestrictionAccessor(_query)),
                     new ValueObjectActor<PriceDeniedPosition>(_query, _priceDeniedPositionBulkRepository, _equalityComparerFactory, new PriceDeniedPositionAccessor(_query)),
                     new ValueObjectActor<PriceAssociatedPosition>(_query, _priceAssociatedPositionBulkRepository, _equalityComparerFactory, new PriceAssociatedPositionAccessor(_query)),
+                    new ValueObjectActor<AssociatedPositionGroupOvercount>(_query, _associatedPositionGroupOvercountRepository, _equalityComparerFactory, new AssociatedPositionGroupOvercountAccessor(_query)),
                 };
 
         public sealed class PriceAccessor : IStorageBasedDataObjectAccessor<Price>
@@ -160,6 +163,34 @@ namespace NuClear.ValidationRules.Replication.Actors
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<PriceAssociatedPosition>(x => aggregateIds.Contains(x.PriceId));
+            }
+        }
+
+        public sealed class AssociatedPositionGroupOvercountAccessor : IStorageBasedDataObjectAccessor<AssociatedPositionGroupOvercount>
+        {
+            // Предполагается, что когда начнём создавать события на втором этапе - события этого класса будут приводить к вызову одной соответствующей проверки
+            private readonly IQuery _query;
+
+            public AssociatedPositionGroupOvercountAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<AssociatedPositionGroupOvercount> GetSource()
+                => from pricePosition in _query.For<Facts::PricePosition>()
+                   let count = _query.For<Facts.AssociatedPositionsGroup>().Count(x => x.PricePositionId == pricePosition.Id)
+                   where count > 1
+                   select new AssociatedPositionGroupOvercount
+                   {
+                       PriceId = pricePosition.PriceId,
+                       PricePositionId = pricePosition.Id,
+                       Count = count,
+                   };
+
+            public FindSpecification<AssociatedPositionGroupOvercount> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<AssociatedPositionGroupOvercount>(x => aggregateIds.Contains(x.PriceId));
             }
         }
     }
