@@ -76,7 +76,7 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
 
             var ruleViolations = from restriction in restrictionGrid
                                  from sale in saleGrid.Where(x => x.Key == restriction.Key).DefaultIfEmpty()
-                                 where sale == null || restriction.Min > sale.Count
+                                 where restriction.Min > (sale == null ? 0 : sale.Count)
                                  select new { restriction.Key, restriction.Min, restriction.Max, sale.Count, restriction.CategoryName };
 
             var projectRuleViolations = from period in query.For<Period>()
