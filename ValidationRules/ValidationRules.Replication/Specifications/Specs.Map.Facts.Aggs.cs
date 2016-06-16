@@ -145,30 +145,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                 return opas.Union(pkgs);
                             });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::OrderPricePosition>> OrderPricePositions
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPricePosition>>(
-                            q => q.For<Facts::OrderPosition>().Select(x =>
-                                 new Aggregates::OrderPricePosition
-                                 {
-                                    OrderId = x.OrderId,
-                                    OrderPositionId = x.Id,
-                                    OrderPositionName = (from pricePosition in
-                                                             (from pricePosition in q.For<Facts::PricePosition>() select new { pricePosition.Id, pricePosition.PositionId })
-                                                            .Union
-                                                            (from pricePositionNotActive in q.For<Facts::PricePositionNotActive>() select new { pricePositionNotActive.Id, pricePositionNotActive.PositionId })
-                                                         join position in q.For<Facts::Position>() on pricePosition.PositionId equals position.Id
-                                                         where pricePosition.Id == x.PricePositionId
-                                                         select position.Name).FirstOrDefault(),
-                                    PriceId = (from pricePosition in
-                                                             (from pricePosition in q.For<Facts::PricePosition>() select new { pricePosition.Id, pricePosition.PriceId })
-                                                            .Union
-                                                            (from pricePositionNotActive in q.For<Facts::PricePositionNotActive>() select new { pricePositionNotActive.Id, pricePositionNotActive.PriceId })
-                                               where pricePosition.Id == x.PricePositionId
-                                               select pricePosition.PriceId).FirstOrDefault(),
-                                    IsActive = !(from pricePositionNotActive in q.For<Facts::PricePositionNotActive>()
-                                                where pricePositionNotActive.Id == x.PricePositionId select pricePositionNotActive).Any()
-                                 }));
-
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Position>> Positions
                         = new MapSpecification<IQuery, IQueryable<Aggregates::Position>>(
                             q => q.For<Facts::Position>().Select(x => new Aggregates::Position

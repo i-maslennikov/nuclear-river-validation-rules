@@ -99,7 +99,23 @@ namespace NuClear.ValidationRules.Replication.Actors
                 _query = query;
             }
 
-            public IQueryable<OrderPricePosition> GetSource() => Specs.Map.Facts.ToAggregates.OrderPricePositions.Map(_query);
+            public IQueryable<OrderPricePosition> GetSource()
+                =>
+                    from orderPosition in _query.For<Facts::OrderPosition>()
+                    from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
+                    from pricePositionNotActive in _query.For<Facts::PricePositionNotActive>().Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
+                    from position in _query.For<Facts::Position>()
+                    where position.Id == pricePosition.PositionId || position.Id == pricePositionNotActive.PositionId
+                    select new OrderPricePosition
+                    {
+                        OrderId = orderPosition.OrderId,
+                        OrderPositionId = orderPosition.Id,
+
+                        OrderPositionName = position.Name,
+                        PriceId = pricePosition != null ? pricePosition.PriceId : pricePositionNotActive != null ? pricePositionNotActive.PriceId : 0,
+                        IsActive = pricePosition != null || pricePositionNotActive == null
+                    };
+
 
             public FindSpecification<OrderPricePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

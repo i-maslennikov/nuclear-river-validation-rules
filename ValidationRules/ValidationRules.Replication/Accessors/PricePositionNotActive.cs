@@ -9,6 +9,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
+using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.Replication.Accessors
 {
@@ -35,6 +36,19 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PricePositionNotActive> dataObjects) => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<PricePositionNotActive> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<PricePositionNotActive> dataObjects)
+        {
+            var ids = dataObjects.Select(x => x.Id).ToArray();
+            var specification = new FindSpecification<PricePosition>(x => ids.Contains(x.Id));
+
+            var orderIds = (from pricePositionNotActive in _query.For(specification)
+                            join orderPosition in _query.For<OrderPosition>() on pricePositionNotActive.Id equals orderPosition.PricePositionId
+                            select orderPosition.OrderId).Distinct()
+                            .Distinct()
+                            .ToArray();
+
+            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
+                          .ToArray();
+        }
     }
 }
