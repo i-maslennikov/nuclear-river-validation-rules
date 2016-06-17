@@ -129,6 +129,19 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Actors
         }
 
         [Test]
+        public void ShouldInitializeFirmHavingLead()
+        {
+            SourceDb.Has(new Storage.Model.Facts.Project { Id = 1, OrganizationUnitId = 1 })
+                    .Has(new Storage.Model.Facts.Lead { Id = 1, FirmId = 1, IsInQueue = true, Type = 1})
+                    .Has(new Storage.Model.Facts.Firm { Id = 1, ClientId = 1, OrganizationUnitId = 1 });
+
+            Factory.CreateFirmAggregateActor(Query)
+                   .Initialize<Firm>(1)
+                   .Verify<Firm>(m => m.Add(It.Is(Predicate.Match(new Firm { Id = 1, ProjectId = 1, ClientId = 1 }))))
+                   .Verify<FirmLead>(m => m.Add(It.Is(Predicate.Match(new FirmLead { FirmId = 1, LeadId = 1, IsInQueue = true, Type = 1 }))));
+        }
+
+        [Test]
         public void ShouldInitializeFirmHavingClient()
         {
             SourceDb.Has(new Storage.Model.Facts.Category { Id = 1, Level = 3 })
@@ -440,6 +453,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Actors
                     query,
                     repositoryFactory.Create<Firm>(),
                     repositoryFactory.Create<FirmActivity>(),
+                    repositoryFactory.Create<FirmLead>(),
                     repositoryFactory.Create<FirmBalance>(),
                     repositoryFactory.Create<FirmCategory1>(),
                     repositoryFactory.Create<FirmCategory2>(),

@@ -32,6 +32,7 @@ namespace NuClear.CustomerIntelligence.Storage
                 config.Entity<Firm>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<FirmAddress>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<FirmContact>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
+                config.Entity<Lead>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<LegalPerson>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<Order>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();
                 config.Entity<Project>().HasSchemaName(ErmSchema).Property(x => x.Id).IsPrimaryKey();

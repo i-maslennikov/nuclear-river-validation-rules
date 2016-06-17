@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Accessors\AccountAccessor.cs" />
+    <Compile Include="Accessors\LeadAccessor.cs" />
     <Compile Include="Accessors\ActivityAccessor.cs" />
     <Compile Include="Accessors\BranchOfficeOrganizationUnitAccessor.cs" />
     <Compile Include="Accessors\CategoryAccessor.cs" />
