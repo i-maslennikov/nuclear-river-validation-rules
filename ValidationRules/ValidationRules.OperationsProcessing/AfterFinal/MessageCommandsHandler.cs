@@ -27,6 +27,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly OrderPositionDoesntCorrespontToActualPriceActor _orderPositionDoesntCorrespontToActualPriceActor;
         private readonly OrderPositionsDoesntCorrespontToActualPriceActor _orderPositionsDoesntCorrespontToActualPriceActor;
         private readonly AssociatedPositionsGroupCountActor _associatedPositionsGroupCountActor;
+        private readonly DeniedPositionsCheckActor _deniedPositionsCheckActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
@@ -38,7 +39,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             OrderPositionCorrespontToInactivePositionActor orderPositionCorrespontToInactivePositionActor,
             OrderPositionDoesntCorrespontToActualPriceActor orderPositionDoesntCorrespontToActualPriceActor,
             OrderPositionsDoesntCorrespontToActualPriceActor orderPositionsDoesntCorrespontToActualPriceActor,
-            AssociatedPositionsGroupCountActor associatedPositionsGroupCountActor)
+            AssociatedPositionsGroupCountActor associatedPositionsGroupCountActor,
+            DeniedPositionsCheckActor deniedPositionsCheckActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -50,6 +52,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _orderPositionDoesntCorrespontToActualPriceActor = orderPositionDoesntCorrespontToActualPriceActor;
             _orderPositionsDoesntCorrespontToActualPriceActor = orderPositionsDoesntCorrespontToActualPriceActor;
             _associatedPositionsGroupCountActor = associatedPositionsGroupCountActor;
+            _deniedPositionsCheckActor = deniedPositionsCheckActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -90,6 +93,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _orderPositionDoesntCorrespontToActualPriceActor.ExecuteCommands(commands);
                 _orderPositionsDoesntCorrespontToActualPriceActor.ExecuteCommands(commands);
                 _associatedPositionsGroupCountActor.ExecuteCommands(commands);
+                _deniedPositionsCheckActor.ExecuteCommands(commands);
 
                 // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
                 // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.

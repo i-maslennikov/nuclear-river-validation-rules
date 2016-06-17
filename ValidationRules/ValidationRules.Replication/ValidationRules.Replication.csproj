@@ -69,6 +69,7 @@
     <Compile Include="Accessors\DeniedPositionAccessor.cs" />
     <Compile Include="Accessors\AssociatedPositionsGroupAccessor.cs" />
     <Compile Include="Accessors\AssociatedPositionAccessor.cs" />
+    <Compile Include="Actors\Validation\DeniedPositionsCheckActor.cs" />
     <Compile Include="Actors\Validation\AdvertisementAmountRestrictionIntegrityActor.cs" />
     <Compile Include="Actors\Validation\AssociatedPositionsGroupCountActor.cs" />
     <Compile Include="Actors\Validation\MaximumAdvertisementAmountActor.cs" />
