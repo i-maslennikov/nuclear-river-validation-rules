@@ -49,6 +49,9 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<OrderPosition>()
                       .HasSchemaName(PriceAggregateSchema);
 
+                config.Entity<OrderDeniedPosition>()
+                      .HasSchemaName(PriceAggregateSchema);
+
                 config.Entity<OrderPricePosition>()
                       .HasSchemaName(PriceAggregateSchema);
 

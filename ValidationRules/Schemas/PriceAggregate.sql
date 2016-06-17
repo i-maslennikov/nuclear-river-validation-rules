@@ -9,6 +9,7 @@ if object_id('PriceAggregate.Period') is not null drop table PriceAggregate.Peri
 if object_id('PriceAggregate.OrderPrice') is not null drop table PriceAggregate.OrderPrice
 if object_id('PriceAggregate.OrderPricePosition') is not null drop table PriceAggregate.OrderPricePosition
 if object_id('PriceAggregate.OrderPosition') is not null drop table PriceAggregate.OrderPosition
+if object_id('PriceAggregate.OrderDeniedPosition') is not null drop table PriceAggregate.OrderDeniedPosition
 if object_id('PriceAggregate.AmountControlledPosition') is not null drop table PriceAggregate.AmountControlledPosition
 if object_id('PriceAggregate.[Order]') is not null drop table PriceAggregate.[Order]
 
@@ -110,6 +111,17 @@ create table PriceAggregate.OrderPosition(
     FirmAddressId bigint NULL
 )
 create index IX_OrderPosition_OrderId ON PriceAggregate.OrderPosition (OrderId)
+go
+
+create table PriceAggregate.OrderDeniedPosition(
+    OrderId bigint NOT NULL,
+    ItemPositionId bigint NOT NULL,
+    BindingType int NOT NULL,
+
+    Category3Id bigint NULL,
+    Category1Id bigint NULL,
+    FirmAddressId bigint NULL
+)
 go
 
 create table PriceAggregate.OrderPricePosition(

@@ -21,6 +21,7 @@ namespace NuClear.ValidationRules.Replication.Actors
         private readonly IBulkRepository<OrderPosition> _orderPositionBulkRepository;
         private readonly IBulkRepository<OrderPricePosition> _orderPricePositionBulkRepository;
         private readonly IBulkRepository<AmountControlledPosition> _amountControlledPositionBulkRepository;
+        private readonly IBulkRepository<OrderDeniedPosition> _orderDeniedPositionBulkRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public OrderAggregateRootActor(
@@ -29,13 +30,15 @@ namespace NuClear.ValidationRules.Replication.Actors
             IBulkRepository<OrderPosition> orderPositionBulkRepository,
             IBulkRepository<OrderPricePosition> orderPricePositionBulkRepository,
             IBulkRepository<AmountControlledPosition> amountControlledPositionBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
+            IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<OrderDeniedPosition> orderDeniedPositionBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
             _query = query;
             _orderPositionBulkRepository = orderPositionBulkRepository;
             _orderPricePositionBulkRepository = orderPricePositionBulkRepository;
             _equalityComparerFactory = equalityComparerFactory;
+            _orderDeniedPositionBulkRepository = orderDeniedPositionBulkRepository;
             _amountControlledPositionBulkRepository = amountControlledPositionBulkRepository;
         }
 
@@ -48,6 +51,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                     new ValueObjectActor<OrderPosition>(_query, _orderPositionBulkRepository, _equalityComparerFactory, new OrderPositionAccessor(_query)),
                     new ValueObjectActor<OrderPricePosition>(_query, _orderPricePositionBulkRepository, _equalityComparerFactory, new OrderPricePositionAccessor(_query)),
                     new ValueObjectActor<AmountControlledPosition>(_query, _amountControlledPositionBulkRepository, _equalityComparerFactory, new AmountControlledPositionAccessor(_query)),
+                    new ValueObjectActor<OrderDeniedPosition>(_query, _orderDeniedPositionBulkRepository, _equalityComparerFactory, new OrderDeniedPositionAccessor(_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -147,6 +151,60 @@ namespace NuClear.ValidationRules.Replication.Actors
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class OrderDeniedPositionAccessor : IStorageBasedDataObjectAccessor<OrderDeniedPosition>
+        {
+            private readonly IQuery _query;
+
+            public OrderDeniedPositionAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<OrderDeniedPosition> GetSource()
+            {
+                var opas = from opa in _query.For<Facts::OrderPositionAdvertisement>()
+                           join orderPosition in _query.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
+                           join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                           join denied in _query.For<Facts::DeniedPosition>() on new { pricePosition.PriceId, pricePosition.PositionId } equals new { denied.PriceId, denied.PositionId }
+                           select new OrderDeniedPosition
+                           {
+                               OrderId = orderPosition.OrderId,
+                               ItemPositionId = denied.PositionDeniedId,
+                               BindingType = denied.ObjectBindingType,
+                               Category3Id = opa.CategoryId,
+                               FirmAddressId = opa.FirmAddressId,
+                               Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
+                                              join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
+                                              join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
+                                              select c1.Id
+                                                ).FirstOrDefault()
+                           };
+
+                var pkgs = from orderPosition in _query.For<Facts::OrderPosition>()
+                           join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                           join denied in _query.For<Facts::DeniedPosition>() on new { pricePosition.PriceId, pricePosition.PositionId  } equals new { denied.PriceId, denied.PositionId }
+                           join position in _query.For<Facts::Position>() on pricePosition.PositionId equals position.Id
+                           where position.IsComposite
+                           select new OrderDeniedPosition
+                           {
+                               OrderId = orderPosition.OrderId,
+                               ItemPositionId = denied.PositionDeniedId,
+                               BindingType = denied.ObjectBindingType,
+                               Category3Id = null,
+                               FirmAddressId = null,
+                               Category1Id = null
+                           };
+
+                return opas.Union(pkgs);
+            }
+
+            public FindSpecification<OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<OrderDeniedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }
