@@ -103,6 +103,7 @@ go
 
 create table PriceAggregate.OrderPosition(
     OrderId bigint NOT NULL,
+    OrderPositionId bigint NOT NULL,
     CompareMode int NOT NULL,
     PackagePositionId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,

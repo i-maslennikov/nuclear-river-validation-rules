@@ -70,6 +70,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                            select new Aggregates::OrderPosition
                                            {
                                                OrderId = orderPosition.OrderId,
+                                               OrderPositionId = orderPosition.Id,
                                                ItemPositionId = opa.PositionId,
                                                CompareMode = (from position in q.For<Facts::Position>()
                                                               where position.Id == opa.PositionId
@@ -97,6 +98,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                            select new Aggregates::OrderPosition
                                            {
                                                OrderId = orderPosition.OrderId,
+                                               OrderPositionId = orderPosition.Id,
                                                ItemPositionId = pricePosition.PositionId,
                                                CompareMode = position.CompareMode,
                                                Category3Id = null,

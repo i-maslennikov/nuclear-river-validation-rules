@@ -6,6 +6,7 @@ namespace NuClear.ValidationRules.Storage.Model.Aggregates
     public sealed class OrderPosition
     {
         public long OrderId { get; set; }
+        public long OrderPositionId { get; set; }
         public long ItemPositionId { get; set; }
         public int CompareMode { get; set; }
         public long? Category3Id { get; set; }
