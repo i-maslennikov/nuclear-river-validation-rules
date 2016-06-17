@@ -172,6 +172,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                            select new OrderDeniedPosition
                            {
                                OrderId = orderPosition.OrderId,
+                               ExceptOrderPositionId = orderPosition.Id,
                                ItemPositionId = denied.PositionDeniedId,
                                BindingType = denied.ObjectBindingType,
                                Category3Id = opa.CategoryId,
@@ -191,6 +192,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                            select new OrderDeniedPosition
                            {
                                OrderId = orderPosition.OrderId,
+                               ExceptOrderPositionId = orderPosition.Id,
                                ItemPositionId = denied.PositionDeniedId,
                                BindingType = denied.ObjectBindingType,
                                Category3Id = null,

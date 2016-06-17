@@ -117,6 +117,7 @@ create table PriceAggregate.OrderDeniedPosition(
     OrderId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,
     BindingType int NOT NULL,
+    ExceptOrderPositionId bigint NOT NULL,
 
     Category3Id bigint NULL,
     Category1Id bigint NULL,
