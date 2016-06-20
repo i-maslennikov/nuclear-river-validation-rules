@@ -29,6 +29,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<CreateIdentity, EntityTypeProject>()
                         .Allow<CreateIdentity, EntityTypeTerritory>()
                         .Allow<CreateIdentity, EntityTypeAccount>()
+                        .Allow<CreateIdentity, EntityTypeLead>()
                         .Allow<CreateIdentity, EntityTypeFirmAddress>()
                         .Allow<CreateIdentity, EntityTypeFirmContact>()
                         .Allow<CreateIdentity, EntityTypeLetter>()
@@ -49,6 +50,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<UpdateIdentity, EntityTypeClient>()
                         .Allow<UpdateIdentity, EntityTypeContact>()
                         .Allow<UpdateIdentity, EntityTypeFirm>()
+                        .Allow<UpdateIdentity, EntityTypeLead>()
                         .Allow<UpdateIdentity, EntityTypeFirmAddress>()
                         .Allow<UpdateIdentity, EntityTypeFirmContact>()
                         .Allow<UpdateIdentity, EntityTypeBranchOfficeOrganizationUnit>()
@@ -162,6 +164,11 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing
                         .Allow<SetMainFirmIdentity>()
                         .Allow<ActualizeActiveLocksIdentity>()
                         .Allow<ImportAdvModelInRubricInfoIdentity>()
+                        .Allow<RegisterLeadIdentity>()
+                        .Allow<DequeueLeadIdentity>()
+                        .Allow<QualifyLeadIdentity>()
+                        .Allow<DisqualifyLeadIdentity>()
+                        .Allow<ChangeLeadFirmIdentity>()
 
                         // эти операции станут ignored после того как фирмы будем брать из InfoRussia
                         .Allow<ImportCardForErmIdentity>()

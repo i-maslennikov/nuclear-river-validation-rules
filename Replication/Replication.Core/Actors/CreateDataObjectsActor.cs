@@ -29,15 +29,6 @@ namespace NuClear.Replication.Core.Actors
             _dataChangesHandler = dataChangesHandler;
         }
 
-        public CreateDataObjectsActor(
-            IQuery query,
-            IBulkRepository<TDataObject> bulkRepository,
-            IEqualityComparerFactory equalityComparerFactory,
-            IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor)
-            : this(query, bulkRepository, equalityComparerFactory, storageBasedDataObjectAccessor, new NullDataChangesHandler<TDataObject>())
-        {
-        }
-
         public override IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
             var commandsToExecute = commands.OfType<ICreateDataObjectCommand>()

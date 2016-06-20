@@ -2,7 +2,7 @@
 #Requires –Version 3.0
 
 if ($TaskList.Count -eq 0){
-	$TaskList = @('Build-Packages')
+	$TaskList = @('Build-NuGet', 'Deploy-NuGet')
 }
 
 if ($Properties.Count -eq 0){

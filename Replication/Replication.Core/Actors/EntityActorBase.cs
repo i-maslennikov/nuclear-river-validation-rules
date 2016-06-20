@@ -15,17 +15,29 @@ namespace NuClear.Replication.Core.Actors
         private readonly IBulkRepository<TDataObject> _bulkRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IStorageBasedDataObjectAccessor<TDataObject> _storageBasedDataObjectAccessor;
+        private readonly IDataChangesHandler<TDataObject> _dataChangesHandler;
 
         protected EntityActorBase(
             IQuery query,
             IBulkRepository<TDataObject> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
             IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor)
+            : this(query, bulkRepository, equalityComparerFactory, storageBasedDataObjectAccessor, new NullDataChangesHandler<TDataObject>())
+        {
+        }
+
+        protected EntityActorBase(
+           IQuery query,
+           IBulkRepository<TDataObject> bulkRepository,
+           IEqualityComparerFactory equalityComparerFactory,
+           IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor,
+           IDataChangesHandler<TDataObject> dataChangesHandler)
         {
             _query = query;
             _bulkRepository = bulkRepository;
             _equalityComparerFactory = equalityComparerFactory;
             _storageBasedDataObjectAccessor = storageBasedDataObjectAccessor;
+            _dataChangesHandler = dataChangesHandler;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -37,13 +49,13 @@ namespace NuClear.Replication.Core.Actors
 
             var events = new List<IEvent>();
 
-            IActor actor = new CreateDataObjectsActor<TDataObject>(_query, _bulkRepository, _equalityComparerFactory, _storageBasedDataObjectAccessor);
+            IActor actor = new CreateDataObjectsActor<TDataObject>(_query, _bulkRepository, _equalityComparerFactory, _storageBasedDataObjectAccessor, _dataChangesHandler);
             events.AddRange(actor.ExecuteCommands(commands));
 
-            actor = new SyncDataObjectsActor<TDataObject>(_query, _bulkRepository, _equalityComparerFactory, _storageBasedDataObjectAccessor);
+            actor = new SyncDataObjectsActor<TDataObject>(_query, _bulkRepository, _equalityComparerFactory, _storageBasedDataObjectAccessor, _dataChangesHandler);
             events.AddRange(actor.ExecuteCommands(commands));
 
-            actor = new DeleteDataObjectsActor<TDataObject>(_query, _bulkRepository, _equalityComparerFactory, _storageBasedDataObjectAccessor);
+            actor = new DeleteDataObjectsActor<TDataObject>(_query, _bulkRepository, _equalityComparerFactory, _storageBasedDataObjectAccessor, _dataChangesHandler);
             events.AddRange(actor.ExecuteCommands(commands));
 
             return events;

@@ -73,24 +73,39 @@ function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 	return $metadata
 }
 
+function Get-NuGetMetadata {
+	return @{
+		'NuGet' = @{
+			'Publish' = @{
+				'Source' = 'https://www.nuget.org/api/v2/package'
+				'PrereleaseSource' = 'http://nuget.2gis.local/api/v2/package'
+
+				'SymbolSource'= 'https://nuget.smbsrc.net/api/v2/package'
+				'PrereleaseSymbolSource' = 'http://nuget.2gis.local/SymbolServer/NuGet'
+			}
+		}
+	}
+}
+
 function Parse-EnvironmentMetadata ($Properties) {
 
-    $buildSystem = 'Local'
+	$environmentMetadata = @{}
+
     if($Properties['BuildSystem']) {
-        $buildSystem = $Properties.BuildSystem
-    }
+		$buildSystem = $Properties.BuildSystem
+    } else {
+		$buildSystem = 'Local'
+	}
+
+	$environmentMetadata += @{ 'BuildSystem' = $buildSystem } 
+	$environmentMetadata += Get-NuGetMetadata
 
 	$environmentName = $Properties['EnvironmentName']
 	if (!$environmentName){
-		return @{'BuildSystem' = $buildSystem}
+		return $environmentMetadata
 	}
 
-    $environmentMetadata = @{
-        'BuildSystem' = $buildSystem;
-        'Common' = @{ 
-            'EnvironmentName' = $environmentName
-        } 
-    }
+    $environmentMetadata += @{ 'Common' = @{ 'EnvironmentName' = $environmentName } }
 
 	$context = $AllEnvironments[$environmentName]
 	if ($context -eq $null){

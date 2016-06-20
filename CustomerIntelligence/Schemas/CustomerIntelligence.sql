@@ -8,6 +8,7 @@ if object_id('CustomerIntelligence.ProjectCategory') is not null drop table Cust
 if object_id('CustomerIntelligence.Territory') is not null drop table CustomerIntelligence.Territory
 if object_id('CustomerIntelligence.Firm') is not null drop table CustomerIntelligence.Firm
 if object_id('CustomerIntelligence.FirmBalance') is not null drop table CustomerIntelligence.FirmBalance
+if object_id('CustomerIntelligence.FirmLead') is not null drop table CustomerIntelligence.FirmLead
 if object_id('CustomerIntelligence.FirmForecast') is not null drop table CustomerIntelligence.FirmForecast
 if object_id('CustomerIntelligence.FirmActivity') is not null drop table CustomerIntelligence.FirmActivity
 if object_id('CustomerIntelligence.Client') is not null drop table CustomerIntelligence.Client
@@ -153,6 +154,16 @@ create table CustomerIntelligence.FirmForecast(
     , ForecastClick int not null
     , ForecastAmount decimal(19,4) not null
     , constraint PK_FirmForecast primary key (FirmId)
+)
+go
+
+-- FirmLead
+create table CustomerIntelligence.FirmLead(
+	FirmId bigint not null
+    , LeadId bigint not null
+    , IsInQueue bit not null
+    , Type int not null
+    , constraint PK_FirmLeads primary key (FirmId, LeadId)
 )
 go
 

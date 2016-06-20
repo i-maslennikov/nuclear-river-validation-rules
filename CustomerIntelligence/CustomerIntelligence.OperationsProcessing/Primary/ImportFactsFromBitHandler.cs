@@ -48,10 +48,10 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                     foreach (var actor in actors)
                     {
                         var events = actor.ExecuteCommands(message.Commands);
-
-                        _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(message.Commands.Count);
                         _eventLogger.Log(events);
                     }
+
+                    _telemetryPublisher.Publish<BitStatisticsEntityProcessedCountIdentity>(message.Commands.Count);
                 }
 
                 return MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded();

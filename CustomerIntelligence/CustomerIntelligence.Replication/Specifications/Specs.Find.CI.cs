@@ -22,6 +22,10 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                 {
                     return new FindSpecification<FirmActivity>(x => aggregateIds.Contains(x.FirmId));
                 }
+                public static FindSpecification<FirmLead> FirmLeads(IReadOnlyCollection<long> aggregateIds)
+                {
+                    return new FindSpecification<FirmLead>(x => aggregateIds.Contains(x.FirmId));
+                }
 
                 public static FindSpecification<FirmBalance> FirmBalances(IReadOnlyCollection<long> aggregateIds)
                 {
@@ -55,6 +59,11 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                                    (acc, idsGroup) => acc || new FindSpecification<FirmCategory3>(x => x.ProjectId == idsGroup.Key && idsGroup.Contains(x.CategoryId)));
 
                     return spec;
+                }
+
+                public static FindSpecification<FirmCategory3> FirmCategory3(IReadOnlyCollection<long> aggregateIds)
+                {
+                    return new FindSpecification<FirmCategory3>(x => aggregateIds.Contains(x.ProjectId));
                 }
 
                 public static FindSpecification<FirmForecast> FirmForecast(IReadOnlyCollection<long> aggregateIds)
