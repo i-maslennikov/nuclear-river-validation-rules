@@ -186,6 +186,17 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                                       CategoryId = category2.Id
                                   }).Distinct());
 
+                    public static readonly MapSpecification<IQuery, IQueryable<FirmLead>> FirmLeads =
+                        new MapSpecification<IQuery, IQueryable<FirmLead>>(
+                            q => from lead in q.For<Lead>()
+                                 select new FirmLead
+                                 {
+                                     FirmId = lead.FirmId,
+                                     LeadId = lead.Id,
+                                     IsInQueue = lead.IsInQueue,
+                                     Type = lead.Type
+                                 });
+
                     public static readonly MapSpecification<IQuery, IQueryable<FirmTerritory>> FirmTerritories =
                         new MapSpecification<IQuery, IQueryable<FirmTerritory>>(
                             q => (from firmAddress in q.For<FirmAddress>()

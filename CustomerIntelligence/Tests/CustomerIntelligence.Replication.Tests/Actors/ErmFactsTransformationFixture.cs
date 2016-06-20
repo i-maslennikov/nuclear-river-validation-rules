@@ -38,7 +38,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Actors
             actorFactory.Object.Create();
 
             //assert
-            Assert.That(factoryInvocationOrder.Count, Is.EqualTo(16));
+            Assert.That(factoryInvocationOrder.Count, Is.EqualTo(17));
             Assert.That(factoryInvocationOrder[0], Is.EqualTo(typeof(Storage.Model.Facts.Project)));
             Assert.That(factoryInvocationOrder[1], Is.EqualTo(typeof(Storage.Model.Facts.Category)));
             Assert.That(factoryInvocationOrder[2], Is.EqualTo(typeof(Storage.Model.Facts.CategoryGroup)));
@@ -55,6 +55,7 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Actors
             Assert.That(factoryInvocationOrder[13], Is.EqualTo(typeof(Storage.Model.Facts.LegalPerson)));
             Assert.That(factoryInvocationOrder[14], Is.EqualTo(typeof(Storage.Model.Facts.Order)));
             Assert.That(factoryInvocationOrder[15], Is.EqualTo(typeof(Storage.Model.Facts.SalesModelCategoryRestriction)));
+            Assert.That(factoryInvocationOrder[16], Is.EqualTo(typeof(Storage.Model.Facts.Lead)));
         }
 
         [Test]

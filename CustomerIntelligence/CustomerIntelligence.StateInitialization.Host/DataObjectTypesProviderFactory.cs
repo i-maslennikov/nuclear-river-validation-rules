@@ -33,6 +33,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                             typeof(Contact),
                             typeof(FirmAddress),
                             typeof(FirmContact),
+                            typeof(Lead),
                             typeof(LegalPerson),
                             typeof(Order),
                             typeof(SalesModelCategoryRestriction)
@@ -48,6 +49,7 @@ namespace NuClear.CustomerIntelligence.StateInitialization.Host
                             typeof(Storage.Model.CI.FirmBalance),
                             typeof(Storage.Model.CI.FirmCategory1),
                             typeof(Storage.Model.CI.FirmCategory2),
+                            typeof(Storage.Model.CI.FirmLead),
                             typeof(Storage.Model.CI.FirmTerritory),
                             typeof(Storage.Model.CI.Client),
                             typeof(Storage.Model.CI.ClientContact),

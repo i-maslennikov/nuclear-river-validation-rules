@@ -22,6 +22,10 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                 {
                     return new FindSpecification<FirmActivity>(x => aggregateIds.Contains(x.FirmId));
                 }
+                public static FindSpecification<FirmLead> FirmLeads(IReadOnlyCollection<long> aggregateIds)
+                {
+                    return new FindSpecification<FirmLead>(x => aggregateIds.Contains(x.FirmId));
+                }
 
                 public static FindSpecification<FirmBalance> FirmBalances(IReadOnlyCollection<long> aggregateIds)
                 {

@@ -18,7 +18,11 @@ namespace NuClear.CustomerIntelligence.Querying.Host
                         .Member("NotSet", 0)
                         .Member("CPS", 10)
                         .Member("FH", 11)
-                        .Member("MFH", 12))
+                        .Member("MFH", 12),
+                    EnumTypeElement.Config.Name(EnumName.LeadType)
+                        .Member("Hot", 1)
+                        .Member("Warm", 2)
+                        .Member("Cold", 3))
                 .Elements(
                     EntityElement.Config.Name(EntityName.CategoryGroup).EntitySetName("CategoryGroups")
                         .HasKey("Id")
@@ -60,6 +64,14 @@ namespace NuClear.CustomerIntelligence.Querying.Host
                                                 .Property(EntityPropertyElement.Config.Name("AccountId").OfType(ElementaryTypeKind.Int64))
                                                 .Property(EntityPropertyElement.Config.Name("ProjectId").OfType(ElementaryTypeKind.Int64))
                                                 .Property(EntityPropertyElement.Config.Name("Balance").OfType(ElementaryTypeKind.Decimal))
+                                        ).AsMany())
+                                    .Relation(EntityRelationElement.Config.Name("Leads")
+                                        .DirectTo(
+                                            EntityElement.Config.Name(EntityName.FirmLead)
+                                                .HasKey("LeadId")
+                                                .Property(EntityPropertyElement.Config.Name("LeadId").OfType(ElementaryTypeKind.Int64))
+                                                .Property(EntityPropertyElement.Config.Name("IsInQueue").OfType(ElementaryTypeKind.Boolean))
+                                                .Property(EntityPropertyElement.Config.Name("Type").OfType<EnumTypeElement>(EnumTypeElement.Config.Name(EnumName.LeadType)))
                                         ).AsMany())
                                     .Relation(EntityRelationElement.Config.Name("Categories1")
                                         .DirectTo(
@@ -175,6 +187,13 @@ namespace NuClear.CustomerIntelligence.Querying.Host
                                  .Relation(EntityRelationElement.Config.Name("CategoryGroupId").DirectTo(EntityElement.Config.Name(TableName.CategoryGroup)).AsOne())
                                  .Relation(EntityRelationElement.Config.Name("ProjectId").DirectTo(EntityElement.Config.Name(TableName.Project)).AsOne())
                                  .Relation(EntityRelationElement.Config.Name("ClientId").DirectTo(EntityElement.Config.Name(TableName.Client)).AsOneOptionally()),
+                    EntityElement.Config.Name(TableName.FirmLead)
+                                 .HasKey("FirmId", "LeadId")
+                                 .Property(EntityPropertyElement.Config.Name("LeadId").OfType(ElementaryTypeKind.Int64))
+                                 .Property(EntityPropertyElement.Config.Name("IsInQueue").OfType(ElementaryTypeKind.Boolean))
+                                 .Property(EntityPropertyElement.Config.Name("Type").OfType(ElementaryTypeKind.Decimal))
+                                 .Relation(EntityRelationElement.Config.Name("FirmId").DirectTo(EntityElement.Config.Name(ViewName.Firm)).AsOne()),
+
                     EntityElement.Config.Name(TableName.FirmBalance)
                                  .HasKey("FirmId", "AccountId")
                                  .Property(EntityPropertyElement.Config.Name("AccountId").OfType(ElementaryTypeKind.Int64))
@@ -219,6 +238,7 @@ namespace NuClear.CustomerIntelligence.Querying.Host
                     .Map(EntityName.Territory, TableName.Territory)
                     .Map(EntityName.Firm, ViewName.Firm)
                     .Map(EntityName.FirmBalance, TableName.FirmBalance)
+                    .Map(EntityName.FirmLead, TableName.FirmLead)
                     .Map(EntityName.FirmCategory1, TableName.FirmCategory1)
                     .Map(EntityName.FirmCategory2, TableName.FirmCategory2)
                     .Map(EntityName.FirmCategory3, TableName.FirmCategory3)
@@ -230,6 +250,7 @@ namespace NuClear.CustomerIntelligence.Querying.Host
             {
                 public const string ContactRole = "ContactRole";
                 public const string SalesModel = "SalesModel";
+                public const string LeadType = "LeadType";
             }
 
             private static class EntityName
@@ -241,6 +262,7 @@ namespace NuClear.CustomerIntelligence.Querying.Host
                 public const string Client = "Client";
                 public const string ClientContact = "ClientContact";
                 public const string Firm = "Firm";
+                public const string FirmLead = "FirmLead";
                 public const string FirmBalance = "FirmBalance";
                 public const string FirmCategory1 = "FirmCategory1";
                 public const string FirmCategory2 = "FirmCategory2";
@@ -255,6 +277,7 @@ namespace NuClear.CustomerIntelligence.Querying.Host
                 public const string ProjectCategory = TableSchema + "." + "ProjectCategory";
                 public const string Territory = TableSchema + "." + "Territory";
                 public const string FirmBalance = TableSchema + "." + "FirmBalance";
+                public const string FirmLead = TableSchema + "." + "FirmLead";
                 public const string FirmCategory1 = TableSchema + "." + "FirmCategory1";
                 public const string FirmCategory2 = TableSchema + "." + "FirmCategory2";
                 public const string FirmCategory3 = TableSchema + "." + "FirmCategory3";

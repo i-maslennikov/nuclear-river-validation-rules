@@ -34,6 +34,9 @@ namespace NuClear.CustomerIntelligence.Storage
                     .HasSchemaName(CustomerIntelligenceSchema)
                     .HasPrimaryKey(x => x.Id);
 
+                config.Entity<FirmLead>()
+                      .HasSchemaName(CustomerIntelligenceSchema);
+
                 config.Entity<FirmActivity>()
                     .HasSchemaName(CustomerIntelligenceSchema);
 

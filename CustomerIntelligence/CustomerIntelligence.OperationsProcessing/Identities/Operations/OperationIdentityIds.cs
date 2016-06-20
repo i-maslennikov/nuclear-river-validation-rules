@@ -40,5 +40,12 @@
         public const int UpdateOrderFinancialPerformanceIdentity = 15110;
         public const int ActualizeActiveLocksIdentity = 15904;
         public const int ImportAdvModelInRubricInfoIdentity = 27201;
+
+        // Lead 582
+        public const int RegisterLeadIdentity = 58201;
+        public const int DequeueLeadIdentity = 58202;
+        public const int QualifyLeadIdentity = 58203;
+        public const int DisqualifyLeadIdentity = 58204;
+        public const int ChangeLeadFirmIdentity = 58205;
     }
 }
