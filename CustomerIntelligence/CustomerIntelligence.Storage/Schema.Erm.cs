@@ -12,6 +12,7 @@ namespace NuClear.CustomerIntelligence.Storage
         private const string BillingSchema = "Billing";
         private const string BusinessDirectorySchema = "BusinessDirectory";
         private const string ActivitySchema = "Activity";
+        private const string CrmSchema = "Crm";
 
         public static MappingSchema Erm
         {
@@ -42,6 +43,11 @@ namespace NuClear.CustomerIntelligence.Storage
                 config.Entity<Firm>()
                     .HasSchemaName(BusinessDirectorySchema)
                     .HasTableName("Firms")
+                    .Property(x => x.Id).IsPrimaryKey()
+                    .Property(x => x.OwnerId).HasColumnName("OwnerCode");
+                config.Entity<Lead>()
+                    .HasSchemaName(CrmSchema)
+                    .HasTableName("Leads")
                     .Property(x => x.Id).IsPrimaryKey()
                     .Property(x => x.OwnerId).HasColumnName("OwnerCode");
                 config.Entity<FirmAddress>().HasSchemaName(BusinessDirectorySchema).HasTableName("FirmAddresses").Property(x => x.Id).IsPrimaryKey();

@@ -17,6 +17,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<FirmActivity> _firmActivityBulkRepository;
+        private readonly IBulkRepository<FirmLead> _firmLeadBulkRepository;
         private readonly IBulkRepository<FirmBalance> _firmBalanceBulkRepository;
         private readonly IBulkRepository<FirmCategory1> _firmCategory1BulkRepository;
         private readonly IBulkRepository<FirmCategory2> _firmCategory2BulkRepository;
@@ -27,6 +28,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             IQuery query,
             IBulkRepository<Firm> firmBulkRepository,
             IBulkRepository<FirmActivity> firmActivityBulkRepository,
+            IBulkRepository<FirmLead> firmLeadBulkRepository,
             IBulkRepository<FirmBalance> firmBalanceBulkRepository,
             IBulkRepository<FirmCategory1> firmCategory1BulkRepository,
             IBulkRepository<FirmCategory2> firmCategory2BulkRepository,
@@ -41,6 +43,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             _firmCategory2BulkRepository = firmCategory2BulkRepository;
             _firmFirmTerritoryBulkRepository = firmFirmTerritoryBulkRepository;
             _equalityComparerFactory = equalityComparerFactory;
+            _firmLeadBulkRepository = firmLeadBulkRepository;
         }
 
 
@@ -50,6 +53,7 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             => new IActor[]
                 {
                     new ValueObjectActor<FirmActivity>(_query, _firmActivityBulkRepository, _equalityComparerFactory, new FirmActivityAccessor(_query)),
+                    new ValueObjectActor<FirmLead>(_query, _firmLeadBulkRepository, _equalityComparerFactory, new FirmLeadAccessor(_query)),
                     new ValueObjectActor<FirmBalance>(_query, _firmBalanceBulkRepository, _equalityComparerFactory, new FirmBalanceAccessor(_query)),
                     new ValueObjectActor<FirmCategory1>(_query, _firmCategory1BulkRepository, _equalityComparerFactory, new FirmCategory1Accessor(_query)),
                     new ValueObjectActor<FirmCategory2>(_query, _firmCategory2BulkRepository, _equalityComparerFactory, new FirmCategory2Accessor(_query)),
@@ -93,6 +97,24 @@ namespace NuClear.CustomerIntelligence.Replication.Actors
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return Specs.Find.CI.FirmActivities(aggregateIds);
+            }
+        }
+
+        public sealed class FirmLeadAccessor : IStorageBasedDataObjectAccessor<FirmLead>
+        {
+            private readonly IQuery _query;
+
+            public FirmLeadAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<FirmLead> GetSource() => Specs.Map.Facts.ToCI.FirmLeads.Map(_query);
+
+            public FindSpecification<FirmLead> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return Specs.Find.CI.FirmLeads(aggregateIds);
             }
         }
 

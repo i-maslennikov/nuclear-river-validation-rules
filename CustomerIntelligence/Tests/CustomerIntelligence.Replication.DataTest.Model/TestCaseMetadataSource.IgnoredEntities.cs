@@ -162,6 +162,16 @@ namespace NuClear.CustomerIntelligence.Replication.StateInitialization.Tests
                                   .Erm(
                                        new Storage.Model.Erm.Territory { Id = 1, IsActive = true },
                                        new Storage.Model.Erm.Territory { Id = 2, IsActive = false });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement IgnoredLead =>
+            ArrangeMetadataElement.Config.Name(nameof(IgnoredLead))
+                                  .Fact(new Lead { Id = 1, FirmId = 2, IsInQueue = false, Type = 1})
+                                  .Erm(
+                                       new Storage.Model.Erm.Lead { Id = 1, FirmId = 2, OwnerId = 3, Status = 1, Type = 1},
+                                       new Storage.Model.Erm.Lead { Id = 2, FirmId = null, OwnerId = 3, Status = 1, Type = 1 },
+                                       new Storage.Model.Erm.Lead { Id = 3, FirmId = 2, OwnerId = 3, Status = 2, Type = 1 });
+
     }
 }
 
