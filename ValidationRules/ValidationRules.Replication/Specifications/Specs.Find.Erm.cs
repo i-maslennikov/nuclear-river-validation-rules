@@ -11,6 +11,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
             {
                 private const int RulesetDraftPriority = 0;
                 private const int OrderStateArchive = 6;
+                private const int OrderStateRejected = 3;
 
                 public static FindSpecification<AssociatedPosition> AssociatedPositions()
                 {
@@ -39,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
 
                 public static FindSpecification<Order> Orders()
                 {
-                    return new FindSpecification<Order>(x => x.IsActive && !x.IsDeleted && x.WorkflowStepId != OrderStateArchive);
+                    return new FindSpecification<Order>(x => x.IsActive && !x.IsDeleted && x.WorkflowStepId != OrderStateArchive && x.WorkflowStepId != OrderStateRejected);
                 }
 
                 public static FindSpecification<OrderPosition> OrderPositions()
