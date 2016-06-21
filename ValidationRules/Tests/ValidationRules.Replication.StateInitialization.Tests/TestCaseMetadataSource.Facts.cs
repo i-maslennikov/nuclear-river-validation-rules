@@ -133,10 +133,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(ReplicatedOrder))
             .Erm(
-                new Erm::Order { Id = 1, IsActive = true, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndDistributionDateFact = DateTime.Parse("2012-01-31T23:59:59"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerCode = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 }
+                new Erm::Order { Id = 1, IsActive = true, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndDistributionDateFact = DateTime.Parse("2012-01-31T23:59:59"), EndDistributionDatePlan = DateTime.Parse("2012-03-31T23:59:59"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerCode = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 }
                 )
             .Fact(
-                new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 }
+                new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2012-01-01"), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndDistributionDatePlan = DateTime.Parse("2012-04-01"), EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 }
                 );
 
         // ReSharper disable once UnusedMember.Local
@@ -240,26 +240,21 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 );
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement IgnoredPricePosition
-        => ArrangeMetadataElement.Config
-            .Name(nameof(IgnoredPricePosition))
-            .Erm(
-                new Erm::PricePosition { Id = 1, IsActive = false, IsDeleted = false },
-                new Erm::PricePosition { Id = 2, IsActive = false, IsDeleted = true },
-                new Erm::PricePosition { Id = 3, IsActive = true, IsDeleted = true }
-                )
-            .Fact();
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement ReplicatedPricePosition
         => ArrangeMetadataElement.Config
             .Name(nameof(ReplicatedPricePosition))
             .Erm(
-                new Erm::PricePosition { Id = 1, IsActive = true, IsDeleted = false }
+                new Erm::PricePosition { Id = 1, IsActive = false, IsDeleted = false },
+                new Erm::PricePosition { Id = 2, IsActive = false, IsDeleted = true },
+                new Erm::PricePosition { Id = 3, IsActive = true, IsDeleted = true },
+                new Erm::PricePosition { Id = 4, IsActive = true, IsDeleted = false }
                 )
             .Fact(
-                new Facts::PricePosition { Id = 1 }
-                );
+                new Facts::PricePositionNotActive { Id = 1 },
+                new Facts::PricePositionNotActive { Id = 2 },
+                new Facts::PricePositionNotActive { Id = 3 },
+                new Facts::PricePosition { Id = 4 }
+            );
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement IgnoredProject

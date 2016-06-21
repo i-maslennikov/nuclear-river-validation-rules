@@ -56,5 +56,27 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Position { Id = 3, CategoryCode = 102, IsControlledByAmount = true },
                     new Aggregates::Position { Id = 4, CategoryCode = 103, IsControlledByAmount = true }
                     );
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement PriceWithAssociatedPositionGroupOvercount
+            => ArrangeMetadataElement.Config
+                .Name(nameof(PriceWithAssociatedPositionGroupOvercount))
+                .Fact(
+                    new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
+
+                    // Position с ограничениями
+                    new Facts::PricePosition { Id = 10, PriceId = 1, PositionId = 3 },
+                    new Facts::Position { Id = 3, CategoryCode = 1 },
+
+                    new Facts::AssociatedPositionsGroup { Id = 20, PricePositionId = 10 },
+                    new Facts::AssociatedPositionsGroup { Id = 21, PricePositionId = 10 }
+                    )
+                .Aggregate(
+                    new Aggregates::Price { Id = 1 },
+                    new Aggregates::AssociatedPositionGroupOvercount { PriceId = 1, Count = 2, PricePositionId = 10 },
+
+                    new Aggregates::Position { Id = 3, CategoryCode = 1 },
+                    new Aggregates::PricePeriod { PriceId = 1, OrganizationUnitId = 0, Start = DateTime.Parse("2012-12-12") }
+                    );
     }
 }
