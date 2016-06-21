@@ -46,12 +46,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
             var ranges = _query.For<Order>()
                           .Where(specification)
-                          .GroupBy(x => x.DestOrganizationUnitId, x => new { Start = x.BeginDistributionDate, End = x.EndDistributionDateFact })
+                          .GroupBy(x => x.DestOrganizationUnitId, x => new { Start = x.BeginDistributionDate, End = x.EndDistributionDatePlan })
                           .ToDictionary(x => x.Key, x => x.Distinct());
 
             var dates = _query.For<Order>()
                          .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
                          .Union(_query.For<Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                         .Union(_query.For<Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                          .Union(_query.For<Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
                          .GroupBy(x => x.OrganizationUnitId, x => x.Date)
                          .ToDictionary(x => x.Key, x => x.Distinct());

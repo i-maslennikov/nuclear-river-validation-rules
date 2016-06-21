@@ -68,6 +68,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                          WorkflowStepId = order.WorkflowStepId,
                                          BeginDistributionDate = order.BeginDistributionDate,
                                          EndDistributionDateFact = order.EndDistributionDateFact + OneSecond,
+                                         EndDistributionDatePlan = order.EndDistributionDatePlan + OneSecond,
                                          BeginReleaseNumber = order.BeginReleaseNumber,
                                          EndReleaseNumberPlan = order.EndReleaseNumberPlan,
                                          EndReleaseNumberFact = order.EndReleaseNumberFact,

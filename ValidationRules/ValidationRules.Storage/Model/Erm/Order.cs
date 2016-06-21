@@ -11,6 +11,7 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
         public long OwnerCode { get; set; }
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDateFact { get; set; }
+        public DateTime EndDistributionDatePlan { get; set; }
         public int BeginReleaseNumber { get; set; }
         public int EndReleaseNumberFact { get; set; }
         public int EndReleaseNumberPlan { get; set; }

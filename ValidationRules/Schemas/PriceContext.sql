@@ -96,6 +96,7 @@ create table PriceContext.[Order](
     OwnerId bigint not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDateFact datetime2(2) not null,
+    EndDistributionDatePlan datetime2(2) not null,
     BeginReleaseNumber int not null,
     EndReleaseNumberFact int not null,
     EndReleaseNumberPlan int not null,

@@ -128,6 +128,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     var dates = q.For<Facts::Order>()
                                                  .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
                                                  .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                                  .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
                                                  .Join(q.For<Facts::Project>(), x => x.OrganizationUnitId, p => p.OrganizationUnitId, (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
                                                  .OrderBy(x => x.Date)
@@ -150,6 +151,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                 var dates = q.For<Facts::Order>()
                                              .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
                                              .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                             .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                              .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
                                              .Distinct();
 
@@ -159,7 +161,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                 var result = q.For<Facts::Order>()
                                               .SelectMany(order => dates.Where(date =>
                                                                                date.OrganizationUnitId == order.DestOrganizationUnitId &&
-                                                                               order.BeginDistributionDate <= date.Date && date.Date < order.EndDistributionDateFact)
+                                                                               order.BeginDistributionDate <= date.Date && date.Date < order.EndDistributionDatePlan)
                                                                         .Select(x => new Aggregates::OrderPeriod
                                                                             {
                                                                                 OrderId = order.Id,
@@ -177,6 +179,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     var dates = q.For<Facts::Order>()
                                                  .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
                                                  .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                                  .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
                                                  .Distinct();
 
