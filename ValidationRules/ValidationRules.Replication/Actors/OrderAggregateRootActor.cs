@@ -108,8 +108,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                     from orderPosition in _query.For<Facts::OrderPosition>()
                     from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
                     from pricePositionNotActive in _query.For<Facts::PricePositionNotActive>().Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
-                    from position in _query.For<Facts::Position>()
-                    where position.Id == pricePosition.PositionId || position.Id == pricePositionNotActive.PositionId
+                    from position in _query.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId || x.Id == pricePositionNotActive.PositionId).DefaultIfEmpty()
                     select new OrderPricePosition
                     {
                         OrderId = orderPosition.OrderId,
