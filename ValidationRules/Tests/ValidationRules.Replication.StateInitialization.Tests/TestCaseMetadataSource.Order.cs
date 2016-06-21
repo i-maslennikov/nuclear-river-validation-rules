@@ -85,7 +85,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 // 1 order, 2 price positions
                 new Aggregates::OrderPricePosition { OrderId = 2, OrderPositionId = 20, PriceId = 3, IsActive = true },
                 new Aggregates::OrderPricePosition { OrderId = 2, OrderPositionId = 21, PriceId = 3, IsActive = true },
-                new Aggregates::Order { Id = 2 });
+                new Aggregates::Order { Id = 2 },
+
+                new Aggregates::Period { Start =DateTime.MinValue, End = DateTime.MaxValue });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderWithAmountControlledPosition
@@ -104,7 +106,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1 },
 
                     new Aggregates::Position { Id = 1, CategoryCode = 10, IsControlledByAmount = true },
-                    new Aggregates::AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10 });
+                    new Aggregates::AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10 },
+
+                    new Aggregates::Period { Start =DateTime.MinValue, End = DateTime.MaxValue });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderWithDeniedPositions
@@ -122,6 +126,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::OrderDeniedPosition { OrderId = 1, ExceptOrderPositionId = 2, ItemPositionId = 14 },
                     new Aggregates::OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, IsActive = true },
 
-                    new Aggregates::PriceDeniedPosition { PriceId = 9, PrincipalPositionId = 7, DeniedPositionId = 14 });
+                    new Aggregates::PriceDeniedPosition { PriceId = 9, PrincipalPositionId = 7, DeniedPositionId = 14 },
+
+                    new Aggregates::Period { Start =DateTime.MinValue, End = DateTime.MaxValue });
     }
 }

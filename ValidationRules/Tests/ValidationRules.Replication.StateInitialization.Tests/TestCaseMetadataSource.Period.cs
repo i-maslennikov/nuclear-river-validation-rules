@@ -15,14 +15,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                      .Name(nameof(OrderPeriod))
                                      .Aggregate(
                                                 new Aggregates::Order { Id = 1 },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-05-01") },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-05-01"), End = DateTime.Parse("2011-06-01") },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-06-01"), End = DateTime.MaxValue },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-05-01"), ProjectId = 123 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-05-01"), End = DateTime.Parse("2011-06-01"), ProjectId = 123 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-06-01"), End = DateTime.MaxValue, ProjectId = 123 },
                                                 new Aggregates::OrderPeriod { OrderId = 1, Start = DateTime.Parse("2011-01-01") },
                                                 new Aggregates::OrderPeriod { OrderId = 1, Start = DateTime.Parse("2011-05-01") })
                                      .Fact(
-                                           new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2011-01-01"), EndDistributionDateFact = DateTime.Parse("2011-05-01"), EndDistributionDatePlan = DateTime.Parse("2011-06-01") },
-                                           new Facts::Project());
+                                           new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2011-01-01"), EndDistributionDateFact = DateTime.Parse("2011-05-01"), EndDistributionDatePlan = DateTime.Parse("2011-06-01")},
+                                           new Facts::Project {Id = 123 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PricePeriod
@@ -31,14 +31,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                      .Aggregate(
                                                 new Aggregates::Price { Id = 1 },
                                                 new Aggregates::Price { Id = 2 },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-02-01") },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-02-01"), End = DateTime.MaxValue },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-02-01"), ProjectId = 123 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-02-01"), End = DateTime.MaxValue, ProjectId = 123 },
                                                 new Aggregates::PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-01-01") },
                                                 new Aggregates::PricePeriod { PriceId = 2, Start = DateTime.Parse("2011-02-01") })
                                      .Fact(
                                            new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2011-01-01") },
                                            new Facts::Price { Id = 2, BeginDate = DateTime.Parse("2011-02-01") },
-                                           new Facts::Project());
+                                           new Facts::Project { Id = 123 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PriceAndOrderPeriod
@@ -52,17 +52,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                 new Aggregates::Order { Id = 2 },
                                                 new Aggregates::Order { Id = 3 },
 
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-02-01"), OrganizationUnitId = 2, ProjectId = 6 },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-02-01"), End = DateTime.Parse("2011-03-01"), OrganizationUnitId = 2, ProjectId = 6 },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-03-01"), End = DateTime.Parse("2011-04-01"), OrganizationUnitId = 2, ProjectId = 6 },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-04-01"), End = DateTime.Parse("2011-05-01"), OrganizationUnitId = 2, ProjectId = 6 },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-05-01"), End = DateTime.Parse("2011-06-01"), OrganizationUnitId = 2, ProjectId = 6 },
-                                                new Aggregates::Period { Start = DateTime.Parse("2011-06-01"), End = DateTime.MaxValue, OrganizationUnitId = 2, ProjectId = 6 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-02-01"), OrganizationUnitId = 2 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-02-01"), End = DateTime.Parse("2011-03-01"), OrganizationUnitId = 2 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-03-01"), End = DateTime.Parse("2011-04-01"), OrganizationUnitId = 2 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-04-01"), End = DateTime.Parse("2011-05-01"), OrganizationUnitId = 2 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-05-01"), End = DateTime.Parse("2011-06-01"), OrganizationUnitId = 2 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2011-06-01"), End = DateTime.MaxValue, OrganizationUnitId = 2 },
 
                                                 // Для второго отделения организации должны быть свои периоды, не влияющие на первое
-                                                new Aggregates::Period { Start = DateTime.Parse("2010-01-01"), End = DateTime.Parse("2010-02-01"), OrganizationUnitId = 1, ProjectId = 5},
-                                                new Aggregates::Period { Start = DateTime.Parse("2010-02-01"), End = DateTime.Parse("2010-03-01"), OrganizationUnitId = 1, ProjectId = 5},
-                                                new Aggregates::Period { Start = DateTime.Parse("2010-03-01"), End = DateTime.MaxValue, OrganizationUnitId = 1, ProjectId = 5 },
+                                                new Aggregates::Period { Start = DateTime.Parse("2010-01-01"), End = DateTime.Parse("2010-02-01"), OrganizationUnitId = 1},
+                                                new Aggregates::Period { Start = DateTime.Parse("2010-02-01"), End = DateTime.Parse("2010-03-01"), OrganizationUnitId = 1},
+                                                new Aggregates::Period { Start = DateTime.Parse("2010-03-01"), End = DateTime.MaxValue, OrganizationUnitId = 1 },
 
                                                 new Aggregates::PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-01-01"), OrganizationUnitId = 2 },
                                                 new Aggregates::PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-02-01"), OrganizationUnitId = 2 },
@@ -91,10 +91,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                                            new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistributionDate = DateTime.Parse("2011-02-01"), EndDistributionDateFact = DateTime.Parse("2011-04-01"), EndDistributionDatePlan = DateTime.Parse("2011-04-01") },
                                            new Facts::Order { Id = 2, DestOrganizationUnitId = 2, BeginDistributionDate = DateTime.Parse("2011-05-01"), EndDistributionDateFact = DateTime.Parse("2011-06-01"), EndDistributionDatePlan = DateTime.Parse("2011-06-01") },
-                                           new Facts::Order { Id = 3, DestOrganizationUnitId = 1, BeginDistributionDate = DateTime.Parse("2010-01-01"), EndDistributionDateFact = DateTime.Parse("2010-02-01"), EndDistributionDatePlan = DateTime.Parse("2010-03-01") },
-
-                                           new Facts::Project { Id = 5, OrganizationUnitId = 1 },
-                                           new Facts::Project { Id = 6, OrganizationUnitId = 2 }
-                                           );
+                                           new Facts::Order { Id = 3, DestOrganizationUnitId = 1, BeginDistributionDate = DateTime.Parse("2010-01-01"), EndDistributionDateFact = DateTime.Parse("2010-02-01"), EndDistributionDatePlan = DateTime.Parse("2010-03-01") });
     }
 }

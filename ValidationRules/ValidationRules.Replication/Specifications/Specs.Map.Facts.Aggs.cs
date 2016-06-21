@@ -130,7 +130,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                  .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
                                                  .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                                  .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
-                                                 .Join(q.For<Facts::Project>(), x => x.OrganizationUnitId, p => p.OrganizationUnitId, (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
+                                                 .SelectMany(x => q.For<Facts::Project>().Where(p => p.OrganizationUnitId == x.OrganizationUnitId).DefaultIfEmpty(), (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
                                                  .OrderBy(x => x.Date)
                                                  .Distinct();
 
