@@ -11,5 +11,6 @@ namespace NuClear.ValidationRules.Storage.Model.Aggregates
         public long OrderId { get; set; }
         public long OrganizationUnitId { get; set; }
         public DateTime Start { get; set; }
+        public long Scope { get; set; }
     }
 }

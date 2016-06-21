@@ -135,42 +135,14 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                  .Distinct();
 
                                     return dates.Select(x => new { Start = x, End = dates.FirstOrDefault(y => y.Date > x.Date && y.OrganizationUnitId == x.OrganizationUnitId) })
-                                                .Select(x => new Aggregates::Period
-                                                    {
-                                                        Start = x.Start.Date,
-                                                        End = x.End != null ? x.End.Date : DateTime.MaxValue,
-                                                        OrganizationUnitId = x.Start.OrganizationUnitId,
-                                                        ProjectId = x.Start.ProjectId
-                                                    });
+                                                      .Select(x => new Aggregates::Period
+                                                          {
+                                                              Start = x.Start.Date,
+                                                              End = x.End != null ? x.End.Date : DateTime.MaxValue,
+                                                              OrganizationUnitId = x.Start.OrganizationUnitId,
+                                                              ProjectId = x.Start.ProjectId
+                                                          });
                                 });
-
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::OrderPeriod>> OrderPeriods
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPeriod>>(
-                            q =>
-                            {
-                                var dates = q.For<Facts::Order>()
-                                             .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
-                                             .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                             .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                             .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
-                                             .Distinct();
-
-                                // https://github.com/linq2db/linq2db/issues/356
-                                dates = dates.Select(x => new { x.Date, x.OrganizationUnitId });
-
-                                var result = q.For<Facts::Order>()
-                                              .SelectMany(order => dates.Where(date =>
-                                                                               date.OrganizationUnitId == order.DestOrganizationUnitId &&
-                                                                               order.BeginDistributionDate <= date.Date && date.Date < order.EndDistributionDatePlan)
-                                                                        .Select(x => new Aggregates::OrderPeriod
-                                                                            {
-                                                                                OrderId = order.Id,
-                                                                                OrganizationUnitId = order.DestOrganizationUnitId,
-                                                                                Start = x.Date
-                                                                            }));
-
-                                return result;
-                            });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::PricePeriod>> PricePeriods
                         = new MapSpecification<IQuery, IQueryable<Aggregates::PricePeriod>>(

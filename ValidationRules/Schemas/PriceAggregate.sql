@@ -152,6 +152,7 @@ create table PriceAggregate.OrderPeriod(
     OrderId bigint NOT NULL,
     OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
+    Scope bigint NOT NULL,
 )
 create index IX_OrderPeriod_OrderId ON PriceAggregate.OrderPeriod (OrderId)
 create index IX_OrderPeriod_OrganizationUnitId_Start ON PriceAggregate.OrderPeriod (OrganizationUnitId, Start)

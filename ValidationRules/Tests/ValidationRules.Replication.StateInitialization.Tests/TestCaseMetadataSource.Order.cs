@@ -128,6 +128,33 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Aggregates::PriceDeniedPosition { PriceId = 9, PrincipalPositionId = 7, DeniedPositionId = 14 },
 
-                    new Aggregates::Period { Start =DateTime.MinValue, End = DateTime.MaxValue });
+                    new Aggregates::Period { Start = DateTime.MinValue, End = DateTime.MaxValue });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement OrderScopes
+            => ArrangeMetadataElement.Config
+                .Name(nameof(OrderScopes))
+                .Fact(
+                    new Facts::Order { Id = 1, WorkflowStepId = 1, BeginDistributionDate = DateTime.Parse("2012-01-01"), EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndDistributionDatePlan = DateTime.Parse("2012-02-01") },
+                    new Facts::Order { Id = 2, WorkflowStepId = 2, BeginDistributionDate = DateTime.Parse("2012-01-01"), EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndDistributionDatePlan = DateTime.Parse("2012-02-01") },
+                    new Facts::Order { Id = 4, WorkflowStepId = 4, BeginDistributionDate = DateTime.Parse("2012-01-01"), EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndDistributionDatePlan = DateTime.Parse("2012-03-01") },
+                    new Facts::Order { Id = 5, WorkflowStepId = 5, BeginDistributionDate = DateTime.Parse("2012-01-01"), EndDistributionDateFact = DateTime.Parse("2012-02-01"), EndDistributionDatePlan = DateTime.Parse("2012-02-01") }
+                    )
+                .Aggregate(
+                    new Aggregates::Order { Id = 1 },
+                    new Aggregates::Order { Id = 2 },
+                    new Aggregates::Order { Id = 4 },
+                    new Aggregates::Order { Id = 5 },
+
+                    new Aggregates::Period { Start = DateTime.Parse("2012-01-01"), End = DateTime.Parse("2012-02-01") },
+                    new Aggregates::Period { Start = DateTime.Parse("2012-02-01"), End = DateTime.Parse("2012-03-01") },
+                    new Aggregates::Period { Start = DateTime.Parse("2012-03-01"), End = DateTime.MaxValue },
+
+                    new Aggregates::OrderPeriod { OrderId = 1, Start = DateTime.Parse("2012-01-01"), Scope = 1 },
+                    new Aggregates::OrderPeriod { OrderId = 2, Start = DateTime.Parse("2012-01-01"), Scope = 0 },
+                    new Aggregates::OrderPeriod { OrderId = 4, Start = DateTime.Parse("2012-01-01"), Scope = 0 },
+                    new Aggregates::OrderPeriod { OrderId = 4, Start = DateTime.Parse("2012-02-01"), Scope = 4 },
+                    new Aggregates::OrderPeriod { OrderId = 5, Start = DateTime.Parse("2012-01-01"), Scope = 0 }
+                    );
     }
 }
