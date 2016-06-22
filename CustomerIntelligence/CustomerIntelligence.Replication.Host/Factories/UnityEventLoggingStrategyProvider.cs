@@ -84,7 +84,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Factories
                 => @event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>;
 
             public void ReportMessageLoggedCount(long count)
-                => _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(count);
+                => _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(count);
         }
     }
 }
