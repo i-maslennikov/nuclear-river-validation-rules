@@ -6,13 +6,12 @@ using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.CustomerIntelligence.Replication.Events;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public sealed class CommonEventsAccumulator :
-        MessageProcessingContextAccumulatorBase<CommonEventsFlow, EventMessage, AggregatableMessage<IAggregateCommand>>
+        MessageProcessingContextAccumulatorBase<CommonEventsFlow, EventMessage, AggregatableMessage<ICommand>>
     {
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRoots
             = new Dictionary<Type, Type>
@@ -24,16 +23,16 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                     { typeof(Storage.Model.Facts.CategoryGroup), typeof(Storage.Model.CI.CategoryGroup) },
                 };
 
-        protected override AggregatableMessage<IAggregateCommand> Process(EventMessage message)
+        protected override AggregatableMessage<ICommand> Process(EventMessage message)
         {
-            return new AggregatableMessage<IAggregateCommand>
+            return new AggregatableMessage<ICommand>
                 {
                     TargetFlow = MessageFlow,
                     Commands = CreateCommands(message.Event),
                 };
         }
 
-        private static IReadOnlyCollection<IAggregateCommand> CreateCommands(IEvent @event)
+        private static IReadOnlyCollection<ICommand> CreateCommands(IEvent @event)
         {
             var createdEvent = @event as DataObjectCreatedEvent;
             if (createdEvent != null)
@@ -57,6 +56,12 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
             if (outdatedEvent != null)
             {
                 return new [] { new RecalculateAggregateCommand(AggregateRoots[outdatedEvent.RelatedDataObjectType], outdatedEvent.RelatedDataObjectId) };
+            }
+
+            var batchProcessedEvent = @event as BatchProcessedEvent;
+            if (batchProcessedEvent != null)
+            {
+                return new[] { new RecordDelayCommand(batchProcessedEvent.EventTime) };
             }
 
             throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));

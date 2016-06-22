@@ -7,13 +7,12 @@ using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.CustomerIntelligence.Replication.Events;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public class ProjectStatisticsAggregateEventsAccumulator :
-        MessageProcessingContextAccumulatorBase<StatisticsEventsFlow, EventMessage, AggregatableMessage<IAggregateCommand>>
+        MessageProcessingContextAccumulatorBase<StatisticsEventsFlow, EventMessage, AggregatableMessage<ICommand>>
     {
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRootTypes
             = new Dictionary<Type, Type>
@@ -24,14 +23,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                     { typeof(Storage.Model.Bit.ProjectCategoryStatistics), typeof(Storage.Model.Statistics.ProjectStatistics) }
                 };
 
-        protected override AggregatableMessage<IAggregateCommand> Process(EventMessage message)
-            => new AggregatableMessage<IAggregateCommand>
+        protected override AggregatableMessage<ICommand> Process(EventMessage message)
+            => new AggregatableMessage<ICommand>
                 {
                     TargetFlow = MessageFlow,
                     Commands = CreateCommands(message.Event),
                 };
 
-        private static IReadOnlyCollection<IAggregateCommand> CreateCommands(IEvent @event)
+        private static IReadOnlyCollection<ICommand> CreateCommands(IEvent @event)
         {
             var replacedEvent = @event as DataObjectReplacedEvent;
             if (replacedEvent != null)
@@ -50,6 +49,12 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                             outdatedEvent.RelatedDataObjectType,
                             outdatedEvent.RelatedDataObjectId.CategoryId)
                     };
+            }
+
+            var batchProcessedEvent = @event as BatchProcessedEvent;
+            if (batchProcessedEvent != null)
+            {
+                return new[] { new RecordDelayCommand(batchProcessedEvent.EventTime) };
             }
 
             throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));

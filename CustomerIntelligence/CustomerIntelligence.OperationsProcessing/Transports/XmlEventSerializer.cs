@@ -20,6 +20,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
         private const string StatisticsKey = "statisticsKey";
         private const string ProjectId = "projectId";
         private const string CategoryId = "categoryId";
+        private const string EventHappendTime = "time";
 
         private static readonly IReadOnlyDictionary<string, Type> SimpleTypes =
             AppDomain.CurrentDomain.GetAssemblies()
@@ -96,6 +97,12 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                 }
             }
 
+            if (IsEventOfType(@event, typeof(BatchProcessedEvent)))
+            {
+                var time = @event.Element(EventHappendTime);
+                return new BatchProcessedEvent((DateTime)time);
+            }
+
             throw new ArgumentException($"Event is unknown or cannot be deserialized: {@event}", nameof(@event));
         }
 
@@ -168,6 +175,12 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                                                                       new XAttribute(ProjectId, complexOutdatedEvent.RelatedDataObjectId.ProjectId),
                                                                       new XAttribute(CategoryId, complexOutdatedEvent.RelatedDataObjectId.CategoryId)))
                                         });
+            }
+
+            var batchProcessedEvent = @event as BatchProcessedEvent;
+            if (batchProcessedEvent != null)
+            {
+                return CreateRecord(batchProcessedEvent, new[] { new XElement(EventHappendTime, batchProcessedEvent.EventTime) });
             }
 
             throw new ArgumentException($"Unknown event type: {@event.GetType().Name}", nameof(@event));

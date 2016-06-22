@@ -64,7 +64,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Factories
             public bool ShouldEventBeLogged(TEvent @event)
                 // Инвертировать условие для StatisticsEventsFlow не лучшая идея в общем случае,
                 // но лучшее решение для того, чтобы гарантировать сохранение логики (в которой, кажется, есть ошибка)
-                => !(@event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>);
+                => !(@event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>) || @event is BatchProcessedEvent;
 
             public void ReportMessageLoggedCount(long count)
                 => _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(count);
@@ -81,7 +81,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Factories
             }
 
             public bool ShouldEventBeLogged(TEvent @event)
-                => @event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey>;
+                => @event is DataObjectReplacedEvent || @event is RelatedDataObjectOutdatedEvent<StatisticsKey> || @event is BatchProcessedEvent;
 
             public void ReportMessageLoggedCount(long count)
                 => _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(count);

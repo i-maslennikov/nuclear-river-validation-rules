@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.CustomerIntelligence.Replication.Commands;
+using NuClear.CustomerIntelligence.Replication.Events;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
@@ -47,11 +49,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                                                    .Cast<AggregatableMessage<ICommand>>()
                                                    .ToArray();
 
-                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.Cast<ISyncDataObjectCommand>()).ToArray());
-
-                // todo: restore delay logging
-                //var oldestEventTime = messages.Min(message => message.EventHappenedTime);
-                //_telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - oldestEventTime).TotalMilliseconds);
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.OfType<ISyncDataObjectCommand>()).ToArray());
+                Handle(messages.SelectMany(message => message.Commands.OfType<RecordDelayCommand>()).ToArray());
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
@@ -60,6 +59,19 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                 _tracer.Error(ex, "Error when import facts for ERM");
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex));
             }
+        }
+
+        private void Handle(IReadOnlyCollection<RecordDelayCommand> commands)
+        {
+            if (!commands.Any())
+            {
+                return;
+            }
+
+            var eldestEventTime = commands.Min(x => x.EventTime);
+            var delta = DateTime.UtcNow - eldestEventTime;
+            _eventLogger.Log(new IEvent[] { new BatchProcessedEvent(DateTime.UtcNow) });
+            _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)delta.TotalMilliseconds);
         }
 
         private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<ISyncDataObjectCommand> commands)
