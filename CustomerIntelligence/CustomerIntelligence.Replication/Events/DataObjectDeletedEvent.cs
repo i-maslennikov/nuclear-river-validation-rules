@@ -7,20 +7,13 @@ namespace NuClear.CustomerIntelligence.Replication.Events
     public class DataObjectDeletedEvent : IEvent
     {
         public DataObjectDeletedEvent(Type dataObjectType, long dataObjectId)
-            : this(dataObjectType, dataObjectId, DateTime.UtcNow)
-        {
-        }
-
-        public DataObjectDeletedEvent(Type dataObjectType, long dataObjectId, DateTime eventHappenedTime)
         {
             DataObjectType = dataObjectType;
             DataObjectId = dataObjectId;
-            HappenedTime = eventHappenedTime;
         }
 
         public Type DataObjectType { get; }
         public long DataObjectId { get; }
-        public DateTime HappenedTime { get; }
 
         public override bool Equals(object obj)
         {

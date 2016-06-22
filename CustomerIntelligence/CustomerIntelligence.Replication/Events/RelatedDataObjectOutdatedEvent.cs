@@ -7,20 +7,13 @@ namespace NuClear.CustomerIntelligence.Replication.Events
     public class RelatedDataObjectOutdatedEvent<TDataObjectId> : IEvent
     {
         public RelatedDataObjectOutdatedEvent(Type relatedDataObjectType, TDataObjectId relatedDataObjectId)
-            : this(relatedDataObjectType, relatedDataObjectId, DateTime.UtcNow)
-        {
-        }
-
-        public RelatedDataObjectOutdatedEvent(Type relatedDataObjectType, TDataObjectId relatedDataObjectId, DateTime eventHappenedTime)
         {
             RelatedDataObjectType = relatedDataObjectType;
             RelatedDataObjectId = relatedDataObjectId;
-            HappenedTime = eventHappenedTime;
         }
 
         public Type RelatedDataObjectType { get; }
         public TDataObjectId RelatedDataObjectId { get; }
-        public DateTime HappenedTime { get; }
 
         public override bool Equals(object obj)
         {

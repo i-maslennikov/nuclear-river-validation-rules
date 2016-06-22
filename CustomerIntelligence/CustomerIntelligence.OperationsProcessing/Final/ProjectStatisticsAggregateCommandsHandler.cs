@@ -39,8 +39,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 
                 Handle(messages.SelectMany(x => x.Commands).ToArray());
 
-                var oldestEventTime = messages.Min(message => message.EventHappenedTime);
-                _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - oldestEventTime).TotalMilliseconds);
+                // todo: restore delay logging
+                //var oldestEventTime = messages.Min(message => message.EventHappenedTime);
+                //_telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - oldestEventTime).TotalMilliseconds);
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }

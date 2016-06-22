@@ -30,7 +30,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                 {
                     TargetFlow = MessageFlow,
                     Commands = CreateCommands(message.Event),
-                    EventHappenedTime = message.Event.HappenedTime,
                 };
         }
 

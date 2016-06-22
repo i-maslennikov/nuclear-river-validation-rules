@@ -48,13 +48,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
             var commands = changes.SelectMany(x => x.Value.Select(y => new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y))).ToArray();
 
+            // todo: use @event.Context.Finished.UtcDateTime to generate time logging command
+
             _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Length);
 
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
                 Commands = commands,
-                EventHappenedTime = @event.Context.Finished.UtcDateTime,
             };
         }
     }

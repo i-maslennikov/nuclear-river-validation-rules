@@ -16,7 +16,5 @@ namespace NuClear.Replication.OperationsProcessing
         public IMessageFlow TargetFlow { get; set; }
 
         public IReadOnlyCollection<TCommand> Commands { get; set; }
-
-        public DateTime EventHappenedTime { get; set; }
     }
 }

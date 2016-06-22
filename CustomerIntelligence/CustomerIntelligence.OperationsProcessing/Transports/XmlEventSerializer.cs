@@ -13,7 +13,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
     public sealed class XmlEventSerializer : IXmlEventSerializer
     {
         private const string EventType = "type";
-        private const string EventTime = "time";
         private const string DataObjectType = "dataObjectType";
         private const string DataObjectId = "dataObjectId";
         private const string RelatedDataObjectType = "relatedDataObjectType";
@@ -35,10 +34,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             {
                 var dataObjectType = @event.Element(DataObjectType);
                 var dataObjectId = @event.Element(DataObjectId);
-                var eventTime = @event.Attribute(EventTime);
                 if (dataObjectType != null && dataObjectId != null)
                 {
-                    return new DataObjectCreatedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, (DateTime)eventTime);
+                    return new DataObjectCreatedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId);
                 }
             }
 
@@ -46,10 +44,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             {
                 var dataObjectType = @event.Element(DataObjectType);
                 var dataObjectId = @event.Element(DataObjectId);
-                var eventTime = @event.Attribute(EventTime);
                 if (dataObjectType != null && dataObjectId != null)
                 {
-                    return new DataObjectUpdatedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, (DateTime)eventTime);
+                    return new DataObjectUpdatedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId);
                 }
             }
 
@@ -57,10 +54,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             {
                 var dataObjectType = @event.Element(DataObjectType);
                 var dataObjectId = @event.Element(DataObjectId);
-                var eventTime = @event.Attribute(EventTime);
                 if (dataObjectType != null && dataObjectId != null)
                 {
-                    return new DataObjectDeletedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, (DateTime)eventTime);
+                    return new DataObjectDeletedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId);
                 }
             }
 
@@ -68,10 +64,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             {
                 var dataObjectType = @event.Element(DataObjectType);
                 var dataObjectId = @event.Element(DataObjectId);
-                var eventTime = @event.Attribute(EventTime);
                 if (dataObjectType != null && dataObjectId != null)
                 {
-                    return new DataObjectReplacedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId, (DateTime)eventTime);
+                    return new DataObjectReplacedEvent(ResolveDataObjectType(dataObjectType.Value), (long)dataObjectId);
                 }
             }
 
@@ -79,10 +74,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             {
                 var relatedDataObjectType = @event.Element(RelatedDataObjectType);
                 var relatedDataObjectId = @event.Element(RelatedDataObjectId);
-                var eventTime = @event.Attribute(EventTime);
                 if (relatedDataObjectType != null && relatedDataObjectId != null)
                 {
-                    return new RelatedDataObjectOutdatedEvent<long>(ResolveDataObjectType(relatedDataObjectType.Value), (long)relatedDataObjectId, (DateTime)eventTime);
+                    return new RelatedDataObjectOutdatedEvent<long>(ResolveDataObjectType(relatedDataObjectType.Value), (long)relatedDataObjectId);
                 }
             }
 
@@ -90,7 +84,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
             {
                 var relatedDataObjectType = @event.Element(RelatedDataObjectType);
                 var relatedDataObjectId = @event.Element(RelatedDataObjectId);
-                var eventTime = @event.Attribute(EventTime);
                 if (relatedDataObjectType != null && relatedDataObjectId != null)
                 {
                     var statisticsKey = relatedDataObjectId.Element(StatisticsKey);
@@ -98,8 +91,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
                     {
                         return new RelatedDataObjectOutdatedEvent<StatisticsKey>(
                             ResolveDataObjectType(relatedDataObjectType.Value),
-                            new StatisticsKey { ProjectId = (long)statisticsKey.Attribute(ProjectId), CategoryId = (long)statisticsKey.Attribute(CategoryId) },
-                            (DateTime)eventTime);
+                            new StatisticsKey { ProjectId = (long)statisticsKey.Attribute(ProjectId), CategoryId = (long)statisticsKey.Attribute(CategoryId) });
                     }
                 }
             }
@@ -193,6 +185,6 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
         }
 
         private static XElement CreateRecord(IEvent @event, IReadOnlyCollection<XElement> elements)
-            => new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), new XAttribute(EventTime, @event.HappenedTime), elements);
+            => new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), elements);
     }
 }
