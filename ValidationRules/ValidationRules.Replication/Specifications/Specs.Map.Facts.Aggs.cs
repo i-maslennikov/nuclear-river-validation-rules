@@ -106,7 +106,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                               select c1.Id).FirstOrDefault()
                                            };
 
-                                return pkgs.Distinct().Union(opas);
+                                return pkgs.Union(opas);
                             });
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Position>> Positions

@@ -201,7 +201,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                                               select c1.Id).FirstOrDefault()
                            };
 
-                return pkgs.Distinct().Union(opas);
+                return pkgs.Union(opas);
             }
 
             public FindSpecification<OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
