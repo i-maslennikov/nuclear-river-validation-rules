@@ -23,13 +23,13 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Factories.Messaging.Tran
 
             if (messageFlow.Equals(CommonEventsFlow.Instance))
             {
-                resolvedFlowReceiverType = typeof(BrokeredMessage2EventMessageTransformer);
+                resolvedFlowReceiverType = typeof(BrokeredMessageWithXmlPayload2EventMessageTransformer);
                 return true;
             }
 
             if (messageFlow.Equals(StatisticsEventsFlow.Instance))
             {
-                resolvedFlowReceiverType = typeof(BrokeredMessage2EventMessageTransformer);
+                resolvedFlowReceiverType = typeof(BrokeredMessageWithXmlPayload2EventMessageTransformer);
                 return true;
             }
 

@@ -8,11 +8,11 @@ using NuClear.Replication.Core;
 
 namespace NuClear.Replication.OperationsProcessing.Transports.ServiceBus
 {
-    public sealed class BrokeredMessage2EventMessageTransformer : MessageTransformerBase<BrokeredMessageDecorator, EventMessage>
+    public sealed class BrokeredMessageWithXmlPayload2EventMessageTransformer : MessageTransformerBase<BrokeredMessageDecorator, EventMessage>
     {
         private readonly IXmlEventSerializer _eventSerializer;
 
-        public BrokeredMessage2EventMessageTransformer(IXmlEventSerializer eventSerializer)
+        public BrokeredMessageWithXmlPayload2EventMessageTransformer(IXmlEventSerializer eventSerializer)
         {
             _eventSerializer = eventSerializer;
         }

@@ -210,7 +210,7 @@
     <Compile Include="Transports\IEventSender.cs" />
     <Compile Include="Transports\IFlowAspect.cs" />
     <Compile Include="Transports\IXmlEventSerializer.cs" />
-    <Compile Include="Transports\ServiceBus\BrokeredMessage2EventMessageTransformer.cs" />
+    <Compile Include="Transports\ServiceBus\BrokeredMessageWithXmlPayload2EventMessageTransformer.cs" />
     <Compile Include="EventMessage.cs" />
     <Compile Include="Transports\ServiceBus\Event2BrokeredMessageConverter.cs" />
     <Compile Include="Transports\ServiceBus\Factories\IServiceBusSettingsFactory.cs" />
