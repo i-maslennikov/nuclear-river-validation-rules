@@ -10,56 +10,66 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement OrderPositionTest
-        => ArrangeMetadataElement.Config
-        .Name(nameof(OrderPositionTest))
-        .Fact(
-            // OrderPositionAdvertisement
-            new Facts::OrderPosition { Id = 1, PricePositionId = 1 },
-            new Facts::PricePosition { Id = 1, PositionId = 2 },
-            new Facts::OrderPositionAdvertisement { Id = 1, PositionId = 3, CategoryId = 10, FirmAddressId = 11, OrderPositionId = 1 },
+        private static ArrangeMetadataElement SimpleOrderPositionTest
+            => ArrangeMetadataElement.Config
+            .Name(nameof(SimpleOrderPositionTest))
+            .Fact(
+                new Facts::OrderPosition { Id = 1, PricePositionId = 11 },
+                new Facts::PricePosition { Id = 11, PositionId = 21 },
+                new Facts::OrderPositionAdvertisement { Id = 31, PositionId = 21, OrderPositionId = 1 },
+                new Facts::OrderPositionAdvertisement { Id = 32, PositionId = 21, OrderPositionId = 1, CategoryId = 3 },
+                new Facts::OrderPositionAdvertisement { Id = 33, PositionId = 21, OrderPositionId = 1, CategoryId = 1 },
+                new Facts::OrderPositionAdvertisement { Id = 34, PositionId = 21, OrderPositionId = 1, CategoryId = 3, FirmAddressId = 111 },
+                new Facts::Position { Id = 21, IsComposite = false },
+                new Facts::Category { Id = 3, ParentId = 2 },
+                new Facts::Category { Id = 2, ParentId = 1 },
+                new Facts::Category { Id = 1 })
+            .Aggregate(
+                // OrderPositionAdvertisement
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 1 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1, FirmAddressId = 111 },
 
-            // OrderPosition
-            new Facts::OrderPosition { Id = 2, PricePositionId = 2 },
-            new Facts::PricePosition { Id = 2, PositionId = 3 },
-            new Facts::Position { Id = 3, IsComposite = true },
+                new Aggregates::Position { Id = 21 },
+                new Aggregates::OrderPricePosition { OrderPositionId = 1, IsActive = true });
 
-            // OrderPositionAdvertisement & OrderPosition
-            new Facts::OrderPosition { Id = 3, PricePositionId = 3 },
-            new Facts::PricePosition { Id = 3, PositionId = 4 },
-            new Facts::OrderPositionAdvertisement { Id = 3, PositionId = 5, CategoryId = 10, FirmAddressId = 11, OrderPositionId = 3 },
-            new Facts::Position { Id = 4, IsComposite = true },
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement PackageOrderPositionTest
+            => ArrangeMetadataElement.Config
+            .Name(nameof(PackageOrderPositionTest))
+            .Fact(
+                new Facts::OrderPosition { Id = 1, PricePositionId = 11 },
+                new Facts::PricePosition { Id = 11, PositionId = 21 },
+                new Facts::OrderPositionAdvertisement { Id = 31, PositionId = 22, OrderPositionId = 1 },
+                new Facts::OrderPositionAdvertisement { Id = 32, PositionId = 23, OrderPositionId = 1, CategoryId = 3 },
+                new Facts::OrderPositionAdvertisement { Id = 33, PositionId = 24, OrderPositionId = 1, CategoryId = 3 },
+                new Facts::OrderPositionAdvertisement { Id = 34, PositionId = 25, OrderPositionId = 1, CategoryId = 3, FirmAddressId = 111 },
+                new Facts::Position { Id = 21, IsComposite = true },
+                new Facts::Position { Id = 22, IsComposite = false },
+                new Facts::Position { Id = 23, IsComposite = false },
+                new Facts::Position { Id = 24, IsComposite = false },
+                new Facts::Position { Id = 25, IsComposite = false },
+                new Facts::Category { Id = 3, ParentId = 2 },
+                new Facts::Category { Id = 2, ParentId = 1 },
+                new Facts::Category { Id = 1 })
+            .Aggregate(
+                // OrderPositionAdvertisement
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1, FirmAddressId = 111 },
 
-            // OrderPositionAdvertisement & Category1
-            new Facts::OrderPosition { Id = 4, PricePositionId = 4 },
-            new Facts::PricePosition { Id = 4 },
-            new Facts::OrderPositionAdvertisement { Id = 4, CategoryId = 3, OrderPositionId = 4 },
-            new Facts::Category { Id = 3, ParentId = 2 },
-            new Facts::Category { Id = 2, ParentId = 1 },
-            new Facts::Category { Id = 1 }
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 22 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 23, Category3Id = 3, Category1Id = 1 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 24, Category3Id = 3, Category1Id = 1 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 25, Category3Id = 3, Category1Id = 1, FirmAddressId = 111 },
 
-            )
-        .Aggregate(
-            // OrderPositionAdvertisement
-            new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 2, ItemPositionId = 3, Category3Id = 10, FirmAddressId = 11 },
-
-            // OrderPosition
-            new Aggregates::OrderPosition { OrderPositionId = 2, PackagePositionId = 3, ItemPositionId = 3 },
-            new Aggregates::Position { Id = 3 },
-
-            // OrderPositionAdvertisement & OrderPosition
-            new Aggregates::OrderPosition { OrderPositionId = 3, PackagePositionId = 4, ItemPositionId = 5, Category3Id = 10, FirmAddressId = 11 },
-            new Aggregates::OrderPosition { OrderPositionId = 3, PackagePositionId = 4, ItemPositionId = 4 },
-            new Aggregates::Position { Id = 4 },
-
-            // OrderPositionAdvertisement & Category1
-            new Aggregates::OrderPosition { OrderPositionId = 4, Category3Id = 3, Category1Id = 1 },
-
-            new Aggregates::OrderPricePosition { OrderPositionId = 1, IsActive = true },
-            new Aggregates::OrderPricePosition { OrderPositionId = 2, IsActive = true },
-            new Aggregates::OrderPricePosition { OrderPositionId = 3, IsActive = true },
-            new Aggregates::OrderPricePosition { OrderPositionId = 4, IsActive = true }
-            );
+                new Aggregates::Position { Id = 21 },
+                new Aggregates::Position { Id = 22 },
+                new Aggregates::Position { Id = 23 },
+                new Aggregates::Position { Id = 24 },
+                new Aggregates::Position { Id = 25 },
+                new Aggregates::OrderPricePosition { OrderPositionId = 1, IsActive = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderPriceTest
@@ -122,7 +132,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::DeniedPosition { Id = 11, PriceId = 9, PositionId = 7, PositionDeniedId = 14 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
-                    new Aggregates::OrderPosition { OrderId = 1, OrderPositionId = 2, ItemPositionId = 7, PackagePositionId = 7 },
                     new Aggregates::OrderDeniedPosition { OrderId = 1, ExceptOrderPositionId = 2, ItemPositionId = 14 },
                     new Aggregates::OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, IsActive = true },
 
