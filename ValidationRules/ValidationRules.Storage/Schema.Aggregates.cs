@@ -23,9 +23,6 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<AssociatedPositionGroupOvercount>()
                       .HasSchemaName(PriceAggregateSchema);
 
-                config.Entity<PriceAssociatedPosition>()
-                      .HasSchemaName(PriceAggregateSchema);
-
                 config.Entity<AdvertisementAmountRestriction>()
                       .HasSchemaName(PriceAggregateSchema);
 
@@ -37,6 +34,9 @@ namespace NuClear.ValidationRules.Storage
                       .HasSchemaName(PriceAggregateSchema);
 
                 config.Entity<OrderPosition>()
+                      .HasSchemaName(PriceAggregateSchema);
+
+                config.Entity<OrderAssociatedPosition>()
                       .HasSchemaName(PriceAggregateSchema);
 
                 config.Entity<OrderDeniedPosition>()

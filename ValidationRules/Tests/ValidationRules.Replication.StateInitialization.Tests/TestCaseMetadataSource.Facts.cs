@@ -223,20 +223,20 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::Position { Id = 999, BindingObjectTypeEnum = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" }
                 )
             .Fact(
-                new Facts::Position { Id = 33, CompareMode = 1 },
-                new Facts::Position { Id = 34, CompareMode = 1 },
-                new Facts::Position { Id = 1, CompareMode = 1 },
+                new Facts::Position { Id = 33 },
+                new Facts::Position { Id = 34 },
+                new Facts::Position { Id = 1 },
 
-                new Facts::Position { Id = 6, CompareMode = 2 },
-                new Facts::Position { Id = 35, CompareMode = 2 },
+                new Facts::Position { Id = 6 },
+                new Facts::Position { Id = 35 },
 
-                new Facts::Position { Id = 7, CompareMode = 3 },
-                new Facts::Position { Id = 8, CompareMode = 3 },
+                new Facts::Position { Id = 7 },
+                new Facts::Position { Id = 8 },
 
-                new Facts::Position { Id = 36, CompareMode = 4 },
-                new Facts::Position { Id = 37, CompareMode = 4 },
+                new Facts::Position { Id = 36 },
+                new Facts::Position { Id = 37 },
 
-                new Facts::Position { Id = 999, CompareMode = 0, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" }
+                new Facts::Position { Id = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" }
                 );
 
         // ReSharper disable once UnusedMember.Local

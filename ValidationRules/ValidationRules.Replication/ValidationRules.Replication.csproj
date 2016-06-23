@@ -69,6 +69,9 @@
     <Compile Include="Accessors\DeniedPositionAccessor.cs" />
     <Compile Include="Accessors\AssociatedPositionsGroupAccessor.cs" />
     <Compile Include="Accessors\AssociatedPositionAccessor.cs" />
+    <Compile Include="Actors\Validation\ConflictingPrincipalPositionActor.cs" />
+    <Compile Include="Actors\Validation\LinkedObjectsMissedInPrincipalsActor.cs" />
+    <Compile Include="Actors\Validation\AssociatedPositionWithoutPrincipalActor.cs" />
     <Compile Include="Actors\Validation\DeniedPositionsCheckActor.cs" />
     <Compile Include="Actors\Validation\AdvertisementAmountRestrictionIntegrityActor.cs" />
     <Compile Include="Actors\Validation\AssociatedPositionsGroupCountActor.cs" />

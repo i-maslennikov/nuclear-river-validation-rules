@@ -30,7 +30,6 @@ create table PriceContext.Position(
     CategoryCode bigint not null,
     IsControlledByAmount bit not null,
     IsComposite bit not null,
-    CompareMode int not null,
     Name nvarchar(max) not null,
     constraint PK_Position primary key (Id)
 )

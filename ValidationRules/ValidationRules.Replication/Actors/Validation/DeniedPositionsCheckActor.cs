@@ -95,18 +95,18 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                         OrderPosition = orderPosition.position,
                         OrderDeniedPosition = deniedPosition.position,
 
-                        OrderPositionNames = new AnonymousPositionType.NamesDto
-                            {
-                                OrderNumber = query.For<Order>().Single(x => x.Id == orderPosition.position.OrderId).Number,
-                                OrderPositionName = query.For<Position>().Single(x => x.Id == orderPosition.position.PackagePositionId).Name,
-                                ItemPositionName = query.For<Position>().Single(x => x.Id == orderPosition.position.ItemPositionId).Name,
-                            },
-
                         OrderDeniedPositionNames = new AnonymousPositionType.NamesDto
                         {
                             OrderNumber = query.For<Order>().Single(x => x.Id == deniedPosition.position.OrderId).Number,
                             OrderPositionName = query.For<Position>().Single(x => x.Id == deniedPosition.position.CausePackagePositionId).Name,
                             ItemPositionName = query.For<Position>().Single(x => x.Id == deniedPosition.position.CauseItemPositionId).Name,
+                        },
+
+                        OrderPositionNames = new AnonymousPositionType.NamesDto
+                        {
+                            OrderNumber = query.For<Order>().Single(x => x.Id == orderPosition.position.OrderId).Number,
+                            OrderPositionName = query.For<Position>().Single(x => x.Id == orderPosition.position.PackagePositionId).Name,
+                            ItemPositionName = query.For<Position>().Single(x => x.Id == orderPosition.position.ItemPositionId).Name,
                         },
                 };
 
@@ -121,19 +121,19 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                             new XDocument(new XElement("element",
                                                        new XAttribute("firm", conflict.FirmId),
                                                        new XElement("position",
-                                                                    new XAttribute("orderId", conflict.OrderPosition.OrderId),
-                                                                    new XAttribute("orderNumber", conflict.OrderPositionNames.OrderNumber),
-                                                                    new XAttribute("orderPositionId", conflict.OrderPosition.OrderPositionId),
-                                                                    new XAttribute("orderPositionName", conflict.OrderPositionNames.OrderPositionName),
-                                                                    new XAttribute("positionId", conflict.OrderPosition.ItemPositionId),
-                                                                    new XAttribute("positionName", conflict.OrderPositionNames.ItemPositionName)),
-                                                       new XElement("position",
                                                                     new XAttribute("orderId", conflict.OrderDeniedPosition.OrderId),
                                                                     new XAttribute("orderNumber", conflict.OrderDeniedPositionNames.OrderNumber),
                                                                     new XAttribute("orderPositionId", conflict.OrderDeniedPosition.CauseOrderPositionId),
                                                                     new XAttribute("orderPositionName", conflict.OrderDeniedPositionNames.OrderPositionName),
                                                                     new XAttribute("positionId", conflict.OrderDeniedPosition.CauseItemPositionId),
-                                                                    new XAttribute("positionName", conflict.OrderDeniedPositionNames.ItemPositionName)))),
+                                                                    new XAttribute("positionName", conflict.OrderDeniedPositionNames.ItemPositionName)),
+                                                       new XElement("position",
+                                                                    new XAttribute("orderId", conflict.OrderPosition.OrderId),
+                                                                    new XAttribute("orderNumber", conflict.OrderPositionNames.OrderNumber),
+                                                                    new XAttribute("orderPositionId", conflict.OrderPosition.OrderPositionId),
+                                                                    new XAttribute("orderPositionName", conflict.OrderPositionNames.OrderPositionName),
+                                                                    new XAttribute("positionId", conflict.OrderPosition.ItemPositionId),
+                                                                    new XAttribute("positionName", conflict.OrderPositionNames.ItemPositionName)))),
                         PeriodStart = conflict.Start,
                         PeriodEnd = conflict.End,
                         ProjectId = conflict.ProjectId,

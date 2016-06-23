@@ -8,7 +8,6 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -19,7 +18,6 @@ namespace NuClear.ValidationRules.Replication.Actors
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<AdvertisementAmountRestriction> _advertisementAmountRestrictionBulkRepository;
-        private readonly IBulkRepository<PriceAssociatedPosition> _priceAssociatedPositionBulkRepository;
         private readonly IBulkRepository<AssociatedPositionGroupOvercount> _associatedPositionGroupOvercountRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
 
@@ -27,14 +25,12 @@ namespace NuClear.ValidationRules.Replication.Actors
             IQuery query,
             IBulkRepository<Price> bulkRepository,
             IBulkRepository<AdvertisementAmountRestriction> advertisementAmountRestrictionBulkRepository,
-            IBulkRepository<PriceAssociatedPosition> priceAssociatedPositionBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory, 
+            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<AssociatedPositionGroupOvercount> associatedPositionGroupOvercountRepository)
             : base(query, bulkRepository, equalityComparerFactory, new PriceAccessor(query))
         {
             _query = query;
             _advertisementAmountRestrictionBulkRepository = advertisementAmountRestrictionBulkRepository;
-            _priceAssociatedPositionBulkRepository = priceAssociatedPositionBulkRepository;
             _equalityComparerFactory = equalityComparerFactory;
             _associatedPositionGroupOvercountRepository = associatedPositionGroupOvercountRepository;
         }
@@ -45,7 +41,6 @@ namespace NuClear.ValidationRules.Replication.Actors
             => new IActor[]
                 {
                     new ValueObjectActor<AdvertisementAmountRestriction>(_query, _advertisementAmountRestrictionBulkRepository, _equalityComparerFactory, new AdvertisementAmountRestrictionAccessor(_query)),
-                    new ValueObjectActor<PriceAssociatedPosition>(_query, _priceAssociatedPositionBulkRepository, _equalityComparerFactory, new PriceAssociatedPositionAccessor(_query)),
                     new ValueObjectActor<AssociatedPositionGroupOvercount>(_query, _associatedPositionGroupOvercountRepository, _equalityComparerFactory, new AssociatedPositionGroupOvercountAccessor(_query)),
                 };
 
@@ -103,36 +98,6 @@ namespace NuClear.ValidationRules.Replication.Actors
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<AdvertisementAmountRestriction>(x => aggregateIds.Contains(x.PriceId));
-            }
-        }
-
-        public sealed class PriceAssociatedPositionAccessor : IStorageBasedDataObjectAccessor<PriceAssociatedPosition>
-        {
-            private readonly IQuery _query;
-
-            public PriceAssociatedPositionAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<PriceAssociatedPosition> GetSource()
-                => from associatedPosition in _query.For<Facts::AssociatedPosition>()
-                   join associatedPositionGroup in _query.For<Facts::AssociatedPositionsGroup>() on associatedPosition.AssociatedPositionsGroupId equals associatedPositionGroup.Id
-                   join pricePosition in _query.For<Facts::PricePosition>() on associatedPositionGroup.PricePositionId equals pricePosition.Id
-                   join price in _query.For<Facts::Price>() on pricePosition.PriceId equals price.Id
-                   select new PriceAssociatedPosition
-                       {
-                           PriceId = price.Id,
-                           AssociatedPositionId = pricePosition.PositionId,
-                           PrincipalPositionId = associatedPosition.PositionId,
-                           ObjectBindingType = associatedPosition.ObjectBindingType,
-                           GroupId = associatedPositionGroup.Id
-                       };
-
-            public FindSpecification<PriceAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<PriceAssociatedPosition>(x => aggregateIds.Contains(x.PriceId));
             }
         }
 

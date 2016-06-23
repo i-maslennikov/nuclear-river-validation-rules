@@ -39,9 +39,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     new Aggregates::Price { Id = 1 },
 
-                    // associated
-                    new Aggregates::PriceAssociatedPosition { PrincipalPositionId = 1 , AssociatedPositionId = 2, ObjectBindingType = 3, PriceId = 1, GroupId = 1 },
-
                     // ограничения
                     new Aggregates::AdvertisementAmountRestriction { CategoryCode = 102, PriceId = 1, Min = 1, Max = 2},
                     new Aggregates::AdvertisementAmountRestriction { CategoryCode = 103, PriceId = 1, Max = 2147483647, MissingMinimalRestriction = true }, // null for max means "unlimited", null for min means error

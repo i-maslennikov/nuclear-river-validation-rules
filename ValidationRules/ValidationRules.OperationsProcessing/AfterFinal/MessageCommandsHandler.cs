@@ -29,6 +29,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly OrderPositionsDoesntCorrespontToActualPriceActor _orderPositionsDoesntCorrespontToActualPriceActor;
         private readonly AssociatedPositionsGroupCountActor _associatedPositionsGroupCountActor;
         private readonly DeniedPositionsCheckActor _deniedPositionsCheckActor;
+        private readonly AssociatedPositionWithoutPrincipalActor _associatedPositionWithoutPrincipalActor;
+        private readonly LinkedObjectsMissedInPrincipalsActor _linkedObjectsMissedInPrincipalsActor;
+        private readonly ConflictingPrincipalPositionActor _conflictingPrincipalPositionActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
@@ -41,7 +44,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             OrderPositionDoesntCorrespontToActualPriceActor orderPositionDoesntCorrespontToActualPriceActor,
             OrderPositionsDoesntCorrespontToActualPriceActor orderPositionsDoesntCorrespontToActualPriceActor,
             AssociatedPositionsGroupCountActor associatedPositionsGroupCountActor,
-            DeniedPositionsCheckActor deniedPositionsCheckActor)
+            DeniedPositionsCheckActor deniedPositionsCheckActor,
+            AssociatedPositionWithoutPrincipalActor associatedPositionWithoutPrincipalActor,
+            LinkedObjectsMissedInPrincipalsActor linkedObjectsMissedInPrincipalsActor,
+            ConflictingPrincipalPositionActor conflictingPrincipalPositionActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -54,6 +60,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _orderPositionsDoesntCorrespontToActualPriceActor = orderPositionsDoesntCorrespontToActualPriceActor;
             _associatedPositionsGroupCountActor = associatedPositionsGroupCountActor;
             _deniedPositionsCheckActor = deniedPositionsCheckActor;
+            _associatedPositionWithoutPrincipalActor = associatedPositionWithoutPrincipalActor;
+            _linkedObjectsMissedInPrincipalsActor = linkedObjectsMissedInPrincipalsActor;
+            _conflictingPrincipalPositionActor = conflictingPrincipalPositionActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -108,6 +117,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _orderPositionsDoesntCorrespontToActualPriceActor.ExecuteCommands(commands);
                 _associatedPositionsGroupCountActor.ExecuteCommands(commands);
                 _deniedPositionsCheckActor.ExecuteCommands(commands);
+                _associatedPositionWithoutPrincipalActor.ExecuteCommands(commands);
+                _linkedObjectsMissedInPrincipalsActor.ExecuteCommands(commands);
+                _conflictingPrincipalPositionActor.ExecuteCommands(commands);
 
                 // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
                 // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.

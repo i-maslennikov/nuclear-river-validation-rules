@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
-using NuClear.ValidationRules.Storage.Model.Enums;
 
 namespace NuClear.ValidationRules.Replication.Specifications
 {
@@ -180,26 +179,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     Id = x.Id,
                                     Name = x.Name,
                                     IsComposite = x.IsComposite,
-                                    CompareMode =
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.CategorySingle ||
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.CategoryMultiple ||
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.CategoryMultipleAsterix
-                                          ? (int)CompareMode.Category :
-
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.AddressSingle ||
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.AddressMultiple
-                                          ? (int)CompareMode.Address :
-
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.AddressCategorySingle ||
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.AddressCategoryMultiple
-                                          ? (int)CompareMode.AddressCategory :
-
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.AddressFirstLevelCategorySingle ||
-                                          x.BindingObjectTypeEnum == (int)PositionBindingObjectType.AddressFirstLevelCategoryMultiple
-                                          ? (int)CompareMode.AddressFirstLevelCategory :
-
-                                          (int)CompareMode.None
-                                         ,
                                     IsControlledByAmount = x.IsControlledByAmount,
                                     CategoryCode = x.CategoryCode
                                 };
@@ -236,22 +215,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     Id = x.Id,
                                     OrganizationUnitId = x.OrganizationUnitId.Value
                                 };
-
-                        private enum PositionBindingObjectType
-                        {
-                            CategorySingle = 33,
-                            CategoryMultiple = 34,
-                            CategoryMultipleAsterix = 1,
-
-                            AddressSingle = 6,
-                            AddressMultiple = 35,
-
-                            AddressCategorySingle = 7,
-                            AddressCategoryMultiple = 8,
-
-                            AddressFirstLevelCategorySingle = 36,
-                            AddressFirstLevelCategoryMultiple = 37,
-                        }
                     }
                 }
             }

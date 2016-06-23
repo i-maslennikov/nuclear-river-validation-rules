@@ -70,6 +70,7 @@
     <Compile Include="Model\Aggregates\AmountControlledPosition.cs" />
     <Compile Include="Model\Aggregates\AssociatedPositionGroupOvercount.cs" />
     <Compile Include="Model\Aggregates\Order.cs" />
+    <Compile Include="Model\Aggregates\OrderAssociatedPosition.cs" />
     <Compile Include="Model\Aggregates\OrderDeniedPosition.cs" />
     <Compile Include="Model\Aggregates\OrderPeriod.cs" />
     <Compile Include="Model\Aggregates\OrderPricePosition.cs" />
@@ -77,9 +78,7 @@
     <Compile Include="Model\Aggregates\Period.cs" />
     <Compile Include="Model\Aggregates\Position.cs" />
     <Compile Include="Model\Aggregates\Price.cs" />
-    <Compile Include="Model\Aggregates\PriceAssociatedPosition.cs" />
     <Compile Include="Model\Aggregates\PricePeriod.cs" />
-    <Compile Include="Model\Enums\CompareMode.cs" />
     <Compile Include="Model\Erm\AssociatedPosition.cs" />
     <Compile Include="Model\Erm\AssociatedPositionsGroup.cs" />
     <Compile Include="Model\Erm\Category.cs" />

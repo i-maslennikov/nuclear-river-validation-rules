@@ -10,6 +10,7 @@ if object_id('PriceAggregate.OrderPrice') is not null drop table PriceAggregate.
 if object_id('PriceAggregate.OrderPricePosition') is not null drop table PriceAggregate.OrderPricePosition
 if object_id('PriceAggregate.OrderPosition') is not null drop table PriceAggregate.OrderPosition
 if object_id('PriceAggregate.OrderDeniedPosition') is not null drop table PriceAggregate.OrderDeniedPosition
+if object_id('PriceAggregate.OrderAssociatedPosition') is not null drop table PriceAggregate.OrderAssociatedPosition
 if object_id('PriceAggregate.AmountControlledPosition') is not null drop table PriceAggregate.AmountControlledPosition
 if object_id('PriceAggregate.[Order]') is not null drop table PriceAggregate.[Order]
 
@@ -34,16 +35,6 @@ create table PriceAggregate.AssociatedPositionGroupOvercount(
     PricePositionId bigint NOT NULL,
     Count int NOT NULL,
 )
-go
-
-create table PriceAggregate.PriceAssociatedPosition(
-    PriceId bigint NOT NULL,
-    AssociatedPositionId bigint NOT NULL,
-    PrincipalPositionId bigint NOT NULL,
-    ObjectBindingType int NOT NULL,
-    GroupId bigint NOT NULL
-)
-create index IX_PriceAssociatedPosition_PriceId ON PriceAggregate.PriceAssociatedPosition (PriceId)
 go
 
 create table PriceAggregate.AdvertisementAmountRestriction(
@@ -78,8 +69,6 @@ create table PriceAggregate.OrderPosition(
     PackagePositionId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,
 
-    CompareMode int NOT NULL,
-
     Category3Id bigint NULL,
     Category1Id bigint NULL,
     FirmAddressId bigint NULL,
@@ -106,6 +95,23 @@ create table PriceAggregate.OrderDeniedPosition(
 create index IX_OrderDeniedPosition_OrderId_DeniedPositionId_BindingType
 on [PriceAggregate].[OrderDeniedPosition] ([OrderId],[DeniedPositionId],[BindingType])
 include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[Category3Id],[Category1Id],[FirmAddressId])
+go
+
+create table PriceAggregate.OrderAssociatedPosition(
+    OrderId bigint NOT NULL,
+    CauseOrderPositionId bigint NOT NULL,
+    CausePackagePositionId bigint NOT NULL,
+    CauseItemPositionId bigint NOT NULL,
+
+    PrincipalPositionId bigint NOT NULL,
+	BindingType int NOT NULL,
+
+    Category3Id bigint NULL,
+    Category1Id bigint NULL,
+    FirmAddressId bigint NULL,
+
+	Source nvarchar(16) not null,
+)
 go
 
 create table PriceAggregate.OrderPricePosition(

@@ -10,8 +10,6 @@ namespace NuClear.ValidationRules.Storage.Model.Aggregates
         public long PackagePositionId { get; set; }
         public long ItemPositionId { get; set; }
 
-        public int CompareMode { get; set; }
-
         public long? Category3Id { get; set; }
         public long? Category1Id { get; set; }
         public long? FirmAddressId { get; set; }

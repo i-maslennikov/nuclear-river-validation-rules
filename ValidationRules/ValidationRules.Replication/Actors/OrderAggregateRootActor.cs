@@ -22,6 +22,7 @@ namespace NuClear.ValidationRules.Replication.Actors
         private readonly IBulkRepository<OrderPricePosition> _orderPricePositionBulkRepository;
         private readonly IBulkRepository<AmountControlledPosition> _amountControlledPositionBulkRepository;
         private readonly IBulkRepository<OrderDeniedPosition> _orderDeniedPositionBulkRepository;
+        private readonly IBulkRepository<OrderAssociatedPosition> _orderAssociatedPositionBulkRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public OrderAggregateRootActor(
@@ -31,7 +32,8 @@ namespace NuClear.ValidationRules.Replication.Actors
             IBulkRepository<OrderPricePosition> orderPricePositionBulkRepository,
             IBulkRepository<AmountControlledPosition> amountControlledPositionBulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
-            IBulkRepository<OrderDeniedPosition> orderDeniedPositionBulkRepository)
+            IBulkRepository<OrderDeniedPosition> orderDeniedPositionBulkRepository,
+            IBulkRepository<OrderAssociatedPosition> orderAssociatedPositionBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
             _query = query;
@@ -39,6 +41,7 @@ namespace NuClear.ValidationRules.Replication.Actors
             _orderPricePositionBulkRepository = orderPricePositionBulkRepository;
             _equalityComparerFactory = equalityComparerFactory;
             _orderDeniedPositionBulkRepository = orderDeniedPositionBulkRepository;
+            _orderAssociatedPositionBulkRepository = orderAssociatedPositionBulkRepository;
             _amountControlledPositionBulkRepository = amountControlledPositionBulkRepository;
         }
 
@@ -52,6 +55,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                     new ValueObjectActor<OrderPricePosition>(_query, _orderPricePositionBulkRepository, _equalityComparerFactory, new OrderPricePositionAccessor(_query)),
                     new ValueObjectActor<AmountControlledPosition>(_query, _amountControlledPositionBulkRepository, _equalityComparerFactory, new AmountControlledPositionAccessor(_query)),
                     new ValueObjectActor<OrderDeniedPosition>(_query, _orderDeniedPositionBulkRepository, _equalityComparerFactory, new OrderDeniedPositionAccessor(_query)),
+                    new ValueObjectActor<OrderAssociatedPosition>(_query, _orderAssociatedPositionBulkRepository, _equalityComparerFactory, new OrderAssociatedPositionAccessor(_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -93,8 +97,8 @@ namespace NuClear.ValidationRules.Replication.Actors
                     join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
                     select new { Category3Id = c3.Id, Category1Id = c1.Id };
 
-                var opas = from orderPosition in _query.For<Facts::OrderPosition>()
-                           join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id // Чтобы сократить число позиций
+                var opas = from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
+                           join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                            join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
@@ -105,7 +109,6 @@ namespace NuClear.ValidationRules.Replication.Actors
                                OrderPositionId = orderPosition.Id,
                                ItemPositionId = position.Id,
 
-                               CompareMode = position.CompareMode,
                                PackagePositionId = pricePosition.PositionId,
 
                                Category3Id = opa.CategoryId,
@@ -113,8 +116,8 @@ namespace NuClear.ValidationRules.Replication.Actors
                                Category1Id = category.Category1Id,
                            };
 
-                var pkgs = from orderPosition in _query.For<Facts::OrderPosition>()
-                           join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id // Чтобы сократить число позиций
+                var pkgs = from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
+                           join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                            join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
@@ -125,7 +128,6 @@ namespace NuClear.ValidationRules.Replication.Actors
                                OrderPositionId = orderPosition.Id,
                                ItemPositionId = pricePosition.PositionId,
 
-                               CompareMode = position.CompareMode,
                                PackagePositionId = pricePosition.PositionId,
 
                                Category3Id = opa.CategoryId,
@@ -204,6 +206,8 @@ namespace NuClear.ValidationRules.Replication.Actors
 
         public sealed class OrderDeniedPositionAccessor : IStorageBasedDataObjectAccessor<OrderDeniedPosition>
         {
+            private const int RulesetRuleTypeDenied = 2;
+
             private readonly IQuery _query;
 
             public OrderDeniedPositionAccessor(IQuery query)
@@ -220,11 +224,10 @@ namespace NuClear.ValidationRules.Replication.Actors
                     select new { Category3Id = c3.Id, Category1Id = c1.Id };
 
                 var opas =
-                    from orderPosition in _query.For<Facts::OrderPosition>()
-                    join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id // Чтобы сократить число позиций
+                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                     join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
                     from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
                     select new
                         {
@@ -240,8 +243,8 @@ namespace NuClear.ValidationRules.Replication.Actors
                         };
 
                 var pkgs =
-                    from orderPosition in _query.For<Facts::OrderPosition>()
-                    join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id // Чтобы сократить число позиций
+                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                     join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                     join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
@@ -281,7 +284,7 @@ namespace NuClear.ValidationRules.Replication.Actors
 
                 var deniedByRuleset =
                     from bingingObject in opas.Union(pkgs)
-                    join denied in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == 2)
+                    join denied in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeDenied)
                         on bingingObject.CauseItemPositionId equals denied.DependentPositionId
                     select new OrderDeniedPosition
                     {
@@ -306,6 +309,114 @@ namespace NuClear.ValidationRules.Replication.Actors
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderDeniedPosition>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class OrderAssociatedPositionAccessor : IStorageBasedDataObjectAccessor<OrderAssociatedPosition>
+        {
+            private const int RulesetRuleTypeAssociated = 1;
+
+            private readonly IQuery _query;
+
+            public OrderAssociatedPositionAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<OrderAssociatedPosition> GetSource()
+            {
+                var categories =
+                    from c3 in _query.For<Facts::Category>()
+                    join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
+                    join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
+                    select new { Category3Id = c3.Id, Category1Id = c1.Id };
+
+                var opas =
+                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
+                    from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                    select new
+                    {
+                        PricePositionId = pricePosition.Id,
+                        orderPosition.OrderId,
+                        CauseOrderPositionId = orderPosition.Id,
+                        CausePackagePositionId = pricePosition.PositionId,
+                        CauseItemPositionId = opa.PositionId,
+                        Category3Id = opa.CategoryId,
+                        opa.FirmAddressId,
+                        category.Category1Id,
+                        Source = "opas",
+                    };
+
+                var pkgs =
+                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
+                    join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
+                    from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                    select new
+                    {
+                        PricePositionId = pricePosition.Id,
+                        orderPosition.OrderId,
+                        CauseOrderPositionId = orderPosition.Id,
+                        CausePackagePositionId = pricePosition.PositionId,
+                        CauseItemPositionId = pricePosition.PositionId,
+                        Category3Id = opa.CategoryId,
+                        opa.FirmAddressId,
+                        category.Category1Id,
+                        Source = "pkgs",
+                    };
+
+                var associatedByPrice =
+                    from bingingObject in opas.Union(pkgs)
+                    join apg in _query.For<Facts::AssociatedPositionsGroup>() on bingingObject.PricePositionId equals apg.PricePositionId
+                    join ap in _query.For<Facts::AssociatedPosition>() on apg.Id equals ap.AssociatedPositionsGroupId
+                    select new OrderAssociatedPosition
+                    {
+                        OrderId = bingingObject.OrderId,
+                        CauseOrderPositionId = bingingObject.CauseOrderPositionId,
+                        CausePackagePositionId = bingingObject.CausePackagePositionId,
+                        CauseItemPositionId = bingingObject.CauseItemPositionId,
+                        Category3Id = bingingObject.Category3Id,
+                        FirmAddressId = bingingObject.FirmAddressId,
+                        Category1Id = bingingObject.Category1Id,
+
+                        PrincipalPositionId = ap.PositionId,
+                        BindingType = ap.ObjectBindingType,
+
+                        Source = bingingObject.Source + " by price",
+                    };
+
+                var associatedByRuleset =
+                    from bingingObject in opas.Union(pkgs)
+                    join associated in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeAssociated)
+                        on bingingObject.CauseItemPositionId equals associated.DependentPositionId
+                    select new OrderAssociatedPosition
+                    {
+                        OrderId = bingingObject.OrderId,
+                        CauseOrderPositionId = bingingObject.CauseOrderPositionId,
+                        CausePackagePositionId = bingingObject.CausePackagePositionId,
+                        CauseItemPositionId = bingingObject.CauseItemPositionId,
+                        Category3Id = bingingObject.Category3Id,
+                        FirmAddressId = bingingObject.FirmAddressId,
+                        Category1Id = bingingObject.Category1Id,
+
+                        PrincipalPositionId = associated.PrincipalPositionId,
+                        BindingType = associated.ObjectBindingType,
+
+                        Source = bingingObject.Source + " by ruleset",
+                    };
+
+                return associatedByPrice.Union(associatedByRuleset);
+            }
+
+            public FindSpecification<OrderAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<OrderAssociatedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }
