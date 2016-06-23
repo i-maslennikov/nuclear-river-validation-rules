@@ -1,11 +1,11 @@
-﻿using NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore;
+﻿using NuClear.CustomerIntelligence.OperationsProcessing.Transports;
 using NuClear.CustomerIntelligence.Replication;
 using NuClear.CustomerIntelligence.Replication.Events;
 using NuClear.CustomerIntelligence.Storage.Model.Facts;
 
 using NUnit.Framework;
 
-namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports.SQLStore
+namespace NuClear.CustomerIntelligence.OperationsProcessing.Tests.Transports
 {
     [TestFixture]
     public class XmlOperationSerializerTests

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.CustomerIntelligence.OperationsProcessing.Contexts;
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
@@ -48,13 +50,14 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
             var commands = changes.SelectMany(x => x.Value.Select(y => new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y))).ToArray();
 
+            var delayCommand = new RecordDelayCommand(@event.Context.Finished.UtcDateTime);
+
             _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Length);
 
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = commands,
-                EventHappenedTime = @event.Context.Finished.UtcDateTime,
+                Commands = new ICommand[] { delayCommand }.Concat(commands).ToArray(),
             };
         }
     }

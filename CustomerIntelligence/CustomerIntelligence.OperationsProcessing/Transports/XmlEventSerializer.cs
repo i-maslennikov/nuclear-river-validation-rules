@@ -5,13 +5,12 @@ using System.Xml.Linq;
 
 using NuClear.CustomerIntelligence.Replication;
 using NuClear.CustomerIntelligence.Replication.Events;
-using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.Core;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.Replication.OperationsProcessing.Transports;
 
-namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
+namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports
 {
-    public sealed class XmlEventSerializer : IEventSerializer
+    public sealed class XmlEventSerializer : IXmlEventSerializer
     {
         private const string EventType = "type";
         private const string DataObjectType = "dataObjectType";
@@ -21,6 +20,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
         private const string StatisticsKey = "statisticsKey";
         private const string ProjectId = "projectId";
         private const string CategoryId = "categoryId";
+        private const string EventHappendTime = "time";
 
         private static readonly IReadOnlyDictionary<string, Type> SimpleTypes =
             AppDomain.CurrentDomain.GetAssemblies()
@@ -29,9 +29,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
                      .Where(x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
                      .ToDictionary(x => x.FullName, x => x);
 
-        public IEvent Deserialize(PerformedOperationFinalProcessing message)
+        public IEvent Deserialize(XElement @event)
         {
-            var @event = XElement.Parse(message.Context);
             if (IsEventOfType(@event, typeof(DataObjectCreatedEvent)))
             {
                 var dataObjectType = @event.Element(DataObjectType);
@@ -98,10 +97,16 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
                 }
             }
 
+            if (IsEventOfType(@event, typeof(BatchProcessedEvent)))
+            {
+                var time = @event.Element(EventHappendTime);
+                return new BatchProcessedEvent((DateTime)time);
+            }
+
             throw new ArgumentException($"Event is unknown or cannot be deserialized: {@event}", nameof(@event));
         }
 
-        public PerformedOperationFinalProcessing Serialize(IEvent @event)
+        public XElement Serialize(IEvent @event)
         {
             var createdEvent = @event as DataObjectCreatedEvent;
             if (createdEvent != null)
@@ -172,6 +177,12 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
                                         });
             }
 
+            var batchProcessedEvent = @event as BatchProcessedEvent;
+            if (batchProcessedEvent != null)
+            {
+                return CreateRecord(batchProcessedEvent, new[] { new XElement(EventHappendTime, batchProcessedEvent.EventTime) });
+            }
+
             throw new ArgumentException($"Unknown event type: {@event.GetType().Name}", nameof(@event));
         }
 
@@ -186,13 +197,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Transports.SQLStore
             return SimpleTypes.TryGetValue(typeName, out type) ? type : null;
         }
 
-        private static PerformedOperationFinalProcessing CreateRecord(IEvent @event, IReadOnlyCollection<XElement> elements)
-        {
-            return new PerformedOperationFinalProcessing
-                {
-                    OperationId = Guid.NewGuid(),
-                    Context = new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), elements).ToString(SaveOptions.DisableFormatting)
-                };
-        }
+        private static XElement CreateRecord(IEvent @event, IReadOnlyCollection<XElement> elements)
+            => new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), elements);
     }
 }

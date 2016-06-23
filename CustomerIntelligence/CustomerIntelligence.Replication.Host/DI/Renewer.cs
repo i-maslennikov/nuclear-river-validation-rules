@@ -70,9 +70,11 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
 
         private async Task RenewalManager(TimeSpan checkInterval, TimeSpan timeReserve, CancellationToken cancellationToken)
         {
+            _tracer.Debug("RenewalManager started");
             var ttlMinimum = checkInterval + timeReserve;
             while (!cancellationToken.IsCancellationRequested)
             {
+                _tracer.Debug("RenewalManager loop");
                 var currentTime = DateTime.UtcNow;
                 var batch = new List<BrokeredMessage>();
                 foreach (var message in _attachedMessages.Values)
@@ -81,7 +83,7 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                     if (ttl <= TimeSpan.Zero)
                     {
                         BrokeredMessage detachedMessage;
-                        _tracer.ErrorFormat("Can not schedule renewal: lock expired, lock: {0}", message.LockToken);
+                        _tracer.ErrorFormat($"Can not schedule message {message.MessageId} renewal: lock expired, lock: {message.LockToken}");
                         _attachedMessages.TryRemove(message.LockToken, out detachedMessage);
                     }
 
@@ -95,30 +97,32 @@ namespace NuClear.CustomerIntelligence.Replication.Host.DI
                 {
                     _renewalQueue.TryAdd(batch);
                 }
-                batch = null;
+
                 await Task.Delay(checkInterval, cancellationToken);
             }
         }
 
         private void Renewer(CancellationToken cancellationToken)
         {
+            _tracer.Debug("Renewer started");
             var enumerable = _renewalQueue.GetConsumingEnumerable(cancellationToken);
             foreach (var renewingBatch in enumerable)
             {
-                _tracer.InfoFormat("Renewing {0} messages", renewingBatch.Count);
-                var tokens = renewingBatch.Select(x => x.LockToken).ToArray();
-                var sampleMessage = renewingBatch.First();
-                try
-                {
-                    var context = sampleMessage.GetPropertyValue("ReceiveContext");
-                    var receiver = context.GetPropertyValue("MessageReceiver");
-                    var asyncResult = receiver.ReflectionInvoke("BeginRenewMessageLocks", null, tokens, TimeSpan.FromMinutes(1), null, null);
-                    var result = (IEnumerable<DateTime>)receiver.ReflectionInvoke("EndRenewMessageLocks", asyncResult);
-                }
-                catch (Exception ex)
-                {
-                    _tracer.Error(ex, "Can't renew message with lock id " + sampleMessage.LockToken);
-                }
+                _tracer.Info($"Renewing {renewingBatch.Count} messages");
+                Parallel.ForEach(renewingBatch, RenewMessage);
+                _tracer.Debug("Renewing complete");
+            }
+        }
+
+        private void RenewMessage(BrokeredMessage message)
+        {
+            try
+            {
+                message.RenewLock();
+            }
+            catch (Exception ex)
+            {
+                _tracer.Error(ex, $"Can't renew message {message.MessageId} with lock id {message.LockToken}");
             }
         }
     }

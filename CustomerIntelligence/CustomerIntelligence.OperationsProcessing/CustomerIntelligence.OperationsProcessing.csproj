@@ -37,11 +37,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Messaging.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Messaging.API.2.0.0\lib\net451\2GIS.NuClear.Messaging.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Messaging.API.2.0.1\lib\net451\2GIS.NuClear.Messaging.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Messaging.Transports.CorporateBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Messaging.Transports.CorporateBus.2.0.0\lib\net451\2GIS.NuClear.Messaging.Transports.CorporateBus.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Messaging.Transports.CorporateBus.2.0.1\lib\net451\2GIS.NuClear.Messaging.Transports.CorporateBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
@@ -53,19 +53,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsLogging.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.API.2.0.0\lib\net451\2GIS.NuClear.OperationsLogging.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.API.3.0.0\lib\net451\2GIS.NuClear.OperationsLogging.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsLogging.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.Transports.SQLStore.2.0.0\lib\net451\2GIS.NuClear.OperationsLogging.Transports.SQLStore.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.Transports.SQLStore.3.0.0\lib\net451\2GIS.NuClear.OperationsLogging.Transports.SQLStore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.API.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.API.3.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.2.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.3.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsTracking.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7546e3dd2743b918, processorArchitecture=MSIL">
@@ -215,8 +215,7 @@
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Primary\Parsers\RubricPopularityCorporateBusMessageParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transports\EventDispatcher.cs" />
-    <Compile Include="Transports\SQLStore\XmlEventSerializer.cs" />
+    <Compile Include="Transports\XmlEventSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Replication\Replication.Core\Replication.Core.csproj">

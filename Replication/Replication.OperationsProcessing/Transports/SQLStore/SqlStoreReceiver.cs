@@ -5,7 +5,6 @@ using System.Transactions;
 
 using NuClear.Messaging.API.Flows.Metadata;
 using NuClear.Messaging.API.Receivers;
-using NuClear.Model.Common.Entities;
 using NuClear.OperationsProcessing.API.Primary;
 using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Storage.API.Readings;
@@ -36,19 +35,11 @@ namespace NuClear.Replication.OperationsProcessing.Transports.SQLStore
                                  .Take(MessageReceiverSettings.BatchSize)
                                  .ToArray();
 
-            return messages.Any()
-                        ? new[]
-                            {
-                                new PerformedOperationsFinalProcessingMessage
-                                {
-                                    EntityId = 0,
-                                    MaxAttemptCount = 0,
-                                    EntityType = EntityType.Instance.None(),
-                                    Flow = SourceFlowMetadata.MessageFlow,
-                                    FinalProcessings = messages,
-                                }
-                            }
-                        : new PerformedOperationsFinalProcessingMessage[0];
+            return messages.Select(x => new PerformedOperationsFinalProcessingMessage
+                {
+                    Flow = SourceFlowMetadata.MessageFlow,
+                    FinalProcessings = new[] { x },
+                }).ToArray();
         }
 
         protected override void Complete(

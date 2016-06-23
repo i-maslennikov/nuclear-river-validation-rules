@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
 using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.CustomerIntelligence.Replication.Events;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
-using NuClear.OperationsProcessing.Transports.SQLStore.Final;
-using NuClear.Replication.Core.Commands;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 {
     public sealed class CommonEventsAccumulator :
-        MessageProcessingContextAccumulatorBase<CommonEventsFlow, PerformedOperationsFinalProcessingMessage, AggregatableMessage<IAggregateCommand>>
+        MessageProcessingContextAccumulatorBase<CommonEventsFlow, EventMessage, AggregatableMessage<ICommand>>
     {
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRoots
             = new Dictionary<Type, Type>
@@ -26,54 +23,48 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
                     { typeof(Storage.Model.Facts.CategoryGroup), typeof(Storage.Model.CI.CategoryGroup) },
                 };
 
-        private readonly IEventSerializer _serializer;
-
-        public CommonEventsAccumulator(IEventSerializer serializer)
+        protected override AggregatableMessage<ICommand> Process(EventMessage message)
         {
-            _serializer = serializer;
-        }
-
-        protected override AggregatableMessage<IAggregateCommand> Process(PerformedOperationsFinalProcessingMessage message)
-        {
-            var events = message.FinalProcessings.Select(x => _serializer.Deserialize(x)).ToArray();
-            var commands = new List<IAggregateCommand>();
-            foreach (var @event in events)
-            {
-                var createdEvent = @event as DataObjectCreatedEvent;
-                if (createdEvent != null)
-                {
-                    commands.Add(new InitializeAggregateCommand(AggregateRoots[createdEvent.DataObjectType], createdEvent.DataObjectId));
-                    continue;
-                }
-
-                var updatedEvent = @event as DataObjectUpdatedEvent;
-                if (updatedEvent != null)
-                {
-                    commands.Add(new RecalculateAggregateCommand(AggregateRoots[updatedEvent.DataObjectType], updatedEvent.DataObjectId));
-                    continue;
-                }
-
-                var deletedEvent = @event as DataObjectDeletedEvent;
-                if (deletedEvent != null)
-                {
-                    commands.Add(new DestroyAggregateCommand(AggregateRoots[deletedEvent.DataObjectType], deletedEvent.DataObjectId));
-                    continue;
-                }
-
-                var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
-                if (outdatedEvent != null)
-                {
-                    commands.Add(new RecalculateAggregateCommand(AggregateRoots[outdatedEvent.RelatedDataObjectType], outdatedEvent.RelatedDataObjectId));
-                    continue;
-                }
-            }
-
-            return new AggregatableMessage<IAggregateCommand>
+            return new AggregatableMessage<ICommand>
                 {
                     TargetFlow = MessageFlow,
-                    Commands = commands,
-                    EventHappenedTime = message.FinalProcessings.Min(x => x.CreatedOn)
+                    Commands = CreateCommands(message.Event),
                 };
+        }
+
+        private static IReadOnlyCollection<ICommand> CreateCommands(IEvent @event)
+        {
+            var createdEvent = @event as DataObjectCreatedEvent;
+            if (createdEvent != null)
+            {
+                return new [] { new InitializeAggregateCommand(AggregateRoots[createdEvent.DataObjectType], createdEvent.DataObjectId) };
+            }
+
+            var updatedEvent = @event as DataObjectUpdatedEvent;
+            if (updatedEvent != null)
+            {
+                return new [] { new RecalculateAggregateCommand(AggregateRoots[updatedEvent.DataObjectType], updatedEvent.DataObjectId) };
+            }
+
+            var deletedEvent = @event as DataObjectDeletedEvent;
+            if (deletedEvent != null)
+            {
+                return new [] { new DestroyAggregateCommand(AggregateRoots[deletedEvent.DataObjectType], deletedEvent.DataObjectId) };
+            }
+
+            var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
+            if (outdatedEvent != null)
+            {
+                return new [] { new RecalculateAggregateCommand(AggregateRoots[outdatedEvent.RelatedDataObjectType], outdatedEvent.RelatedDataObjectId) };
+            }
+
+            var batchProcessedEvent = @event as BatchProcessedEvent;
+            if (batchProcessedEvent != null)
+            {
+                return new[] { new RecordDelayCommand(batchProcessedEvent.EventTime) };
+            }
+
+            throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
         }
     }
 }

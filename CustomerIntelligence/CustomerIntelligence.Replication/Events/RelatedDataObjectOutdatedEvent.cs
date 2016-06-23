@@ -13,7 +13,7 @@ namespace NuClear.CustomerIntelligence.Replication.Events
         }
 
         public Type RelatedDataObjectType { get; }
-        public TDataObjectId RelatedDataObjectId { get; set; }
+        public TDataObjectId RelatedDataObjectId { get; }
 
         public override bool Equals(object obj)
         {

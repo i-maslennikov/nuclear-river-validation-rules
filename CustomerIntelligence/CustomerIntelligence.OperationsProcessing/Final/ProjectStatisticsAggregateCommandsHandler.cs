@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 
-using NuClear.CustomerIntelligence.Storage.Model.Statistics;
+using NuClear.CustomerIntelligence.Replication.Commands;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
@@ -11,6 +12,7 @@ using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;
+using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 
 namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
@@ -18,40 +20,74 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
     public sealed class ProjectStatisticsAggregateCommandsHandler : IMessageProcessingHandler
     {
         private readonly IAggregateActorFactory _aggregateActorFactory;
-        private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
+        private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ProjectStatisticsAggregateCommandsHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer)
         {
             _aggregateActorFactory = aggregateActorFactory;
-            _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
+            _telemetryPublisher = telemetryPublisher;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
         {
-            return processingResultsMap.Select(pair => Handle(pair.Key, pair.Value));
-        }
-
-        private StageResult Handle(Guid bucketId, IEnumerable<IAggregatableMessage> messages)
-        {
             try
             {
-                foreach (var message in messages.Cast<AggregatableMessage<IAggregateCommand>>())
-                {
-                    var actor = _aggregateActorFactory.Create(typeof(ProjectStatistics));
-                    actor.ExecuteCommands(message.Commands);
+                var messages = processingResultsMap.SelectMany(pair => pair.Value)
+                                                   .Cast<AggregatableMessage<ICommand>>()
+                                                   .ToArray();
 
-                    _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(message.Commands.Count);
-                    _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)(DateTime.UtcNow - message.EventHappenedTime).TotalMilliseconds);
-                }
+                Handle(messages.SelectMany(x => x.Commands).OfType<IAggregateCommand>().ToArray());
+                Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
 
-                return MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded();
+                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
             catch (Exception ex)
             {
                 _tracer.Error(ex, "Error when calculating statistics");
-                return MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex);
+                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex));
+            }
+        }
+
+        private void Handle(IReadOnlyCollection<RecordDelayCommand> commands)
+        {
+            if (!commands.Any())
+            {
+                return;
+            }
+
+            var eldestEventTime = commands.Min(x => x.EventTime);
+            var delta = DateTime.UtcNow - eldestEventTime;
+            _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+        }
+
+        private void Handle(IReadOnlyCollection<IAggregateCommand> commands)
+        {
+            var commandGroups = commands.GroupBy(x => x.AggregateRootType);
+
+            // TODO: Can agreggate actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
+            foreach (var commandGroup in commandGroups)
+            {
+                ExecuteCommands(commandGroup.Key, commandGroup.ToArray());
+            }
+
+            _telemetryPublisher.Publish<StatisticsProcessedOperationCountIdentity>(commands.Count);
+        }
+
+        private void ExecuteCommands(Type aggregateRootType, IReadOnlyCollection<IAggregateCommand> commands)
+        {
+            using (var transaction = new TransactionScope(
+                TransactionScopeOption.Required,
+                new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
+            {
+                using (Probe.Create($"ETL2 {aggregateRootType.Name}"))
+                {
+                    var actor = _aggregateActorFactory.Create(aggregateRootType);
+                    actor.ExecuteCommands(commands);
+                }
+
+                transaction.Complete();
             }
         }
     }
