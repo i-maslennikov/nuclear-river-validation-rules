@@ -79,7 +79,6 @@
     <Compile Include="Model\Aggregates\Position.cs" />
     <Compile Include="Model\Aggregates\Price.cs" />
     <Compile Include="Model\Aggregates\PriceAssociatedPosition.cs" />
-    <Compile Include="Model\Aggregates\PriceDeniedPosition.cs" />
     <Compile Include="Model\Aggregates\PricePeriod.cs" />
     <Compile Include="Model\Aggregates\Ruleset.cs" />
     <Compile Include="Model\Aggregates\RulesetRule.cs" />

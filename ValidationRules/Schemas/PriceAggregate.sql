@@ -13,7 +13,6 @@ if object_id('PriceAggregate.OrderDeniedPosition') is not null drop table PriceA
 if object_id('PriceAggregate.AmountControlledPosition') is not null drop table PriceAggregate.AmountControlledPosition
 if object_id('PriceAggregate.[Order]') is not null drop table PriceAggregate.[Order]
 
-if object_id('PriceAggregate.PriceDeniedPosition') is not null drop table PriceAggregate.PriceDeniedPosition
 if object_id('PriceAggregate.PriceAssociatedPosition') is not null drop table PriceAggregate.PriceAssociatedPosition
 if object_id('PriceAggregate.AdvertisementAmountRestriction') is not null drop table PriceAggregate.AdvertisementAmountRestriction
 if object_id('PriceAggregate.Price') is not null drop table PriceAggregate.Price
@@ -38,15 +37,6 @@ create table PriceAggregate.AssociatedPositionGroupOvercount(
     PricePositionId bigint NOT NULL,
     Count int NOT NULL,
 )
-go
-
-create table PriceAggregate.PriceDeniedPosition(
-    PriceId bigint NOT NULL,
-    DeniedPositionId bigint NOT NULL,
-    PrincipalPositionId bigint NOT NULL,
-    ObjectBindingType int NOT NULL
-)
-create index IX_PriceDeniedPosition_PriceId ON PriceAggregate.PriceDeniedPosition (PriceId)
 go
 
 create table PriceAggregate.PriceAssociatedPosition(

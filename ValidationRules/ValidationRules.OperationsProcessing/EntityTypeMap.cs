@@ -49,7 +49,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypePosition, Storage.Model.Aggregates.Position>()
                 .AddMapping<EntityTypePeriod, Storage.Model.Aggregates.Period>()
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.AdvertisementAmountRestriction))
-                .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.PriceDeniedPosition))
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.PriceAssociatedPosition))
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPeriod))
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPosition))

@@ -126,8 +126,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::OrderDeniedPosition { OrderId = 1, ExceptOrderPositionId = 2, ItemPositionId = 14 },
                     new Aggregates::OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, IsActive = true },
 
-                    new Aggregates::PriceDeniedPosition { PriceId = 9, PrincipalPositionId = 7, DeniedPositionId = 14 },
-
                     new Aggregates::Period { Start = DateTime.MinValue, End = DateTime.MaxValue });
 
         // ReSharper disable once UnusedMember.Local

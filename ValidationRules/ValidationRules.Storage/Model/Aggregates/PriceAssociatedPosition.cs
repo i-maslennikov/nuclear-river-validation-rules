@@ -5,6 +5,7 @@ namespace NuClear.ValidationRules.Storage.Model.Aggregates
     /// </summary>
     public sealed class PriceAssociatedPosition
     {
+        // todo: как насчёт того, чтобы удалить эту сущность?
         public long PriceId { get; set; }
 
         public long AssociatedPositionId { get; set; }
