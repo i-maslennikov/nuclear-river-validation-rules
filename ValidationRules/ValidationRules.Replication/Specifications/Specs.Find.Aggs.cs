@@ -18,11 +18,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<Aggregates::RulesetRule>(x => aggregateIds.Contains(x.RulesetId));
                 }
 
-                public static FindSpecification<Aggregates::OrderPosition> OrderPositions(IReadOnlyCollection<long> aggregateIds)
-                {
-                    return new FindSpecification<Aggregates::OrderPosition>(x => aggregateIds.Contains(x.OrderId));
-                }
-
                 public static FindSpecification<Aggregates::OrderPricePosition> OrderPricePositions(IReadOnlyCollection<long> aggregateIds)
                 {
                     return new FindSpecification<Aggregates::OrderPricePosition>(x => aggregateIds.Contains(x.OrderId));

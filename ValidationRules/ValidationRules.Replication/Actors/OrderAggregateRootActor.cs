@@ -85,12 +85,55 @@ namespace NuClear.ValidationRules.Replication.Actors
                 _query = query;
             }
 
-            public IQueryable<OrderPosition> GetSource() => Specs.Map.Facts.ToAggregates.OrderPositions.Map(_query);
+            public IQueryable<OrderPosition> GetSource()
+            {
+                var opas = from orderPosition in _query.For<Facts::OrderPosition>()
+                           join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                           join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
+                           join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
+                           select new OrderPosition
+                           {
+                               OrderId = orderPosition.OrderId,
+                               OrderPositionId = orderPosition.Id,
+                               ItemPositionId = opa.PositionId,
+                               CompareMode = position.CompareMode,
+                               PackagePositionId = pricePosition.PositionId,
+
+                               Category3Id = opa.CategoryId,
+                               FirmAddressId = opa.FirmAddressId,
+                               Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
+                                              join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
+                                              join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
+                                              select c1.Id).FirstOrDefault()
+                           };
+
+                var pkgs = from orderPosition in _query.For<Facts::OrderPosition>()
+                           join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                           join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
+                           join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
+                           select new OrderPosition
+                           {
+                               OrderId = orderPosition.OrderId,
+                               OrderPositionId = orderPosition.Id,
+                               ItemPositionId = pricePosition.PositionId,
+                               CompareMode = position.CompareMode,
+                               PackagePositionId = pricePosition.PositionId,
+
+                               Category3Id = opa.CategoryId,
+                               FirmAddressId = opa.FirmAddressId,
+                               Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
+                                              join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
+                                              join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
+                                              select c1.Id).FirstOrDefault()
+                           };
+
+                return pkgs.Union(opas);
+            }
 
             public FindSpecification<OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return Specs.Find.Aggs.OrderPositions(aggregateIds);
+                return new FindSpecification<OrderPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
