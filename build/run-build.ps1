@@ -1,5 +1,9 @@
-﻿param([string[]]$TaskList = @(), [hashtable]$Properties = @{})
+﻿param([string[]]$TaskList = @(), [hashtable]$Properties = @{}, [switch]$RunDataTests)
 #Requires –Version 3.0
+
+if($RunDataTests -eq $true -and $TaskList -notcontains "Run-DataTests"){
+    $TaskList = $TaskList + "Run-DataTests"
+}
 
 if ($TaskList.Count -eq 0){
 	$TaskList = @('Build-Packages')
