@@ -65,9 +65,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                         = new MapSpecification<IQuery, IQueryable<Aggregates::OrderPosition>>(
                             q =>
                             {
-                                var opas = from opa in q.For<Facts::OrderPositionAdvertisement>()
-                                           join orderPosition in q.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
+                                var opas = from orderPosition in q.For<Facts::OrderPosition>()
                                            join pricePosition in q.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                                           join opa in q.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                                            join position in q.For<Facts::Position>() on opa.PositionId equals position.Id
                                            select new Aggregates::OrderPosition
                                            {
@@ -95,7 +95,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                OrderPositionId = orderPosition.Id,
                                                ItemPositionId = pricePosition.PositionId,
                                                CompareMode = position.CompareMode,
-
                                                PackagePositionId = pricePosition.PositionId,
 
                                                Category3Id = opa.CategoryId,
