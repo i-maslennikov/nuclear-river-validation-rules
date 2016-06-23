@@ -164,9 +164,9 @@ namespace NuClear.ValidationRules.Replication.Actors
 
             public IQueryable<OrderDeniedPosition> GetSource()
             {
-                var opas = from opa in _query.For<Facts::OrderPositionAdvertisement>()
-                           join orderPosition in _query.For<Facts::OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
+                var opas = from orderPosition in _query.For<Facts::OrderPosition>()
                            join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                           join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join denied in _query.For<Facts::DeniedPosition>() on new { pricePosition.PriceId, pricePosition.PositionId } equals new { denied.PriceId, denied.PositionId }
                            select new OrderDeniedPosition
                            {
@@ -179,27 +179,29 @@ namespace NuClear.ValidationRules.Replication.Actors
                                Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                                               join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
                                               join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
-                                              select c1.Id
-                                                ).FirstOrDefault()
+                                              select c1.Id).FirstOrDefault()
                            };
 
                 var pkgs = from orderPosition in _query.For<Facts::OrderPosition>()
                            join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
-                           join denied in _query.For<Facts::DeniedPosition>() on new { pricePosition.PriceId, pricePosition.PositionId  } equals new { denied.PriceId, denied.PositionId }
-                           join position in _query.For<Facts::Position>() on pricePosition.PositionId equals position.Id
-                           where position.IsComposite
+                           join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
+                           join denied in _query.For<Facts::DeniedPosition>() on new { pricePosition.PriceId, pricePosition.PositionId } equals new { denied.PriceId, denied.PositionId }
+                           join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
                            select new OrderDeniedPosition
                            {
                                OrderId = orderPosition.OrderId,
                                ExceptOrderPositionId = orderPosition.Id,
                                ItemPositionId = denied.PositionDeniedId,
                                BindingType = denied.ObjectBindingType,
-                               Category3Id = null,
-                               FirmAddressId = null,
-                               Category1Id = null
+                               Category3Id = opa.CategoryId,
+                               FirmAddressId = opa.FirmAddressId,
+                               Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
+                                              join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
+                                              join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
+                                              select c1.Id).FirstOrDefault()
                            };
 
-                return opas.Union(pkgs);
+                return pkgs.Distinct().Union(opas);
             }
 
             public FindSpecification<OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
