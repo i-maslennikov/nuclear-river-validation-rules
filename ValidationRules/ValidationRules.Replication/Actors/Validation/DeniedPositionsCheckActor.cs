@@ -71,22 +71,22 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                 join order in query.For<Order>() on position.OrderId equals order.Id
                 join op in query.For<OrderPeriod>() on order.Id equals op.OrderId
                 join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                select new { order.FirmId, period.Start, period.End, period.ProjectId, op.Scope, position };
+                select new { order.FirmId, period.Start, period.End, period.ProjectId, period.OrganizationUnitId, op.Scope, position };
 
             var deniedPositions =
                 from position in query.For<OrderDeniedPosition>()
                 join order in query.For<Order>() on position.OrderId equals order.Id
                 join op in query.For<OrderPeriod>() on order.Id equals op.OrderId
                 join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                select new { order.FirmId, period.Start, period.End, period.ProjectId, op.Scope, position };
+                select new { order.FirmId, period.Start, period.End, period.ProjectId, period.OrganizationUnitId, op.Scope, position };
 
             var conflictsBeforeBindingObjectFilter =
                 from orderPosition in orderPositions
                 join deniedPosition in deniedPositions on
-                    new { orderPosition.FirmId, orderPosition.Start, orderPosition.End, orderPosition.ProjectId, orderPosition.position.ItemPositionId } equals
-                    new { deniedPosition.FirmId, deniedPosition.Start, deniedPosition.End, deniedPosition.ProjectId, deniedPosition.position.ItemPositionId }
+                    new { orderPosition.FirmId, orderPosition.Start, orderPosition.End, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
+                    new { deniedPosition.FirmId, deniedPosition.Start, deniedPosition.End, deniedPosition.OrganizationUnitId, deniedPosition.position.ItemPositionId }
                 where orderPosition.position.OrderPositionId != deniedPosition.position.ExceptOrderPositionId
-                    && (orderPosition.Scope == 0 || orderPosition.Scope == deniedPosition.Scope)
+                      && (orderPosition.Scope == 0 || orderPosition.Scope == deniedPosition.Scope)
                 select new AnonymousPositionType
                     {
                         FirmId = orderPosition.FirmId,
