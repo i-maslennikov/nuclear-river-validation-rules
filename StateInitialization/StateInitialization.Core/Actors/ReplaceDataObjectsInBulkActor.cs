@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.Mapping;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
@@ -38,11 +40,32 @@ namespace NuClear.StateInitialization.Core.Actors
                 _targetDataConnection.GetTable<TDataObject>().Delete();
                 _targetDataConnection.BulkCopy(options, _dataObjectsSource);
 
+                UpdateTableStatistics();
+
                 return Array.Empty<IEvent>();
             }
             catch (Exception ex)
             {
                 throw new Exception($"Can not process entity type {typeof(TDataObject).Name}{Environment.NewLine}{_targetDataConnection.LastQuery}", ex);
+            }
+        }
+
+        private void UpdateTableStatistics()
+        {
+            var attributes = _targetDataConnection.MappingSchema.GetAttributes<TableAttribute>(typeof(TDataObject));
+            var tableName = attributes.Select(x => x.Name).FirstOrDefault() ?? typeof(TDataObject).Name;
+            var schemaName = attributes.Select(x => x.Schema).FirstOrDefault();
+            var builder = new SqlCommandBuilder();
+            if (!string.IsNullOrEmpty(schemaName))
+            {
+                tableName = builder.QuoteIdentifier(tableName);
+                schemaName = builder.QuoteIdentifier(schemaName);
+                _targetDataConnection.Execute($"UPDATE STATISTICS {schemaName}.{tableName}");
+            }
+            else
+            {
+                tableName = builder.QuoteIdentifier(tableName);
+                _targetDataConnection.Execute($"UPDATE STATISTICS {tableName}");
             }
         }
     }
