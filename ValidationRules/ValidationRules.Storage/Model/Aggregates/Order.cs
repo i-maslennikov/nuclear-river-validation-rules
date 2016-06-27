@@ -7,5 +7,6 @@ namespace NuClear.ValidationRules.Storage.Model.Aggregates
     {
         public long Id { get; set; }
         public long FirmId { get; set; }
+        public string Number { get; set; }
     }
 }

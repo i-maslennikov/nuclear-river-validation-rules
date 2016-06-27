@@ -81,6 +81,7 @@ go
 create table PriceAggregate.[Order](
     Id bigint NOT NULL,
     FirmId bigint NOT NULL,
+    Number nvarchar(max) NOT NULL,
     constraint PK_Order primary key (Id)
 )
 go
@@ -94,26 +95,35 @@ go
 create table PriceAggregate.OrderPosition(
     OrderId bigint NOT NULL,
     OrderPositionId bigint NOT NULL,
-    CompareMode int NOT NULL,
     PackagePositionId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,
+
+    CompareMode int NOT NULL,
+
     Category3Id bigint NULL,
     Category1Id bigint NULL,
-    FirmAddressId bigint NULL
+    FirmAddressId bigint NULL,
+
+    Source nvarchar(16) NULL,
 )
 create index IX_OrderPosition_OrderId ON PriceAggregate.OrderPosition (OrderId)
 go
 
 create table PriceAggregate.OrderDeniedPosition(
     OrderId bigint NOT NULL,
-    ItemPositionId bigint NOT NULL,
-    BindingType int NOT NULL,
-    ExceptOrderPositionId bigint NOT NULL,
+    CauseOrderPositionId bigint NOT NULL,
+    CausePackagePositionId bigint NOT NULL,
+    CauseItemPositionId bigint NOT NULL,
 
+    DeniedPositionId bigint NOT NULL,
+    BindingType int NOT NULL,
     Category3Id bigint NULL,
     Category1Id bigint NULL,
     FirmAddressId bigint NULL
 )
+create index IX_OrderDeniedPosition_OrderId_DeniedPositionId_BindingType
+on [PriceAggregate].[OrderDeniedPosition] ([OrderId],[DeniedPositionId],[BindingType])
+include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[Category3Id],[Category1Id],[FirmAddressId])
 go
 
 create table PriceAggregate.OrderPricePosition(

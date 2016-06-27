@@ -87,44 +87,50 @@ namespace NuClear.ValidationRules.Replication.Actors
 
             public IQueryable<OrderPosition> GetSource()
             {
+                var categories =
+                    from c3 in _query.For<Facts::Category>()
+                    join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
+                    join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
+                    select new { Category3Id = c3.Id, Category1Id = c1.Id };
+
                 var opas = from orderPosition in _query.For<Facts::OrderPosition>()
+                           join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id // Чтобы сократить число позиций
                            join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
+                           from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
                            select new OrderPosition
                            {
                                OrderId = orderPosition.OrderId,
                                OrderPositionId = orderPosition.Id,
-                               ItemPositionId = opa.PositionId,
+                               ItemPositionId = position.Id,
+
                                CompareMode = position.CompareMode,
                                PackagePositionId = pricePosition.PositionId,
 
                                Category3Id = opa.CategoryId,
                                FirmAddressId = opa.FirmAddressId,
-                               Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
-                                              join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
-                                              join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
-                                              select c1.Id).FirstOrDefault()
+                               Category1Id = category.Category1Id,
                            };
 
                 var pkgs = from orderPosition in _query.For<Facts::OrderPosition>()
+                           join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id // Чтобы сократить число позиций
                            join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
+                           from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
                            select new OrderPosition
                            {
                                OrderId = orderPosition.OrderId,
                                OrderPositionId = orderPosition.Id,
                                ItemPositionId = pricePosition.PositionId,
+
                                CompareMode = position.CompareMode,
                                PackagePositionId = pricePosition.PositionId,
 
                                Category3Id = opa.CategoryId,
                                FirmAddressId = opa.FirmAddressId,
-                               Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
-                                              join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
-                                              join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
-                                              select c1.Id).FirstOrDefault()
+                               Category1Id = category.Category1Id,
                            };
 
                 return pkgs.Union(opas);
@@ -207,44 +213,93 @@ namespace NuClear.ValidationRules.Replication.Actors
 
             public IQueryable<OrderDeniedPosition> GetSource()
             {
-                var opas = from orderPosition in _query.For<Facts::OrderPosition>()
-                           join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
-                           join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                           join denied in _query.For<Facts::DeniedPosition>() on new { pricePosition.PriceId, pricePosition.PositionId } equals new { denied.PriceId, denied.PositionId }
-                           select new OrderDeniedPosition
-                           {
-                               OrderId = orderPosition.OrderId,
-                               ExceptOrderPositionId = orderPosition.Id,
-                               ItemPositionId = denied.PositionDeniedId,
-                               BindingType = denied.ObjectBindingType,
-                               Category3Id = opa.CategoryId,
-                               FirmAddressId = opa.FirmAddressId,
-                               Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
-                                              join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
-                                              join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
-                                              select c1.Id).FirstOrDefault()
-                           };
+                var categories =
+                    from c3 in _query.For<Facts::Category>()
+                    join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
+                    join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
+                    select new { Category3Id = c3.Id, Category1Id = c1.Id };
 
-                var pkgs = from orderPosition in _query.For<Facts::OrderPosition>()
-                           join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
-                           join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                           join denied in _query.For<Facts::DeniedPosition>() on new { pricePosition.PriceId, pricePosition.PositionId } equals new { denied.PriceId, denied.PositionId }
-                           join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
-                           select new OrderDeniedPosition
-                           {
-                               OrderId = orderPosition.OrderId,
-                               ExceptOrderPositionId = orderPosition.Id,
-                               ItemPositionId = denied.PositionDeniedId,
-                               BindingType = denied.ObjectBindingType,
-                               Category3Id = opa.CategoryId,
-                               FirmAddressId = opa.FirmAddressId,
-                               Category1Id = (from c3 in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
-                                              join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
-                                              join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
-                                              select c1.Id).FirstOrDefault()
-                           };
+                var opas =
+                    from orderPosition in _query.For<Facts::OrderPosition>()
+                    join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id // Чтобы сократить число позиций
+                    join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
+                    join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
+                    from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                    select new
+                        {
+                            PriceId = pricePosition.PriceId,
+                            OrderId = orderPosition.OrderId,
+                            CauseOrderPositionId = orderPosition.Id,
+                            CausePackagePositionId = pricePosition.PositionId,
+                            CauseItemPositionId = opa.PositionId,
+                            Category3Id = opa.CategoryId,
+                            FirmAddressId = opa.FirmAddressId,
+                            Category1Id = category.Category1Id,
+                            Source = "opas",
+                        };
 
-                return pkgs.Union(opas);
+                var pkgs =
+                    from orderPosition in _query.For<Facts::OrderPosition>()
+                    join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id // Чтобы сократить число позиций
+                    join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
+                    join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
+                    from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                    select new
+                        {
+                            PriceId = pricePosition.PriceId,
+                            OrderId = orderPosition.OrderId,
+                            CauseOrderPositionId = orderPosition.Id,
+                            CausePackagePositionId = pricePosition.PositionId,
+                            CauseItemPositionId = pricePosition.PositionId,
+                            Category3Id = opa.CategoryId,
+                            FirmAddressId = opa.FirmAddressId,
+                            Category1Id = category.Category1Id,
+                            Source = "pkgs",
+                        };
+
+                var deniedByPrice =
+                    from bingingObject in opas.Union(pkgs)
+                    join denied in _query.For<Facts::DeniedPosition>()
+                        on new { bingingObject.PriceId, PositionId = bingingObject.CauseItemPositionId } equals new { denied.PriceId, denied.PositionId }
+                    select new OrderDeniedPosition
+                        {
+                            OrderId = bingingObject.OrderId,
+                            CauseOrderPositionId = bingingObject.CauseOrderPositionId,
+                            CausePackagePositionId = bingingObject.CausePackagePositionId,
+                            CauseItemPositionId = bingingObject.CauseItemPositionId,
+                            Category3Id = bingingObject.Category3Id,
+                            FirmAddressId = bingingObject.FirmAddressId,
+                            Category1Id = bingingObject.Category1Id,
+
+                            DeniedPositionId = denied.PositionDeniedId,
+                            BindingType = denied.ObjectBindingType,
+
+                            Source = bingingObject.Source + " by price",
+                        };
+
+                var deniedByRuleset =
+                    from bingingObject in opas.Union(pkgs)
+                    join denied in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == 2)
+                        on bingingObject.CauseItemPositionId equals denied.PrincipalPositionId
+                    select new OrderDeniedPosition
+                    {
+                        OrderId = bingingObject.OrderId,
+                        CauseOrderPositionId = bingingObject.CauseOrderPositionId,
+                        CausePackagePositionId = bingingObject.CausePackagePositionId,
+                        CauseItemPositionId = bingingObject.CauseItemPositionId,
+                        Category3Id = bingingObject.Category3Id,
+                        FirmAddressId = bingingObject.FirmAddressId,
+                        Category1Id = bingingObject.Category1Id,
+
+                        DeniedPositionId = denied.DependentPositionId,
+                        BindingType = denied.ObjectBindingType,
+
+                        Source = bingingObject.Source + " by ruleset",
+                    };
+
+                return deniedByPrice.Union(deniedByRuleset);
             }
 
             public FindSpecification<OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

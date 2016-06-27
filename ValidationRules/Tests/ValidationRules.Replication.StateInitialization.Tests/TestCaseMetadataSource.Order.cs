@@ -132,7 +132,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::DeniedPosition { Id = 11, PriceId = 9, PositionId = 7, PositionDeniedId = 14 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
-                    new Aggregates::OrderDeniedPosition { OrderId = 1, ExceptOrderPositionId = 2, ItemPositionId = 14 },
+                    new Aggregates::OrderDeniedPosition { OrderId = 1, CauseOrderPositionId = 2, DeniedPositionId = 14 },
                     new Aggregates::OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, IsActive = true },
 
                     new Aggregates::Period { Start = DateTime.MinValue, End = DateTime.MaxValue });

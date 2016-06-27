@@ -70,32 +70,45 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                 from position in query.For<OrderPosition>()
                 join order in query.For<Order>() on position.OrderId equals order.Id
                 join op in query.For<OrderPeriod>() on order.Id equals op.OrderId
-                join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                select new { order.FirmId, period.Start, period.End, period.ProjectId, period.OrganizationUnitId, op.Scope, position };
+                select new { order.FirmId, op.Start, op.OrganizationUnitId, op.Scope, position };
 
             var deniedPositions =
                 from position in query.For<OrderDeniedPosition>()
                 join order in query.For<Order>() on position.OrderId equals order.Id
                 join op in query.For<OrderPeriod>() on order.Id equals op.OrderId
-                join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                select new { order.FirmId, period.Start, period.End, period.ProjectId, period.OrganizationUnitId, op.Scope, position };
+                select new { order.FirmId, op.Start, op.OrganizationUnitId, op.Scope, position };
 
             var conflictsBeforeBindingObjectFilter =
                 from orderPosition in orderPositions
                 join deniedPosition in deniedPositions on
-                    new { orderPosition.FirmId, orderPosition.Start, orderPosition.End, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
-                    new { deniedPosition.FirmId, deniedPosition.Start, deniedPosition.End, deniedPosition.OrganizationUnitId, deniedPosition.position.ItemPositionId }
-                where orderPosition.position.OrderPositionId != deniedPosition.position.ExceptOrderPositionId
+                    new { orderPosition.FirmId, orderPosition.Start, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
+                    new { deniedPosition.FirmId, deniedPosition.Start, deniedPosition.OrganizationUnitId, ItemPositionId = deniedPosition.position.DeniedPositionId }
+                join period in query.For<Period>() on new { orderPosition.Start, orderPosition.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                where orderPosition.position.OrderPositionId != deniedPosition.position.CauseOrderPositionId
                       && (orderPosition.Scope == 0 || orderPosition.Scope == deniedPosition.Scope)
                 select new AnonymousPositionType
                     {
                         FirmId = orderPosition.FirmId,
-                        Start = orderPosition.Start,
-                        End = orderPosition.End,
-                        ProjectId = orderPosition.ProjectId,
+                        Start = period.Start,
+                        End = period.End,
+                        ProjectId = period.ProjectId,
                         OrderPosition = orderPosition.position,
                         OrderDeniedPosition = deniedPosition.position,
-                    };
+
+                        OrderPositionNames = new AnonymousPositionType.NamesDto
+                            {
+                                OrderNumber = query.For<Order>().Single(x => x.Id == orderPosition.position.OrderId).Number,
+                                OrderPositionName = query.For<Position>().Single(x => x.Id == orderPosition.position.PackagePositionId).Name,
+                                ItemPositionName = query.For<Position>().Single(x => x.Id == orderPosition.position.ItemPositionId).Name,
+                            },
+
+                        OrderDeniedPositionNames = new AnonymousPositionType.NamesDto
+                        {
+                            OrderNumber = query.For<Order>().Single(x => x.Id == deniedPosition.position.OrderId).Number,
+                            OrderPositionName = query.For<Position>().Single(x => x.Id == deniedPosition.position.CausePackagePositionId).Name,
+                            ItemPositionName = query.For<Position>().Single(x => x.Id == deniedPosition.position.CauseItemPositionId).Name,
+                        },
+                };
 
             var messages =
                 from conflict in conflictsBeforeBindingObjectFilter.Where(BindingObjectSpecification)
@@ -108,19 +121,25 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                             new XDocument(new XElement("element",
                                                        new XAttribute("firm", conflict.FirmId),
                                                        new XElement("position",
-                                                                    new XAttribute("order", conflict.OrderPosition.OrderId),
-                                                                    new XAttribute("orderPosition", conflict.OrderPosition.OrderPositionId),
-                                                                    new XAttribute("position", conflict.OrderPosition.ItemPositionId)),
+                                                                    new XAttribute("orderId", conflict.OrderPosition.OrderId),
+                                                                    new XAttribute("orderNumber", conflict.OrderPositionNames.OrderNumber),
+                                                                    new XAttribute("orderPositionId", conflict.OrderPosition.OrderPositionId),
+                                                                    new XAttribute("orderPositionName", conflict.OrderPositionNames.OrderPositionName),
+                                                                    new XAttribute("positionId", conflict.OrderPosition.ItemPositionId),
+                                                                    new XAttribute("positionName", conflict.OrderPositionNames.ItemPositionName)),
                                                        new XElement("position",
-                                                                    new XAttribute("order", conflict.OrderDeniedPosition.OrderId),
-                                                                    new XAttribute("orderPosition", conflict.OrderDeniedPosition.ExceptOrderPositionId),
-                                                                    new XAttribute("position", conflict.OrderDeniedPosition.ItemPositionId)))),
+                                                                    new XAttribute("orderId", conflict.OrderDeniedPosition.OrderId),
+                                                                    new XAttribute("orderNumber", conflict.OrderDeniedPositionNames.OrderNumber),
+                                                                    new XAttribute("orderPositionId", conflict.OrderDeniedPosition.CauseOrderPositionId),
+                                                                    new XAttribute("orderPositionName", conflict.OrderDeniedPositionNames.OrderPositionName),
+                                                                    new XAttribute("positionId", conflict.OrderDeniedPosition.CauseItemPositionId),
+                                                                    new XAttribute("positionName", conflict.OrderDeniedPositionNames.ItemPositionName)))),
                         PeriodStart = conflict.Start,
                         PeriodEnd = conflict.End,
                         ProjectId = conflict.ProjectId,
 
                         ReferenceType = EntityTypeIds.Order,
-                        ReferenceId = conflict.OrderPosition.OrderId,
+                        ReferenceId = conflict.OrderDeniedPosition.OrderId,
 
                         Result = RuleResult,
                     };
@@ -136,6 +155,15 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
             public long ProjectId { get; set; }
             public OrderPosition OrderPosition { get; set; }
             public OrderDeniedPosition OrderDeniedPosition { get; set; }
+            public NamesDto OrderPositionNames { get; set; }
+            public NamesDto OrderDeniedPositionNames { get; set; }
+
+            public class NamesDto
+            {
+                public string OrderNumber { get; set; }
+                public string OrderPositionName { get; set; }
+                public string ItemPositionName { get; set; }
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                 {
                                     Id = x.Id,
                                     FirmId = x.FirmId,
+                                    Number = x.Number,
                                 }));
 
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Position>> Positions
