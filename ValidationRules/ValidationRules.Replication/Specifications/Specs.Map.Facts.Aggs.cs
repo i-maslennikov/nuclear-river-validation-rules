@@ -18,41 +18,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 // ReSharper disable once InconsistentNaming
                 public static class ToAggregates
                 {
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>> Rulesets
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::Ruleset>>(
-                            q =>
-                            {
-                                return q.For<Facts::RulesetRule>().OrderByDescending(x => x.Priority).Take(1).Select(x => new Aggregates::Ruleset
-                                {
-                                    Id = x.Id
-                                });
-                            });
-
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::RulesetRule>> RulesetRules
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::RulesetRule>>(
-                            q =>
-                                {
-                                    var queгу = q.For<Facts::RulesetRule>();
-
-                                    return queгу
-                                            .Select(x => new
-                                            {
-                                                Rule = x,
-                                                MaxPriority = queгу.Max(y => y.Priority)
-                                            })
-                                            .Where(x => x.Rule.Priority == x.MaxPriority)
-                                            .Select(x => x.Rule)
-                                            .Select(x => new Aggregates::RulesetRule
-                                            {
-                                                RulesetId = x.Id,
-                                                RuleType = x.RuleType,
-
-                                                DependentPositionId = x.DependentPositionId,
-                                                PrincipalPositionId = x.PrincipalPositionId,
-                                                ObjectBindingType = x.ObjectBindingType,
-                                            });
-                                });
-
                     public static readonly MapSpecification<IQuery, IQueryable<Aggregates::Order>> Orders
                         = new MapSpecification<IQuery, IQueryable<Aggregates::Order>>(
                             q => q.For<Facts::Order>().Select(x => new Aggregates::Order

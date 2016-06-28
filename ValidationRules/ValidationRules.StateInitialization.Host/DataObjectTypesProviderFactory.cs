@@ -53,8 +53,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(Storage.Model.Aggregates.PriceAssociatedPosition),
                             typeof(Storage.Model.Aggregates.AssociatedPositionGroupOvercount),
                             typeof(Storage.Model.Aggregates.PricePeriod),
-                            typeof(Storage.Model.Aggregates.Ruleset),
-                            typeof(Storage.Model.Aggregates.RulesetRule)
                         });
             }
 

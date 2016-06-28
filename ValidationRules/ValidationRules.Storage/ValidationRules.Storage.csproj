@@ -80,8 +80,6 @@
     <Compile Include="Model\Aggregates\Price.cs" />
     <Compile Include="Model\Aggregates\PriceAssociatedPosition.cs" />
     <Compile Include="Model\Aggregates\PricePeriod.cs" />
-    <Compile Include="Model\Aggregates\Ruleset.cs" />
-    <Compile Include="Model\Aggregates\RulesetRule.cs" />
     <Compile Include="Model\Enums\CompareMode.cs" />
     <Compile Include="Model\Erm\AssociatedPosition.cs" />
     <Compile Include="Model\Erm\AssociatedPositionsGroup.cs" />

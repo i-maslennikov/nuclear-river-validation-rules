@@ -45,7 +45,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
             = builder => builder
                 .AddMapping<EntityTypeOrder, Storage.Model.Aggregates.Order>()
                 .AddMapping<EntityTypePrice, Storage.Model.Aggregates.Price>()
-                .AddMapping<EntityTypeRuleset, Storage.Model.Aggregates.Ruleset>()
                 .AddMapping<EntityTypePosition, Storage.Model.Aggregates.Position>()
                 .AddMapping<EntityTypePeriod, Storage.Model.Aggregates.Period>()
                 .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.AdvertisementAmountRestriction))

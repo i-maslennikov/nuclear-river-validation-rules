@@ -80,7 +80,6 @@
     <Compile Include="Actors\Validation\OrderPositionsDoesntCorrespontToActualPriceActor.cs" />
     <Compile Include="Actors\ErmStateAggregateRootActor.cs" />
     <Compile Include="Actors\IncrementStateActor.cs" />
-    <Compile Include="Actors\RulesetAggregateRootActor.cs" />
     <Compile Include="Actors\PeriodAggregateRootActor.cs" />
     <Compile Include="Actors\PriceAggregateRootActor.cs" />
     <Compile Include="Actors\OrderAggregateRootActor.cs" />

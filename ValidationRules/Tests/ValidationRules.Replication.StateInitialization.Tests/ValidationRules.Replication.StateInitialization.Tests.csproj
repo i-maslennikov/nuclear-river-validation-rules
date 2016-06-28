@@ -82,7 +82,6 @@
     <Compile Include="TestCaseMetadataSource.Order.cs" />
     <Compile Include="TestCaseMetadataSource.Period.cs" />
     <Compile Include="TestCaseMetadataSource.Position.cs" />
-    <Compile Include="TestCaseMetadataSource.Ruleset.cs" />
     <Compile Include="TestCaseMetadataSource.Price.cs" />
   </ItemGroup>
   <ItemGroup>

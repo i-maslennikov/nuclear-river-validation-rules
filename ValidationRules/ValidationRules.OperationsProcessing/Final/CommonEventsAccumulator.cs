@@ -23,7 +23,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                     { typeof(Storage.Model.Facts.Price), typeof(Storage.Model.Aggregates.Price) },
                     { typeof(Storage.Model.Facts.Order), typeof(Storage.Model.Aggregates.Order) },
                     { typeof(Storage.Model.Facts.Position), typeof(Storage.Model.Aggregates.Position) },
-                    { typeof(Storage.Model.Facts.RulesetRule), typeof(Storage.Model.Aggregates.Ruleset) },
                 };
 
         private readonly IEventSerializer _serializer;
