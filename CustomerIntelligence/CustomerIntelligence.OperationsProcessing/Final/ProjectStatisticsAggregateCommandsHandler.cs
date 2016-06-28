@@ -59,7 +59,7 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Final
 
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
-            _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+            _telemetryPublisher.Publish<StatisticsProcessingDelayIdentity>((long)delta.TotalMilliseconds);
         }
 
         private void Handle(IReadOnlyCollection<IAggregateCommand> commands)
