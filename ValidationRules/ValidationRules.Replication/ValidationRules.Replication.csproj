@@ -78,8 +78,6 @@
     <Compile Include="Actors\Validation\OrderPositionCorrespontToInactivePositionActor.cs" />
     <Compile Include="Actors\Validation\OrderPositionDoesntCorrespontToActualPriceActor.cs" />
     <Compile Include="Actors\Validation\OrderPositionsDoesntCorrespontToActualPriceActor.cs" />
-    <Compile Include="Actors\ErmStateAggregateRootActor.cs" />
-    <Compile Include="Actors\IncrementStateActor.cs" />
     <Compile Include="Actors\PeriodAggregateRootActor.cs" />
     <Compile Include="Actors\PriceAggregateRootActor.cs" />
     <Compile Include="Actors\OrderAggregateRootActor.cs" />
@@ -87,7 +85,6 @@
     <Compile Include="Actors\Validation\CreateNewVersionActor.cs" />
     <Compile Include="Actors\Validation\ValidationRuleShared.cs" />
     <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
-    <Compile Include="Commands\IncrementAggregateStateCommand.cs" />
     <Compile Include="Commands\IncrementStateCommand.cs" />
     <Compile Include="Commands\CreateNewVersionCommand.cs" />
     <Compile Include="Commands\DestroyAggregateCommand.cs" />
@@ -98,13 +95,17 @@
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
     <Compile Include="Commands\RecalculateAggregateCommand.cs" />
     <Compile Include="Commands\RecalculateEntityCommand.cs" />
+    <Compile Include="Commands\RecordDelayCommand.cs" />
     <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
     <Compile Include="DataObjectTypesProvider.cs" />
     <Compile Include="EntityTypeIds.cs" />
+    <Compile Include="Events\AggregatesBatchProcessedEvent.cs" />
+    <Compile Include="Events\AggregatesStateIncrementedEvent.cs" />
+    <Compile Include="Events\FactsBatchProcessedEvent.cs" />
     <Compile Include="Events\DataObjectCreatedEvent.cs" />
     <Compile Include="Events\DataObjectDeletedEvent.cs" />
     <Compile Include="Events\DataObjectUpdatedEvent.cs" />
-    <Compile Include="Events\StateIncrementedEvent.cs" />
+    <Compile Include="Events\FactsStateIncrementedEvent.cs" />
     <Compile Include="PeriodKey.cs" />
     <Compile Include="Commands\SyncDataObjectCommand.cs" />
     <Compile Include="Events\RelatedDataObjectOutdatedEvent.cs" />

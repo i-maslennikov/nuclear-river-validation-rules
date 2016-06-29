@@ -13,7 +13,6 @@ using NuClear.ValidationRules.OperationsProcessing;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
 using NuClear.ValidationRules.OperationsProcessing.Final;
 using NuClear.ValidationRules.OperationsProcessing.Transports;
-using NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore;
 using NuClear.ValidationRules.Replication.Accessors;
 using NuClear.ValidationRules.Replication.Host.Factories;
 using NuClear.ValidationRules.Replication.Host.Factories.Messaging.Processor;
@@ -56,6 +55,9 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
 using NuClear.Model.Common.Operations.Identity;
+using NuClear.OperationsLogging;
+using NuClear.OperationsLogging.API;
+using NuClear.OperationsLogging.Transports.ServiceBus;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
 using NuClear.Replication.Core;
@@ -68,6 +70,7 @@ using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
+using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.Security;
@@ -194,8 +197,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             container.RegisterType<IOperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.Resolve<OperationIdentityRegistryFactory>().RegistryFor<FactsSubDomain>()))
                     .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
                     .RegisterType<IEntityTypeExplicitMapping, NoEntityTypeExplicitMapping>(Lifetime.Singleton)
-                    .RegisterType<IEventDispatcher, EventDispatcher>(Lifetime.Singleton)
-                    .RegisterType<IFlowLengthReporter, FlowLengthReporter>(Lifetime.Singleton);
+                    .RegisterType<IEventDispatcher, EventDispatcher>(Lifetime.Singleton);
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);
@@ -205,21 +207,24 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
             // primary
             container.RegisterTypeWithDependencies(typeof(CorporateBusOperationsReceiver), Lifetime.PerScope, null)
-                     .RegisterTypeWithDependencies(typeof(ServiceBusOperationsReceiverTelemetryDecorator), Lifetime.PerScope, null)
+                     .RegisterTypeWithDependencies(typeof(ServiceBusMessageReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
-                     .RegisterType<IEventSender, SqlStoreSender>(Lifetime.PerScope)
-                     .RegisterType<IEventSerializer, XmlEventSerializer>();
+                     .RegisterType<IXmlEventSerializer, XmlEventSerializer>();
 
             // final
-            container.RegisterTypeWithDependencies(typeof(SqlStoreReceiverTelemetryDecorator), Lifetime.PerScope, null)
-                     .RegisterTypeWithDependencies(typeof(AggregateCommandsHandler), Lifetime.PerResolve, null);
+            container.RegisterTypeWithDependencies(typeof(AggregateCommandsHandler), Lifetime.PerResolve, null);
 
+            container.RegisterType<IEventLoggingStrategyProvider, UnityEventLoggingStrategyProvider>()
+                     .RegisterType<IEvent2BrokeredMessageConverter<IEvent>, Event2BrokeredMessageConverter>()
+                     .RegisterType<IEventLogger, SequentialEventLogger>()
+                     .RegisterType<IServiceBusMessageSender, ServiceBusMessageSender>();
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(typeof(IUserContext)), Lifetime.Singleton)
                             .RegisterType(typeof(ServiceBusMessageFlowReceiver), Lifetime.Singleton)
                             .RegisterType<IServiceBusLockRenewer, NullServiceBusLockRenewer>(Lifetime.Singleton)
-                            .RegisterType<IServiceBusMessageFlowReceiverFactory, UnityServiceBusMessageFlowReceiverFactory>(Lifetime.PerScope)
+                            .RegisterType<IServiceBusSettingsFactory, ServiceBusSettingsFactory>(Lifetime.Singleton)
+                            .RegisterType<IServiceBusMessageFlowReceiverFactory, ServiceBusMessageFlowReceiverFactory>(Lifetime.PerScope)
                             .RegisterType<IMessageProcessingStagesFactory, UnityMessageProcessingStagesFactory>(Lifetime.PerScope)
                             .RegisterType<IMessageFlowProcessorFactory, UnityMessageFlowProcessorFactory>(Lifetime.PerScope)
                             .RegisterType<IMessageReceiverFactory, UnityMessageReceiverFactory>(Lifetime.PerScope)
@@ -280,7 +285,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         {
             return container
                 .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
-                .RegisterType<IEventSerializer, XmlEventSerializer>(Lifetime.Singleton)
                 .RegisterType<IEqualityComparerFactory, EqualityComparerFactory>(Lifetime.Singleton)
 
                 .RegisterType<IStorageBasedDataObjectAccessor<AssociatedPosition>, AssociatedPositionAccessor>(entryPointSpecificLifetimeManagerFactory())

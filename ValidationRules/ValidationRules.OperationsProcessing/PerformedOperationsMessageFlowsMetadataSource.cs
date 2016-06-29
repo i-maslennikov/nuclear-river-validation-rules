@@ -9,7 +9,6 @@ using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
 using NuClear.ValidationRules.OperationsProcessing.AfterFinal;
 using NuClear.ValidationRules.OperationsProcessing.Final;
 
@@ -22,20 +21,20 @@ namespace NuClear.ValidationRules.OperationsProcessing
             PerformedOperations.Flows
                                .Primary(
                                         MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
-                                                           .Receiver<ServiceBusOperationsReceiverTelemetryDecorator>()
+                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
                                                            .Accumulator<ImportFactsFromErmAccumulator>()
                                                            .Handler<ImportFactsFromErmHandler>()
                                                            .To.Primary().Flow<ImportFactsFromErmFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<CommonEventsFlow>()
-                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
-                                                           .Accumulator<CommonEventsAccumulator>()
+                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
+                                                           .Accumulator<AggregateCommandsAccumulator>()
                                                            .Handler<AggregateCommandsHandler>()
                                                            .To.Primary().Flow<CommonEventsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<MessagesFlow>()
-                                                           .Receiver<SqlStoreReceiverTelemetryDecorator>()
-                                                           .Accumulator<MessageEventsAccumulator>()
+                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
+                                                           .Accumulator<MessageCommandsAccumulator>()
                                                            .Handler<MessageCommandsHandler>()
                                                            .To.Primary().Flow<MessagesFlow>().Connect()
                                        );

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-using NuClear.OperationsProcessing.Transports.SQLStore.Final;
 using NuClear.Replication.Core;
-using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Events;
 
-namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
+namespace NuClear.ValidationRules.OperationsProcessing.Transports
 {
-    public sealed class XmlEventSerializer : IEventSerializer
+    public sealed class XmlEventSerializer : IXmlEventSerializer
     {
         private const string EventType = "type";
         private const string DataObjectType = "dataObjectType";
@@ -19,6 +18,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
         private const string RelatedDataObjectType = "relatedDataObjectType";
         private const string RelatedDataObjectId = "relatedDataObjectId";
         private const string State = "state";
+        private const string EventHappendTime = "time";
 
         private const string PeriodKey = "periodKey";
         private const string OrganizationUnitId = "organizationUnitId";
@@ -31,9 +31,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
                      .Where(x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
                      .ToDictionary(x => x.FullName, x => x);
 
-        public IEvent Deserialize(PerformedOperationFinalProcessing message)
+        public IEvent Deserialize(XElement @event)
         {
-            var @event = XElement.Parse(message.Context);
             if (IsEventOfType(@event, typeof(DataObjectCreatedEvent)))
             {
                 var dataObjectType = @event.Element(DataObjectType);
@@ -94,79 +93,102 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
                 }
             }
 
-            if (IsEventOfType(@event, typeof(StateIncrementedEvent)))
+            if (IsEventOfType(@event, typeof(FactsStateIncrementedEvent)))
             {
                 var states = @event.Elements(State).Select(x => new Guid(x.Value));
-                return new StateIncrementedEvent(states.ToArray());
+                return new FactsStateIncrementedEvent(states.ToArray());
+            }
+
+            if (IsEventOfType(@event, typeof(AggregatesStateIncrementedEvent)))
+            {
+                var states = @event.Elements(State).Select(x => new Guid(x.Value));
+                return new AggregatesStateIncrementedEvent(states.ToArray());
+            }
+
+            if (IsEventOfType(@event, typeof(FactsBatchProcessedEvent)))
+            {
+                var time = @event.Element(EventHappendTime);
+                return new FactsBatchProcessedEvent((DateTime)time);
+            }
+
+            if (IsEventOfType(@event, typeof(AggregatesBatchProcessedEvent)))
+            {
+                var time = @event.Element(EventHappendTime);
+                return new AggregatesBatchProcessedEvent((DateTime)time);
             }
 
             throw new ArgumentException($"Event is unknown or cannot be deserialized: {@event}", nameof(@event));
         }
 
-        public PerformedOperationFinalProcessing Serialize(IEvent @event)
+        public XElement Serialize(IEvent @event)
         {
             var createdEvent = @event as DataObjectCreatedEvent;
             if (createdEvent != null)
             {
                 return CreateRecord(createdEvent,
-                                    new[]
-                                        {
-                                            new XElement(DataObjectType, createdEvent.DataObjectType.FullName),
-                                            new XElement(DataObjectId, createdEvent.DataObjectId)
-                                        });
+                                    new XElement(DataObjectType, createdEvent.DataObjectType.FullName),
+                                    new XElement(DataObjectId, createdEvent.DataObjectId));
             }
 
             var updatedEvent = @event as DataObjectUpdatedEvent;
             if (updatedEvent != null)
             {
                 return CreateRecord(updatedEvent,
-                                    new[]
-                                        {
-                                            new XElement(DataObjectType, updatedEvent.DataObjectType.FullName),
-                                            new XElement(DataObjectId, updatedEvent.DataObjectId)
-                                        });
+                                    new XElement(DataObjectType, updatedEvent.DataObjectType.FullName),
+                                    new XElement(DataObjectId, updatedEvent.DataObjectId));
             }
 
             var deletedEvent = @event as DataObjectDeletedEvent;
             if (deletedEvent != null)
             {
                 return CreateRecord(deletedEvent,
-                                    new[]
-                                        {
-                                            new XElement(DataObjectType, deletedEvent.DataObjectType.FullName),
-                                            new XElement(DataObjectId, deletedEvent.DataObjectId)
-                                        });
+                                    new XElement(DataObjectType, deletedEvent.DataObjectType.FullName),
+                                    new XElement(DataObjectId, deletedEvent.DataObjectId));
             }
 
             var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
             if (outdatedEvent != null)
             {
                 return CreateRecord(outdatedEvent,
-                                    new[]
-                                        {
-                                            new XElement(RelatedDataObjectType, outdatedEvent.RelatedDataObjectType.FullName),
-                                            new XElement(RelatedDataObjectId, outdatedEvent.RelatedDataObjectId)
-                                        });
+                                    new XElement(RelatedDataObjectType, outdatedEvent.RelatedDataObjectType.FullName),
+                                    new XElement(RelatedDataObjectId, outdatedEvent.RelatedDataObjectId));
             }
 
             var complexOutdatedEvent = @event as RelatedDataObjectOutdatedEvent<PeriodKey>;
             if (complexOutdatedEvent != null)
             {
                 return CreateRecord(complexOutdatedEvent,
-                                    new[]
-                                        {
-                                            new XElement(RelatedDataObjectType, complexOutdatedEvent.RelatedDataObjectType.FullName),
-                                            new XElement(RelatedDataObjectId,
-                                                         new XElement(PeriodKey,
-                                                                      new XAttribute(OrganizationUnitId, complexOutdatedEvent.RelatedDataObjectId.OrganizationUnitId),
-                                                                      new XAttribute(Start, complexOutdatedEvent.RelatedDataObjectId.Start)))
-                                        });
+                                    new XElement(RelatedDataObjectType, complexOutdatedEvent.RelatedDataObjectType.FullName),
+                                    new XElement(RelatedDataObjectId,
+                                                 new XElement(PeriodKey,
+                                                              new XAttribute(OrganizationUnitId, complexOutdatedEvent.RelatedDataObjectId.OrganizationUnitId),
+                                                              new XAttribute(Start, complexOutdatedEvent.RelatedDataObjectId.Start))));
             }
 
-            var stateIncrementedEvent = @event as StateIncrementedEvent;
-            if (stateIncrementedEvent != null)
+            var factsStateIncrementedEvent = @event as FactsStateIncrementedEvent;
+            if (factsStateIncrementedEvent != null)
             {
-                return CreateRecord(stateIncrementedEvent, stateIncrementedEvent.IncludedTokens.Select(guid => new XElement(State, guid.ToString())).ToArray());
+                return CreateRecord(factsStateIncrementedEvent,
+                                    factsStateIncrementedEvent.IncludedTokens.Select(guid => new XElement(State, guid.ToString())).ToArray());
+            }
+
+            var aggregatesStateIncrementedEvent = @event as AggregatesStateIncrementedEvent;
+            if (aggregatesStateIncrementedEvent != null)
+            {
+                return CreateRecord(aggregatesStateIncrementedEvent,
+                                    aggregatesStateIncrementedEvent.IncludedTokens.Select(guid => new XElement(State, guid.ToString())).ToArray());
+            }
+
+            var factsBatchProcessedEvent = @event as FactsBatchProcessedEvent;
+            if (factsBatchProcessedEvent != null)
+            {
+                return CreateRecord(factsBatchProcessedEvent, new[] { new XElement(EventHappendTime, factsBatchProcessedEvent.EventTime) });
+            }
+
+            var aggregateBatchProcessedEvent = @event as AggregatesBatchProcessedEvent;
+            if (aggregateBatchProcessedEvent != null)
+            {
+                return CreateRecord(aggregateBatchProcessedEvent, new[] { new XElement(EventHappendTime, aggregateBatchProcessedEvent.EventTime) });
             }
 
             throw new ArgumentException($"Unknown event type: {@event.GetType().Name}", nameof(@event));
@@ -183,13 +205,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.SQLStore
             return SimpleTypes.TryGetValue(typeName, out type) ? type : null;
         }
 
-        private static PerformedOperationFinalProcessing CreateRecord(IEvent @event, IReadOnlyCollection<XElement> elements)
-        {
-            return new PerformedOperationFinalProcessing
-            {
-                OperationId = Guid.NewGuid(),
-                Context = new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), elements).ToString(SaveOptions.DisableFormatting)
-            };
-        }
+        private static XElement CreateRecord(IEvent @event, params XElement[] elements)
+            => new XElement("event", new XAttribute(EventType, @event.GetType().GetFriendlyName()), elements);
     }
 }

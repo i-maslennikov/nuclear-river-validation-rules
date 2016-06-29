@@ -6,6 +6,7 @@ using System.Transactions;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
+using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
@@ -60,15 +61,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             try
             {
                 var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<AggregatableMessage<IValidationRuleCommand>>()
+                                                   .Cast<AggregatableMessage<ICommand>>()
                                                    .ToArray();
 
-                var commands = messages.SelectMany(x => x.Commands).ToArray();
-                Handle(commands);
-
-                var oldestEventTime = messages.Min(message => message.EventHappenedTime);
-                _telemetryPublisher.Publish<MessageProcessedOperationCountIdentity>(commands.Length);
-                _telemetryPublisher.Publish<MessageProcessingDelayIdentity>((long)(DateTime.UtcNow - oldestEventTime).TotalMilliseconds);
+                Handle(messages.SelectMany(x => x.Commands).OfType<IValidationRuleCommand>().ToArray());
+                Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
@@ -79,8 +76,25 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             }
         }
 
+        private void Handle(IReadOnlyCollection<RecordDelayCommand> commands)
+        {
+            if (!commands.Any())
+            {
+                return;
+            }
+
+            var eldestEventTime = commands.Min(x => x.EventTime);
+            var delta = DateTime.UtcNow - eldestEventTime;
+            _telemetryPublisher.Publish<MessageProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+        }
+
         private void Handle(IReadOnlyCollection<IValidationRuleCommand> commands)
         {
+            if (!commands.Any())
+            {
+                return;
+            }
+
             // Транзакция важна для запросов в пространстве Messages, запросы в PriceAggregate нужно выполнять без транзакции, хотя в идеале хотелось бы две независимые транзакции.
             var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
@@ -102,6 +116,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
 
                 transaction.Complete();
             }
+
+            _telemetryPublisher.Publish<MessageProcessedOperationCountIdentity>(commands.Count);
         }
     }
 }

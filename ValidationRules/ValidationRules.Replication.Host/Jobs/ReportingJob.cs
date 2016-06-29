@@ -5,15 +5,18 @@ using System.Data.SqlClient;
 using Microsoft.ServiceBus;
 
 using NuClear.Jobs;
+using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
+using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.Security.API;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 
 using Quartz;
 
@@ -23,46 +26,47 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
     public sealed class ReportingJob : TaskServiceJobBase
     {
         private readonly ITelemetryPublisher _telemetry;
-        private readonly IServiceBusMessageReceiverSettings _serviceBusMessageReceiverSettings;
-        private readonly IFlowLengthReporter _flowLengthReporter;
-        private readonly NamespaceManager _manager;
-        private readonly SqlConnection _sqlConnection;
+        private readonly IServiceBusSettingsFactory _serviceBusSettingsFactory;
+        private readonly ITracer _tracer;
 
         public ReportingJob(ITracer tracer,
                             ISignInService signInService,
                             IUserImpersonationService userImpersonationService,
                             ITelemetryPublisher telemetry,
-                            IConnectionStringSettings connectionStringSettings,
-                            IServiceBusMessageReceiverSettings serviceBusMessageReceiverSettings,
-                            IFlowLengthReporter flowLengthReporter)
+                            IServiceBusSettingsFactory serviceBusSettingsFactory)
             : base(signInService, userImpersonationService, tracer)
         {
+            _tracer = tracer;
             _telemetry = telemetry;
-            _serviceBusMessageReceiverSettings = serviceBusMessageReceiverSettings;
-            _flowLengthReporter = flowLengthReporter;
-            _manager = NamespaceManager.CreateFromConnectionString(connectionStringSettings.GetConnectionString(ServiceBusConnectionStringIdentity.Instance));
-            _sqlConnection = new SqlConnection(connectionStringSettings.GetConnectionString(TransportConnectionStringIdentity.Instance));
+            _serviceBusSettingsFactory = serviceBusSettingsFactory;
         }
 
         protected override void ExecuteInternal(IJobExecutionContext context)
         {
-            ReportMemoryUsage();
-            ReportPrimaryProcessingQueueLength();
-            ReportFinalProcessingQueueLength();
-            ReportProbes();
+            WithinErrorLogging(ReportMemoryUsage);
+            WithinErrorLogging(ReportQueueLength<ImportFactsFromErmFlow, PrimaryProcessingQueueLengthIdentity>);
+            WithinErrorLogging(ReportQueueLength<CommonEventsFlow, FinalProcessingAggregateQueueLengthIdentity>);
+            WithinErrorLogging(ReportQueueLength<MessagesFlow, MessagesQueueLengthIdentity>);
+            WithinErrorLogging(ReportProbes);
+        }
+
+        private void WithinErrorLogging(Action action)
+        {
+            try
+            {
+                action.Invoke();
+            }
+            catch (Exception ex)
+            {
+                _tracer.Error(ex, "Eception in ReportingJob");
+            }
         }
 
         private void ReportMemoryUsage()
         {
-            try
-            {
-                var process = System.Diagnostics.Process.GetCurrentProcess();
-                _telemetry.Publish<ProcessPrivateMemorySizeIdentity>(process.PrivateMemorySize64);
-                _telemetry.Publish<ProcessWorkingSetIdentity>(process.WorkingSet64);
-            }
-            catch (Exception)
-            {
-            }
+            var process = System.Diagnostics.Process.GetCurrentProcess();
+            _telemetry.Publish<ProcessPrivateMemorySizeIdentity>(process.PrivateMemorySize64);
+            _telemetry.Publish<ProcessWorkingSetIdentity>(process.WorkingSet64);
         }
 
         private void ReportProbes()
@@ -74,34 +78,15 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             }
         }
 
-        private void ReportFinalProcessingQueueLength()
+        private void ReportQueueLength<TFlow, TTelemetryIdentity>()
+            where TFlow : MessageFlowBase<TFlow>, new()
+            where TTelemetryIdentity : TelemetryIdentityBase<TTelemetryIdentity>, new()
         {
-            if (_sqlConnection.State != ConnectionState.Open)
-            {
-                _sqlConnection.Open();
-            }
-
-            const string CommandText = "select count(*) from Transport.PerformedOperationFinalProcessing " +
-                                       "where MessageFlowId = @flowId";
-            var command = new SqlCommand(CommandText, _sqlConnection);
-            command.Parameters.Add("@flowId", SqlDbType.UniqueIdentifier);
-
-            foreach (var flow in _flowLengthReporter.SqlFlows)
-            {
-                command.Parameters["@flowId"].Value = flow.Id;
-                _flowLengthReporter.ReportFlowLength(flow, (int)command.ExecuteScalar());
-            }
-
-            _sqlConnection.Close();
-        }
-
-        private void ReportPrimaryProcessingQueueLength()
-        {
-            foreach (var flow in _flowLengthReporter.SeriviceBusFlows)
-            {
-                var subscription = _manager.GetSubscription(_serviceBusMessageReceiverSettings.TransportEntityPath, flow.Id.ToString());
-                _flowLengthReporter.ReportFlowLength(flow, (int)subscription.MessageCountDetails.ActiveMessageCount);
-            }
+            var flow = MessageFlowBase<TFlow>.Instance;
+            var settings = _serviceBusSettingsFactory.CreateReceiverSettings(flow);
+            var manager = NamespaceManager.CreateFromConnectionString(settings.ConnectionString);
+            var subscription = manager.GetSubscription(settings.TransportEntityPath, flow.Id.ToString());
+            _telemetry.Publish<TTelemetryIdentity>(subscription.MessageCountDetails.ActiveMessageCount);
         }
     }
 }

@@ -6,15 +6,16 @@ using System.Transactions;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
+using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
-using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
+using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Final
 {
@@ -22,47 +23,73 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
     {
         private readonly IAggregateActorFactory _aggregateActorFactory;
         private readonly ITelemetryPublisher _telemetryPublisher;
-        private readonly IEventSender _eventSender;
+        private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
 
-        public AggregateCommandsHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer, IEventSender eventSender)
+        public AggregateCommandsHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer, IEventLogger eventLogger)
         {
             _aggregateActorFactory = aggregateActorFactory;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
-            _eventSender = eventSender;
+            _eventLogger = eventLogger;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
         {
-            return processingResultsMap.Select(pair => Handle(pair.Key, pair.Value));
-        }
-
-        private StageResult Handle(Guid bucketId, IEnumerable<IAggregatableMessage> messages)
-        {
             try
             {
-                foreach (var message in messages.OfType<AggregatableMessage<IAggregateCommand>>())
-                {
-                    var commandGroups = message.Commands.GroupBy(x => x.AggregateRootType);
+                var messages = processingResultsMap.SelectMany(pair => pair.Value)
+                                                   .Cast<AggregatableMessage<ICommand>>()
+                                                   .ToArray();
 
-                    // TODO: Can agreggate actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
-                    foreach (var commandGroup in commandGroups)
-                    {
-                        ExecuteCommands(commandGroup.Key, commandGroup.ToArray());
-                    }
+                Handle(messages.SelectMany(x => x.Commands).OfType<IAggregateCommand>().ToArray());
+                Handle(messages.SelectMany(message => message.Commands.OfType<IncrementStateCommand>()).ToArray());
+                Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
 
-                    _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(message.Commands.Count);
-                    _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)(DateTime.UtcNow - message.EventHappenedTime).TotalMilliseconds);
-                }
-
-                return MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded();
+                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
             catch (Exception ex)
             {
                 _tracer.Error(ex, "Error when calculating aggregates");
-                return MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex);
+                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex));
             }
+        }
+
+        private void Handle(IReadOnlyCollection<RecordDelayCommand> commands)
+        {
+            if (!commands.Any())
+            {
+                return;
+            }
+
+            var eldestEventTime = commands.Min(x => x.EventTime);
+            var delta = DateTime.UtcNow - eldestEventTime;
+            _eventLogger.Log(new IEvent[] { new AggregatesBatchProcessedEvent(DateTime.UtcNow) });
+            _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+        }
+
+        private void Handle(IReadOnlyCollection<IncrementStateCommand> commands)
+        {
+            if (!commands.Any())
+            {
+                return;
+            }
+
+            var states = commands.SelectMany(command => command.States).ToArray();
+            _eventLogger.Log(new IEvent[] { new AggregatesStateIncrementedEvent(states) });
+        }
+
+        private void Handle(IReadOnlyCollection<IAggregateCommand> commands)
+        {
+            var commandGroups = commands.GroupBy(x => x.AggregateRootType);
+
+            // TODO: Can agreggate actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
+            foreach (var commandGroup in commandGroups)
+            {
+                ExecuteCommands(commandGroup.Key, commandGroup.ToArray());
+            }
+
+            _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(commands.Count);
         }
 
         private void ExecuteCommands(Type aggregateRootType, IReadOnlyCollection<IAggregateCommand> commands)
@@ -81,7 +108,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                 transaction.Complete();
             }
 
-            _eventSender.Push(MessagesFlow.Instance, events);
+            _eventLogger.Log(events);
         }
     }
 }

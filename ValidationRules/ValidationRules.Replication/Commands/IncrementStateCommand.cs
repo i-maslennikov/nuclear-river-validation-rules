@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using NuClear.Replication.Core;
 
@@ -6,12 +7,12 @@ namespace NuClear.ValidationRules.Replication.Commands
 {
     public sealed class IncrementStateCommand : ICommand
     {
-        public IncrementStateCommand(Guid state)
+        public IncrementStateCommand(IReadOnlyCollection<Guid> states)
         {
-            State = state;
+            States = states;
         }
 
-        public Guid State { get; }
+        public IReadOnlyCollection<Guid> States { get; }
 
         public override bool Equals(object obj)
         {
@@ -35,12 +36,12 @@ namespace NuClear.ValidationRules.Replication.Commands
 
         public override int GetHashCode()
         {
-            return State.GetHashCode();
+            return States.GetHashCode();
         }
 
         private bool Equals(IncrementStateCommand other)
         {
-            return State.Equals(other.State);
+            return ReferenceEquals(States, other.States);
         }
     }
 }

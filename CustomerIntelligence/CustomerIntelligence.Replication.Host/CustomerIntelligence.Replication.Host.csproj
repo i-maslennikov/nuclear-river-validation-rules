@@ -298,7 +298,6 @@
     <Compile Include="DI\Renewer.cs" />
     <Compile Include="DI\ReplicationHostAssembly.cs" />
     <Compile Include="DI\ReplicationRoot.cs" />
-    <Compile Include="DI\UnityContainerExtensions.cs" />
     <Compile Include="Factories\UnityEventLoggingStrategyProvider.cs" />
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Receiver\MessageFlowReceiverResolveStrategy.cs" />
@@ -307,7 +306,6 @@
     <Compile Include="Factories\Replication\UnityDataObjectsActorFactory.cs" />
     <Compile Include="Factories\ServiceBusSettingsFactory.cs" />
     <Compile Include="Factories\UnityCorporateBusMessageFlowReceiverFactory.cs" />
-    <Compile Include="Factories\UnityServiceBusMessageFlowReceiverFactory.cs" />
     <Compile Include="Factories\Messaging\Processor\PrimaryProcessorResolveStrategy.cs" />
     <Compile Include="Jobs\DebugTestJob.cs" />
     <Compile Include="Jobs\ProcessingJob.cs" />

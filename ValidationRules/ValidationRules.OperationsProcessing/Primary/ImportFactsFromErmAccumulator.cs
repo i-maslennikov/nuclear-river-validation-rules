@@ -39,19 +39,19 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
 
             var changes = _useCaseFiltrator.Filter(@event);
 
-            var incrementState = new ICommand[] { new IncrementStateCommand(@event.Id) };
+            var incrementStateCommand = new IncrementStateCommand(new[] { @event.Id });
+            var delayCommand = new RecordDelayCommand(@event.Context.Finished.UtcDateTime);
 
-            var commands = changes.SelectMany(x => x.Value.Select(y => (ICommand)new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y)))
-                                  .Concat(incrementState)
-                                  .ToArray();
+            var commands = changes.SelectMany(x => x.Value.Select(y => (ICommand)new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y))).ToList();
+            commands.Add(incrementStateCommand);
+            commands.Add(delayCommand);
 
-            _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Length);
+            _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Count);
 
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
                 Commands = commands,
-                EventHappenedTime = @event.Context.Finished.UtcDateTime,
             };
         }
     }

@@ -202,6 +202,7 @@
     <Compile Include="Telemetry\FinalProcessingStatisticsQueueLengthIdentity.cs" />
     <Compile Include="Telemetry\MessageProcessedOperationCountIdentity.cs" />
     <Compile Include="Telemetry\MessageProcessingDelayIdentity.cs" />
+    <Compile Include="Telemetry\MessagesQueueLengthIdentity.cs" />
     <Compile Include="Telemetry\PrimaryProcessingDelayIdentity.cs" />
     <Compile Include="Telemetry\PrimaryProcessingQueueLengthIdentity.cs" />
     <Compile Include="Telemetry\ProcessPrivateMemorySizeIdentity.cs" />
@@ -223,9 +224,6 @@
     <Compile Include="Transports\ServiceBus\Factories\ServiceBusMessageFlowReceiverFactory.cs" />
     <Compile Include="Transports\ServiceBus\ServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\IFlowLengthReporter.cs" />
-    <Compile Include="Transports\SQLStore\IEventSerializer.cs" />
-    <Compile Include="Transports\ServiceBus\ServiceBusOperationsReceiverTelemetryDecorator.cs" />
-    <Compile Include="Transports\ServiceBus\UnknownEntityType.cs" />
     <Compile Include="Transports\SQLStore\IdentityGenerator.cs" />
     <Compile Include="Transports\SQLStore\IIdentityGenerator.cs" />
     <Compile Include="Transports\SQLStore\Schema.cs" />

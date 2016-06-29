@@ -21,7 +21,6 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(Order), typeof(OrderAggregateRootActor) },
                     { typeof(Period), typeof(PeriodAggregateRootActor) },
                     { typeof(Position), typeof(PositionAggregateRootActor) },
-                    { typeof(ErmState), typeof(ErmStateAggregateRootActor) }
                 };
 
         public UnityAggregateActorFactory(IUnityContainer unityContainer)
