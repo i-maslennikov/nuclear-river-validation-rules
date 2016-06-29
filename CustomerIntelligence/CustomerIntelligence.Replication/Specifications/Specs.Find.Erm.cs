@@ -11,6 +11,7 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
             {
                 private const int ActivityStatusCompleted = 2;
                 private const int RegardingObjectReference = 1;
+                private const int LeadStatusOpen = 1;
 
                 public static FindSpecification<Account> Accounts()
                 {
@@ -45,6 +46,11 @@ namespace NuClear.CustomerIntelligence.Replication.Specifications
                 public static FindSpecification<Firm> Firms()
                 {
                     return new FindSpecification<Firm>(x => x.IsActive && !x.IsDeleted && !x.ClosedForAscertainment);
+                }
+
+                public static FindSpecification<Lead> Leads()
+                {
+                    return new FindSpecification<Lead>(x => x.Status == LeadStatusOpen);
                 }
 
                 public static FindSpecification<FirmAddress> FirmAddresses()

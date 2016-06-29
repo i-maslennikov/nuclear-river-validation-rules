@@ -29,15 +29,6 @@ namespace NuClear.Replication.Core.Actors
             _dataChangesHandler = dataChangesHandler;
         }
 
-        public SyncDataObjectsActor(
-            IQuery query,
-            IBulkRepository<TDataObject> bulkRepository,
-            IEqualityComparerFactory equalityComparerFactory,
-            IStorageBasedDataObjectAccessor<TDataObject> storageBasedDataObjectAccessor)
-            : this(query, bulkRepository, equalityComparerFactory, storageBasedDataObjectAccessor, new NullDataChangesHandler<TDataObject>())
-        {
-        }
-
         public override IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
             var commandsToExecute = commands.OfType<ISyncDataObjectCommand>()
@@ -67,7 +58,6 @@ namespace NuClear.Replication.Core.Actors
             _bulkRepository.Create(toCreate);
             events.AddRange(_dataChangesHandler.HandleCreates(toCreate));
             events.AddRange(_dataChangesHandler.HandleRelates(toCreate));
-
 
             var toUpdate = changes.Intersection.ToArray();
 

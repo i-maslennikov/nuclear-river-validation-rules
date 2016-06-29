@@ -37,10 +37,6 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Settings
                         ConfigurationManager.ConnectionStrings["CustomerIntelligence"].ConnectionString
                     },
                     {
-                        TransportConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Transport"].ConnectionString
-                    },
-                    {
                         ServiceBusConnectionStringIdentity.Instance,
                         ConfigurationManager.ConnectionStrings["ServiceBus"].ConnectionString
                     },
@@ -58,7 +54,6 @@ namespace NuClear.CustomerIntelligence.Replication.Host.Settings
                    .Use<ServiceBusMessageLockRenewalSettings>()
                    .Use<EnvironmentSettingsAspect>()
                    .Use(new QuartzSettingsAspect(connectionStringSettings.GetConnectionString(InfrastructureConnectionStringIdentity.Instance)))
-                   .Use(new ServiceBusReceiverSettingsAspect(connectionStringSettings.GetConnectionString(ServiceBusConnectionStringIdentity.Instance)))
                    .Use<CorporateBusSettingsAspect>()
                    .Use<LogstashSettingsAspect>()
                    .Use<IdentityServiceClientSettingsAspect>();

@@ -6,7 +6,7 @@ if($RunDataTests -eq $true -and $TaskList -notcontains "Run-DataTests"){
 }
 
 if ($TaskList.Count -eq 0){
-	$TaskList = @('Build-Packages')
+	$TaskList = @('Build-NuGet', 'Deploy-NuGet')
 }
 
 if ($Properties.Count -eq 0){

@@ -32,7 +32,8 @@ namespace NuClear.CustomerIntelligence.Replication
                         typeof(FirmContact),
                         typeof(LegalPerson),
                         typeof(Order),
-                        typeof(SalesModelCategoryRestriction)
+                        typeof(SalesModelCategoryRestriction),
+                        typeof(Lead)
                     };
             }
 

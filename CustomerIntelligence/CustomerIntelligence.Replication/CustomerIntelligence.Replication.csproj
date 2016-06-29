@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Accessors\AccountAccessor.cs" />
+    <Compile Include="Accessors\LeadAccessor.cs" />
     <Compile Include="Accessors\ActivityAccessor.cs" />
     <Compile Include="Accessors\BranchOfficeOrganizationUnitAccessor.cs" />
     <Compile Include="Accessors\CategoryAccessor.cs" />
@@ -61,10 +62,12 @@
     <Compile Include="Actors\ProjectStatisticsAggregateRootActor.cs" />
     <Compile Include="Actors\TerritoryAggregateRootActor.cs" />
     <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
+    <Compile Include="Events\BatchProcessedEvent.cs" />
     <Compile Include="Commands\CreateDataObjectCommand.cs" />
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
     <Compile Include="Commands\DestroyAggregateCommand.cs" />
     <Compile Include="Commands\InitializeAggregateCommand.cs" />
+    <Compile Include="Commands\RecordDelayCommand.cs" />
     <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
     <Compile Include="Commands\RecalculateAggregateCommand.cs" />
     <Compile Include="Commands\RecalculateEntityCommand.cs" />

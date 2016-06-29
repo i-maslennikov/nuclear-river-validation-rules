@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
 
-using NuClear.CustomerIntelligence.OperationsProcessing.Identities.Flows;
+using NuClear.CustomerIntelligence.Replication.Commands;
+using NuClear.CustomerIntelligence.Replication.Events;
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
+using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.Settings;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
-using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
@@ -23,24 +23,21 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
     {
         private readonly IReplicationSettings _replicationSettings;
         private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
-        private readonly IEventSender _eventSender;
-        private readonly IEventDispatcher _eventDispatcher;
+        private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromErmHandler(
             IReplicationSettings replicationSettings,
             IDataObjectsActorFactory dataObjectsActorFactory,
-            IEventSender eventSender,
+            IEventLogger eventLogger,
             ITelemetryPublisher telemetryPublisher,
-            IEventDispatcher eventDispatcher,
             ITracer tracer)
         {
             _replicationSettings = replicationSettings;
             _dataObjectsActorFactory = dataObjectsActorFactory;
-            _eventSender = eventSender;
+            _eventLogger = eventLogger;
             _telemetryPublisher = telemetryPublisher;
-            _eventDispatcher = eventDispatcher;
             _tracer = tracer;
         }
 
@@ -52,10 +49,8 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                                                    .Cast<AggregatableMessage<ICommand>>()
                                                    .ToArray();
 
-                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.Cast<ISyncDataObjectCommand>()).ToArray());
-
-                var oldestEventTime = messages.Min(message => message.EventHappenedTime);
-                _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)(DateTime.UtcNow - oldestEventTime).TotalMilliseconds);
+                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.OfType<ISyncDataObjectCommand>()).ToArray());
+                Handle(messages.SelectMany(message => message.Commands.OfType<RecordDelayCommand>()).ToArray());
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
@@ -64,6 +59,19 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
                 _tracer.Error(ex, "Error when import facts for ERM");
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex));
             }
+        }
+
+        private void Handle(IReadOnlyCollection<RecordDelayCommand> commands)
+        {
+            if (!commands.Any())
+            {
+                return;
+            }
+
+            var eldestEventTime = commands.Min(x => x.EventTime);
+            var delta = DateTime.UtcNow - eldestEventTime;
+            _eventLogger.Log(new IEvent[] { new BatchProcessedEvent(DateTime.UtcNow) });
+            _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)delta.TotalMilliseconds);
         }
 
         private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<ISyncDataObjectCommand> commands)
@@ -97,28 +105,9 @@ namespace NuClear.CustomerIntelligence.OperationsProcessing.Primary
 
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);
 
-            // We always need to use different transaction scope to operate with operation sender because it has its own store
-            using (var pushTransaction = new TransactionScope(TransactionScopeOption.RequiresNew,
-                                                              new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
-            {
-                _tracer.Debug("Pushing messages");
-                DispatchEvents(events);
-                pushTransaction.Complete();
-            }
+            _eventLogger.Log(events);
 
             _tracer.Debug("Executing fact commands finished");
-        }
-
-        private void DispatchEvents(IReadOnlyCollection<IEvent> events)
-        {
-            var dispatched = _eventDispatcher.Dispatch(events);
-            foreach (var pair in dispatched)
-            {
-                _eventSender.Push(pair.Key, pair.Value);
-            }
-
-            _telemetryPublisher.Publish<StatisticsEnqueuedOperationCountIdentity>(dispatched[StatisticsEventsFlow.Instance].Count);
-            _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(dispatched[CommonEventsFlow.Instance].Count);
         }
     }
 }

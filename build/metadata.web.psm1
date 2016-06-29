@@ -97,6 +97,11 @@ function Get-IisAppPathMetadata ($Context) {
 	}
 }
 
+function Get-IisAppPoolMetadata ($Context) {
+	
+	return @{ 'AppPoolName' = 'ErmAppPool' }
+}
+
 function Get-TakeOfflineMetadata ($Context) {
 	switch($Context.EnvType){
 		'Production' {
@@ -130,6 +135,7 @@ function Get-WebMetadata ($Context) {
 	$metadata += Get-ValidateWebsiteMetadata $Context
 	$metadata += Get-TargetHostsMetadata $Context
 	$metadata += Get-IisAppPathMetadata $Context
+	$metadata += Get-IisAppPoolMetadata $Context
 	$metadata += Get-TakeOfflineMetadata $Context
 	$metadata += Get-OptionsMetadata $Context
 	$metadata += Get-TransformMetadata $Context

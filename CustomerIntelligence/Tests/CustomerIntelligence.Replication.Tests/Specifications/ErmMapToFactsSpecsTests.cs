@@ -146,6 +146,30 @@ namespace NuClear.CustomerIntelligence.Replication.Tests.Specifications
         }
 
         [Test]
+        public void ShouldTransformLead()
+        {
+            SourceDb.Has(
+                new Lead
+                {
+                    Id = 1,
+                    FirmId = 2,
+                    OwnerId = 3,
+                    Type = 1,
+                    Status = 1
+                });
+
+            Transformation.Create(Query)
+                          .VerifyTransform(x => Specs.Map.Erm.ToFacts.Leads.Map(x).By(y => y.Id, 1),
+                                           new Storage.Model.Facts.Lead
+                                           {
+                                               Id = 1,
+                                               FirmId = 2,
+                                               IsInQueue = false,
+                                               Type = 1
+                                           });
+        }
+
+        [Test]
         public void ShouldTransformFirmAddress()
         {
             SourceDb.Has(
