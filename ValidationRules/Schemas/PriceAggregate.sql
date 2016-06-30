@@ -99,7 +99,9 @@ create table PriceAggregate.OrderDeniedPosition(
     BindingType int NOT NULL,
     Category3Id bigint NULL,
     Category1Id bigint NULL,
-    FirmAddressId bigint NULL
+    FirmAddressId bigint NULL,
+
+    Source nvarchar(16) not null,
 )
 create index IX_OrderDeniedPosition_OrderId_DeniedPositionId_BindingType
 on [PriceAggregate].[OrderDeniedPosition] ([OrderId],[DeniedPositionId],[BindingType])
