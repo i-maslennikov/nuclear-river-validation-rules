@@ -142,6 +142,7 @@ function Parse-EnvironmentMetadata ($Properties) {
 $AllSchemas = @{
 	'PriceContext' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'ValidationRules\Schemas\PriceContext.sql' }
 	'PriceAggregate' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'ValidationRules\Schemas\PriceAggregate.sql' }
+    'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'ValidationRules\Schemas\Messages.sql' }
 
 	'Transport' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Replication\Schemas\Transport.sql' }
 }
