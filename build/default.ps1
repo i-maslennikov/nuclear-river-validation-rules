@@ -44,7 +44,7 @@ function QueueDeploy-TaskService {
 Task QueueBuild-Packages {
 
 	QueueBuild-BulkTool
-	QueueBuild-OData
+	#QueueBuild-OData
 	QueueBuild-TaskService
 
 	Invoke-MSBuildQueue
