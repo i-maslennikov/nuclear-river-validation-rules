@@ -282,7 +282,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                 var deniedByRuleset =
                     from bingingObject in opas.Union(pkgs)
                     join denied in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == 2)
-                        on bingingObject.CauseItemPositionId equals denied.PrincipalPositionId
+                        on bingingObject.CauseItemPositionId equals denied.DependentPositionId
                     select new OrderDeniedPosition
                     {
                         OrderId = bingingObject.OrderId,
@@ -293,7 +293,7 @@ namespace NuClear.ValidationRules.Replication.Actors
                         FirmAddressId = bingingObject.FirmAddressId,
                         Category1Id = bingingObject.Category1Id,
 
-                        DeniedPositionId = denied.DependentPositionId,
+                        DeniedPositionId = denied.PrincipalPositionId,
                         BindingType = denied.ObjectBindingType,
 
                         Source = bingingObject.Source + " by ruleset",
