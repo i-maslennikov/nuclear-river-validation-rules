@@ -41,10 +41,6 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
                         ConfigurationManager.ConnectionStrings["Messages"].ConnectionString
                     },
                     {
-                        TransportConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Transport"].ConnectionString
-                    },
-                    {
                         ServiceBusConnectionStringIdentity.Instance,
                         ConfigurationManager.ConnectionStrings["ServiceBus"].ConnectionString
                     },
