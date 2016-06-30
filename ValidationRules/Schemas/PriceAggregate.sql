@@ -18,9 +18,6 @@ if object_id('PriceAggregate.AdvertisementAmountRestriction') is not null drop t
 if object_id('PriceAggregate.Price') is not null drop table PriceAggregate.Price
 if object_id('PriceAggregate.AssociatedPositionGroupOvercount') is not null drop table PriceAggregate.AssociatedPositionGroupOvercount
 
-if object_id('PriceAggregate.RulesetRule') is not null drop table PriceAggregate.RulesetRule
-if object_id('PriceAggregate.Ruleset') is not null drop table PriceAggregate.Ruleset
-
 go
 
 
@@ -58,23 +55,6 @@ create table PriceAggregate.AdvertisementAmountRestriction(
     MissingMinimalRestriction bit NOT NULL,
 )
 create index IX_AdvertisementAmountRestriction_PriceId ON PriceAggregate.AdvertisementAmountRestriction (PriceId)
-go
-
--- ruleset aggregate
-create table PriceAggregate.Ruleset(
-    Id bigint NOT NULL,
-    constraint PK_Ruleset primary key (Id)
-)
-go
-
-create table PriceAggregate.RulesetRule(
-    RulesetId bigint NOT NULL,
-    RuleType int NOT NULL,
-    DependentPositionId bigint NOT NULL,
-    PrincipalPositionId bigint NOT NULL,
-    ObjectBindingType int NOT NULL
-)
-create index IX_RulesetRule_RulesetId ON PriceAggregate.RulesetRule (RulesetId)
 go
 
 -- order aggregate
