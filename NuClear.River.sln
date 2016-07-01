@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querying.Metadata.Tests", "Querying\Tests\Querying.Metadata.Tests\Querying.Metadata.Tests.csproj", "{16DA002C-3DA3-4303-AC10-8FE046F0ED2C}"
 EndProject
@@ -106,9 +106,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ValidationRules", "Validati
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{1F115A52-C900-4C2E-9B83-375E1A71C831}"
 	ProjectSection(SolutionItems) = preProject
+		ValidationRules\Schemas\Account.Aggregates.sql = ValidationRules\Schemas\Account.Aggregates.sql
+		ValidationRules\Schemas\Account.Facts.sql = ValidationRules\Schemas\Account.Facts.sql
 		ValidationRules\Schemas\Messages.sql = ValidationRules\Schemas\Messages.sql
-		ValidationRules\Schemas\PriceAggregate.sql = ValidationRules\Schemas\PriceAggregate.sql
-		ValidationRules\Schemas\PriceContext.sql = ValidationRules\Schemas\PriceContext.sql
+		ValidationRules\Schemas\Price.Aggregates.sql = ValidationRules\Schemas\Price.Aggregates.sql
+		ValidationRules\Schemas\Price.Facts.sql = ValidationRules\Schemas\Price.Facts.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Storage", "ValidationRules\ValidationRules.Storage\ValidationRules.Storage.csproj", "{E799A2EE-408F-467A-8B50-FC729E92D3F3}"
