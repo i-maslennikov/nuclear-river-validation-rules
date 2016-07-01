@@ -1,7 +1,7 @@
 ﻿using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
 
-using NuClear.ValidationRules.Storage.Model.Aggregates;
+using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 namespace NuClear.ValidationRules.Storage
 {

@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.Aggregates
+namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
     /// Представляет превышение числа AssociatedPositionsGroup для PricePosition (поддерживается не больее одной)

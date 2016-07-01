@@ -5,7 +5,7 @@ using NuClear.Storage.API.Specifications;
 
 namespace NuClear.ValidationRules.Replication.Specifications
 {
-    using Aggregates = Storage.Model.Aggregates;
+    using Aggregates = Storage.Model.PriceRules.Aggregates;
 
     public static partial class Specs
     {

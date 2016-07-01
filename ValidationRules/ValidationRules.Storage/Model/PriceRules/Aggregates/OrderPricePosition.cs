@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.Aggregates
+namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
     /// Связь заказа с его позицией и позицией прайс-листа

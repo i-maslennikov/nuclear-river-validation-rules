@@ -17,9 +17,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRoots
             = new Dictionary<Type, Type>
                 {
-                    { typeof(Storage.Model.Facts.Price), typeof(Storage.Model.Aggregates.Price) },
-                    { typeof(Storage.Model.Facts.Order), typeof(Storage.Model.Aggregates.Order) },
-                    { typeof(Storage.Model.Facts.Position), typeof(Storage.Model.Aggregates.Position) },
+                    { typeof(Storage.Model.PriceRules.Facts.Price), typeof(Storage.Model.PriceRules.Aggregates.Price) },
+                    { typeof(Storage.Model.PriceRules.Facts.Order), typeof(Storage.Model.PriceRules.Aggregates.Order) },
+                    { typeof(Storage.Model.PriceRules.Facts.Position), typeof(Storage.Model.PriceRules.Aggregates.Position) },
                 };
 
         protected override AggregatableMessage<ICommand> Process(EventMessage message)

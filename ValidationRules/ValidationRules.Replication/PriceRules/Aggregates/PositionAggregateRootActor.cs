@@ -10,7 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
-using NuClear.ValidationRules.Storage.Model.Aggregates;
+using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {

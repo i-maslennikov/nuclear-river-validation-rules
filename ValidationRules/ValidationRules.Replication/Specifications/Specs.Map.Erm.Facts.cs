@@ -8,7 +8,7 @@ using NuClear.Storage.API.Specifications;
 namespace NuClear.ValidationRules.Replication.Specifications
 {
     using Erm = Storage.Model.Erm;
-    using Facts = Storage.Model.Facts;
+    using Facts = Storage.Model.PriceRules.Facts;
 
     public static partial class Specs
     {

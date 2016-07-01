@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.ValidationRules.Storage.Model.Facts;
+using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.DataObjects;

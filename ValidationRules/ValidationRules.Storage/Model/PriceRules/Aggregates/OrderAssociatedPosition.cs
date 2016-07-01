@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.Aggregates
+namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     public sealed class OrderAssociatedPosition
     {

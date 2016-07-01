@@ -27,31 +27,31 @@ namespace NuClear.ValidationRules.OperationsProcessing
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> FactsTypeMap
             = builder => builder
-                .AddMapping<EntityTypeAssociatedPosition, Storage.Model.Facts.AssociatedPosition>()
-                .AddMapping<EntityTypeAssociatedPositionsGroup, Storage.Model.Facts.AssociatedPositionsGroup>()
-                .AddMapping<EntityTypeCategory, Storage.Model.Facts.Category>()
-                .AddMapping<EntityTypeDeniedPosition, Storage.Model.Facts.DeniedPosition>()
-                .AddMapping<EntityTypeRuleset, Storage.Model.Facts.RulesetRule>()
-                .AddMapping<EntityTypeOrder, Storage.Model.Facts.Order>()
-                .AddMapping<EntityTypeOrderPosition, Storage.Model.Facts.OrderPosition>()
-                .AddMapping<EntityTypeOrderPositionAdvertisement, Storage.Model.Facts.OrderPositionAdvertisement>()
-                .AddMapping<EntityTypeOrganizationUnit, Storage.Model.Facts.OrganizationUnit>()
-                .AddMapping<EntityTypePosition, Storage.Model.Facts.Position>()
-                .AddMapping<EntityTypePrice, Storage.Model.Facts.Price>()
-                .AddMapping<EntityTypePricePosition, Storage.Model.Facts.PricePosition>()
-                .AddMapping<EntityTypeProject, Storage.Model.Facts.Project>();
+                .AddMapping<EntityTypeAssociatedPosition, Storage.Model.PriceRules.Facts.AssociatedPosition>()
+                .AddMapping<EntityTypeAssociatedPositionsGroup, Storage.Model.PriceRules.Facts.AssociatedPositionsGroup>()
+                .AddMapping<EntityTypeCategory, Storage.Model.PriceRules.Facts.Category>()
+                .AddMapping<EntityTypeDeniedPosition, Storage.Model.PriceRules.Facts.DeniedPosition>()
+                .AddMapping<EntityTypeRuleset, Storage.Model.PriceRules.Facts.RulesetRule>()
+                .AddMapping<EntityTypeOrder, Storage.Model.PriceRules.Facts.Order>()
+                .AddMapping<EntityTypeOrderPosition, Storage.Model.PriceRules.Facts.OrderPosition>()
+                .AddMapping<EntityTypeOrderPositionAdvertisement, Storage.Model.PriceRules.Facts.OrderPositionAdvertisement>()
+                .AddMapping<EntityTypeOrganizationUnit, Storage.Model.PriceRules.Facts.OrganizationUnit>()
+                .AddMapping<EntityTypePosition, Storage.Model.PriceRules.Facts.Position>()
+                .AddMapping<EntityTypePrice, Storage.Model.PriceRules.Facts.Price>()
+                .AddMapping<EntityTypePricePosition, Storage.Model.PriceRules.Facts.PricePosition>()
+                .AddMapping<EntityTypeProject, Storage.Model.PriceRules.Facts.Project>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap
             = builder => builder
-                .AddMapping<EntityTypeOrder, Storage.Model.Aggregates.Order>()
-                .AddMapping<EntityTypePrice, Storage.Model.Aggregates.Price>()
-                .AddMapping<EntityTypePosition, Storage.Model.Aggregates.Position>()
-                .AddMapping<EntityTypePeriod, Storage.Model.Aggregates.Period>()
-                .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.AdvertisementAmountRestriction))
-                .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPeriod))
-                .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPosition))
-                .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.OrderPricePosition))
-                .AddAsPersistenceOnly(typeof(Storage.Model.Aggregates.PricePeriod));
+                .AddMapping<EntityTypeOrder, Storage.Model.PriceRules.Aggregates.Order>()
+                .AddMapping<EntityTypePrice, Storage.Model.PriceRules.Aggregates.Price>()
+                .AddMapping<EntityTypePosition, Storage.Model.PriceRules.Aggregates.Position>()
+                .AddMapping<EntityTypePeriod, Storage.Model.PriceRules.Aggregates.Period>()
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.AdvertisementAmountRestriction))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.OrderPeriod))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.OrderPosition))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.OrderPricePosition))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.PricePeriod));
 
         public static IEntityTypeMappingRegistry<ErmSubDomain> CreateErmContext()
         {

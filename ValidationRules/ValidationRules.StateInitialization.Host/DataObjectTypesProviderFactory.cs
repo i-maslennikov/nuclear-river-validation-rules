@@ -6,7 +6,7 @@ using NuClear.StateInitialization.Core;
 using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.Factories;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
-using NuClear.ValidationRules.Storage.Model.Facts;
+using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
@@ -40,19 +40,19 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 return new DataObjectTypesProvider(
                     new List<Type>
                         {
-                            typeof(Storage.Model.Aggregates.AdvertisementAmountRestriction),
-                            typeof(Storage.Model.Aggregates.Order),
-                            typeof(Storage.Model.Aggregates.OrderPeriod),
-                            typeof(Storage.Model.Aggregates.OrderPosition),
-                            typeof(Storage.Model.Aggregates.OrderAssociatedPosition),
-                            typeof(Storage.Model.Aggregates.OrderDeniedPosition),
-                            typeof(Storage.Model.Aggregates.OrderPricePosition),
-                            typeof(Storage.Model.Aggregates.AmountControlledPosition),
-                            typeof(Storage.Model.Aggregates.Period),
-                            typeof(Storage.Model.Aggregates.Position),
-                            typeof(Storage.Model.Aggregates.Price),
-                            typeof(Storage.Model.Aggregates.AssociatedPositionGroupOvercount),
-                            typeof(Storage.Model.Aggregates.PricePeriod),
+                            typeof(Storage.Model.PriceRules.Aggregates.AdvertisementAmountRestriction),
+                            typeof(Storage.Model.PriceRules.Aggregates.Order),
+                            typeof(Storage.Model.PriceRules.Aggregates.OrderPeriod),
+                            typeof(Storage.Model.PriceRules.Aggregates.OrderPosition),
+                            typeof(Storage.Model.PriceRules.Aggregates.OrderAssociatedPosition),
+                            typeof(Storage.Model.PriceRules.Aggregates.OrderDeniedPosition),
+                            typeof(Storage.Model.PriceRules.Aggregates.OrderPricePosition),
+                            typeof(Storage.Model.PriceRules.Aggregates.AmountControlledPosition),
+                            typeof(Storage.Model.PriceRules.Aggregates.Period),
+                            typeof(Storage.Model.PriceRules.Aggregates.Position),
+                            typeof(Storage.Model.PriceRules.Aggregates.Price),
+                            typeof(Storage.Model.PriceRules.Aggregates.AssociatedPositionGroupOvercount),
+                            typeof(Storage.Model.PriceRules.Aggregates.PricePeriod),
                         });
             }
 

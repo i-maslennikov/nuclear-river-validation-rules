@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.Aggregates
+namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
     /// Импортированная из ERM сущность прайс-листа

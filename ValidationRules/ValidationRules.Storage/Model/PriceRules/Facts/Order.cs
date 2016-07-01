@@ -1,6 +1,6 @@
 using System;
 
-namespace NuClear.ValidationRules.Storage.Model.Facts
+namespace NuClear.ValidationRules.Storage.Model.PriceRules.Facts
 {
     public sealed class Order
     {

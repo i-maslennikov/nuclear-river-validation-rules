@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.Aggregates
+namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
     /// Представляет запрет, порождаемый одной из позиций заказа.

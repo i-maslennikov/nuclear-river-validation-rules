@@ -21,7 +21,7 @@ using NuClear.ValidationRules.Replication.Host.Factories.Replication;
 using NuClear.ValidationRules.Replication.Host.Settings;
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
-using NuClear.ValidationRules.Storage.Model.Facts;
+using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using NuClear.DI.Unity.Config;
 using NuClear.DI.Unity.Config.RegistrationResolvers;
 using NuClear.IdentityService.Client.Interaction;
