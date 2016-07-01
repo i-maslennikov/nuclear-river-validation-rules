@@ -54,39 +54,39 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accessors\PricePositionNotActive.cs" />
-    <Compile Include="Accessors\ProjectAccessor.cs" />
-    <Compile Include="Accessors\OrganizationUnitAccessor.cs" />
-    <Compile Include="Accessors\CategoryAccessor.cs" />
-    <Compile Include="Accessors\PricePositionAccessor.cs" />
-    <Compile Include="Accessors\PeriodKeyEqualityComparer.cs" />
-    <Compile Include="Accessors\PriceAccessor.cs" />
-    <Compile Include="Accessors\PositionAccessor.cs" />
-    <Compile Include="Accessors\OrderAccessor.cs" />
-    <Compile Include="Accessors\OrderPositionAdvertisementAccessor.cs" />
-    <Compile Include="Accessors\OrderPositionAccessor.cs" />
-    <Compile Include="Accessors\RulesetRuleAccessor.cs" />
-    <Compile Include="Accessors\DeniedPositionAccessor.cs" />
-    <Compile Include="Accessors\AssociatedPositionsGroupAccessor.cs" />
-    <Compile Include="Accessors\AssociatedPositionAccessor.cs" />
-    <Compile Include="Actors\Validation\ConflictingPrincipalPositionActor.cs" />
-    <Compile Include="Actors\Validation\LinkedObjectsMissedInPrincipalsActor.cs" />
-    <Compile Include="Actors\Validation\AssociatedPositionWithoutPrincipalActor.cs" />
-    <Compile Include="Actors\Validation\DeniedPositionsCheckActor.cs" />
-    <Compile Include="Actors\Validation\AdvertisementAmountRestrictionIntegrityActor.cs" />
-    <Compile Include="Actors\Validation\AssociatedPositionsGroupCountActor.cs" />
-    <Compile Include="Actors\Validation\MaximumAdvertisementAmountActor.cs" />
-    <Compile Include="Actors\Validation\MinimumAdvertisementAmountActor.cs" />
-    <Compile Include="Actors\AggregateActor.cs" />
-    <Compile Include="Actors\Validation\OrderPositionCorrespontToInactivePositionActor.cs" />
-    <Compile Include="Actors\Validation\OrderPositionDoesntCorrespontToActualPriceActor.cs" />
-    <Compile Include="Actors\Validation\OrderPositionsDoesntCorrespontToActualPriceActor.cs" />
-    <Compile Include="Actors\PeriodAggregateRootActor.cs" />
-    <Compile Include="Actors\PriceAggregateRootActor.cs" />
-    <Compile Include="Actors\OrderAggregateRootActor.cs" />
-    <Compile Include="Actors\PositionAggregateRootActor.cs" />
-    <Compile Include="Actors\Validation\CreateNewVersionActor.cs" />
-    <Compile Include="Actors\Validation\ValidationRuleShared.cs" />
+    <Compile Include="PriceRules\Facts\PricePositionNotActive.cs" />
+    <Compile Include="PriceRules\Facts\ProjectAccessor.cs" />
+    <Compile Include="PriceRules\Facts\OrganizationUnitAccessor.cs" />
+    <Compile Include="PriceRules\Facts\CategoryAccessor.cs" />
+    <Compile Include="PriceRules\Facts\PricePositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\PeriodKeyEqualityComparer.cs" />
+    <Compile Include="PriceRules\Facts\PriceAccessor.cs" />
+    <Compile Include="PriceRules\Facts\PositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\OrderAccessor.cs" />
+    <Compile Include="PriceRules\Facts\OrderPositionAdvertisementAccessor.cs" />
+    <Compile Include="PriceRules\Facts\OrderPositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\RulesetRuleAccessor.cs" />
+    <Compile Include="PriceRules\Facts\DeniedPositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\AssociatedPositionsGroupAccessor.cs" />
+    <Compile Include="PriceRules\Facts\AssociatedPositionAccessor.cs" />
+    <Compile Include="PriceRules\Validation\DeniedPositionsCheckActor.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementAmountRestrictionIntegrityActor.cs" />
+    <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCountActor.cs" />
+    <Compile Include="PriceRules\Validation\MaximumAdvertisementAmountActor.cs" />
+    <Compile Include="PriceRules\Validation\MinimumAdvertisementAmountActor.cs" />
+    <Compile Include="AggregateActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePositionActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionDoesntCorrespontToActualPriceActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionsDoesntCorrespontToActualPriceActor.cs" />
+    <Compile Include="PriceRules\Aggregates\PeriodAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
+    <Compile Include="ValidationRuleShared.cs" />
+    <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />
+    <Compile Include="PriceRules\Validation\LinkedObjectsMissedInPrincipalsActor.cs" />
+    <Compile Include="PriceRules\Validation\AssociatedPositionWithoutPrincipalActor.cs" />
     <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
     <Compile Include="Commands\IncrementStateCommand.cs" />
     <Compile Include="Commands\CreateNewVersionCommand.cs" />
@@ -135,7 +135,11 @@
       <Name>ValidationRules.Storage</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="AccountRules\Aggregates\" />
+    <Folder Include="AccountRules\Facts\" />
+    <Folder Include="AccountRules\Validation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

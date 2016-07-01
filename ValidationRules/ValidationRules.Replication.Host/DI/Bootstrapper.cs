@@ -13,7 +13,6 @@ using NuClear.ValidationRules.OperationsProcessing;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
 using NuClear.ValidationRules.OperationsProcessing.Final;
 using NuClear.ValidationRules.OperationsProcessing.Transports;
-using NuClear.ValidationRules.Replication.Accessors;
 using NuClear.ValidationRules.Replication.Host.Factories;
 using NuClear.ValidationRules.Replication.Host.Factories.Messaging.Processor;
 using NuClear.ValidationRules.Replication.Host.Factories.Messaging.Receiver;
@@ -89,13 +88,13 @@ using NuClear.Storage.LinqToDB.Writings;
 using NuClear.Storage.Readings;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.Replication.PriceRules.Facts;
 using NuClear.WCF.Client;
 using NuClear.WCF.Client.Config;
 
 using Quartz.Spi;
 
 using Schema = NuClear.ValidationRules.Storage.Schema;
-using TransportSchema = NuClear.Replication.OperationsProcessing.Transports.SQLStore.Schema;
 
 namespace NuClear.ValidationRules.Replication.Host.DI
 {

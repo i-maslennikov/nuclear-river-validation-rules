@@ -6,7 +6,6 @@ using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.Metamodeling.Provider;
 using NuClear.StateInitialization.Core;
 using NuClear.Storage.API.ConnectionStrings;
-using NuClear.ValidationRules.Replication.Actors;
 using NuClear.ValidationRules.StateInitialization.Host;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests

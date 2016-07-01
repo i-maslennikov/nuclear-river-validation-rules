@@ -5,7 +5,7 @@ using Microsoft.Practices.Unity;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
-using NuClear.ValidationRules.Replication.Actors;
+using NuClear.ValidationRules.Replication.PriceRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Aggregates;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories.Replication

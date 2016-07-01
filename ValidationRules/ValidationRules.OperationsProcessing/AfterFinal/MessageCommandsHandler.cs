@@ -11,8 +11,8 @@ using NuClear.Replication.OperationsProcessing;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Telemetry;
-using NuClear.ValidationRules.Replication.Actors.Validation;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
 namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
 {
