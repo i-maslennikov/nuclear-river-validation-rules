@@ -17,19 +17,30 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
     public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
     {
+        private readonly IQuery _query;
+        private readonly IEqualityComparerFactory _equalityComparerFactory;
+        private readonly IBulkRepository<Lock> _lockBulkRepository;
+
         public OrderAggregateRootActor(
             IQuery query,
-            IBulkRepository<Order> bulkRepository,
+            IBulkRepository<Order> orderBulkRepository,
+            IBulkRepository<Lock> lockBulkRepository,
             IEqualityComparerFactory equalityComparerFactory)
-            : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
+            _query = query;
+            _equalityComparerFactory = equalityComparerFactory;
+            _lockBulkRepository = lockBulkRepository;
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
             => Array.Empty<IEntityActor>();
 
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => Array.Empty<IActor>();
+            => new IActor[]
+                {
+                    new ValueObjectActor<Lock>(_query, _lockBulkRepository, _equalityComparerFactory, new LockAccessor(_query))
+                };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
         {
@@ -62,6 +73,34 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
+            }
+        }
+
+        public sealed class LockAccessor : IStorageBasedDataObjectAccessor<Lock>
+        {
+            private readonly IQuery _query;
+
+            public LockAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Lock> GetSource()
+                => _query.For<Facts::Lock>().Select(x => new Lock
+                    {
+                        OrderId = x.OrderId,
+                        Start = x.PeriodStartDate,
+                        End = x.PeriodEndDate,
+                    });
+
+            public FindSpecification<Lock> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Lock>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }

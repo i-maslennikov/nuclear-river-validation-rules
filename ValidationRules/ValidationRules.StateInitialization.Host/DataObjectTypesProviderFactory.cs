@@ -42,6 +42,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountFacts::Account),
                             typeof(AccountFacts::Order),
                             typeof(AccountFacts::Project),
+                            typeof(AccountFacts::Lock),
                         });
             }
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
@@ -64,6 +65,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::PricePeriod),
 
                             typeof(AccountAggregates::Order),
+                            typeof(AccountAggregates::Lock),
                         });
             }
 

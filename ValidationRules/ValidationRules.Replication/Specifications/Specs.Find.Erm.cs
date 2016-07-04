@@ -87,6 +87,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     return new FindSpecification<Account>(x => !x.IsArchived);
                 }
+
+                public static FindSpecification<Lock> Locks()
+                {
+                    return new FindSpecification<Lock>(x => x.IsActive && !x.IsDeleted);
+                }
             }
         }
     }

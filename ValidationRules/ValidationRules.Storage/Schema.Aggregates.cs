@@ -74,6 +74,9 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(AccountAggregateSchema)
                   .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<AccountAggregates::Lock>()
+                   .HasSchemaName(AccountAggregateSchema);
+
             return builder;
         }
     }

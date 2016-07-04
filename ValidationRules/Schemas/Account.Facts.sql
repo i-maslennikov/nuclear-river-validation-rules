@@ -2,7 +2,9 @@
 go
 
 if object_id('AccountContext.Order') is not null drop table AccountContext.[Order]
+if object_id('AccountContext.Project') is not null drop table AccountContext.Project
 if object_id('AccountContext.Account') is not null drop table AccountContext.Account
+if object_id('AccountContext.Lock') is not null drop table AccountContext.Lock
 go
 
 create table AccountContext.[Order](
@@ -26,5 +28,14 @@ go
 create table AccountContext.Account(
     Id bigint not null,
     constraint PK_Account primary key (Id)
+)
+go
+
+create table AccountContext.Lock(
+    Id bigint not null,
+    OrderId bigint not null,
+    PeriodStartDate datetime2(2) not null,
+    PeriodEndDate datetime2(2) not null,
+    constraint PK_Lock primary key (Id)
 )
 go

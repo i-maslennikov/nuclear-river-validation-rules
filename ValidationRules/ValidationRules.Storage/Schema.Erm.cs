@@ -28,6 +28,7 @@ namespace NuClear.ValidationRules.Storage
                       .HasPrimaryKey(x => x.RuleType)
                       .HasPrimaryKey(x => x.DependentPositionId)
                       .HasPrimaryKey(x => x.PrincipalPositionId);
+                config.Entity<Lock>().HasSchemaName(BillingSchema).HasTableName("Locks").HasPrimaryKey(x => x.Id);
                 config.Entity<Order>().HasSchemaName(BillingSchema).HasTableName("Orders").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPosition>().HasSchemaName(BillingSchema).HasTableName("OrderPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPositionAdvertisement>().HasSchemaName(BillingSchema).HasTableName("OrderPositionAdvertisement").HasPrimaryKey(x => x.Id);
