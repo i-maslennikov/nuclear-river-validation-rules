@@ -54,6 +54,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="AccountRules\Facts\ProjectAccessor.cs" />
+    <Compile Include="AccountRules\Facts\AccountAccessor.cs" />
+    <Compile Include="AccountRules\Facts\OrderAccessor.cs" />
+    <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionNotActive.cs" />
     <Compile Include="PriceRules\Facts\ProjectAccessor.cs" />
     <Compile Include="PriceRules\Facts\OrganizationUnitAccessor.cs" />
@@ -135,11 +140,7 @@
       <Name>ValidationRules.Storage</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AccountRules\Aggregates\" />
-    <Folder Include="AccountRules\Facts\" />
-    <Folder Include="AccountRules\Validation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

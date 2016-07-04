@@ -11,6 +11,7 @@ using NuClear.Replication.OperationsProcessing;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Telemetry;
+using NuClear.ValidationRules.Replication.AccountRules.Validation;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
@@ -32,6 +33,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly AssociatedPositionWithoutPrincipalActor _associatedPositionWithoutPrincipalActor;
         private readonly LinkedObjectsMissedInPrincipalsActor _linkedObjectsMissedInPrincipalsActor;
         private readonly ConflictingPrincipalPositionActor _conflictingPrincipalPositionActor;
+        private readonly AccountShouldExistActor _accountShouldExistActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
@@ -47,7 +49,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             DeniedPositionsCheckActor deniedPositionsCheckActor,
             AssociatedPositionWithoutPrincipalActor associatedPositionWithoutPrincipalActor,
             LinkedObjectsMissedInPrincipalsActor linkedObjectsMissedInPrincipalsActor,
-            ConflictingPrincipalPositionActor conflictingPrincipalPositionActor)
+            ConflictingPrincipalPositionActor conflictingPrincipalPositionActor,
+            AccountShouldExistActor accountShouldExistActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -63,6 +66,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _associatedPositionWithoutPrincipalActor = associatedPositionWithoutPrincipalActor;
             _linkedObjectsMissedInPrincipalsActor = linkedObjectsMissedInPrincipalsActor;
             _conflictingPrincipalPositionActor = conflictingPrincipalPositionActor;
+            _accountShouldExistActor = accountShouldExistActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -120,6 +124,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _associatedPositionWithoutPrincipalActor.ExecuteCommands(commands);
                 _linkedObjectsMissedInPrincipalsActor.ExecuteCommands(commands);
                 _conflictingPrincipalPositionActor.ExecuteCommands(commands);
+                _accountShouldExistActor.ExecuteCommands(commands);
 
                 // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
                 // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
