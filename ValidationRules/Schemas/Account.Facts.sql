@@ -13,7 +13,7 @@ create table AccountContext.[Order](
     AccountId bigint null,
     Number nvarchar(64) not null,
     BeginDistributionDate datetime2(2) not null,
-    EndDistributionDatePlan datetime2(2) not null,
+    EndDistributionDate datetime2(2) not null,
     constraint PK_Order primary key (Id)
 )
 go

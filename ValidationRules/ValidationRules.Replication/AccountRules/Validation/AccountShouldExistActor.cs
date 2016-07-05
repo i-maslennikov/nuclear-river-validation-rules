@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                                                                                  new XAttribute("id", order.Id),
                                                                                  new XAttribute("number", order.Number))),
                                       PeriodStart = order.BeginDistributionDate,
-                                      PeriodEnd = order.EndDistributionDatePlan,
+                                      PeriodEnd = order.EndDistributionDate,
                                       ProjectId = order.ProjectId,
                                       VersionId = version,
 

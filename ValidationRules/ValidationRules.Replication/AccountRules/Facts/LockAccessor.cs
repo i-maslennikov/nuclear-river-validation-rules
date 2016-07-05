@@ -15,6 +15,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
 {
     public sealed class LockAccessor : IStorageBasedDataObjectAccessor<Lock>, IDataChangesHandler<Lock>
     {
+        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
         private readonly IQuery _query;
 
         public LockAccessor(IQuery query)
@@ -28,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
                     Id = x.Id,
                     OrderId = x.OrderId,
                     PeriodStartDate = x.PeriodStartDate,
-                    PeriodEndDate = x.PeriodEndDate,
+                    PeriodEndDate = x.PeriodEndDate + OneSecond,
                 });
 
         public FindSpecification<Lock> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

@@ -9,6 +9,6 @@ namespace NuClear.ValidationRules.Storage.Model.AccountRules.Facts
         public long? AccountId { get; set; }
         public string Number { get; set; }
         public DateTime BeginDistributionDate { get; set; }
-        public DateTime EndDistributionDatePlan { get; set; }
+        public DateTime EndDistributionDate { get; set; }
     }
 }

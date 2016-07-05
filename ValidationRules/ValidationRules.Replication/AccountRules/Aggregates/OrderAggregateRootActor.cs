@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                            ProjectId = project.Id,
                            Number = order.Number,
                            BeginDistributionDate = order.BeginDistributionDate,
-                           EndDistributionDatePlan = order.EndDistributionDatePlan,
+                           EndDistributionDate = order.EndDistributionDate,
                            HasAccount = account != null
                        };
 
