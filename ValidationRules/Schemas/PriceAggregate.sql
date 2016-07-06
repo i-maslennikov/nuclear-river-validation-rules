@@ -69,6 +69,7 @@ create table PriceAggregate.OrderPosition(
     PackagePositionId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,
 
+	HasNoBinding bit NOT NULL,
     Category3Id bigint NULL,
     Category1Id bigint NULL,
     FirmAddressId bigint NULL,
@@ -86,6 +87,8 @@ create table PriceAggregate.OrderDeniedPosition(
 
     DeniedPositionId bigint NOT NULL,
     BindingType int NOT NULL,
+
+	HasNoBinding bit NOT NULL,
     Category3Id bigint NULL,
     Category1Id bigint NULL,
     FirmAddressId bigint NULL,
@@ -94,7 +97,7 @@ create table PriceAggregate.OrderDeniedPosition(
 )
 create index IX_OrderDeniedPosition_OrderId_DeniedPositionId_BindingType
 on [PriceAggregate].[OrderDeniedPosition] ([OrderId],[DeniedPositionId],[BindingType])
-include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[Category3Id],[Category1Id],[FirmAddressId])
+include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[HasNoBinding],[Category3Id],[Category1Id],[FirmAddressId])
 go
 
 create table PriceAggregate.OrderAssociatedPosition(
@@ -106,12 +109,16 @@ create table PriceAggregate.OrderAssociatedPosition(
     PrincipalPositionId bigint NOT NULL,
 	BindingType int NOT NULL,
 
+	HasNoBinding bit NOT NULL,
     Category3Id bigint NULL,
     Category1Id bigint NULL,
     FirmAddressId bigint NULL,
 
 	Source nvarchar(16) not null,
 )
+create index IX_OrderAssociatedPosition_OrderId_PrincipalPositionId_BindingType
+on [PriceAggregate].[OrderAssociatedPosition] ([OrderId],[PrincipalPositionId],[BindingType])
+include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[HasNoBinding],[Category3Id],[Category1Id],[FirmAddressId])
 go
 
 create table PriceAggregate.OrderPricePosition(

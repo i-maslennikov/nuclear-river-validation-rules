@@ -14,6 +14,8 @@ namespace NuClear.ValidationRules.Storage.Model.Aggregates
 
         public long DeniedPositionId { get; set; }
         public long BindingType { get; set; }
+
+        public bool HasNoBinding { get; set; }
         public long? Category3Id { get; set; }
         public long? FirmAddressId { get; set; }
         public long? Category1Id { get; set; }

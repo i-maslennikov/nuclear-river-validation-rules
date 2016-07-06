@@ -41,15 +41,17 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
 
         private static readonly FindSpecification<AnonymousPositionType> MatchSpecification = new FindSpecification<AnonymousPositionType>(
             x => x.OrderDeniedPosition.BindingType == Match &&
+                 (x.OrderDeniedPosition.HasNoBinding == x.OrderPosition.HasNoBinding) &&
                  (x.OrderDeniedPosition.Category1Id == null || x.OrderDeniedPosition.Category1Id == x.OrderPosition.Category1Id) &&
                  (x.OrderDeniedPosition.Category3Id == null || x.OrderDeniedPosition.Category3Id == x.OrderPosition.Category3Id) &&
                  (x.OrderDeniedPosition.FirmAddressId == null || x.OrderDeniedPosition.FirmAddressId == x.OrderPosition.FirmAddressId));
 
         private static readonly FindSpecification<AnonymousPositionType> DifferentSpecification = new FindSpecification<AnonymousPositionType>(
             x => x.OrderDeniedPosition.BindingType == Different &&
-                 (x.OrderDeniedPosition.Category1Id == null || x.OrderDeniedPosition.Category1Id != x.OrderPosition.Category1Id) &&
-                 (x.OrderDeniedPosition.Category3Id == null || x.OrderDeniedPosition.Category3Id != x.OrderPosition.Category3Id) &&
-                 (x.OrderDeniedPosition.FirmAddressId == null || x.OrderDeniedPosition.FirmAddressId != x.OrderPosition.FirmAddressId));
+                 (x.OrderDeniedPosition.HasNoBinding != x.OrderPosition.HasNoBinding ||
+                 (x.OrderDeniedPosition.Category1Id != null && x.OrderDeniedPosition.Category1Id != x.OrderPosition.Category1Id) ||
+                 (x.OrderDeniedPosition.Category3Id != null && x.OrderDeniedPosition.Category3Id != x.OrderPosition.Category3Id) ||
+                 (x.OrderDeniedPosition.FirmAddressId != null && x.OrderDeniedPosition.FirmAddressId != x.OrderPosition.FirmAddressId)));
 
         private static readonly FindSpecification<AnonymousPositionType> BindingObjectSpecification =
             NoDependencySpecification | MatchSpecification | DifferentSpecification;

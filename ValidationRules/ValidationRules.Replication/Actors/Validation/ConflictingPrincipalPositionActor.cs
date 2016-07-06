@@ -56,9 +56,10 @@ namespace NuClear.ValidationRules.Replication.Actors.Validation
                     new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId }
 
                 where associatedPosition.position.BindingType != Different ||
-                      (associatedPosition.position.Category3Id == null || associatedPosition.position.Category3Id != orderPosition.position.Category3Id) &&
-                      (associatedPosition.position.Category1Id == null || associatedPosition.position.Category1Id != orderPosition.position.Category1Id) &&
-                      (associatedPosition.position.FirmAddressId == null || associatedPosition.position.FirmAddressId != orderPosition.position.FirmAddressId)
+                      (associatedPosition.position.HasNoBinding != orderPosition.position.HasNoBinding) ||
+                      (associatedPosition.position.Category3Id != null && associatedPosition.position.Category3Id != orderPosition.position.Category3Id) ||
+                      (associatedPosition.position.Category1Id != null && associatedPosition.position.Category1Id != orderPosition.position.Category1Id) ||
+                      (associatedPosition.position.FirmAddressId != null && associatedPosition.position.FirmAddressId != orderPosition.position.FirmAddressId)
                 select new
                 {
                     associatedPosition.position.CauseOrderPositionId,
