@@ -15,6 +15,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     {
         private const int Match = 1;
 
+        // TODO: можно вполне выводить в какой именно основной позиции отсутствуют объекты привязки, но в ERM так не делают, и мы не будем
         // LinkedObjectsMissedInPrincipals - {0} содержит объекты привязки, отсутствующие в основных позициях.
         private const int MessageTypeId = 10;
 
@@ -54,12 +55,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 join associatedPosition in associatedPositions on
                     new { orderPosition.FirmId, orderPosition.Start, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
                     new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId }
-
-                where associatedPosition.position.BindingType != Match ||
-                      (associatedPosition.position.HasNoBinding == orderPosition.position.HasNoBinding) &&
-                      (associatedPosition.position.Category3Id == null || associatedPosition.position.Category3Id == orderPosition.position.Category3Id) &&
-                      (associatedPosition.position.Category1Id == null || associatedPosition.position.Category1Id == orderPosition.position.Category1Id) &&
-                      (associatedPosition.position.FirmAddressId == null || associatedPosition.position.FirmAddressId == orderPosition.position.FirmAddressId)
+                where
+                    orderPosition.position.OrderPositionId != associatedPosition.position.CauseOrderPositionId
+                where
+                    associatedPosition.position.BindingType != Match ||
+                    associatedPosition.position.HasNoBinding == orderPosition.position.HasNoBinding &&
+                    (associatedPosition.position.Category3Id == null || associatedPosition.position.Category3Id == orderPosition.position.Category3Id) &&
+                    (associatedPosition.position.Category1Id == null || associatedPosition.position.Category1Id == orderPosition.position.Category1Id) &&
+                    (associatedPosition.position.FirmAddressId == null || associatedPosition.position.FirmAddressId == orderPosition.position.FirmAddressId)
                 select new
                 {
                     associatedPosition.position.CauseOrderPositionId,

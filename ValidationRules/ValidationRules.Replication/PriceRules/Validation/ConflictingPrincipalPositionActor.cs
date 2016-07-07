@@ -54,16 +54,24 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 join associatedPosition in associatedPositions on
                     new { orderPosition.FirmId, orderPosition.Start, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
                     new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId }
-
-                where associatedPosition.position.BindingType != Different ||
-                      (associatedPosition.position.HasNoBinding != orderPosition.position.HasNoBinding) ||
-                      (associatedPosition.position.Category3Id != null && associatedPosition.position.Category3Id != orderPosition.position.Category3Id) ||
-                      (associatedPosition.position.Category1Id != null && associatedPosition.position.Category1Id != orderPosition.position.Category1Id) ||
-                      (associatedPosition.position.FirmAddressId != null && associatedPosition.position.FirmAddressId != orderPosition.position.FirmAddressId)
+                where
+                    orderPosition.position.OrderPositionId != associatedPosition.position.CauseOrderPositionId
+                where
+                    associatedPosition.position.BindingType != Different ||
+                    associatedPosition.position.HasNoBinding != orderPosition.position.HasNoBinding ||
+                    (associatedPosition.position.Category3Id != null && associatedPosition.position.Category3Id != orderPosition.position.Category3Id) ||
+                    (associatedPosition.position.Category1Id != null && associatedPosition.position.Category1Id != orderPosition.position.Category1Id) ||
+                    (associatedPosition.position.FirmAddressId != null && associatedPosition.position.FirmAddressId != orderPosition.position.FirmAddressId)
                 select new
                 {
                     associatedPosition.position.CauseOrderPositionId,
                     associatedPosition.position.CauseItemPositionId,
+
+                    associatedPosition.position.PrincipalPositionId,
+
+                    PrincipalOrderPositionId = orderPosition.position.OrderPositionId,
+                    PrincipalPackagePositionId = orderPosition.position.PackagePositionId,
+                    PrincipalOrderId = orderPosition.position.OrderId
                 };
 
             var notSatisfiedPositions =
@@ -79,7 +87,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                     position.position.CausePackagePositionId,
                     position.position.CauseItemPositionId,
 
-                    position.position.PrincipalPositionId,
+                    satisfied.PrincipalPositionId,
+
+                    satisfied.PrincipalPackagePositionId,
+                    satisfied.PrincipalOrderPositionId,
+                    satisfied.PrincipalOrderId,
 
                     position.Start,
                     position.OrganizationUnitId,
@@ -102,8 +114,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                             new XAttribute("positionId", conflict.CauseItemPositionId),
                                                                             new XAttribute("positionName", query.For<Position>().Single(x => x.Id == conflict.CauseItemPositionId).Name)),
                                                                new XElement("position",
-                                                                            new XAttribute("orderId", conflict.OrderId),
-                                                                            new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == conflict.OrderId).Number),
+                                                                            new XAttribute("orderId", conflict.PrincipalOrderId),
+                                                                            new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == conflict.PrincipalOrderId).Number),
+                                                                            new XAttribute("orderPositionId", conflict.PrincipalOrderPositionId),
+                                                                            new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == conflict.PrincipalPackagePositionId).Name),
                                                                             new XAttribute("positionId", conflict.PrincipalPositionId),
                                                                             new XAttribute("positionName", query.For<Position>().Single(x => x.Id == conflict.PrincipalPositionId).Name))
                                                               )

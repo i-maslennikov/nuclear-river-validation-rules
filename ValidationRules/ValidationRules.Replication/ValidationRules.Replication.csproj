@@ -97,7 +97,8 @@
     <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
     <Compile Include="ValidationRuleShared.cs" />
     <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />
-    <Compile Include="PriceRules\Validation\LinkedObjectsMissedInPrincipalsActor.cs" />
+    <Compile Include="PriceRules\Validation\SatisfiedPrincipalPositionDifferentOrderActor.cs" />
+	<Compile Include="PriceRules\Validation\LinkedObjectsMissedInPrincipalsActor.cs" />
     <Compile Include="PriceRules\Validation\AssociatedPositionWithoutPrincipalActor.cs" />
     <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
     <Compile Include="Commands\IncrementStateCommand.cs" />

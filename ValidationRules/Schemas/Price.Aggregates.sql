@@ -55,6 +55,7 @@ create table PriceAggregate.[Order](
     Number nvarchar(max) NOT NULL,
     constraint PK_Order primary key (Id)
 )
+create index IX_Order_FirmId ON PriceAggregate.[Order] ([FirmId]) include (Id)
 go
 
 create table PriceAggregate.AmountControlledPosition(
@@ -119,6 +120,9 @@ create table PriceAggregate.OrderAssociatedPosition(
 create index IX_OrderAssociatedPosition_OrderId_PrincipalPositionId_BindingType
 on [PriceAggregate].[OrderAssociatedPosition] ([OrderId],[PrincipalPositionId],[BindingType])
 include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[HasNoBinding],[Category3Id],[Category1Id],[FirmAddressId])
+
+create index IX_OrderAssociatedPosition_CauseOrderPositionId_CauseItemPositionId_BindingType
+on [PriceAggregate].[OrderAssociatedPosition] ([CauseOrderPositionId],[CauseItemPositionId],[BindingType])
 go
 
 create table PriceAggregate.OrderPricePosition(

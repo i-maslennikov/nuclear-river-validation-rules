@@ -31,8 +31,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly AssociatedPositionsGroupCountActor _associatedPositionsGroupCountActor;
         private readonly DeniedPositionsCheckActor _deniedPositionsCheckActor;
         private readonly AssociatedPositionWithoutPrincipalActor _associatedPositionWithoutPrincipalActor;
-        private readonly LinkedObjectsMissedInPrincipalsActor _linkedObjectsMissedInPrincipalsActor;
         private readonly ConflictingPrincipalPositionActor _conflictingPrincipalPositionActor;
+        private readonly LinkedObjectsMissedInPrincipalsActor _linkedObjectsMissedInPrincipalsActor;
+        private readonly SatisfiedPrincipalPositionDifferentOrderActor _satisfiedPrincipalPositionDifferentOrderActor;
         private readonly AccountShouldExistActor _accountShouldExistActor;
         private readonly LockShouldNotExistActor _lockShouldNotExistActor;
         private readonly AccountBalanceShouldBePositiveActor _accountBalanceShouldBePositiveActor;
@@ -51,6 +52,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             DeniedPositionsCheckActor deniedPositionsCheckActor,
             AssociatedPositionWithoutPrincipalActor associatedPositionWithoutPrincipalActor,
             LinkedObjectsMissedInPrincipalsActor linkedObjectsMissedInPrincipalsActor,
+            SatisfiedPrincipalPositionDifferentOrderActor satisfiedPrincipalPositionDifferentOrderActor,
             ConflictingPrincipalPositionActor conflictingPrincipalPositionActor,
             AccountShouldExistActor accountShouldExistActor,
             LockShouldNotExistActor lockShouldNotExistActor,
@@ -69,6 +71,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _deniedPositionsCheckActor = deniedPositionsCheckActor;
             _associatedPositionWithoutPrincipalActor = associatedPositionWithoutPrincipalActor;
             _linkedObjectsMissedInPrincipalsActor = linkedObjectsMissedInPrincipalsActor;
+            _satisfiedPrincipalPositionDifferentOrderActor = satisfiedPrincipalPositionDifferentOrderActor;
             _conflictingPrincipalPositionActor = conflictingPrincipalPositionActor;
             _accountShouldExistActor = accountShouldExistActor;
             _lockShouldNotExistActor = lockShouldNotExistActor;
@@ -129,6 +132,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _deniedPositionsCheckActor.ExecuteCommands(commands);
                 _associatedPositionWithoutPrincipalActor.ExecuteCommands(commands);
                 _linkedObjectsMissedInPrincipalsActor.ExecuteCommands(commands);
+                _satisfiedPrincipalPositionDifferentOrderActor.ExecuteCommands(commands);
                 _conflictingPrincipalPositionActor.ExecuteCommands(commands);
                 _accountShouldExistActor.ExecuteCommands(commands);
                 _lockShouldNotExistActor.ExecuteCommands(commands);
