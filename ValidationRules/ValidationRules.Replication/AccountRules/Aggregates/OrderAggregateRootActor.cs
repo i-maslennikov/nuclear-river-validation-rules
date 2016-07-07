@@ -53,16 +53,18 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   join project in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals project.OrganizationUnitId
+                   join destProject in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals destProject.OrganizationUnitId
+                   join sourceProject in _query.For<Facts::Project>() on order.SourceOrganizationUnitId equals sourceProject.OrganizationUnitId
                    from account in _query.For<Facts::Account>().Where(x => x.Id == order.AccountId).DefaultIfEmpty()
                    select new Order
                        {
                            Id = order.Id,
-                           ProjectId = project.Id,
+                           DestProjectId = destProject.Id,
+                           SourceProjectId = sourceProject.Id,
+                           AccountId = account.Id,
                            Number = order.Number,
                            BeginDistributionDate = order.BeginDistributionDate,
                            EndDistributionDate = order.EndDistributionDate,
-                           HasAccount = account != null
                        };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -89,9 +91,9 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 => _query.For<Facts::Lock>().Select(x => new Lock
                     {
                         OrderId = x.OrderId,
-                        Start = x.PeriodStartDate,
-                        End = x.PeriodEndDate,
-                    });
+                        Start = x.Start,
+                        End = x.Start.AddMonths(1)
+                });
 
             public FindSpecification<Lock> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

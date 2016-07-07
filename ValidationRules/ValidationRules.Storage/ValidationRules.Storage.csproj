@@ -66,12 +66,17 @@
     <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\MessagesConnectionStringIdentity.cs" />
     <Compile Include="LinqToDbPropertyProvider.cs" />
+    <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
+    <Compile Include="Model\AccountRules\Aggregates\AccountPeriod.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Lock.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Order.cs" />
+    <Compile Include="Model\AccountRules\Facts\Limit.cs" />
     <Compile Include="Model\AccountRules\Facts\Lock.cs" />
     <Compile Include="Model\AccountRules\Facts\Order.cs" />
     <Compile Include="Model\AccountRules\Facts\Account.cs" />
+    <Compile Include="Model\AccountRules\Facts\OrderPosition.cs" />
     <Compile Include="Model\AccountRules\Facts\Project.cs" />
+    <Compile Include="Model\AccountRules\Facts\ReleaseWithdrawal.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Lock.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AdvertisementAmountRestriction.cs" />

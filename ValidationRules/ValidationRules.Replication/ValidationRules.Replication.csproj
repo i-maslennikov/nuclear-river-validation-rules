@@ -54,11 +54,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountRules\Aggregates\AccountAggregateRootActor.cs" />
     <Compile Include="AccountRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="AccountRules\Facts\LimitAccessor.cs" />
+    <Compile Include="AccountRules\Facts\OrderPositionAccessor.cs" />
+    <Compile Include="AccountRules\Facts\ReleaseWithdrawalAccessor.cs" />
     <Compile Include="AccountRules\Facts\LockAccessor.cs" />
     <Compile Include="AccountRules\Facts\ProjectAccessor.cs" />
     <Compile Include="AccountRules\Facts\AccountAccessor.cs" />
     <Compile Include="AccountRules\Facts\OrderAccessor.cs" />
+    <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositiveActor.cs" />
     <Compile Include="AccountRules\Validation\LockShouldNotExistActor.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionNotActive.cs" />

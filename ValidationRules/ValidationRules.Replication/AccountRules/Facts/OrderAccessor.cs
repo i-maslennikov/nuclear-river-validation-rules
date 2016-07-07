@@ -29,16 +29,17 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
 
         public IQueryable<Order> GetSource()
             => _query.For<Erm::Order>()
-            .Where(x => x.IsActive && !x.IsDeleted && (x.WorkflowStepId == OrderOnTermination || x.WorkflowStepId == OrderApproved))
-            .Select(order => new Order
-                {
-                    Id = order.Id,
-                    DestOrganizationUnitId = order.DestOrganizationUnitId,
-                    AccountId = order.AccountId,
-                    Number = order.Number,
-                    BeginDistributionDate = order.BeginDistributionDate,
-                    EndDistributionDate = order.EndDistributionDateFact + OneSecond,
-                });
+                     .Where(x => x.IsActive && !x.IsDeleted && (x.WorkflowStepId == OrderOnTermination || x.WorkflowStepId == OrderApproved))
+                     .Select(order => new Order
+                         {
+                             Id = order.Id,
+                             DestOrganizationUnitId = order.DestOrganizationUnitId,
+                             SourceOrganizationUnitId = order.SourceOrganizationUnitId,
+                             AccountId = order.AccountId,
+                             Number = order.Number,
+                             BeginDistributionDate = order.BeginDistributionDate,
+                             EndDistributionDate = order.EndDistributionDateFact + OneSecond,
+                         });
 
         public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

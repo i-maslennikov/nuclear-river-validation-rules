@@ -35,6 +35,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly ConflictingPrincipalPositionActor _conflictingPrincipalPositionActor;
         private readonly AccountShouldExistActor _accountShouldExistActor;
         private readonly LockShouldNotExistActor _lockShouldNotExistActor;
+        private readonly AccountBalanceShouldBePositiveActor _accountBalanceShouldBePositiveActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
@@ -52,7 +53,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             LinkedObjectsMissedInPrincipalsActor linkedObjectsMissedInPrincipalsActor,
             ConflictingPrincipalPositionActor conflictingPrincipalPositionActor,
             AccountShouldExistActor accountShouldExistActor,
-            LockShouldNotExistActor lockShouldNotExistActor)
+            LockShouldNotExistActor lockShouldNotExistActor,
+            AccountBalanceShouldBePositiveActor accountBalanceShouldBePositiveActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -70,6 +72,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _conflictingPrincipalPositionActor = conflictingPrincipalPositionActor;
             _accountShouldExistActor = accountShouldExistActor;
             _lockShouldNotExistActor = lockShouldNotExistActor;
+            _accountBalanceShouldBePositiveActor = accountBalanceShouldBePositiveActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -129,6 +132,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _conflictingPrincipalPositionActor.ExecuteCommands(commands);
                 _accountShouldExistActor.ExecuteCommands(commands);
                 _lockShouldNotExistActor.ExecuteCommands(commands);
+                _accountBalanceShouldBePositiveActor.ExecuteCommands(commands);
 
                 // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
                 // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.

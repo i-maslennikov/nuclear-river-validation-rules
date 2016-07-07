@@ -95,6 +95,18 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(AccountContextSchema)
                   .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<AccountFacts::Limit>()
+              .HasSchemaName(AccountContextSchema)
+              .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<AccountFacts::ReleaseWithdrawal>()
+              .HasSchemaName(AccountContextSchema)
+              .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<AccountFacts::OrderPosition>()
+              .HasSchemaName(AccountContextSchema)
+              .HasPrimaryKey(x => x.Id);
+
             return builder;
         }
     }

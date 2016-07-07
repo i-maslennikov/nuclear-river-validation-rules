@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
 {
     /// <summary>
     /// Для заказов, у которых есть блокировки, должна выводиться ошибка.
-    /// "Заказ {0} не имеет привязки к лицевому счёту"
+    /// "Заказ {0} имеет созданную блокировку на указанный период"
     /// </summary>
     public sealed class LockShouldNotExistActor : IActor
     {
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                                                                                  new XAttribute("number", order.Number))),
                                       PeriodStart = @lock.Start,
                                       PeriodEnd = @lock.End,
-                                      ProjectId = order.ProjectId,
+                                      ProjectId = order.DestProjectId,
                                       VersionId = version,
 
                                       ReferenceType = EntityTypeIds.Order,

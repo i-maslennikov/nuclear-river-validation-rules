@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
         }
 
         public IQueryable<Account> GetSource()
-            => _query.For(Specs.Find.Erm.Accounts()).Select(x => new Account { Id = x.Id });
+            => _query.For(Specs.Find.Erm.Accounts()).Select(x => new Account { Id = x.Id, Balance = x.Balance });
 
         public FindSpecification<Account> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

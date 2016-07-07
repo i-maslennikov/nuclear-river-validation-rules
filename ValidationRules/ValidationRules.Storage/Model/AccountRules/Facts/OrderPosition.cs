@@ -1,8 +1,8 @@
 namespace NuClear.ValidationRules.Storage.Model.AccountRules.Facts
 {
-    public sealed class Account
+    public sealed class OrderPosition
     {
         public long Id { get; set; }
-        public decimal Balance { get; set; }
+        public long OrderId { get; set; }
     }
 }

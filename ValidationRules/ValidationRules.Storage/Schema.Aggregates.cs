@@ -77,6 +77,12 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AccountAggregates::Lock>()
                    .HasSchemaName(AccountAggregateSchema);
 
+            builder.Entity<AccountAggregates::Account>()
+                   .HasSchemaName(AccountAggregateSchema);
+
+            builder.Entity<AccountAggregates::AccountPeriod>()
+                   .HasSchemaName(AccountAggregateSchema);
+
             return builder;
         }
     }

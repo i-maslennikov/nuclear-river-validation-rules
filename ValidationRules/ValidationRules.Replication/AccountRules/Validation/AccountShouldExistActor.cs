@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
         {
             var ruleResults = from order in query.For<Order>()
-                              where !order.HasAccount
+                              where !order.AccountId.HasValue
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                                                                                  new XAttribute("number", order.Number))),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDate,
-                                      ProjectId = order.ProjectId,
+                                      ProjectId = order.DestProjectId,
                                       VersionId = version,
 
                                       ReferenceType = EntityTypeIds.Order,

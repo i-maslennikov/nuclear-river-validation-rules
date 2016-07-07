@@ -12,6 +12,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 private const int RulesetDraftPriority = 0;
                 private const int OrderStateArchive = 6;
                 private const int OrderStateRejected = 3;
+                private const int LimitStateApprooved = 2;
 
                 public static FindSpecification<AssociatedPosition> AssociatedPositions()
                 {
@@ -92,6 +93,17 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     return new FindSpecification<Lock>(x => x.IsActive && !x.IsDeleted);
                 }
+
+                public static FindSpecification<Limit> Limits()
+                {
+                    return new FindSpecification<Limit>(x => x.IsActive && !x.IsDeleted && x.Status == LimitStateApprooved);
+                }
+
+                public static FindSpecification<ReleaseWithdrawal> ReleaseWithdrawals()
+                {
+                    return new FindSpecification<ReleaseWithdrawal>(x => true);
+                }
+                
             }
         }
     }

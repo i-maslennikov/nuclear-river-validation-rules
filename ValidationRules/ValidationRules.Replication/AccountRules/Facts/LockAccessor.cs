@@ -15,7 +15,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
 {
     public sealed class LockAccessor : IStorageBasedDataObjectAccessor<Lock>, IDataChangesHandler<Lock>
     {
-        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
         private readonly IQuery _query;
 
         public LockAccessor(IQuery query)
@@ -28,8 +27,9 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
                 {
                     Id = x.Id,
                     OrderId = x.OrderId,
-                    PeriodStartDate = x.PeriodStartDate,
-                    PeriodEndDate = x.PeriodEndDate + OneSecond,
+                    AccountId = x.AccountId,
+                    Amount = x.PlannedAmount,
+                    Start = x.PeriodStartDate,
                 });
 
         public FindSpecification<Lock> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -48,6 +48,8 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Lock> dataObjects)
-            => dataObjects.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x.OrderId)).ToArray();
+            => dataObjects.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x.OrderId))
+                          .Union(dataObjects.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Account), x.AccountId)))
+                          .ToArray();
     }
 }
