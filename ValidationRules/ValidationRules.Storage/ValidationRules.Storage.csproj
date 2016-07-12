@@ -79,6 +79,7 @@
     <Compile Include="Model\AccountRules\Facts\ReleaseWithdrawal.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Lock.cs" />
+    <Compile Include="Model\Erm\ReleaseInfos.cs" />
     <Compile Include="Model\Erm\TimeZone.cs" />
     <Compile Include="Model\Erm\UserProfile.cs" />
     <Compile Include="Model\Erm\User.cs" />

@@ -21,14 +21,15 @@ namespace NuClear.ValidationRules.Replication.Host.Temp
 
         public IReadOnlyCollection<Version.ValidationResult> GetResults(IEnumerable<Tuple<long, DateTime>> filter)
         {
-            var lastVersion = _query.For<Version>().OrderByDescending(x => x.Id).First();
+            // Просто .First() приводит к сообщению, что подключение закрыто.
+            var lastVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).ToArray().First();
 
             var results = new List<Version.ValidationResult>();
             foreach (var group in filter.GroupBy(x => x.Item2, x => x.Item1))
             {
                 var query = _query.For<Version.ValidationResult>()
                                   .Where(x => x.VersionId == lastVersion.Id)
-                                  .Where(x => x.PeriodStart >= group.Key && x.PeriodEnd <= group.Key)
+                                  .Where(x => x.PeriodStart <= group.Key && group.Key < x.PeriodEnd)
                                   .Where(x => x.ReferenceType == OrderReferenceType)
                                   .Where(x => group.Contains(x.ReferenceId));
                 results.AddRange(query);

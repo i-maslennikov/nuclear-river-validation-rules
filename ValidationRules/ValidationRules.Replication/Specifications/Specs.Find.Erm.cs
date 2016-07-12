@@ -119,9 +119,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<TimeZone>(x => true);
                 }
 
-                public static FindSpecification<ReleaseInfos> ReleaseInfos()
+                public static FindSpecification<ReleaseInfo> ReleaseInfos()
                 {
-                    return new FindSpecification<ReleaseInfos>(x => x.IsActive && !x.IsDeleted && !x.IsBeta && x.Status == 2);
+                    return new FindSpecification<ReleaseInfo>(x => x.IsActive && !x.IsDeleted && !x.IsBeta && x.Status == 2);
                 }
             }
         }
