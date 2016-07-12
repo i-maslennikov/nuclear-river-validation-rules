@@ -12,7 +12,7 @@ using NuClear.ValidationRules.Storage.Model.User.Facts;
 
 namespace NuClear.ValidationRules.Replication.User
 {
-    public sealed class OrderPositionAccessor : IStorageBasedDataObjectAccessor<AccountOrder>, IDataChangesHandler<AccountOrder>
+    public sealed class OrderPositionAccessor : IStorageBasedDataObjectAccessor<UserOrder>, IDataChangesHandler<UserOrder>
     {
         private readonly IQuery _query;
 
@@ -21,26 +21,26 @@ namespace NuClear.ValidationRules.Replication.User
             _query = query;
         }
 
-        public IQueryable<AccountOrder> GetSource()
+        public IQueryable<UserOrder> GetSource()
             => _query.For(Specs.Find.Erm.Orders())
-                     .Select(x => new AccountOrder { OrderId = x.Id, UserAccountId = x.OwnerCode });
+                     .Select(x => new UserOrder { OrderId = x.Id, UserId = x.OwnerCode });
 
-        public FindSpecification<AccountOrder> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+        public FindSpecification<UserOrder> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<AccountOrder>(x => ids.Contains(x.OrderId));
+            return new FindSpecification<UserOrder>(x => ids.Contains(x.OrderId));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<AccountOrder> dataObjects)
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<UserOrder> dataObjects)
             => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<AccountOrder> dataObjects)
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<UserOrder> dataObjects)
             => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<AccountOrder> dataObjects)
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<UserOrder> dataObjects)
             => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<AccountOrder> dataObjects)
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<UserOrder> dataObjects)
             => Array.Empty<IEvent>();
     }
 }

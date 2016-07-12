@@ -2,7 +2,8 @@
 go
 
 if object_id('UserContext.UserAccount') is not null drop table UserContext.UserAccount
-if object_id('UserContext.AccountOrder') is not null drop table UserContext.AccountOrder
+if object_id('UserContext.UserProfile') is not null drop table UserContext.UserProfile
+if object_id('UserContext.UserOrder') is not null drop table UserContext.UserOrder
 go
 
 create table UserContext.UserAccount(
@@ -12,9 +13,17 @@ create table UserContext.UserAccount(
 )
 go
 
-create table UserContext.AccountOrder(
-    UserAccountId bigint not null,
+create table UserContext.UserOrder(
+    UserId bigint not null,
     OrderId bigint not null,
-    constraint PK_AccountOrder primary key (OrderId)
+    constraint PK_UserOrder primary key (OrderId)
+)
+go
+
+create table UserContext.UserProfile(
+    Id bigint not null,
+    UserId bigint not null,
+    TimeZoneId nvarchar(max) not null,
+    constraint PK_UserProfile primary key (UserId)
 )
 go

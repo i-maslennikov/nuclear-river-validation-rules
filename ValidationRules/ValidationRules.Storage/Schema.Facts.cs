@@ -119,9 +119,13 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(UserContextSchema)
                   .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<UserFacts::AccountOrder>()
+            builder.Entity<UserFacts::UserOrder>()
                   .HasSchemaName(UserContextSchema)
                   .HasPrimaryKey(x => x.OrderId);
+
+            builder.Entity<UserFacts::UserProfile>()
+                  .HasSchemaName(UserContextSchema)
+                  .HasPrimaryKey(x => x.UserId);
 
             return builder;
         }

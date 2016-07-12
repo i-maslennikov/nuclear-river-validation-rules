@@ -50,7 +50,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountFacts::ReleaseWithdrawal),
 
                             typeof(UserFacts::UserAccount),
-                            typeof(UserFacts::AccountOrder),
+                            typeof(UserFacts::UserOrder),
+                            typeof(UserFacts::UserProfile),
                         });
             }
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)

@@ -108,6 +108,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     return new FindSpecification<Storage.Model.Erm.User>(x => x.IsActive && !x.IsDeleted && !x.IsServiceUser);
                 }
+
+                public static FindSpecification<UserProfile> UserProfiles()
+                {
+                    return new FindSpecification<UserProfile>(x => x.IsActive && !x.IsDeleted);
+                }
             }
         }
     }

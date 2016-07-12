@@ -95,6 +95,7 @@
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
+    <Compile Include="User\UserProfileAccessor.cs" />
     <Compile Include="User\UserAccountAccessor.cs" />
     <Compile Include="User\OrderPositionAccessor.cs" />
     <Compile Include="ValidationRuleShared.cs" />
