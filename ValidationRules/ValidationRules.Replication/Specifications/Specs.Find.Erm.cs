@@ -113,6 +113,16 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     return new FindSpecification<UserProfile>(x => x.IsActive && !x.IsDeleted);
                 }
+
+                public static FindSpecification<TimeZone> TimeZones()
+                {
+                    return new FindSpecification<TimeZone>(x => true);
+                }
+
+                public static FindSpecification<ReleaseInfos> ReleaseInfos()
+                {
+                    return new FindSpecification<ReleaseInfos>(x => x.IsActive && !x.IsDeleted && !x.IsBeta && x.Status == 2);
+                }
             }
         }
     }
