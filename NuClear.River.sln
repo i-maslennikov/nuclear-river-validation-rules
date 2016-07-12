@@ -111,6 +111,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{1F11
 		ValidationRules\Schemas\Messages.sql = ValidationRules\Schemas\Messages.sql
 		ValidationRules\Schemas\Price.Aggregates.sql = ValidationRules\Schemas\Price.Aggregates.sql
 		ValidationRules\Schemas\Price.Facts.sql = ValidationRules\Schemas\Price.Facts.sql
+		ValidationRules\Schemas\User.Facts.sql = ValidationRules\Schemas\User.Facts.sql
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Storage", "ValidationRules\ValidationRules.Storage\ValidationRules.Storage.csproj", "{E799A2EE-408F-467A-8B50-FC729E92D3F3}"

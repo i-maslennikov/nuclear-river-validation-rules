@@ -103,7 +103,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     return new FindSpecification<ReleaseWithdrawal>(x => true);
                 }
-                
+
+                public static FindSpecification<Storage.Model.Erm.User> Users()
+                {
+                    return new FindSpecification<Storage.Model.Erm.User>(x => x.IsActive && !x.IsDeleted && !x.IsServiceUser);
+                }
             }
         }
     }

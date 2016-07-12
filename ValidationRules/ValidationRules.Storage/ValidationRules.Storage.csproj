@@ -79,6 +79,7 @@
     <Compile Include="Model\AccountRules\Facts\ReleaseWithdrawal.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Lock.cs" />
+    <Compile Include="Model\Erm\User.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AdvertisementAmountRestriction.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AmountControlledPosition.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AssociatedPositionGroupOvercount.cs" />
@@ -121,6 +122,8 @@
     <Compile Include="Model\PriceRules\Facts\Project.cs" />
     <Compile Include="Model\PriceRules\Facts\RulesetRule.cs" />
     <Compile Include="Model\Messages\ValidationResult.cs" />
+    <Compile Include="Model\User\Facts\UserAccount.cs" />
+    <Compile Include="Model\User\Facts\AccountOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.Messages.cs" />
     <Compile Include="Schema.Aggregates.cs" />

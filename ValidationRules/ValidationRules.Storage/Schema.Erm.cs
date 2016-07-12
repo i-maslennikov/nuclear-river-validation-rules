@@ -10,6 +10,7 @@ namespace NuClear.ValidationRules.Storage
         private const string BillingSchema = "Billing";
         private const string BusinessDirectorySchema = "BusinessDirectory";
         private const string OrderValidationSchema = "OrderValidation";
+        private const string SecuritySchema = "Security";
 
         public static MappingSchema Erm
         {
@@ -40,6 +41,7 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<Project>().HasSchemaName(BillingSchema).HasTableName("Projects").HasPrimaryKey(x => x.Id);
                 config.Entity<Position>().HasSchemaName(BillingSchema).HasTableName("Positions").HasPrimaryKey(x => x.Id);
                 config.Entity<Category>().HasSchemaName(BusinessDirectorySchema).HasTableName("Categories").HasPrimaryKey(x => x.Id);
+                config.Entity<User>().HasSchemaName(SecuritySchema).HasTableName("Users").HasPrimaryKey(x => x.Id);
 
                 return schema;
             }
