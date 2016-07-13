@@ -355,6 +355,8 @@
     <Compile Include="ResultDelivery\LocalizedMessage.cs" />
     <Compile Include="ResultDelivery\LocalizedMessageFactory.cs" />
     <Compile Include="ResultDelivery\Serializers\LinkFactory.cs" />
+    <Compile Include="ResultDelivery\Serializers\OrderPositionShouldCorrespontToActualPriceMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\OrderPositionsShouldCorrespontToActualPriceMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Slack\SlackTransportDecorator.cs" />
     <Compile Include="Settings\DefaultEntityContainerNameResolver.cs" />
     <Compile Include="Settings\QuartzSettingsAspect.cs" />

@@ -6,10 +6,10 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class AccountBalanceShouldBePositiveMessageSerializer : IMessageSerializer
     {
+        private readonly LinkFactory _linkFactory = new LinkFactory();
+
         public int MessageType
             => AccountBalanceShouldBePositiveActor.MessageTypeId;
-
-        private readonly LinkFactory _linkFactory = new LinkFactory();
 
         public LocalizedMessage Serialize(XDocument document)
         {
@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             var required = (decimal)document.Root.Element("message").Attribute("required");
 
             return new LocalizedMessage(Result.Error,
-                                        $"Заказ <{_linkFactory.CreateLink("Order", orderId)}|{orderNumber}>",
+                                        $"Заказ {_linkFactory.CreateLink("Order", orderId, orderNumber)}",
                                         $"Для оформления заказа недостаточно средств. Необходимо: {planned}. Имеется: {available}. Необходим лимит: {required}");
         }
     }

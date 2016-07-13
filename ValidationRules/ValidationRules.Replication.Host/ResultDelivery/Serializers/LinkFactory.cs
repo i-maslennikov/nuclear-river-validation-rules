@@ -8,7 +8,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class LinkFactory
     {
-        public string CreateLink(string entityName, long entityId)
-            => $"https://web-app20.test.erm.2gis.ru/CreateOrUpdate/{entityName}/{entityId}";
+        public string CreateLink(string entityName, long entityId, string displayText)
+            => $"<https://web-app20.test.erm.2gis.ru/CreateOrUpdate/{entityName}/{entityId}|{displayText}>";
     }
 }
