@@ -7,14 +7,14 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class ResultDeliveryService
     {
-        private readonly DebugTransportDecorator _debugTransportService;
+        private readonly ITransportDecorator _transport;
         private readonly UserReadModel _userReadModel;
         private readonly ResultReadModel _resultReadModel;
         private readonly LocalizedMessageFactory _localizedMessageFactory;
 
-        public ResultDeliveryService(DebugTransportDecorator debugTransportService, UserReadModel userReadModel, ResultReadModel resultReadModel, LocalizedMessageFactory localizedMessageFactory)
+        public ResultDeliveryService(SlackTransportDecorator transport, UserReadModel userReadModel, ResultReadModel resultReadModel, LocalizedMessageFactory localizedMessageFactory)
         {
-            _debugTransportService = debugTransportService;
+            _transport = transport;
             _userReadModel = userReadModel;
             _resultReadModel = resultReadModel;
             _localizedMessageFactory = localizedMessageFactory;
@@ -30,7 +30,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                                                .Select(_localizedMessageFactory.Localize)
                                                .ToArray();
 
-                _debugTransportService.SendMessage(user.Key, messages);
+                _transport.SendMessage(user.Key, messages);
             }
         }
     }
