@@ -350,6 +350,7 @@
     <Compile Include="ResultDelivery\Serializers\AccountBalanceShouldBePositiveMessageSerializer.cs" />
     <Compile Include="ResultDelivery\LocalizedMessage.cs" />
     <Compile Include="ResultDelivery\LocalizedMessageFactory.cs" />
+    <Compile Include="ResultDelivery\Serializers\LinkFactory.cs" />
     <Compile Include="Settings\DefaultEntityContainerNameResolver.cs" />
     <Compile Include="Settings\QuartzSettingsAspect.cs" />
     <Compile Include="Settings\ReplicationServiceSettings.cs" />
