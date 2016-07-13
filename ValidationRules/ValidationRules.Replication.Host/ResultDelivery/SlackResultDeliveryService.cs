@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace NuClear.ValidationRules.Replication.Host.Temp
+namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class SlackResultDeliveryService : IResultDeliveryService
     {

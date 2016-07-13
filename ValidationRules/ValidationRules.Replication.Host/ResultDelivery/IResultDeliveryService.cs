@@ -1,4 +1,4 @@
-﻿namespace NuClear.ValidationRules.Replication.Host.Temp
+﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public interface IResultDeliveryService
     {

@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
 
-namespace NuClear.ValidationRules.Replication.Host.Temp
+namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class UserReadModel
     {

@@ -1,7 +1,7 @@
 ﻿using NuClear.Jobs;
 using NuClear.Security.API;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.Replication.Host.Temp;
+using NuClear.ValidationRules.Replication.Host.ResultDelivery;
 
 using Quartz;
 

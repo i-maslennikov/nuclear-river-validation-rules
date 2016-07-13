@@ -348,13 +348,13 @@
     <Compile Include="Settings\DefaultEntityContainerNameResolver.cs" />
     <Compile Include="Settings\QuartzSettingsAspect.cs" />
     <Compile Include="Settings\ReplicationServiceSettings.cs" />
-    <Compile Include="Temp\IResultDeliveryService.cs" />
-    <Compile Include="Temp\MessageSerializer.cs" />
-    <Compile Include="Temp\ResultReadModel.cs" />
-    <Compile Include="Temp\ResultRequest.cs" />
-    <Compile Include="Temp\SlackResultDeliveryService.cs" />
-    <Compile Include="Temp\SlackService.cs" />
-    <Compile Include="Temp\UserReadModel.cs" />
+    <Compile Include="ResultDelivery\IResultDeliveryService.cs" />
+    <Compile Include="ResultDelivery\MessageSerializer.cs" />
+    <Compile Include="ResultDelivery\ResultReadModel.cs" />
+    <Compile Include="ResultDelivery\ResultRequest.cs" />
+    <Compile Include="ResultDelivery\SlackResultDeliveryService.cs" />
+    <Compile Include="ResultDelivery\SlackService.cs" />
+    <Compile Include="ResultDelivery\UserReadModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,7 +6,7 @@ using NuClear.Storage.API.Readings;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication.Host.Temp
+namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class ResultReadModel
     {
