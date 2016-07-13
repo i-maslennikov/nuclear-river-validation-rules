@@ -1,4 +1,6 @@
-﻿using NuClear.Jobs;
+﻿using System;
+
+using NuClear.Jobs;
 using NuClear.Security.API;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Host.ResultDelivery;
@@ -10,10 +12,10 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
     [DisallowConcurrentExecution]
     public sealed class ResultDeliveryJob : TaskServiceJobBase
     {
-        private readonly SlackResultDeliveryService _deliveryService;
+        private readonly ResultDeliveryService _deliveryService;
 
         public ResultDeliveryJob(ISignInService signInService,
-                                 SlackResultDeliveryService deliveryService,
+                                 ResultDeliveryService deliveryService,
                                  IUserImpersonationService userImpersonationService,
                                  ITracer tracer)
             : base(signInService, userImpersonationService, tracer)
@@ -23,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
         protected override void ExecuteInternal(IJobExecutionContext context)
         {
-            _deliveryService.DoIt();
+            _deliveryService.Execute(DateTime.UtcNow);
         }
     }
 }

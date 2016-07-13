@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack;
 using NuClear.ValidationRules.Replication.Specifications;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
@@ -13,12 +14,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
         private const int DeliveryHour = 9;
 
         private readonly IQuery _query;
-        private readonly SlackDecorator _slackService;
+        private readonly DebugTransportDecorator _debugTransportService;
 
-        public UserReadModel(IQuery query, SlackDecorator slackService)
+        public UserReadModel(IQuery query, DebugTransportDecorator debugTransportService)
         {
             _query = query;
-            _slackService = slackService;
+            _debugTransportService = debugTransportService;
         }
 
         public IReadOnlyCollection<ResultRequest> GetCurrentIteration(DateTime iterationTime)

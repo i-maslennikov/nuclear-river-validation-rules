@@ -345,15 +345,18 @@
     <Compile Include="ReplicationService.Designer.cs">
       <DependentUpon>ReplicationService.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResultDelivery\IMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\ITransportDecorator.cs" />
+    <Compile Include="ResultDelivery\Serializers\AccountBalanceShouldBePositiveMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\LocalizedMessage.cs" />
+    <Compile Include="ResultDelivery\LocalizedMessageFactory.cs" />
     <Compile Include="Settings\DefaultEntityContainerNameResolver.cs" />
     <Compile Include="Settings\QuartzSettingsAspect.cs" />
     <Compile Include="Settings\ReplicationServiceSettings.cs" />
-    <Compile Include="ResultDelivery\IResultDeliveryService.cs" />
-    <Compile Include="ResultDelivery\MessageSerializer.cs" />
     <Compile Include="ResultDelivery\ResultReadModel.cs" />
     <Compile Include="ResultDelivery\ResultRequest.cs" />
-    <Compile Include="ResultDelivery\SlackResultDeliveryService.cs" />
-    <Compile Include="ResultDelivery\SlackService.cs" />
+    <Compile Include="ResultDelivery\ResultDeliveryService.cs" />
+    <Compile Include="ResultDelivery\Slack\DebugTransportDecorator.cs" />
     <Compile Include="ResultDelivery\UserReadModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
