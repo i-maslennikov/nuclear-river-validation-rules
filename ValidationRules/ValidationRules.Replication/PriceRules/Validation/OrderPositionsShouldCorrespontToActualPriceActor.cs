@@ -11,19 +11,25 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
-    public sealed class OrderPositionDoesntCorrespontToActualPriceActor : IActor
+    /// <summary>
+    /// Для заказов, в городах без действующего на момент размещения прайс-листа, должна выводиться ошибка.
+    /// "Заказ не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа"
+    /// 
+    /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionsDoesntCorrespontToActualPrice
+    /// TODO: странный текст ошибки, нужно исправить.
+    /// </summary>
+    public class OrderPositionsShouldCorrespontToActualPriceActor : IActor
     {
-        // OrderCheckOrderPositionDoesntCorrespontToActualPrice - Позиция {OrderPositionId} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа.
-        private const int MessageTypeId = 5;
+        public const int MessageTypeId = 3;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Warning)
-                                                                    .WhenMassPrerelease(Result.Warning)
-                                                                    .WhenMassRelease(Result.Warning); // Немного искажённая трактовка, проверка erm выдаёт ошибку при статусе, отличном от Approved
+                                                            .WhenMass(Result.Error)
+                                                            .WhenMassPrerelease(Result.Error)
+                                                            .WhenMassRelease(Result.Error);
 
         private readonly ValidationRuleShared _validationRuleShared;
 
-        public OrderPositionDoesntCorrespontToActualPriceActor(ValidationRuleShared validationRuleShared)
+        public OrderPositionsShouldCorrespontToActualPriceActor(ValidationRuleShared validationRuleShared)
         {
             _validationRuleShared = validationRuleShared;
         }
@@ -48,26 +54,22 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                   select new
                                   {
                                       OrderId = order.Id,
+                                      Number = order.Number,
 
-                                      period.OrganizationUnitId,
                                       period.ProjectId,
                                       period.Start,
                                       period.End,
                                   };
 
-            var orderPositionBadPriceErrors =
+            var priceNotFoundErrors =
             from orderFirstPeriodDto in orderFirstPeriodDtos
-            from pricePeriod in query.For<PricePeriod>().Where(x => x.OrganizationUnitId == orderFirstPeriodDto.OrganizationUnitId && x.Start == orderFirstPeriodDto.Start).DefaultIfEmpty()
-            join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
-            where pricePeriod != null
-            where pricePeriod.PriceId != orderPricePosition.PriceId
+            from pricePeriod in query.For<PricePeriod>().Where(x => x.OrganizationUnitId == orderFirstPeriodDto.ProjectId && x.Start == orderFirstPeriodDto.Start).DefaultIfEmpty()
+            where pricePeriod == null
             select new Version.ValidationResult
             {
                 MessageType = MessageTypeId,
-                MessageParams = new XDocument(new XElement("empty",
-                                                new XAttribute("id", orderPricePosition.OrderPositionId),
-                                                new XAttribute("name", orderPricePosition.OrderPositionName)
-                                             )),
+                MessageParams = new XDocument(new XElement("root",
+                    new XElement("order", new XAttribute("id", orderFirstPeriodDto.OrderId), new XAttribute("number", orderFirstPeriodDto.Number)))),
                 PeriodStart = orderFirstPeriodDto.Start,
                 PeriodEnd = orderFirstPeriodDto.End,
                 ProjectId = orderFirstPeriodDto.ProjectId,
@@ -79,7 +81,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 Result = RuleResult,
             };
 
-            return orderPositionBadPriceErrors;
+            return priceNotFoundErrors;
         }
     }
 }

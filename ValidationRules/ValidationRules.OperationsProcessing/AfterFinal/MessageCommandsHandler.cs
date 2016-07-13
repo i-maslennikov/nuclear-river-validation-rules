@@ -26,8 +26,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly MaximumAdvertisementAmountActor _maximumAdvertisementAmountActor;
         private readonly AdvertisementAmountRestrictionIntegrityActor _restrictionIntegrityActor;
         private readonly OrderPositionCorrespontToInactivePositionActor _orderPositionCorrespontToInactivePositionActor;
-        private readonly OrderPositionDoesntCorrespontToActualPriceActor _orderPositionDoesntCorrespontToActualPriceActor;
-        private readonly OrderPositionsDoesntCorrespontToActualPriceActor _orderPositionsDoesntCorrespontToActualPriceActor;
+        private readonly OrderPositionShouldCorrespontToActualPriceActor _orderPositionShouldCorrespontToActualPriceActor;
+        private readonly OrderPositionsShouldCorrespontToActualPriceActor _orderPositionsShouldCorrespontToActualPriceActor;
         private readonly AssociatedPositionsGroupCountActor _associatedPositionsGroupCountActor;
         private readonly DeniedPositionsCheckActor _deniedPositionsCheckActor;
         private readonly AssociatedPositionWithoutPrincipalActor _associatedPositionWithoutPrincipalActor;
@@ -46,8 +46,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             MaximumAdvertisementAmountActor maximumAdvertisementAmountActor,
             AdvertisementAmountRestrictionIntegrityActor restrictionIntegrityActor,
             OrderPositionCorrespontToInactivePositionActor orderPositionCorrespontToInactivePositionActor,
-            OrderPositionDoesntCorrespontToActualPriceActor orderPositionDoesntCorrespontToActualPriceActor,
-            OrderPositionsDoesntCorrespontToActualPriceActor orderPositionsDoesntCorrespontToActualPriceActor,
+            OrderPositionShouldCorrespontToActualPriceActor orderPositionShouldCorrespontToActualPriceActor,
+            OrderPositionsShouldCorrespontToActualPriceActor orderPositionsShouldCorrespontToActualPriceActor,
             AssociatedPositionsGroupCountActor associatedPositionsGroupCountActor,
             DeniedPositionsCheckActor deniedPositionsCheckActor,
             AssociatedPositionWithoutPrincipalActor associatedPositionWithoutPrincipalActor,
@@ -65,8 +65,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _maximumAdvertisementAmountActor = maximumAdvertisementAmountActor;
             _restrictionIntegrityActor = restrictionIntegrityActor;
             _orderPositionCorrespontToInactivePositionActor = orderPositionCorrespontToInactivePositionActor;
-            _orderPositionDoesntCorrespontToActualPriceActor = orderPositionDoesntCorrespontToActualPriceActor;
-            _orderPositionsDoesntCorrespontToActualPriceActor = orderPositionsDoesntCorrespontToActualPriceActor;
+            _orderPositionShouldCorrespontToActualPriceActor = orderPositionShouldCorrespontToActualPriceActor;
+            _orderPositionsShouldCorrespontToActualPriceActor = orderPositionsShouldCorrespontToActualPriceActor;
             _associatedPositionsGroupCountActor = associatedPositionsGroupCountActor;
             _deniedPositionsCheckActor = deniedPositionsCheckActor;
             _associatedPositionWithoutPrincipalActor = associatedPositionWithoutPrincipalActor;
@@ -126,8 +126,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _maximumAdvertisementAmountActor.ExecuteCommands(commands);
                 _restrictionIntegrityActor.ExecuteCommands(commands);
                 _orderPositionCorrespontToInactivePositionActor.ExecuteCommands(commands);
-                _orderPositionDoesntCorrespontToActualPriceActor.ExecuteCommands(commands);
-                _orderPositionsDoesntCorrespontToActualPriceActor.ExecuteCommands(commands);
+                _orderPositionShouldCorrespontToActualPriceActor.ExecuteCommands(commands);
+                _orderPositionsShouldCorrespontToActualPriceActor.ExecuteCommands(commands);
                 _associatedPositionsGroupCountActor.ExecuteCommands(commands);
                 _deniedPositionsCheckActor.ExecuteCommands(commands);
                 _associatedPositionWithoutPrincipalActor.ExecuteCommands(commands);

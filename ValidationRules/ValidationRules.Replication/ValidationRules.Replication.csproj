@@ -88,8 +88,8 @@
     <Compile Include="PriceRules\Validation\MinimumAdvertisementAmountActor.cs" />
     <Compile Include="AggregateActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePositionActor.cs" />
-    <Compile Include="PriceRules\Validation\OrderPositionDoesntCorrespontToActualPriceActor.cs" />
-    <Compile Include="PriceRules\Validation\OrderPositionsDoesntCorrespontToActualPriceActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionShouldCorrespontToActualPriceActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionsShouldCorrespontToActualPriceActor.cs" />
     <Compile Include="PriceRules\Aggregates\PeriodAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
