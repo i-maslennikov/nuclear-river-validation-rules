@@ -13,10 +13,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
     /// Для проекта, в котором продано недостаточно рекламы в Position.Category должна выводиться ошибка.
+    /// "Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {6} - {3} (оформлено - {4}, содержит ошибки - {5})"
+    /// В силу того, что мы (пока) не знаем, число заказов с ошибками, сократим сообщение (erm тоже так делает иногда)
+    /// "Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3} - {4}"
+    /// 
+    /// Source: AdvertisementAmountOrderValidationRule/AdvertisementAmountErrorMessage
+    /// todo: Нужно, чтобы ошибка не препятствовала одобрению заказа, но не давала собрать город. Можно ли использовать Scope?
     /// </summary>
     public sealed class MinimumAdvertisementAmountActor : IActor
     {
-        private const int MessageTypeId = 1;
+        public const int MessageTypeId = 16;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Error)
@@ -58,13 +64,17 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                         select new Version.ValidationResult
                                             {
                                                 MessageType = MessageTypeId,
-                                                MessageParams =
-                                                    new XDocument(new XElement("empty",
-                                                                               new XAttribute("min", violation.Min),
-                                                                               new XAttribute("count", violation.Count),
-                                                                               new XAttribute("name", violation.CategoryName))),
-                                                PeriodStart = period.Start,
-                                                PeriodEnd = period.End,
+                                            MessageParams =
+                                                  new XDocument(new XElement("root",
+                                                                new XElement("message",
+                                                                            new XAttribute("min", violation.Min),
+                                                                            new XAttribute("count", violation.Count),
+                                                                            new XAttribute("name", violation.CategoryName),
+                                                                            new XAttribute("month", period.Start)),
+                                                                new XElement("project",
+                                                                            new XAttribute("id", period.ProjectId),
+                                                                            new XAttribute("number", period.ProjectId)))), // todo: в агрегат нужно подтянуть имя проекта                                                PeriodStart = period.Start,
+                                            PeriodEnd = period.End,
                                                 ProjectId = period.ProjectId,
                                                 VersionId = version,
 
@@ -76,6 +86,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var orderRuleViolations = from position in query.For<AmountControlledPosition>()
                                       join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
+                                      join order in query.For<Order>() on op.OrderId equals order.Id
                                       join violation in ruleViolations on new { op.Start, op.OrganizationUnitId, position.CategoryCode }
                                           equals new { violation.Key.Start, violation.Key.OrganizationUnitId, violation.Key.CategoryCode }
                                       join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId }
@@ -84,11 +95,19 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                           {
                                               MessageType = MessageTypeId,
                                               MessageParams =
-                                                  new XDocument(new XElement("empty",
-                                                                             new XAttribute("min", violation.Min),
-                                                                             new XAttribute("count", violation.Count),
-                                                                             new XAttribute("name", violation.CategoryName))),
-                                              PeriodStart = period.Start,
+                                                  new XDocument(new XElement("root",
+                                                                new XElement("message",
+                                                                            new XAttribute("min", violation.Min),
+                                                                            new XAttribute("count", violation.Count),
+                                                                            new XAttribute("name", violation.CategoryName),
+                                                                            new XAttribute("month", period.Start)),
+                                                                new XElement("order",
+                                                                            new XAttribute("id", order.Id),
+                                                                            new XAttribute("number", order.Number)),
+                                                                new XElement("project",
+                                                                            new XAttribute("id", period.ProjectId),
+                                                                            new XAttribute("number", period.ProjectId)))), // todo: в агрегат нужно подтянуть имя проекта
+                                          PeriodStart = period.Start,
                                               PeriodEnd = period.End,
                                               ProjectId = period.ProjectId,
                                               VersionId = version,

@@ -13,10 +13,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
     /// Для заказов, которые приводят к превышению ограничения на максимальное количесов рекламы в Position.Category должна выводиться ошибка.
+    /// "Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {6} - {3} (оформлено - {4}, содержит ошибки - {5})"
+    /// В силу того, что мы (пока) не знаем, число заказов с ошибками, сократим сообщение (erm тоже так делает иногда)
+    /// "Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3} - {4}"
+    /// 
+    /// Source: AdvertisementAmountOrderValidationRule/AdvertisementAmountErrorMessage
+    /// todo: Нужно, чтобы заказы "на оформлении" получали ошибку, если оформлено максимальное количество, но при этом оформленные - ошибку не получали. Сейчас баг. Можно использовать Scope.
     /// </summary>
     public sealed class MaximumAdvertisementAmountActor : IActor
     {
-        private const int MessageTypeId = 1;
+        public const int MessageTypeId = 1;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)
@@ -59,10 +65,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                         {
                                             MessageType = MessageTypeId,
                                             MessageParams =
-                                                  new XDocument(new XElement("empty",
-                                                                             new XAttribute("max", violation.Max),
-                                                                             new XAttribute("count", violation.Count),
-                                                                             new XAttribute("name", violation.CategoryName))),
+                                                new XDocument(new XElement("root",
+                                                                new XElement("message",
+                                                                            new XAttribute("max", violation.Max),
+                                                                            new XAttribute("count", violation.Count),
+                                                                            new XAttribute("name", violation.CategoryName),
+                                                                            new XAttribute("month", period.Start)),
+                                                                new XElement("project",
+                                                                            new XAttribute("id", period.ProjectId),
+                                                                            new XAttribute("number", period.ProjectId)))), // todo: в агрегат нужно подтянуть имя проекта
                                             PeriodStart = period.Start,
                                             PeriodEnd = period.End,
                                             ProjectId = period.ProjectId,
@@ -76,6 +87,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var orderRuleViolations = from position in query.For<AmountControlledPosition>()
                                       join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
+                                      join order in query.For<Order>() on op.OrderId equals order.Id
                                       join violation in ruleViolations on new { op.Start, op.OrganizationUnitId, position.CategoryCode }
                                           equals new { violation.Key.Start, violation.Key.OrganizationUnitId, violation.Key.CategoryCode }
                                       join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId }
@@ -84,10 +96,18 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                       {
                                           MessageType = MessageTypeId,
                                           MessageParams =
-                                                new XDocument(new XElement("empty",
+                                                new XDocument(new XElement("root",
+                                                                new XElement("message",
                                                                             new XAttribute("max", violation.Max),
                                                                             new XAttribute("count", violation.Count),
-                                                                            new XAttribute("name", violation.CategoryName))),
+                                                                            new XAttribute("name", violation.CategoryName),
+                                                                            new XAttribute("month", period.Start)),
+                                                                new XElement("order",
+                                                                            new XAttribute("id", order.Id),
+                                                                            new XAttribute("number", order.Number)),
+                                                                new XElement("project",
+                                                                            new XAttribute("id", period.ProjectId),
+                                                                            new XAttribute("number", period.ProjectId)))), // todo: в агрегат нужно подтянуть имя проекта
                                           PeriodStart = period.Start,
                                           PeriodEnd = period.End,
                                           ProjectId = period.ProjectId,
