@@ -73,7 +73,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                             new XAttribute("month", period.Start)),
                                                                 new XElement("project",
                                                                             new XAttribute("id", period.ProjectId),
-                                                                            new XAttribute("number", period.ProjectId)))), // todo: в агрегат нужно подтянуть имя проекта
+                                                                            new XAttribute("name", period.ProjectId)))), // todo: в агрегат нужно подтянуть имя проекта
                                             PeriodStart = period.Start,
                                             PeriodEnd = period.End,
                                             ProjectId = period.ProjectId,
