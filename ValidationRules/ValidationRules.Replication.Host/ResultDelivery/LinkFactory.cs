@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class LinkFactory
     {

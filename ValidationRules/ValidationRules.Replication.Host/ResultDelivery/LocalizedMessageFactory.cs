@@ -14,6 +14,9 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                     new AccountBalanceShouldBePositiveMessageSerializer(),
                     new OrderPositionShouldCorrespontToActualPriceMessageSerializer(),
                     new OrderPositionsShouldCorrespontToActualPriceMessageSerializer(),
+                    new DeniedPositionsCheckMessageSerializer(),
+                    new AccountShouldExistMessageSerializer(),
+                    new LockShouldNotExistMessageSerializer(),
                 }.ToDictionary(x => x.MessageType, x => x);
 
         public LocalizedMessage Localize(Version.ValidationResult result)

@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
     /// </summary>
     public sealed class LockShouldNotExistActor : IActor
     {
-        private const int MessageTypeId = 13;
+        public const int MessageTypeId = 13;
 
         // В erm эта проверка не вызывается при ручной проверке, только при сборке (в том числе бете)
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
@@ -44,9 +44,10 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
-                                      MessageParams = new XDocument(new XElement("order",
-                                                                                 new XAttribute("id", order.Id),
-                                                                                 new XAttribute("number", order.Number))),
+                                      MessageParams = new XDocument(new XElement("root",
+                                                                                 new XElement("order",
+                                                                                              new XAttribute("id", order.Id),
+                                                                                              new XAttribute("number", order.Number)))),
                                       PeriodStart = @lock.Start,
                                       PeriodEnd = @lock.End,
                                       ProjectId = order.DestProjectId,
