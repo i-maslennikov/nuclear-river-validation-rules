@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                       MessageParams = new XDocument(new XElement("root",
                                                                                  new XElement("project",
                                                                                               new XAttribute("id", period.ProjectId),
-                                                                                              new XAttribute("name", period.ProjectId)),
+                                                                                              new XAttribute("name", period.ProjectId)), // todo: в агрегат нужно подтянуть имя проекта
                                                                                  new XElement("pricePosition",
                                                                                               new XAttribute("name", restriction.CategoryName)))),
                                       PeriodStart = period.Start,

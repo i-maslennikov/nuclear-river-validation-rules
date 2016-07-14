@@ -18,6 +18,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                     new AccountShouldExistMessageSerializer(),
                     new LockShouldNotExistMessageSerializer(),
                     new MinimalAdvertisementRestrictionShouldBeSpecifiedMessageSerializer(),
+                    new AssociatedPositionsGroupCountMessageSerializer(),
                 }.ToDictionary(x => x.MessageType, x => x);
 
         public LocalizedMessage Localize(Version.ValidationResult result)

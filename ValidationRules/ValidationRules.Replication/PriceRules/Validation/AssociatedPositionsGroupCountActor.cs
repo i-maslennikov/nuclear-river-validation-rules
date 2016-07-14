@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -17,7 +18,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class AssociatedPositionsGroupCountActor : IActor
     {
-        private const int MessageTypeId = 7;
+        public const int MessageTypeId = 7;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Warning)
@@ -39,14 +40,21 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
         {
             var ruleResults = from overcount in query.For<AssociatedPositionGroupOvercount>()
+                              join price in query.For<Price>() on overcount.PriceId equals price.Id
                               join pp in query.For<PricePeriod>() on overcount.PriceId equals pp.PriceId
                               join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
-                                      MessageParams = new XDocument(new XElement("empty",
-                                                                                 new XAttribute("price", overcount.PriceId),
-                                                                                 new XAttribute("pricePosition", overcount.PricePositionId))),
+                                      MessageParams = new XDocument(new XElement("root",
+                                                                                 new XElement("price",
+                                                                                              new XAttribute("id", price.Id),
+                                                                                              new XAttribute("publishDate", DateTime.MinValue)), // todo: в агрегат нужно подтянуть дату публикацию прайс-листа
+                                                                                 new XElement("project",
+                                                                                              new XAttribute("id", period.ProjectId),
+                                                                                              new XAttribute("name", period.ProjectId)), // todo: в агрегат нужно подтянуть имя проекта
+                                                                                 new XAttribute("pricePosition",
+                                                                                                new XAttribute("id", overcount.PricePositionId)))),
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
                                       ProjectId = period.ProjectId,
