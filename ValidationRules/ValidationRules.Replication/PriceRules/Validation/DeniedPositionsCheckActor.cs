@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class DeniedPositionsCheckActor : IActor
     {
-        private const int MessageTypeId = 8;
+        public const int MessageTypeId = 8;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)
@@ -120,8 +120,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
                         MessageType = MessageTypeId,
                         MessageParams =
-                            new XDocument(new XElement("element",
-                                                       new XAttribute("firm", conflict.FirmId),
+                            new XDocument(new XElement("root",
+                                                       new XElement("firm",
+                                                                    new XAttribute("id", conflict.FirmId)),
                                                        new XElement("position",
                                                                     new XAttribute("orderId", conflict.OrderDeniedPosition.OrderId),
                                                                     new XAttribute("orderNumber", conflict.OrderDeniedPositionNames.OrderNumber),
@@ -135,7 +136,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     new XAttribute("orderPositionId", conflict.OrderPosition.OrderPositionId),
                                                                     new XAttribute("orderPositionName", conflict.OrderPositionNames.OrderPositionName),
                                                                     new XAttribute("positionId", conflict.OrderPosition.ItemPositionId),
-                                                                    new XAttribute("positionName", conflict.OrderPositionNames.ItemPositionName)))),
+                                                                    new XAttribute("positionName", conflict.OrderPositionNames.ItemPositionName)),
+                                                       new XElement("order",
+                                                                    new XAttribute("id", conflict.OrderDeniedPosition.OrderId),
+                                                                    new XAttribute("number", conflict.OrderDeniedPositionNames.OrderNumber)))),
                         PeriodStart = conflict.Start,
                         PeriodEnd = conflict.End,
                         ProjectId = conflict.ProjectId,

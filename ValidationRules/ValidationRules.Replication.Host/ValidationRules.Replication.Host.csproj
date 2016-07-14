@@ -351,6 +351,7 @@
     </Compile>
     <Compile Include="ResultDelivery\IMessageSerializer.cs" />
     <Compile Include="ResultDelivery\ITransportDecorator.cs" />
+    <Compile Include="ResultDelivery\Serializers\DeniedPositionsCheckMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AccountBalanceShouldBePositiveMessageSerializer.cs" />
     <Compile Include="ResultDelivery\LocalizedMessage.cs" />
     <Compile Include="ResultDelivery\LocalizedMessageFactory.cs" />
