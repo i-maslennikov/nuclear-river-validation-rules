@@ -15,6 +15,9 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
     /// <summary>
     /// Для заказов, у которых не достаточно средств для выпуска, должна выводиться ошибка
     /// "Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}. Необходим лимит: {2}"
+    /// 
+    /// Проверка в erm допускает отрицательную сумму в 1 копейку (на самом деле основывается на настройке SignificantDigitsNumber)
+    /// Source: BalanceOrderValidationRule/OrdersCheckOrderInsufficientFunds
     /// </summary>
     public sealed class AccountBalanceShouldBePositiveActor : IActor
     {
@@ -25,6 +28,9 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                                                                     .WhenMass(Result.None)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
+
+        // todo: завести настройку SignificantDigitsNumber и вообще решить вопрос с настройками проверок
+        private static readonly decimal Epsilon = 0.01m;
 
         private readonly ValidationRuleShared _validationRuleShared;
 
@@ -47,7 +53,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
             var ruleResults = from accountPeriod in query.For<AccountPeriod>()
                               join order in orderSourceProjects.Union(orderDestProjects) on accountPeriod.AccountId equals order.AccountId
                               where order.BeginDistributionDate < accountPeriod.End && accountPeriod.Start < order.EndDistributionDate
-                              where accountPeriod.Balance + accountPeriod.LimitAmount - accountPeriod.ReleaseAmount - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) < 0
+                              where accountPeriod.Balance + accountPeriod.LimitAmount - accountPeriod.ReleaseAmount - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) < -Epsilon
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
