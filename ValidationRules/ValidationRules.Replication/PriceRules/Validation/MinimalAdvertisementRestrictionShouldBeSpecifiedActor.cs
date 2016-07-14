@@ -13,10 +13,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
     /// Для прайс-листов, в которых для позиций с контроллируемым количеством не указан минимум должна выводиться ошибка.
+    /// "В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск"
+    /// 
+    /// Source: AdvertisementAmountOrderValidationRule/PricePositionHasNoMinAdvertisementAmount
+    /// Ошибка на самом деле выводится не для позиции прайса, а для номенклатурной позиции в прайсе, но такой сущности попросту нет.
     /// </summary>
-    public sealed class AdvertisementAmountRestrictionIntegrityActor : IActor
+    public sealed class MinimalAdvertisementRestrictionShouldBeSpecifiedActor : IActor
     {
-        private const int MessageTypeId = 2;
+        public const int MessageTypeId = 2;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Error)
@@ -25,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         private readonly ValidationRuleShared _validationRuleShared;
 
-        public AdvertisementAmountRestrictionIntegrityActor(ValidationRuleShared validationRuleShared)
+        public MinimalAdvertisementRestrictionShouldBeSpecifiedActor(ValidationRuleShared validationRuleShared)
         {
             _validationRuleShared = validationRuleShared;
         }
@@ -44,7 +48,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
-                                      MessageParams = new XDocument(new XElement("empty", new XAttribute("name", restriction.CategoryName))),
+                                      MessageParams = new XDocument(new XElement("root",
+                                                                                 new XElement("project",
+                                                                                              new XAttribute("id", period.ProjectId),
+                                                                                              new XAttribute("name", period.ProjectId)),
+                                                                                 new XElement("pricePosition",
+                                                                                              new XAttribute("name", restriction.CategoryName)))),
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
                                       ProjectId = period.ProjectId,
@@ -54,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                       ReferenceId = period.ProjectId,
 
                                       Result = RuleResult,
-                              };
+                                  };
 
             return ruleResults;
         }

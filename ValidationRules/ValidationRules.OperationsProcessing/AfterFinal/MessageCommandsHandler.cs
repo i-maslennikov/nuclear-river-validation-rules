@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly CreateNewVersionActor _createNewVersionActor;
         private readonly MinimumAdvertisementAmountActor _minimumAdvertisementAmountActor;
         private readonly MaximumAdvertisementAmountActor _maximumAdvertisementAmountActor;
-        private readonly AdvertisementAmountRestrictionIntegrityActor _restrictionIntegrityActor;
+        private readonly MinimalAdvertisementRestrictionShouldBeSpecifiedActor _restrictionShouldBeSpecifiedActor;
         private readonly OrderPositionCorrespontToInactivePositionActor _orderPositionCorrespontToInactivePositionActor;
         private readonly OrderPositionShouldCorrespontToActualPriceActor _orderPositionShouldCorrespontToActualPriceActor;
         private readonly OrderPositionsShouldCorrespontToActualPriceActor _orderPositionsShouldCorrespontToActualPriceActor;
@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             CreateNewVersionActor createNewVersionActor,
             MinimumAdvertisementAmountActor minimumAdvertisementAmountActor,
             MaximumAdvertisementAmountActor maximumAdvertisementAmountActor,
-            AdvertisementAmountRestrictionIntegrityActor restrictionIntegrityActor,
+            MinimalAdvertisementRestrictionShouldBeSpecifiedActor restrictionShouldBeSpecifiedActor,
             OrderPositionCorrespontToInactivePositionActor orderPositionCorrespontToInactivePositionActor,
             OrderPositionShouldCorrespontToActualPriceActor orderPositionShouldCorrespontToActualPriceActor,
             OrderPositionsShouldCorrespontToActualPriceActor orderPositionsShouldCorrespontToActualPriceActor,
@@ -63,7 +63,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _createNewVersionActor = createNewVersionActor;
             _minimumAdvertisementAmountActor = minimumAdvertisementAmountActor;
             _maximumAdvertisementAmountActor = maximumAdvertisementAmountActor;
-            _restrictionIntegrityActor = restrictionIntegrityActor;
+            _restrictionShouldBeSpecifiedActor = restrictionShouldBeSpecifiedActor;
             _orderPositionCorrespontToInactivePositionActor = orderPositionCorrespontToInactivePositionActor;
             _orderPositionShouldCorrespontToActualPriceActor = orderPositionShouldCorrespontToActualPriceActor;
             _orderPositionsShouldCorrespontToActualPriceActor = orderPositionsShouldCorrespontToActualPriceActor;
@@ -124,7 +124,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 // Думаю, пока достаточно указывать вызваемые акторы явно, о фабриках подумаем позже.
                 _minimumAdvertisementAmountActor.ExecuteCommands(commands);
                 _maximumAdvertisementAmountActor.ExecuteCommands(commands);
-                _restrictionIntegrityActor.ExecuteCommands(commands);
+                _restrictionShouldBeSpecifiedActor.ExecuteCommands(commands);
                 _orderPositionCorrespontToInactivePositionActor.ExecuteCommands(commands);
                 _orderPositionShouldCorrespontToActualPriceActor.ExecuteCommands(commands);
                 _orderPositionsShouldCorrespontToActualPriceActor.ExecuteCommands(commands);

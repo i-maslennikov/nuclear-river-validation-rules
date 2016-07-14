@@ -82,9 +82,9 @@
     <Compile Include="PriceRules\Facts\AssociatedPositionsGroupAccessor.cs" />
     <Compile Include="PriceRules\Facts\AssociatedPositionAccessor.cs" />
     <Compile Include="PriceRules\Validation\DeniedPositionsCheckActor.cs" />
-    <Compile Include="PriceRules\Validation\AdvertisementAmountRestrictionIntegrityActor.cs" />
     <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCountActor.cs" />
     <Compile Include="PriceRules\Validation\MaximumAdvertisementAmountActor.cs" />
+    <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecifiedActor.cs" />
     <Compile Include="PriceRules\Validation\MinimumAdvertisementAmountActor.cs" />
     <Compile Include="AggregateActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePositionActor.cs" />
