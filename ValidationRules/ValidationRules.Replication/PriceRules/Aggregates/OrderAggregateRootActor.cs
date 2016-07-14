@@ -158,7 +158,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<OrderPricePosition> GetSource()
                 =>
-                    from orderPosition in _query.For<Facts::OrderPosition>()
+                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                     from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
                     from pricePositionNotActive in _query.For<Facts::PricePositionNotActive>().Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
                     from position in _query.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId || x.Id == pricePositionNotActive.PositionId).DefaultIfEmpty()
@@ -190,7 +191,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
 
             public IQueryable<AmountControlledPosition> GetSource()
-                => from orderPosition in _query.For<Facts::OrderPosition>()
+                => from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
+                   join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                    join adv in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals adv.OrderPositionId
                    join position in _query.For<Facts::Position>().Where(x => x.IsControlledByAmount) on adv.PositionId equals position.Id
                    select new AmountControlledPosition
