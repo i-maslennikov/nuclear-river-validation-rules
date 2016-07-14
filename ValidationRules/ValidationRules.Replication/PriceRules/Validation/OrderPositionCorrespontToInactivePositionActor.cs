@@ -11,10 +11,16 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
+    /// <summary>
+    /// ƒл€ заказов, позиции которых ссылаютс€ на не действительные номенклатурные позиции, должна выводитьс€ ошибка.
+    /// "ѕозици€ {0} соответствует скрытой позиции прайс листа. Ќеобходимо указать активную позицию из текущего действующего прайс-листа"
+    /// 
+    /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionCorrespontToInactivePosition
+    /// todo: ”брать из этой группы проверок - пон€ти€ периода/scope не имеют смысла дл€ этой проверки
+    /// </summary>
     public sealed class OrderPositionCorrespontToInactivePositionActor : IActor
     {
-        // OrderCheckOrderPositionCorrespontToInactivePosition - ѕозици€ {OrderPositionId} соответствует скрытой позиции прайс листа. Ќеобходимо указать активную позицию из текущего действующего прайс-листа.
-        private const int MessageTypeId = 4;
+        public const int MessageTypeId = 4;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)
@@ -48,6 +54,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                   select new
                                   {
                                       OrderId = order.Id,
+                                      OrderNumber = order.Number,
 
                                       period.ProjectId,
                                       period.Start,
@@ -55,28 +62,31 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                   };
 
             var pricePositionIsNotActiveErrors =
-            from orderFirstPeriodDto in orderFirstPeriodDtos
-            join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
-            where !orderPricePosition.IsActive
-            select new Version.ValidationResult
-            {
-                MessageType = MessageTypeId,
-                MessageParams = new XDocument(new XElement("empty",
-                                                new XAttribute("id", orderPricePosition.OrderPositionId),
-                                                new XAttribute("name", orderPricePosition.OrderPositionName)
-                                             )),
+                from orderFirstPeriodDto in orderFirstPeriodDtos
+                join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
+                where !orderPricePosition.IsActive
+                select new Version.ValidationResult
+                    {
+                        MessageType = MessageTypeId,
+                        MessageParams = new XDocument(new XElement("root",
+                                                                   new XElement("order",
+                                                                                new XAttribute("id", orderFirstPeriodDto.OrderId),
+                                                                                new XAttribute("number", orderFirstPeriodDto.OrderNumber)),
+                                                                   new XElement("orderPosition",
+                                                                                new XAttribute("id", orderPricePosition.OrderPositionId),
+                                                                                new XAttribute("name", orderPricePosition.OrderPositionName)))),
 
-                PeriodStart = orderFirstPeriodDto.Start,
-                PeriodEnd = orderFirstPeriodDto.End,
-                ProjectId = orderFirstPeriodDto.ProjectId,
+                        PeriodStart = orderFirstPeriodDto.Start,
+                        PeriodEnd = orderFirstPeriodDto.End,
+                        ProjectId = orderFirstPeriodDto.ProjectId,
 
-                VersionId = version,
+                        VersionId = version,
 
-                ReferenceType = EntityTypeIds.Order,
-                ReferenceId = orderFirstPeriodDto.OrderId,
+                        ReferenceType = EntityTypeIds.Order,
+                        ReferenceId = orderFirstPeriodDto.OrderId,
 
-                Result = RuleResult,
-            };
+                        Result = RuleResult,
+                    };
 
             return pricePositionIsNotActiveErrors;
         }

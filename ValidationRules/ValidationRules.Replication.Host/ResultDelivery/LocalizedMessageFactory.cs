@@ -21,6 +21,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                     new AssociatedPositionsGroupCountMessageSerializer(),
                     new MinimumAdvertisementAmountMessageSerializer(),
                     new MaximumAdvertisementAmountMessageSerializer(),
+                    new OrderPositionCorrespontToInactivePositionMessageSerializer(),
                 }.ToDictionary(x => x.MessageType, x => x);
 
         public LocalizedMessage Localize(Version.ValidationResult result)
