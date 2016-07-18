@@ -11,12 +11,25 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
+    /// <summary>
+    /// Для заказа, в котором есть сопутствующая позиция и есть основная, но не удовлетворено условие ObjectBindingType.Match должна выводиться ошибка.
+    /// "{0} содержит объекты привязки, отсутствующие в основных позициях"
+    /// 
+    /// Source: ADP/LinkedObjectsMissedInPrincipals
+    /// 
+    /// Q: Позиция Y - сопутствующая для X (с требованием, чтобы объекты привязки соападали).
+    ///    Продана X в рубрику адреса (A, B). Продана Y в рубрику B. Должна ли появиться ошибка?
+    /// 
+    /// Q: Позиция Y - сопутствующая для X (с требованием, чтобы объекты привязки соападали).
+    ///    Продана X в рубрику адреса (A, B). Продана Y к адресу A. Должна ли появиться ошибка?
+    /// 
+    /// 
+    /// </summary>
     public sealed class LinkedObjectsMissedInPrincipalsActor : IActor
     {
         private const int Match = 1;
 
         // TODO: можно вполне выводить в какой именно основной позиции отсутствуют объекты привязки, но в ERM так не делают, и мы не будем
-        // LinkedObjectsMissedInPrincipals - {0} содержит объекты привязки, отсутствующие в основных позициях.
         private const int MessageTypeId = 10;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
