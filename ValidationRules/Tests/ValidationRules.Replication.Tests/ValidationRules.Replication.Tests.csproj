@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Actors\ActorFixtureBase.cs" />
     <Compile Include="Actors\SyncDataObjectsActorTests.cs" />
+    <Compile Include="BindingObjectSpecificationTests.cs" />
     <Compile Include="DataFixtureBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultBuilderTests.cs" />

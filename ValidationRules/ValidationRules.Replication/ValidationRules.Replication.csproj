@@ -95,6 +95,7 @@
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
+    <Compile Include="PriceRules\Validation\Dto\PrincipalAssociatedPostionPair.cs" />
     <Compile Include="ValidationRuleShared.cs" />
     <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />
     <Compile Include="PriceRules\Validation\SatisfiedPrincipalPositionDifferentOrderActor.cs" />
