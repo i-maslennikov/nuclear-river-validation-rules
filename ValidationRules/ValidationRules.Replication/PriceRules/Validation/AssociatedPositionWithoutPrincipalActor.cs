@@ -61,6 +61,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 join associatedPosition in associatedPositions on
                     new { orderPosition.FirmId, orderPosition.Start, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
                     new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId }
+                where orderPosition.Scope == 0 || orderPosition.Scope == associatedPosition.Scope
                 select new
                 {
                     associatedPosition.position.CauseOrderPositionId,
