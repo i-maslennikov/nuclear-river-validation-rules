@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -17,13 +20,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Source: ADP/LinkedObjectsMissedInPrincipals
     /// 
-    /// Q: Позиция Y - сопутствующая для X (с требованием, чтобы объекты привязки соападали).
+    /// Q: Позиция Y - сопутствующая для X (с требованием, чтобы объекты привязки совпадали).
     ///    Продана X в рубрику адреса (A, B). Продана Y в рубрику B. Должна ли появиться ошибка?
+    /// A: Завит от того, как заполнена таблица сравнения объектов привязки. По той, что у нас сейчас - нет. В реальности - по-разному.
     /// 
-    /// Q: Позиция Y - сопутствующая для X (с требованием, чтобы объекты привязки соападали).
+    /// Q: Позиция Y - сопутствующая для X (с требованием, чтобы объекты привязки совпадали).
     ///    Продана X в рубрику адреса (A, B). Продана Y к адресу A. Должна ли появиться ошибка?
+    /// A: Завит от того, как заполнена таблица сравнения объектов привязки. По той, что у нас сейчас - нет. В реальности - по-разному.
     /// 
+    /// Q: Позиция Z - сопутствующая для X (без учёта), для Y (совпадение).
+    ///    Проданы Z, Y (с другим объектом привязки), X. Должна ли появиться ошибка?
+    /// A: Сейчас ERM выдаёт ошибку. Если удалить позицию Y из заказа, ошибка остаётся - позиции "без учёта" не могут удовлетворить это правило.
     /// 
+    /// Q: Позиция Y - сопутствующая для X (совпадение)
+    ///    Y продана в рубрики A и B. X продана только в A. Должна ли появиться ошибка?
+    /// A: Да.
+    /// 
+    /// Q: Позиция Z - сопутствующая для X, Y (совпадение)
+    ///    Z продана в A, B. X продана в A. Y продана в B. Должна ли появиться ошибка?
+    /// A: Нет.
     /// </summary>
     public sealed class LinkedObjectsMissedInPrincipalsActor : IActor
     {
@@ -55,80 +70,101 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from order in query.For<Order>()
                 join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<OrderPosition>() on order.Id equals position.OrderId
-                select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
+                select new Dto<OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var associatedPositions =
                 from order in query.For<Order>()
                 join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<OrderAssociatedPosition>() on order.Id equals position.OrderId
-                select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
+                where position.BindingType == Match // небольшой косяк (который есть и в erm) - если сопутствующая удовлетворена мастер-позицией без учёта привязки, то эта проверка выдаст ошибку.
+                select new Dto<OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
-            var satisfiedPositions =
-                from orderPosition in orderPositions
-                join associatedPosition in associatedPositions on
-                    new { orderPosition.FirmId, orderPosition.Start, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
-                    new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId }
-                where
-                    orderPosition.position.OrderPositionId != associatedPosition.position.CauseOrderPositionId
-                where
-                    associatedPosition.position.BindingType != Match ||
-                    associatedPosition.position.HasNoBinding == orderPosition.position.HasNoBinding &&
-                    (associatedPosition.position.Category3Id == null || associatedPosition.position.Category3Id == orderPosition.position.Category3Id) &&
-                    (associatedPosition.position.Category1Id == null || associatedPosition.position.Category1Id == orderPosition.position.Category1Id) &&
-                    (associatedPosition.position.FirmAddressId == null || associatedPosition.position.FirmAddressId == orderPosition.position.FirmAddressId)
-                select new
-                {
-                    associatedPosition.position.CauseOrderPositionId,
-                    associatedPosition.position.CauseItemPositionId,
-                };
+            var unsatisfiedPositions =
+                associatedPositions.SelectMany(WithMatchedBindingObject(orderPositions.DefaultIfEmpty()), (associated, principal) => new { associated, principal })
+                                   .GroupBy(x => new
+                                   {
+                                       // можно включать все поля, какие захотим иметь в выборке, кроме двух: PrincipalPositionId, Source
+                                       Start = x.associated.Start,
+                                       Scope = x.associated.Scope,
+                                       Category1Id = x.associated.Position.Category1Id,
+                                       Category3Id = x.associated.Position.Category3Id,
+                                       CauseItemPositionId = x.associated.Position.CauseItemPositionId,
+                                       CauseOrderPositionId = x.associated.Position.CauseOrderPositionId,
+                                       CausePackagePositionId = x.associated.Position.CausePackagePositionId,
+                                       FirmAddressId = x.associated.Position.FirmAddressId,
+                                       FirmId = x.associated.FirmId,
+                                       OrganizationUnitId = x.associated.OrganizationUnitId,
+                                       OrderId = x.associated.Position.OrderId,
+                                   })
+                                   .Where(x => x.All(y => y.principal == null))
+                                   .Select(grouping => new
+                                   {
+                                       grouping.Key,
 
-            var notSatisfiedPositions =
-                (from position in associatedPositions
-                from satisfied in satisfiedPositions.Where(x => x.CauseOrderPositionId == position.position.CauseOrderPositionId &&
-                                                                x.CauseItemPositionId == position.position.CauseItemPositionId).DefaultIfEmpty()
-                where satisfied == null
-                select new
-                {
-                    position.FirmId,
-                    position.position.OrderId,
-                    position.position.CauseOrderPositionId,
-                    position.position.CausePackagePositionId,
-                    position.position.CauseItemPositionId,
+                                       ProjectId = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).ProjectId,
+                                       End = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).End,
+                                       OrderNumber = query.For<Order>().Single(x => x.Id == grouping.Key.OrderId).Number,
+                                       OrderPositionName = query.For<Position>().Single(x => x.Id == grouping.Key.CausePackagePositionId).Name,
+                                       ItemPositionName = query.For<Position>().Single(x => x.Id == grouping.Key.CauseItemPositionId).Name,
+                                   });
 
-                    position.Start,
-                    position.OrganizationUnitId,
-                }).Distinct(); // схлопнем позиции по всем нарушенным правилам
-
-            var messages = from conflict in notSatisfiedPositions
-                           join period in query.For<Period>() on new { conflict.Start, conflict.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+            var messages = from unsatisfied in unsatisfiedPositions
                            select new Version.ValidationResult
                            {
                                VersionId = version,
                                MessageType = MessageTypeId,
                                MessageParams =
-                                    new XDocument(new XElement("element",
-                                                               new XAttribute("firm", conflict.FirmId),
+                                    new XDocument(new XElement("root",
+                                                               new XElement("firm",
+                                                                            new XAttribute("id", unsatisfied.Key.FirmId)),
                                                                new XElement("position",
-                                                                            new XAttribute("orderId", conflict.OrderId),
-                                                                            new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == conflict.OrderId).Number),
-                                                                            new XAttribute("orderPositionId", conflict.CauseOrderPositionId),
-                                                                            new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == conflict.CausePackagePositionId).Name),
-                                                                            new XAttribute("positionId", conflict.CauseItemPositionId),
-                                                                            new XAttribute("positionName", query.For<Position>().Single(x => x.Id == conflict.CauseItemPositionId).Name))
-                                                              )
-                                                 ),
+                                                                            new XAttribute("orderId", unsatisfied.Key.OrderId),
+                                                                            new XAttribute("orderNumber", unsatisfied.OrderNumber),
+                                                                            new XAttribute("orderPositionId", unsatisfied.Key.CauseOrderPositionId),
+                                                                            new XAttribute("orderPositionName", unsatisfied.OrderPositionName),
+                                                                            new XAttribute("positionId", unsatisfied.Key.CauseItemPositionId),
+                                                                            new XAttribute("positionName", unsatisfied.ItemPositionName)),
+                                                               new XElement("order",
+                                                                            new XAttribute("id", unsatisfied.Key.OrderId),
+                                                                            new XAttribute("number", unsatisfied.OrderNumber)))),
 
-                               PeriodStart = period.Start,
-                               PeriodEnd = period.End,
-                               ProjectId = period.ProjectId,
+                               PeriodStart = unsatisfied.Key.Start,
+                               PeriodEnd = unsatisfied.End,
+                               ProjectId = unsatisfied.ProjectId,
 
                                ReferenceType = EntityTypeIds.Order,
-                               ReferenceId = conflict.OrderId,
+                               ReferenceId = unsatisfied.Key.OrderId,
 
                                Result = RuleResult,
                            };
 
             return messages;
+        }
+
+        private static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> WithMatchedBindingObject(IQueryable<Dto<OrderPosition>> principals)
+        {
+            return associated => principals.Where(principal => principal.FirmId == associated.FirmId
+                                                               && principal.Start == associated.Start
+                                                               && principal.OrganizationUnitId == associated.OrganizationUnitId
+                                                               && principal.Position.ItemPositionId == associated.Position.PrincipalPositionId
+                                                               && principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId
+                                                               && (principal.Scope == 0 || principal.Scope == associated.Scope))
+                                           .Where(principal =>
+                                                  (associated.Position.HasNoBinding == principal.Position.HasNoBinding) &&
+                                                  ((associated.Position.Category1Id == principal.Position.Category1Id) &&
+                                                   (associated.Position.Category3Id == principal.Position.Category3Id || associated.Position.Category3Id == null || principal.Position.Category3Id == null) &&
+                                                   (associated.Position.FirmAddressId == principal.Position.FirmAddressId || associated.Position.FirmAddressId == null || principal.Position.FirmAddressId == null) ||
+                                                   (associated.Position.Category1Id == principal.Position.Category1Id || associated.Position.Category1Id == null || principal.Position.Category1Id == null) && (associated.Position.Category3Id == null || principal.Position.Category3Id == null) &&
+                                                   (associated.Position.FirmAddressId == principal.Position.FirmAddressId)));
+        }
+
+        class Dto<TPosition>
+        {
+            public long FirmId { get; set; }
+            public DateTime Start { get; set; }
+            public long OrganizationUnitId { get; set; }
+            public long Scope { get; set; }
+            public TPosition Position { get; set; }
         }
     }
 }
