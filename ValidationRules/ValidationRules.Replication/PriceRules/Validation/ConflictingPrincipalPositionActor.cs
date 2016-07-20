@@ -64,47 +64,43 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from order in query.For<Order>()
                 join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<OrderPosition>() on order.Id equals position.OrderId
-                select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
+                select new Dto<OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var associatedPositions =
                 from order in query.For<Order>()
                 join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<OrderAssociatedPosition>() on order.Id equals position.OrderId
-                select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
+                where position.BindingType == Different
+                select new Dto<OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var conflictingPositions =
-                from associatedPosition in associatedPositions
-                join principalPosition in orderPositions on
-                    new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId } equals
-                    new { principalPosition.FirmId, principalPosition.Start, principalPosition.OrganizationUnitId, principalPosition.position.ItemPositionId }
-                join period in query.For<Period>() on new { principalPosition.Start, principalPosition.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                where
-                    principalPosition.position.OrderPositionId != associatedPosition.position.CauseOrderPositionId && (principalPosition.Scope == 0 || principalPosition.Scope == associatedPosition.Scope)
-                select new PrincipalAssociatedPostionPair
+                from pair in associatedPositions.SelectMany(Specs.Join.Aggs.WithMatchedBindingObject(orderPositions), (associated, principal) => new { associated, principal })
+                join period in query.For<Period>() on new { pair.associated.Start, pair.associated.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                select new
                     {
-                        FirmId = principalPosition.FirmId,
+                        FirmId = pair.associated.FirmId,
                         Start = period.Start,
                         End = period.End,
                         ProjectId = period.ProjectId,
-                        OrderPrincipalPosition = principalPosition.position,
-                        OrderAssociatedPosition = associatedPosition.position,
+                        OrderPrincipalPosition = pair.principal.Position,
+                        OrderAssociatedPosition = pair.associated.Position,
 
-                        OrderAssociatedPositionNames = new PrincipalAssociatedPostionPair.NamesDto
+                        OrderAssociatedPositionNames = new
                         {
-                            OrderNumber = query.For<Order>().Single(x => x.Id == associatedPosition.position.OrderId).Number,
-                            OrderPositionName = query.For<Position>().Single(x => x.Id == associatedPosition.position.CausePackagePositionId).Name,
-                            ItemPositionName = query.For<Position>().Single(x => x.Id == associatedPosition.position.CauseItemPositionId).Name,
+                            OrderNumber = query.For<Order>().Single(x => x.Id == pair.associated.Position.OrderId).Number,
+                            OrderPositionName = query.For<Position>().Single(x => x.Id == pair.associated.Position.CausePackagePositionId).Name,
+                            ItemPositionName = query.For<Position>().Single(x => x.Id == pair.associated.Position.CauseItemPositionId).Name,
                         },
 
-                        OrderPrincipalPositionNames = new PrincipalAssociatedPostionPair.NamesDto
+                        OrderPrincipalPositionNames = new
                         {
-                            OrderNumber = query.For<Order>().Single(x => x.Id == principalPosition.position.OrderId).Number,
-                            OrderPositionName = query.For<Position>().Single(x => x.Id == principalPosition.position.PackagePositionId).Name,
-                            ItemPositionName = query.For<Position>().Single(x => x.Id == principalPosition.position.ItemPositionId).Name,
+                            OrderNumber = query.For<Order>().Single(x => x.Id == pair.principal.Position.OrderId).Number,
+                            OrderPositionName = query.For<Position>().Single(x => x.Id == pair.principal.Position.PackagePositionId).Name,
+                            ItemPositionName = query.For<Position>().Single(x => x.Id == pair.principal.Position.ItemPositionId).Name,
                         },
                     };
 
-            var messages = from conflict in conflictingPositions.Where(x => x.OrderAssociatedPosition.BindingType == Different).Where(Specs.Find.Aggs.BindingObjectMatch())
+            var messages = from conflict in conflictingPositions
                            select new Version.ValidationResult
                            {
                                VersionId = version,

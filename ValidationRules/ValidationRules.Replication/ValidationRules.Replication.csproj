@@ -83,6 +83,7 @@
     <Compile Include="PriceRules\Facts\AssociatedPositionAccessor.cs" />
     <Compile Include="PriceRules\Validation\DeniedPositionsCheckActor.cs" />
     <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCountActor.cs" />
+    <Compile Include="PriceRules\Validation\Dto\Dto.cs" />
     <Compile Include="PriceRules\Validation\MaximumAdvertisementAmountActor.cs" />
     <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecifiedActor.cs" />
     <Compile Include="PriceRules\Validation\MinimumAdvertisementAmountActor.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
-    <Compile Include="PriceRules\Validation\Dto\PrincipalAssociatedPostionPair.cs" />
+    <Compile Include="Specifications\Specs.Join.Aggs.cs" />
     <Compile Include="ValidationRuleShared.cs" />
     <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />
     <Compile Include="PriceRules\Validation\SatisfiedPrincipalPositionDifferentOrderActor.cs" />

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -80,7 +79,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Dto<OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var unsatisfiedPositions =
-                associatedPositions.SelectMany(WithMatchedBindingObject(orderPositions.DefaultIfEmpty()), (associated, principal) => new { associated, principal })
+                associatedPositions.SelectMany(Specs.Join.Aggs.WithMatchedBindingObject(orderPositions.DefaultIfEmpty()), (associated, principal) => new { associated, principal })
                                    .GroupBy(x => new
                                    {
                                        // можно включать все поля, какие захотим иметь в выборке, кроме двух: PrincipalPositionId, Source
@@ -139,32 +138,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                            };
 
             return messages;
-        }
-
-        private static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> WithMatchedBindingObject(IQueryable<Dto<OrderPosition>> principals)
-        {
-            return associated => principals.Where(principal => principal.FirmId == associated.FirmId
-                                                               && principal.Start == associated.Start
-                                                               && principal.OrganizationUnitId == associated.OrganizationUnitId
-                                                               && principal.Position.ItemPositionId == associated.Position.PrincipalPositionId
-                                                               && principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId
-                                                               && (principal.Scope == 0 || principal.Scope == associated.Scope))
-                                           .Where(principal =>
-                                                  (associated.Position.HasNoBinding == principal.Position.HasNoBinding) &&
-                                                  ((associated.Position.Category1Id == principal.Position.Category1Id) &&
-                                                   (associated.Position.Category3Id == principal.Position.Category3Id || associated.Position.Category3Id == null || principal.Position.Category3Id == null) &&
-                                                   (associated.Position.FirmAddressId == principal.Position.FirmAddressId || associated.Position.FirmAddressId == null || principal.Position.FirmAddressId == null) ||
-                                                   (associated.Position.Category1Id == principal.Position.Category1Id || associated.Position.Category1Id == null || principal.Position.Category1Id == null) && (associated.Position.Category3Id == null || principal.Position.Category3Id == null) &&
-                                                   (associated.Position.FirmAddressId == principal.Position.FirmAddressId)));
-        }
-
-        class Dto<TPosition>
-        {
-            public long FirmId { get; set; }
-            public DateTime Start { get; set; }
-            public long OrganizationUnitId { get; set; }
-            public long Scope { get; set; }
-            public TPosition Position { get; set; }
         }
     }
 }
