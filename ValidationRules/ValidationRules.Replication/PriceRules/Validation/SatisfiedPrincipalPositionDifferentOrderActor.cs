@@ -111,34 +111,36 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var messages = from warning in satisfiedPositions
                            join period in query.For<Period>() on new { warning.Start, warning.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                            select new Version.ValidationResult
-                           {
-                               VersionId = version,
-                               MessageType = MessageTypeId,
-                               MessageParams =
-                                new XDocument(new XElement("element",
-                                    new XAttribute("firm", warning.FirmId),
-                                    new XElement("position",
-                                        new XAttribute("orderId", warning.PrincipalOrderId),
-                                        new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.PrincipalOrderId).Number),
-                                        new XAttribute("orderPositionId", warning.PrincipalOrderPositionId),
-                                        new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.PrincipalOrderPositionId).Name)),
-                                    new XElement("position",
-                                        new XAttribute("orderId", warning.CauseOrderId),
-                                        new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.CauseOrderId).Number),
-                                        new XAttribute("orderPositionId", warning.CauseOrderPositionId),
-                                        new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.CausePackagePositionId).Name))
-                                    )
-                                ),
+                               {
+                                   VersionId = version,
+                                   MessageType = MessageTypeId,
+                                   MessageParams =
+                                       new XDocument(new XElement("root",
+                                                                  new XElement("firm",
+                                                                               new XAttribute("id", warning.FirmId)),
+                                                                  new XElement("position",
+                                                                               new XAttribute("orderId", warning.PrincipalOrderId),
+                                                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.PrincipalOrderId).Number),
+                                                                               new XAttribute("orderPositionId", warning.PrincipalOrderPositionId),
+                                                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.PrincipalOrderPositionId).Name)),
+                                                                  new XElement("position",
+                                                                               new XAttribute("orderId", warning.CauseOrderId),
+                                                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.CauseOrderId).Number),
+                                                                               new XAttribute("orderPositionId", warning.CauseOrderPositionId),
+                                                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.CausePackagePositionId).Name)),
+                                                                  new XElement("order",
+                                                                               new XAttribute("id", warning.PrincipalOrderId),
+                                                                               new XAttribute("number", query.For<Order>().Single(x => x.Id == warning.PrincipalOrderId).Number)))),
 
-                               PeriodStart = period.Start,
-                               PeriodEnd = period.End,
-                               ProjectId = period.ProjectId,
+                                   PeriodStart = period.Start,
+                                   PeriodEnd = period.End,
+                                   ProjectId = period.ProjectId,
 
-                               ReferenceType = EntityTypeIds.Order,
-                               ReferenceId = warning.PrincipalOrderId,
+                                   ReferenceType = EntityTypeIds.Order,
+                                   ReferenceId = warning.PrincipalOrderId,
 
-                               Result = RuleResult,
-                           };
+                                   Result = RuleResult,
+                               };
 
             return messages;
         }
