@@ -11,14 +11,28 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
+    /// <summary>
+    /// Для заказов в статусе "на расторжении", если они содержат основную позицию для остающихся одобренными заказов и среди одобренных нет другой основной позиции должно выводиться предупреждение.
+    /// Позиция {0} данного Заказа является основной для следующих позиций:
+    /// Позиция {0} Заказа {1}
+    /// 
+    /// Source: ADP/ADPValidation_Template
+    /// 
+    /// Q1: X является сопутствующей для Y (объект привязки совпадает)
+    ///     Оформлен заказ №1 с X(A,B), Y(A) и заказ №2 с Y(B).
+    ///     Заказ №2 отправляется на расторжение. Должна ли быть ошибка?
+    /// A: Да.
+    /// 
+    /// Q2: Аналогично Q1, но позиция X ещё является сопутствующей для Z (без учёта)
+    ///     И позиция Z продана в заказ 1. По логике (бага?) проверки LinkedObjectsMissedInPrincipalsActor (Q3) ошибка должна быть.
+    /// A: Ошибка есть.
+    /// </summary>
     public sealed class SatisfiedPrincipalPositionDifferentOrderActor : IActor
     {
         private const int NoDependency = 2;
         private const int Match = 1;
         private const int Different = 3;
 
-        // Позиция №{0} данного Заказа является основной для следующих позиций:
-        // Позиция №{0} Заказа {1}
         private const int MessageTypeId = 15;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
