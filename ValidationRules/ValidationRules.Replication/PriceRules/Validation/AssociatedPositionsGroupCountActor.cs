@@ -43,16 +43,17 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                               join price in query.For<Price>() on overcount.PriceId equals price.Id
                               join pp in query.For<PricePeriod>() on overcount.PriceId equals pp.PriceId
                               join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                              join project in query.For<Project>() on period.ProjectId equals project.Id
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
                                       MessageParams = new XDocument(new XElement("root",
                                                                                  new XElement("price",
                                                                                               new XAttribute("id", price.Id),
-                                                                                              new XAttribute("publishDate", DateTime.MinValue)), // todo: в агрегат нужно подтянуть дату публикацию прайс-листа
+                                                                                              new XAttribute("beginDate", price.BeginDate)),
                                                                                  new XElement("project",
-                                                                                              new XAttribute("id", period.ProjectId),
-                                                                                              new XAttribute("name", period.ProjectId)), // todo: в агрегат нужно подтянуть имя проекта
+                                                                                              new XAttribute("id", project.Id),
+                                                                                              new XAttribute("name", project.Name)),
                                                                                  new XAttribute("pricePosition",
                                                                                                 new XAttribute("id", overcount.PricePositionId)))),
                                       PeriodStart = period.Start,

@@ -18,6 +18,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
             new Dictionary<Type, Type>
                 {
                     { typeof(Price), typeof(PriceAggregateRootActor) },
+                    { typeof(Project), typeof(ProjectAggregateRootActor) },
                     { typeof(Order), typeof(OrderAggregateRootActor) },
                     { typeof(Period), typeof(PeriodAggregateRootActor) },
                     { typeof(Position), typeof(PositionAggregateRootActor) },

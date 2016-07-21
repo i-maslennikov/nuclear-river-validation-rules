@@ -17,6 +17,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRoots
             = new Dictionary<Type, Type>
                 {
+                    { typeof(Storage.Model.PriceRules.Facts.Project), typeof(Storage.Model.PriceRules.Aggregates.Project) },
                     { typeof(Storage.Model.PriceRules.Facts.Price), typeof(Storage.Model.PriceRules.Aggregates.Price) },
                     { typeof(Storage.Model.PriceRules.Facts.Order), typeof(Storage.Model.PriceRules.Aggregates.Order) },
                     { typeof(Storage.Model.PriceRules.Facts.Position), typeof(Storage.Model.PriceRules.Aggregates.Position) },

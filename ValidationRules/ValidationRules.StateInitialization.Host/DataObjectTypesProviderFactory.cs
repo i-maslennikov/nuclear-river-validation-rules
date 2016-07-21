@@ -64,6 +64,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Period),
                             typeof(PriceAggregates::Position),
                             typeof(PriceAggregates::Price),
+                            typeof(PriceAggregates::Project),
                             typeof(PriceAggregates::AssociatedPositionGroupOvercount),
                             typeof(PriceAggregates::PricePeriod),
 

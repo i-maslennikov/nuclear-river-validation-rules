@@ -213,7 +213,8 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             x => new Facts::Project
                                 {
                                     Id = x.Id,
-                                    OrganizationUnitId = x.OrganizationUnitId.Value
+                                    OrganizationUnitId = x.OrganizationUnitId.Value,
+                                    Name = x.DisplayName,
                                 };
                     }
                 }

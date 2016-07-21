@@ -19,13 +19,23 @@ if object_id('PriceAggregate.AdvertisementAmountRestriction') is not null drop t
 if object_id('PriceAggregate.Price') is not null drop table PriceAggregate.Price
 if object_id('PriceAggregate.AssociatedPositionGroupOvercount') is not null drop table PriceAggregate.AssociatedPositionGroupOvercount
 
+if object_id('PriceAggregate.Project') is not null drop table PriceAggregate.Project
+
 go
 
+-- справочник
+create table PriceAggregate.Project(
+    Id bigint NOT NULL,
+    Name nvarchar(max) NOT NULL,
+    constraint PK_Project primary key (Id)
+)
+go
 
 -- price aggregate
 
 create table PriceAggregate.Price(
     Id bigint NOT NULL,
+    BeginDate datetime2(2) NOT NULL,
     constraint PK_Price primary key (Id)
 )
 go

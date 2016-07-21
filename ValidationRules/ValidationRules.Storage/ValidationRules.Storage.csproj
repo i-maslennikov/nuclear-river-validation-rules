@@ -110,6 +110,7 @@
     <Compile Include="Model\Erm\Project.cs" />
     <Compile Include="Model\Erm\Ruleset.cs" />
     <Compile Include="Model\Erm\RulesetRule.cs" />
+    <Compile Include="Model\PriceRules\Aggregates\Project.cs" />
     <Compile Include="Model\PriceRules\Facts\AssociatedPosition.cs" />
     <Compile Include="Model\PriceRules\Facts\AssociatedPositionsGroup.cs" />
     <Compile Include="Model\PriceRules\Facts\Category.cs" />

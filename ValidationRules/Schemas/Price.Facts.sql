@@ -136,6 +136,7 @@ go
 create table PriceContext.Project(
     Id bigint not null,
     OrganizationUnitId bigint not null,
+    Name nvarchar(max) not null,
     constraint PK_Project primary key (Id)
 )
 go

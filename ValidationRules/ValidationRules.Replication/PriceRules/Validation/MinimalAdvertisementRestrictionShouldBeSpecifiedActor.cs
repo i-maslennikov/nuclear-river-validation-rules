@@ -45,13 +45,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                               join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
                               join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                               join op in query.For<OrderPeriod>() on new { pp.Start, pp.OrganizationUnitId } equals new { op.Start, op.OrganizationUnitId }
+                              join project in query.For<Project>() on period.ProjectId equals project.Id
                               select new Version.ValidationResult
                                   {
                                       MessageType = MessageTypeId,
                                       MessageParams = new XDocument(new XElement("root",
                                                                                  new XElement("project",
-                                                                                              new XAttribute("id", period.ProjectId),
-                                                                                              new XAttribute("name", period.ProjectId)), // todo: в агрегат нужно подтянуть имя проекта
+                                                                                              new XAttribute("id", project.Id),
+                                                                                              new XAttribute("name", project.Name)),
                                                                                  new XElement("pricePosition",
                                                                                               new XAttribute("name", restriction.CategoryName)))),
                                       PeriodStart = period.Start,

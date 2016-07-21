@@ -61,10 +61,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var projectRuleViolations = from period in query.For<Period>()
                                         join violation in ruleViolations on new { period.Start, period.OrganizationUnitId }
                                             equals new { violation.Key.Start, violation.Key.OrganizationUnitId }
+                                        join project in query.For<Project>() on period.ProjectId equals project.Id
                                         select new Version.ValidationResult
                                             {
                                                 MessageType = MessageTypeId,
-                                            MessageParams =
+                                                MessageParams =
                                                   new XDocument(new XElement("root",
                                                                 new XElement("message",
                                                                             new XAttribute("min", violation.Min),
@@ -72,9 +73,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                             new XAttribute("name", violation.CategoryName),
                                                                             new XAttribute("month", period.Start)),
                                                                 new XElement("project",
-                                                                            new XAttribute("id", period.ProjectId),
-                                                                            new XAttribute("name", period.ProjectId)))), // todo: в агрегат нужно подтянуть имя проекта                                                PeriodStart = period.Start,
-                                            PeriodEnd = period.End,
+                                                                            new XAttribute("id", project.Id),
+                                                                            new XAttribute("name", project.Name)))),
+
+                                                PeriodStart = period.Start,
+                                                PeriodEnd = period.End,
                                                 ProjectId = period.ProjectId,
                                                 VersionId = version,
 
@@ -91,6 +94,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                           equals new { violation.Key.Start, violation.Key.OrganizationUnitId, violation.Key.CategoryCode }
                                       join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId }
                                           equals new { period.Start, period.OrganizationUnitId }
+                                      join project in query.For<Project>() on period.ProjectId equals project.Id
                                       select new Version.ValidationResult
                                           {
                                               MessageType = MessageTypeId,
@@ -105,9 +109,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                             new XAttribute("id", order.Id),
                                                                             new XAttribute("number", order.Number)),
                                                                 new XElement("project",
-                                                                            new XAttribute("id", period.ProjectId),
-                                                                            new XAttribute("number", period.ProjectId)))), // todo: в агрегат нужно подтянуть имя проекта
-                                          PeriodStart = period.Start,
+                                                                            new XAttribute("id", project.Id),
+                                                                            new XAttribute("number", project.Name)))),
+                                              PeriodStart = period.Start,
                                               PeriodEnd = period.End,
                                               ProjectId = period.ProjectId,
                                               VersionId = version,

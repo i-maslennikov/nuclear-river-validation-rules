@@ -54,7 +54,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
 
             public IQueryable<Price> GetSource()
-                => _query.For<Facts::Price>().Select(price => new Price { Id = price.Id });
+                => _query.For<Facts::Price>().Select(price => new Price { Id = price.Id, BeginDate = price.BeginDate });
 
             public FindSpecification<Price> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
