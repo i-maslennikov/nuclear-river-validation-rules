@@ -18,7 +18,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// "Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3} - {4}"
     /// 
     /// Source: AdvertisementAmountOrderValidationRule/AdvertisementAmountErrorMessage
-    /// todo: Нужно, чтобы ошибка не препятствовала одобрению заказа, но не давала собрать город. Можно ли использовать Scope?
     /// </summary>
     public sealed class MinimumAdvertisementAmountActor : IActor
     {
@@ -49,6 +48,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var saleGrid = from position in query.For<AmountControlledPosition>()
                            join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
+                           where op.Scope == 0
                            group new { op.Start, op.OrganizationUnitId, position.CategoryCode }
                                by new { op.Start, op.OrganizationUnitId, position.CategoryCode } into groups
                            select new { groups.Key, Count = groups.Count() };
@@ -58,35 +58,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                  where restriction.Min > (sale == null ? 0 : sale.Count)
                                  select new { restriction.Key, restriction.Min, restriction.Max, sale.Count, restriction.CategoryName };
 
-            var projectRuleViolations = from period in query.For<Period>()
-                                        join violation in ruleViolations on new { period.Start, period.OrganizationUnitId }
-                                            equals new { violation.Key.Start, violation.Key.OrganizationUnitId }
-                                        join project in query.For<Project>() on period.ProjectId equals project.Id
-                                        select new Version.ValidationResult
-                                            {
-                                                MessageType = MessageTypeId,
-                                                MessageParams =
-                                                  new XDocument(new XElement("root",
-                                                                new XElement("message",
-                                                                            new XAttribute("min", violation.Min),
-                                                                            new XAttribute("count", violation.Count),
-                                                                            new XAttribute("name", violation.CategoryName),
-                                                                            new XAttribute("month", period.Start)),
-                                                                new XElement("project",
-                                                                            new XAttribute("id", project.Id),
-                                                                            new XAttribute("name", project.Name)))),
-
-                                                PeriodStart = period.Start,
-                                                PeriodEnd = period.End,
-                                                ProjectId = period.ProjectId,
-                                                VersionId = version,
-
-                                                ReferenceType = EntityTypeIds.Project,
-                                                ReferenceId = period.ProjectId,
-
-                                                Result = RuleResult,
-                                            };
-
             var orderRuleViolations = from position in query.For<AmountControlledPosition>()
                                       join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
                                       join order in query.For<Order>() on op.OrderId equals order.Id
@@ -95,6 +66,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                       join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId }
                                           equals new { period.Start, period.OrganizationUnitId }
                                       join project in query.For<Project>() on period.ProjectId equals project.Id
+                                      let count = op.Scope == 0 ? violation.Count : violation.Count + 1
+                                      where count < violation.Min
                                       select new Version.ValidationResult
                                           {
                                               MessageType = MessageTypeId,
@@ -102,7 +75,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                   new XDocument(new XElement("root",
                                                                 new XElement("message",
                                                                             new XAttribute("min", violation.Min),
-                                                                            new XAttribute("count", violation.Count),
+                                                                            new XAttribute("count", count),
                                                                             new XAttribute("name", violation.CategoryName),
                                                                             new XAttribute("month", period.Start)),
                                                                 new XElement("order",
@@ -122,9 +95,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                               Result = RuleResult,
                                           };
 
-            // В projectRuleViolations получаются сообщения с тегом проекта,
-            // в orderRuleViolations получаются сообщения с тегом заказа.
-            return orderRuleViolations.ToArray().Concat(projectRuleViolations.ToArray()).AsQueryable();
+            return orderRuleViolations;
         }
     }
 }
