@@ -16,16 +16,24 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// "ѕозици€ {0} не соответствует актуальному прайс-листу. Ќеобходимо указать позицию из текущего действующего прайс-листа"
     /// 
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionDoesntCorrespontToActualPrice
-    /// TODO: Ќемного искажЄнна€ трактовка, проверка erm выдаЄт ошибку при статусе, отличном от Approved (т.е. не блокирует уже одобренные заказы) - решение, ошибка в локальном Scope, предупреждение в глобальном.
     /// </summary>
     public sealed class OrderPositionShouldCorrespontToActualPriceActor : IActor
     {
         public const int MessageTypeId = 5;
 
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Warning)
-                                                                    .WhenMassPrerelease(Result.Warning)
-                                                                    .WhenMassRelease(Result.Warning);
+        private static readonly int RuleResultError =
+            new ResultBuilder()
+                .WhenSingle(Result.Error)
+                .WhenMass(Result.Error)
+                .WhenMassPrerelease(Result.Error)
+                .WhenMassRelease(Result.Error);
+
+        private static readonly int RuleResultWarning =
+            new ResultBuilder()
+                .WhenSingle(Result.Warning)
+                .WhenMass(Result.Warning)
+                .WhenMassPrerelease(Result.Warning)
+                .WhenMassRelease(Result.Warning);
 
         private readonly ValidationRuleShared _validationRuleShared;
 
@@ -41,51 +49,46 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
         {
-            // проверка провер€ет соответствие только первого периода
-            var orderFirstPeriods = from orderPeriod1 in query.For<OrderPeriod>()
-                                    from orderPeriod2 in query.For<OrderPeriod>().Where(x => orderPeriod1.OrderId == x.OrderId && orderPeriod1.Start > x.Start).DefaultIfEmpty()
-                                    where orderPeriod2 == null
-                                    select orderPeriod1;
+            // ƒействующий прайс заказа - это прайс, действующий на момент начала размещени€ заказа.
+            // Ќо есть нюанс: можно одобрить заказ, а потом действующий прайс изменитс€. Ёта ситуаци€ должна вызывать не ошибку, а предупреждение.
+            var orderPrices =
+                from order in query.For<Order>()
+                let orderStart = query.For<OrderPeriod>().Where(x => x.OrderId == order.Id).Min(x => x.Start)
+                let orderEnd = query.For<OrderPeriod>().SelectMany(x => query.For<Period>().Where(y => x.OrderId == order.Id && y.Start == x.Start && y.OrganizationUnitId == x.OrganizationUnitId)).Max(x => x.End)
+                from orderPeriod in query.For<OrderPeriod>().Where(x => x.OrderId == order.Id && x.Start == orderStart)
+                from pricePeriod in query.For<PricePeriod>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
+                from period in query.For<Period>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
+                select new { Order = order, ActualPriceId = pricePeriod.PriceId, Start = period.Start, End = orderEnd, ProjectId = period.ProjectId, Scope = orderPeriod.Scope };
 
-            var orderFirstPeriodDtos = from orderFirstPeriod in orderFirstPeriods
-                                  join order in query.For<Order>() on orderFirstPeriod.OrderId equals order.Id
-                                  join period in query.For<Period>()
-                                  on new { orderFirstPeriod.OrganizationUnitId, orderFirstPeriod.Start } equals new { period.OrganizationUnitId, period.Start }
-                                  select new
-                                  {
-                                      OrderId = order.Id,
-                                      OrderNumber = order.Number,
+            var notRelevantPositions =
+                from position in query.For<OrderPricePosition>()
+                from actual in orderPrices.Where(x => x.Order.Id == position.OrderId && x.ActualPriceId != position.PriceId)
+                select new { Order = actual.Order, Position = position, Start = actual.Start, End = actual.End, ProjectId = actual.ProjectId, Scope = actual.Scope };
 
-                                      period.OrganizationUnitId,
-                                      period.ProjectId,
-                                      period.Start,
-                                      period.End,
-                                  };
+            var messages =
+                from position in notRelevantPositions
+                select new Version.ValidationResult
+                    {
+                        MessageType = MessageTypeId,
+                        MessageParams = new XDocument(new XElement("root",
+                                                                   new XElement("order",
+                                                                                new XAttribute("id", position.Order.Id),
+                                                                                new XAttribute("number", position.Order.Number)),
+                                                                   new XElement("orderPosition",
+                                                                                new XAttribute("id", position.Position.OrderPositionId),
+                                                                                new XAttribute("name", position.Position.OrderPositionName)))),
+                        PeriodStart = position.Start,
+                        PeriodEnd = position.End,
+                        ProjectId = position.ProjectId,
+                        VersionId = version,
 
-            var orderPositionBadPriceErrors =
-            from orderFirstPeriodDto in orderFirstPeriodDtos
-            from pricePeriod in query.For<PricePeriod>().Where(x => x.OrganizationUnitId == orderFirstPeriodDto.OrganizationUnitId && x.Start == orderFirstPeriodDto.Start).DefaultIfEmpty()
-            join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
-            where pricePeriod != null
-            where pricePeriod.PriceId != orderPricePosition.PriceId
-            select new Version.ValidationResult
-            {
-                MessageType = MessageTypeId,
-                MessageParams = new XDocument(new XElement("root",
-                                                new XElement("order", new XAttribute("id", orderFirstPeriodDto.OrderId), new XAttribute("number", orderFirstPeriodDto.OrderNumber)),
-                                                new XElement("orderPosition", new XAttribute("id", orderPricePosition.OrderPositionId), new XAttribute("name", orderPricePosition.OrderPositionName)))),
-                PeriodStart = orderFirstPeriodDto.Start,
-                PeriodEnd = orderFirstPeriodDto.End,
-                ProjectId = orderFirstPeriodDto.ProjectId,
-                VersionId = version,
+                        ReferenceType = EntityTypeIds.Order,
+                        ReferenceId = position.Order.Id,
 
-                ReferenceType = EntityTypeIds.Order,
-                ReferenceId = orderFirstPeriodDto.OrderId,
+                        Result = position.Scope == 0 ? RuleResultError : RuleResultWarning,
+                    };
 
-                Result = RuleResult,
-            };
-
-            return orderPositionBadPriceErrors;
+            return messages;
         }
     }
 }
