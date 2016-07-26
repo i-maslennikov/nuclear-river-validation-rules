@@ -4,12 +4,12 @@ using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
-    public sealed class DeniedPositionsCheckMessageSerializer : IMessageSerializer
+    public sealed class AssociatedPositionWithoutPrincipalMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory = new LinkFactory();
 
         public int MessageType
-            => DeniedPositionsCheckActor.MessageTypeId;
+            => AssociatedPositionWithoutPrincipalActor.MessageTypeId;
 
         public LocalizedMessage Serialize(Message message)
         {
@@ -18,8 +18,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 
             return new LocalizedMessage(Result.Error,
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"{MakePositionText(positions.First())} является запрещённой для: {MakePositionText(positions.Last())}" +
-                                            $" в заказе {_linkFactory.CreateLink("Order", positions.Last().OrderId, positions.Last().OrderNumber)}");
+                                        $"{MakePositionText(positions.First())} является сопутствующей, основная позиция не найдена");
         }
 
         private string MakePositionText(MessageExtensions.OrderPositionDto dto)

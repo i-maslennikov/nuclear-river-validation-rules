@@ -37,9 +37,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class ConflictingPrincipalPositionActor : IActor
     {
-        private const int Different = 3;
+        public const int MessageTypeId = 11;
 
-        private const int MessageTypeId = 11;
+        private const int Different = 3;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)

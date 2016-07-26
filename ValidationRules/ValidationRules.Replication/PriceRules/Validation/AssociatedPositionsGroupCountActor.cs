@@ -54,8 +54,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                                  new XElement("project",
                                                                                               new XAttribute("id", project.Id),
                                                                                               new XAttribute("name", project.Name)),
-                                                                                 new XAttribute("pricePosition",
-                                                                                                new XAttribute("id", overcount.PricePositionId)))),
+                                                                                 new XElement("pricePosition",
+                                                                                              new XAttribute("id", overcount.PricePositionId),
+                                                                                              new XAttribute("name", overcount.PricePositionId)))), // todo: нужно название позиции
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
                                       ProjectId = period.ProjectId,

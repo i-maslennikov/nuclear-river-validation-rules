@@ -38,13 +38,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Q5: Позиция Z - сопутствующая для X, Y (совпадение)
     ///     Z продана в A, B. X продана в A. Y продана в B. Должна ли появиться ошибка?
     /// A: Нет.
+    /// 
+    /// TODO: можно вполне выводить в какой именно основной позиции отсутствуют объекты привязки, но в ERM так не делают, и мы не будем
     /// </summary>
     public sealed class LinkedObjectsMissedInPrincipalsActor : IActor
     {
-        private const int Match = 1;
+        public const int MessageTypeId = 10;
 
-        // TODO: можно вполне выводить в какой именно основной позиции отсутствуют объекты привязки, но в ERM так не делают, и мы не будем
-        private const int MessageTypeId = 10;
+        private const int Match = 1;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)

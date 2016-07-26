@@ -11,15 +11,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 
         public LocalizedMessage Serialize(Message message)
         {
-            var priceId = (long)message.Data.Root.Element("price").Attribute("id");
-            var priceBeginDate = (string)message.Data.Root.Element("price").Attribute("beginDate");
-            var projectName = (string)message.Data.Root.Element("project").Attribute("name");
-            var pricePositionName = (decimal)message.Data.Root.Element("pricePosition").Attribute("name");
+            var priceReference = message.ReadPriceReference();
+            var pricePositionReference = message.ReadPricePositionReference();
 
-            // todo: Вывести название прайс-листа из названия города и даты публикации. Думаю, это задача ui, т.е. должна решаться здесь.
             return new LocalizedMessage(Result.Error,
-                                        $"Прайс-лист {_linkFactory.CreateLink("Price", priceId, $"{projectName} от {priceBeginDate}")}",
-                                        $"В Позиции прайс-листа {pricePositionName} содержится более одной группы сопутствующих позиций, что не поддерживается системой");
+                                        $"Прайс-лист {_linkFactory.CreateLink(priceReference)}",
+                                        $"В Позиции прайс-листа {_linkFactory.CreateLink(pricePositionReference)} содержится более одной группы сопутствующих позиций, что не поддерживается системой");
         }
     }
 }

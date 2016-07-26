@@ -4,22 +4,24 @@ using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
-    public sealed class DeniedPositionsCheckMessageSerializer : IMessageSerializer
+    public sealed class SatisfiedPrincipalPositionDifferentOrderMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory = new LinkFactory();
 
         public int MessageType
-            => DeniedPositionsCheckActor.MessageTypeId;
+            => SatisfiedPrincipalPositionDifferentOrderActor.MessageTypeId;
 
         public LocalizedMessage Serialize(Message message)
         {
             var orderReference = message.ReadOrderReference();
-            var positions = message.ReadOrderPositions();
+            var orderPositions = message.ReadOrderPositions();
+
+            var masterPosition = $"{MakePositionText(orderPositions.First())} данного Заказа является основной для следующих позиций: ";
+            var dependentPositions = orderPositions.Skip(1).Select(x => $"{MakePositionText(x)} Заказа {_linkFactory.CreateLink("Order", x.OrderId, x.OrderNumber)}");
 
             return new LocalizedMessage(Result.Error,
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"{MakePositionText(positions.First())} является запрещённой для: {MakePositionText(positions.Last())}" +
-                                            $" в заказе {_linkFactory.CreateLink("Order", positions.Last().OrderId, positions.Last().OrderNumber)}");
+                                        masterPosition + string.Join(", ", dependentPositions));
         }
 
         private string MakePositionText(MessageExtensions.OrderPositionDto dto)

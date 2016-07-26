@@ -2,7 +2,6 @@
 using System.Linq;
 
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers;
-using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
@@ -22,10 +21,10 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                     new MinimumAdvertisementAmountMessageSerializer(),
                     new MaximumAdvertisementAmountMessageSerializer(),
                     new OrderPositionCorrespontToInactivePositionMessageSerializer(),
-                    // new LinkedObjectsMissedInPrincipalsMessageSerializer(),
-                    // new SatisfiedPrincipalPositionDifferentOrderMessageSerializer(),
-                    // new ConflictingPrincipalPositionMessageSerializer(),
-                    // new AssociatedPositionWithoutPrincipalMessageSerializer(),
+                    new LinkedObjectsMissedInPrincipalsMessageSerializer(),
+                    new SatisfiedPrincipalPositionDifferentOrderMessageSerializer(),
+                    new ConflictingPrincipalPositionMessageSerializer(),
+                    new AssociatedPositionWithoutPrincipalMessageSerializer(),
                 }.ToDictionary(x => x.MessageType, x => x);
 
         public LocalizedMessage Localize(Message result)
@@ -33,7 +32,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
             IMessageSerializer serializer;
             return _serializers.TryGetValue(result.MessageType, out serializer)
                        ? serializer.Serialize(result)
-                       : new LocalizedMessage(new ResultBuilder(result.ResultCode).WhenMassRelease(), $"Неопознанная ошибка", result.Data.ToString());
+                       : new LocalizedMessage(new ResultBuilder(result.ResultCode).WhenMassRelease(), $"Неопознанная ошибка с кодом {result.MessageType}", result.Data.ToString());
         }
     }
 }

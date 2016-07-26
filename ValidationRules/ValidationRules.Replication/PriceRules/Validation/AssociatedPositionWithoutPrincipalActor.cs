@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class AssociatedPositionWithoutPrincipalActor : IActor
     {
-        private const int MessageTypeId = 9;
+        public const int MessageTypeId = 9;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)

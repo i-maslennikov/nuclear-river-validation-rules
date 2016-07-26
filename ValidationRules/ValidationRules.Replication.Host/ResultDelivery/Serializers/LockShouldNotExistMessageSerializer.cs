@@ -11,11 +11,10 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 
         public LocalizedMessage Serialize(Message message)
         {
-            var orderId = (long)message.Data.Root.Element("order").Attribute("id");
-            var orderNumber = (string)message.Data.Root.Element("order").Attribute("number");
+            var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(Result.Error,
-                                        $"Заказ {_linkFactory.CreateLink("Order", orderId, orderNumber)}",
+                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
                                         $"Заказ имеет созданную блокировку на указанный период");
         }
     }

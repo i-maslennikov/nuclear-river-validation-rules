@@ -73,6 +73,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                           MessageParams =
                                                 new XDocument(new XElement("root",
                                                                 new XElement("message",
+                                                                            new XAttribute("min", violation.Min),
                                                                             new XAttribute("max", violation.Max),
                                                                             new XAttribute("count", count),
                                                                             new XAttribute("name", violation.CategoryName),

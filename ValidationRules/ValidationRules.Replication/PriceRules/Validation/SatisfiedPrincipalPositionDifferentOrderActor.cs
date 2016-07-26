@@ -29,11 +29,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class SatisfiedPrincipalPositionDifferentOrderActor : IActor
     {
+        public const int MessageTypeId = 15;
+
         private const int NoDependency = 2;
         private const int Match = 1;
         private const int Different = 3;
-
-        private const int MessageTypeId = 15;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Warning)

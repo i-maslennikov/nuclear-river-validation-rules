@@ -11,12 +11,11 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 
         public LocalizedMessage Serialize(Message message)
         {
-            var projectId = (long)message.Data.Root.Element("project").Attribute("id");
-            var projectName = (string)message.Data.Root.Element("project").Attribute("name");
-            var pricePositionName = (decimal)message.Data.Root.Element("pricePosition").Attribute("name");
+            var projectReference = message.ReadProjectReference();
+            var pricePositionName = message.ReadAttribute("pricePosition", "name");
 
             return new LocalizedMessage(Result.Error,
-                                        $"Проект {_linkFactory.CreateLink("Project", projectId, projectName)}",
+                                        $"Проект {_linkFactory.CreateLink(projectReference)}",
                                         $"В позиции прайса {pricePositionName} необходимо указать минимальное количество рекламы в выпуск");
         }
     }

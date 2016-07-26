@@ -11,15 +11,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 
         public LocalizedMessage Serialize(Message message)
         {
-            var orderId = (long)message.Data.Root.Element("order").Attribute("id");
-            var orderNumber = (string)message.Data.Root.Element("order").Attribute("number");
-            var available = (decimal)message.Data.Root.Element("message").Attribute("available");
-            var planned = (decimal)message.Data.Root.Element("message").Attribute("planned");
-            var required = (decimal)message.Data.Root.Element("message").Attribute("required");
+            var orderReference = message.ReadOrderReference();
+            var dto = message.ReadAccountBalanceMessage();
 
             return new LocalizedMessage(Result.Error,
-                                        $"Заказ {_linkFactory.CreateLink("Order", orderId, orderNumber)}",
-                                        $"Для оформления заказа недостаточно средств. Необходимо: {planned}. Имеется: {available}. Необходим лимит: {required}");
+                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
+                                        $"Для оформления заказа недостаточно средств. Необходимо: {dto.Planned}. Имеется: {dto.Available}. Необходим лимит: {dto.Required}");
         }
     }
 }

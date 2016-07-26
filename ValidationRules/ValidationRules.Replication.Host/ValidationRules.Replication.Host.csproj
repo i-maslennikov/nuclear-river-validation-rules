@@ -349,9 +349,14 @@
     <Compile Include="ReplicationService.Designer.cs">
       <DependentUpon>ReplicationService.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResultDelivery\Serializers\AssociatedPositionWithoutPrincipalMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConflictingPrincipalPositionMessageSerializer.cs" />
     <Compile Include="ResultDelivery\IMessageSerializer.cs" />
     <Compile Include="ResultDelivery\ITransportDecorator.cs" />
+    <Compile Include="ResultDelivery\Serializers\LinkedObjectsMissedInPrincipalsMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Message.cs" />
+    <Compile Include="ResultDelivery\Serializers\MessageExtensions.cs" />
+    <Compile Include="ResultDelivery\Serializers\SatisfiedPrincipalPositionDifferentOrderMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AssociatedPositionsGroupCountMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\OrderPositionCorrespontToInactivePositionMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\MinimumAdvertisementAmountMessageSerializer.cs" />
