@@ -60,8 +60,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                        PeriodEnd = x.PeriodEnd,
                                                                        PeriodStart = x.PeriodStart,
                                                                        ProjectId = x.ProjectId,
-                                                                       ReferenceType = x.ReferenceType,
-                                                                       ReferenceId = x.ReferenceId,
                                                                        Result = x.Result,
                                                                    });
             _validationResultRepository.AddRange(nextVersionResults);

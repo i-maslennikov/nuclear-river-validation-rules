@@ -351,6 +351,7 @@
     </Compile>
     <Compile Include="ResultDelivery\IMessageSerializer.cs" />
     <Compile Include="ResultDelivery\ITransportDecorator.cs" />
+    <Compile Include="ResultDelivery\Message.cs" />
     <Compile Include="ResultDelivery\Serializers\AssociatedPositionsGroupCountMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\OrderPositionCorrespontToInactivePositionMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\MinimumAdvertisementAmountMessageSerializer.cs" />

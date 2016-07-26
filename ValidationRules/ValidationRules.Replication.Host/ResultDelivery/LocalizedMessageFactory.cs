@@ -28,12 +28,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                     // new AssociatedPositionWithoutPrincipalMessageSerializer(),
                 }.ToDictionary(x => x.MessageType, x => x);
 
-        public LocalizedMessage Localize(Version.ValidationResult result)
+        public LocalizedMessage Localize(Message result)
         {
             IMessageSerializer serializer;
             return _serializers.TryGetValue(result.MessageType, out serializer)
-                       ? serializer.Serialize(result.MessageParams)
-                       : new LocalizedMessage(new ResultBuilder(result.Result).WhenMassRelease(), $"Заказ {result.ReferenceId}", result.MessageParams.ToString());
+                       ? serializer.Serialize(result)
+                       : new LocalizedMessage(new ResultBuilder(result.ResultCode).WhenMassRelease(), $"Неопознанная ошибка", result.Data.ToString());
         }
     }
 }

@@ -82,9 +82,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
                         VersionId = version,
 
-                        ReferenceType = EntityTypeIds.Order,
-                        ReferenceId = orderFirstPeriodDto.OrderId,
-
                         Result = RuleResult,
                     };
 

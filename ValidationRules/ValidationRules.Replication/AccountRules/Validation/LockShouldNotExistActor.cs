@@ -53,9 +53,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                                       ProjectId = order.DestProjectId,
                                       VersionId = version,
 
-                                      ReferenceType = EntityTypeIds.Order,
-                                      ReferenceId = order.Id,
-
                                       Result = RuleResult,
                                   };
 

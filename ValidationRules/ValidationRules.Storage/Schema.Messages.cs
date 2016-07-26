@@ -30,6 +30,9 @@ namespace NuClear.ValidationRules.Storage
                       .HasTableName(nameof(Version.ValidationResult))
                       .HasSchemaName(MessagesSchema);
 
+                config.Entity<Version.ValidationResultByOrder>()
+                      .HasSchemaName(MessagesSchema);
+
                 return schema;
             }
         }

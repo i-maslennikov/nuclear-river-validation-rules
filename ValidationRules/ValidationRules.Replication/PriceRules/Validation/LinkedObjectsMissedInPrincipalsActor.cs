@@ -131,9 +131,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                PeriodEnd = unsatisfied.End,
                                ProjectId = unsatisfied.ProjectId,
 
-                               ReferenceType = EntityTypeIds.Order,
-                               ReferenceId = unsatisfied.Key.OrderId,
-
                                Result = RuleResult,
                            };
 

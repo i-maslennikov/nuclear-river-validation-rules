@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Xml.Linq;
 
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
@@ -12,14 +11,14 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
         public int MessageType
             => MinimumAdvertisementAmountActor.MessageTypeId;
 
-        public LocalizedMessage Serialize(XDocument document)
+        public LocalizedMessage Serialize(Message message)
         {
-            var orderId = (long)document.Root.Element("order").Attribute("id");
-            var orderNumber = (string)document.Root.Element("order").Attribute("number");
-            var min = (int)document.Root.Element("message").Attribute("min");
-            var count = (int)document.Root.Element("message").Attribute("count");
-            var name = (string)document.Root.Element("message").Attribute("name");
-            var month = (DateTime)document.Root.Element("message").Attribute("month");
+            var orderId = (long)message.Data.Root.Element("order").Attribute("id");
+            var orderNumber = (string)message.Data.Root.Element("order").Attribute("number");
+            var min = (int)message.Data.Root.Element("message").Attribute("min");
+            var count = (int)message.Data.Root.Element("message").Attribute("count");
+            var name = (string)message.Data.Root.Element("message").Attribute("name");
+            var month = (DateTime)message.Data.Root.Element("message").Attribute("month");
 
             return new LocalizedMessage(Result.Error,
                                         $"Заказ {_linkFactory.CreateLink("Order", orderId, orderNumber)}",

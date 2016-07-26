@@ -1,7 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
-
-using NuClear.ValidationRules.Replication.PriceRules.Validation;
+﻿using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
@@ -12,10 +9,10 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
         public int MessageType
             => OrderPositionsShouldCorrespontToActualPriceActor.MessageTypeId;
 
-        public LocalizedMessage Serialize(XDocument document)
+        public LocalizedMessage Serialize(Message message)
         {
-            var orderId = (long)document.Root.Element("order").Attribute("id");
-            var orderNumber = (string)document.Root.Element("order").Attribute("number");
+            var orderId = (long)message.Data.Root.Element("order").Attribute("id");
+            var orderNumber = (string)message.Data.Root.Element("order").Attribute("number");
 
             return new LocalizedMessage(Result.Error,
                                         $"Заказ {_linkFactory.CreateLink("Order", orderId, orderNumber)}",

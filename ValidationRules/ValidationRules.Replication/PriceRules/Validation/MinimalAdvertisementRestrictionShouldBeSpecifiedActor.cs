@@ -60,9 +60,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                       ProjectId = period.ProjectId,
                                       VersionId = version,
 
-                                      ReferenceType = EntityTypeIds.Project,
-                                      ReferenceId = period.ProjectId,
-
                                       Result = RuleResult,
                                   };
 

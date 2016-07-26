@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-using NuClear.ValidationRules.Replication.PriceRules.Validation;
+﻿using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
@@ -11,12 +9,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
         public int MessageType
             => AssociatedPositionsGroupCountActor.MessageTypeId;
 
-        public LocalizedMessage Serialize(XDocument document)
+        public LocalizedMessage Serialize(Message message)
         {
-            var priceId = (long)document.Root.Element("price").Attribute("id");
-            var priceBeginDate = (string)document.Root.Element("price").Attribute("beginDate");
-            var projectName = (string)document.Root.Element("project").Attribute("name");
-            var pricePositionName = (decimal)document.Root.Element("pricePosition").Attribute("name");
+            var priceId = (long)message.Data.Root.Element("price").Attribute("id");
+            var priceBeginDate = (string)message.Data.Root.Element("price").Attribute("beginDate");
+            var projectName = (string)message.Data.Root.Element("project").Attribute("name");
+            var pricePositionName = (decimal)message.Data.Root.Element("pricePosition").Attribute("name");
 
             // todo: Вывести название прайс-листа из названия города и даты публикации. Думаю, это задача ui, т.е. должна решаться здесь.
             return new LocalizedMessage(Result.Error,

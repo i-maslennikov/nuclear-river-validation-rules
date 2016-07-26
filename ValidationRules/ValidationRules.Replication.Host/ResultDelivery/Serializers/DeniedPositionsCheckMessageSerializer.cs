@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
@@ -13,11 +12,11 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
         public int MessageType
             => DeniedPositionsCheckActor.MessageTypeId;
 
-        public LocalizedMessage Serialize(XDocument document)
+        public LocalizedMessage Serialize(Message message)
         {
-            var orderId = (long)document.Root.Element("order").Attribute("id");
-            var orderNumber = (string)document.Root.Element("order").Attribute("number");
-            var positions = document.Root.Elements("position").Select(ParseOrderPosition).ToArray();
+            var orderId = (long)message.Data.Root.Element("order").Attribute("id");
+            var orderNumber = (string)message.Data.Root.Element("order").Attribute("number");
+            var positions = message.Data.Root.Elements("position").Select(ParseOrderPosition).ToArray();
 
             return new LocalizedMessage(Result.Error,
                                         $"Заказ {_linkFactory.CreateLink("Order", orderId, orderNumber)}",

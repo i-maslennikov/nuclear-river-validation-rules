@@ -82,9 +82,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         ProjectId = position.ProjectId,
                         VersionId = version,
 
-                        ReferenceType = EntityTypeIds.Order,
-                        ReferenceId = position.Order.Id,
-
                         Result = position.Scope == 0 ? RuleResultError : RuleResultWarning,
                     };
 

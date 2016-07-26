@@ -10,8 +10,6 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class ResultReadModel
     {
-        private const int OrderReferenceType = 151;
-
         private readonly IQuery _query;
 
         public ResultReadModel(IQuery query)
@@ -19,19 +17,19 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
             _query = query;
         }
 
-        public IReadOnlyCollection<Version.ValidationResult> GetResults(IEnumerable<Tuple<long, DateTime>> filter)
+        public IReadOnlyCollection<Message> GetResults(IEnumerable<Tuple<long, DateTime>> filter)
         {
             // Просто .First() приводит к сообщению, что подключение закрыто.
             var lastVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).ToArray().First();
 
-            var results = new List<Version.ValidationResult>();
+            var results = new List<Message>();
             foreach (var group in filter.GroupBy(x => x.Item2, x => x.Item1))
             {
-                var query = _query.For<Version.ValidationResult>()
+                var query = _query.For<Version.ValidationResultByOrder>()
                                   .Where(x => x.VersionId == lastVersion.Id)
                                   .Where(x => x.PeriodStart <= group.Key && group.Key < x.PeriodEnd)
-                                  .Where(x => x.ReferenceType == OrderReferenceType)
-                                  .Where(x => group.Contains(x.ReferenceId));
+                                  .Where(x => group.Contains(x.OrderId))
+                                  .Select(x => new Message(x.MessageType, x.MessageParams, x.Result));
                 results.AddRange(query);
             }
 
