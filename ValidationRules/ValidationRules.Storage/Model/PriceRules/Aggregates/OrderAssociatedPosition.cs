@@ -1,6 +1,6 @@
 namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
-    public sealed class OrderAssociatedPosition
+    public sealed class OrderAssociatedPosition : IBindingObject
     {
         public long OrderId { get; set; }
         public long CauseOrderPositionId { get; set; }

@@ -5,7 +5,7 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     /// Запрет распространяется не только на позиции заказа, к которому он привязан,
     /// но и ко всем заказа того-же периода той-же фирмы.
     /// </summary>
-    public sealed class OrderDeniedPosition
+    public sealed class OrderDeniedPosition : IBindingObject
     {
         public long OrderId { get; set; }
         public long CauseOrderPositionId { get; set; }
