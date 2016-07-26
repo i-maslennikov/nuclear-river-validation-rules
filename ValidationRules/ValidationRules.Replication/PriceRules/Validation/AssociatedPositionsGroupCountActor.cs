@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                                               new XAttribute("name", project.Name)),
                                                                                  new XElement("pricePosition",
                                                                                               new XAttribute("id", overcount.PricePositionId),
-                                                                                              new XAttribute("name", overcount.PricePositionId)))), // todo: нужно название позиции
+                                                                                              new XAttribute("name", overcount.PricePositionName)))),
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
                                       ProjectId = period.ProjectId,

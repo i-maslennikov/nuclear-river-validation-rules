@@ -60,8 +60,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
                            .Distinct()
                            .ToArray();
 
+            var priceIds = _query.For<PricePosition>().Where(x => ids.Contains(x.Id)).Select(x => x.PriceId).Distinct().ToArray();
 
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
+                           .Concat(priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Price), x)))
+                           .ToArray();
         }
     }
 }

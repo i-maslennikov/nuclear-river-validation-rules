@@ -114,11 +114,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public IQueryable<AssociatedPositionGroupOvercount> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>()
                    let count = _query.For<Facts::AssociatedPositionsGroup>().Count(x => x.PricePositionId == pricePosition.Id)
+                   let name = _query.For<Facts::Position>().Single(x => x.Id == pricePosition.PositionId).Name
                    where count > 1
                    select new AssociatedPositionGroupOvercount
                    {
                        PriceId = pricePosition.PriceId,
                        PricePositionId = pricePosition.Id,
+                       PricePositionName = name,
                        Count = count,
                    };
 

@@ -43,6 +43,7 @@ go
 create table PriceAggregate.AssociatedPositionGroupOvercount(
     PriceId bigint NOT NULL,
     PricePositionId bigint NOT NULL,
+    PricePositionName nvarchar(max) NOT NULL,
     Count int NOT NULL,
 )
 go
