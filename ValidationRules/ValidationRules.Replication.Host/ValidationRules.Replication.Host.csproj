@@ -371,7 +371,7 @@
     <Compile Include="Settings\QuartzSettingsAspect.cs" />
     <Compile Include="Settings\ReplicationServiceSettings.cs" />
     <Compile Include="ResultDelivery\ResultReadModel.cs" />
-    <Compile Include="ResultDelivery\ResultRequest.cs" />
+    <Compile Include="ResultDelivery\ValidationMessageRequest.cs" />
     <Compile Include="ResultDelivery\ResultDeliveryService.cs" />
     <Compile Include="ResultDelivery\Slack\DebugTransportDecorator.cs" />
     <Compile Include="ResultDelivery\UserReadModel.cs" />

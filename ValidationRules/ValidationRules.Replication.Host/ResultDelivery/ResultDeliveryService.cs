@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-using NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack;
-
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class ResultDeliveryService
@@ -12,7 +10,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
         private readonly ResultReadModel _resultReadModel;
         private readonly LocalizedMessageFactory _localizedMessageFactory;
 
-        public ResultDeliveryService(SlackTransportDecorator transport, UserReadModel userReadModel, ResultReadModel resultReadModel, LocalizedMessageFactory localizedMessageFactory)
+        public ResultDeliveryService(ITransportDecorator transport, UserReadModel userReadModel, ResultReadModel resultReadModel, LocalizedMessageFactory localizedMessageFactory)
         {
             _transport = transport;
             _userReadModel = userReadModel;

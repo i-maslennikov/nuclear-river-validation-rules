@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 
 using NuClear.Storage.API.Readings;
-using NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack;
 using NuClear.ValidationRules.Replication.Specifications;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
@@ -14,15 +13,15 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
         private const int DeliveryHour = 9;
 
         private readonly IQuery _query;
-        private readonly DebugTransportDecorator _debugTransportService;
+        private readonly ITransportDecorator _transportService;
 
-        public UserReadModel(IQuery query, DebugTransportDecorator debugTransportService)
+        public UserReadModel(IQuery query, ITransportDecorator transportService)
         {
             _query = query;
-            _debugTransportService = debugTransportService;
+            _transportService = transportService;
         }
 
-        public IReadOnlyCollection<ResultRequest> GetCurrentIteration(DateTime iterationTime)
+        public IReadOnlyCollection<ValidationMessageRequest> GetCurrentIteration(DateTime iterationTime)
         {
             var subscribedUsersFilter = GetSubscribedUsersFilter();
             var timeZonesFilter = GetCurrentIterationTimeZonesFilter(iterationTime);
@@ -32,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                         join timeZone in _query.For(Specs.Find.Erm.TimeZones()).Where(timeZonesFilter) on profile.TimeZoneId equals timeZone.Id
                         join order in _query.For(Specs.Find.Erm.Orders()) on user.Id equals order.OwnerCode
                         let release = _query.For(Specs.Find.Erm.ReleaseInfos()).Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId).OrderByDescending(x => x.PeriodStartDate).First()
-                        select new ResultRequest
+                        select new ValidationMessageRequest
                             {
                                 UserAccount = user.Account,
                                 OrderId = order.Id,
