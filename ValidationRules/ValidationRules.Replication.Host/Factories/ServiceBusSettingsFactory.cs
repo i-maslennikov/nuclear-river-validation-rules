@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
         private readonly string _serviceBusConnectionString;
 
         private readonly StringSetting _ermOperationsFlowTopic = ConfigFileSetting.String.Optional("ErmEventsFlowTopic", "topic.performedoperations");
-        private readonly StringSetting _commonEventsFlowTopic = ConfigFileSetting.String.Optional("CommonEventsFlowTopic", "topic.river.validationrules.price.common");
-        private readonly StringSetting _mesageEventsFlowTopic = ConfigFileSetting.String.Optional("MessageEventsFlowTopic", "topic.river.validationrules.price.messages");
+        private readonly StringSetting _commonEventsFlowTopic = ConfigFileSetting.String.Optional("CommonEventsFlowTopic", "topic.river.validationrules.common");
+        private readonly StringSetting _mesageEventsFlowTopic = ConfigFileSetting.String.Optional("MessageEventsFlowTopic", "topic.river.validationrules.messages");
 
         public ServiceBusSettingsFactory(IConnectionStringSettings connectionStringSettings)
         {
