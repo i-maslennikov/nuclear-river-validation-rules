@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             var masterPosition = $"{MakePositionText(orderPositions.First())} данного Заказа является основной для следующих позиций: ";
             var dependentPositions = orderPositions.Skip(1).Select(x => $"{MakePositionText(x)} Заказа {_linkFactory.CreateLink("Order", x.OrderId, x.OrderNumber)}");
 
-            return new LocalizedMessage(Result.Error,
+            return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
                                         masterPosition + string.Join(", ", dependentPositions));
         }

@@ -6,6 +6,9 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public static class MessageExtensions
     {
+        public static Result GetLevel(this Message message)
+            => new ResultBuilder(message.ResultCode).WhenSingle();
+
         public static string ReadAttribute(this Message message, string elementName, string attributeName)
         {
             var element = message.Data.Root.Element(elementName);

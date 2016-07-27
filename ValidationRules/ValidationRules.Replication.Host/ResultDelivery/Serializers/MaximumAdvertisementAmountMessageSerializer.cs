@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             var orderReference = message.ReadOrderReference();
             var dto = message.ReadAdvertisementCountMessage();
 
-            return new LocalizedMessage(Result.Error,
+            return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
                                         $"Позиция {dto.Name} должна присутствовать в сборке в количестве от {dto.Min} до {dto.Max}. Фактическое количество позиций в месяц {dto.Month:d} - {dto.Count}");
         }

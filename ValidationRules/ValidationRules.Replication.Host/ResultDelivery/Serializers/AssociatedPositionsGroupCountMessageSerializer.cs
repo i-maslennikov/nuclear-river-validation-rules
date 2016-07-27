@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             var priceReference = message.ReadPriceReference();
             var pricePositionReference = message.ReadPricePositionReference();
 
-            return new LocalizedMessage(Result.Error,
+            return new LocalizedMessage(message.GetLevel(),
                                         $"Прайс-лист {_linkFactory.CreateLink(priceReference)}",
                                         $"В Позиции прайс-листа {_linkFactory.CreateLink(pricePositionReference)} содержится более одной группы сопутствующих позиций, что не поддерживается системой");
         }

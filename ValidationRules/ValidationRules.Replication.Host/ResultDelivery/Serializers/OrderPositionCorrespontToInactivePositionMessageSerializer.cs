@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             var orderReference = message.ReadOrderReference();
             var orderPositionReference = message.ReadOrderPositionReference();
 
-            return new LocalizedMessage(Result.Error,
+            return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
                                         $"Позиция {_linkFactory.CreateLink(orderPositionReference)} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа.");
         }

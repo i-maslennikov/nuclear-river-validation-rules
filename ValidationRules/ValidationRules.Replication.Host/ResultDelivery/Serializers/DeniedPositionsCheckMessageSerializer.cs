@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             var orderReference = message.ReadOrderReference();
             var positions = message.ReadOrderPositions();
 
-            return new LocalizedMessage(Result.Error,
+            return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
                                         $"{MakePositionText(positions.First())} является запрещённой для: {MakePositionText(positions.Last())}" +
                                             $" в заказе {_linkFactory.CreateLink("Order", positions.Last().OrderId, positions.Last().OrderNumber)}");

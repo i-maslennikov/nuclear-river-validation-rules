@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             var orderReference = message.ReadOrderReference();
             var dto = message.ReadAccountBalanceMessage();
 
-            return new LocalizedMessage(Result.Error,
+            return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
                                         $"Для оформления заказа недостаточно средств. Необходимо: {dto.Planned}. Имеется: {dto.Available}. Необходим лимит: {dto.Required}");
         }

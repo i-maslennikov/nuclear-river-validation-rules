@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             var orderReference = message.ReadOrderReference();
             var orderPositions = message.ReadOrderPositions();
 
-            return new LocalizedMessage(Result.Error,
+            return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
                                         $"{MakePositionText(orderPositions.First())} содержит объекты привязки, отсутствующие в основных позициях");
         }

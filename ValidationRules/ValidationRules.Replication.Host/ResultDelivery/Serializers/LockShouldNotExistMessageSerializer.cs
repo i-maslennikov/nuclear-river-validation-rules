@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
         {
             var orderReference = message.ReadOrderReference();
 
-            return new LocalizedMessage(Result.Error,
+            return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
                                         $"Заказ имеет созданную блокировку на указанный период");
         }
