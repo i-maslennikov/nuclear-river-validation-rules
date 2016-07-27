@@ -10,25 +10,20 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class UserReadModel
     {
-        private const int DeliveryHour = 9;
-
         private readonly IQuery _query;
-        private readonly ITransportDecorator _transportService;
 
-        public UserReadModel(IQuery query, ITransportDecorator transportService)
+        public UserReadModel(IQuery query)
         {
             _query = query;
-            _transportService = transportService;
         }
 
-        public IReadOnlyCollection<ValidationMessageRequest> GetCurrentIteration(DateTime iterationTime)
+        public IReadOnlyCollection<ValidationMessageRequest> GetCurrentIterationRequest(
+            Expression<Func<Storage.Model.Erm.User, bool>> subscriptionFilter,
+            Expression<Func<Storage.Model.Erm.TimeZone, bool>> timeZoneFilter)
         {
-            var subscribedUsersFilter = GetSubscribedUsersFilter();
-            var timeZonesFilter = GetCurrentIterationTimeZonesFilter(iterationTime);
-
-            var query = from user in _query.For(Specs.Find.Erm.Users()).Where(subscribedUsersFilter)
+            var query = from user in _query.For(Specs.Find.Erm.Users()).Where(subscriptionFilter)
                         join profile in _query.For(Specs.Find.Erm.UserProfiles()) on user.Id equals profile.UserId
-                        join timeZone in _query.For(Specs.Find.Erm.TimeZones()).Where(timeZonesFilter) on profile.TimeZoneId equals timeZone.Id
+                        join timeZone in _query.For(Specs.Find.Erm.TimeZones()).Where(timeZoneFilter) on profile.TimeZoneId equals timeZone.Id
                         join order in _query.For(Specs.Find.Erm.Orders()) on user.Id equals order.OwnerCode
                         let release = _query.For(Specs.Find.Erm.ReleaseInfos()).Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId).OrderByDescending(x => x.PeriodStartDate).First()
                         select new ValidationMessageRequest
@@ -39,40 +34,6 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                             };
 
             return query.ToArray();
-        }
-
-        private Expression<Func<Storage.Model.Erm.User, bool>> GetSubscribedUsersFilter()
-        {
-            //return x => _slackService.GetUsers().Contains(x.Account);
-            return x => true;
-        }
-
-        private Expression<Func<Storage.Model.Erm.TimeZone, bool>> GetCurrentIterationTimeZonesFilter(DateTime iterationTime)
-        {
-            //var timeZones = GetCurrentIterationTimeZones(iterationTime).ToArray();
-            //return x => timeZones.Contains(x.TimeZoneId);
-            return x => true;
-
-        }
-        private IEnumerable<string> GetCurrentIterationTimeZones(DateTime iterationTime)
-        {
-            var timeZones = from profile in _query.For(Specs.Find.Erm.UserProfiles())
-                            join timeZone in _query.For(Specs.Find.Erm.TimeZones()) on profile.TimeZoneId equals timeZone.Id
-                            select timeZone.TimeZoneId;
-
-            foreach (var timeZone in timeZones.ToArray())
-            {
-                // Можно было бы в базе положить просто смещение относительно utc
-                // и получать все профили для отправки в текущей итерации,
-                // но ведь есть переводы стрелок, летнее/зименее время:
-                // всё это обрабатывается TimeZoneInfo (нужны актуальные патчи :)
-                var tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
-                var userLocalHour = TimeZoneInfo.ConvertTimeFromUtc(iterationTime, tz).Hour;
-                if (userLocalHour == DeliveryHour)
-                {
-                    yield return timeZone;
-                }
-            }
         }
     }
 }

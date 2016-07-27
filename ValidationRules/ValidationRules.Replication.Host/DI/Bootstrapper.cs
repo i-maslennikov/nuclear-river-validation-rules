@@ -344,7 +344,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
         private static IUnityContainer ConfigureResultDelivery(this IUnityContainer container)
         {
-            return container.RegisterType<ITransportDecorator, DebugTransportDecorator>();
+            return container.RegisterType<ITransportDecorator, SlackTransportDecorator>();
         }
 
         private static IUnityContainer RegisterContexts(this IUnityContainer container)

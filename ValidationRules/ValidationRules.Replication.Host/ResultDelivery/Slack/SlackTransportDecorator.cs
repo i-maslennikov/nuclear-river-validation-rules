@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+
+using NuClear.Tracing.API;
 
 using SlackAPI;
 
@@ -11,11 +11,26 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
 {
     public sealed class SlackTransportDecorator : ITransportDecorator
     {
+        private readonly ITracer _tracer;
         private readonly SlackTaskClient _client;
         private readonly Task<LoginResponse> _connectionTask;
 
-        public SlackTransportDecorator()
+        public static readonly IDictionary<string, string> UserMap = new Dictionary<string, string>
+            {
+                { "s.tokarev", "a.rechkalov" },
+                { "g.habrus", "a.rechkalov" },
+                { "o.opokina", "a.rechkalov" },
+                { "l.pavel", "m.pashuk" },
+                { "u.starova", "m.pashuk" },
+                { "a.kudryashov", "m.pashuk" },
+                { "s.denis", "d.ivanov" },
+                { "m.kaniukova", "d.ivanov" },
+                { "ki.glushkov", "d.ivanov" },
+            };
+
+        public SlackTransportDecorator(ITracer tracer)
         {
+            _tracer = tracer;
             var apiToken = Environment.GetEnvironmentVariable("ORDER_VALIDATION_SLACK_TOKEN");
             _client = new SlackTaskClient(apiToken);
             _connectionTask = _client.ConnectAsync();
@@ -23,26 +38,49 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
 
         public IReadOnlyCollection<string> GetSubscribedUsers()
         {
-            if (!_connectionTask.IsCompleted)
-                _connectionTask.Wait();
-            if (_connectionTask.IsFaulted)
-                throw _connectionTask.Exception;
-
+            EnsureConnected();
             return _client.Users.Select(x => x.profile.email.Split('@').First()).ToArray();
-            return new[] { "a.rechkalov" };
         }
 
         public void SendMessage(string user, IReadOnlyCollection<LocalizedMessage> messages)
         {
-            user = "a.rechkalov"; // fixme!
-            if (!_connectionTask.IsCompleted)
-                _connectionTask.Wait();
-            if (_connectionTask.IsFaulted)
-                throw _connectionTask.Exception;
+            EnsureConnected();
 
-            var slackUser = _client.Users.First(x => x.profile.email.StartsWith(user));
+            string mappedUser;
+            if (!UserMap.TryGetValue(user, out mappedUser))
+                return;
+
+            var slackUser = _client.Users.FirstOrDefault(x => x.profile?.email != null && x.profile.email.StartsWith(mappedUser));
+            if (slackUser == null)
+            {
+                _tracer.Warn($"Пользователь {mappedUser} не найден, сообщения не отправлены");
+                return;
+            }
+
             var slackChannel = _client.JoinDirectMessageChannelAsync(slackUser.id).Result;
-            _client.PostMessageAsync(slackChannel.channel.id, "Результаты проверки заказов", attachments: messages.GroupBy(x => x.Header, x => x).Select(MakeAttachment).ToArray()).Wait();
+            if (messages.Any())
+            {
+                var message = $"Результаты проверки заказов ({user})";
+                _client.PostMessageAsync(slackChannel.channel.id, message, attachments: messages.GroupBy(x => x.Header, x => x).Select(MakeAttachment).ToArray()).Wait();
+            }
+            else
+            {
+                var message = $"Проверка заказов ошибок не выявила ({user})";
+                _client.PostMessageAsync(slackChannel.channel.id, message).Wait();
+            }
+        }
+
+        private void EnsureConnected()
+        {
+            if (!_connectionTask.IsCompleted)
+            {
+                _connectionTask.Wait();
+            }
+
+            if (_connectionTask.IsFaulted)
+            {
+                throw new Exception("Can not connect to slack", _connectionTask.Exception);
+            }
         }
 
         private Attachment MakeAttachment(IGrouping<string, LocalizedMessage> message)
