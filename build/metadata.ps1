@@ -42,9 +42,9 @@ function Get-BulkToolMetadata ($updateSchemasMetadata, $Context){
 	$metadata = @{}
 
 	$arguments = @()
-	switch(@($updateSchemasMetadata.Keys)){
-		'PriceContext' { $arguments += @('-facts', '-aggregates') }
-		'PriceAggregate' { $arguments += @('-aggregates') }
+	switch -Regex (@($updateSchemasMetadata.Keys)){
+		'Facts' { $arguments += @('-facts', '-aggregates') }
+		'Aggregates' { $arguments += @('-aggregates') }
 	}
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
@@ -58,9 +58,9 @@ function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 	$metadata = @{}
 
 	$updateSchemasMetadata = @{ }
-	foreach ($schema in $AllSchemas.GetEnumerator()){
-		if ($UpdateSchemas -contains $schema.Key){
-			$updateSchemasMetadata.Add($schema.Key, $schema.Value)
+	foreach ($schema in $UpdateSchemas.Split(@(','), 'RemoveEmptyEntries')){
+		foreach($key in $AllSchemas.Keys -match $schema) {
+			$updateSchemasMetadata.Add($key, $AllSchemas[$key])
 		}
 	}
 
@@ -140,11 +140,11 @@ function Parse-EnvironmentMetadata ($Properties) {
 }
 
 $AllSchemas = @{
-	'PriceContext' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'ValidationRules\Schemas\PriceContext.sql' }
-	'PriceAggregate' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'ValidationRules\Schemas\PriceAggregate.sql' }
-    'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'ValidationRules\Schemas\Messages.sql' }
-
-	'Transport' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Replication\Schemas\Transport.sql' }
+	'Price.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'ValidationRules\Schemas\Price.Facts.sql' }
+	'Price.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'ValidationRules\Schemas\Price.Aggregates.sql' }
+	'Account.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'ValidationRules\Schemas\Account.Facts.sql' }
+	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'ValidationRules\Schemas\Account.Aggregates.sql' }
+	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'ValidationRules\Schemas\Messages.sql' }
 }
 
 $AllEntryPoints = @(
