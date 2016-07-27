@@ -82,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         ProjectId = position.ProjectId,
                         VersionId = version,
 
-                        Result = position.Scope == 0 ? RuleResultError : RuleResultWarning,
+                        Result = position.Scope == 0 ? RuleResultWarning : RuleResultError,
                     };
 
             return messages;
