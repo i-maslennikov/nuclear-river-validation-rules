@@ -16,6 +16,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
         {
             public static class Aggs
             {
+                /// <summary>
+                /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
+                /// </summary>
                 public static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> WithMatchedBindingObject(IQueryable<Dto<OrderPosition>> principals)
                 {
                     Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
@@ -26,6 +29,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return (Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
+                /// <summary>
+                /// Возвращает выражение выборки запрещённых позиций заказа по принципу совпадения обектов привязки.
+                /// </summary>
                 public static Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> DeniedWithMatchedBindingObject(IQueryable<Dto<OrderPosition>> principals)
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
@@ -36,6 +42,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return (Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
+                /// <summary>
+                /// Возвращает выражение выборки запрещённых позиций заказа по принципу различия обектов привязки.
+                /// </summary>
                 public static Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> DeniedWithDifferentBindingObject(IQueryable<Dto<OrderPosition>> principals)
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
@@ -46,6 +55,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return (Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
+                /// <summary>
+                /// Возвращает выражение выборки запрещённых позиций заказа без учёта обектов привязки.
+                /// </summary>
                 public static Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> DeniedWithoutConsideringBindingObject(IQueryable<Dto<OrderPosition>> principals)
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
@@ -55,6 +67,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return (Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
+                /// <summary>
+                /// Возвращает выражение для пересечения влияющих друг на друга позиций (сопутствующих или запрещённых)
+                /// </summary>
                 public static Expression<Func<Dto<OrderPosition>, Dto<T>, bool>> MatchedPeriod<T>()
                 {
                     return (principal, dto) => principal.FirmId == dto.FirmId &&
@@ -63,6 +78,12 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                (principal.Scope == 0 || principal.Scope == dto.Scope);
                 }
 
+                /// <summary>
+                /// Возвращает выражение для сравнения объектов привязки.
+                /// Выражение пытается реализивать таблицу соответствий, описанную в документации:
+                /// https://github.com/2gis/nuclear-river/blob/feature/validation-rules/docs/ru/validation-rules/compare-linking-objects.md
+                /// Выражение достаточно не тривиальное и используется многократно, поэтому и создан <see cref="ExpandMethodCallVisitor"/>
+                /// </summary>
                 public static Expression<Func<OrderPosition, T, bool>> MatchedBindingObjects<T>()
                     where T: IBindingObject
                 {
@@ -75,6 +96,10 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                    (binding.FirmAddressId == position.FirmAddressId));
                 }
 
+                /// <summary>
+                /// Позволяет заменить вызов метода, возвращающего выражение (с последующей компиляцией и вызовом, как того требует синтаксис)
+                /// на собственно это результат вызова, что позволяет переиспользовать куски выражений при построении запросов.
+                /// </summary>
                 private class ExpandMethodCallVisitor : ExpressionVisitor
                 {
                     protected override Expression VisitMethodCall(MethodCallExpression node)
@@ -102,6 +127,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                         return new ReplaceParameterVisitor(replacementDictionary).Visit(constructedExpression.Body);
                     }
 
+                    /// <summary>
+                    /// Позволяет заменить обращения к параметрам в выражении на некие другие обращения.
+                    /// </summary>
                     private class ReplaceParameterVisitor : ExpressionVisitor
                     {
                         private readonly IDictionary<ParameterExpression, Expression> _dictionary;
