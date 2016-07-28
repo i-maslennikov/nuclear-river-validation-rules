@@ -53,6 +53,15 @@ namespace NuClear.ValidationRules.Replication.Host
                                              .Logstash(new Uri(connectionStringSettings.GetConnectionString(LoggingConnectionStringIdentity.Instance)))
                                              .Build;
 
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ORDER_VALIDATION_SLACK_TOKEN")))
+            {
+                tracer.Warn($"Slack bot token missing");
+            }
+            else
+            {
+                tracer.Info($"Slack bot token present");
+            }
+
             IUnityContainer container = null;
             try
             {
