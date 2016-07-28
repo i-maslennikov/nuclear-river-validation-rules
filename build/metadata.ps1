@@ -58,7 +58,12 @@ function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 	$metadata = @{}
 
 	$updateSchemasMetadata = @{ }
-	foreach ($schema in $UpdateSchemas.Split(@(','), 'RemoveEmptyEntries')){
+
+	if ($UpdateSchemas -and $UpdateSchemas -isnot [array]){
+		$UpdateSchemas = $UpdateSchemas.Split(@(','), 'RemoveEmptyEntries')
+	}
+
+	foreach ($schema in $UpdateSchemas){
 		foreach($key in $AllSchemas.Keys -match $schema) {
 			$updateSchemasMetadata.Add($key, $AllSchemas[$key])
 		}
