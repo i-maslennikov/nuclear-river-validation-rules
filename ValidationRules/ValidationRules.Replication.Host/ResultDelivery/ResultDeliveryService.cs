@@ -9,7 +9,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class ResultDeliveryService
     {
-        private const int DeleviryHour = 9;
+        private const int DeleviryHour = 15;
 
         private readonly ITransportDecorator _transport;
         private readonly UserReadModel _userReadModel;
