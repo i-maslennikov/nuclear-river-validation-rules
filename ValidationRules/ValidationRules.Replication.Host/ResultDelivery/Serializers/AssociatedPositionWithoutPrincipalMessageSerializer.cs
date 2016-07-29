@@ -6,7 +6,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class AssociatedPositionWithoutPrincipalMessageSerializer : IMessageSerializer
     {
-        private readonly LinkFactory _linkFactory = new LinkFactory();
+        private readonly LinkFactory _linkFactory;
+
+        public AssociatedPositionWithoutPrincipalMessageSerializer(LinkFactory linkFactory)
+        {
+            _linkFactory = linkFactory;
+        }
 
         public int MessageType
             => AssociatedPositionWithoutPrincipalActor.MessageTypeId;

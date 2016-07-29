@@ -349,6 +349,7 @@
     <Compile Include="ReplicationService.Designer.cs">
       <DependentUpon>ReplicationService.cs</DependentUpon>
     </Compile>
+    <Compile Include="ResultDelivery\DeliverySettingsAspect.cs" />
     <Compile Include="ResultDelivery\Serializers\AssociatedPositionWithoutPrincipalMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ConflictingPrincipalPositionMessageSerializer.cs" />
     <Compile Include="ResultDelivery\IMessageSerializer.cs" />
@@ -366,7 +367,7 @@
     <Compile Include="ResultDelivery\Serializers\DeniedPositionsCheckMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AccountBalanceShouldBePositiveMessageSerializer.cs" />
     <Compile Include="ResultDelivery\LocalizedMessage.cs" />
-    <Compile Include="ResultDelivery\LocalizedMessageFactory.cs" />
+    <Compile Include="ResultDelivery\UnityLocalizedMessageFactory.cs" />
     <Compile Include="ResultDelivery\LinkFactory.cs" />
     <Compile Include="ResultDelivery\Serializers\LockShouldNotExistMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\OrderPositionShouldCorrespontToActualPriceMessageSerializer.cs" />

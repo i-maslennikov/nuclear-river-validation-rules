@@ -9,19 +9,19 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class ResultDeliveryService
     {
-        private const int DeleviryHour = 11;
-
         private readonly ITransportDecorator _transport;
         private readonly UserReadModel _userReadModel;
         private readonly ResultReadModel _resultReadModel;
-        private readonly LocalizedMessageFactory _localizedMessageFactory;
+        private readonly UnityLocalizedMessageFactory _unityLocalizedMessageFactory;
+        private readonly ResultDeliverySettingsAspect _settings;
 
-        public ResultDeliveryService(ITransportDecorator transport, UserReadModel userReadModel, ResultReadModel resultReadModel, LocalizedMessageFactory localizedMessageFactory)
+        public ResultDeliveryService(ITransportDecorator transport, UserReadModel userReadModel, ResultReadModel resultReadModel, UnityLocalizedMessageFactory unityLocalizedMessageFactory, ResultDeliverySettingsAspect settings)
         {
             _transport = transport;
             _userReadModel = userReadModel;
             _resultReadModel = resultReadModel;
-            _localizedMessageFactory = localizedMessageFactory;
+            _unityLocalizedMessageFactory = unityLocalizedMessageFactory;
+            _settings = settings;
         }
 
         public void Execute(DateTime iterationTime)
@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
             foreach (var user in currentIteration.GroupBy(x => x.UserAccount, x => Tuple.Create(x.OrderId, x.PeriodStart)))
             {
                 var messages = _resultReadModel.GetResults(user)
-                                               .Select(_localizedMessageFactory.Localize)
+                                               .Select(_unityLocalizedMessageFactory.Localize)
                                                .Where(x => x.Result >= Result.Info)
                                                .OrderByDescending(x => x.Result)
                                                .ToArray();
@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
         private IReadOnlyCollection<string> GetCurrentIterationTimeZones(DateTime iterationTime)
         {
             var timeZones = from timeZone in TimeZoneInfo.GetSystemTimeZones()
-                            where TimeZoneInfo.ConvertTimeFromUtc(iterationTime, timeZone).Hour == DeleviryHour
+                            where TimeZoneInfo.ConvertTimeFromUtc(iterationTime, timeZone).Hour == _settings.ResultDeliveryHour
                             select timeZone.Id;
 
             return timeZones.ToArray();

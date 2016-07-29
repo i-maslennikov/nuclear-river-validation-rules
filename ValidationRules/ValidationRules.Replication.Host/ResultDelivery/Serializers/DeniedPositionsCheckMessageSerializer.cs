@@ -6,7 +6,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class DeniedPositionsCheckMessageSerializer : IMessageSerializer
     {
-        private readonly LinkFactory _linkFactory = new LinkFactory();
+        private readonly LinkFactory _linkFactory;
+
+        public DeniedPositionsCheckMessageSerializer(LinkFactory linkFactory)
+        {
+            _linkFactory = linkFactory;
+        }
 
         public int MessageType
             => DeniedPositionsCheckActor.MessageTypeId;

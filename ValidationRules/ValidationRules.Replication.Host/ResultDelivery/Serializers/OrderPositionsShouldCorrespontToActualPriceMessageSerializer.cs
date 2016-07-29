@@ -4,7 +4,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class OrderPositionsShouldCorrespontToActualPriceMessageSerializer : IMessageSerializer
     {
-        private readonly LinkFactory _linkFactory = new LinkFactory();
+        private readonly LinkFactory _linkFactory;
+
+        public OrderPositionsShouldCorrespontToActualPriceMessageSerializer(LinkFactory linkFactory)
+        {
+            _linkFactory = linkFactory;
+        }
 
         public int MessageType
             => OrderPositionsShouldCorrespontToActualPriceActor.MessageTypeId;

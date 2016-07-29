@@ -6,7 +6,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class SatisfiedPrincipalPositionDifferentOrderMessageSerializer : IMessageSerializer
     {
-        private readonly LinkFactory _linkFactory = new LinkFactory();
+        private readonly LinkFactory _linkFactory;
+
+        public SatisfiedPrincipalPositionDifferentOrderMessageSerializer(LinkFactory linkFactory)
+        {
+            _linkFactory = linkFactory;
+        }
 
         public int MessageType
             => SatisfiedPrincipalPositionDifferentOrderActor.MessageTypeId;
