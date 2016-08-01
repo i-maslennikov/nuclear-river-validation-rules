@@ -65,6 +65,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceFacts::Category>()
                   .HasSchemaName(PriceContextSchema)
                   .HasPrimaryKey(x => x.Id);
+            builder.Entity<PriceFacts::Theme>()
+                  .HasSchemaName(PriceContextSchema)
+                  .HasPrimaryKey(x => x.Id);
 
             // TODO: хак чтобы не делать факты со сложным ключом
             builder.Entity<PriceFacts::RulesetRule>()

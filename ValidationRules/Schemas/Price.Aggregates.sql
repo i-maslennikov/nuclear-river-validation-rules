@@ -31,6 +31,13 @@ create table PriceAggregates.Project(
 )
 go
 
+create table PriceAggregate.Theme(
+    Id bigint NOT NULL,
+    Name nvarchar(max) NOT NULL,
+    constraint PK_Theme primary key (Id)
+)
+go
+
 -- price aggregate
 
 create table PriceAggregates.Price(
@@ -81,10 +88,12 @@ create table PriceAggregates.OrderPosition(
     PackagePositionId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,
 
-	HasNoBinding bit NOT NULL,
+    HasNoBinding bit NOT NULL,
     Category3Id bigint NULL,
     Category1Id bigint NULL,
     FirmAddressId bigint NULL,
+
+    ThemeId bigint NULL,
 
     Source nvarchar(16) NULL,
 )

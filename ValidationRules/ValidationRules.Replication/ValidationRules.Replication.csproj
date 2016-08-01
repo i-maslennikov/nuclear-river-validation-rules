@@ -66,6 +66,7 @@
     <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositiveActor.cs" />
     <Compile Include="AccountRules\Validation\LockShouldNotExistActor.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
+    <Compile Include="PriceRules\Aggregates\ThemeAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionNotActive.cs" />
     <Compile Include="PriceRules\Facts\ProjectAccessor.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="PriceRules\Facts\DeniedPositionAccessor.cs" />
     <Compile Include="PriceRules\Facts\AssociatedPositionsGroupAccessor.cs" />
     <Compile Include="PriceRules\Facts\AssociatedPositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\ThemeAccessor.cs" />
     <Compile Include="PriceRules\Validation\DeniedPositionsCheckActor.cs" />
     <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCountActor.cs" />
     <Compile Include="PriceRules\Validation\Dto\Dto.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
+    <Compile Include="PriceRules\Validation\ThemeAdvertisementsShouldNotBeGreaterThanTenActor.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />
     <Compile Include="ValidationRuleShared.cs" />
     <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />

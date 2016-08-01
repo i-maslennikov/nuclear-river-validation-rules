@@ -7,5 +7,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Facts
         public long PositionId { get; set; }
         public long? CategoryId { get; set; }
         public long? FirmAddressId { get; set; }
+        public long? ThemeId { get; set; }
     }
 }

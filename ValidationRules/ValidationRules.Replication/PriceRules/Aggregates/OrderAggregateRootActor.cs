@@ -115,6 +115,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                                Category3Id = opa.CategoryId,
                                FirmAddressId = opa.FirmAddressId,
                                Category1Id = category.Category1Id,
+
+                               ThemeId = opa.ThemeId,
                            };
 
                 var pkgs = from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
@@ -135,6 +137,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                                Category3Id = opa.CategoryId,
                                FirmAddressId = opa.FirmAddressId,
                                Category1Id = category.Category1Id,
+
+                               ThemeId = opa.ThemeId,
                            };
 
                 return pkgs.Union(opas);

@@ -38,6 +38,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceFacts::PricePositionNotActive),
                             typeof(PriceFacts::Project),
                             typeof(PriceFacts::RulesetRule),
+                            typeof(PriceFacts::Theme),
 
                             typeof(AccountFacts::Account),
                             typeof(AccountFacts::Order),
@@ -67,6 +68,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Project),
                             typeof(PriceAggregates::AssociatedPositionGroupOvercount),
                             typeof(PriceAggregates::PricePeriod),
+                            typeof(PriceAggregates::Theme),
 
                             typeof(AccountAggregates::Order),
                             typeof(AccountAggregates::Lock),

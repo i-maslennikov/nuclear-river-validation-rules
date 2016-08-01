@@ -121,6 +121,7 @@ create table PriceFacts.OrderPositionAdvertisement(
     PositionId bigint not null,
     CategoryId bigint null,
     FirmAddressId bigint null,
+    ThemeId bigint null,
     constraint PK_OrderPositionAdvertisement primary key (Id)
 )
 create index IX_OrderPositionAdvertisement_OrderPositionId ON PriceFacts.OrderPositionAdvertisement (OrderPositionId)
@@ -138,6 +139,13 @@ create table PriceFacts.Project(
     OrganizationUnitId bigint not null,
     Name nvarchar(max) not null,
     constraint PK_Project primary key (Id)
+)
+go
+
+create table PriceFacts.Theme(
+    Id bigint not null,
+    Name nvarchar(max) not null,
+    constraint PK_Theme primary key (Id)
 )
 go
 

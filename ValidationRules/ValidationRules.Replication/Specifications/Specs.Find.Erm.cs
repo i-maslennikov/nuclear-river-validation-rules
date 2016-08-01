@@ -84,6 +84,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<Project>(x => x.IsActive && x.OrganizationUnitId != null);
                 }
 
+                public static FindSpecification<Theme> Theme()
+                {
+                    return new FindSpecification<Theme>(x => x.IsActive && !x.IsDeleted);
+                }
+
                 public static FindSpecification<Account> Accounts()
                 {
                     return new FindSpecification<Account>(x => !x.IsArchived);
