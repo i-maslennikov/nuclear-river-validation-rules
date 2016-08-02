@@ -49,40 +49,54 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
         {
-            var data = query.For<Position>().Where(x => x.CategoryCode == TargetCategoryCode)
-                .Join(query.For<OrderPosition>().Where(x => x.Category3Id.HasValue), x => x.Id, x => x.ItemPositionId, (position, orderPosition) => orderPosition)
-                .Join(query.For<OrderPeriod>().Where(x => x.Scope == 0), x => x.OrderId, x => x.OrderId, (position, period) => new {position, period })
-                .GroupBy(x => new { x.period.Start, x.period.OrganizationUnitId, x.position.Category1Id, x.position.Category3Id })
-                .Select(x => new { x.Key.Start, x.Key.OrganizationUnitId, x.Key.Category1Id, x.Key.Category3Id, Count = x.Count() });
+            var sales =
+                from orderPosition in query.For<OrderPosition>().Where(x => x.Category3Id != null || x.Category1Id != null)
+                from orderPeriod in query.For<OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
+                from position in query.For<Position>().Where(x => x.Id == orderPosition.ItemPositionId && x.CategoryCode == TargetCategoryCode)
+                select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.Category1Id, orderPosition.Category3Id };
 
-            var messages = from order in query.For<Order>()
-                           from orderPosition in query.For<OrderPosition>().Where(x => x.OrderId == order.Id && x.ThemeId != null)
-                           from orderPeriod in query.For<OrderPeriod>().Where(x => x.OrderId == order.Id)
-                           from period in query.For<Period>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
-                           from category in query.For<Category>().Where(x => x.Id == (orderPosition.Category3Id ?? orderPosition.Category1Id))
-                           from record in data.Where(x => x.OrganizationUnitId == orderPeriod.OrganizationUnitId && x.Start == orderPeriod.Start && x.Category1Id == orderPosition.Category1Id && x.Category3Id == orderPosition.Category3Id)
-                           let count = orderPeriod.Scope == 0 ? record.Count : record.Count + 1
-                           where count > MaxPositionsPerCategory
-                           select new Version.ValidationResult
-                               {
-                                   MessageType = MessageTypeId,
-                                   MessageParams =
-                                       new XDocument(new XElement("root",
-                                                                  new XElement("message",
-                                                                               new XAttribute("max", TargetCategoryCode),
-                                                                               new XAttribute("count", count),
-                                                                               new XAttribute("name", category.Name),
-                                                                               new XAttribute("month", orderPeriod.Start)),
-                                                                  new XElement("order",
-                                                                               new XAttribute("id", order.Id),
-                                                                               new XAttribute("number", order.Number)))),
-                                   PeriodStart = period.Start,
-                                   PeriodEnd = period.End,
-                                   ProjectId = period.ProjectId,
-                                   VersionId = version,
+            var approvedSaleCounts =
+                sales.Where(x => x.Scope == 0)
+                         .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.Category1Id, x.Category3Id })
+                         .Select(x => new { x.Key, Count = x.Count() });
 
-                                   Result = RuleResult,
-                               };
+            var perOrderSaleCounts =
+                sales.GroupBy(x => new { x.OrderId, x.Scope, x.Start, x.OrganizationUnitId, x.Category1Id, x.Category3Id })
+                         .Select(x => new { x.Key, Count = x.Count() });
+
+            var oversales =
+                from c in approvedSaleCounts
+                join co in perOrderSaleCounts on c.Key equals new { co.Key.Start, co.Key.OrganizationUnitId, co.Key.Category1Id, co.Key.Category3Id }
+                let count = c.Count + (co.Key.Scope == 0 ? 0 : co.Count)
+                where count > MaxPositionsPerCategory
+                select new { c.Key.Start, c.Key.OrganizationUnitId, co.Key.OrderId, Count = count, c.Key.Category1Id, c.Key.Category3Id };
+
+            var messages =
+                from oversale in oversales.Distinct()
+                join period in query.For<Period>() on new { oversale.Start , oversale.OrganizationUnitId }  equals new { period.Start, period.OrganizationUnitId}
+                join order in query.For<Order>() on oversale.OrderId equals order.Id
+                join category in query.For<Category>() on oversale.Category3Id ?? oversale.Category1Id equals category.Id
+                select new Version.ValidationResult
+                    {
+                        MessageType = MessageTypeId,
+                        MessageParams =
+                            new XDocument(new XElement("root",
+                                                       new XElement("message",
+                                                                    new XAttribute("max", MaxPositionsPerCategory),
+                                                                    new XAttribute("count", oversale.Count),
+                                                                    new XAttribute("name", category.Name),
+                                                                    new XAttribute("month", oversale.Start)),
+                                                       new XElement("order",
+                                                                    new XAttribute("id", order.Id),
+                                                                    new XAttribute("number", order.Number)))),
+                        PeriodStart = period.Start,
+                        PeriodEnd = period.End,
+                        ProjectId = period.ProjectId,
+                        VersionId = version,
+
+                        Result = RuleResult,
+                    };
+
 
             return messages;
         }

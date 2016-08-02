@@ -70,6 +70,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::AssociatedPositionGroupOvercount),
                             typeof(PriceAggregates::PricePeriod),
                             typeof(PriceAggregates::Theme),
+                            typeof(PriceAggregates::Category),
 
                             typeof(AccountAggregates::Order),
                             typeof(AccountAggregates::Lock),
