@@ -66,6 +66,7 @@
     <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositiveActor.cs" />
     <Compile Include="AccountRules\Validation\LockShouldNotExistActor.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
+    <Compile Include="PriceRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ThemeAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionNotActive.cs" />
@@ -99,7 +100,8 @@
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
-    <Compile Include="PriceRules\Validation\ThemeAdvertisementsShouldNotBeGreaterThanTenActor.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementCountPerCategoryShouldBeLimitedActor.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementCountPerThemeShouldBeLimitedActor.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />
     <Compile Include="ValidationRuleShared.cs" />
     <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />

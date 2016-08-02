@@ -39,6 +39,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceFacts::Project),
                             typeof(PriceFacts::RulesetRule),
                             typeof(PriceFacts::Theme),
+                            typeof(PriceFacts::Category),
 
                             typeof(AccountFacts::Account),
                             typeof(AccountFacts::Order),

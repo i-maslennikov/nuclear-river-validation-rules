@@ -151,7 +151,8 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             x => new Facts::Category
                             {
                                 Id = x.Id,
-                                ParentId = x.ParentId
+                                ParentId = x.ParentId,
+                                Name = x.Name,
                             };
 
                         public static readonly Expression<Func<Erm::OrderPosition, Facts::OrderPosition>> OrderPosition =

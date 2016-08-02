@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using NuClear.Replication.Core;
@@ -19,7 +16,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Source: ThemePositionCountValidationRule
     /// </summary>
-    public sealed class AdvertisementPerThemeShouldNotBeGreaterThanTenActor
+    public sealed class AdvertisementCountPerThemeShouldBeLimitedActor
     {
         public const int MessageTypeId = 16;
 
@@ -32,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public AdvertisementPerThemeShouldNotBeGreaterThanTenActor(ValidationRuleShared validationRuleShared)
+        public AdvertisementCountPerThemeShouldBeLimitedActor(ValidationRuleShared validationRuleShared)
         {
             _validationRuleShared = validationRuleShared;
         }

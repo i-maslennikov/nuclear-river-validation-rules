@@ -87,6 +87,7 @@
     <Compile Include="Model\PriceRules\Aggregates\AdvertisementAmountRestriction.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AmountControlledPosition.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AssociatedPositionGroupOvercount.cs" />
+    <Compile Include="Model\PriceRules\Aggregates\Category.cs" />
     <Compile Include="Model\PriceRules\Aggregates\IBindingObject.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Order.cs" />
     <Compile Include="Model\PriceRules\Aggregates\OrderAssociatedPosition.cs" />
