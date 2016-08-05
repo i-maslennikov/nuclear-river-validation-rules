@@ -8,8 +8,8 @@ namespace NuClear.ValidationRules.Storage
 {
     public static partial class Schema
     {
-        private const string PriceContextSchema = "PriceFacts";
-        private const string AccountContextSchema = "AccountFacts";
+        private const string PriceFactsSchema = "PriceFacts";
+        private const string AccountFactsSchema = "AccountFacts";
 
         public static MappingSchema Facts
         {
@@ -27,48 +27,48 @@ namespace NuClear.ValidationRules.Storage
         private static FluentMappingBuilder RegisterPriceFacts(this FluentMappingBuilder builder)
         {
             builder.Entity<PriceFacts::AssociatedPositionsGroup>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::AssociatedPosition>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::DeniedPosition>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::Order>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::OrderPosition>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::OrderPositionAdvertisement>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::OrganizationUnit>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::Price>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::PricePosition>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::PricePositionNotActive>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::Project>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::Position>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::Category>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
 
             // TODO: хак чтобы не делать факты со сложным ключом
             builder.Entity<PriceFacts::RulesetRule>()
-                  .HasSchemaName(PriceContextSchema)
+                  .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id)
                   .HasPrimaryKey(x => x.RuleType)
                   .HasPrimaryKey(x => x.DependentPositionId)
@@ -80,31 +80,31 @@ namespace NuClear.ValidationRules.Storage
         private static FluentMappingBuilder RegisterAccountFacts(this FluentMappingBuilder builder)
         {
             builder.Entity<AccountFacts::Order>()
-                  .HasSchemaName(AccountContextSchema)
+                  .HasSchemaName(AccountFactsSchema)
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<AccountFacts::Account>()
-                  .HasSchemaName(AccountContextSchema)
+                  .HasSchemaName(AccountFactsSchema)
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<AccountFacts::Project>()
-                  .HasSchemaName(AccountContextSchema)
+                  .HasSchemaName(AccountFactsSchema)
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<AccountFacts::Lock>()
-                  .HasSchemaName(AccountContextSchema)
+                  .HasSchemaName(AccountFactsSchema)
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<AccountFacts::Limit>()
-              .HasSchemaName(AccountContextSchema)
+              .HasSchemaName(AccountFactsSchema)
               .HasPrimaryKey(x => x.Id);
 
             builder.Entity<AccountFacts::ReleaseWithdrawal>()
-              .HasSchemaName(AccountContextSchema)
+              .HasSchemaName(AccountFactsSchema)
               .HasPrimaryKey(x => x.Id);
 
             builder.Entity<AccountFacts::OrderPosition>()
-              .HasSchemaName(AccountContextSchema)
+              .HasSchemaName(AccountFactsSchema)
               .HasPrimaryKey(x => x.Id);
 
             return builder;

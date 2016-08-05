@@ -8,8 +8,8 @@ namespace NuClear.ValidationRules.Storage
 {
     public static partial class Schema
     {
-        private const string PriceAggregateSchema = "PriceAggregates";
-        private const string AccountAggregateSchema = "AccountAggregates";
+        private const string PriceAggregatesSchema = "PriceAggregates";
+        private const string AccountAggregatesSchema = "AccountAggregates";
 
         public static MappingSchema Aggregates
             => new MappingSchema(nameof(Aggregates), new SqlServerMappingSchema())
@@ -21,52 +21,52 @@ namespace NuClear.ValidationRules.Storage
         private static FluentMappingBuilder RegisterPriceAggregates(this FluentMappingBuilder builder)
         {
             builder.Entity<PriceAggregates::Price>()
-                  .HasSchemaName(PriceAggregateSchema)
+                  .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<PriceAggregates::AssociatedPositionGroupOvercount>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::AdvertisementAmountRestriction>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::Order>()
-                  .HasSchemaName(PriceAggregateSchema)
+                  .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<PriceAggregates::OrderPeriod>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::OrderPosition>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::OrderAssociatedPosition>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::OrderDeniedPosition>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::OrderPricePosition>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::AmountControlledPosition>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::Period>()
-                  .HasSchemaName(PriceAggregateSchema)
+                  .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Start)
                   .HasPrimaryKey(x => x.End)
                   .HasPrimaryKey(x => x.ProjectId);
 
             builder.Entity<PriceAggregates::PricePeriod>()
-                  .HasSchemaName(PriceAggregateSchema);
+                  .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::Position>()
-                  .HasSchemaName(PriceAggregateSchema)
+                  .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<PriceAggregates::Project>()
-                  .HasSchemaName(PriceAggregateSchema)
+                  .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
             return builder;
@@ -75,17 +75,17 @@ namespace NuClear.ValidationRules.Storage
         private static FluentMappingBuilder RegisterAccountAggregates(this FluentMappingBuilder builder)
         {
             builder.Entity<AccountAggregates::Order>()
-                  .HasSchemaName(AccountAggregateSchema)
+                  .HasSchemaName(AccountAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<AccountAggregates::Lock>()
-                   .HasSchemaName(AccountAggregateSchema);
+                   .HasSchemaName(AccountAggregatesSchema);
 
             builder.Entity<AccountAggregates::Account>()
-                   .HasSchemaName(AccountAggregateSchema);
+                   .HasSchemaName(AccountAggregatesSchema);
 
             builder.Entity<AccountAggregates::AccountPeriod>()
-                   .HasSchemaName(AccountAggregateSchema);
+                   .HasSchemaName(AccountAggregatesSchema);
 
             return builder;
         }
