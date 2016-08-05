@@ -66,6 +66,9 @@
     <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositiveActor.cs" />
     <Compile Include="AccountRules\Validation\LockShouldNotExistActor.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
+    <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="ConsistencyRules\Facts\OrderAccessor.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderFirmShouldBeValidActor.cs" />
     <Compile Include="PriceRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ThemeAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ProjectAggregateRootActor.cs" />

@@ -77,6 +77,8 @@
     <Compile Include="Model\AccountRules\Facts\OrderPosition.cs" />
     <Compile Include="Model\AccountRules\Facts\Project.cs" />
     <Compile Include="Model\AccountRules\Facts\ReleaseWithdrawal.cs" />
+    <Compile Include="Model\ConsistencyRules\Aggregates\Order.cs" />
+    <Compile Include="Model\ConsistencyRules\Facts\Order.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Lock.cs" />
     <Compile Include="Model\Erm\ReleaseInfos.cs" />

@@ -13,6 +13,9 @@ using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
+using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
@@ -48,6 +51,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountFacts::Limit),
                             typeof(AccountFacts::OrderPosition),
                             typeof(AccountFacts::ReleaseWithdrawal),
+
+                            typeof(ConsistencyFacts::Order),
                         });
             }
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
@@ -76,6 +81,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountAggregates::Lock),
                             typeof(AccountAggregates::Account),
                             typeof(AccountAggregates::AccountPeriod),
+
+                            typeof(ConsistencyAggregates::Order),
                         });
             }
 

@@ -3,6 +3,7 @@ using LinqToDB.Mapping;
 
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
 namespace NuClear.ValidationRules.Storage
 {
@@ -10,6 +11,7 @@ namespace NuClear.ValidationRules.Storage
     {
         private const string PriceContextSchema = "PriceFacts";
         private const string AccountContextSchema = "AccountFacts";
+        private const string ConsistencyFactsSchema = "ConsistencyFacts";
 
         public static MappingSchema Facts
         {
@@ -18,7 +20,8 @@ namespace NuClear.ValidationRules.Storage
                 var schema = new MappingSchema(nameof(Facts), new SqlServerMappingSchema());
                 schema.GetFluentMappingBuilder()
                       .RegisterPriceFacts()
-                      .RegisterAccountFacts();
+                      .RegisterAccountFacts()
+                      .RegisterConsistencyFacts();
 
                 return schema;
             }
@@ -109,6 +112,15 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AccountFacts::OrderPosition>()
               .HasSchemaName(AccountContextSchema)
               .HasPrimaryKey(x => x.Id);
+
+            return builder;
+        }
+
+        private static FluentMappingBuilder RegisterConsistencyFacts(this FluentMappingBuilder builder)
+        {
+            builder.Entity<ConsistencyFacts::Order>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
 
             return builder;
         }
