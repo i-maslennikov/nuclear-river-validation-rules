@@ -16,6 +16,27 @@ namespace NuClear.ValidationRules.Replication.Specifications
         {
             public static class Aggs
             {
+                const int NoDependency = 2;
+                const int Match = 1;
+                const int Different = 3;
+
+                /// <summary>
+                /// Возвращает выражение для сопоставления основных и сопутствующих позиций.
+                /// Выражение учитывает все типы сравнения объектов привязки.
+                /// Но не учитывает "области видимости" позиций.
+                /// </summary>
+                public static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> AvailablePrincipalPosition(IQueryable<Dto<OrderPosition>> principals)
+                {
+                    Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
+                        associated => principals.Where(principal => MatchedPeriod<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
+                                                .Where(principal => associated.Position.BindingType == NoDependency ||
+                                                                    associated.Position.BindingType == Match && MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
+                                                                    associated.Position.BindingType == Different && !MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
+                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
+                                                                    principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
+                    return (Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                }
+
                 /// <summary>
                 /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
                 /// </summary>
@@ -23,6 +44,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
                         associated => principals.Where(principal => MatchedPeriod<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
+                                                .Where(principal => MatchedScope<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
                                                 .Where(principal => MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
@@ -36,6 +58,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
                         denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                                            .Where(principal => MatchedScope<OrderDeniedPosition>().Compile().Invoke(principal, denied))
                                             .Where(principal => MatchedBindingObjects<OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
@@ -49,6 +72,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
                         denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                                            .Where(principal => MatchedScope<OrderDeniedPosition>().Compile().Invoke(principal, denied))
                                             .Where(principal => !MatchedBindingObjects<OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
@@ -62,6 +86,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
                         denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                                            .Where(principal => MatchedScope<OrderDeniedPosition>().Compile().Invoke(principal, denied))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
                     return (Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
@@ -74,8 +99,15 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     return (principal, dto) => principal.FirmId == dto.FirmId &&
                                                principal.Start == dto.Start &&
-                                               principal.OrganizationUnitId == dto.OrganizationUnitId &&
-                                               (principal.Scope == 0 || principal.Scope == dto.Scope);
+                                               principal.OrganizationUnitId == dto.OrganizationUnitId;
+                }
+
+                /// <summary>
+                /// Возвращает выражение для определения "видят" ли друг друга позиции
+                /// </summary>
+                public static Expression<Func<Dto<OrderPosition>, Dto<T>, bool>> MatchedScope<T>()
+                {
+                    return (principal, dto) => principal.Scope == 0 || principal.Scope == dto.Scope;
                 }
 
                 /// <summary>

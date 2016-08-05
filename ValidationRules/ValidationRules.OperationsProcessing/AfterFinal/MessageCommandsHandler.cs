@@ -132,7 +132,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _deniedPositionsCheckActor.ExecuteCommands(commands);
                 _associatedPositionWithoutPrincipalActor.ExecuteCommands(commands);
                 _linkedObjectsMissedInPrincipalsActor.ExecuteCommands(commands);
-                //_satisfiedPrincipalPositionDifferentOrderActor.ExecuteCommands(commands);
+                _satisfiedPrincipalPositionDifferentOrderActor.ExecuteCommands(commands);
                 _conflictingPrincipalPositionActor.ExecuteCommands(commands);
                 _accountShouldExistActor.ExecuteCommands(commands);
                 _lockShouldNotExistActor.ExecuteCommands(commands);

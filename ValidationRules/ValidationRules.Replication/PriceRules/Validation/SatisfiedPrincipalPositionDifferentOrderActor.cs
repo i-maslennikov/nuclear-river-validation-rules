@@ -5,6 +5,8 @@ using System.Xml.Linq;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -31,10 +33,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     {
         public const int MessageTypeId = 15;
 
-        private const int NoDependency = 2;
-        private const int Match = 1;
-        private const int Different = 3;
-
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Warning)
                                                                     .WhenMassPrerelease(Result.Warning)
@@ -58,86 +56,66 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from order in query.For<Order>()
                 join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<OrderPosition>() on order.Id equals position.OrderId
-                select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
+                select new Dto<OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var associatedPositions =
                 from order in query.For<Order>()
                 join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<OrderAssociatedPosition>() on order.Id equals position.OrderId
-                select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
+                where period.Scope == 0
+                select new Dto<OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
-            var satisfiedPositions =
-                from orderPosition in orderPositions
-                join associatedPosition in associatedPositions on
-                    new { orderPosition.FirmId, orderPosition.Start, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
-                    new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId }
-                where
-                    // правила удовлетворённые из других заказов (сопутствующая в одном заказе, основная - в другом)
-                    orderPosition.position.OrderId != associatedPosition.position.OrderId &&
-                    orderPosition.position.OrderPositionId != associatedPosition.position.CauseOrderPositionId
-                where
-                    // local scope only
-                    orderPosition.Scope != 0 || orderPosition.Scope == associatedPosition.Scope
-                where
-                    associatedPosition.position.BindingType == NoDependency ||
+            var notSatisfiedPositions =
+                associatedPositions.SelectMany(Specs.Join.Aggs.AvailablePrincipalPosition(orderPositions.Where(x => x.Scope == 0).DefaultIfEmpty()), (associated, principal) => new { associated, has = principal != null })
+                                   .GroupBy(x => new
+                                       {
+                                           x.associated.Start,
+                                           x.associated.Position.OrderId,
+                                           x.associated.Position.CauseOrderPositionId,
+                                           x.associated.Position.CauseItemPositionId,
+                                           x.associated.Position.Category1Id,
+                                           x.associated.Position.Category3Id,
+                                           x.associated.Position.FirmAddressId,
+                                       })
+                                   .Where(x => x.Max(y => y.has) == false)
+                                   .Select(x => x.Key);
 
-                    (associatedPosition.position.BindingType == Match &&
-                    associatedPosition.position.HasNoBinding == orderPosition.position.HasNoBinding &&
-                    (associatedPosition.position.Category3Id == null || associatedPosition.position.Category3Id == orderPosition.position.Category3Id) &&
-                    (associatedPosition.position.Category1Id == null || associatedPosition.position.Category1Id == orderPosition.position.Category1Id) &&
-                    (associatedPosition.position.FirmAddressId == null || associatedPosition.position.FirmAddressId == orderPosition.position.FirmAddressId)) ||
+            var satisfiedOnlyByHiddenPositions =
+                associatedPositions.SelectMany(Specs.Join.Aggs.AvailablePrincipalPosition(orderPositions.Where(x => x.Scope != 0)), (associated, principal) => new { associated, principal })
+                                   .Where(x => notSatisfiedPositions.Any(y => y.Start == x.associated.Start &&
+                                                                              y.CauseOrderPositionId == x.associated.Position.CauseOrderPositionId &&
+                                                                              y.CauseItemPositionId == x.associated.Position.CauseItemPositionId));
 
-                    (associatedPosition.position.BindingType == Different &&
-                    (associatedPosition.position.HasNoBinding != orderPosition.position.HasNoBinding ||
-                    (associatedPosition.position.Category3Id != null && associatedPosition.position.Category3Id != orderPosition.position.Category3Id) ||
-                    (associatedPosition.position.Category1Id != null && associatedPosition.position.Category1Id != orderPosition.position.Category1Id) ||
-                    (associatedPosition.position.FirmAddressId != null && associatedPosition.position.FirmAddressId != orderPosition.position.FirmAddressId)))
-                select new
-                {
-                    associatedPosition.FirmId,
-                    CauseOrderId = associatedPosition.position.OrderId,
-                    associatedPosition.position.CauseOrderPositionId,
-                    associatedPosition.position.CausePackagePositionId,
-                    associatedPosition.position.CauseItemPositionId,
-
-                    associatedPosition.position.PrincipalPositionId,
-                    PrincipalOrderPositionId = orderPosition.position.OrderPositionId,
-                    PrincipalOrderId = orderPosition.position.OrderId,
-
-                    associatedPosition.Start,
-                    associatedPosition.OrganizationUnitId,
-                };
-
-            var messages = from warning in satisfiedPositions
-                           join period in query.For<Period>() on new { warning.Start, warning.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+            var messages = from warning in satisfiedOnlyByHiddenPositions
+                           join period in query.For<Period>() on new { warning.principal.Start, warning.principal.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                            select new Version.ValidationResult
-                               {
-                                   VersionId = version,
-                                   MessageType = MessageTypeId,
-                                   MessageParams =
+                           {
+                               VersionId = version,
+                               MessageType = MessageTypeId,
+                               MessageParams =
                                        new XDocument(new XElement("root",
                                                                   new XElement("firm",
-                                                                               new XAttribute("id", warning.FirmId)),
+                                                                               new XAttribute("id", warning.principal.FirmId)),
                                                                   new XElement("position",
-                                                                               new XAttribute("orderId", warning.PrincipalOrderId),
-                                                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.PrincipalOrderId).Number),
-                                                                               new XAttribute("orderPositionId", warning.PrincipalOrderPositionId),
-                                                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.PrincipalOrderPositionId).Name)),
+                                                                               new XAttribute("orderId", warning.principal.Position.OrderId),
+                                                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.principal.Position.OrderId).Number),
+                                                                               new XAttribute("orderPositionId", warning.principal.Position.OrderPositionId),
+                                                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.principal.Position.ItemPositionId).Name)),
                                                                   new XElement("position",
-                                                                               new XAttribute("orderId", warning.CauseOrderId),
-                                                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.CauseOrderId).Number),
-                                                                               new XAttribute("orderPositionId", warning.CauseOrderPositionId),
-                                                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.CausePackagePositionId).Name)),
+                                                                               new XAttribute("orderId", warning.associated.Position.OrderId),
+                                                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.associated.Position.OrderId).Number),
+                                                                               new XAttribute("orderPositionId", warning.associated.Position.CauseOrderPositionId),
+                                                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.associated.Position.CausePackagePositionId).Name)),
                                                                   new XElement("order",
-                                                                               new XAttribute("id", warning.PrincipalOrderId),
-                                                                               new XAttribute("number", query.For<Order>().Single(x => x.Id == warning.PrincipalOrderId).Number)))),
+                                                                               new XAttribute("id", warning.principal.Position.OrderId),
+                                                                               new XAttribute("number", query.For<Order>().Single(x => x.Id == warning.principal.Position.OrderId).Number)))),
 
-                                   PeriodStart = period.Start,
-                                   PeriodEnd = period.End,
-                                   ProjectId = period.ProjectId,
+                               PeriodStart = period.Start,
+                               PeriodEnd = period.End,
+                               ProjectId = period.ProjectId,
 
-                                   Result = RuleResult,
-                               };
+                               Result = RuleResult,
+                           };
 
             return messages;
         }
