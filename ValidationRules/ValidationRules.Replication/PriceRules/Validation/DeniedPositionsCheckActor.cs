@@ -145,6 +145,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             return messages;
         }
 
+        /// <summary>
+        /// Бага в Union требует plain-dto, без составных полей.
+        /// </summary>
         private sealed class PrincipalDeniedDto
         {
             public long FirmId { get; set; }
