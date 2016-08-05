@@ -1,23 +1,23 @@
-﻿if not exists (select * from sys.schemas where name = 'PriceContext') exec('create schema PriceContext')
+﻿if not exists (select * from sys.schemas where name = 'PriceFacts') exec('create schema PriceFacts')
 go
 
-if object_id('PriceContext.AssociatedPosition') is not null drop table PriceContext.AssociatedPosition
-if object_id('PriceContext.AssociatedPositionsGroup') is not null drop table PriceContext.AssociatedPositionsGroup
-if object_id('PriceContext.DeniedPosition') is not null drop table PriceContext.DeniedPosition
-if object_id('PriceContext.OrderPositionAdvertisement') is not null drop table PriceContext.OrderPositionAdvertisement
-if object_id('PriceContext.OrderPosition') is not null drop table PriceContext.OrderPosition
-if object_id('PriceContext.Order') is not null drop table PriceContext.[Order]
-if object_id('PriceContext.OrganizationUnit') is not null drop table PriceContext.OrganizationUnit
-if object_id('PriceContext.PricePosition') is not null drop table PriceContext.PricePosition
-if object_id('PriceContext.PricePositionNotActive') is not null drop table PriceContext.PricePositionNotActive
-if object_id('PriceContext.Price') is not null drop table PriceContext.Price
-if object_id('PriceContext.Project') is not null drop table PriceContext.Project
-if object_id('PriceContext.Position') is not null drop table PriceContext.Position
-if object_id('PriceContext.Category') is not null drop table PriceContext.Category
-if object_id('PriceContext.RulesetRule') is not null drop table PriceContext.RulesetRule
+if object_id('PriceFacts.AssociatedPosition') is not null drop table PriceFacts.AssociatedPosition
+if object_id('PriceFacts.AssociatedPositionsGroup') is not null drop table PriceFacts.AssociatedPositionsGroup
+if object_id('PriceFacts.DeniedPosition') is not null drop table PriceFacts.DeniedPosition
+if object_id('PriceFacts.OrderPositionAdvertisement') is not null drop table PriceFacts.OrderPositionAdvertisement
+if object_id('PriceFacts.OrderPosition') is not null drop table PriceFacts.OrderPosition
+if object_id('PriceFacts.Order') is not null drop table PriceFacts.[Order]
+if object_id('PriceFacts.OrganizationUnit') is not null drop table PriceFacts.OrganizationUnit
+if object_id('PriceFacts.PricePosition') is not null drop table PriceFacts.PricePosition
+if object_id('PriceFacts.PricePositionNotActive') is not null drop table PriceFacts.PricePositionNotActive
+if object_id('PriceFacts.Price') is not null drop table PriceFacts.Price
+if object_id('PriceFacts.Project') is not null drop table PriceFacts.Project
+if object_id('PriceFacts.Position') is not null drop table PriceFacts.Position
+if object_id('PriceFacts.Category') is not null drop table PriceFacts.Category
+if object_id('PriceFacts.RulesetRule') is not null drop table PriceFacts.RulesetRule
 go
 
-create table PriceContext.Price(
+create table PriceFacts.Price(
     Id bigint not null,
     OrganizationUnitId bigint not null,
     BeginDate datetime2(2) not null,
@@ -25,7 +25,7 @@ create table PriceContext.Price(
 )
 go
 
-create table PriceContext.Position(
+create table PriceFacts.Position(
     Id bigint not null,
     CategoryCode bigint not null,
     IsControlledByAmount bit not null,
@@ -33,10 +33,10 @@ create table PriceContext.Position(
     Name nvarchar(max) not null,
     constraint PK_Position primary key (Id)
 )
-create index IX_Position_IsComposite ON PriceContext.Position (IsComposite)
+create index IX_Position_IsComposite ON PriceFacts.Position (IsComposite)
 go
 
-create table PriceContext.PricePosition(
+create table PriceFacts.PricePosition(
     Id bigint not null,
     PriceId bigint not null,
     PositionId bigint not null,
@@ -44,39 +44,39 @@ create table PriceContext.PricePosition(
     MaxAdvertisementAmount int null,
     constraint PK_PricePosition primary key (Id)
 )
-create index IX_PricePosition_PriceId ON PriceContext.PricePosition (PriceId)
-create index IX_PricePosition_PositionId ON PriceContext.PricePosition (PositionId)
+create index IX_PricePosition_PriceId ON PriceFacts.PricePosition (PriceId)
+create index IX_PricePosition_PositionId ON PriceFacts.PricePosition (PositionId)
 go
 
-create table PriceContext.PricePositionNotActive(
+create table PriceFacts.PricePositionNotActive(
     Id bigint not null,
     PriceId bigint not null,
     PositionId bigint not null,
     constraint PK_PricePositionNotActive primary key (Id)
 )
-create index IX_PricePositionNotActive_PriceId ON PriceContext.PricePositionNotActive (PriceId)
-create index IX_PricePositionNotActive_PositionId ON PriceContext.PricePositionNotActive (PositionId)
+create index IX_PricePositionNotActive_PriceId ON PriceFacts.PricePositionNotActive (PriceId)
+create index IX_PricePositionNotActive_PositionId ON PriceFacts.PricePositionNotActive (PositionId)
 go
 
-create table PriceContext.AssociatedPositionsGroup(
+create table PriceFacts.AssociatedPositionsGroup(
     Id bigint not null,
     PricePositionId bigint not null,
     constraint PK_AssociatedPositionsGroup primary key (Id)
 )
-create index IX_AssociatedPositionsGroup_PricePositionId ON PriceContext.AssociatedPositionsGroup (PricePositionId)
+create index IX_AssociatedPositionsGroup_PricePositionId ON PriceFacts.AssociatedPositionsGroup (PricePositionId)
 go
 
-create table PriceContext.AssociatedPosition(
+create table PriceFacts.AssociatedPosition(
     Id bigint not null,
     AssociatedPositionsGroupId bigint not null,
     PositionId bigint not null,
     ObjectBindingType int not null,
     constraint PK_AssociatedPosition primary key (Id)
 )
-create index IX_AssociatedPosition_AssociatedPositionsGroupId ON PriceContext.AssociatedPosition (AssociatedPositionsGroupId)
+create index IX_AssociatedPosition_AssociatedPositionsGroupId ON PriceFacts.AssociatedPosition (AssociatedPositionsGroupId)
 go
 
-create table PriceContext.DeniedPosition(
+create table PriceFacts.DeniedPosition(
     Id bigint not null,
     PositionId bigint not null,
     PositionDeniedId bigint not null,
@@ -84,10 +84,10 @@ create table PriceContext.DeniedPosition(
     PriceId bigint not null,
     constraint PK_DeniedPosition primary key (Id)
 )
-create index IX_DeniedPosition_PriceId ON PriceContext.DeniedPosition (PriceId)
+create index IX_DeniedPosition_PriceId ON PriceFacts.DeniedPosition (PriceId)
 go
 
-create table PriceContext.[Order](
+create table PriceFacts.[Order](
     Id bigint not null,
     FirmId bigint not null,
     DestOrganizationUnitId bigint not null,
@@ -105,17 +105,17 @@ create table PriceContext.[Order](
 )
 go
 
-create table PriceContext.OrderPosition(
+create table PriceFacts.OrderPosition(
     Id bigint not null,
     OrderId bigint not null,
     PricePositionId bigint not null,
     constraint PK_OrderPosition primary key (Id)
 )
-create index IX_OrderPosition_OrderId ON PriceContext.OrderPosition (OrderId)
-create index IX_OrderPosition_PricePositionId ON PriceContext.OrderPosition (PricePositionId)
+create index IX_OrderPosition_OrderId ON PriceFacts.OrderPosition (OrderId)
+create index IX_OrderPosition_PricePositionId ON PriceFacts.OrderPosition (PricePositionId)
 go
 
-create table PriceContext.OrderPositionAdvertisement(
+create table PriceFacts.OrderPositionAdvertisement(
     Id bigint not null,
     OrderPositionId bigint not null,
     PositionId bigint not null,
@@ -123,17 +123,17 @@ create table PriceContext.OrderPositionAdvertisement(
     FirmAddressId bigint null,
     constraint PK_OrderPositionAdvertisement primary key (Id)
 )
-create index IX_OrderPositionAdvertisement_OrderPositionId ON PriceContext.OrderPositionAdvertisement (OrderPositionId)
-create index IX_OrderPositionAdvertisement_PositionId ON PriceContext.OrderPositionAdvertisement (PositionId)
+create index IX_OrderPositionAdvertisement_OrderPositionId ON PriceFacts.OrderPositionAdvertisement (OrderPositionId)
+create index IX_OrderPositionAdvertisement_PositionId ON PriceFacts.OrderPositionAdvertisement (PositionId)
 go
 
-create table PriceContext.OrganizationUnit(
+create table PriceFacts.OrganizationUnit(
     Id bigint not null,
     constraint PK_OrganizationUnit primary key (Id)
 )
 go
 
-create table PriceContext.Project(
+create table PriceFacts.Project(
     Id bigint not null,
     OrganizationUnitId bigint not null,
     Name nvarchar(max) not null,
@@ -141,15 +141,15 @@ create table PriceContext.Project(
 )
 go
 
-create table PriceContext.Category(
+create table PriceFacts.Category(
     Id bigint not null,
     ParentId bigint not null,
     constraint PK_Category primary key (Id)
 )
-create index IX_Category_ParentId ON PriceContext.Category (ParentId)
+create index IX_Category_ParentId ON PriceFacts.Category (ParentId)
 go
 
-create table PriceContext.RulesetRule(
+create table PriceFacts.RulesetRule(
     Id bigint not null,
     RuleType int not null,
     DependentPositionId bigint not null,
@@ -157,5 +157,5 @@ create table PriceContext.RulesetRule(
     [Priority] int not null,
     ObjectBindingType int not null
 )
-create index IX_RulesetRule_Id ON PriceContext.RulesetRule (Id)
+create index IX_RulesetRule_Id ON PriceFacts.RulesetRule (Id)
 go

@@ -8,8 +8,8 @@ namespace NuClear.ValidationRules.Storage
 {
     public static partial class Schema
     {
-        private const string PriceContextSchema = "PriceContext";
-        private const string AccountContextSchema = "AccountContext";
+        private const string PriceContextSchema = "PriceFacts";
+        private const string AccountContextSchema = "AccountFacts";
 
         public static MappingSchema Facts
         {

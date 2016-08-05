@@ -1,16 +1,16 @@
-﻿if not exists (select * from sys.schemas where name = 'AccountContext') exec('create schema AccountContext')
+﻿if not exists (select * from sys.schemas where name = 'AccountFacts') exec('create schema AccountFacts')
 go
 
-if object_id('AccountContext.Order') is not null drop table AccountContext.[Order]
-if object_id('AccountContext.Project') is not null drop table AccountContext.Project
-if object_id('AccountContext.Account') is not null drop table AccountContext.Account
-if object_id('AccountContext.Lock') is not null drop table AccountContext.Lock
-if object_id('AccountContext.Limit') is not null drop table AccountContext.Limit
-if object_id('AccountContext.ReleaseWithdrawal') is not null drop table AccountContext.ReleaseWithdrawal
-if object_id('AccountContext.OrderPosition') is not null drop table AccountContext.OrderPosition
+if object_id('AccountFacts.Order') is not null drop table AccountFacts.[Order]
+if object_id('AccountFacts.Project') is not null drop table AccountFacts.Project
+if object_id('AccountFacts.Account') is not null drop table AccountFacts.Account
+if object_id('AccountFacts.Lock') is not null drop table AccountFacts.Lock
+if object_id('AccountFacts.Limit') is not null drop table AccountFacts.Limit
+if object_id('AccountFacts.ReleaseWithdrawal') is not null drop table AccountFacts.ReleaseWithdrawal
+if object_id('AccountFacts.OrderPosition') is not null drop table AccountFacts.OrderPosition
 go
 
-create table AccountContext.[Order](
+create table AccountFacts.[Order](
     Id bigint not null,
     DestOrganizationUnitId bigint not null,
     SourceOrganizationUnitId bigint not null,
@@ -22,21 +22,21 @@ create table AccountContext.[Order](
 )
 go
 
-create table AccountContext.Project(
+create table AccountFacts.Project(
     Id bigint not null,
     OrganizationUnitId bigint null,
     constraint PK_Project primary key (Id)
 )
 go
 
-create table AccountContext.Account(
+create table AccountFacts.Account(
     Id bigint not null,
     Balance decimal(19,4) not null,
     constraint PK_Account primary key (Id)
 )
 go
 
-create table AccountContext.Lock(
+create table AccountFacts.Lock(
     Id bigint not null,
     OrderId bigint not null,
     AccountId bigint not null,
@@ -46,7 +46,7 @@ create table AccountContext.Lock(
 )
 go
 
-create table AccountContext.Limit(
+create table AccountFacts.Limit(
     Id bigint not null,
     AccountId bigint not null,
     Start datetime2(2) not null,
@@ -55,7 +55,7 @@ create table AccountContext.Limit(
 )
 go
 
-create table AccountContext.ReleaseWithdrawal(
+create table AccountFacts.ReleaseWithdrawal(
     Id bigint not null,
     OrderPositionId bigint not null,
     Start datetime2(2) not null,
@@ -64,7 +64,7 @@ create table AccountContext.ReleaseWithdrawal(
 )
 go
 
-create table AccountContext.OrderPosition(
+create table AccountFacts.OrderPosition(
     Id bigint not null,
     OrderId bigint not null,
     constraint PK_OrderPosition primary key (Id)
