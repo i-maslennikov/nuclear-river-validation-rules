@@ -8,8 +8,8 @@ namespace NuClear.ValidationRules.Storage
 {
     public static partial class Schema
     {
-        private const string PriceAggregateSchema = "PriceAggregate";
-        private const string AccountAggregateSchema = "AccountAggregate";
+        private const string PriceAggregateSchema = "PriceAggregates";
+        private const string AccountAggregateSchema = "AccountAggregates";
 
         public static MappingSchema Aggregates
             => new MappingSchema(nameof(Aggregates), new SqlServerMappingSchema())

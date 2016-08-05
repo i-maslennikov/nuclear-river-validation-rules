@@ -1,12 +1,12 @@
-﻿if not exists (select * from sys.schemas where name = 'AccountAggregate') exec('create schema AccountAggregate')
+﻿if not exists (select * from sys.schemas where name = 'AccountAggregates') exec('create schema AccountAggregates')
 
-if object_id('AccountAggregate.Order') is not null drop table AccountAggregate.[Order]
-if object_id('AccountAggregate.Lock') is not null drop table AccountAggregate.Lock
-if object_id('AccountAggregate.Account') is not null drop table AccountAggregate.Account
-if object_id('AccountAggregate.AccountPeriod') is not null drop table AccountAggregate.AccountPeriod
+if object_id('AccountAggregates.Order') is not null drop table AccountAggregates.[Order]
+if object_id('AccountAggregates.Lock') is not null drop table AccountAggregates.Lock
+if object_id('AccountAggregates.Account') is not null drop table AccountAggregates.Account
+if object_id('AccountAggregates.AccountPeriod') is not null drop table AccountAggregates.AccountPeriod
 go
 
-create table AccountAggregate.[Order](
+create table AccountAggregates.[Order](
     Id bigint not null,
     DestProjectId bigint not null,
     SourceProjectId bigint not null,
@@ -18,21 +18,21 @@ create table AccountAggregate.[Order](
 )
 go
 
-create table AccountAggregate.Lock(
+create table AccountAggregates.Lock(
     OrderId bigint not null,
     [Start] datetime2(2) not null,
     [End] datetime2(2) not null,
 )
-create index IX_Lock_OrderId ON AccountAggregate.Lock (OrderId)
+create index IX_Lock_OrderId ON AccountAggregates.Lock (OrderId)
 go
 
-create table AccountAggregate.Account(
+create table AccountAggregates.Account(
     Id bigint not null,
     constraint PK_Account primary key (Id)
 )
 go
 
-create table AccountAggregate.AccountPeriod(
+create table AccountAggregates.AccountPeriod(
     AccountId bigint not null,
     Balance decimal(19,4) not null,
     LockedAmount decimal(19,4) not null,
@@ -44,5 +44,5 @@ create table AccountAggregate.AccountPeriod(
     [End] datetime2(2) not null,
 
 )
---create index IX_AccountPeriod_ ON AccountAggregate.Lock (AccountId)
+--create index IX_AccountPeriod_ ON AccountAggregates.Lock (AccountId)
 go

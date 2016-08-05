@@ -1,30 +1,30 @@
-﻿if not exists (select * from sys.schemas where name = 'PriceAggregate') exec('create schema PriceAggregate')
+﻿if not exists (select * from sys.schemas where name = 'PriceAggregates') exec('create schema PriceAggregates')
 
-if object_id('PriceAggregate.Position') is not null drop table PriceAggregate.Position
+if object_id('PriceAggregates.Position') is not null drop table PriceAggregates.Position
 
-if object_id('PriceAggregate.OrderPeriod') is not null drop table PriceAggregate.OrderPeriod
-if object_id('PriceAggregate.PricePeriod') is not null drop table PriceAggregate.PricePeriod
-if object_id('PriceAggregate.Period') is not null drop table PriceAggregate.Period
+if object_id('PriceAggregates.OrderPeriod') is not null drop table PriceAggregates.OrderPeriod
+if object_id('PriceAggregates.PricePeriod') is not null drop table PriceAggregates.PricePeriod
+if object_id('PriceAggregates.Period') is not null drop table PriceAggregates.Period
 
-if object_id('PriceAggregate.OrderPrice') is not null drop table PriceAggregate.OrderPrice
-if object_id('PriceAggregate.OrderPricePosition') is not null drop table PriceAggregate.OrderPricePosition
-if object_id('PriceAggregate.OrderPosition') is not null drop table PriceAggregate.OrderPosition
-if object_id('PriceAggregate.OrderDeniedPosition') is not null drop table PriceAggregate.OrderDeniedPosition
-if object_id('PriceAggregate.OrderAssociatedPosition') is not null drop table PriceAggregate.OrderAssociatedPosition
-if object_id('PriceAggregate.AmountControlledPosition') is not null drop table PriceAggregate.AmountControlledPosition
-if object_id('PriceAggregate.[Order]') is not null drop table PriceAggregate.[Order]
+if object_id('PriceAggregates.OrderPrice') is not null drop table PriceAggregates.OrderPrice
+if object_id('PriceAggregates.OrderPricePosition') is not null drop table PriceAggregates.OrderPricePosition
+if object_id('PriceAggregates.OrderPosition') is not null drop table PriceAggregates.OrderPosition
+if object_id('PriceAggregates.OrderDeniedPosition') is not null drop table PriceAggregates.OrderDeniedPosition
+if object_id('PriceAggregates.OrderAssociatedPosition') is not null drop table PriceAggregates.OrderAssociatedPosition
+if object_id('PriceAggregates.AmountControlledPosition') is not null drop table PriceAggregates.AmountControlledPosition
+if object_id('PriceAggregates.[Order]') is not null drop table PriceAggregates.[Order]
 
-if object_id('PriceAggregate.PriceAssociatedPosition') is not null drop table PriceAggregate.PriceAssociatedPosition
-if object_id('PriceAggregate.AdvertisementAmountRestriction') is not null drop table PriceAggregate.AdvertisementAmountRestriction
-if object_id('PriceAggregate.Price') is not null drop table PriceAggregate.Price
-if object_id('PriceAggregate.AssociatedPositionGroupOvercount') is not null drop table PriceAggregate.AssociatedPositionGroupOvercount
+if object_id('PriceAggregates.PriceAssociatedPosition') is not null drop table PriceAggregates.PriceAssociatedPosition
+if object_id('PriceAggregates.AdvertisementAmountRestriction') is not null drop table PriceAggregates.AdvertisementAmountRestriction
+if object_id('PriceAggregates.Price') is not null drop table PriceAggregates.Price
+if object_id('PriceAggregates.AssociatedPositionGroupOvercount') is not null drop table PriceAggregates.AssociatedPositionGroupOvercount
 
-if object_id('PriceAggregate.Project') is not null drop table PriceAggregate.Project
+if object_id('PriceAggregates.Project') is not null drop table PriceAggregates.Project
 
 go
 
 -- справочник
-create table PriceAggregate.Project(
+create table PriceAggregates.Project(
     Id bigint NOT NULL,
     Name nvarchar(max) NOT NULL,
     constraint PK_Project primary key (Id)
@@ -33,14 +33,14 @@ go
 
 -- price aggregate
 
-create table PriceAggregate.Price(
+create table PriceAggregates.Price(
     Id bigint NOT NULL,
     BeginDate datetime2(2) NOT NULL,
     constraint PK_Price primary key (Id)
 )
 go
 
-create table PriceAggregate.AssociatedPositionGroupOvercount(
+create table PriceAggregates.AssociatedPositionGroupOvercount(
     PriceId bigint NOT NULL,
     PricePositionId bigint NOT NULL,
     PricePositionName nvarchar(max) NOT NULL,
@@ -48,7 +48,7 @@ create table PriceAggregate.AssociatedPositionGroupOvercount(
 )
 go
 
-create table PriceAggregate.AdvertisementAmountRestriction(
+create table PriceAggregates.AdvertisementAmountRestriction(
     PriceId bigint NOT NULL,
     CategoryCode bigint NOT NULL,
     CategoryName nvarchar(max) NOT NULL,
@@ -56,26 +56,26 @@ create table PriceAggregate.AdvertisementAmountRestriction(
     [Max] int NOT NULL,
     MissingMinimalRestriction bit NOT NULL,
 )
-create index IX_AdvertisementAmountRestriction_PriceId ON PriceAggregate.AdvertisementAmountRestriction (PriceId)
+create index IX_AdvertisementAmountRestriction_PriceId ON PriceAggregates.AdvertisementAmountRestriction (PriceId)
 go
 
 -- order aggregate
-create table PriceAggregate.[Order](
+create table PriceAggregates.[Order](
     Id bigint NOT NULL,
     FirmId bigint NOT NULL,
     Number nvarchar(max) NOT NULL,
     constraint PK_Order primary key (Id)
 )
-create index IX_Order_FirmId ON PriceAggregate.[Order] ([FirmId]) include (Id)
+create index IX_Order_FirmId ON PriceAggregates.[Order] ([FirmId]) include (Id)
 go
 
-create table PriceAggregate.AmountControlledPosition(
+create table PriceAggregates.AmountControlledPosition(
     OrderId bigint NOT NULL,
     CategoryCode bigint NOT NULL
 )
 go
 
-create table PriceAggregate.OrderPosition(
+create table PriceAggregates.OrderPosition(
     OrderId bigint NOT NULL,
     OrderPositionId bigint NOT NULL,
     PackagePositionId bigint NOT NULL,
@@ -88,10 +88,10 @@ create table PriceAggregate.OrderPosition(
 
     Source nvarchar(16) NULL,
 )
-create index IX_OrderPosition_OrderId ON PriceAggregate.OrderPosition (OrderId)
+create index IX_OrderPosition_OrderId ON PriceAggregates.OrderPosition (OrderId)
 go
 
-create table PriceAggregate.OrderDeniedPosition(
+create table PriceAggregates.OrderDeniedPosition(
     OrderId bigint NOT NULL,
     CauseOrderPositionId bigint NOT NULL,
     CausePackagePositionId bigint NOT NULL,
@@ -108,11 +108,11 @@ create table PriceAggregate.OrderDeniedPosition(
     Source nvarchar(16) not null,
 )
 create index IX_OrderDeniedPosition_OrderId_DeniedPositionId_BindingType
-on [PriceAggregate].[OrderDeniedPosition] ([OrderId],[DeniedPositionId],[BindingType])
+on [PriceAggregates].[OrderDeniedPosition] ([OrderId],[DeniedPositionId],[BindingType])
 include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[HasNoBinding],[Category3Id],[Category1Id],[FirmAddressId])
 go
 
-create table PriceAggregate.OrderAssociatedPosition(
+create table PriceAggregates.OrderAssociatedPosition(
     OrderId bigint NOT NULL,
     CauseOrderPositionId bigint NOT NULL,
     CausePackagePositionId bigint NOT NULL,
@@ -129,27 +129,27 @@ create table PriceAggregate.OrderAssociatedPosition(
 	Source nvarchar(16) not null,
 )
 create index IX_OrderAssociatedPosition_OrderId_PrincipalPositionId_BindingType
-on [PriceAggregate].[OrderAssociatedPosition] ([OrderId],[PrincipalPositionId],[BindingType])
+on [PriceAggregates].[OrderAssociatedPosition] ([OrderId],[PrincipalPositionId],[BindingType])
 include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[HasNoBinding],[Category3Id],[Category1Id],[FirmAddressId])
 
 create index IX_OrderAssociatedPosition_CauseOrderPositionId_CauseItemPositionId_BindingType
-on [PriceAggregate].[OrderAssociatedPosition] ([CauseOrderPositionId],[CauseItemPositionId],[BindingType])
+on [PriceAggregates].[OrderAssociatedPosition] ([CauseOrderPositionId],[CauseItemPositionId],[BindingType])
 go
 
-create table PriceAggregate.OrderPricePosition(
+create table PriceAggregates.OrderPricePosition(
     OrderId bigint NOT NULL,
 	OrderPositionId bigint NOT NULL,
 	OrderPositionName nvarchar(max) NULL,
 	PriceId bigint NOT NULL,
 	IsActive bit NOT NULL
 )
-create index IX_OrderPricePosition_OrderId ON PriceAggregate.OrderPricePosition (OrderId)
-create index IX_OrderPricePosition_PriceId ON PriceAggregate.OrderPricePosition (PriceId)
-create index IX_OrderPricePosition_IsActive ON PriceAggregate.OrderPricePosition (IsActive)
+create index IX_OrderPricePosition_OrderId ON PriceAggregates.OrderPricePosition (OrderId)
+create index IX_OrderPricePosition_PriceId ON PriceAggregates.OrderPricePosition (PriceId)
+create index IX_OrderPricePosition_IsActive ON PriceAggregates.OrderPricePosition (IsActive)
 go
 
 -- period aggregate
-create table PriceAggregate.Period(
+create table PriceAggregates.Period(
     ProjectId bigint NOT NULL,
     OrganizationUnitId bigint NOT NULL,
     [Start] datetime2(2) NOT NULL,
@@ -158,27 +158,27 @@ create table PriceAggregate.Period(
 )
 go
 
-create table PriceAggregate.OrderPeriod(
+create table PriceAggregates.OrderPeriod(
     OrderId bigint NOT NULL,
     OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
     Scope bigint NOT NULL,
 )
-create index IX_OrderPeriod_OrderId ON PriceAggregate.OrderPeriod (OrderId)
-create index IX_OrderPeriod_OrganizationUnitId_Start ON PriceAggregate.OrderPeriod (OrganizationUnitId, Start)
+create index IX_OrderPeriod_OrderId ON PriceAggregates.OrderPeriod (OrderId)
+create index IX_OrderPeriod_OrganizationUnitId_Start ON PriceAggregates.OrderPeriod (OrganizationUnitId, Start)
 go
 
-create table PriceAggregate.PricePeriod(
+create table PriceAggregates.PricePeriod(
     PriceId bigint NOT NULL,
     OrganizationUnitId bigint NOT NULL,
     Start datetime2(2) NOT NULL,
 )
-create index IX_PricePeriod_PriceId ON PriceAggregate.PricePeriod (PriceId)
-create index IX_PricePeriod_OrganizationUnitId_Start ON PriceAggregate.PricePeriod (OrganizationUnitId, Start)
+create index IX_PricePeriod_PriceId ON PriceAggregates.PricePeriod (PriceId)
+create index IX_PricePeriod_OrganizationUnitId_Start ON PriceAggregates.PricePeriod (OrganizationUnitId, Start)
 go
 
 -- position aggregate
-create table PriceAggregate.Position(
+create table PriceAggregates.Position(
     Id bigint NOT NULL,
     CategoryCode bigint NOT NULL,
     IsControlledByAmount bit NOT NULL,

@@ -117,7 +117,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 return;
             }
 
-            // Транзакция важна для запросов в пространстве Messages, запросы в PriceAggregate нужно выполнять без транзакции, хотя в идеале хотелось бы две независимые транзакции.
+            // Транзакция важна для запросов в пространстве Messages, запросы в PriceAggregates нужно выполнять без транзакции, хотя в идеале хотелось бы две независимые транзакции.
             var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
