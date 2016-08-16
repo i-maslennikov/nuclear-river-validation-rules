@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NuClear.ValidationRules.Replication</RootNamespace>
+    <AssemblyName>2GIS.NuClear.ValidationRules.Replication</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Assembling.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Assembling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.IdentityService.Client, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b743d84006fae806, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.IdentityService.Client.1.0.5\lib\net451\2GIS.NuClear.IdentityService.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Messaging.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Messaging.API.2.0.1\lib\net451\2GIS.NuClear.Messaging.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Messaging.Transports.CorporateBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Messaging.Transports.CorporateBus.2.0.1\lib\net451\2GIS.NuClear.Messaging.Transports.CorporateBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Messaging.Transports.ServiceBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Messaging.Transports.ServiceBus.2.0.1\lib\net451\2GIS.NuClear.Messaging.Transports.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Metamodeling.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Metamodeling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Model.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsLogging.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.OperationsLogging.API.3.0.0\lib\net451\2GIS.NuClear.OperationsLogging.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsLogging.Transports.ServiceBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.OperationsLogging.Transports.ServiceBus.3.0.0\lib\net451\2GIS.NuClear.OperationsLogging.Transports.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsLogging.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.OperationsLogging.Transports.SQLStore.3.0.0\lib\net451\2GIS.NuClear.OperationsLogging.Transports.SQLStore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsProcessing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.OperationsProcessing.API.3.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.ServiceBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.3.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=e30b8659b221afc8, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.3.0.0\lib\net451\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsTracking, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7546e3dd2743b918, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.OperationsTracking.2.0.0\lib\net451\2GIS.NuClear.OperationsTracking.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.OperationsTracking.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=7546e3dd2743b918, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.OperationsTracking.API.2.0.0\lib\net451\2GIS.NuClear.OperationsTracking.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuClear.River.Replication.3.0.2-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuClear.River.Replication.3.0.2-beta\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Settings.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Settings.API.1.2.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Storage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Storage.API.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Storage.LinqToDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Telemetry.0.12.3\lib\net451\2GIS.NuClear.Telemetry.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Tracing.API.1.0.5\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Tracing.Environment, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Tracing.Environment.1.0.5\lib\net451\2GIS.NuClear.Tracing.Environment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Utils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Utils.1.1.12\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Utils.Legacy, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Utils.Legacy.1.1.12\lib\net451\2GIS.NuClear.Utils.Legacy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.WCF.Client, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.WCF.Client.1.0.12\lib\net451\2GIS.NuClear.WCF.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="linq2db, Version=1.0.7.4, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
+      <HintPath>..\packages\linq2db.1.0.7.4\lib\net45\linq2db.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ServiceBus, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.ServiceBus.6.0.1304.0\lib\NET45\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceBus.v1_1.1.0.5\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.1\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\protobuf-net.2.0.0.669\lib\net35\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountRules\Aggregates\AccountAggregateRootActor.cs" />
+    <Compile Include="AccountRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="AccountRules\Facts\LimitAccessor.cs" />
+    <Compile Include="AccountRules\Facts\OrderPositionAccessor.cs" />
+    <Compile Include="AccountRules\Facts\ReleaseWithdrawalAccessor.cs" />
+    <Compile Include="AccountRules\Facts\LockAccessor.cs" />
+    <Compile Include="AccountRules\Facts\ProjectAccessor.cs" />
+    <Compile Include="AccountRules\Facts\AccountAccessor.cs" />
+    <Compile Include="AccountRules\Facts\OrderAccessor.cs" />
+    <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositiveActor.cs" />
+    <Compile Include="AccountRules\Validation\LockShouldNotExistActor.cs" />
+    <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
+    <Compile Include="PriceRules\Aggregates\ProjectAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Facts\PricePositionNotActive.cs" />
+    <Compile Include="PriceRules\Facts\ProjectAccessor.cs" />
+    <Compile Include="PriceRules\Facts\OrganizationUnitAccessor.cs" />
+    <Compile Include="PriceRules\Facts\CategoryAccessor.cs" />
+    <Compile Include="PriceRules\Facts\PricePositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\PeriodKeyEqualityComparer.cs" />
+    <Compile Include="PriceRules\Facts\PriceAccessor.cs" />
+    <Compile Include="PriceRules\Facts\PositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\OrderAccessor.cs" />
+    <Compile Include="PriceRules\Facts\OrderPositionAdvertisementAccessor.cs" />
+    <Compile Include="PriceRules\Facts\OrderPositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\RulesetRuleAccessor.cs" />
+    <Compile Include="PriceRules\Facts\DeniedPositionAccessor.cs" />
+    <Compile Include="PriceRules\Facts\AssociatedPositionsGroupAccessor.cs" />
+    <Compile Include="PriceRules\Facts\AssociatedPositionAccessor.cs" />
+    <Compile Include="PriceRules\Validation\DeniedPositionsCheckActor.cs" />
+    <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCountActor.cs" />
+    <Compile Include="PriceRules\Validation\Dto\Dto.cs" />
+    <Compile Include="PriceRules\Validation\MaximumAdvertisementAmountActor.cs" />
+    <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecifiedActor.cs" />
+    <Compile Include="PriceRules\Validation\MinimumAdvertisementAmountActor.cs" />
+    <Compile Include="AggregateActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePositionActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionShouldCorrespontToActualPriceActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionsShouldCorrespontToActualPriceActor.cs" />
+    <Compile Include="PriceRules\Aggregates\PeriodAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
+    <Compile Include="Specifications\Specs.Join.Aggs.cs" />
+    <Compile Include="ValidationRuleShared.cs" />
+    <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />
+    <Compile Include="PriceRules\Validation\SatisfiedPrincipalPositionDifferentOrderActor.cs" />
+    <Compile Include="PriceRules\Validation\LinkedObjectsMissedInPrincipalsActor.cs" />
+    <Compile Include="PriceRules\Validation\AssociatedPositionWithoutPrincipalActor.cs" />
+    <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
+    <Compile Include="Commands\IncrementStateCommand.cs" />
+    <Compile Include="Commands\CreateNewVersionCommand.cs" />
+    <Compile Include="Commands\DestroyAggregateCommand.cs" />
+    <Compile Include="Commands\InitializeAggregateCommand.cs" />
+    <Compile Include="Commands\IValidationRuleCommand.cs" />
+    <Compile Include="Commands\PeriodCommands.cs" />
+    <Compile Include="Commands\CreateDataObjectCommand.cs" />
+    <Compile Include="Commands\DeleteDataObjectCommand.cs" />
+    <Compile Include="Commands\RecalculateAggregateCommand.cs" />
+    <Compile Include="Commands\RecalculateEntityCommand.cs" />
+    <Compile Include="Commands\RecordDelayCommand.cs" />
+    <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
+    <Compile Include="DataObjectTypesProvider.cs" />
+    <Compile Include="EntityTypeIds.cs" />
+    <Compile Include="Events\AggregatesBatchProcessedEvent.cs" />
+    <Compile Include="Events\AggregatesStateIncrementedEvent.cs" />
+    <Compile Include="Events\FactsBatchProcessedEvent.cs" />
+    <Compile Include="Events\DataObjectCreatedEvent.cs" />
+    <Compile Include="Events\DataObjectDeletedEvent.cs" />
+    <Compile Include="Events\DataObjectUpdatedEvent.cs" />
+    <Compile Include="Events\FactsStateIncrementedEvent.cs" />
+    <Compile Include="PeriodKey.cs" />
+    <Compile Include="Commands\SyncDataObjectCommand.cs" />
+    <Compile Include="Events\RelatedDataObjectOutdatedEvent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
+    <Compile Include="ResultBuilder.cs" />
+    <Compile Include="Specifications\Specs.Find.Aggs.cs" />
+    <Compile Include="Specifications\Specs.Find.Erm.cs" />
+    <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
+    <Compile Include="Specifications\Specs.Map.Facts.Aggs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ValidationRules.Storage\ValidationRules.Storage.csproj">
+      <Project>{e799a2ee-408f-467a-8b50-fc729e92d3f3}</Project>
+      <Name>ValidationRules.Storage</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

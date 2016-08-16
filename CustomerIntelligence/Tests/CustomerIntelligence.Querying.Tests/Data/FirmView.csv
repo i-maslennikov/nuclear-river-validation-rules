@@ -1,3 +1,0 @@
-﻿Id,Name,CreatedOn,LastDisqualifiedOn,LastDistributedOn,LastActivityOn,HasPhone,HasWebsite,AddressCount,CategoryGroupId,ClientId,ProjectId,OwnerId,ForecastClick,ForecastAmount
-"1","Firm 1","2015-01-20T00:00:00Z","2015-01-20T00:00:00Z","2015-01-20T00:00:00Z","2015-01-20T00:00:00Z","True","True","0","5","1","6","27","1","100"
-"2","Firm 2","2015-01-20T00:00:00Z","2015-01-20T00:00:00Z","2015-01-20T00:00:00Z","2015-01-20T00:00:00Z","True","True","0","2","1","6","27",,

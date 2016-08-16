@@ -5,6 +5,7 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module "$PSScriptRoot\metadata.web.psm1" -DisableNameChecking
 Import-Module "$PSScriptRoot\metadata.transform.psm1" -DisableNameChecking
+Import-Module "$PSScriptRoot\metadata.servicebus.psm1" -DisableNameChecking
 
 function Get-QuartzConfigMetadata ($Context){
 
@@ -65,6 +66,7 @@ function Get-TargetHostsMetadata ($Context){
 				'ConvertUseCasesService' {
 					return @{ 'TargetHosts' = @('uk-erm-sb01') }
 				}
+				'ConvertUseCasesService-Production' { return @{} }
 				default {
 					throw "Unknown entrypoint $_"
 				}
@@ -108,6 +110,9 @@ function Get-ServiceNameMetadata ($Context) {
 				'ServiceDisplayName' = '2GIS NuClear River Convert UseCases Service'
 			}
 		}
+		default {
+			return @{}
+		}
 	}
 }
 
@@ -118,6 +123,7 @@ function Get-TaskServiceMetadata ($Context) {
 	$metadata += Get-QuartzConfigMetadata $Context
 	$metadata += Get-ServiceNameMetadata $Context
 	$metadata += Get-TransformMetadata $Context
+	$metadata += Get-ServiceBusMetadata $Context
 	
 	$metadata += @{
 		'EntrypointType' = 'Desktop'

@@ -10,6 +10,7 @@ Import-Module "$BuildToolsRoot\modules\deployqueue.psm1" -DisableNameChecking
 
 Include "$BuildToolsRoot\psake\nuget.ps1"
 Include "$BuildToolsRoot\psake\unittests.ps1"
+Include 'servicebus.ps1'
 Include 'convertusecases.ps1'
 Include 'updateschemas.ps1'
 Include 'bulktool.ps1'
@@ -18,7 +19,7 @@ Include 'datatest.ps1'
 # OData
 function QueueBuild-OData {
 	if ($Metadata['ValidationRules.Querying.Host']){
-		$projectFileName = Get-ProjectFileName 'ValidationRules' 'ValidationRules.Querying.Host'
+		$projectFileName = Get-ProjectFileName '.' 'ValidationRules.Querying.Host'
 		QueueBuild-WebPackage $projectFileName 'ValidationRules.Querying.Host'
 	}
 }
@@ -31,7 +32,7 @@ function QueueDeploy-OData {
 # task service
 function QueueBuild-TaskService {
 	if ($Metadata['ValidationRules.Replication.Host']){
-		$projectFileName = Get-ProjectFileName 'ValidationRules' 'ValidationRules.Replication.Host'
+		$projectFileName = Get-ProjectFileName '.' 'ValidationRules.Replication.Host'
 		QueueBuild-AppPackage $projectFileName 'ValidationRules.Replication.Host'
 	}
 }
@@ -73,5 +74,5 @@ QueueBuild-Packages
 Task Deploy-Packages -depends `
 Update-Schemas, `
 Run-BulkTool, `
-Create-Topics, `
+Deploy-ServiceBus, `
 QueueDeploy-Packages

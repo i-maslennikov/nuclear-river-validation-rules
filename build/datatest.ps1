@@ -48,7 +48,7 @@ function Run-DataTests ($Projects, $entryPointMetadataKey){
             $argumentList = ($assemblies, '--teamcity=true')
         }
         'Jenkins' {
-            $ouputFile = Join-Path $Metadata.Common.Dir.TempPersist "DataTest.xml"
+            $ouputFile = Join-Path $Metadata.Common.Dir.Temp "DataTest.xml"
             $argumentList = ($assemblies, "--nunit25-output=$ouputFile")
             Write-Host "Results (nunit2.5) will be saved as $ouputFile"
         }

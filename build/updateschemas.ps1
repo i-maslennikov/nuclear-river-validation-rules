@@ -10,7 +10,7 @@ Import-Module "$BuildToolsRoot\modules\metadata.psm1" -DisableNameChecking
 
 Task Update-Schemas -Precondition { $Metadata['ValidationRules.StateInitialization.Host'] -and $Metadata['UpdateSchemas'] } {
 
-	$projectFileName = Get-ProjectFileName 'ValidationRules' 'ValidationRules.StateInitialization.Host'
+	$projectFileName = Get-ProjectFileName '.' 'ValidationRules.StateInitialization.Host'
 	$projectDir = Split-Path $projectFileName
 	$configFileName = Join-Path $projectDir 'app.config'
 	[xml]$config = Get-TransformedConfig $configFileName 'ValidationRules.StateInitialization.Host'

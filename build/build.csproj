@@ -40,11 +40,12 @@
     <None Include="metadata.ps1" />
     <None Include="metadata.taskservice.psm1" />
     <None Include="metadata.transform.psm1" />
-    <None Include="metadata.usecaseroute.psm1" />
     <None Include="metadata.web.psm1" />
     <None Include="project.json" />
     <None Include="run-build.ps1" />
     <None Include="updateschemas.ps1" />
+    <None Include="metadata.servicebus.psm1" />
+    <None Include="servicebus.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,7 +8,7 @@ Import-Module "$BuildToolsRoot\modules\artifacts.psm1" -DisableNameChecking
 
 function QueueBuild-BulkTool  {
 	if ($Metadata['ValidationRules.StateInitialization.Host']){
-		$projectFileName = Get-ProjectFileName 'ValidationRules' 'ValidationRules.StateInitialization.Host'
+		$projectFileName = Get-ProjectFileName '.' 'ValidationRules.StateInitialization.Host'
 		QueueBuild-AppPackage $projectFileName 'ValidationRules.StateInitialization.Host'
 	}
 }
