@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 #Requires –Version 3.0
 #------------------------------
 
-Import-Module "$PSScriptRoot\metadata.usecaseroute.psm1" -DisableNameChecking
+Import-Module "$PSScriptRoot\metadata.servicebus.psm1" -DisableNameChecking
 
 $DBSuffixes = @{
 	'Chile' = 'CL'
@@ -44,13 +44,13 @@ function Get-XdtMetadata($Context){
 
 
 	switch($Context.EntryPoint){
+		'ConvertUseCasesService-Production' {
+			$xdt += @("ConvertUseCases.Production.config")
+		}
 		'ConvertUseCasesService' {
 			switch($Context.EnvType){
 				'Test' {
 					$xdt += @("Templates\ConvertUseCases.Test.config")
-				}
-				'Production' {
-					$xdt += @("ConvertUseCases.Production.config")
 				}
 				default {
 					$xdt += @("ConvertUseCases.config")
@@ -59,7 +59,6 @@ function Get-XdtMetadata($Context){
 		}
 		default {
 			$xdt += @(
-				'Common\log4net.Release.config'
 				'Common\Erm.Release.config'
 			)
 
@@ -95,10 +94,18 @@ function Get-RegexMetadata($Context){
 		$regex += @{ '{EnvType}' = $Context['EnvType'] }
 	}
 
-	$useCaseRouteMetadata = Get-UseCaseRouteMetadata $Context
-	if ($useCaseRouteMetadata.Count -ne 0){
-		foreach($keyValuePair in $useCaseRouteMetadata.UseCaseRoute.GetEnumerator()){
-			$regex["{$($keyValuePair.Key)}"] = $keyValuePair.Value
+	$serviceBusMetadata = (Get-ServiceBusMetadata $Context)['ServiceBus']
+	if ($serviceBusMetadata.Count -ne 0){
+		if ($serviceBusMetadata['CreateTopics']){
+			foreach($metadata in $serviceBusMetadata.CreateTopics.GetEnumerator()){
+				$regex["{$($metadata.Key)}"] = $metadata.Value.Name
+			}
+		}
+
+		if ($serviceBusMetadata['CreateSubscriptions']){
+			foreach($metadata in $serviceBusMetadata.CreateSubscriptions.GetEnumerator()){
+				$regex["{$($metadata.Key)}"] = $metadata.Value.Name
+			}
 		}
 	}
 
