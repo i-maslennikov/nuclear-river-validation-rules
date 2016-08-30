@@ -15,6 +15,7 @@ if object_id('PriceFacts.Project') is not null drop table PriceFacts.Project
 if object_id('PriceFacts.Position') is not null drop table PriceFacts.Position
 if object_id('PriceFacts.Category') is not null drop table PriceFacts.Category
 if object_id('PriceFacts.RulesetRule') is not null drop table PriceFacts.RulesetRule
+if object_id('PriceFacts.Theme') is not null drop table PriceContext.Theme
 go
 
 create table PriceFacts.Price(
@@ -121,6 +122,7 @@ create table PriceFacts.OrderPositionAdvertisement(
     PositionId bigint not null,
     CategoryId bigint null,
     FirmAddressId bigint null,
+    ThemeId bigint null,
     constraint PK_OrderPositionAdvertisement primary key (Id)
 )
 create index IX_OrderPositionAdvertisement_OrderPositionId ON PriceFacts.OrderPositionAdvertisement (OrderPositionId)
@@ -141,9 +143,17 @@ create table PriceFacts.Project(
 )
 go
 
+create table PriceFacts.Theme(
+    Id bigint not null,
+    Name nvarchar(max) not null,
+    constraint PK_Theme primary key (Id)
+)
+go
+
 create table PriceFacts.Category(
     Id bigint not null,
     ParentId bigint not null,
+    Name nvarchar(max) not null,
     constraint PK_Category primary key (Id)
 )
 create index IX_Category_ParentId ON PriceFacts.Category (ParentId)

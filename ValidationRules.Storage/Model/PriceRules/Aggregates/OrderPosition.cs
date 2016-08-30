@@ -14,5 +14,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
         public long? Category3Id { get; set; }
         public long? Category1Id { get; set; }
         public long? FirmAddressId { get; set; }
+        public long? ThemeId { get; set; }
     }
 }

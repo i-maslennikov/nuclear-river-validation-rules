@@ -195,15 +195,19 @@
     <Compile Include="Model\AccountRules\Facts\OrderPosition.cs" />
     <Compile Include="Model\AccountRules\Facts\Project.cs" />
     <Compile Include="Model\AccountRules\Facts\ReleaseWithdrawal.cs" />
+    <Compile Include="Model\ConsistencyRules\Aggregates\Order.cs" />
+    <Compile Include="Model\ConsistencyRules\Facts\Order.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Lock.cs" />
     <Compile Include="Model\Erm\ReleaseInfos.cs" />
+    <Compile Include="Model\Erm\Theme.cs" />
     <Compile Include="Model\Erm\TimeZone.cs" />
     <Compile Include="Model\Erm\UserProfile.cs" />
     <Compile Include="Model\Erm\User.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AdvertisementAmountRestriction.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AmountControlledPosition.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AssociatedPositionGroupOvercount.cs" />
+    <Compile Include="Model\PriceRules\Aggregates\Category.cs" />
     <Compile Include="Model\PriceRules\Aggregates\IBindingObject.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Order.cs" />
     <Compile Include="Model\PriceRules\Aggregates\OrderAssociatedPosition.cs" />
@@ -230,6 +234,7 @@
     <Compile Include="Model\Erm\Ruleset.cs" />
     <Compile Include="Model\Erm\RulesetRule.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Project.cs" />
+    <Compile Include="Model\PriceRules\Aggregates\Theme.cs" />
     <Compile Include="Model\PriceRules\Facts\AssociatedPosition.cs" />
     <Compile Include="Model\PriceRules\Facts\AssociatedPositionsGroup.cs" />
     <Compile Include="Model\PriceRules\Facts\Category.cs" />
@@ -245,6 +250,7 @@
     <Compile Include="Model\PriceRules\Facts\Project.cs" />
     <Compile Include="Model\PriceRules\Facts\RulesetRule.cs" />
     <Compile Include="Model\Messages\ValidationResult.cs" />
+    <Compile Include="Model\PriceRules\Facts\Theme.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.Messages.cs" />
     <Compile Include="Schema.Aggregates.cs" />

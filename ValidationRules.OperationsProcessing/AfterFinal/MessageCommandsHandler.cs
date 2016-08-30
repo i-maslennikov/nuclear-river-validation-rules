@@ -37,6 +37,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly AccountShouldExistActor _accountShouldExistActor;
         private readonly LockShouldNotExistActor _lockShouldNotExistActor;
         private readonly AccountBalanceShouldBePositiveActor _accountBalanceShouldBePositiveActor;
+        private readonly AdvertisementCountPerThemeShouldBeLimitedActor _advertisementCountPerThemeShouldBeLimitedActor;
+        private readonly AdvertisementCountPerCategoryShouldBeLimitedActor _advertisementCountPerCategoryShouldBeLimitedActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
@@ -56,7 +58,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             ConflictingPrincipalPositionActor conflictingPrincipalPositionActor,
             AccountShouldExistActor accountShouldExistActor,
             LockShouldNotExistActor lockShouldNotExistActor,
-            AccountBalanceShouldBePositiveActor accountBalanceShouldBePositiveActor)
+            AccountBalanceShouldBePositiveActor accountBalanceShouldBePositiveActor,
+            AdvertisementCountPerThemeShouldBeLimitedActor advertisementCountPerThemeShouldBeLimitedActor,
+            AdvertisementCountPerCategoryShouldBeLimitedActor advertisementCountPerCategoryShouldBeLimitedActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -76,6 +80,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             _accountShouldExistActor = accountShouldExistActor;
             _lockShouldNotExistActor = lockShouldNotExistActor;
             _accountBalanceShouldBePositiveActor = accountBalanceShouldBePositiveActor;
+            _advertisementCountPerThemeShouldBeLimitedActor = advertisementCountPerThemeShouldBeLimitedActor;
+            _advertisementCountPerCategoryShouldBeLimitedActor = advertisementCountPerCategoryShouldBeLimitedActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -137,11 +143,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 _accountShouldExistActor.ExecuteCommands(commands);
                 _lockShouldNotExistActor.ExecuteCommands(commands);
                 _accountBalanceShouldBePositiveActor.ExecuteCommands(commands);
+                _advertisementCountPerThemeShouldBeLimitedActor.ExecuteCommands(commands);
+                _advertisementCountPerCategoryShouldBeLimitedActor.ExecuteCommands(commands);
 
-                // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
-                // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
-                // Благодаря этому все изменения, предшествующие состоянию erm будут гарантированно включены в версию проверок.
-                _createNewVersionActor.ExecuteCommands(commands);
+        // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
+        // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
+        // Благодаря этому все изменения, предшествующие состоянию erm будут гарантированно включены в версию проверок.
+        _createNewVersionActor.ExecuteCommands(commands);
 
                 transaction.Complete();
             }

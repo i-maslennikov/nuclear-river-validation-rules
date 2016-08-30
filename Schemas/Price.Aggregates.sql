@@ -19,7 +19,9 @@ if object_id('PriceAggregates.AdvertisementAmountRestriction') is not null drop 
 if object_id('PriceAggregates.Price') is not null drop table PriceAggregates.Price
 if object_id('PriceAggregates.AssociatedPositionGroupOvercount') is not null drop table PriceAggregates.AssociatedPositionGroupOvercount
 
-if object_id('PriceAggregates.Project') is not null drop table PriceAggregates.Project
+if object_id('PriceAggregates.Project') is not null drop table PriceAggregate.Project
+if object_id('PriceAggregates.Category') is not null drop table PriceAggregate.Category
+if object_id('PriceAggregates.Theme') is not null drop table PriceAggregate.Theme
 
 go
 
@@ -28,6 +30,20 @@ create table PriceAggregates.Project(
     Id bigint NOT NULL,
     Name nvarchar(max) NOT NULL,
     constraint PK_Project primary key (Id)
+)
+go
+
+create table PriceAggregates.Theme(
+    Id bigint NOT NULL,
+    Name nvarchar(max) NOT NULL,
+    constraint PK_Theme primary key (Id)
+)
+go
+
+create table PriceAggregates.Category(
+    Id bigint not null,
+    Name nvarchar(max) not null,
+    constraint PK_Category primary key (Id)
 )
 go
 
@@ -81,10 +97,12 @@ create table PriceAggregates.OrderPosition(
     PackagePositionId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,
 
-	HasNoBinding bit NOT NULL,
+    HasNoBinding bit NOT NULL,
     Category3Id bigint NULL,
     Category1Id bigint NULL,
     FirmAddressId bigint NULL,
+
+    ThemeId bigint NULL,
 
     Source nvarchar(16) NULL,
 )

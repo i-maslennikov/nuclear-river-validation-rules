@@ -13,6 +13,9 @@ using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
+using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
@@ -38,6 +41,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceFacts::PricePositionNotActive),
                             typeof(PriceFacts::Project),
                             typeof(PriceFacts::RulesetRule),
+                            typeof(PriceFacts::Theme),
+                            typeof(PriceFacts::Category),
 
                             typeof(AccountFacts::Account),
                             typeof(AccountFacts::Order),
@@ -46,6 +51,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountFacts::Limit),
                             typeof(AccountFacts::OrderPosition),
                             typeof(AccountFacts::ReleaseWithdrawal),
+
+                            typeof(ConsistencyFacts::Order),
                         });
             }
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
@@ -67,11 +74,15 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Project),
                             typeof(PriceAggregates::AssociatedPositionGroupOvercount),
                             typeof(PriceAggregates::PricePeriod),
+                            typeof(PriceAggregates::Theme),
+                            typeof(PriceAggregates::Category),
 
                             typeof(AccountAggregates::Order),
                             typeof(AccountAggregates::Lock),
                             typeof(AccountAggregates::Account),
                             typeof(AccountAggregates::AccountPeriod),
+
+                            typeof(ConsistencyAggregates::Order),
                         });
             }
 
