@@ -3,22 +3,20 @@
 Import-Module "$PSScriptRoot\metadata.web.psm1" -DisableNameChecking
 Import-Module "$PSScriptRoot\metadata.taskservice.psm1" -DisableNameChecking
 Import-Module "$PSScriptRoot\metadata.transform.psm1" -DisableNameChecking
-Import-Module "$PSScriptRoot\metadata.usecaseroute.psm1" -DisableNameChecking
 
 function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 
 	$entryPointsMetadata = @{}
 
-	# конвертер нужен всегда, чтобы из него подтянуть connection strings для Create-Topics
+	# конвертер нужен всегда (очистка ресурсов)
 	$Context.EntryPoint = 'ConvertUseCasesService'
 	$entryPointsMetadata += Get-TaskServiceMetadata $Context
 
-	# копия конвертера, нацеленная строго на production
-	$tempContext = $Context.Clone()
-	$tempContext.EnvType = 'Production'
-	$tempContext.EntryPoint = 'ConvertUseCasesService'
-	$tempMetadata = Get-TaskServiceMetadata $tempContext
-	$entryPointsMetadata += @{ 'ConvertUseCasesServiceProduction' = $tempMetadata['ConvertUseCasesService'] } 
+	# production копия конвертера нужна всегда (очистка ресурсов)
+	$productionContext = $Context.Clone()
+	$productionContext.EnvType = 'Production' 
+	$productionContext.EntryPoint = 'ConvertUseCasesService-Production'
+	$entryPointsMetadata += Get-TaskServiceMetadata $productionContext 
 
 	switch ($EntryPoints){
 		'ValidationRules.Querying.Host' {
@@ -118,7 +116,6 @@ function Parse-EnvironmentMetadata ($Properties) {
 	$context.EnvironmentName = $environmentName
 
 	$context.UseCaseRoute = $Properties['UseCaseRoute']
-	$environmentMetadata += Get-UseCaseRouteMetadata $context
 
 	if ($Properties.ContainsKey('EntryPoints')){
 		$entryPoints = $Properties['EntryPoints']
@@ -145,11 +142,11 @@ function Parse-EnvironmentMetadata ($Properties) {
 }
 
 $AllSchemas = @{
-	'Price.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'ValidationRules\Schemas\Price.Facts.sql' }
-	'Price.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'ValidationRules\Schemas\Price.Aggregates.sql' }
-	'Account.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'ValidationRules\Schemas\Account.Facts.sql' }
-	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'ValidationRules\Schemas\Account.Aggregates.sql' }
-	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'ValidationRules\Schemas\Messages.sql' }
+	'Price.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Price.Facts.sql' }
+	'Price.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Price.Aggregates.sql' }
+	'Account.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Account.Facts.sql' }
+	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Account.Aggregates.sql' }
+	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'Schemas\Messages.sql' }
 }
 
 $AllEntryPoints = @(
