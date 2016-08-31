@@ -118,7 +118,39 @@ namespace NuClear.ValidationRules.Storage
 
         private static FluentMappingBuilder RegisterConsistencyFacts(this FluentMappingBuilder builder)
         {
+            builder.Entity<ConsistencyFacts::Bargain>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::BargainScanFile>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Bill>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Firm>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::LegalPersonProfile>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
             builder.Entity<ConsistencyFacts::Order>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity < ConsistencyFacts::OrderPosition> ()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::OrderScanFile>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Project>()
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);
 

@@ -16,7 +16,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 {
     public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>, IDataChangesHandler<Order>
     {
-        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+        public const int RejectedOrderState = 3;
+        public const int ArchiveOrderState = 6;
 
         private readonly IQuery _query;
 
@@ -27,11 +28,26 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 
         public IQueryable<Order> GetSource()
             => _query.For<Erm::Order>()
-                     .Where(x => x.IsActive && !x.IsDeleted)
+                     .Where(x => x.IsActive && !x.IsDeleted && x.WorkflowStepId != RejectedOrderState && x.WorkflowStepId != ArchiveOrderState)
                      .Select(order => new Order
                          {
                              Id = order.Id,
-                         });
+                             FirmId = order.FirmId,
+                             DestOrganizationUnitId = order.DestOrganizationUnitId,
+                             LegalPersonId = order.LegalPersonId,
+                             LegalPersonProfileId = order.LegalPersonProfileId,
+                             BranchOfficeOrganizationUnitId = order.BranchOfficeOrganizationUnitId,
+                             InspectorId = order.InspectorCode,
+                             CurrencyId = order.CurrencyId,
+                             BargainId = order.BargainId,
+
+                             SignupDate = order.SignupDate,
+                             BeginDistribution = order.BeginDistributionDate,
+                             EndDistributionFact = order.EndDistributionDateFact,
+                             EndDistributionPlan = order.EndDistributionDatePlan,
+                             ReleaseCountPlan = order.ReleaseCountPlan,
+                             Number = order.Number,
+                     });
 
         public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

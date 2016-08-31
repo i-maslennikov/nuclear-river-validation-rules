@@ -193,6 +193,14 @@
     <Compile Include="AccountRules\Validation\LockShouldNotExistActor.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
     <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="ConsistencyRules\Facts\ProjectAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\BargainAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\OrderScanFileAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\OrderPositionAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\LegalPersonProfileAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\FirmAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\BillAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\BargainScanFileAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\OrderAccessor.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderFirmShouldBeValidActor.cs" />
     <Compile Include="PriceRules\Aggregates\CategoryAggregateRootActor.cs" />
