@@ -41,12 +41,15 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
         {
             var ruleResults = from order in query.For<Order>()
-                              from date in query.For<Order.LegalPersonProfileBargainExpired>().Where(x => x.OrderId == order.Id)
+                              from expired in query.For<Order.LegalPersonProfileBargainExpired>().Where(x => x.OrderId == order.Id)
                               select new Version.ValidationResult
                               {
                                   MessageType = MessageTypeId,
                                   MessageParams = new XDocument(
                                           new XElement("root",
+                                                       new XElement("legalPersonProfile",
+                                                                    new XAttribute("id", expired.LegalPersonProfileId),
+                                                                    new XAttribute("number", expired.LegalPersonProfileName)),
                                                        new XElement("order",
                                                                     new XAttribute("id", order.Id),
                                                                     new XAttribute("number", order.Number)))),

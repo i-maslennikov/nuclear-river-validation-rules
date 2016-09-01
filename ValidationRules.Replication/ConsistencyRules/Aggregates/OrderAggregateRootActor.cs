@@ -150,6 +150,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                        FirmId = firm.Id,
                        OrderId = order.Id,
                        State = state,
+                       Name = firm.Name,
                    };
 
             public FindSpecification<Order.InvalidFirm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -382,6 +383,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    {
                        OrderId = order.Id,
                        LegalPersonProfileId = profile.Id,
+                       LegalPersonProfileName = profile.Name,
                    };
 
             public FindSpecification<Order.LegalPersonProfileBargainExpired> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -412,6 +414,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    {
                        OrderId = order.Id,
                        LegalPersonProfileId = profile.Id,
+                       LegalPersonProfileName = profile.Name,
                    };
 
             public FindSpecification<Order.LegalPersonProfileWarrantyExpired> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

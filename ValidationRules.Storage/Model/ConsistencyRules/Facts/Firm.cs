@@ -6,5 +6,6 @@
         public bool ClosedForAscertainment { get; set; }
         public bool IsHidden { get; set; }
         public bool IsDeleted { get; set; }
+        public string Name { get; set; }
     }
 }

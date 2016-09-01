@@ -31,6 +31,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                              ClosedForAscertainment = x.ClosedForAscertainment,
                              IsHidden = !x.IsActive,
                              IsDeleted = x.IsDeleted,
+                             Name = x.Name,
                          });
 
         public FindSpecification<Firm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

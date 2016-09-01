@@ -38,6 +38,7 @@ create table ConsistencyFacts.Firm (
     ClosedForAscertainment bit not null,
     IsHidden bit not null,
     IsDeleted bit not null,
+    Name nvarchar(max) not null,
 )
 go
 
@@ -46,6 +47,7 @@ create table ConsistencyFacts.LegalPersonProfile (
     LegalPersonId bigint not null,
     BargainEndDate datetime2(2) null,
     WarrantyEndDate datetime2(2) null,
+    Name nvarchar(max) not null,
 )
 go
 

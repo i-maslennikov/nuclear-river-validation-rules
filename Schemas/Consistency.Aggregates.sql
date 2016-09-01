@@ -32,6 +32,7 @@ create table ConsistencyAggregates.InvalidFirm(
     OrderId bigint not null,
     FirmId bigint not null,
     [State] int not null,
+    Name nvarchar(max) not null,
 )
 go
 
@@ -48,12 +49,14 @@ go
 create table ConsistencyAggregates.LegalPersonProfileBargainExpired(
     OrderId bigint not null,
     LegalPersonProfileId bigint not null,
+    LegalPersonProfileName nvarchar(max) not null,
 )
 go
 
 create table ConsistencyAggregates.LegalPersonProfileWarrantyExpired(
     OrderId bigint not null,
     LegalPersonProfileId bigint not null,
+    LegalPersonProfileName nvarchar(max) not null,
 )
 go
 

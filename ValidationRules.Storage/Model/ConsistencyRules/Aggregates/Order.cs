@@ -24,6 +24,7 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public long OrderId { get; set; }
             public long FirmId { get; set; }
             public InvalidFirmState State { get; set; }
+            public string Name { get; set; }
         }
 
         public class InvalidBeginDistributionDate
@@ -40,12 +41,14 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         {
             public long OrderId { get; set; }
             public long LegalPersonProfileId { get; set; }
+            public string LegalPersonProfileName { get; set; }
         }
 
         public class LegalPersonProfileWarrantyExpired
         {
             public long OrderId { get; set; }
             public long LegalPersonProfileId { get; set; }
+            public string LegalPersonProfileName { get; set; }
         }
 
         public class BargainSignedLaterThanOrder
