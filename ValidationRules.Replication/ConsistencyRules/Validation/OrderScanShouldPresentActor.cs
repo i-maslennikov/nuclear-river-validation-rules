@@ -12,25 +12,23 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 {
     /// <summary>
-    /// Для заказов, к которым привязана неактуальная фирма, должна выводиться ошибка.
-    /// "Фирма {0} удалена"
-    /// "Фирма {0} скрыта навсегда"
-    /// "Фирма {0} скрыта до выяснения"
+    /// Для заказов, у которых отсутствует скан бланка заказа, должно выводиться предупреждение.
+    /// "Отсутствует сканированная копия Бланка заказа"
     /// 
-    /// Source: FirmsOrderValidationRule
+    /// Source: OrdersAndBargainsScansExistOrderValidationRule
     /// </summary>
-    public sealed class OrderFirmShouldBeValidActor : IActor
+    public sealed class OrderScanShouldPresentActor : IActor
     {
-        public const int MessageTypeId = 17;
+        public const int MessageTypeId = 26;
 
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
+        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
+                                                                    .WhenMassPrerelease(Result.None)
+                                                                    .WhenMassRelease(Result.None);
 
         private readonly ValidationRuleShared _validationRuleShared;
 
-        public OrderFirmShouldBeValidActor(ValidationRuleShared validationRuleShared)
+        public OrderScanShouldPresentActor(ValidationRuleShared validationRuleShared)
         {
             _validationRuleShared = validationRuleShared;
         }
@@ -43,15 +41,12 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
         private static IQueryable<Version.ValidationResult> GetValidationResults(IQuery query, long version)
         {
             var ruleResults = from order in query.For<Order>()
-                              from firm in query.For<Order.InvalidFirm>().Where(x => x.OrderId == order.Id)
+                              from date in query.For<Order.MissingOrderScan>().Where(x => x.OrderId == order.Id)
                               select new Version.ValidationResult
                               {
                                   MessageType = MessageTypeId,
                                   MessageParams = new XDocument(
                                           new XElement("root",
-                                                       new XElement("firm",
-                                                                    new XAttribute("id", firm.FirmId),
-                                                                    new XAttribute("state", firm.State)),
                                                        new XElement("order",
                                                                     new XAttribute("id", order.Id),
                                                                     new XAttribute("number", order.Number)))),
