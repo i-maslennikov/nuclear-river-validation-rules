@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                      .Select(x => new Firm
                      {
                              Id = x.Id,
-                             ClosedForAscertainment = x.ClosedForAscertainment,
+                             IsClosedForAscertainment = x.ClosedForAscertainment,
                              IsHidden = !x.IsActive,
                              IsDeleted = x.IsDeleted,
                              Name = x.Name,

@@ -19,6 +19,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<Order.InvalidFirm> _orderInvalidFirmRepository;
+        private readonly IBulkRepository<Order.InvalidFirmAddress> _orderInvalidFirmAddressRepository;
         private readonly IBulkRepository<Order.BargainSignedLaterThanOrder> _orderBargainSignedLaterThanOrderRepository;
         private readonly IBulkRepository<Order.HasNoAnyLegalPersonProfile> _orderHasNoAnyLegalPersonProfileRepository;
         private readonly IBulkRepository<Order.HasNoAnyPosition> _orderHasNoAnyPositionRepository;
@@ -40,6 +41,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IBulkRepository<Order> orderBulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
+            IBulkRepository<Order.InvalidFirmAddress> orderInvalidFirmAddressRepository,
             IBulkRepository<Order.BargainSignedLaterThanOrder> orderBargainSignedLaterThanOrderRepository,
             IBulkRepository<Order.HasNoAnyLegalPersonProfile> orderHasNoAnyLegalPersonProfileRepository,
             IBulkRepository<Order.HasNoAnyPosition> orderHasNoAnyPositionRepository,
@@ -59,6 +61,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
             _orderInvalidFirmRepository = orderInvalidFirmRepository;
+            _orderInvalidFirmAddressRepository = orderInvalidFirmAddressRepository;
             _orderBargainSignedLaterThanOrderRepository = orderBargainSignedLaterThanOrderRepository;
             _orderHasNoAnyLegalPersonProfileRepository = orderHasNoAnyLegalPersonProfileRepository;
             _orderHasNoAnyPositionRepository = orderHasNoAnyPositionRepository;
@@ -81,7 +84,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
-                    new ValueObjectActor<Order.InvalidFirm>(_query, _orderInvalidFirmRepository, _equalityComparerFactory, new OrderFirmAccessor (_query)),
+                    new ValueObjectActor<Order.InvalidFirm>(_query, _orderInvalidFirmRepository, _equalityComparerFactory, new InvalidFirmAccessor (_query)),
+                    new ValueObjectActor<Order.InvalidFirmAddress>(_query, _orderInvalidFirmAddressRepository, _equalityComparerFactory, new InvalidFirmAddressAccessor (_query)),
                     new ValueObjectActor<Order.BargainSignedLaterThanOrder>(_query, _orderBargainSignedLaterThanOrderRepository, _equalityComparerFactory, new OrderBargainSignedLaterThanOrderAccessor (_query)),
                     new ValueObjectActor<Order.HasNoAnyLegalPersonProfile>(_query, _orderHasNoAnyLegalPersonProfileRepository, _equalityComparerFactory, new OrderHasNoAnyLegalPersonProfileAccessor (_query)),
                     new ValueObjectActor<Order.HasNoAnyPosition>(_query, _orderHasNoAnyPositionRepository, _equalityComparerFactory, new OrderHasNoAnyPositionAccessor (_query)),
@@ -131,11 +135,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderFirmAccessor : IStorageBasedDataObjectAccessor<Order.InvalidFirm>
+        public sealed class InvalidFirmAccessor : IStorageBasedDataObjectAccessor<Order.InvalidFirm>
         {
             private readonly IQuery _query;
 
-            public OrderFirmAccessor(IQuery query)
+            public InvalidFirmAccessor(IQuery query)
             {
                 _query = query;
             }
@@ -143,7 +147,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             public IQueryable<Order.InvalidFirm> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from firm in _query.For<Facts::Firm>().Where(x => x.Id == order.FirmId)
-                   let state = firm.IsDeleted ? InvalidFirmState.Deleted : firm.IsHidden ? InvalidFirmState.ClosedForever : firm.ClosedForAscertainment ? InvalidFirmState.ClosedForAscertainment : InvalidFirmState.NotSet
+                   let state = firm.IsDeleted ? InvalidFirmState.Deleted : firm.IsHidden ? InvalidFirmState.ClosedForever : firm.IsClosedForAscertainment ? InvalidFirmState.ClosedForAscertainment : InvalidFirmState.NotSet
                    where state != InvalidFirmState.NotSet // todo: интересно было бы глянуть на сгенерированный sql
                    select new Order.InvalidFirm
                    {
@@ -161,6 +165,44 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order.InvalidFirm>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class InvalidFirmAddressAccessor : IStorageBasedDataObjectAccessor<Order.InvalidFirmAddress>
+        {
+            private readonly IQuery _query;
+
+            public InvalidFirmAddressAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Order.InvalidFirmAddress> GetSource()
+                => from order in _query.For<Facts::Order>()
+                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
+                   from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId)
+                   let state = address.FirmId != order.FirmId ? InvalidFirmAddressState.NotBelongToFirm
+                                : address.IsDeleted ? InvalidFirmAddressState.Deleted
+                                : !address.IsActive ? InvalidFirmAddressState.Hidden
+                                : address.IsClosedForAscertainment ? InvalidFirmAddressState.ClosedForAscertainment
+                                : InvalidFirmAddressState.NotSet
+                   where state != InvalidFirmAddressState.NotSet // todo: интересно было бы глянуть на сгенерированный sql
+                   select new Order.InvalidFirmAddress
+                       {
+                           OrderId = order.Id,
+                           FirmAddressId = address.Id,
+                           State = state,
+                           Name = address.Name,
+                       };
+
+            public FindSpecification<Order.InvalidFirmAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Order.InvalidFirmAddress>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

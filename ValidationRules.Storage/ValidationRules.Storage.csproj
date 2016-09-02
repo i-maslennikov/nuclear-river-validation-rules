@@ -200,9 +200,11 @@
     <Compile Include="Model\ConsistencyRules\Facts\BargainScanFile.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\Bill.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\Firm.cs" />
+    <Compile Include="Model\ConsistencyRules\Facts\FirmAddress.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\LegalPersonProfile.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\Order.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\OrderPosition.cs" />
+    <Compile Include="Model\ConsistencyRules\Facts\OrderPositionAdvertisement.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\OrderScanFile.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\Project.cs" />
     <Compile Include="Model\Erm\Account.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="Model\Erm\BargainFile.cs" />
     <Compile Include="Model\Erm\Bill.cs" />
     <Compile Include="Model\Erm\Firm.cs" />
+    <Compile Include="Model\Erm\FirmAddress.cs" />
     <Compile Include="Model\Erm\LegalPersonProfile.cs" />
     <Compile Include="Model\Erm\Lock.cs" />
     <Compile Include="Model\Erm\OrderFile.cs" />

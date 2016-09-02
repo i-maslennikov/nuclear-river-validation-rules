@@ -10,6 +10,15 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         ClosedForAscertainment
     }
 
+    public enum InvalidFirmAddressState
+    {
+        NotSet = 0,
+        Deleted,
+        Hidden,
+        ClosedForAscertainment,
+        NotBelongToFirm
+    }
+
     public sealed class Order
     {
         public long Id { get; set; }
@@ -24,6 +33,14 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public long OrderId { get; set; }
             public long FirmId { get; set; }
             public InvalidFirmState State { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class InvalidFirmAddress
+        {
+            public long OrderId { get; set; }
+            public long FirmAddressId { get; set; }
+            public InvalidFirmAddressState State { get; set; }
             public string Name { get; set; }
         }
 

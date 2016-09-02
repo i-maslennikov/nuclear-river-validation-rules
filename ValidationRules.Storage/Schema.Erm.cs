@@ -52,6 +52,7 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<BargainFile>().HasSchemaName(BillingSchema).HasTableName("BargainFiles").HasPrimaryKey(x => x.Id);
                 config.Entity<Bill>().HasSchemaName(BillingSchema).HasTableName("Bills").HasPrimaryKey(x => x.Id);
                 config.Entity<Firm>().HasSchemaName(BusinessDirectorySchema).HasTableName("Firms").HasPrimaryKey(x => x.Id);
+                config.Entity<FirmAddress>().HasSchemaName(BusinessDirectorySchema).HasTableName("FirmAddresses").HasPrimaryKey(x => x.Id);
                 config.Entity<LegalPersonProfile>().HasSchemaName(BillingSchema).HasTableName("LegalPersonProfiles").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderFile>().HasSchemaName(BillingSchema).HasTableName("OrderFiles").HasPrimaryKey(x => x.Id);
 

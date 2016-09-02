@@ -113,6 +113,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ConsistencyAggregates::Order.InvalidFirm>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
+            builder.Entity<ConsistencyAggregates::Order.InvalidFirmAddress>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
             builder.Entity<ConsistencyAggregates::Order.HasNoAnyLegalPersonProfile>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 

@@ -5,9 +5,11 @@ if object_id('ConsistencyFacts.Bargain') is not null drop table ConsistencyFacts
 if object_id('ConsistencyFacts.BargainScanFile') is not null drop table ConsistencyFacts.BargainScanFile
 if object_id('ConsistencyFacts.Bill') is not null drop table ConsistencyFacts.Bill
 if object_id('ConsistencyFacts.Firm') is not null drop table ConsistencyFacts.Firm
+if object_id('ConsistencyFacts.FirmAddress') is not null drop table ConsistencyFacts.FirmAddress
 if object_id('ConsistencyFacts.LegalPersonProfile') is not null drop table ConsistencyFacts.LegalPersonProfile
 if object_id('ConsistencyFacts.[Order]') is not null drop table ConsistencyFacts.[Order]
 if object_id('ConsistencyFacts.OrderPosition') is not null drop table ConsistencyFacts.OrderPosition
+if object_id('ConsistencyFacts.OrderPositionAdvertisement') is not null drop table ConsistencyFacts.OrderPositionAdvertisement
 if object_id('ConsistencyFacts.OrderScanFile') is not null drop table ConsistencyFacts.OrderScanFile
 if object_id('ConsistencyFacts.Project') is not null drop table ConsistencyFacts.Project
 go
@@ -35,10 +37,20 @@ go
 
 create table ConsistencyFacts.Firm (
     Id bigint not null,
-    ClosedForAscertainment bit not null,
+    IsClosedForAscertainment bit not null,
     IsHidden bit not null,
     IsDeleted bit not null,
     Name nvarchar(max) not null,
+)
+go
+
+create table ConsistencyFacts.FirmAddress (
+    Id bigint not null,
+    FirmId bigint not null,
+    Name nvarchar(max) not null,
+    IsClosedForAscertainment bit not null,
+    IsActive bit not null,
+    IsDeleted bit not null,
 )
 go
 
@@ -74,6 +86,13 @@ go
 create table ConsistencyFacts.OrderPosition (
     Id bigint not null,
     OrderId bigint not null,
+)
+go
+
+create table ConsistencyFacts.OrderPositionAdvertisement (
+    Id bigint not null,
+    OrderId bigint not null,
+    FirmAddressId bigint null,
 )
 go
 
