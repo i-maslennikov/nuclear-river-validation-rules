@@ -147,15 +147,18 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             public IQueryable<Order.InvalidFirm> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from firm in _query.For<Facts::Firm>().Where(x => x.Id == order.FirmId)
-                   let state = firm.IsDeleted ? InvalidFirmState.Deleted : firm.IsHidden ? InvalidFirmState.ClosedForever : firm.IsClosedForAscertainment ? InvalidFirmState.ClosedForAscertainment : InvalidFirmState.NotSet
+                   let state = firm.IsDeleted ? InvalidFirmState.Deleted
+                                   : !firm.IsActive ? InvalidFirmState.ClosedForever
+                                   : firm.IsClosedForAscertainment ? InvalidFirmState.ClosedForAscertainment 
+                                   : InvalidFirmState.NotSet
                    where state != InvalidFirmState.NotSet // todo: интересно было бы глянуть на сгенерированный sql
                    select new Order.InvalidFirm
-                   {
-                       FirmId = firm.Id,
-                       OrderId = order.Id,
-                       State = state,
-                       Name = firm.Name,
-                   };
+                       {
+                           FirmId = firm.Id,
+                           OrderId = order.Id,
+                           State = state,
+                           Name = firm.Name,
+                       };
 
             public FindSpecification<Order.InvalidFirm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

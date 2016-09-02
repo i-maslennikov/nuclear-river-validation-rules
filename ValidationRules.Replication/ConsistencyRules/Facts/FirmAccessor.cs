@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                      {
                              Id = x.Id,
                              IsClosedForAscertainment = x.ClosedForAscertainment,
-                             IsHidden = !x.IsActive,
+                             IsActive = x.IsActive,
                              IsDeleted = x.IsDeleted,
                              Name = x.Name,
                          });

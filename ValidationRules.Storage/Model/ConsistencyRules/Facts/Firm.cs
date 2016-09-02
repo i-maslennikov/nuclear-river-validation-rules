@@ -4,7 +4,7 @@
     {
         public long Id { get; set; }
         public bool IsClosedForAscertainment { get; set; }
-        public bool IsHidden { get; set; } // todo: вернуть IsActive
+        public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public string Name { get; set; }
     }

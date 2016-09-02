@@ -38,7 +38,7 @@ go
 create table ConsistencyFacts.Firm (
     Id bigint not null,
     IsClosedForAscertainment bit not null,
-    IsHidden bit not null,
+    IsActive bit not null,
     IsDeleted bit not null,
     Name nvarchar(max) not null,
 )
