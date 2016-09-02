@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
     /// 
     /// Source: FirmsOrderValidationRule
     /// </summary>
-    public sealed class OrderFirmShouldBeValidActor : IActor
+    public sealed class LinkedFirmShouldBeValidActor : IActor
     {
         public const int MessageTypeId = 17;
 
@@ -30,7 +30,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 
         private readonly ValidationRuleShared _validationRuleShared;
 
-        public OrderFirmShouldBeValidActor(ValidationRuleShared validationRuleShared)
+        public LinkedFirmShouldBeValidActor(ValidationRuleShared validationRuleShared)
         {
             _validationRuleShared = validationRuleShared;
         }

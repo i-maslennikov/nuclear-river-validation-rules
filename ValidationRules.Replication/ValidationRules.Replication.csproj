@@ -213,7 +213,7 @@
     <Compile Include="ConsistencyRules\Validation\LegalPersonProfileWarrantyShouldNotBeExpiredActor.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderEndDistrubutionShouldBeLastSecondOfMonthActor.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderBeginDistrubutionShouldBeFirstDayOfMonthActor.cs" />
-    <Compile Include="ConsistencyRules\Validation\OrderFirmShouldBeValidActor.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedFirmShouldBeValidActor.cs" />
     <Compile Include="PriceRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ThemeAggregateRootActor.cs" />
