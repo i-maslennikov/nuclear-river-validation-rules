@@ -52,9 +52,10 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                   MessageType = MessageTypeId,
                                   MessageParams = new XDocument(
                                           new XElement("root",
+                                                       new XElement("message",
+                                                                    new XAttribute("state", firmAddress.State)),
                                                        new XElement("firmAddress",
                                                                     new XAttribute("id", firmAddress.FirmAddressId),
-                                                                    new XAttribute("state", firmAddress.State),
                                                                     new XAttribute("name", firmAddress.Name)),
                                                        new XElement("order",
                                                                     new XAttribute("id", order.Id),
