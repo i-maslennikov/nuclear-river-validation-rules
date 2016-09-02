@@ -5,5 +5,6 @@
         public long Id { get; set; }
         public long OrderId { get; set; }
         public long? FirmAddressId { get; set; }
+        public long? CategoryId { get; set; }
     }
 }

@@ -3,6 +3,7 @@
 if object_id('ConsistencyAggregates.Order') is not null drop table ConsistencyAggregates.[Order]
 if object_id('ConsistencyAggregates.InvalidFirm') is not null drop table ConsistencyAggregates.InvalidFirm
 if object_id('ConsistencyAggregates.InvalidFirmAddress') is not null drop table ConsistencyAggregates.InvalidFirmAddress
+if object_id('ConsistencyAggregates.InvalidCategoryFirmAddress') is not null drop table ConsistencyAggregates.InvalidCategoryFirmAddress
 if object_id('ConsistencyAggregates.InvalidBeginDistributionDate') is not null drop table ConsistencyAggregates.InvalidBeginDistributionDate
 if object_id('ConsistencyAggregates.InvalidEndDistributionDate') is not null drop table ConsistencyAggregates.InvalidEndDistributionDate
 if object_id('ConsistencyAggregates.LegalPersonProfileBargainExpired') is not null drop table ConsistencyAggregates.LegalPersonProfileBargainExpired
@@ -42,6 +43,16 @@ create table ConsistencyAggregates.InvalidFirmAddress(
     FirmAddressId bigint not null,
     [State] int not null,
     Name nvarchar(max) not null,
+)
+go
+
+create table ConsistencyAggregates.InvalidCategoryFirmAddress(
+    OrderId bigint not null,
+    FirmAddressId bigint not null,
+    FirmAddressName nvarchar(max) not null,
+    CategoryId bigint not null,
+    CategoryName nvarchar(max) not null,
+    [State] int not null,
 )
 go
 

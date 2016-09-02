@@ -35,6 +35,12 @@ create table ConsistencyFacts.Bill (
 )
 go
 
+create table ConsistencyFacts.Category (
+    Id bigint not null,
+    Name nvarchar(max) not null,
+)
+go
+
 create table ConsistencyFacts.Firm (
     Id bigint not null,
     IsClosedForAscertainment bit not null,
@@ -51,6 +57,13 @@ create table ConsistencyFacts.FirmAddress (
     IsClosedForAscertainment bit not null,
     IsActive bit not null,
     IsDeleted bit not null,
+)
+go
+
+create table ConsistencyFacts.CategoryFirmAddress (
+    Id bigint not null,
+    FirmAddressId bigint not null,
+    CategoryId bigint not null,
 )
 go
 
@@ -93,6 +106,7 @@ create table ConsistencyFacts.OrderPositionAdvertisement (
     Id bigint not null,
     OrderId bigint not null,
     FirmAddressId bigint null,
+    CategoryId bigint null,
 )
 go
 

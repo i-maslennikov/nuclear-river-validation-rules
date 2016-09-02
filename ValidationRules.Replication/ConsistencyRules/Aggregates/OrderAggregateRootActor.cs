@@ -209,6 +209,43 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
+        public sealed class InvalidCategoryFirmAddressAccessor : IStorageBasedDataObjectAccessor<Order.InvalidCategoryFirmAddress>
+        {
+            private readonly IQuery _query;
+
+            public InvalidCategoryFirmAddressAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Order.InvalidCategoryFirmAddress> GetSource()
+                => from order in _query.For<Facts::Order>()
+                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id && x.CategoryId.HasValue && x.FirmAddressId.HasValue)
+                   from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId && x.IsActive && !x.IsClosedForAscertainment && !x.IsDeleted)
+                   from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
+                   from cfa in _query.For<Facts::CategoryFirmAddress>().Where(x => x.FirmAddressId == opa.FirmAddressId && x.CategoryId == opa.CategoryId).DefaultIfEmpty()
+                   where cfa == null
+                   select new Order.InvalidCategoryFirmAddress
+                   {
+                       OrderId = order.Id,
+                       FirmAddressId = address.Id,
+                       FirmAddressName = address.Name,
+                       CategoryId = category.Id,
+                       CategoryName = category.Name,
+                       State = InvalidCategoryFirmAddressState.CategoryNotBelongsToAddress,
+                   };
+
+            public FindSpecification<Order.InvalidCategoryFirmAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Order.InvalidCategoryFirmAddress>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
         public sealed class OrderBargainSignedLaterThanOrderAccessor : IStorageBasedDataObjectAccessor<Order.BargainSignedLaterThanOrder>
         {
             private readonly IQuery _query;

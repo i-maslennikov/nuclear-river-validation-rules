@@ -32,6 +32,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                        Id = opa.Id,
                        OrderId = o.Id,
                        FirmAddressId = opa.FirmAddressId,
+                       CategoryId = opa.CategoryId,
                    };
 
         public FindSpecification<OrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
