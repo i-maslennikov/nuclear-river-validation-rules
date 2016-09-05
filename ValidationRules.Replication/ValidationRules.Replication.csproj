@@ -194,6 +194,7 @@
     <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
     <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ConsistencyRules\Facts\CategoryAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\PositionAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\CategoryFirmAddressAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\FirmAddressAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\OrderPositionAdvertisementAccessor.cs" />
@@ -206,6 +207,9 @@
     <Compile Include="ConsistencyRules\Facts\BillAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\BargainScanFileAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\OrderAccessor.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedCategoryAsterixMayBelongToFirmActor.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedCategoryShouldBelongToFirmActor.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedCategoryShouldBeActiveActor.cs" />
     <Compile Include="ConsistencyRules\Validation\LinkedCategoryFirmAddressShouldBeValidActor.cs" />
     <Compile Include="ConsistencyRules\Validation\LinkedFirmAddressShouldBeValidActor.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderRequiredFieldsShouldBeSpecifiedActor.cs" />

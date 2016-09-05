@@ -246,6 +246,49 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
+        public sealed class InvalidCategoryAccessor : IStorageBasedDataObjectAccessor<Order.InvalidCategory>
+        {
+            private const int BindingObjectTypeCategoryMultipleAsterix = 1;
+
+            private readonly IQuery _query;
+
+            public InvalidCategoryAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Order.InvalidCategory> GetSource()
+                => from order in _query.For<Facts::Order>()
+                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id && x.CategoryId.HasValue && x.FirmAddressId.HasValue)
+                   from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
+                   from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
+                   let firmAddress = _query.For<Facts::FirmAddress>() 
+                                           .SelectMany(fa => _query.For<Facts::CategoryFirmAddress>().Where(cfa => cfa.FirmAddressId == fa.Id))
+                                           .Any(x => x.CategoryId == opa.CategoryId)
+                   let state = category.IsActive ? InvalidCategoryState.Inactive
+                                   : firmAddress ? InvalidCategoryState.NotBelongToFirm
+                                   : InvalidCategoryState.NotSet
+                   where state != InvalidCategoryState.NotSet
+                   select new Order.InvalidCategory
+                       {
+                           OrderId = order.Id,
+                           CategoryId = category.Id,
+                           CategoryName = category.Name,
+                           MayNotBelongToFirm = position.BindingObjectType == BindingObjectTypeCategoryMultipleAsterix,
+                           State = state,
+                       };
+
+            public FindSpecification<Order.InvalidCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Order.InvalidCategory>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
         public sealed class OrderBargainSignedLaterThanOrderAccessor : IStorageBasedDataObjectAccessor<Order.BargainSignedLaterThanOrder>
         {
             private readonly IQuery _query;

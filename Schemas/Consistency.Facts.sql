@@ -5,12 +5,15 @@ if object_id('ConsistencyFacts.Bargain') is not null drop table ConsistencyFacts
 if object_id('ConsistencyFacts.BargainScanFile') is not null drop table ConsistencyFacts.BargainScanFile
 if object_id('ConsistencyFacts.Bill') is not null drop table ConsistencyFacts.Bill
 if object_id('ConsistencyFacts.Firm') is not null drop table ConsistencyFacts.Firm
+if object_id('ConsistencyFacts.Category') is not null drop table ConsistencyFacts.Category
+if object_id('ConsistencyFacts.CategoryFirmAddress') is not null drop table ConsistencyFacts.CategoryFirmAddress
 if object_id('ConsistencyFacts.FirmAddress') is not null drop table ConsistencyFacts.FirmAddress
 if object_id('ConsistencyFacts.LegalPersonProfile') is not null drop table ConsistencyFacts.LegalPersonProfile
 if object_id('ConsistencyFacts.[Order]') is not null drop table ConsistencyFacts.[Order]
 if object_id('ConsistencyFacts.OrderPosition') is not null drop table ConsistencyFacts.OrderPosition
 if object_id('ConsistencyFacts.OrderPositionAdvertisement') is not null drop table ConsistencyFacts.OrderPositionAdvertisement
 if object_id('ConsistencyFacts.OrderScanFile') is not null drop table ConsistencyFacts.OrderScanFile
+if object_id('ConsistencyFacts.Position') is not null drop table ConsistencyFacts.Position
 if object_id('ConsistencyFacts.Project') is not null drop table ConsistencyFacts.Project
 go
 
@@ -38,6 +41,7 @@ go
 create table ConsistencyFacts.Category (
     Id bigint not null,
     Name nvarchar(max) not null,
+    IsActive bit not null,
 )
 go
 
@@ -107,12 +111,19 @@ create table ConsistencyFacts.OrderPositionAdvertisement (
     OrderId bigint not null,
     FirmAddressId bigint null,
     CategoryId bigint null,
+    PositionId bigint null,
 )
 go
 
 create table ConsistencyFacts.OrderScanFile (
     Id bigint not null,
     OrderId bigint not null,
+)
+go
+
+create table ConsistencyFacts.Position (
+    Id bigint not null,
+    BindingObjectType int not null,
 )
 go
 

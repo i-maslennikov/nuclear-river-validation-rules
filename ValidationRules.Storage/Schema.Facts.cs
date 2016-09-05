@@ -166,6 +166,10 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<ConsistencyFacts::Position>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
             builder.Entity<ConsistencyFacts::Project>()
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);

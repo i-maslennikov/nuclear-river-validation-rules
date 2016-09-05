@@ -208,6 +208,7 @@
     <Compile Include="Model\ConsistencyRules\Facts\OrderPosition.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\OrderPositionAdvertisement.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\OrderScanFile.cs" />
+    <Compile Include="Model\ConsistencyRules\Facts\Position.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\Project.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Bargain.cs" />

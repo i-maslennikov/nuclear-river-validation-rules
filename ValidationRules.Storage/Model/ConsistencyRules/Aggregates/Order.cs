@@ -25,6 +25,13 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         CategoryNotBelongsToAddress
     }
 
+    public enum InvalidCategoryState
+    {
+        NotSet = 0,
+        Inactive,
+        NotBelongToFirm
+    }
+
     public sealed class Order
     {
         public long Id { get; set; }
@@ -58,6 +65,15 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public long CategoryId { get; set; }
             public string CategoryName { get; set; }
             public InvalidCategoryFirmAddressState State { get; set; }
+        }
+
+        public class InvalidCategory
+        {
+            public long OrderId { get; set; }
+            public long CategoryId { get; set; }
+            public string CategoryName { get; set; }
+            public InvalidCategoryState State { get; set; }
+            public bool MayNotBelongToFirm { get; set; }
         }
 
         public class InvalidBeginDistributionDate
