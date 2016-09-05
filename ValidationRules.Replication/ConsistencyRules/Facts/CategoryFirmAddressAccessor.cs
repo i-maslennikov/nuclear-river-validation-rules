@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
         }
 
         public IQueryable<CategoryFirmAddress> GetSource()
-            => GetLevelThreeSource().Union(GetLevelTwoSource()).Union(GetLevelOneSource());
+            => GetLevelThreeSource().Union(GetLevelOneSource());
 
         private IQueryable<CategoryFirmAddress> GetLevelThreeSource()
             => from cfa in _query.For<Erm::CategoryFirmAddress>()
@@ -33,17 +33,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                    {
                        Id = cfa.Id,
                        CategoryId = cfa.CategoryId,
-                       FirmAddressId = cfa.FirmAddressId,
-                   };
-
-        private IQueryable<CategoryFirmAddress> GetLevelTwoSource()
-            => from cfa in _query.For<Erm::CategoryFirmAddress>()
-               from c3 in _query.For<Erm::Category>().Where(x => x.Id == cfa.CategoryId)
-               where cfa.IsActive && !cfa.IsDeleted
-               select new CategoryFirmAddress
-                   {
-                       Id = cfa.Id,
-                       CategoryId = c3.ParentId,
                        FirmAddressId = cfa.FirmAddressId,
                    };
 
