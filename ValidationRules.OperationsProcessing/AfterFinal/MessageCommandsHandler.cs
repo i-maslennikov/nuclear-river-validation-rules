@@ -11,7 +11,7 @@ using NuClear.Replication.OperationsProcessing;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Telemetry;
-using NuClear.ValidationRules.Replication.AccountRules.Validation;
+using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
@@ -22,66 +22,18 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
         private readonly CreateNewVersionActor _createNewVersionActor;
-        private readonly MinimumAdvertisementAmountActor _minimumAdvertisementAmountActor;
-        private readonly MaximumAdvertisementAmountActor _maximumAdvertisementAmountActor;
-        private readonly MinimalAdvertisementRestrictionShouldBeSpecifiedActor _restrictionShouldBeSpecifiedActor;
-        private readonly OrderPositionCorrespontToInactivePositionActor _orderPositionCorrespontToInactivePositionActor;
-        private readonly OrderPositionShouldCorrespontToActualPriceActor _orderPositionShouldCorrespontToActualPriceActor;
-        private readonly OrderPositionsShouldCorrespontToActualPriceActor _orderPositionsShouldCorrespontToActualPriceActor;
-        private readonly AssociatedPositionsGroupCountActor _associatedPositionsGroupCountActor;
-        private readonly DeniedPositionsCheckActor _deniedPositionsCheckActor;
-        private readonly AssociatedPositionWithoutPrincipalActor _associatedPositionWithoutPrincipalActor;
-        private readonly ConflictingPrincipalPositionActor _conflictingPrincipalPositionActor;
-        private readonly LinkedObjectsMissedInPrincipalsActor _linkedObjectsMissedInPrincipalsActor;
-        private readonly SatisfiedPrincipalPositionDifferentOrderActor _satisfiedPrincipalPositionDifferentOrderActor;
-        private readonly AccountShouldExistActor _accountShouldExistActor;
-        private readonly LockShouldNotExistActor _lockShouldNotExistActor;
-        private readonly AccountBalanceShouldBePositiveActor _accountBalanceShouldBePositiveActor;
-        private readonly AdvertisementCountPerThemeShouldBeLimitedActor _advertisementCountPerThemeShouldBeLimitedActor;
-        private readonly AdvertisementCountPerCategoryShouldBeLimitedActor _advertisementCountPerCategoryShouldBeLimitedActor;
+        private readonly ValidationRuleActor _validationRuleActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer,
             CreateNewVersionActor createNewVersionActor,
-            MinimumAdvertisementAmountActor minimumAdvertisementAmountActor,
-            MaximumAdvertisementAmountActor maximumAdvertisementAmountActor,
-            MinimalAdvertisementRestrictionShouldBeSpecifiedActor restrictionShouldBeSpecifiedActor,
-            OrderPositionCorrespontToInactivePositionActor orderPositionCorrespontToInactivePositionActor,
-            OrderPositionShouldCorrespontToActualPriceActor orderPositionShouldCorrespontToActualPriceActor,
-            OrderPositionsShouldCorrespontToActualPriceActor orderPositionsShouldCorrespontToActualPriceActor,
-            AssociatedPositionsGroupCountActor associatedPositionsGroupCountActor,
-            DeniedPositionsCheckActor deniedPositionsCheckActor,
-            AssociatedPositionWithoutPrincipalActor associatedPositionWithoutPrincipalActor,
-            LinkedObjectsMissedInPrincipalsActor linkedObjectsMissedInPrincipalsActor,
-            SatisfiedPrincipalPositionDifferentOrderActor satisfiedPrincipalPositionDifferentOrderActor,
-            ConflictingPrincipalPositionActor conflictingPrincipalPositionActor,
-            AccountShouldExistActor accountShouldExistActor,
-            LockShouldNotExistActor lockShouldNotExistActor,
-            AccountBalanceShouldBePositiveActor accountBalanceShouldBePositiveActor,
-            AdvertisementCountPerThemeShouldBeLimitedActor advertisementCountPerThemeShouldBeLimitedActor,
-            AdvertisementCountPerCategoryShouldBeLimitedActor advertisementCountPerCategoryShouldBeLimitedActor)
+            ValidationRuleActor validationRuleActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
             _createNewVersionActor = createNewVersionActor;
-            _minimumAdvertisementAmountActor = minimumAdvertisementAmountActor;
-            _maximumAdvertisementAmountActor = maximumAdvertisementAmountActor;
-            _restrictionShouldBeSpecifiedActor = restrictionShouldBeSpecifiedActor;
-            _orderPositionCorrespontToInactivePositionActor = orderPositionCorrespontToInactivePositionActor;
-            _orderPositionShouldCorrespontToActualPriceActor = orderPositionShouldCorrespontToActualPriceActor;
-            _orderPositionsShouldCorrespontToActualPriceActor = orderPositionsShouldCorrespontToActualPriceActor;
-            _associatedPositionsGroupCountActor = associatedPositionsGroupCountActor;
-            _deniedPositionsCheckActor = deniedPositionsCheckActor;
-            _associatedPositionWithoutPrincipalActor = associatedPositionWithoutPrincipalActor;
-            _linkedObjectsMissedInPrincipalsActor = linkedObjectsMissedInPrincipalsActor;
-            _satisfiedPrincipalPositionDifferentOrderActor = satisfiedPrincipalPositionDifferentOrderActor;
-            _conflictingPrincipalPositionActor = conflictingPrincipalPositionActor;
-            _accountShouldExistActor = accountShouldExistActor;
-            _lockShouldNotExistActor = lockShouldNotExistActor;
-            _accountBalanceShouldBePositiveActor = accountBalanceShouldBePositiveActor;
-            _advertisementCountPerThemeShouldBeLimitedActor = advertisementCountPerThemeShouldBeLimitedActor;
-            _advertisementCountPerCategoryShouldBeLimitedActor = advertisementCountPerCategoryShouldBeLimitedActor;
+            _validationRuleActor = validationRuleActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -127,29 +79,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
-                // Думаю, пока достаточно указывать вызваемые акторы явно, о фабриках подумаем позже.
-                _minimumAdvertisementAmountActor.ExecuteCommands(commands);
-                _maximumAdvertisementAmountActor.ExecuteCommands(commands);
-                _restrictionShouldBeSpecifiedActor.ExecuteCommands(commands);
-                _orderPositionCorrespontToInactivePositionActor.ExecuteCommands(commands);
-                _orderPositionShouldCorrespontToActualPriceActor.ExecuteCommands(commands);
-                _orderPositionsShouldCorrespontToActualPriceActor.ExecuteCommands(commands);
-                _associatedPositionsGroupCountActor.ExecuteCommands(commands);
-                _deniedPositionsCheckActor.ExecuteCommands(commands);
-                _associatedPositionWithoutPrincipalActor.ExecuteCommands(commands);
-                _linkedObjectsMissedInPrincipalsActor.ExecuteCommands(commands);
-                _satisfiedPrincipalPositionDifferentOrderActor.ExecuteCommands(commands);
-                _conflictingPrincipalPositionActor.ExecuteCommands(commands);
-                _accountShouldExistActor.ExecuteCommands(commands);
-                _lockShouldNotExistActor.ExecuteCommands(commands);
-                _accountBalanceShouldBePositiveActor.ExecuteCommands(commands);
-                _advertisementCountPerThemeShouldBeLimitedActor.ExecuteCommands(commands);
-                _advertisementCountPerCategoryShouldBeLimitedActor.ExecuteCommands(commands);
-
-        // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
-        // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
-        // Благодаря этому все изменения, предшествующие состоянию erm будут гарантированно включены в версию проверок.
-        _createNewVersionActor.ExecuteCommands(commands);
+                // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
+                // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
+                // Благодаря этому все изменения, предшествующие состоянию erm будут гарантированно включены в версию проверок.
+                _validationRuleActor.ExecuteCommands(commands);
+                _createNewVersionActor.ExecuteCommands(commands);
 
                 transaction.Complete();
             }

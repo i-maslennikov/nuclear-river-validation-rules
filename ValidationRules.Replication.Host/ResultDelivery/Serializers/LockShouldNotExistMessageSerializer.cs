@@ -1,6 +1,4 @@
-﻿using NuClear.ValidationRules.Replication.AccountRules.Validation;
-
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class LockShouldNotExistMessageSerializer : IMessageSerializer
     {
@@ -11,8 +9,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             _linkFactory = linkFactory;
         }
 
-        public int MessageType
-            => LockShouldNotExistActor.MessageTypeId;
+        public int MessageType => 13;
 
         public LocalizedMessage Serialize(Message message)
         {

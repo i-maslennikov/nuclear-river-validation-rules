@@ -1,6 +1,4 @@
-﻿using NuClear.ValidationRules.Replication.AccountRules.Validation;
-
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class AccountBalanceShouldBePositiveMessageSerializer : IMessageSerializer
     {
@@ -11,8 +9,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             _linkFactory = linkFactory;
         }
 
-        public int MessageType
-            => AccountBalanceShouldBePositiveActor.MessageTypeId;
+        public int MessageType => 14;
 
         public LocalizedMessage Serialize(Message message)
         {

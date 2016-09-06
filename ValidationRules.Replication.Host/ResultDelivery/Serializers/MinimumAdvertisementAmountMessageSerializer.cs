@@ -1,6 +1,4 @@
-﻿using NuClear.ValidationRules.Replication.PriceRules.Validation;
-
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class MinimumAdvertisementAmountMessageSerializer : IMessageSerializer
     {
@@ -11,8 +9,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             _linkFactory = linkFactory;
         }
 
-        public int MessageType
-            => MinimumAdvertisementAmountActor.MessageTypeId;
+        public int MessageType => 16;
 
         public LocalizedMessage Serialize(Message message)
         {

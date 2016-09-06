@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 
-using NuClear.ValidationRules.Replication.PriceRules.Validation;
-
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class AssociatedPositionWithoutPrincipalMessageSerializer : IMessageSerializer
@@ -13,8 +11,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             _linkFactory = linkFactory;
         }
 
-        public int MessageType
-            => AssociatedPositionWithoutPrincipalActor.MessageTypeId;
+        public int MessageType => 9;
 
         public LocalizedMessage Serialize(Message message)
         {

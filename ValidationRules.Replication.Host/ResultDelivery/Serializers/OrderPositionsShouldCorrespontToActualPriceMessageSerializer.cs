@@ -1,6 +1,4 @@
-﻿using NuClear.ValidationRules.Replication.PriceRules.Validation;
-
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public sealed class OrderPositionsShouldCorrespontToActualPriceMessageSerializer : IMessageSerializer
     {
@@ -11,8 +9,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             _linkFactory = linkFactory;
         }
 
-        public int MessageType
-            => OrderPositionsShouldCorrespontToActualPriceActor.MessageTypeId;
+        public int MessageType => 3;
 
         public LocalizedMessage Serialize(Message message)
         {

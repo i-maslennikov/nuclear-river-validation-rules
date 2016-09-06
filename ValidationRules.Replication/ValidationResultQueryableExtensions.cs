@@ -10,8 +10,20 @@ namespace NuClear.ValidationRules.Replication
             => queryable.Select(x => new Version.ValidationResult
                 {
                     VersionId = version,
-                    MessageParams = x.MessageParams,
                     MessageType = x.MessageType,
+                    MessageParams = x.MessageParams,
+                    PeriodEnd = x.PeriodEnd,
+                    PeriodStart = x.PeriodStart,
+                    ProjectId = x.ProjectId,
+                    Result = x.Result,
+                });
+
+        public static IQueryable<Version.ValidationResult> ApplyMessageType(this IQueryable<Version.ValidationResult> queryable, int messageTypeId)
+            => queryable.Select(x => new Version.ValidationResult
+                {
+                    VersionId = x.VersionId,
+                    MessageType = messageTypeId,
+                    MessageParams = x.MessageParams,
                     PeriodEnd = x.PeriodEnd,
                     PeriodStart = x.PeriodStart,
                     ProjectId = x.ProjectId,
