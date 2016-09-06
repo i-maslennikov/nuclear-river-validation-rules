@@ -17,4 +17,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     {
         public ReplicateInBulkCommand Command => BulkReplicationCommands.FactsToAggregates;
     }
+
+    public sealed class Messages : IKey
+    {
+        public ReplicateInBulkCommand Command => BulkReplicationCommands.AggregatesToMessages;
+    }
 }

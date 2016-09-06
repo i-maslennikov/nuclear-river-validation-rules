@@ -16,6 +16,8 @@ using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
+using Messages = NuClear.ValidationRules.Storage.Model.Messages;
+
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
@@ -68,6 +70,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyFacts::Project),
                         });
             }
+
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
             {
                 return new CommandRegardlessDataObjectTypesProvider(
@@ -114,6 +117,15 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyAggregates::Order.MissingRequiredField),
                             typeof(ConsistencyAggregates::Order.MissingOrderScan),
                             typeof(ConsistencyAggregates::Order.NoReleasesSheduled),
+                        });
+            }
+
+            if (command.TargetStorageDescriptor.ConnectionStringIdentity is MessagesConnectionStringIdentity)
+            {
+                return new CommandRegardlessDataObjectTypesProvider(
+                    new List<Type>
+                        {
+                            typeof(Messages::Version.ValidationResult),
                         });
             }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 
 using NuClear.Assembling.TypeProcessing;
 using NuClear.Replication.Core;
@@ -21,6 +22,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                         { ErmConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Erm) },
                         { FactsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Facts) },
                         { AggregatesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Aggregates) },
+                        { MessagesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Messages) },
                     });
 
         public static void Main(string[] args)
@@ -28,20 +30,19 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             StateInitializationRoot.Instance.PerformTypesMassProcessing(Array.Empty<IMassProcessor>(), true, typeof(object));
 
             var commands = new List<ICommand>();
-            foreach (var mode in args)
+            if (args.Contains("-facts"))
             {
-                switch (mode)
-                {
-                    case "-facts":
-                        commands.Add(BulkReplicationCommands.ErmToFacts);
-                        break;
-                    case "-aggregates":
-                        commands.Add(BulkReplicationCommands.FactsToAggregates);
-                        break;
-                    default:
-                        Console.WriteLine($"Unknown argument: {mode}");
-                        break;
-                }
+                commands.Add(BulkReplicationCommands.ErmToFacts);
+            }
+
+            if (args.Contains("-aggregates"))
+            {
+                commands.Add(BulkReplicationCommands.FactsToAggregates);
+            }
+
+            if (args.Contains("-messages"))
+            {
+                commands.Add(BulkReplicationCommands.AggregatesToMessages);
             }
 
             var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), ConnectionStringSettings);

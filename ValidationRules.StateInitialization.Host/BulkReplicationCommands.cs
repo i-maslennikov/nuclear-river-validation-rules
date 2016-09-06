@@ -7,6 +7,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public static class BulkReplicationCommands
     {
+        public static ReplicateInBulkCommand AggregatesToMessages { get; } =
+            new ReplicateInBulkCommand(
+                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
+                new StorageDescriptor(MessagesConnectionStringIdentity.Instance, Schema.Messages));
+
         public static ReplicateInBulkCommand FactsToAggregates { get; } =
             new ReplicateInBulkCommand(
                 new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
