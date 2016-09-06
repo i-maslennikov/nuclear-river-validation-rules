@@ -17,6 +17,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionDoesntCorrespontToActualPrice
     /// </summary>
+    // todo: подумать о рефакторинге: актуальный прайс-лист должен вычисляться на этапе агрегатов, а эту проверку разделить на две.
     public sealed class OrderPositionShouldCorrespontToActualPriceActor : IActor
     {
         public const int MessageTypeId = 5;
