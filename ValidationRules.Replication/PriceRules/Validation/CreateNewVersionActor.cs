@@ -51,17 +51,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             // TODO: Возможно, не лучшее решение с точки зрения производительности и администратора БД, но трюками займёмся позже.
             var lastVersionResults = _query.For<Version.ValidationResult>().Where(x => x.VersionId == lastVersion.Id);
-            var nextVersionResults = lastVersionResults.Select(x =>
-                                                               new Version.ValidationResult
-                                                                   {
-                                                                       VersionId = nextVersion.Id,
-                                                                       MessageParams = x.MessageParams,
-                                                                       MessageType = x.MessageType,
-                                                                       PeriodEnd = x.PeriodEnd,
-                                                                       PeriodStart = x.PeriodStart,
-                                                                       ProjectId = x.ProjectId,
-                                                                       Result = x.Result,
-                                                                   });
+            var nextVersionResults = lastVersionResults.ApplyVersion(nextVersion.Id);
             _validationResultRepository.AddRange(nextVersionResults);
             _validationResultRepository.Save();
 

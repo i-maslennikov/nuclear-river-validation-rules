@@ -260,6 +260,7 @@
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
+    <Compile Include="ValidationResultQueryableExtensions.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />
     <Compile Include="ValidationRuleShared.cs" />
     <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />
