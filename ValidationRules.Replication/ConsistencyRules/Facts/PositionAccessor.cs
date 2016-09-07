@@ -25,6 +25,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 
         public IQueryable<Position> GetSource()
             => from position in _query.For<Erm::Position>()
+               where !position.IsDeleted
                select new Position
                    {
                        Id = position.Id,

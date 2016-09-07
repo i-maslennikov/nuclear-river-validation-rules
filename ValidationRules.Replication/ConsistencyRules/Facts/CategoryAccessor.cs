@@ -29,6 +29,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                    {
                        Id = category.Id,
                        Name = category.Name,
+                       IsActiveNotDeleted = category.IsActive && !category.IsDeleted
                    };
 
         public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

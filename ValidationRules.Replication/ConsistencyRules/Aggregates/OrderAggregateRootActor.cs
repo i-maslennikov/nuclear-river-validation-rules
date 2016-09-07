@@ -265,7 +265,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    let firmAddress = _query.For<Facts::FirmAddress>() 
                                            .SelectMany(fa => _query.For<Facts::CategoryFirmAddress>().Where(cfa => cfa.FirmAddressId == fa.Id))
                                            .Any(x => x.CategoryId == opa.CategoryId)
-                   let state = category.IsActive ? InvalidCategoryState.Inactive
+                   let state = !category.IsActiveNotDeleted ? InvalidCategoryState.Inactive
                                    : firmAddress ? InvalidCategoryState.NotBelongToFirm
                                    : InvalidCategoryState.NotSet
                    where state != InvalidCategoryState.NotSet

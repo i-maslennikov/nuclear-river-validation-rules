@@ -41,7 +41,7 @@ go
 create table ConsistencyFacts.Category (
     Id bigint not null,
     Name nvarchar(max) not null,
-    IsActive bit not null,
+    IsActiveNotDeleted bit not null,
 )
 go
 

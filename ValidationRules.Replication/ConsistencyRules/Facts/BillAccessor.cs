@@ -34,6 +34,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                              OrderId = x.OrderId,
                              Begin = x.BeginDistributionDate,
                              End = x.EndDistributionDate,
+                             PayablePlan = x.PayablePlan,
                          });
 
         public FindSpecification<Bill> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
