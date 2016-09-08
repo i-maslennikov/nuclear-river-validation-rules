@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::DeniedPosition { PositionId = 1, PositionDeniedId = 2, ObjectBindingType = 3, PriceId = 1, Id = 1 }
                     )
                 .Aggregate(
-                    new Aggregates::Price { Id = 1 },
+                    new Aggregates::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
                     // ограничения
                     new Aggregates::AdvertisementAmountRestriction { CategoryCode = 102, PriceId = 1, Min = 1, Max = 2},
@@ -66,7 +66,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::AssociatedPositionsGroup { Id = 21, PricePositionId = 10 }
                     )
                 .Aggregate(
-                    new Aggregates::Price { Id = 1 },
+                    new Aggregates::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
                     new Aggregates::AssociatedPositionGroupOvercount { PriceId = 1, Count = 2, PricePositionId = 10 },
 
                     new Aggregates::Position { Id = 3, CategoryCode = 1 },
