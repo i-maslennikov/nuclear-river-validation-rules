@@ -50,7 +50,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                     PrincipalItemPositionId = principal.Position.ItemPositionId,
                 };
 
-        public DeniedPositionsCheck(IQuery query) : base(query, 8)
+        public DeniedPositionsCheck(IQuery query) : base(query, MessageTypeCode.DeniedPositionsCheck)
         {
         }
 

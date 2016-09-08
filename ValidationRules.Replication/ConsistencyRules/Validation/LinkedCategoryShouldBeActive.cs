@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public LinkedCategoryShouldBeActive(IQuery query) : base(query, 33)
+        public LinkedCategoryShouldBeActive(IQuery query) : base(query, MessageTypeCode.LinkedCategoryShouldBeActive)
         {
         }
 

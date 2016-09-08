@@ -2,7 +2,7 @@
 {
     public interface IMessageSerializer
     {
-        int MessageType { get; }
+        MessageTypeCode MessageType { get; }
         LocalizedMessage Serialize(Message message);
     }
 }

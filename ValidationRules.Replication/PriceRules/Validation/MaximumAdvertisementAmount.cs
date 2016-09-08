@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public MaximumAdvertisementAmount(IQuery query) : base(query, 1)
+        public MaximumAdvertisementAmount(IQuery query) : base(query, MessageTypeCode.MaximumAdvertisementAmount)
         {
         }
 

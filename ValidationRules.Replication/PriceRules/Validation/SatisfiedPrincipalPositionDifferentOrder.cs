@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Warning)
                                                                     .WhenMassRelease(Result.Warning);
 
-        public SatisfiedPrincipalPositionDifferentOrder(IQuery query) : base(query, 15)
+        public SatisfiedPrincipalPositionDifferentOrder(IQuery query) : base(query, MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder)
         {
         }
 

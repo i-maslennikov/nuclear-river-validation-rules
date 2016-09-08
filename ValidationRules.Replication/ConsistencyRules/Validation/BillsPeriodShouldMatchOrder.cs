@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.None)
                                                                     .WhenMassRelease(Result.None);
 
-        public BillsPeriodShouldMatchOrder(IQuery query) : base(query, 22)
+        public BillsPeriodShouldMatchOrder(IQuery query) : base(query, MessageTypeCode.BillsPeriodShouldMatchOrder)
         {
         }
 

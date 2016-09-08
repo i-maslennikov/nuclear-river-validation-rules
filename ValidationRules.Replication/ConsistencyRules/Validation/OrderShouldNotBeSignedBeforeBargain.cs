@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.None)
                                                                     .WhenMassRelease(Result.None);
 
-        public OrderShouldNotBeSignedBeforeBargain(IQuery query) : base(query, 23)
+        public OrderShouldNotBeSignedBeforeBargain(IQuery query) : base(query, MessageTypeCode.OrderShouldNotBeSignedBeforeBargain)
         {
         }
 

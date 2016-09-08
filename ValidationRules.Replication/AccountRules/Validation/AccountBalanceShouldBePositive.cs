@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         // todo: завести настройку SignificantDigitsNumber и вообще решить вопрос с настройками проверок
         private static readonly decimal Epsilon = 0.01m;
 
-        public AccountBalanceShouldBePositive(IQuery query) : base(query, 14)
+        public AccountBalanceShouldBePositive(IQuery query) : base(query, MessageTypeCode.AccountBalanceShouldBePositive)
         {
         }
 

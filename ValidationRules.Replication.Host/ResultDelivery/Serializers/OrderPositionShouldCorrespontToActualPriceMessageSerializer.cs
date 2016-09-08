@@ -9,7 +9,7 @@
             _linkFactory = linkFactory;
         }
 
-        public int MessageType => 5;
+        public MessageTypeCode MessageType => MessageTypeCode.OrderPositionShouldCorrespontToActualPrice;
 
         public LocalizedMessage Serialize(Message message)
         {

@@ -46,7 +46,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public ConflictingPrincipalPosition(IQuery query) : base(query, 11)
+        public ConflictingPrincipalPosition(IQuery query) : base(query, MessageTypeCode.ConflictingPrincipalPosition)
         {
         }
 

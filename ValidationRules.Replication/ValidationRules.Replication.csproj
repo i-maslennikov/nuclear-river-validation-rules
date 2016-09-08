@@ -301,6 +301,7 @@
     <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.Aggs.cs" />
+    <Compile Include="MessageTypeCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

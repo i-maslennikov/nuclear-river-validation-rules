@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 typeof(AssociatedPositionWithoutPrincipalMessageSerializer),
             };
 
-        private readonly Dictionary<int, IMessageSerializer> _serializers;
+        private readonly Dictionary<MessageTypeCode, IMessageSerializer> _serializers;
 
         public UnityLocalizedMessageFactory(IUnityContainer container)
         {

@@ -9,7 +9,7 @@
             _linkFactory = linkFactory;
         }
 
-        public int MessageType => 4;
+        public MessageTypeCode MessageType => MessageTypeCode.OrderPositionCorrespontToInactivePosition;
 
         public LocalizedMessage Serialize(Message message)
         {

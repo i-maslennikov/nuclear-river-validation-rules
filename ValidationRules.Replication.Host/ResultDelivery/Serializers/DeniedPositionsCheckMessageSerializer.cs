@@ -11,7 +11,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             _linkFactory = linkFactory;
         }
 
-        public int MessageType => 8;
+        public MessageTypeCode MessageType => MessageTypeCode.DeniedPositionsCheck;
 
         public LocalizedMessage Serialize(Message message)
         {

@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public LinkedFirmShouldBeValid(IQuery query) : base(query, 17)
+        public LinkedFirmShouldBeValid(IQuery query) : base(query, MessageTypeCode.LinkedFirmShouldBeValid)
         {
         }
 

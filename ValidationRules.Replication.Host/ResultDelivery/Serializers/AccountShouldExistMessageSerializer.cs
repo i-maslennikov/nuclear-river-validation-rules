@@ -9,7 +9,7 @@
             _linkFactory = linkFactory;
         }
 
-        public int MessageType => 12;
+        public MessageTypeCode MessageType => MessageTypeCode.AccountShouldExist;
 
         public LocalizedMessage Serialize(Message message)
         {

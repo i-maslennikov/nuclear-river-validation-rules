@@ -9,7 +9,7 @@
             _linkFactory = linkFactory;
         }
 
-        public int MessageType => 7;
+        public MessageTypeCode MessageType => MessageTypeCode.AssociatedPositionsGroupCount;
 
         public LocalizedMessage Serialize(Message message)
         {

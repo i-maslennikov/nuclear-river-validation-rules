@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 .WhenMassPrerelease(Result.Warning)
                 .WhenMassRelease(Result.Warning);
 
-        public OrderPositionShouldCorrespontToActualPrice(IQuery query) : base(query, 5)
+        public OrderPositionShouldCorrespontToActualPrice(IQuery query) : base(query, MessageTypeCode.OrderPositionShouldCorrespontToActualPrice)
         {
         }
 

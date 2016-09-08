@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public OrderRequiredFieldsShouldBeSpecified(IQuery query) : base(query, 28)
+        public OrderRequiredFieldsShouldBeSpecified(IQuery query) : base(query, MessageTypeCode.OrderRequiredFieldsShouldBeSpecified)
         {
         }
 

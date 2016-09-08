@@ -50,7 +50,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public LinkedObjectsMissedInPrincipals(IQuery query) : base(query, 10)
+        public LinkedObjectsMissedInPrincipals(IQuery query) : base(query, MessageTypeCode.LinkedObjectsMissedInPrincipals)
         {
         }
 

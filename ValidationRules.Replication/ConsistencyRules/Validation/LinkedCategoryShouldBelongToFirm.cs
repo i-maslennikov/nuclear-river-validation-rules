@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public LinkedCategoryShouldBelongToFirm(IQuery query) : base(query, 32)
+        public LinkedCategoryShouldBelongToFirm(IQuery query) : base(query, MessageTypeCode.LinkedCategoryShouldBelongToFirm)
         {
         }
 

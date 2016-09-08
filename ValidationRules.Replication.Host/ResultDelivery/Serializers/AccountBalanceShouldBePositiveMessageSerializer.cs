@@ -9,7 +9,7 @@
             _linkFactory = linkFactory;
         }
 
-        public int MessageType => 14;
+        public MessageTypeCode MessageType => MessageTypeCode.AccountBalanceShouldBePositive;
 
         public LocalizedMessage Serialize(Message message)
         {

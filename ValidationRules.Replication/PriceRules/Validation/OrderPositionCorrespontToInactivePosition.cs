@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public OrderPositionCorrespontToInactivePosition(IQuery query) : base(query, 4)
+        public OrderPositionCorrespontToInactivePosition(IQuery query) : base(query, MessageTypeCode.OrderPositionCorrespontToInactivePosition)
         {
         }
 

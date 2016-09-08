@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public AssociatedPositionWithoutPrincipal(IQuery query) : base(query, 9)
+        public AssociatedPositionWithoutPrincipal(IQuery query) : base(query, MessageTypeCode.AssociatedPositionWithoutPrincipal)
         {
         }
 

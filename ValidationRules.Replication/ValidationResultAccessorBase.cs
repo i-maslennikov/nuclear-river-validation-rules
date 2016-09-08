@@ -13,10 +13,10 @@ namespace NuClear.ValidationRules.Replication
         private readonly IQuery _query;
         private readonly int _messageTypeId;
 
-        protected ValidationResultAccessorBase(IQuery query, int messageTypeId)
+        protected ValidationResultAccessorBase(IQuery query, MessageTypeCode messageTypeId)
         {
             _query = query;
-            _messageTypeId = messageTypeId;
+            _messageTypeId = (int)messageTypeId;
         }
 
         int IValidationResultAccessor.MessageTypeId => _messageTypeId;

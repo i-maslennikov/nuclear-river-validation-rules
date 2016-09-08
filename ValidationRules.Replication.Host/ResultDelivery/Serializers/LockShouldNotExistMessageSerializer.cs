@@ -9,7 +9,7 @@
             _linkFactory = linkFactory;
         }
 
-        public int MessageType => 13;
+        public MessageTypeCode MessageType => MessageTypeCode.LockShouldNotExist;
 
         public LocalizedMessage Serialize(Message message)
         {

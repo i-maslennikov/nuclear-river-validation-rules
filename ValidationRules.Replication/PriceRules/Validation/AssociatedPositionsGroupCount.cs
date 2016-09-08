@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Warning)
                                                                     .WhenMassRelease(Result.Warning);
 
-        public AssociatedPositionsGroupCount(IQuery query) : base(query, 7)
+        public AssociatedPositionsGroupCount(IQuery query) : base(query, MessageTypeCode.AssociatedPositionsGroupCount)
         {
         }
 

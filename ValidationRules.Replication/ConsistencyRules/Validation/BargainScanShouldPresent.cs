@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.None)
                                                                     .WhenMassRelease(Result.None);
 
-        public BargainScanShouldPresent(IQuery query) : base(query, 27)
+        public BargainScanShouldPresent(IQuery query) : base(query, MessageTypeCode.BargainScanShouldPresent)
         {
         }
 

@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.None)
                                                                     .WhenMassRelease(Result.None);
 
-        public LegalPersonProfileBargainShouldNotBeExpired(IQuery query) : base(query, 20)
+        public LegalPersonProfileBargainShouldNotBeExpired(IQuery query) : base(query, MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired)
         {
         }
 

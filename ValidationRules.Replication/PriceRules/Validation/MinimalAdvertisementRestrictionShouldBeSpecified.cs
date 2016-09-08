@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public MinimalAdvertisementRestrictionShouldBeSpecified(IQuery query) : base(query, 2)
+        public MinimalAdvertisementRestrictionShouldBeSpecified(IQuery query) : base(query, MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified)
         {
         }
 

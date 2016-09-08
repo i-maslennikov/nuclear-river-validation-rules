@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public OrderEndDistrubutionShouldBeLastSecondOfMonth(IQuery query) : base(query, 19)
+        public OrderEndDistrubutionShouldBeLastSecondOfMonth(IQuery query) : base(query, MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth)
         {
         }
 

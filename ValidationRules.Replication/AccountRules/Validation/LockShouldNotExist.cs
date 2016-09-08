@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public LockShouldNotExist(IQuery query) : base(query, 13)
+        public LockShouldNotExist(IQuery query) : base(query, MessageTypeCode.LockShouldNotExist)
         {
         }
 

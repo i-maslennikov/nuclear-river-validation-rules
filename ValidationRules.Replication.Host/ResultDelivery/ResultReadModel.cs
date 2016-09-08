@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                                       .Where(x => x.VersionId == lastVersion.Id)
                                       .Where(x => x.PeriodStart <= group.Key && group.Key < x.PeriodEnd)
                                       .Where(x => group.Contains(x.OrderId))
-                                      .Select(x => new Message(x.MessageType, x.MessageParams, x.Result));
+                                      .Select(x => new Message((MessageTypeCode)x.MessageType, x.MessageParams, x.Result));
                     results.AddRange(query);
                 }
 

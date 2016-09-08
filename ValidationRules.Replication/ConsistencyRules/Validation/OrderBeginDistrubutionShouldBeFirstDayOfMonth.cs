@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public OrderBeginDistrubutionShouldBeFirstDayOfMonth(IQuery query) : base(query, 18)
+        public OrderBeginDistrubutionShouldBeFirstDayOfMonth(IQuery query) : base(query, MessageTypeCode.OrderBeginDistrubutionShouldBeFirstDayOfMonth)
         {
         }
 

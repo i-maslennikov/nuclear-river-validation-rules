@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                                                                     .WhenMassRelease(Result.Error);
 
 
-        public AccountShouldExist(IQuery query) : base(query, 12)
+        public AccountShouldExist(IQuery query) : base(query, MessageTypeCode.AccountShouldExist)
         {
         }
 

@@ -9,7 +9,7 @@
             _linkFactory = linkFactory;
         }
 
-        public int MessageType => 1;
+        public MessageTypeCode MessageType => MessageTypeCode.MaximumAdvertisementAmount;
 
         public LocalizedMessage Serialize(Message message)
         {

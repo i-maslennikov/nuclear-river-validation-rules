@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.Info)
                                                                     .WhenMassRelease(Result.Info);
 
-        public LinkedCategoryAsterixMayBelongToFirm(IQuery query) : base(query, 32)
+        public LinkedCategoryAsterixMayBelongToFirm(IQuery query) : base(query, MessageTypeCode.LinkedCategoryAsterixMayBelongToFirm)
         {
         }
 

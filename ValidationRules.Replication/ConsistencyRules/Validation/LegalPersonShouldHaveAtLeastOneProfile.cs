@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.None)
                                                                     .WhenMassRelease(Result.None);
 
-        public LegalPersonShouldHaveAtLeastOneProfile(IQuery query) : base(query, 24)
+        public LegalPersonShouldHaveAtLeastOneProfile(IQuery query) : base(query, MessageTypeCode.LegalPersonShouldHaveAtLeastOneProfile)
         {
         }
 

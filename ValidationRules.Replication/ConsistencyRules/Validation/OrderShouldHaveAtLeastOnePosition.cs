@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public OrderShouldHaveAtLeastOnePosition(IQuery query) : base(query, 25)
+        public OrderShouldHaveAtLeastOnePosition(IQuery query) : base(query, MessageTypeCode.OrderShouldHaveAtLeastOnePosition)
         {
         }
 
