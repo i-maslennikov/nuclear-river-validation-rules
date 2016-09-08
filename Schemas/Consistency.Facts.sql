@@ -108,7 +108,7 @@ go
 
 create table ConsistencyFacts.OrderPositionAdvertisement (
     Id bigint not null,
-    OrderId bigint not null,
+    OrderPositionId bigint not null,
     FirmAddressId bigint null,
     CategoryId bigint null,
     PositionId bigint null,

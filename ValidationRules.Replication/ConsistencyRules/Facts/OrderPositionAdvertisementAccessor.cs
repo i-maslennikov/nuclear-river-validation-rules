@@ -25,12 +25,10 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 
         public IQueryable<OrderPositionAdvertisement> GetSource()
             => from opa in _query.For<Erm::OrderPositionAdvertisement>()
-               from op in _query.For<Erm::OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
-               from o in _query.For<Erm::Order>().Where(x => x.Id == op.OrderId)
                select new OrderPositionAdvertisement
                    {
                        Id = opa.Id,
-                       OrderId = o.Id,
+                       OrderPositionId = opa.OrderPositionId,
                        FirmAddressId = opa.FirmAddressId,
                        CategoryId = opa.CategoryId,
                    };
