@@ -82,8 +82,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.MissingBargainScan(),
                 new Aggregates::Order.MissingBills(),
                 new Aggregates::Order.MissingOrderScan(),
-                new Aggregates::Order.MissingRequiredField(),
-                new Aggregates::Order.NoReleasesSheduled())
+                new Aggregates::Order.MissingRequiredField())
             .Ignored();
     }
 }

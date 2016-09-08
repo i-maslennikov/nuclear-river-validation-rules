@@ -115,7 +115,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyAggregates::Order.MissingBills),
                             typeof(ConsistencyAggregates::Order.MissingRequiredField),
                             typeof(ConsistencyAggregates::Order.MissingOrderScan),
-                            typeof(ConsistencyAggregates::Order.NoReleasesSheduled),
                         });
             }
 

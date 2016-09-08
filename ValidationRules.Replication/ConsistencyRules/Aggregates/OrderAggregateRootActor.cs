@@ -33,7 +33,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         private readonly IBulkRepository<Order.MissingBills> _orderMissingBillsRepository;
         private readonly IBulkRepository<Order.MissingRequiredField> _orderMissingRequiredFieldRepository;
         private readonly IBulkRepository<Order.MissingOrderScan> _orderMissingOrderScanRepository;
-        private readonly IBulkRepository<Order.NoReleasesSheduled> _orderNoReleasesSheduledRepository;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
 
         public OrderAggregateRootActor(
@@ -54,8 +53,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IBulkRepository<Order.MissingBargainScan> orderMissingBargainScanRepository,
             IBulkRepository<Order.MissingBills> orderMissingBillsRepository,
             IBulkRepository<Order.MissingRequiredField> orderMissingRequiredFieldRepository,
-            IBulkRepository<Order.MissingOrderScan> orderMissingOrderScanRepository,
-            IBulkRepository<Order.NoReleasesSheduled> orderNoReleasesSheduledRepository)
+            IBulkRepository<Order.MissingOrderScan> orderMissingOrderScanRepository)
             : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
             _query = query;
@@ -75,7 +73,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             _orderMissingBillsRepository = orderMissingBillsRepository;
             _orderMissingRequiredFieldRepository = orderMissingRequiredFieldRepository;
             _orderMissingOrderScanRepository = orderMissingOrderScanRepository;
-            _orderNoReleasesSheduledRepository = orderNoReleasesSheduledRepository;
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
@@ -99,7 +96,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     new ValueObjectActor<Order.MissingBills>(_query, _orderMissingBillsRepository, _equalityComparerFactory, new OrderMissingBillsAccessor (_query)),
                     new ValueObjectActor<Order.MissingRequiredField>(_query, _orderMissingRequiredFieldRepository, _equalityComparerFactory, new MissingRequiredFieldAccessor(_query)),
                     new ValueObjectActor<Order.MissingOrderScan>(_query, _orderMissingOrderScanRepository, _equalityComparerFactory, new OrderMissingOrderScanAccessor (_query)),
-                    new ValueObjectActor<Order.NoReleasesSheduled>(_query, _orderNoReleasesSheduledRepository, _equalityComparerFactory, new OrderNoReleasesSheduledAccessor (_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -633,6 +629,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                            Inspector = !order.InspectorId.HasValue,
                            LegalPerson = !order.LegalPersonId.HasValue,
                            LegalPersonProfile = !order.LegalPersonProfileId.HasValue,
+                           ReleaseCountPlan = order.ReleaseCountPlan == 0,
                        };
 
             public FindSpecification<Order.MissingRequiredField> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -672,34 +669,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order.MissingOrderScan>(x => aggregateIds.Contains(x.OrderId));
-            }
-        }
-
-        public sealed class OrderNoReleasesSheduledAccessor : IStorageBasedDataObjectAccessor<Order.NoReleasesSheduled>
-        {
-            private readonly IQuery _query;
-
-            public OrderNoReleasesSheduledAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<Order.NoReleasesSheduled> GetSource()
-                => from order in _query.For<Facts::Order>()
-                   where order.ReleaseCountPlan == 0
-                   select new Order.NoReleasesSheduled
-                   {
-                       OrderId = order.Id,
-                   };
-
-            public FindSpecification<Order.NoReleasesSheduled> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
-                return new FindSpecification<Order.NoReleasesSheduled>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }

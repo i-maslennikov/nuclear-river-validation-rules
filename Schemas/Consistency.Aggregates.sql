@@ -14,7 +14,6 @@ if object_id('ConsistencyAggregates.MissingBargainScan') is not null drop table 
 if object_id('ConsistencyAggregates.MissingOrderScan') is not null drop table ConsistencyAggregates.MissingOrderScan
 if object_id('ConsistencyAggregates.HasNoAnyLegalPersonProfile') is not null drop table ConsistencyAggregates.HasNoAnyLegalPersonProfile
 if object_id('ConsistencyAggregates.HasNoAnyPosition') is not null drop table ConsistencyAggregates.HasNoAnyPosition
-if object_id('ConsistencyAggregates.NoReleasesSheduled') is not null drop table ConsistencyAggregates.NoReleasesSheduled
 if object_id('ConsistencyAggregates.MissingBills') is not null drop table ConsistencyAggregates.MissingBills
 if object_id('ConsistencyAggregates.InvalidBillsTotal') is not null drop table ConsistencyAggregates.InvalidBillsTotal
 if object_id('ConsistencyAggregates.InvalidBillsPeriod') is not null drop table ConsistencyAggregates.InvalidBillsPeriod
@@ -116,11 +115,6 @@ create table ConsistencyAggregates.HasNoAnyPosition(
 )
 go
 
-create table ConsistencyAggregates.NoReleasesSheduled(
-    OrderId bigint not null,
-)
-go
-
 create table ConsistencyAggregates.MissingBills(
     OrderId bigint not null,
 )
@@ -143,5 +137,6 @@ create table ConsistencyAggregates.MissingRequiredField(
     BranchOfficeOrganizationUnit bit not null,
     Inspector bit not null,
     Currency bit not null,
+    ReleaseCountPlan bit not null,
 )
 go

@@ -158,9 +158,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ConsistencyAggregates::Order.MissingOrderScan>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
-            builder.Entity<ConsistencyAggregates::Order.NoReleasesSheduled>()
-                  .HasSchemaName(ConsistencyAggregatesSchema);
-
             return builder;
         }
     }
