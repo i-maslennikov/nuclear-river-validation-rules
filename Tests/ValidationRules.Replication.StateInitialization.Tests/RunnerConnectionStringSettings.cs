@@ -29,6 +29,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     { ErmTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration, ConnectionStringName.Erm) },
                     { FactsTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration, ConnectionStringName.Facts) },
                     { AggregatesTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration, ConnectionStringName.Aggregates) },
+                    { MessagesTestConnectionStringIdentity.Instance, MakeUniqueSqlConnectionString(configuration, ConnectionStringName.Messages) },
                 };
 
         private static string MakeUniqueSqlConnectionString(ConnectionStringSettingsCollection configuration, string connectionName)

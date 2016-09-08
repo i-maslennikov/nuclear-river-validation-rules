@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
         private static IEnumerable<TestCaseMetadataElement> Tests()
         {
-            var acts = new[] { ErmToFacts, FactsToAggregates };
+            var acts = new[] { ErmToFacts, FactsToAggregates, AggregatesToMessages };
 
             var tests = from arrangeMetadataElement in ScanForDatasets()
                         from actMetadataElement in acts
@@ -47,5 +47,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                               .Source(ContextName.Facts)
                               .Target(ContextName.Aggregates)
                               .Action<BulkReplicationAdapter<Aggregates>>();
+
+        private static readonly ActMetadataElement AggregatesToMessages =
+            ActMetadataElement.Config
+                              .Source(ContextName.Aggregates)
+                              .Target(ContextName.Messages)
+                              .Action<BulkReplicationAdapter<Messages>>();
     }
 }

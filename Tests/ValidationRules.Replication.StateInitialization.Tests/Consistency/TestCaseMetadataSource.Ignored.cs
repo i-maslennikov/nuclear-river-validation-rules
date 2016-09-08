@@ -1,10 +1,11 @@
-﻿using System;
+﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -84,5 +85,30 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.MissingOrderScan(),
                 new Aggregates::Order.MissingRequiredField())
             .Ignored();
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement SampleTest1
+            => ArrangeMetadataElement.Config
+            .Name(nameof(SampleTest1))
+            .Fact(
+                new Facts::Order { ReleaseCountPlan = 0, BeginDistribution = FirstDay1, EndDistributionPlan = LastSecond1, EndDistributionFact = LastSecond2 },
+                new Facts::Project { })
+            .Aggregate(
+                new Aggregates::Order { BeginDistribution = FirstDay1, EndDistributionPlan = LastSecond1, EndDistributionFact = LastSecond2 },
+                new Aggregates::Order.HasNoAnyPosition(),
+                new Aggregates::Order.HasNoAnyLegalPersonProfile(),
+                new Aggregates::Order.InvalidEndDistributionDate(),
+                new Aggregates::Order.MissingOrderScan(),
+                new Aggregates::Order.MissingRequiredField {BranchOfficeOrganizationUnit = true, Currency = true, Inspector = true, LegalPerson = true, LegalPersonProfile = true, ReleaseCountPlan = true });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement SampleTest2
+            => ArrangeMetadataElement.Config
+            .Name(nameof(SampleTest2))
+            .Aggregate(
+                new Aggregates::Order { Id = 1, Number = "123", BeginDistribution = FirstDay1, EndDistributionPlan = LastSecond1, EndDistributionFact = LastSecond2 },
+                new Aggregates::Order.HasNoAnyPosition {OrderId = 1})
+            .Message(
+                new Messages::Version.ValidationResult { MessageParams = XDocument.Parse("<root><order id=\"1\" number=\"123\" /></root>"), MessageType = 25, Result = 243, PeriodStart = FirstDay1, PeriodEnd = LastSecond1 });
     }
 }
