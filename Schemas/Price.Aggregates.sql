@@ -19,9 +19,9 @@ if object_id('PriceAggregates.AdvertisementAmountRestriction') is not null drop 
 if object_id('PriceAggregates.Price') is not null drop table PriceAggregates.Price
 if object_id('PriceAggregates.AssociatedPositionGroupOvercount') is not null drop table PriceAggregates.AssociatedPositionGroupOvercount
 
-if object_id('PriceAggregates.Project') is not null drop table PriceAggregate.Project
-if object_id('PriceAggregates.Category') is not null drop table PriceAggregate.Category
-if object_id('PriceAggregates.Theme') is not null drop table PriceAggregate.Theme
+if object_id('PriceAggregates.Project') is not null drop table PriceAggregates.Project
+if object_id('PriceAggregates.Category') is not null drop table PriceAggregates.Category
+if object_id('PriceAggregates.Theme') is not null drop table PriceAggregates.Theme
 
 go
 
