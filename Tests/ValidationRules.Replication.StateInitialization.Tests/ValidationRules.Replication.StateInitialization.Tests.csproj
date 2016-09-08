@@ -108,6 +108,9 @@
     <Compile Include="ArrangeMetadataElementBuilderExtensions.cs" />
     <Compile Include="BulkReplicationAdapter.cs" />
     <Compile Include="ConnectionStringName.cs" />
+    <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="Price\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="ContextName.cs" />
     <Compile Include="Identitites\Connections\AggregatesTestConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\ErmTestConnectionStringIdentity.cs" />

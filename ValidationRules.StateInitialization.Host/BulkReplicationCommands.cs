@@ -21,5 +21,23 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             new ReplicateInBulkCommand(
                 new StorageDescriptor(ErmConnectionStringIdentity.Instance, Schema.Erm),
                 new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
+
+        public static ReplicateInBulkCommand AggregatesToMessagesTest { get; } =
+            new ReplicateInBulkCommand(
+                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
+                new StorageDescriptor(MessagesConnectionStringIdentity.Instance, Schema.Messages),
+                DbManagementMode.None);
+
+        public static ReplicateInBulkCommand FactsToAggregatesTest { get; } =
+            new ReplicateInBulkCommand(
+                new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
+                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
+                DbManagementMode.None);
+
+        public static ReplicateInBulkCommand ErmToFactsTest { get; } =
+            new ReplicateInBulkCommand(
+                new StorageDescriptor(ErmConnectionStringIdentity.Instance, Schema.Erm),
+                new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
+                DbManagementMode.None);
     }
 }
