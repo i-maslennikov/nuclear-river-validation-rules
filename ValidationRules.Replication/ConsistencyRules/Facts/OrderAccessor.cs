@@ -16,8 +16,9 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 {
     public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>, IDataChangesHandler<Order>
     {
-        public const int RejectedOrderState = 3;
-        public const int ArchiveOrderState = 6;
+        private const int RejectedOrderState = 3;
+        private const int ArchiveOrderState = 6;
+        private static readonly int[] FreeOfChargeOrderTypes = { 2, 7, 9 };
 
         private readonly IQuery _query;
 
@@ -40,6 +41,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                              InspectorId = order.InspectorCode,
                              CurrencyId = order.CurrencyId,
                              BargainId = order.BargainId,
+                             WorkflowStep = order.WorkflowStepId,
+                             IsFreeOfCharge = FreeOfChargeOrderTypes.Contains(order.OrderType),
 
                              SignupDate = order.SignupDate,
                              BeginDistribution = order.BeginDistributionDate,

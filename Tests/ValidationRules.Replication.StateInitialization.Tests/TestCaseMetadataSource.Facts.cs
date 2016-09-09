@@ -171,12 +171,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(OrderFacts))
             .Erm(
-                new Erm::Order { Id = 1, IsActive = true, BeginDistributionDate = FirstDay1, EndDistributionDateFact = LastSecond1, EndDistributionDatePlan = LastSecond2, BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerCode = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8, CurrencyId = 9, ReleaseCountPlan = 3},
+                new Erm::Order { Id = 1, IsActive = true, BeginDistributionDate = FirstDay1, EndDistributionDateFact = LastSecond1, EndDistributionDatePlan = LastSecond2, BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerCode = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8, CurrencyId = 9, ReleaseCountPlan = 3, OrderType = 2 },
                 new Erm::Order { Id = 2, IsActive = false, IsDeleted = false },
                 new Erm::Order { Id = 3, IsActive = true, IsDeleted = true })
             .Fact(
                 new PriceFacts::Order { Id = 1, BeginDistributionDate = FirstDay1, EndDistributionDateFact = LastSecond1.AddSeconds(1), EndDistributionDatePlan = LastSecond2.AddSeconds(1), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 },
-                new ConsistencyFacts::Order { Id = 1, BeginDistribution = FirstDay1, EndDistributionFact = LastSecond1, EndDistributionPlan = LastSecond2, DestOrganizationUnitId = 2, FirmId = 5, Number = "Number", CurrencyId = 9, ReleaseCountPlan = 3 });
+                new ConsistencyFacts::Order { Id = 1, BeginDistribution = FirstDay1, EndDistributionFact = LastSecond1, EndDistributionPlan = LastSecond2, DestOrganizationUnitId = 2, FirmId = 5, Number = "Number", CurrencyId = 9, ReleaseCountPlan = 3, WorkflowStep = 8, IsFreeOfCharge = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderPositionFacts

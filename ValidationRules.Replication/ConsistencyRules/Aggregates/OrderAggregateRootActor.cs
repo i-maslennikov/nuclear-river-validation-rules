@@ -463,6 +463,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
         public sealed class OrderInvalidBillsTotalAccessor : IStorageBasedDataObjectAccessor<Order.InvalidBillsTotal>
         {
+            private const int WorkflowStepOnRegistration = 1;
+
             private readonly IQuery _query;
 
             public OrderInvalidBillsTotalAccessor(IQuery query)
@@ -471,9 +473,12 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
 
             public IQueryable<Order.InvalidBillsTotal> GetSource()
-                => from order in _query.For<Facts::Order>()
+                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == WorkflowStepOnRegistration)
                    let billTotal = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Sum(x => x.PayablePlan)
-                   where false // todo: в расчёт сумм нужно погружаться отдельно
+                   let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                                     from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
+                                     select rw.Amount).Sum()
+                   where billTotal != orderTotal
                    select new Order.InvalidBillsTotal
                    {
                        OrderId = order.Id,
@@ -583,6 +588,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
         public sealed class OrderMissingBillsAccessor : IStorageBasedDataObjectAccessor<Order.MissingBills>
         {
+            private const int WorkflowStepOnRegistration = 1;
+
             private readonly IQuery _query;
 
             public OrderMissingBillsAccessor(IQuery query)
@@ -591,8 +598,12 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
 
             public IQueryable<Order.MissingBills> GetSource()
-                => from order in _query.For<Facts::Order>()
-                   where false // todo: аналогично OrderInvalidBillsTotalAccessor, требуется более глубокое погружение
+                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == WorkflowStepOnRegistration)
+                   let billCount = _query.For<Facts::Bill>().Count(x => x.OrderId == order.Id)
+                   let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                                     from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
+                                     select rw.Amount).Sum()
+                   where orderTotal > 0 && !order.IsFreeOfCharge && billCount == 0
                    select new Order.MissingBills
                    {
                        OrderId = order.Id,

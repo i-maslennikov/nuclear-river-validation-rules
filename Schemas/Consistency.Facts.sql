@@ -15,6 +15,7 @@ if object_id('ConsistencyFacts.OrderPositionAdvertisement') is not null drop tab
 if object_id('ConsistencyFacts.OrderScanFile') is not null drop table ConsistencyFacts.OrderScanFile
 if object_id('ConsistencyFacts.Position') is not null drop table ConsistencyFacts.Position
 if object_id('ConsistencyFacts.Project') is not null drop table ConsistencyFacts.Project
+if object_id('ConsistencyFacts.ReleaseWithdrawal') is not null drop table ConsistencyFacts.ReleaseWithdrawal
 go
 
 create table ConsistencyFacts.Bargain (
@@ -90,7 +91,9 @@ create table ConsistencyFacts.[Order](
     InspectorId bigint null,
     CurrencyId bigint null,
     BargainId bigint null,
-    
+    WorkflowStep int not null,
+    IsFreeOfCharge bit not null,
+
     SignupDate datetime2(2) not null,
     BeginDistribution datetime2(2) not null,
     EndDistributionFact datetime2(2) not null,
@@ -130,5 +133,12 @@ go
 create table ConsistencyFacts.Project (
     Id bigint not null,
     OrganizationUnitId bigint not null,
+)
+go
+
+create table ConsistencyFacts.ReleaseWithdrawal (
+    Id bigint not null,
+    OrderPositionId bigint not null,
+    Amount decimal(19,4) not null,
 )
 go

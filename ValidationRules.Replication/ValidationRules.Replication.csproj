@@ -194,6 +194,7 @@
     <Compile Include="AccountRules\Validation\AccountShouldExist.cs" />
     <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ConsistencyRules\Facts\CategoryAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\ReleaseWithdrawalAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\PositionAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\CategoryFirmAddressAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\FirmAddressAccessor.cs" />
@@ -207,6 +208,8 @@
     <Compile Include="ConsistencyRules\Facts\BillAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\BargainScanFileAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\OrderAccessor.cs" />
+    <Compile Include="ConsistencyRules\Validation\BillsSumShouldMatchOrder.cs" />
+    <Compile Include="ConsistencyRules\Validation\BillsShouldBeCreated.cs" />
     <Compile Include="ValidationResultAccessorBase.cs" />
     <Compile Include="IValidationResultAccessor.cs" />
     <Compile Include="ConsistencyRules\Validation\LinkedCategoryAsterixMayBelongToFirm.cs" />

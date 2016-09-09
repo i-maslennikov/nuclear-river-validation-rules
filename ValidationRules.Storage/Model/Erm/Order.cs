@@ -25,6 +25,7 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
         public int EndReleaseNumberPlan { get; set; }
         public int ReleaseCountPlan { get; set; }
         public int WorkflowStepId { get; set; }
+        public int OrderType { get; set; }
         public string Number { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }

@@ -67,6 +67,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyFacts::OrderScanFile),
                             typeof(ConsistencyFacts::Position),
                             typeof(ConsistencyFacts::Project),
+                            typeof(ConsistencyFacts::ReleaseWithdrawal),
                         });
             }
 
