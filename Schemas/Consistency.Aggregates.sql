@@ -33,16 +33,18 @@ go
 create table ConsistencyAggregates.InvalidFirm(
     OrderId bigint not null,
     FirmId bigint not null,
+    FirmName nvarchar(max) not null,
     [State] int not null,
-    Name nvarchar(max) not null,
 )
 go
 
 create table ConsistencyAggregates.InvalidFirmAddress(
     OrderId bigint not null,
     FirmAddressId bigint not null,
+    FirmAddressName nvarchar(max) not null,
+    OrderPositionId bigint not null,
+    OrderPositionName nvarchar(max) not null,
     [State] int not null,
-    Name nvarchar(max) not null,
 )
 go
 
@@ -50,6 +52,8 @@ create table ConsistencyAggregates.InvalidCategory(
     OrderId bigint not null,
     CategoryId bigint not null,
     CategoryName nvarchar(max) not null,
+    OrderPositionId bigint not null,
+    OrderPositionName nvarchar(max) not null,
     [State] int not null,
     MayNotBelongToFirm bit not null,
 )
@@ -61,6 +65,8 @@ create table ConsistencyAggregates.InvalidCategoryFirmAddress(
     FirmAddressName nvarchar(max) not null,
     CategoryId bigint not null,
     CategoryName nvarchar(max) not null,
+    OrderPositionId bigint not null,
+    OrderPositionName nvarchar(max) not null,
     [State] int not null,
 )
 go

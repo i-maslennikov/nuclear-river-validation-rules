@@ -30,7 +30,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                    {
                        Id = position.Id,
                        BindingObjectType = position.BindingObjectTypeEnum,
-                   };
+                       Name = position.Name,
+               };
 
         public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

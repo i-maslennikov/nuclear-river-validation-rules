@@ -4,5 +4,6 @@
     {
         public long Id { get; set; }
         public long BindingObjectType { get; set; }
+        public string Name { get; set; }
     }
 }

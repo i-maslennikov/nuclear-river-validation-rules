@@ -45,16 +45,18 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         {
             public long OrderId { get; set; }
             public long FirmId { get; set; }
+            public string FirmName { get; set; }
             public InvalidFirmState State { get; set; }
-            public string Name { get; set; }
         }
 
         public class InvalidFirmAddress
         {
             public long OrderId { get; set; }
             public long FirmAddressId { get; set; }
+            public string FirmAddressName { get; set; }
+            public long OrderPositionId { get; set; }
+            public string OrderPositionName { get; set; }
             public InvalidFirmAddressState State { get; set; }
-            public string Name { get; set; }
         }
 
         public class InvalidCategoryFirmAddress
@@ -64,6 +66,8 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public string FirmAddressName { get; set; }
             public long CategoryId { get; set; }
             public string CategoryName { get; set; }
+            public long OrderPositionId { get; set; }
+            public string OrderPositionName { get; set; }
             public InvalidCategoryFirmAddressState State { get; set; }
         }
 
@@ -72,6 +76,8 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public long OrderId { get; set; }
             public long CategoryId { get; set; }
             public string CategoryName { get; set; }
+            public long OrderPositionId { get; set; }
+            public string OrderPositionName { get; set; }
             public InvalidCategoryState State { get; set; }
             public bool MayNotBelongToFirm { get; set; }
         }

@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     new XAttribute("state", firm.State)),
                                                        new XElement("firm",
                                                                     new XAttribute("id", firm.FirmId),
-                                                                    new XAttribute("name", firm.Name)),
+                                                                    new XAttribute("name", firm.FirmName)),
                                                        new XElement("order",
                                                                     new XAttribute("id", order.Id),
                                                                     new XAttribute("number", order.Number)))),

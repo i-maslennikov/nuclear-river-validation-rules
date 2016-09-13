@@ -127,6 +127,7 @@ go
 create table ConsistencyFacts.Position (
     Id bigint not null,
     BindingObjectType int not null,
+    Name nvarchar(max) not null,
 )
 go
 
