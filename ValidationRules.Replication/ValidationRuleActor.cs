@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
         private readonly ValidationRuleRegistry _registry;
 
-        public ValidationRuleActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository, IStorageBasedDataObjectAccessor<Version.ValidationResult> accessor)
+        public ValidationRuleActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
         {
             _query = query;
             _repository = repository;
@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0;
+            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Select(x => x.Id).FirstOrDefault();
             return _registry.CreateAccessors().SelectMany(accessor => ProcessRule(accessor, currentVersion)).ToArray();
         }
 
@@ -70,43 +70,46 @@ namespace NuClear.ValidationRules.Replication
 
             public IEnumerable<IValidationResultAccessor> CreateAccessors()
             {
-                yield return new BargainScanShouldPresent(_query);
-                yield return new BillsPeriodShouldMatchOrder(_query);
-                yield return new LegalPersonProfileBargainShouldNotBeExpired(_query);
-                yield return new LegalPersonProfileWarrantyShouldNotBeExpired(_query);
-                yield return new LegalPersonShouldHaveAtLeastOneProfile(_query);
-                yield return new LinkedCategoryAsterixMayBelongToFirm(_query);
-                yield return new LinkedCategoryFirmAddressShouldBeValid(_query);
-                yield return new LinkedCategoryShouldBeActive(_query);
-                yield return new LinkedCategoryShouldBelongToFirm(_query);
-                yield return new LinkedFirmAddressShouldBeValid(_query);
-                yield return new LinkedFirmShouldBeValid(_query);
-                yield return new OrderBeginDistrubutionShouldBeFirstDayOfMonth(_query);
-                yield return new OrderEndDistrubutionShouldBeLastSecondOfMonth(_query);
-                yield return new OrderRequiredFieldsShouldBeSpecified(_query);
-                yield return new OrderScanShouldPresent(_query);
-                yield return new OrderShouldHaveAtLeastOnePosition(_query);
-                yield return new OrderShouldNotBeSignedBeforeBargain(_query);
+                return new IValidationResultAccessor[]
+                {
+                    new BargainScanShouldPresent(_query),
+                    new BillsPeriodShouldMatchOrder(_query),
+                    new LegalPersonProfileBargainShouldNotBeExpired(_query),
+                    new LegalPersonProfileWarrantyShouldNotBeExpired(_query),
+                    new LegalPersonShouldHaveAtLeastOneProfile(_query),
+                    new LinkedCategoryAsterixMayBelongToFirm(_query),
+                    new LinkedCategoryFirmAddressShouldBeValid(_query),
+                    new LinkedCategoryShouldBeActive(_query),
+                    new LinkedCategoryShouldBelongToFirm(_query),
+                    new LinkedFirmAddressShouldBeValid(_query),
+                    new LinkedFirmShouldBeValid(_query),
+                    new OrderBeginDistrubutionShouldBeFirstDayOfMonth(_query),
+                    new OrderEndDistrubutionShouldBeLastSecondOfMonth(_query),
+                    new OrderRequiredFieldsShouldBeSpecified(_query),
+                    new OrderScanShouldPresent(_query),
+                    new OrderShouldHaveAtLeastOnePosition(_query),
+                    new OrderShouldNotBeSignedBeforeBargain(_query),
 
-                yield return new AccountShouldExist(_query);
-                yield return new AccountBalanceShouldBePositive(_query);
-                yield return new LockShouldNotExist(_query);
+                    new AccountShouldExist(_query),
+                    new AccountBalanceShouldBePositive(_query),
+                    new LockShouldNotExist(_query),
 
-                yield return new AdvertisementCountPerCategoryShouldBeLimited(_query);
-                yield return new AdvertisementCountPerThemeShouldBeLimited(_query);
-                yield return new AssociatedPositionsGroupCount(_query);
-                yield return new AssociatedPositionsGroupCount(_query);
-                yield return new AssociatedPositionWithoutPrincipal(_query);
-                yield return new ConflictingPrincipalPosition(_query);
-                yield return new DeniedPositionsCheck(_query);
-                yield return new LinkedObjectsMissedInPrincipals(_query);
-                yield return new MaximumAdvertisementAmount(_query);
-                yield return new MinimalAdvertisementRestrictionShouldBeSpecified(_query);
-                yield return new MinimumAdvertisementAmount(_query);
-                yield return new OrderPositionCorrespontToInactivePosition(_query);
-                yield return new OrderPositionShouldCorrespontToActualPrice(_query);
-                yield return new OrderPositionsShouldCorrespontToActualPrice(_query);
-                yield return new SatisfiedPrincipalPositionDifferentOrder(_query);
+                    new AdvertisementCountPerCategoryShouldBeLimited(_query),
+                    new AdvertisementCountPerThemeShouldBeLimited(_query),
+                    new AssociatedPositionsGroupCount(_query),
+                    new AssociatedPositionsGroupCount(_query),
+                    new AssociatedPositionWithoutPrincipal(_query),
+                    new ConflictingPrincipalPosition(_query),
+                    new DeniedPositionsCheck(_query),
+                    new LinkedObjectsMissedInPrincipals(_query),
+                    new MaximumAdvertisementAmount(_query),
+                    new MinimalAdvertisementRestrictionShouldBeSpecified(_query),
+                    new MinimumAdvertisementAmount(_query),
+                    new OrderPositionCorrespontToInactivePosition(_query),
+                    new OrderPositionShouldCorrespontToActualPrice(_query),
+                    new OrderPositionsShouldCorrespontToActualPrice(_query),
+                    new SatisfiedPrincipalPositionDifferentOrder(_query)
+                };
             }
         }
     }

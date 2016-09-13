@@ -11,7 +11,7 @@ go
 create table Messages.Version(
     Id bigint NOT NULL,
 
-    constraint PK_Version primary key (Id)
+    constraint PK_Version primary key (Id desc)
 )
 go
 
