@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
         public IReadOnlyCollection<string> GetSubscribedUsers()
         {
             EnsureConnected();
-            return _client.Users.Select(x => x.profile.email.Split('@').First()).ToArray();
+            return _client.Users.Where(x => !string.IsNullOrEmpty(x.profile.email)).Select(x => x.profile.email.Split('@').First()).ToArray();
         }
 
         public void SendMessage(string user, IReadOnlyCollection<LocalizedMessage> messages)
