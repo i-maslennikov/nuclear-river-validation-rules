@@ -55,9 +55,10 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
             var orderPositionIds = dataObjects.Select(x => x.OrderPositionId);
 
             var accountIds =
-                from order in _query.For<Order>().Where(x => x.AccountId.HasValue)
+                from order in _query.For<Order>()
+                from account in _query.For<Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                 join orderPosition in _query.For<OrderPosition>().Where(x => orderPositionIds.Contains(x.Id)) on order.Id equals orderPosition.OrderId
-                select order.AccountId.Value;
+                select account.Id;
 
             accountIds = accountIds.Distinct();
 

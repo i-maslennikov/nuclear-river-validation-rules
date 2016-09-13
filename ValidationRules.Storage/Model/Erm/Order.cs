@@ -8,7 +8,6 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
         public long FirmId { get; set; }
         public long DestOrganizationUnitId { get; set; }
         public long SourceOrganizationUnitId { get; set; }
-        public long? AccountId { get; set; }
         public long? LegalPersonId { get; set; }
         public long? LegalPersonProfileId { get; set; }
         public long? BranchOfficeOrganizationUnitId { get; set; }
