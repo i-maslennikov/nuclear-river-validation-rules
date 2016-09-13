@@ -36,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                   MessageParams = new XDocument(
                                           new XElement("root",
                                                        new XElement("message",
-                                                                    new XAttribute("state", firm.State)),
+                                                                    new XAttribute("invalidFirmState", (int)firm.State)),
                                                        new XElement("firm",
                                                                     new XAttribute("id", firm.FirmId),
                                                                     new XAttribute("name", firm.FirmName)),

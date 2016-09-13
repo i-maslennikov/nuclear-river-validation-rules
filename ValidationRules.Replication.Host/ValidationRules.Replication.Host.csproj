@@ -351,29 +351,50 @@
       <DependentUpon>ReplicationService.cs</DependentUpon>
     </Compile>
     <Compile Include="ResultDelivery\DeliverySettingsAspect.cs" />
-    <Compile Include="ResultDelivery\Serializers\AssociatedPositionWithoutPrincipalMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\ConflictingPrincipalPositionMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BargainScanShouldPresentMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsPeriodShouldMatchOrderMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderShouldNotBeSignedBeforeBargainMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderShouldHaveAtLeastOnePositionMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderScanShouldPresentMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderRequiredFieldsShouldBeSpecifiedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderEndDistrubutionShouldBeLastSecondOfMonthMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderBeginDistrubutionShouldBeFirstDayOfMonthMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedFirmShouldBeValidMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedFirmAddressShouldBeValidMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedCategoryShouldBelongToFirmMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedCategoryShouldBeActiveMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedCategoryFirmAddressShouldBeValidMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedCategoryAsterixMayBelongToFirmMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LegalPersonShouldHaveAtLeastOneProfileMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LegalPersonProfileWarrantyShouldNotBeExpiredMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LegalPersonProfileBargainShouldNotBeExpiredMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsSumShouldMatchOrderMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsShouldBeCreatedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\AdvertisementCountPerCategoryShouldBeLimitedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\AssociatedPositionsGroupCountMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\AssociatedPositionWithoutPrincipalMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\ConflictingPrincipalPositionMessageSerializer.cs" />
     <Compile Include="ResultDelivery\IMessageSerializer.cs" />
     <Compile Include="ResultDelivery\ITransportDecorator.cs" />
-    <Compile Include="ResultDelivery\Serializers\LinkedObjectsMissedInPrincipalsMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\LinkedObjectsMissedInPrincipalsMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Message.cs" />
     <Compile Include="ResultDelivery\Serializers\MessageExtensions.cs" />
-    <Compile Include="ResultDelivery\Serializers\SatisfiedPrincipalPositionDifferentOrderMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AssociatedPositionsGroupCountMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\OrderPositionCorrespontToInactivePositionMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\MinimumAdvertisementAmountMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\MaximumAdvertisementAmountMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AccountShouldExistMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\DeniedPositionsCheckMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AccountBalanceShouldBePositiveMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\SatisfiedPrincipalPositionDifferentOrderMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\AdvertisementCountPerThemeShouldBeLimitedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\OrderPositionCorrespontToInactivePositionMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\MinimumAdvertisementAmountMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\MaximumAdvertisementAmountMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AccountRules\AccountShouldExistMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\DeniedPositionsCheckMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AccountRules\AccountBalanceShouldBePositiveMessageSerializer.cs" />
     <Compile Include="ResultDelivery\LocalizedMessage.cs" />
     <Compile Include="ResultDelivery\MessageRedirection.cs" />
     <Compile Include="ResultDelivery\UnityLocalizedMessageFactory.cs" />
     <Compile Include="ResultDelivery\LinkFactory.cs" />
-    <Compile Include="ResultDelivery\Serializers\LockShouldNotExistMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\OrderPositionShouldCorrespontToActualPriceMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\OrderPositionsShouldCorrespontToActualPriceMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AccountRules\LockShouldNotExistMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\OrderPositionShouldCorrespontToActualPriceMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\OrderPositionsShouldCorrespontToActualPriceMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Slack\SlackTransportDecorator.cs" />
     <Compile Include="Settings\DefaultEntityContainerNameResolver.cs" />
     <Compile Include="Settings\QuartzSettingsAspect.cs" />
@@ -384,6 +405,7 @@
     <Compile Include="ResultDelivery\Slack\DebugTransportDecorator.cs" />
     <Compile Include="ResultDelivery\UserReadModel.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

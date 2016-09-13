@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
 {
     public sealed class SatisfiedPrincipalPositionDifferentOrderMessageSerializer : IMessageSerializer
     {

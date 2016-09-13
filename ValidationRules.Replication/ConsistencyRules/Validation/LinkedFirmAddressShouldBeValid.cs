@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                   MessageParams = new XDocument(
                                           new XElement("root",
                                                        new XElement("message",
-                                                                    new XAttribute("state", firmAddress.State)),
+                                                                    new XAttribute("invalidFirmAddressState", (int)firmAddress.State)),
                                                        new XElement("firmAddress",
                                                                     new XAttribute("id", firmAddress.FirmAddressId),
                                                                     new XAttribute("name", firmAddress.FirmAddressName)),
@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     new XAttribute("number", order.Number)),
                                                        new XElement("orderPosition",
                                                                     new XAttribute("id", firmAddress.OrderPositionId),
-                                                                    new XAttribute("number", firmAddress.OrderPositionName)))),
+                                                                    new XAttribute("name", firmAddress.OrderPositionName)))),
                                   PeriodStart = order.BeginDistribution,
                                   PeriodEnd = order.EndDistributionPlan,
                                   ProjectId = order.ProjectId,

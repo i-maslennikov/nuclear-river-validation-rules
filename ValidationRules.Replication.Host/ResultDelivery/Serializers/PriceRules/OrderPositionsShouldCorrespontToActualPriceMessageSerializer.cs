@@ -1,4 +1,4 @@
-﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
 {
     public sealed class OrderPositionsShouldCorrespontToActualPriceMessageSerializer : IMessageSerializer
     {

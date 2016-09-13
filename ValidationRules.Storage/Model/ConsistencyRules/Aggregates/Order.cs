@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
     {
         NotSet = 0,
         Deleted,
-        Hidden,
+        NotActive,
         ClosedForAscertainment,
         NotBelongToFirm
     }

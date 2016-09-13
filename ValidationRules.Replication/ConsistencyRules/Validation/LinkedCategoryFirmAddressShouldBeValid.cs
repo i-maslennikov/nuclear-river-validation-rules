@@ -46,7 +46,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                                     new XAttribute("number", order.Number)),
                                                        new XElement("orderPosition",
                                                                     new XAttribute("id", categoryFirmAddress.OrderPositionId),
-                                                                    new XAttribute("number", categoryFirmAddress.OrderPositionName)))),
+                                                                    new XAttribute("name", categoryFirmAddress.OrderPositionName)))),
                                   PeriodStart = order.BeginDistribution,
                                   PeriodEnd = order.EndDistributionPlan,
                                   ProjectId = order.ProjectId,

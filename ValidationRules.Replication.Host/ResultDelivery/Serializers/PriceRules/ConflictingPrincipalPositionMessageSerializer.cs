@@ -1,17 +1,17 @@
 ﻿using System.Linq;
 
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
 {
-    public sealed class DeniedPositionsCheckMessageSerializer : IMessageSerializer
+    public sealed class ConflictingPrincipalPositionMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory;
 
-        public DeniedPositionsCheckMessageSerializer(LinkFactory linkFactory)
+        public ConflictingPrincipalPositionMessageSerializer(LinkFactory linkFactory)
         {
             _linkFactory = linkFactory;
         }
 
-        public MessageTypeCode MessageType => MessageTypeCode.DeniedPositionsCheck;
+        public MessageTypeCode MessageType => MessageTypeCode.ConflictingPrincipalPosition;
 
         public LocalizedMessage Serialize(Message message)
         {
@@ -20,8 +20,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 
             return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"{MakePositionText(positions.First())} является запрещённой для: {MakePositionText(positions.Last())}" +
-                                            $" в заказе {_linkFactory.CreateLink("Order", positions.Last().OrderId, positions.Last().OrderNumber)}");
+                                        $"{MakePositionText(positions.First())} содержит объекты привязки, " +
+                                            $"конфликтующие с объектами привязки следующей основной позиции: {MakePositionText(positions.Last())}");
         }
 
         private string MakePositionText(MessageExtensions.OrderPositionDto dto)

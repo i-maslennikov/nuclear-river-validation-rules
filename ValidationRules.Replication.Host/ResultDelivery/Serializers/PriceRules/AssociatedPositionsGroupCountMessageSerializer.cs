@@ -1,4 +1,4 @@
-п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
+namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
 {
     public sealed class AssociatedPositionsGroupCountMessageSerializer : IMessageSerializer
     {
@@ -17,8 +17,8 @@
             var pricePositionReference = message.ReadPricePositionReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"РџСЂР°Р№СЃ-Р»РёСЃС‚ {_linkFactory.CreateLink(priceReference)}",
-                                        $"Р’ РџРѕР·РёС†РёРё РїСЂР°Р№СЃ-Р»РёСЃС‚Р° {_linkFactory.CreateLink(pricePositionReference)} СЃРѕРґРµСЂР¶РёС‚СЃСЏ Р±РѕР»РµРµ РѕРґРЅРѕР№ РіСЂСѓРїРїС‹ СЃРѕРїСѓС‚СЃС‚РІСѓСЋС‰РёС… РїРѕР·РёС†РёР№, С‡С‚Рѕ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ СЃРёСЃС‚РµРјРѕР№");
+                                        $"Прайс-лист {_linkFactory.CreateLink(priceReference)}",
+                                        $"В Позиции прайс-листа {_linkFactory.CreateLink(pricePositionReference)} содержится более одной группы сопутствующих позиций, что не поддерживается системой");
         }
     }
 }

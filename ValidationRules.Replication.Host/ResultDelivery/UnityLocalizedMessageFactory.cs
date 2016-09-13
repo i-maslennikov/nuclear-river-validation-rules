@@ -4,7 +4,9 @@ using System.Linq;
 
 using Microsoft.Practices.Unity;
 
-using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers;
+using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AccountRules;
+using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules;
+using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
@@ -13,20 +15,43 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
         private static readonly IReadOnlyCollection<Type> SerializerTypes = new[]
             {
                 typeof(AccountBalanceShouldBePositiveMessageSerializer),
-                typeof(OrderPositionShouldCorrespontToActualPriceMessageSerializer),
-                typeof(OrderPositionsShouldCorrespontToActualPriceMessageSerializer),
-                typeof(DeniedPositionsCheckMessageSerializer),
                 typeof(AccountShouldExistMessageSerializer),
                 typeof(LockShouldNotExistMessageSerializer),
-                typeof(MinimalAdvertisementRestrictionShouldBeSpecifiedMessageSerializer),
+
+                typeof(BargainScanShouldPresentMessageSerializer),
+                typeof(BillsPeriodShouldMatchOrderMessageSerializer),
+                typeof(BillsShouldBeCreatedMessageSerializer),
+                typeof(BillsSumShouldMatchOrderMessageSerializer),
+                typeof(LegalPersonProfileBargainShouldNotBeExpiredMessageSerializer),
+                typeof(LegalPersonProfileWarrantyShouldNotBeExpiredMessageSerializer),
+                typeof(LegalPersonShouldHaveAtLeastOneProfileMessageSerializer),
+                typeof(LinkedCategoryAsterixMayBelongToFirmMessageSerializer),
+                typeof(LinkedCategoryFirmAddressShouldBeValidMessageSerializer),
+                typeof(LinkedCategoryShouldBeActiveMessageSerializer),
+                typeof(LinkedCategoryShouldBelongToFirmMessageSerializer),
+                typeof(LinkedFirmAddressShouldBeValidMessageSerializer),
+                typeof(LinkedFirmShouldBeValidMessageSerializer),
+                typeof(OrderBeginDistrubutionShouldBeFirstDayOfMonthMessageSerializer),
+                typeof(OrderEndDistrubutionShouldBeLastSecondOfMonthMessageSerializer),
+                typeof(OrderRequiredFieldsShouldBeSpecifiedMessageSerializer),
+                typeof(OrderScanShouldPresentMessageSerializer),
+                typeof(OrderShouldHaveAtLeastOnePositionMessageSerializer),
+                typeof(OrderShouldNotBeSignedBeforeBargainMessageSerializer),
+
+                typeof(AdvertisementCountPerCategoryShouldBeLimitedMessageSerializer),
+                typeof(AdvertisementCountPerThemeShouldBeLimitedMessageSerializer),
                 typeof(AssociatedPositionsGroupCountMessageSerializer),
-                typeof(MinimumAdvertisementAmountMessageSerializer),
-                typeof(MaximumAdvertisementAmountMessageSerializer),
-                typeof(OrderPositionCorrespontToInactivePositionMessageSerializer),
-                typeof(LinkedObjectsMissedInPrincipalsMessageSerializer),
-                typeof(SatisfiedPrincipalPositionDifferentOrderMessageSerializer),
-                typeof(ConflictingPrincipalPositionMessageSerializer),
                 typeof(AssociatedPositionWithoutPrincipalMessageSerializer),
+                typeof(ConflictingPrincipalPositionMessageSerializer),
+                typeof(DeniedPositionsCheckMessageSerializer),
+                typeof(LinkedObjectsMissedInPrincipalsMessageSerializer),
+                typeof(MaximumAdvertisementAmountMessageSerializer),
+                typeof(MinimalAdvertisementRestrictionShouldBeSpecifiedMessageSerializer),
+                typeof(MinimumAdvertisementAmountMessageSerializer),
+                typeof(OrderPositionCorrespontToInactivePositionMessageSerializer),
+                typeof(OrderPositionShouldCorrespontToActualPriceMessageSerializer),
+                typeof(OrderPositionsShouldCorrespontToActualPriceMessageSerializer),
+                typeof(SatisfiedPrincipalPositionDifferentOrderMessageSerializer),
             };
 
         private readonly Dictionary<MessageTypeCode, IMessageSerializer> _serializers;

@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                           new XElement("root",
                                                        new XElement("legalPersonProfile",
                                                                     new XAttribute("id", expired.LegalPersonProfileId),
-                                                                    new XAttribute("number", expired.LegalPersonProfileName)),
+                                                                    new XAttribute("name", expired.LegalPersonProfileName)),
                                                        new XElement("order",
                                                                     new XAttribute("id", order.Id),
                                                                     new XAttribute("number", order.Number)))),

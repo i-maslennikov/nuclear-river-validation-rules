@@ -184,7 +184,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId)
                    let state = address.FirmId != order.FirmId ? InvalidFirmAddressState.NotBelongToFirm
                                 : address.IsDeleted ? InvalidFirmAddressState.Deleted
-                                : !address.IsActive ? InvalidFirmAddressState.Hidden
+                                : !address.IsActive ? InvalidFirmAddressState.NotActive
                                 : address.IsClosedForAscertainment ? InvalidFirmAddressState.ClosedForAscertainment
                                 : InvalidFirmAddressState.NotSet
                    where state != InvalidFirmAddressState.NotSet // todo: интересно было бы глянуть на сгенерированный sql
