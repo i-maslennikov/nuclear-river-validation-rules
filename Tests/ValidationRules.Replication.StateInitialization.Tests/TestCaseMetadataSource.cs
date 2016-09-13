@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         from actMetadataElement in acts
                         where actMetadataElement.Requirements.All(requirement => arrangeMetadataElement.Contexts.Contains(requirement))
                               && arrangeMetadataElement.Contexts.Contains(actMetadataElement.Target)
-                        select new TestCaseMetadataElement(arrangeMetadataElement, actMetadataElement);
+                        select new TestCaseMetadataElement(arrangeMetadataElement, actMetadataElement, AssertOnlyMentionedTypes);
 
             return tests.OrderBy(x => x.Identity.Id.ToString());
         }
@@ -53,5 +53,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                               .Source(ContextName.Aggregates)
                               .Target(ContextName.Messages)
                               .Action<BulkReplicationAdapter<Messages>>();
+
+        private static readonly AssertMetadataElement AssertOnlyMentionedTypes =
+            AssertMetadataElement.Config
+                                 .Filter((type, context) => context.Keys.Contains(type));
     }
 }
