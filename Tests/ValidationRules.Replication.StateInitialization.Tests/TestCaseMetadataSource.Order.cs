@@ -28,7 +28,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .Aggregate(
                 // OrderPositionAdvertisement
                 new Aggregates::Order { },
-                new Aggregates::Period { ProjectId=  0, OrganizationUnitId = 0, Start = DateTime.MinValue, End = DateTime.MaxValue },
 
                 new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, HasNoBinding = true },
                 new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1 },
@@ -65,7 +64,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .Aggregate(
                 // OrderPositionAdvertisement
                 new Aggregates::Order { },
-                new Aggregates::Period { ProjectId = 0, OrganizationUnitId = 0, Start = DateTime.MinValue, End = DateTime.MaxValue },
 
                 new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, HasNoBinding = true },
                 new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1 },
@@ -111,9 +109,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 // 1 order, 2 price positions
                 new Aggregates::OrderPricePosition { OrderId = 2, OrderPositionId = 20, PriceId = 3, IsActive = true },
                 new Aggregates::OrderPricePosition { OrderId = 2, OrderPositionId = 21, PriceId = 3, IsActive = true },
-                new Aggregates::Order { Id = 2 },
-
-                new Aggregates::Period { Start =DateTime.MinValue, End = DateTime.MaxValue });
+                new Aggregates::Order { Id = 2 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderWithAmountControlledPosition
@@ -132,9 +128,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
 
                     new Aggregates::Position { Id = 1, CategoryCode = 10, IsControlledByAmount = true },
-                    new Aggregates::AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10 },
-
-                    new Aggregates::Period { Start =DateTime.MinValue, End = DateTime.MaxValue });
+                    new Aggregates::AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderWithDeniedPositions
@@ -149,9 +143,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
                     new Aggregates::OrderDeniedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 7, CauseItemPositionId = 7, DeniedPositionId = 14, HasNoBinding = true, Source = "opas by price" },
-                    new Aggregates::OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, IsActive = true },
-
-                    new Aggregates::Period { Start = DateTime.MinValue, End = DateTime.MaxValue });
+                    new Aggregates::OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, IsActive = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderScopes
