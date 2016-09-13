@@ -174,6 +174,10 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<ConsistencyFacts::ReleaseWithdrawal>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
             return builder;
         }
     }
