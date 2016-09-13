@@ -368,6 +368,7 @@
     <Compile Include="ResultDelivery\Serializers\DeniedPositionsCheckMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AccountBalanceShouldBePositiveMessageSerializer.cs" />
     <Compile Include="ResultDelivery\LocalizedMessage.cs" />
+    <Compile Include="ResultDelivery\MessageRedirection.cs" />
     <Compile Include="ResultDelivery\UnityLocalizedMessageFactory.cs" />
     <Compile Include="ResultDelivery\LinkFactory.cs" />
     <Compile Include="ResultDelivery\Serializers\LockShouldNotExistMessageSerializer.cs" />

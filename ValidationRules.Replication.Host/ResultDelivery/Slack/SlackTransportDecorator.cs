@@ -15,19 +15,6 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
         private readonly SlackTaskClient _client;
         private readonly Task<LoginResponse> _connectionTask;
 
-        public static readonly IDictionary<string, string> UserMap = new Dictionary<string, string>
-            {
-                { "s.tokarev", "a.rechkalov" },
-                { "g.habrus", "a.rechkalov" },
-                { "o.opokina", "a.rechkalov" },
-                { "l.pavel", "m.pashuk" },
-                { "u.starova", "m.pashuk" },
-                { "a.kudryashov", "m.pashuk" },
-                { "s.denis", "d.ivanov" },
-                { "m.kaniukova", "d.ivanov" },
-                { "ki.glushkov", "d.ivanov" },
-            };
-
         public SlackTransportDecorator(ITracer tracer)
         {
             _tracer = tracer;
@@ -46,14 +33,10 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
         {
             EnsureConnected();
 
-            string mappedUser;
-            if (!UserMap.TryGetValue(user, out mappedUser))
-                return;
-
-            var slackUser = _client.Users.FirstOrDefault(x => x.profile?.email != null && x.profile.email.StartsWith(mappedUser));
+            var slackUser = _client.Users.FirstOrDefault(x => x.profile?.email != null && x.profile.email.StartsWith(user));
             if (slackUser == null)
             {
-                _tracer.Warn($"Пользователь {mappedUser} не найден, сообщения не отправлены");
+                _tracer.Warn($"Пользователь {user} не найден, сообщения не отправлены");
                 return;
             }
 
