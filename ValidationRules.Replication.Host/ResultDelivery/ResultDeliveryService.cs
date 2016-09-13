@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
             {
                 var messages = _resultReadModel.GetResults(user)
                                                .Select(_unityLocalizedMessageFactory.Localize)
-                                               .Where(x => x.Result >= Result.Info)
+                                               .Where(x => x != null && x.Result >= Result.Info)
                                                .OrderByDescending(x => x.Result)
                                                .ToArray();
 

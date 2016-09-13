@@ -41,7 +41,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
             IMessageSerializer serializer;
             return _serializers.TryGetValue(result.MessageType, out serializer)
                        ? serializer.Serialize(result)
-                       : new LocalizedMessage(result.GetLevel(), $"Неопознанная ошибка с кодом {result.MessageType}", result.Data.ToString());
+                       : null;
         }
     }
 }
