@@ -146,6 +146,8 @@ $AllSchemas = @{
 	'Price.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Price.Aggregates.sql' }
 	'Account.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Account.Facts.sql' }
 	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Account.Aggregates.sql' }
+	'Consistency.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Consistency.Facts.sql' }
+	'Consistency.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Consistency.Aggregates.sql' }
 	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'Schemas\Messages.sql' }
 }
 
