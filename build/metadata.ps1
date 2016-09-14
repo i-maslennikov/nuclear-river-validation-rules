@@ -40,10 +40,16 @@ function Get-BulkToolMetadata ($updateSchemasMetadata, $Context){
 	$metadata = @{}
 
 	$arguments = @()
-	switch -Regex (@($updateSchemasMetadata.Keys)){
-		'Facts' { $arguments += @('-facts', '-aggregates') }
-		'Aggregates' { $arguments += @('-aggregates') }
-	}
+    if($updateSchemasMetadata.Keys -contains 'Facts') {
+        $arguments += @('-facts', '-aggregates', '-messages')
+    }
+    if($updateSchemasMetadata.Keys -contains 'Aggregates') {
+        $arguments += @('-aggregates', '-messages')
+    }
+    if($updateSchemasMetadata.Keys -contains 'Messages') {
+        $arguments += @('-messages')
+    }
+
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
 	$Context.EntryPoint = 'ValidationRules.StateInitialization.Host'
