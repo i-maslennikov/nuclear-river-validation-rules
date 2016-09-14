@@ -72,7 +72,7 @@ Build-ConvertUseCasesService, `
 QueueBuild-Packages
 
 Task Deploy-Packages -depends `
+Deploy-ServiceBus, `
 Update-Schemas, `
 Run-BulkTool, `
-Deploy-ServiceBus, `
 QueueDeploy-Packages
