@@ -41,15 +41,19 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrderScanFile> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(OrderScanFile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<OrderScanFile> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(OrderScanFile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<OrderScanFile> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(OrderScanFile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderScanFile> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var orderIds = dataObjects.Select(x => x.OrderId).Distinct().ToArray();
+
+            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+        }
     }
 }

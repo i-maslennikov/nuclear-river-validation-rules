@@ -42,15 +42,26 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<LegalPersonProfile> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(LegalPersonProfile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<LegalPersonProfile> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(LegalPersonProfile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<LegalPersonProfile> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(LegalPersonProfile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<LegalPersonProfile> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var legalPersonProfileIds = dataObjects.Select(x => x.Id).ToArray();
+            var legalPersonIds = dataObjects.Select(x => x.LegalPersonId).Distinct().ToArray();
+
+            var orderIds =
+                from order in _query.For<Order>()
+                where order.LegalPersonProfileId.HasValue && legalPersonProfileIds.Contains(order.LegalPersonProfileId.Value)
+                      || order.LegalPersonId.HasValue && legalPersonIds.Contains(order.LegalPersonId.Value)
+                select order.Id;
+
+            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+        }
     }
 }

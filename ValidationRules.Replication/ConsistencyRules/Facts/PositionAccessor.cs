@@ -40,15 +40,26 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Position), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Position), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Position), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Position> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var positionIds = dataObjects.Select(x => x.Id).ToArray();
+
+            var orderIds =
+                from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
+                from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
+                select orderPosition.OrderId;
+
+            orderIds = orderIds.Distinct();
+
+            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+        }
     }
 }

@@ -56,15 +56,24 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<CategoryFirmAddress> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(CategoryFirmAddress), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<CategoryFirmAddress> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(CategoryFirmAddress), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<CategoryFirmAddress> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(CategoryFirmAddress), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<CategoryFirmAddress> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var firmAddressIds = dataObjects.Select(x => x.FirmAddressId).ToArray();
+
+            var orderIds =
+                from firmAddress in _query.For<FirmAddress>().Where(x => firmAddressIds.Contains(x.Id))
+                from order in _query.For<Order>().Where(x => x.FirmId == firmAddress.FirmId)
+                select order.Id;
+
+            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+        }
     }
 }

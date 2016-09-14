@@ -41,15 +41,23 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<BargainScanFile> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(BargainScanFile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<BargainScanFile> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(BargainScanFile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<BargainScanFile> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(BargainScanFile), x.Id)).ToArray();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<BargainScanFile> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var bargainIds = dataObjects.Select(x => x.BargainId).ToArray();
+
+            var orderIds =
+                from order in _query.For<Order>().Where(x => x.BargainId.HasValue && bargainIds.Contains(x.BargainId.Value))
+                select order.Id;
+
+            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+        }
     }
 }
