@@ -451,7 +451,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             public IQueryable<Order.InvalidBillsPeriod> GetSource()
                 => from order in _query.For<Facts::Order>()
                    let minimumDate = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Min(x => x.Begin)
-                   let maximumDate = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Min(x => x.End)
+                   let maximumDate = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Max(x => x.End)
                    where order.BeginDistribution != minimumDate || order.EndDistributionPlan != maximumDate
                    select new Order.InvalidBillsPeriod
                        {
