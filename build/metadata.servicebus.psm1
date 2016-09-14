@@ -15,6 +15,7 @@ $subscriptionProperties = @{
 	'Properties' = @{
 		'EnableBatchedOperations' = $true
 		'MaxDeliveryCount' = 0x7fffffff
+		'LockDuration' = New-TimeSpan -Minutes 5
 	}
 }
 
