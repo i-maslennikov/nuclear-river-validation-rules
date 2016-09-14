@@ -267,11 +267,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id && x.CategoryId.HasValue && x.FirmAddressId.HasValue)
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                    from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
-                   let firmAddress = _query.For<Facts::FirmAddress>() 
-                                           .SelectMany(fa => _query.For<Facts::CategoryFirmAddress>().Where(cfa => cfa.FirmAddressId == fa.Id))
-                                           .Any(x => x.CategoryId == opa.CategoryId)
+                   let categoryBelongToFirmAddress = _query.For<Facts::FirmAddress>()
+                                                           .SelectMany(fa => _query.For<Facts::CategoryFirmAddress>().Where(cfa => cfa.FirmAddressId == fa.Id))
+                                                           .Any(x => x.CategoryId == opa.CategoryId)
                    let state = !category.IsActiveNotDeleted ? InvalidCategoryState.Inactive
-                                   : firmAddress ? InvalidCategoryState.NotBelongToFirm
+                                   : !categoryBelongToFirmAddress ? InvalidCategoryState.NotBelongToFirm
                                    : InvalidCategoryState.NotSet
                    where state != InvalidCategoryState.NotSet
                    select new Order.InvalidCategory
