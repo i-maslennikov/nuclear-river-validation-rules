@@ -33,6 +33,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 var messages = _resultReadModel.GetResults(user)
                                                .Select(_unityLocalizedMessageFactory.Localize)
                                                .Where(x => x != null && x.Result >= Result.Info)
+                                               .Distinct(new MessageComparer())
                                                .OrderByDescending(x => x.Result)
                                                .ToArray();
 
@@ -59,6 +60,19 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                             select timeZone.Id;
 
             return timeZones.ToArray();
+        }
+
+        /// <summary>
+        /// Служит для того, чтобы не выводить пользоветелю два идентичных сообщения.
+        /// Идентичные сообщения возможны, например, в случае проверки запрещённых позиций (совпадают с точностью до порядка наименований позиций, поскольку симметричны)
+        /// </summary>
+        private sealed class MessageComparer : IEqualityComparer<LocalizedMessage>
+        {
+            public bool Equals(LocalizedMessage x, LocalizedMessage y)
+                => x.Result == y.Result && string.Equals(x.Message, y.Message) && string.Equals(x.Header, y.Header);
+
+            public int GetHashCode(LocalizedMessage x)
+                => x.Result.GetHashCode() ^ x.Message.GetHashCode() ^ x.Header.GetHashCode();
         }
     }
 }

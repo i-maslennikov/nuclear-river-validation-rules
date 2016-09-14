@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Pr
         public LocalizedMessage Serialize(Message message)
         {
             var orderReference = message.ReadOrderReference();
-            var positions = message.ReadOrderPositions();
+            var positions = message.ReadOrderPositions().OrderBy(x => x.OrderPositionId);
 
             return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
