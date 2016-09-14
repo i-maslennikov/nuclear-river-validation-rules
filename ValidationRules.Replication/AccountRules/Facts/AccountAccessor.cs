@@ -32,18 +32,25 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Account> dataObjects)
-            => Array.Empty<IEvent>();
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Account), x.Id)).ToArray();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Account> dataObjects)
-            => Array.Empty<IEvent>();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Account), x.Id)).ToArray();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Account> dataObjects)
-            => Array.Empty<IEvent>();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Account), x.Id)).ToArray();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Account> dataObjects)
         {
             var accountIds = dataObjects.Select(x => x.Id).ToArray();
-            var orderIds = _query.For<Order>().Where(x => accountIds.Contains(x.Id)).Select(x => x.Id).ToArray();
+
+            var orderIds =
+                from account in _query.For<Account>().Where(x => accountIds.Contains(x.Id))
+                from order in _query.For<Order>().Where(x => x.LegalPersonId == account.LegalPersonId && x.BranchOfficeOrganizationUnitId == account.BranchOfficeOrganizationUnitId)
+                select order.Id;
+
+            orderIds = orderIds.Distinct();
+
             return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
         }
     }

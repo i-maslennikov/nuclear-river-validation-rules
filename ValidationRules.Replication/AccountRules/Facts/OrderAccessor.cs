@@ -58,6 +58,17 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
             => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Order), x.Id)).ToArray();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Order> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var orderIds = dataObjects.Select(x => x.Id).ToArray();
+
+            var accountIds =
+                from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
+                from account in _query.For<Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
+                select account.Id;
+
+            accountIds = accountIds.Distinct();
+
+            return accountIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Account), x)).ToArray();
+        }
     }
 }

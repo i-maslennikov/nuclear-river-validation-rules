@@ -48,6 +48,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Lock> dataObjects)
+            // полагаться на поля, отличные от Id не стоит, но здесь расчёт на то, что блокировку нельзя перевести с одного ЛС или заказа на другой
             => dataObjects.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x.OrderId))
                           .Union(dataObjects.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Account), x.AccountId)))
                           .ToArray();
