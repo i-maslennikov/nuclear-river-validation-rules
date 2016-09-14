@@ -33,8 +33,9 @@ namespace NuClear.ValidationRules.Replication
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Select(x => x.Id).FirstOrDefault();
-            return _registry.CreateAccessors().SelectMany(accessor => ProcessRule(accessor, currentVersion)).ToArray();
+            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).FirstOrDefault();
+            var currentVersionId = currentVersion?.Id ?? 0;
+            return _registry.CreateAccessors().SelectMany(accessor => ProcessRule(accessor, currentVersionId)).ToArray();
         }
 
         public IReadOnlyCollection<IEvent> ProcessRule(IValidationResultAccessor accessor, long currentVersion)

@@ -69,10 +69,9 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
         private Attachment MakeAttachment(IGrouping<string, LocalizedMessage> message)
         {
             var sortedByResult = message.OrderByDescending(x => x.Result);
-            var lines = new List<string> { message.Key };
-            lines.AddRange(sortedByResult.Select(item => $"{GetIcon(item.Result)} {item.Message}"));
+            var lines = sortedByResult.Select(item => $"{GetIcon(item.Result)} {item.Message}").ToArray();
 
-            return new Attachment { text = string.Join("\n", lines), color = GetColor(sortedByResult.First().Result) };
+            return new Attachment { pretext = message.Key, text = string.Join("\n", lines), color = GetColor(sortedByResult.First().Result) };
         }
 
         private string GetColor(Result result)
