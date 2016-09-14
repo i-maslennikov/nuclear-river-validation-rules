@@ -36,17 +36,17 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	return $entryPointsMetadata
 }
 
-function Get-BulkToolMetadata ($updateSchemasMetadata, $Context){
+function Get-BulkToolMetadata ($updateSchemas, $Context){
 	$metadata = @{}
 
 	$arguments = @()
-    if($updateSchemasMetadata.Keys -contains 'Facts') {
+    if($updateSchemas -contains 'Facts') {
         $arguments += @('-facts', '-aggregates', '-messages')
     }
-    if($updateSchemasMetadata.Keys -contains 'Aggregates') {
+    if($updateSchemas -contains 'Aggregates') {
         $arguments += @('-aggregates', '-messages')
     }
-    if($updateSchemasMetadata.Keys -contains 'Messages') {
+    if($updateSchemas -contains 'Messages') {
         $arguments += @('-messages')
     }
 
@@ -75,7 +75,7 @@ function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 
 	if ($updateSchemasMetadata.Count -ne 0){
 		$metadata += @{ 'UpdateSchemas' = $updateSchemasMetadata }
-		$metadata += Get-BulkToolMetadata $updateSchemasMetadata $Context
+		$metadata += Get-BulkToolMetadata $UpdateSchemas $Context
 	}
 
 	return $metadata
