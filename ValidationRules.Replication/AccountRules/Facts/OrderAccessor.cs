@@ -8,9 +8,8 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
-
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.AccountRules.Facts
 {
@@ -28,8 +27,8 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
         }
 
         public IQueryable<Order> GetSource()
-            => _query.For<Erm::Order>()
-                     .Where(x => x.IsActive && !x.IsDeleted && (x.WorkflowStepId == OrderOnTermination || x.WorkflowStepId == OrderApproved))
+            => _query.For(Specs.Find.Erm.Orders())
+                     .Where(x => x.WorkflowStepId == OrderOnTermination || x.WorkflowStepId == OrderApproved)
                      .Select(order => new Order
                          {
                              Id = order.Id,
