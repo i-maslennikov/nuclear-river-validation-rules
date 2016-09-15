@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 using NuClear.Storage.API.Specifications;
 
@@ -20,21 +18,38 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<Aggregates::OrderPricePosition>(x => aggregateIds.Contains(x.OrderId));
                 }
 
+                public static FindSpecification<Aggregates::Period> Periods(IReadOnlyCollection<PeriodKey> aggregateIds)
+                {
+                    var result = new FindSpecification<Aggregates::Period>(x => false);
+
+                    return aggregateIds.Select(PeriodSpecificationForSingleKey)
+                                       .Aggregate(result, (current, spec) => current | spec);
+                }
+
                 public static FindSpecification<Aggregates::OrderPeriod> OrderPeriods(IReadOnlyCollection<PeriodKey> aggregateIds)
                 {
                     var result = new FindSpecification<Aggregates::OrderPeriod>(x => false);
-                    result = aggregateIds.GroupBy(x => x.OrganizationUnitId, x => x.Start)
-                                         .Aggregate(result, (current, group) => current | (new FindSpecification<Aggregates.OrderPeriod>(x => x.OrganizationUnitId == group.Key) & new FindSpecification<Aggregates.OrderPeriod>(x => group.Contains(x.Start))));
-                    return result;
+
+                    return aggregateIds.Select(OrderSpecificationForSingleKey)
+                                       .Aggregate(result, (current, spec) => current | spec);
                 }
 
                 public static FindSpecification<Aggregates::PricePeriod> PricePeriods(IReadOnlyCollection<PeriodKey> aggregateIds)
                 {
                     var result = new FindSpecification<Aggregates::PricePeriod>(x => false);
-                    result = aggregateIds.GroupBy(x => x.OrganizationUnitId, x => x.Start)
-                                         .Aggregate(result, (current, group) => current | (new FindSpecification<Aggregates.PricePeriod>(x => x.OrganizationUnitId == group.Key) & new FindSpecification<Aggregates.PricePeriod>(x => group.Contains(x.Start))));
-                    return result;
+
+                    return aggregateIds.Select(PriceSpecificationForSingleKey)
+                                       .Aggregate(result, (current, spec) => current | spec);
                 }
+
+                private static FindSpecification<Aggregates::Period> PeriodSpecificationForSingleKey(PeriodKey periodKey)
+                    => new FindSpecification<Aggregates.Period>(x => x.OrganizationUnitId == periodKey.OrganizationUnitId && periodKey.Start <= x.End && x.Start <= periodKey.End);
+
+                private static FindSpecification<Aggregates::OrderPeriod> OrderSpecificationForSingleKey(PeriodKey periodKey)
+                    => new FindSpecification<Aggregates.OrderPeriod>(x => x.OrganizationUnitId == periodKey.OrganizationUnitId && periodKey.Start <= x.Start && x.Start <= periodKey.End);
+
+                private static FindSpecification<Aggregates::PricePeriod> PriceSpecificationForSingleKey(PeriodKey periodKey)
+                    => new FindSpecification<Aggregates.PricePeriod>(x => x.OrganizationUnitId == periodKey.OrganizationUnitId && periodKey.Start <= x.Start && x.Start <= periodKey.End);
             }
         }
     }

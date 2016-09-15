@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -55,19 +56,31 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 _query = query;
             }
 
-            public IQueryable<Period> GetSource() => Specs.Map.Facts.ToAggregates.Periods.Map(_query);
+            public IQueryable<Period> GetSource()
+            {
+                var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
+                                  .SelectMany(x => _query.For<Facts::Project>().Where(p => p.OrganizationUnitId == x.OrganizationUnitId).DefaultIfEmpty(),
+                                              (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
+                                  .OrderBy(x => x.Date);
+
+                return dates.Select(x => new { Start = x, End = dates.FirstOrDefault(y => y.Date > x.Date && y.OrganizationUnitId == x.OrganizationUnitId) })
+                                  .Select(x => new Period
+                                  {
+                                      Start = x.Start.Date,
+                                      End = x.End != null ? x.End.Date : DateTime.MaxValue,
+                                      OrganizationUnitId = x.Start.OrganizationUnitId,
+                                      ProjectId = x.Start.ProjectId
+                                  });
+            }
+
 
             public FindSpecification<Period> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var periodKeys = commands.OfType<SyncPeriodDataObjectCommand>().Select(c => c.PeriodKey)
-                                           .Distinct()
-                                           .ToArray();
-
-                var findSpecification = periodKeys.Aggregate(new FindSpecification<Period>(x => true),
-                                                             (spec, periodKey) =>
-                                                             spec |
-                                                             new FindSpecification<Period>(x => x.OrganizationUnitId == periodKey.OrganizationUnitId && x.Start == periodKey.Start));
-                return findSpecification;
+                var aggregateIds = commands.Cast<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
+                return Specs.Find.Aggs.Periods(aggregateIds);
             }
         }
 
