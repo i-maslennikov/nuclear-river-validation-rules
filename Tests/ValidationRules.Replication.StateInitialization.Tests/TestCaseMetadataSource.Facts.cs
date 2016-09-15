@@ -263,7 +263,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new ConsistencyFacts::Position { Id = 36, BindingObjectType = 36 },
                 new ConsistencyFacts::Position { Id = 37, BindingObjectType = 37 },
 
-                new ConsistencyFacts::Position { Id = 999, BindingObjectType = 999 });
+                new ConsistencyFacts::Position { Id = 999, BindingObjectType = 999, Name = "Name" });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PricePositionFacts
