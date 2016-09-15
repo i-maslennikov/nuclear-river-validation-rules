@@ -21,6 +21,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                     { typeof(Storage.Model.PriceRules.Facts.Price), typeof(Storage.Model.PriceRules.Aggregates.Price) },
                     { typeof(Storage.Model.PriceRules.Facts.Order), typeof(Storage.Model.PriceRules.Aggregates.Order) },
                     { typeof(Storage.Model.PriceRules.Facts.Position), typeof(Storage.Model.PriceRules.Aggregates.Position) },
+
+                    { typeof(Storage.Model.ConsistencyRules.Facts.Order), typeof(Storage.Model.ConsistencyRules.Aggregates.Order) },
+
+                    { typeof(Storage.Model.AccountRules.Facts.Account), typeof(Storage.Model.AccountRules.Aggregates.Account) },
+                    { typeof(Storage.Model.AccountRules.Facts.Order), typeof(Storage.Model.AccountRules.Aggregates.Order) },
                 };
 
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
