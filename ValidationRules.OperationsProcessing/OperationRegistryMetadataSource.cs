@@ -4,11 +4,8 @@ using System.Linq;
 
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
-using NuClear.Model.Common.Operations.Identity.Generic;
 using NuClear.Replication.OperationsProcessing.Metadata;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
-using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Operations;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -20,22 +17,15 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 {
                     OperationRegistryMetadataElement
                         .Config
-                        .For<PriceFactsSubDomain>()
-                        .Allow<CreateIdentity, EntityTypeOrder>()
-                        .Allow<CreateIdentity, EntityTypeOrderPosition>()
-                        .Allow<CreateIdentity, EntityTypeProject>()
+                        .For<AccountFactsSubDomain>(),
 
-                        .Allow<UpdateIdentity, EntityTypeOrder>()
-                        .Allow<UpdateIdentity, EntityTypeOrderPosition>()
-                        .Allow<UpdateIdentity, EntityTypeProject>()
+                    OperationRegistryMetadataElement
+                        .Config
+                        .For<ConsistencyFactsSubDomain>(),
 
-                        .Allow<DeleteIdentity, EntityTypeOrderPosition>()
-
-                        .Allow<AssignIdentity, EntityTypeOrder>()
-
-                        .Allow<PublishRulesetIdentity>()
-
-                        .Ignore<ManageDraftRulesetIdentity>()
+                    OperationRegistryMetadataElement
+                        .Config
+                        .For<PriceFactsSubDomain>(),
                 };
 
             Metadata = metadataElements.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);
