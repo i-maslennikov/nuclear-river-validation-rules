@@ -45,16 +45,19 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             var priceIds = from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
                            select pricePosition.PriceId;
 
-            // todo: посмотреть запрос
-            var orderIds
-                = from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
+            var orderIdsFromPricePosition =
                   from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
-                  from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id || x.Id == opa.OrderPositionId)
+                  from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
+                  select orderPosition.OrderId;
+
+            var orderIdsFromOpa =
+                  from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
+                  from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
                   select orderPosition.OrderId;
 
             return new EventCollectionHelper
                 {
-                    { typeof(Order), orderIds },
+                    { typeof(Order), orderIdsFromPricePosition.Union(orderIdsFromOpa) },
                     { typeof(Price), priceIds.Distinct() }
                 }.ToArray();
         }

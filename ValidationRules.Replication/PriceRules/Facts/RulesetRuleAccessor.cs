@@ -43,12 +43,19 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
         {
             var positionIds = dataObjects.Select(x => x.DependentPositionId);
 
-            var orderIds = from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId)) // Для пакетов и простых позиций
-                           from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId)) // Для элементов пакетов и простых позиций
-                           from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id || x.Id == opa.OrderPositionId)
-                           select orderPosition.OrderId;
+            // Для пакетов и простых позиций
+            var orderIdsFromPricePostion =
+                from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
+                from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
+                select orderPosition.OrderId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
+            // Для элементов пакетов и простых позиций
+            var orderIdsFromOpa =
+                from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
+                from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
+                select orderPosition.OrderId;
+
+            return new EventCollectionHelper { { typeof(Order), orderIdsFromPricePostion.Union(orderIdsFromOpa) } }.ToArray();
         }
     }
 }
