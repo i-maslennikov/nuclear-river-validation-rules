@@ -13,6 +13,8 @@ using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggrega
 using PriceActors = NuClear.ValidationRules.Replication.PriceRules.Aggregates;
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using ConsistencyActors = NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates;
+using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using AdvertisementActors = NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 {
@@ -33,6 +35,12 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(AccountAggregates::Account), typeof(AccountActors::AccountAggregateRootActor) },
 
                     { typeof(ConsistencyAggregates::Order), typeof(ConsistencyActors::OrderAggregateRootActor) },
+
+                    { typeof(AdvertisementAggregates::Advertisement), typeof(AdvertisementActors::AdvertisementAggregateRootActor) },
+                    { typeof(AdvertisementAggregates::AdvertisementElementTemplate), typeof(AdvertisementActors::AdvertisementElementTemplateAggregateRootActor) },
+                    { typeof(AdvertisementAggregates::Firm), typeof(AdvertisementActors::FirmAggregateRootActor) },
+                    { typeof(AdvertisementAggregates::Order), typeof(AdvertisementActors::OrderAggregateRootActor) },
+                    { typeof(AdvertisementAggregates::Position), typeof(AdvertisementActors::PositionAggregateRootActor) },
                 };
 
         public UnityAggregateActorFactory(IUnityContainer unityContainer)

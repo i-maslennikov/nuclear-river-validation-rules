@@ -351,6 +351,17 @@
       <DependentUpon>ReplicationService.cs</DependentUpon>
     </Compile>
     <Compile Include="ResultDelivery\DeliverySettingsAspect.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\CompositePositionMustHaveLinkedObjectsMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\WhiteListExistMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\WhiteListNotExistMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementElementDraftMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementElementInvalidMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderMustHaveAdvertisementMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementNotBelongsToFirmMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderContainsDummyAdvertisementMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RemovedAdvertisemendSpecifiedForPositionMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\CompositePositionMustHaveAdvertisementsMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\PositionMustHaveAdvertisementsMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BargainScanShouldPresentMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsPeriodShouldMatchOrderMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderShouldNotBeSignedBeforeBargainMessageSerializer.cs" />

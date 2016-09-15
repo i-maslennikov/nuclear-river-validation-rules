@@ -28,6 +28,10 @@
         public const int ReleaseWithdrawal = 215;
         public const int Ruleset = 280;
         public const int Theme = 221;
+        public const int Advertisement = 186;
+        public const int AdvertisementElement = 187;
+        public const int AdvertisementTemplate = 184;
+        public const int AdvertisementElementTemplate = 185;
 
         // Значения, первоисточником которых является VR
         public const int Period = 10101;

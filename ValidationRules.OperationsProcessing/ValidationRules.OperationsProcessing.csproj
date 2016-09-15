@@ -185,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AfterFinal\MessageCommandsAccumulator.cs" />
+    <Compile Include="Contexts\AdvertisementFactsSubDomain.cs" />
     <Compile Include="Contexts\AccountFactsSubDomain.cs" />
     <Compile Include="Contexts\AggregateSubDomain.cs" />
     <Compile Include="Contexts\ConsistencyFactsSubDomain.cs" />
@@ -195,6 +196,9 @@
     <Compile Include="AfterFinal\MessageCommandsHandler.cs" />
     <Compile Include="Final\AggregateCommandsHandler.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAccount.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAdvertisement.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementElementTemplate.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementElement.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeBargain.cs" />
@@ -214,6 +218,7 @@
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPositionAdvertisement.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrganizationUnit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementTemplate.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePrice.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePricePosition.cs" />

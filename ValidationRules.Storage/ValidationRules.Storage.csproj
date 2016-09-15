@@ -195,6 +195,12 @@
     <Compile Include="Model\AccountRules\Facts\OrderPosition.cs" />
     <Compile Include="Model\AccountRules\Facts\Project.cs" />
     <Compile Include="Model\AccountRules\Facts\ReleaseWithdrawal.cs" />
+    <Compile Include="Model\AdvertisementRules\Aggregates\AdvertisementElementTemplate.cs" />
+    <Compile Include="Model\AdvertisementRules\Aggregates\Advertisement.cs" />
+    <Compile Include="Model\AdvertisementRules\Aggregates\Position.cs" />
+    <Compile Include="Model\AdvertisementRules\Aggregates\Firm.cs" />
+    <Compile Include="Model\AdvertisementRules\Aggregates\Order.cs" />
+    <Compile Include="Model\AdvertisementRules\Facts\Facts.cs" />
     <Compile Include="Model\ConsistencyRules\Aggregates\Order.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\Bargain.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\BargainScanFile.cs" />
@@ -211,6 +217,11 @@
     <Compile Include="Model\ConsistencyRules\Facts\Position.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\Project.cs" />
     <Compile Include="Model\ConsistencyRules\Facts\ReleaseWithdrawal.cs" />
+    <Compile Include="Model\Erm\Advertisement.cs" />
+    <Compile Include="Model\Erm\AdvertisementElement.cs" />
+    <Compile Include="Model\Erm\AdvertisementElementStatus.cs" />
+    <Compile Include="Model\Erm\AdvertisementElementTemplate.cs" />
+    <Compile Include="Model\Erm\AdvertisementTemplate.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Bargain.cs" />
     <Compile Include="Model\Erm\BargainFile.cs" />
@@ -221,6 +232,7 @@
     <Compile Include="Model\Erm\LegalPersonProfile.cs" />
     <Compile Include="Model\Erm\Lock.cs" />
     <Compile Include="Model\Erm\OrderFile.cs" />
+    <Compile Include="Model\Erm\PositionChild.cs" />
     <Compile Include="Model\Erm\ReleaseInfos.cs" />
     <Compile Include="Model\Erm\Theme.cs" />
     <Compile Include="Model\Erm\TimeZone.cs" />
@@ -283,6 +295,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

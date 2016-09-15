@@ -50,6 +50,39 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             return Tuple.Create("OrderPosition", (long)element.Attribute("id"), (string)element.Attribute("name"));
         }
 
+        public static Tuple<string, long, string> ReadPositionReference(this Message message)
+        {
+            var element = message.Data.Root.Element("position");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит ссылки на позицию номенклатуры", nameof(message));
+            }
+
+            return Tuple.Create("Position", (long)element.Attribute("id"), (string)element.Attribute("name"));
+        }
+
+        public static Tuple<string, long, string> ReadAdvertisementReference(this Message message)
+        {
+            var element = message.Data.Root.Element("advertisement");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит ссылки на позицию номенклатуры", nameof(message));
+            }
+
+            return Tuple.Create("Advertisement", (long)element.Attribute("id"), (string)element.Attribute("name"));
+        }
+
+        public static Tuple<string, long, string> ReadAdvertisementElementReference(this Message message)
+        {
+            var element = message.Data.Root.Element("advertisementElement");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит ссылки на ЭРМ", nameof(message));
+            }
+
+            return Tuple.Create("AdvertisementElement", (long)element.Attribute("id"), (string)element.Attribute("name"));
+        }
+
         public static Tuple<string, long, string> ReadProjectReference(this Message message)
         {
             var element = message.Data.Root.Element("project");

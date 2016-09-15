@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Practices.Unity;
 
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AccountRules;
+using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AdvertisementRules;
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules;
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules;
 
@@ -17,6 +18,19 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 typeof(AccountBalanceShouldBePositiveMessageSerializer),
                 typeof(AccountShouldExistMessageSerializer),
                 typeof(LockShouldNotExistMessageSerializer),
+
+                // AdvertisementRules
+                typeof(AdvertisementElementDraftMessageSerializer),
+                typeof(AdvertisementElementInvalidMessageSerializer),
+                typeof(AdvertisementNotBelongsToFirmMessageSerializer),
+                typeof(CompositePositionMustHaveAdvertisementsMessageSerializer),
+                typeof(CompositePositionMustHaveLinkedObjectsMessageSerializer),
+                typeof(OrderContainsDummyAdvertisementMessageSerializer),
+                typeof(OrderMustHaveAdvertisementMessageSerializer),
+                typeof(PositionMustHaveAdvertisementsMessageSerializer),
+                typeof(RemovedAdvertisemendSpecifiedForPositionMessageSerializer),
+                typeof(WhiteListNotExistMessageSerializer),
+                typeof(WhiteListExistMessageSerializer),
 
                 typeof(BargainScanShouldPresentMessageSerializer),
                 typeof(BillsPeriodShouldMatchOrderMessageSerializer),

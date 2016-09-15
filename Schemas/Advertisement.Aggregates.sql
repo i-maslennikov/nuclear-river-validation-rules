@@ -1,0 +1,180 @@
+﻿if not exists (select * from sys.schemas where name = 'AdvertisementAggregates') exec('create schema AdvertisementAggregates')
+go
+
+if object_id('AdvertisementAggregates.Order') is not null drop table AdvertisementAggregates.[Order]
+if object_id('AdvertisementAggregates.AdvertisementRequired') is not null drop table AdvertisementAggregates.AdvertisementRequired
+if object_id('AdvertisementAggregates.AdvertisementRequiredComposite') is not null drop table AdvertisementAggregates.AdvertisementRequiredComposite
+if object_id('AdvertisementAggregates.LinkedObjectRequiredComposite') is not null drop table AdvertisementAggregates.LinkedObjectRequiredComposite
+if object_id('AdvertisementAggregates.AdvertisementDeleted') is not null drop table AdvertisementAggregates.AdvertisementDeleted
+if object_id('AdvertisementAggregates.AdvertisementNotBelongsToFirm') is not null drop table AdvertisementAggregates.AdvertisementNotBelongsToFirm
+if object_id('AdvertisementAggregates.AdvertisementIsDummy') is not null drop table AdvertisementAggregates.AdvertisementIsDummy
+if object_id('AdvertisementAggregates.WhiteListNotExist') is not null drop table AdvertisementAggregates.WhiteListNotExist
+if object_id('AdvertisementAggregates.WhiteListExist') is not null drop table AdvertisementAggregates.WhiteListExist
+if object_id('AdvertisementAggregates.OrderAdvertisement') is not null drop table AdvertisementAggregates.OrderAdvertisement
+
+if object_id('AdvertisementAggregates.Advertisement') is not null drop table AdvertisementAggregates.Advertisement
+if object_id('AdvertisementAggregates.ElementRequired') is not null drop table AdvertisementAggregates.ElementRequired
+if object_id('AdvertisementAggregates.ElementInvalid') is not null drop table AdvertisementAggregates.ElementInvalid
+if object_id('AdvertisementAggregates.ElementDraft') is not null drop table AdvertisementAggregates.ElementDraft
+
+if object_id('AdvertisementAggregates.AdvertisementElementTemplate') is not null drop table AdvertisementAggregates.AdvertisementElementTemplate
+
+if object_id('AdvertisementAggregates.Firm') is not null drop table AdvertisementAggregates.Firm
+
+if object_id('AdvertisementAggregates.Position') is not null drop table AdvertisementAggregates.Position
+go
+
+-- Order aggregate
+
+create table AdvertisementAggregates.[Order] (
+    Id bigint not null,
+    Number nvarchar(64) not null,
+
+    BeginDistributionDate datetime2(2) not null,
+    EndDistributionDatePlan datetime2(2) not null,
+	ProjectId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.AdvertisementRequired (
+    OrderId bigint not null,
+
+	OrderPositionId bigint not null,
+    PositionId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.AdvertisementRequiredComposite (
+    OrderId bigint not null,
+
+	OrderPositionId bigint not null,
+    CompositePositionId bigint not null,
+
+	PositionId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.LinkedObjectRequiredComposite (
+    OrderId bigint not null,
+
+	OrderPositionId bigint not null,
+    CompositePositionId bigint not null,
+
+	PositionId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.AdvertisementDeleted (
+    OrderId bigint not null,
+
+	OrderPositionId bigint not null,
+    PositionId bigint not null,
+
+	AdvertisementId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.AdvertisementNotBelongsToFirm (
+    OrderId bigint not null,
+
+	OrderPositionId bigint not null,
+    PositionId bigint not null,
+
+	AdvertisementId bigint not null,
+
+	FirmId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.AdvertisementIsDummy (
+    OrderId bigint not null,
+
+	PositionId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.WhiteListNotExist (
+    OrderId bigint not null,
+
+	FirmId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.WhiteListExist (
+    OrderId bigint not null,
+
+	FirmId bigint not null,
+	AdvertisementId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.OrderAdvertisement (
+    OrderId bigint not null,
+
+	AdvertisementId bigint not null,
+)
+go
+
+-- Advertisement aggregate
+
+create table AdvertisementAggregates.Advertisement (
+    Id bigint not null,
+
+	Name nvarchar(128) not null,
+)
+go
+
+create table AdvertisementAggregates.ElementRequired (
+    AdvertisementId bigint not null,
+
+	AdvertisementElementId bigint not null,
+
+	AdvertisementElementTemplateId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.ElementInvalid (
+    AdvertisementId bigint not null,
+
+	AdvertisementElementId bigint not null,
+
+	AdvertisementElementTemplateId bigint not null,
+)
+go
+
+create table AdvertisementAggregates.ElementDraft (
+    AdvertisementId bigint not null,
+
+	AdvertisementElementId bigint not null,
+
+	AdvertisementElementTemplateId bigint not null,
+)
+go
+
+-- AdvertisementElementTemplate aggregate
+
+create table AdvertisementAggregates.AdvertisementElementTemplate (
+    Id bigint not null,
+
+	Name nvarchar(128) not null,
+)
+go
+
+
+-- Firm aggregate
+
+create table AdvertisementAggregates.Firm (
+    Id bigint not null,
+
+	Name nvarchar(250) not null,
+)
+go
+
+-- Position aggregate
+
+create table AdvertisementAggregates.Position (
+    Id bigint not null,
+
+	Name nvarchar(256) not null,
+)
+go

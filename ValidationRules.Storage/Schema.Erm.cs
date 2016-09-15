@@ -21,6 +21,11 @@ namespace NuClear.ValidationRules.Storage
                 var config = schema.GetFluentMappingBuilder();
 
                 config.Entity<Account>().HasSchemaName(BillingSchema).HasTableName("Accounts").HasPrimaryKey(x => x.Id);
+                config.Entity<Advertisement>().HasSchemaName(BillingSchema).HasTableName("Advertisements").HasPrimaryKey(x => x.Id);
+                config.Entity<AdvertisementTemplate>().HasSchemaName(BillingSchema).HasTableName("AdvertisementTemplates").HasPrimaryKey(x => x.Id);
+                config.Entity<AdvertisementElement>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElements").HasPrimaryKey(x => x.Id);
+                config.Entity<AdvertisementElementStatus>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElementStatuses").HasPrimaryKey(x => x.Id);
+                config.Entity<AdvertisementElementTemplate>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElementTemplates").HasPrimaryKey(x => x.Id);
                 config.Entity<AssociatedPositionsGroup>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositionsGroups").HasPrimaryKey(x => x.Id);
                 config.Entity<AssociatedPosition>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<DeniedPosition>().HasSchemaName(BillingSchema).HasTableName("DeniedPositions").HasPrimaryKey(x => x.Id);
@@ -42,6 +47,9 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<PricePosition>().HasSchemaName(BillingSchema).HasTableName("PricePositions").HasPrimaryKey(x => x.Id);
                 config.Entity<Project>().HasSchemaName(BillingSchema).HasTableName("Projects").HasPrimaryKey(x => x.Id);
                 config.Entity<Position>().HasSchemaName(BillingSchema).HasTableName("Positions").HasPrimaryKey(x => x.Id);
+                config.Entity<PositionChild>().HasSchemaName(BillingSchema).HasTableName("PositionChildren")
+                    .HasPrimaryKey(x => x.MasterPositionId)
+                    .HasPrimaryKey(x => x.ChildPositionId);
                 config.Entity<Category>().HasSchemaName(BusinessDirectorySchema).HasTableName("Categories").HasPrimaryKey(x => x.Id);
                 config.Entity<CategoryFirmAddress>().HasSchemaName(BusinessDirectorySchema).HasTableName("CategoryFirmAddresses").HasPrimaryKey(x => x.Id);
                 config.Entity<User>().HasSchemaName(SecuritySchema).HasTableName("Users").HasPrimaryKey(x => x.Id);
