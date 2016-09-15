@@ -19,23 +19,23 @@ namespace NuClear.ValidationRules.OperationsProcessing
             var metadataElements = new OperationRegistryMetadataElement[]
                 {
                     OperationRegistryMetadataElement
-                    .Config
-                    .For<FactsSubDomain>()
-                    .Allow<CreateIdentity, EntityTypeOrder>()
-                    .Allow<CreateIdentity, EntityTypeOrderPosition>()
-                    .Allow<CreateIdentity, EntityTypeProject>()
+                        .Config
+                        .For<PriceFactsSubDomain>()
+                        .Allow<CreateIdentity, EntityTypeOrder>()
+                        .Allow<CreateIdentity, EntityTypeOrderPosition>()
+                        .Allow<CreateIdentity, EntityTypeProject>()
 
-                    .Allow<UpdateIdentity, EntityTypeOrder>()
-                    .Allow<UpdateIdentity, EntityTypeOrderPosition>()
-                    .Allow<UpdateIdentity, EntityTypeProject>()
+                        .Allow<UpdateIdentity, EntityTypeOrder>()
+                        .Allow<UpdateIdentity, EntityTypeOrderPosition>()
+                        .Allow<UpdateIdentity, EntityTypeProject>()
 
-                    .Allow<DeleteIdentity, EntityTypeOrderPosition>()
+                        .Allow<DeleteIdentity, EntityTypeOrderPosition>()
 
-                    .Allow<AssignIdentity, EntityTypeOrder>()
+                        .Allow<AssignIdentity, EntityTypeOrder>()
 
-                    .Allow<PublishRulesetIdentity>()
+                        .Allow<PublishRulesetIdentity>()
 
-                    .Ignore<ManageDraftRulesetIdentity>()
+                        .Ignore<ManageDraftRulesetIdentity>()
                 };
 
             Metadata = metadataElements.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);

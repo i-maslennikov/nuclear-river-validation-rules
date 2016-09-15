@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.DataObjects;
+
+using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
 namespace NuClear.ValidationRules.Replication
 {
@@ -16,19 +19,44 @@ namespace NuClear.ValidationRules.Replication
             {
                 return new List<Type>
                     {
-                        typeof(AssociatedPosition),
-                        typeof(AssociatedPositionsGroup),
-                        typeof(Category),
-                        typeof(DeniedPosition),
-                        typeof(Order),
-                        typeof(OrderPosition),
-                        typeof(OrderPositionAdvertisement),
-                        typeof(Position),
-                        typeof(Price),
-                        typeof(PricePosition),
-                        typeof(PricePositionNotActive),
-                        typeof(Project),
-                        typeof(RulesetRule),
+                            typeof(PriceFacts::AssociatedPosition),
+                            typeof(PriceFacts::AssociatedPositionsGroup),
+                            typeof(PriceFacts::Category),
+                            typeof(PriceFacts::DeniedPosition),
+                            typeof(PriceFacts::Order),
+                            typeof(PriceFacts::OrderPosition),
+                            typeof(PriceFacts::OrderPositionAdvertisement),
+                            typeof(PriceFacts::Position),
+                            typeof(PriceFacts::Price),
+                            typeof(PriceFacts::PricePosition),
+                            typeof(PriceFacts::PricePositionNotActive),
+                            typeof(PriceFacts::Project),
+                            typeof(PriceFacts::RulesetRule),
+                            typeof(PriceFacts::Theme),
+
+                            typeof(AccountFacts::Account),
+                            typeof(AccountFacts::Order),
+                            typeof(AccountFacts::Project),
+                            typeof(AccountFacts::Lock),
+                            typeof(AccountFacts::Limit),
+                            typeof(AccountFacts::OrderPosition),
+                            typeof(AccountFacts::ReleaseWithdrawal),
+
+                            typeof(ConsistencyFacts::Bargain),
+                            typeof(ConsistencyFacts::BargainScanFile),
+                            typeof(ConsistencyFacts::Bill),
+                            typeof(ConsistencyFacts::Category),
+                            typeof(ConsistencyFacts::CategoryFirmAddress),
+                            typeof(ConsistencyFacts::Firm),
+                            typeof(ConsistencyFacts::FirmAddress),
+                            typeof(ConsistencyFacts::LegalPersonProfile),
+                            typeof(ConsistencyFacts::Order),
+                            typeof(ConsistencyFacts::OrderPosition),
+                            typeof(ConsistencyFacts::OrderPositionAdvertisement),
+                            typeof(ConsistencyFacts::OrderScanFile),
+                            typeof(ConsistencyFacts::Position),
+                            typeof(ConsistencyFacts::Project),
+                            typeof(ConsistencyFacts::ReleaseWithdrawal),
                     };
             }
 

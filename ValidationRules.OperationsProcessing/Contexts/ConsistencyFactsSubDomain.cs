@@ -2,9 +2,9 @@
 
 namespace NuClear.ValidationRules.OperationsProcessing.Contexts
 {
-    public sealed class FactsSubDomain : ISubDomain
+    public sealed class ConsistencyFactsSubDomain : ISubDomain
     {
-        private FactsSubDomain()
+        private ConsistencyFactsSubDomain()
         {
         }
     }
