@@ -60,7 +60,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
                 from orderPosition in _query.For<OrderPosition>().Where(x => orderPositionIds.Contains(x.Id) && x.OrderId == order.Id)
                 select account.Id;
 
-            return new EventCollectionHelper { { typeof(Account), accountIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Account), accountIds.Distinct() } };
         }
     }
 }

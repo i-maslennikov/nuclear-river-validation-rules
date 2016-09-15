@@ -8,28 +8,32 @@ using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.Replication
 {
-    internal sealed class EventCollectionHelper : IEnumerable<IEvent>
+    internal sealed class EventCollectionHelper : IReadOnlyCollection<IEvent>
     {
         private IEnumerable<IEvent> _events = Array.Empty<IEvent>();
+        private IReadOnlyCollection<IEvent> _readonlyCollection;
 
         public void Add<T>(Type type, IQueryable<T> queryable)
         {
-            _events = _events.Concat(queryable.ToArray().Select(x => new RelatedDataObjectOutdatedEvent<T>(type, x)));
+            Add(type, queryable.ToArray());
         }
 
         public void Add<T>(Type type, IEnumerable<T> queryable)
         {
             _events = _events.Concat(queryable.ToArray().Select(x => new RelatedDataObjectOutdatedEvent<T>(type, x)));
+            _readonlyCollection = null;
         }
 
-        public IEnumerator<IEvent> GetEnumerator()
-        {
-            return _events.GetEnumerator();
-        }
+        private IReadOnlyCollection<IEvent> ReadonlyCollection
+            => _readonlyCollection ?? (_readonlyCollection = _events.ToArray());
+
+        IEnumerator<IEvent> IEnumerable<IEvent>.GetEnumerator()
+            => ReadonlyCollection.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)_events).GetEnumerator();
-        }
+            => ((IEnumerable)ReadonlyCollection).GetEnumerator();
+
+        int IReadOnlyCollection<IEvent>.Count
+            => ReadonlyCollection.Count;
     }
 }

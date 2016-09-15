@@ -58,7 +58,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                 where orderPositionIds.Contains(orderPosition.Id)
                 select orderPosition.OrderId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

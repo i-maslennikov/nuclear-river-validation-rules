@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
         {
             var orderIds = dataObjects.Select(x => x.OrderId);
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

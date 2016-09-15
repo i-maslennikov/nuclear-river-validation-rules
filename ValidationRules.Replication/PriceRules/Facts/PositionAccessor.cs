@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
                 {
                     { typeof(Order), orderIdsFromPricePosition.Union(orderIdsFromOpa) },
                     { typeof(Price), priceIds.Distinct() }
-                }.ToArray();
+                };
         }
     }
 }

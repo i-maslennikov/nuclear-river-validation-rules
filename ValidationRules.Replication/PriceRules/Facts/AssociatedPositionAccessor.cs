@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
                            from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == associatedPositionGroup.PricePositionId)
                            select orderPosition.OrderId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

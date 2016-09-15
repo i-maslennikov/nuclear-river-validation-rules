@@ -57,7 +57,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
                 {
                     { typeof(Order), orderIds.Distinct() },
                     { typeof(Account), accountIds.Distinct() }
-                }.ToArray();
+                };
         }
     }
 }

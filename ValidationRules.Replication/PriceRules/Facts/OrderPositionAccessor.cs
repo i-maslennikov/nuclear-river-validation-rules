@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             // поле OrderId не меняется - в базу ходить за старым значением не надо.
             var orderIds = dataObjects.Select(x => x.OrderId);
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

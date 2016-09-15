@@ -55,7 +55,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
                 from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
                 select orderPosition.OrderId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIdsFromPricePostion.Union(orderIdsFromOpa) } }.ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIdsFromPricePostion.Union(orderIdsFromOpa) } };
         }
     }
 }
