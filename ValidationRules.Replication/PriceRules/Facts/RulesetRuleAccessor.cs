@@ -30,22 +30,28 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<RulesetRule>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<RulesetRule> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<RulesetRule> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<RulesetRule> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<RulesetRule> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<RulesetRule> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<RulesetRule> dataObjects)
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<RulesetRule> dataObjects)
         {
-            // always recalculate all rulesets
-            var priceIds = (from rulesetRule in _query.For<RulesetRule>()
-                            select rulesetRule.Id)
-                            .Distinct()
-                            .ToArray();
+            var positionIds = dataObjects.Select(x => x.DependentPositionId);
 
-            return priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(RulesetRule), x))
-                          .ToArray();
+            var orderIds = from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId)) // Для пакетов и простых позиций
+                           from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId)) // Для элементов пакетов и простых позиций
+                           from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id || x.Id == opa.OrderPositionId)
+                           select orderPosition.OrderId;
+
+            orderIds = orderIds.Distinct();
+
+            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
+                           .ToArray();
         }
     }
 }

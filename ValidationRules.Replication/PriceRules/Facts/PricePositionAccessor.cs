@@ -30,24 +30,31 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<PricePosition>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<PricePosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<PricePosition> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<PricePosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<PricePosition> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PricePosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PricePosition> dataObjects)
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<PricePosition> dataObjects)
         {
-            var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<PricePosition>(x => ids.Contains(x.Id));
+            // Поле PriceId не меняется
+            var priceIds = dataObjects.Select(x => x.PriceId);
 
-            var priceIds = (from pricePosition in _query.For(specification)
-                            select pricePosition.PriceId).Distinct()
-                            .Distinct()
-                            .ToArray();
+            priceIds = priceIds.Distinct();
+
+            var ids = dataObjects.Select(x => x.Id).ToArray();
+            var orderIds = from orderPosition in _query.For<OrderPosition>().Where(x => ids.Contains(x.PricePositionId))
+                           select orderPosition.OrderId;
+
+            orderIds = orderIds.Distinct();
 
             return priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Price), x))
-                          .ToArray();
+                           .Concat(orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)))
+                           .ToArray();
         }
     }
 }

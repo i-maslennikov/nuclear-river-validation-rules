@@ -12,6 +12,7 @@ using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Facts
 {
+    // todo: удалить, не используется
     public sealed class OrganizationUnitAccessor : IStorageBasedDataObjectAccessor<OrganizationUnit>, IDataChangesHandler<OrganizationUnit>
     {
         private readonly IQuery _query;
@@ -29,12 +30,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<OrganizationUnit>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrganizationUnit> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrganizationUnit> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<OrganizationUnit> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<OrganizationUnit> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<OrganizationUnit> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<OrganizationUnit> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrganizationUnit> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrganizationUnit> dataObjects)
+            => Array.Empty<IEvent>();
     }
 }

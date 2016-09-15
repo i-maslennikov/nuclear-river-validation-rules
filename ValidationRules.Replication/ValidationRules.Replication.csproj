@@ -237,7 +237,6 @@
     <Compile Include="PriceRules\Facts\OrganizationUnitAccessor.cs" />
     <Compile Include="PriceRules\Facts\CategoryAccessor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionAccessor.cs" />
-    <Compile Include="PriceRules\Facts\PeriodKeyEqualityComparer.cs" />
     <Compile Include="PriceRules\Facts\PriceAccessor.cs" />
     <Compile Include="PriceRules\Facts\PositionAccessor.cs" />
     <Compile Include="PriceRules\Facts\OrderAccessor.cs" />

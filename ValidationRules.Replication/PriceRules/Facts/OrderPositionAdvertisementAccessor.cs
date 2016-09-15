@@ -30,25 +30,27 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<OrderPositionAdvertisement>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrderPositionAdvertisement> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrderPositionAdvertisement> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<OrderPositionAdvertisement> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<OrderPositionAdvertisement> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<OrderPositionAdvertisement> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<OrderPositionAdvertisement> dataObjects)
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderPositionAdvertisement> dataObjects)
         {
-            var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<OrderPositionAdvertisement>(x => ids.Contains(x.Id));
+            // Поле OrderPositionId не меняется - в базу за ним ходить не надо.
+            var orderPositionIds = dataObjects.Select(x => x.OrderPositionId).ToArray();
 
-            var orderIds = (from opa in _query.For(specification)
-                            join orderPosition in _query.For<OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
-                            select orderPosition.OrderId)
-                            .Distinct()
-                            .ToArray();
+            var orderIds = from orderPosition in _query.For<OrderPosition>().Where(x => orderPositionIds.Contains(x.Id))
+                           select orderPosition.OrderId;
+
+            orderIds = orderIds.Distinct();
 
             return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
-                          .ToArray();
+                           .ToArray();
         }
     }
 }

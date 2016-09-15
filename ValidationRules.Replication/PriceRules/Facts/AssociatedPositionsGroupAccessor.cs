@@ -30,25 +30,34 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<AssociatedPositionsGroup>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<AssociatedPositionsGroup> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<AssociatedPositionsGroup> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<AssociatedPositionsGroup> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<AssociatedPositionsGroup> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<AssociatedPositionsGroup> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<AssociatedPositionsGroup> dataObjects)
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<AssociatedPositionsGroup> dataObjects)
         {
             var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<AssociatedPositionsGroup>(x => ids.Contains(x.Id));
 
-            var priceIds = (from associatedPositionsGroup in _query.For(specification)
-                            join pricePosition in _query.For<PricePosition>() on associatedPositionsGroup.PricePositionId equals pricePosition.Id
-                            select pricePosition.PriceId)
-                            .Distinct()
-                            .ToArray();
+            var priceIds = from associatedPositionsGroup in _query.For<AssociatedPositionsGroup>().Where(x => ids.Contains(x.Id))
+                           from pricePosition in _query.For<PricePosition>().Where(x => x.Id == associatedPositionsGroup.PricePositionId)
+                           select pricePosition.PriceId;
+
+            priceIds = priceIds.Distinct();
+
+            var orderIds = from associatedPositionsGroup in _query.For<AssociatedPositionsGroup>().Where(x => ids.Contains(x.Id))
+                           from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == associatedPositionsGroup.PricePositionId)
+                           select orderPosition.OrderId;
+
+            orderIds = orderIds.Distinct();
 
             return priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Price), x))
-                          .ToArray();
+                           .Union(orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)))
+                           .ToArray();
         }
     }
 }
