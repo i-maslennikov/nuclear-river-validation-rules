@@ -8,6 +8,11 @@ namespace NuClear.ValidationRules.Replication.Events
     {
         public RelatedDataObjectOutdatedEvent(Type relatedDataObjectType, TDataObjectId relatedDataObjectId)
         {
+            if (relatedDataObjectType == null)
+            {
+                throw new ArgumentNullException(nameof(relatedDataObjectId));
+            }
+
             RelatedDataObjectType = relatedDataObjectType;
             RelatedDataObjectId = relatedDataObjectId;
         }
