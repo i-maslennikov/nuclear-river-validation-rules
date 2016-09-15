@@ -84,11 +84,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             q => q.For(Find.Erm.OrderPositionAdvertisements())
                                   .Select(Transform.OrderPositionAdvertisement));
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Facts::OrganizationUnit>> OrganizationUnit =
-                        new MapSpecification<IQuery, IQueryable<Facts::OrganizationUnit>>(
-                            q => q.For(Find.Erm.OrganizationUnits())
-                                  .Select(Transform.OrganizationUnit));
-
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Position>> Position =
                         new MapSpecification<IQuery, IQueryable<Facts::Position>>(
                             q => q.For(Find.Erm.Positions())
@@ -173,12 +168,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     OrderPositionId = x.OrderPositionId,
                                     ThemeId = x.ThemeId,
                             };
-
-                        public static readonly Expression<Func<Erm::OrganizationUnit, Facts::OrganizationUnit>> OrganizationUnit =
-                            x => new Facts::OrganizationUnit
-                                {
-                                    Id = x.Id,
-                                };
 
                         public static readonly Expression<Func<Erm::Position, Facts::Position>> Position =
                             x => new Facts::Position

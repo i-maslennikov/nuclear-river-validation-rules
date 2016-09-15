@@ -47,9 +47,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceFacts::OrderPositionAdvertisement>()
                   .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
-            builder.Entity<PriceFacts::OrganizationUnit>()
-                  .HasSchemaName(PriceFactsSchema)
-                  .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::Price>()
                   .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);

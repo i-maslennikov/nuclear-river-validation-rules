@@ -35,7 +35,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypeOrder, Storage.Model.PriceRules.Facts.Order>()
                 .AddMapping<EntityTypeOrderPosition, Storage.Model.PriceRules.Facts.OrderPosition>()
                 .AddMapping<EntityTypeOrderPositionAdvertisement, Storage.Model.PriceRules.Facts.OrderPositionAdvertisement>()
-                .AddMapping<EntityTypeOrganizationUnit, Storage.Model.PriceRules.Facts.OrganizationUnit>()
                 .AddMapping<EntityTypePosition, Storage.Model.PriceRules.Facts.Position>()
                 .AddMapping<EntityTypePrice, Storage.Model.PriceRules.Facts.Price>()
                 .AddMapping<EntityTypePricePosition, Storage.Model.PriceRules.Facts.PricePosition>()

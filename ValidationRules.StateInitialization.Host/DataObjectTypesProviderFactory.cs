@@ -36,7 +36,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceFacts::Order),
                             typeof(PriceFacts::OrderPosition),
                             typeof(PriceFacts::OrderPositionAdvertisement),
-                            typeof(PriceFacts::OrganizationUnit),
                             typeof(PriceFacts::Position),
                             typeof(PriceFacts::Price),
                             typeof(PriceFacts::PricePosition),

@@ -201,17 +201,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new ConsistencyFacts::OrderPositionAdvertisement { Id = 1, CategoryId = 1, FirmAddressId = 2, OrderPositionId = 3, PositionId = 4 });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement OrganizationUnitFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(OrganizationUnitFacts))
-            .Erm(
-                new Erm::OrganizationUnit { Id = 1, IsActive = true },
-                new Erm::OrganizationUnit { Id = 2, IsActive = false, IsDeleted = false },
-                new Erm::OrganizationUnit { Id = 3, IsActive = true, IsDeleted = true })
-            .Fact(
-                new PriceFacts::OrganizationUnit { Id = 1 });
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PositionFacts
         => ArrangeMetadataElement.Config
             .Name(nameof(PositionFacts))

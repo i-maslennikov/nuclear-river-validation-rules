@@ -23,7 +23,6 @@ namespace NuClear.ValidationRules.Replication
                         typeof(Order),
                         typeof(OrderPosition),
                         typeof(OrderPositionAdvertisement),
-                        typeof(OrganizationUnit),
                         typeof(Position),
                         typeof(Price),
                         typeof(PricePosition),

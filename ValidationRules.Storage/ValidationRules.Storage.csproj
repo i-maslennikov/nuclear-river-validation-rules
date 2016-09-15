@@ -264,7 +264,6 @@
     <Compile Include="Model\PriceRules\Facts\Order.cs" />
     <Compile Include="Model\PriceRules\Facts\OrderPosition.cs" />
     <Compile Include="Model\PriceRules\Facts\OrderPositionAdvertisement.cs" />
-    <Compile Include="Model\PriceRules\Facts\OrganizationUnit.cs" />
     <Compile Include="Model\PriceRules\Facts\Position.cs" />
     <Compile Include="Model\PriceRules\Facts\Price.cs" />
     <Compile Include="Model\PriceRules\Facts\PricePositionNotActive.cs" />

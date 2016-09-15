@@ -234,7 +234,6 @@
     <Compile Include="PriceRules\Aggregates\ThemeAggregateRootActor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionNotActive.cs" />
     <Compile Include="PriceRules\Facts\ProjectAccessor.cs" />
-    <Compile Include="PriceRules\Facts\OrganizationUnitAccessor.cs" />
     <Compile Include="PriceRules\Facts\CategoryAccessor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionAccessor.cs" />
     <Compile Include="PriceRules\Facts\PriceAccessor.cs" />

@@ -7,7 +7,6 @@ if object_id('PriceFacts.DeniedPosition') is not null drop table PriceFacts.Deni
 if object_id('PriceFacts.OrderPositionAdvertisement') is not null drop table PriceFacts.OrderPositionAdvertisement
 if object_id('PriceFacts.OrderPosition') is not null drop table PriceFacts.OrderPosition
 if object_id('PriceFacts.Order') is not null drop table PriceFacts.[Order]
-if object_id('PriceFacts.OrganizationUnit') is not null drop table PriceFacts.OrganizationUnit
 if object_id('PriceFacts.PricePosition') is not null drop table PriceFacts.PricePosition
 if object_id('PriceFacts.PricePositionNotActive') is not null drop table PriceFacts.PricePositionNotActive
 if object_id('PriceFacts.Price') is not null drop table PriceFacts.Price
@@ -127,12 +126,6 @@ create table PriceFacts.OrderPositionAdvertisement(
 )
 create index IX_OrderPositionAdvertisement_OrderPositionId ON PriceFacts.OrderPositionAdvertisement (OrderPositionId)
 create index IX_OrderPositionAdvertisement_PositionId ON PriceFacts.OrderPositionAdvertisement (PositionId)
-go
-
-create table PriceFacts.OrganizationUnit(
-    Id bigint not null,
-    constraint PK_OrganizationUnit primary key (Id)
-)
 go
 
 create table PriceFacts.Project(
