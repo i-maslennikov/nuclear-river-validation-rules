@@ -49,9 +49,9 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderPosition> dataObjects)
         {
-            var orderIds = dataObjects.Select(x => x.Id).Distinct().ToArray();
+            var orderIds = dataObjects.Select(x => x.Id);
 
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
         }
     }
 }

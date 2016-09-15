@@ -42,10 +42,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderPosition> dataObjects)
         {
             // поле OrderId не меняется - в базу ходить за старым значением не надо.
-            var orderIds = dataObjects.Select(x => x.OrderId).Distinct();
+            var orderIds = dataObjects.Select(x => x.OrderId);
 
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
-                           .ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
         }
     }
 }

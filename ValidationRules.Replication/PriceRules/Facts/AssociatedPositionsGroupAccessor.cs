@@ -47,17 +47,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
                            from pricePosition in _query.For<PricePosition>().Where(x => x.Id == associatedPositionsGroup.PricePositionId)
                            select pricePosition.PriceId;
 
-            priceIds = priceIds.Distinct();
-
             var orderIds = from associatedPositionsGroup in _query.For<AssociatedPositionsGroup>().Where(x => ids.Contains(x.Id))
                            from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == associatedPositionsGroup.PricePositionId)
                            select orderPosition.OrderId;
 
-            orderIds = orderIds.Distinct();
-
-            return priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Price), x))
-                           .Union(orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)))
-                           .ToArray();
+            return new EventCollectionHelper
+                {
+                    { typeof(Order), orderIds.Distinct() },
+                    { typeof(Price), priceIds.Distinct() },
+                }.ToArray();
         }
     }
 }

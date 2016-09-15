@@ -58,7 +58,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                 from order in _query.For<Order>().Where(x => firmIds.Contains(x.FirmId))
                 select order.Id;
 
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds } }.ToArray();
         }
     }
 }

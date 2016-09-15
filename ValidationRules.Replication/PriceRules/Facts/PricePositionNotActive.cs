@@ -46,10 +46,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             var orderIds = from orderPosition in _query.For<OrderPosition>().Where(x => ids.Contains(x.PricePositionId))
                            select orderPosition.OrderId;
 
-            orderIds = orderIds.Distinct();
-
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
-                           .ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
         }
     }
 }

@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
                 from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
                 select order.Id;
 
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
         }
     }
 }

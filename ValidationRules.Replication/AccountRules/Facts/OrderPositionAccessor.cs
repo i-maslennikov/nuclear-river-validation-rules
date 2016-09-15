@@ -51,11 +51,11 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
                 from account in _query.For<Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                 select account.Id;
 
-            accountIds = accountIds.Distinct();
-
-            return accountIds.Select(id => new RelatedDataObjectOutdatedEvent<long>(typeof(Account), id))
-                             .Union(orderIds.Select(id => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), id)))
-                             .ToArray();
+            return new EventCollectionHelper
+                {
+                    { typeof(Order), orderIds.Distinct() },
+                    { typeof(Account), accountIds.Distinct() },
+                }.ToArray();
         }
     }
 }

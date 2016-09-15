@@ -44,17 +44,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             // Поле PriceId не меняется
             var priceIds = dataObjects.Select(x => x.PriceId);
 
-            priceIds = priceIds.Distinct();
-
             var ids = dataObjects.Select(x => x.Id).ToArray();
             var orderIds = from orderPosition in _query.For<OrderPosition>().Where(x => ids.Contains(x.PricePositionId))
                            select orderPosition.OrderId;
 
-            orderIds = orderIds.Distinct();
-
-            return priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Price), x))
-                           .Concat(orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)))
-                           .ToArray();
+            return new EventCollectionHelper
+                {
+                    { typeof(Order), orderIds.Distinct() },
+                    { typeof(Price), priceIds.Distinct() },
+                }.ToArray();
         }
     }
 }

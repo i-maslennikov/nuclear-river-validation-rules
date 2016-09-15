@@ -7,7 +7,6 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Events;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
@@ -46,8 +45,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             var priceIds = from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
                            select pricePosition.PriceId;
 
-            priceIds = priceIds.Distinct();
-
             // todo: посмотреть запрос
             var orderIds
                 = from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
@@ -55,11 +52,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
                   from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id || x.Id == opa.OrderPositionId)
                   select orderPosition.OrderId;
 
-            orderIds = orderIds.Distinct();
-
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
-                           .Concat(priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Price), x)))
-                           .ToArray();
+            return new EventCollectionHelper
+                {
+                    { typeof(Order), orderIds },
+                    { typeof(Price), priceIds.Distinct() }
+                }.ToArray();
         }
     }
 }

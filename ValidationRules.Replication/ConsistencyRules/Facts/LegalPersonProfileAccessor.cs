@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                       || order.LegalPersonId.HasValue && legalPersonIds.Contains(order.LegalPersonId.Value)
                 select order.Id;
 
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds } }.ToArray();
         }
     }
 }

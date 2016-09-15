@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
 
             // И какой тип я должен тут указать?
             // Тип outdated-сущности - это период. Нет периода в фактах, а агрегатный тип тут указывать некорректно.
-            return periodIds.Select(x => new RelatedDataObjectOutdatedEvent<PeriodKey>(null, x)).ToArray();
+            return new EventCollectionHelper { { null, periodIds } }.ToArray();
         }
     }
 }

@@ -66,9 +66,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
                 from account in _query.For<Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                 select account.Id;
 
-            accountIds = accountIds.Distinct();
-
-            return accountIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Account), x)).ToArray();
+            return new EventCollectionHelper { { typeof(Account), accountIds.Distinct() } }.ToArray();
         }
     }
 }
