@@ -38,15 +38,18 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
         {
             try
             {
-                var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<AggregatableMessage<ICommand>>()
-                                                   .ToArray();
+                using (Probe.Create("ETL2 Transforming"))
+                {
+                    var messages = processingResultsMap.SelectMany(pair => pair.Value)
+                                                       .Cast<AggregatableMessage<ICommand>>()
+                                                       .ToArray();
 
-                Handle(messages.SelectMany(x => x.Commands).OfType<IAggregateCommand>().ToArray());
-                Handle(messages.SelectMany(message => message.Commands.OfType<IncrementStateCommand>()).ToArray());
-                Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
+                    Handle(messages.SelectMany(x => x.Commands).OfType<IAggregateCommand>().ToArray());
+                    Handle(messages.SelectMany(message => message.Commands.OfType<IncrementStateCommand>()).ToArray());
+                    Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
 
-                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
+                    return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
+                }
             }
             catch (Exception ex)
             {
@@ -89,16 +92,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             {
                 var actorName = actor.GetType().GetFriendlyName();
 
-                using (var transaction = new TransactionScope(
-                    TransactionScopeOption.Required,
-                    new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
+                using (Probe.Create($"ETL2 {actorName}"))
                 {
-                    using (Probe.Create($"ETL2 {actorName}"))
+                    var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
+                    using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
                     {
                         actor.ExecuteCommands(commands);
+                        transaction.Complete();
                     }
-
-                    transaction.Complete();
                 }
             }
 

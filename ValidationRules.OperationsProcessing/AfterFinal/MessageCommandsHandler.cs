@@ -9,6 +9,7 @@ using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Telemetry;
+using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Telemetry;
 using NuClear.ValidationRules.Replication;
@@ -40,14 +41,17 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         {
             try
             {
-                var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<AggregatableMessage<ICommand>>()
-                                                   .ToArray();
+                using (Probe.Create("ETL3 Transforming"))
+                {
+                    var messages = processingResultsMap.SelectMany(pair => pair.Value)
+                                                       .Cast<AggregatableMessage<ICommand>>()
+                                                       .ToArray();
 
-                Handle(messages.SelectMany(x => x.Commands).OfType<IValidationRuleCommand>().ToArray());
-                Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
+                    Handle(messages.SelectMany(x => x.Commands).OfType<IValidationRuleCommand>().ToArray());
+                    Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
 
-                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
+                    return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
+                }
             }
             catch (Exception ex)
             {
@@ -82,8 +86,15 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
                 // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
                 // Благодаря этому все изменения, предшествующие состоянию erm будут гарантированно включены в версию проверок.
-                _validationRuleActor.ExecuteCommands(commands);
-                _createNewVersionActor.ExecuteCommands(commands);
+                using (Probe.Create("ValidationRuleActor"))
+                {
+                    _validationRuleActor.ExecuteCommands(commands);
+                }
+
+                using (Probe.Create("CreateNewVersionActor"))
+                {
+                    _createNewVersionActor.ExecuteCommands(commands);
+                }
 
                 transaction.Complete();
             }

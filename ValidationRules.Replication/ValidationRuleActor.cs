@@ -7,6 +7,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
+using NuClear.Telemetry.Probing;
 using NuClear.ValidationRules.Replication.AccountRules.Validation;
 using NuClear.ValidationRules.Replication.ConsistencyRules.Validation;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
@@ -19,15 +20,17 @@ namespace NuClear.ValidationRules.Replication
     public sealed class ValidationRuleActor : IActor
     {
         private readonly IQuery _query;
+        private readonly QueryTracer _queryTracer;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
         private readonly ValidationRuleRegistry _registry;
 
-        public ValidationRuleActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
+        public ValidationRuleActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository, QueryTracer queryTracer)
         {
             _query = query;
             _repository = repository;
             _deleteRepository = deleteRepository;
+            _queryTracer = queryTracer;
             _registry = new ValidationRuleRegistry(query);
         }
 
@@ -40,24 +43,39 @@ namespace NuClear.ValidationRules.Replication
 
         public IReadOnlyCollection<IEvent> ProcessRule(IValidationResultAccessor accessor, long currentVersion)
         {
-            IReadOnlyCollection<Version.ValidationResult> sourceObjects;
-            using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
+            using (Probe.Create($"Rule {accessor.GetType().Name}, {accessor.MessageTypeId}"))
             {
-                // Запрос к данным источника посылаем вне транзакции, большой беды от этого быть не должно.
-                sourceObjects = accessor.GetSource().ApplyVersion(currentVersion).ToArray();
+                IReadOnlyCollection<Version.ValidationResult> sourceObjects;
+                using (Probe.Create($"Query"))
+                {
+                    using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
+                    {
+                        // Запрос к данным источника посылаем вне транзакции, большой беды от этого быть не должно.
+                        var query = accessor.GetSource().ApplyVersion(currentVersion);
+                        _queryTracer.Trace(query);
+                        sourceObjects = query.ToArray();
 
-                // todo: удалить, добавлено с целью отладки
-                sourceObjects = sourceObjects.Where(x => x.PeriodStart >= DateTime.Parse("2016-06-01")).ToArray();
+                        // todo: удалить, добавлено с целью отладкиP
+                        sourceObjects = sourceObjects.Where(x => x.PeriodStart >= DateTime.Parse("2016-06-01")).ToArray();
 
-                scope.Complete();
+                        scope.Complete();
+                    }
+                }
+
+                using (Probe.Create($"Delete"))
+                {
+                    // Данные в целевых таблицах меняем в одной большой транзакции (сейчас она управляется из хендлера)
+                    var forBulkDelete = new Version.ValidationResultForBulkDelete { MessageType = accessor.MessageTypeId, VersionId = currentVersion };
+                    _deleteRepository.Delete(new[] { forBulkDelete });
+                }
+
+                using (Probe.Create($"Create"))
+                {
+                    _repository.Create(sourceObjects);
+                }
+
+                return Array.Empty<IEvent>();
             }
-
-            // Данные в целевых таблицах меняем в одной большой транзакции (сейчас она управляется из хендлера)
-            var forBulkDelete = new Version.ValidationResultForBulkDelete { MessageType = accessor.MessageTypeId, VersionId = currentVersion };
-            _deleteRepository.Delete(new[] { forBulkDelete });
-            _repository.Create(sourceObjects);
-
-            return Array.Empty<IEvent>();
         }
 
         private sealed class ValidationRuleRegistry

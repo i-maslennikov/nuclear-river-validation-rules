@@ -45,15 +45,18 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
         {
             try
             {
-                var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                   .Cast<AggregatableMessage<ICommand>>()
-                                                   .ToArray();
+                using (Probe.Create("ETL1 Transforming"))
+                {
+                    var messages = processingResultsMap.SelectMany(pair => pair.Value)
+                                                       .Cast<AggregatableMessage<ICommand>>()
+                                                       .ToArray();
 
-                Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.OfType<ISyncDataObjectCommand>()).ToArray());
-                Handle(messages.SelectMany(message => message.Commands.OfType<IncrementStateCommand>()).ToArray());
-                Handle(messages.SelectMany(message => message.Commands.OfType<RecordDelayCommand>()).ToArray());
+                    Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.OfType<ISyncDataObjectCommand>()).ToArray());
+                    Handle(messages.SelectMany(message => message.Commands.OfType<IncrementStateCommand>()).ToArray());
+                    Handle(messages.SelectMany(message => message.Commands.OfType<RecordDelayCommand>()).ToArray());
 
-                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
+                    return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
+                }
             }
             catch (Exception ex)
             {
@@ -94,20 +97,17 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             }
 
             var events = new List<IEvent>();
-            using (Probe.Create("ETL1 Transforming"))
+
+            // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
+            var actors = _dataObjectsActorFactory.Create();
+            foreach (var actor in actors)
             {
-                // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
-                var actors = _dataObjectsActorFactory.Create();
-                foreach (var actor in actors)
+                var actorType = actor.GetType().GetFriendlyName();
+                using (Probe.Create($"ETL1 {actorType}"))
                 {
-                    var actorType = actor.GetType().GetFriendlyName();
-                    using (Probe.Create("ETL1 Transforming", actorType))
+                    foreach (var batch in commands.CreateBatches(_replicationSettings.ReplicationBatchSize))
                     {
-                        _tracer.Debug($"Applying changes to target facts storage with actor {actorType}");
-                        foreach (var batch in commands.CreateBatches(_replicationSettings.ReplicationBatchSize))
-                        {
-                            events.AddRange(actor.ExecuteCommands(batch));
-                        }
+                        events.AddRange(actor.ExecuteCommands(batch));
                     }
                 }
             }
@@ -120,9 +120,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
 
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);
 
-            _eventLogger.Log(events);
+            _tracer.Warn($"ETL1 event count: {events.Count} and only {events.Distinct().Count()} distinct");
 
-            _tracer.Debug("Executing fact commands finished");
+            _eventLogger.Log(events);
         }
     }
 }
