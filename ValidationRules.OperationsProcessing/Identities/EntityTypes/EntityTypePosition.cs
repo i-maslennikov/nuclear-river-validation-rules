@@ -1,4 +1,4 @@
-using NuClear.Model.Common.Entities;
+﻿using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.Replication;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes

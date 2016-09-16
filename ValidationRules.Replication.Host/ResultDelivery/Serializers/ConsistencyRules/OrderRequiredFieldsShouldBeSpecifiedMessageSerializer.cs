@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
@@ -22,32 +22,32 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
 
             if (dto.LegalPerson)
             {
-                parameters.Add("Юр. лицо заказчика");
+                parameters.Add("Р®СЂ. Р»РёС†Рѕ Р·Р°РєР°Р·С‡РёРєР°");
             }
             if (dto.LegalPersonProfile)
             {
-                parameters.Add("Профиль юр. лица заказчика");
+                parameters.Add("РџСЂРѕС„РёР»СЊ СЋСЂ. Р»РёС†Р° Р·Р°РєР°Р·С‡РёРєР°");
             }
             if (dto.BranchOfficeOrganizationUnit)
             {
-                parameters.Add("Юр. лицо исполнителя");
+                parameters.Add("Р®СЂ. Р»РёС†Рѕ РёСЃРїРѕР»РЅРёС‚РµР»СЏ");
             }
             if (dto.Inspector)
             {
-                parameters.Add("Проверяющий");
+                parameters.Add("РџСЂРѕРІРµСЂСЏСЋС‰РёР№");
             }
             if (dto.ReleaseCountPlan)
             {
-                parameters.Add("план");
+                parameters.Add("РїР»Р°РЅ");
             }
             if (dto.Currency)
             {
-                parameters.Add("Валюта");
+                parameters.Add("Р’Р°Р»СЋС‚Р°");
             }
 
             return new LocalizedMessage(message.GetLevel(),
-                                    $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                    "Необходимо заполнить все обязательные для заполнения поля: " + string.Join(", ", parameters));
+                                    $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                    "РќРµРѕР±С…РѕРґРёРјРѕ Р·Р°РїРѕР»РЅРёС‚СЊ РІСЃРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РїРѕР»СЏ: " + string.Join(", ", parameters));
         }
     }
 }

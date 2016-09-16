@@ -1,4 +1,4 @@
-using System.Linq;
+п»їusing System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
@@ -9,12 +9,12 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
-    /// Для заказов, позиция которых ссылается на не действующий на момент начала размещения прайс-лист должна выводиться ошибка.
-    /// "Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа"
+    /// Р”Р»СЏ Р·Р°РєР°Р·РѕРІ, РїРѕР·РёС†РёСЏ РєРѕС‚РѕСЂС‹С… СЃСЃС‹Р»Р°РµС‚СЃСЏ РЅР° РЅРµ РґРµР№СЃС‚РІСѓСЋС‰РёР№ РЅР° РјРѕРјРµРЅС‚ РЅР°С‡Р°Р»Р° СЂР°Р·РјРµС‰РµРЅРёСЏ РїСЂР°Р№СЃ-Р»РёСЃС‚ РґРѕР»Р¶РЅР° РІС‹РІРѕРґРёС‚СЊСЃСЏ РѕС€РёР±РєР°.
+    /// "РџРѕР·РёС†РёСЏ {0} РЅРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ Р°РєС‚СѓР°Р»СЊРЅРѕРјСѓ РїСЂР°Р№СЃ-Р»РёСЃС‚Сѓ. РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РїРѕР·РёС†РёСЋ РёР· С‚РµРєСѓС‰РµРіРѕ РґРµР№СЃС‚РІСѓСЋС‰РµРіРѕ РїСЂР°Р№СЃ-Р»РёСЃС‚Р°"
     /// 
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionDoesntCorrespontToActualPrice
     /// </summary>
-    // todo: подумать о рефакторинге: актуальный прайс-лист должен вычисляться на этапе агрегатов, а эту проверку разделить на две.
+    // todo: РїРѕРґСѓРјР°С‚СЊ Рѕ СЂРµС„Р°РєС‚РѕСЂРёРЅРіРµ: Р°РєС‚СѓР°Р»СЊРЅС‹Р№ РїСЂР°Р№СЃ-Р»РёСЃС‚ РґРѕР»Р¶РµРЅ РІС‹С‡РёСЃР»СЏС‚СЊСЃСЏ РЅР° СЌС‚Р°РїРµ Р°РіСЂРµРіР°С‚РѕРІ, Р° СЌС‚Сѓ РїСЂРѕРІРµСЂРєСѓ СЂР°Р·РґРµР»РёС‚СЊ РЅР° РґРІРµ.
     public sealed class OrderPositionShouldCorrespontToActualPrice : ValidationResultAccessorBase
     {
         private static readonly int RuleResultError =
@@ -37,8 +37,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            // Действующий прайс заказа - это прайс, действующий на момент начала размещения заказа.
-            // Но есть нюанс: можно одобрить заказ, а потом действующий прайс изменится. Эта ситуация должна вызывать не ошибку, а предупреждение.
+            // Р”РµР№СЃС‚РІСѓСЋС‰РёР№ РїСЂР°Р№СЃ Р·Р°РєР°Р·Р° - СЌС‚Рѕ РїСЂР°Р№СЃ, РґРµР№СЃС‚РІСѓСЋС‰РёР№ РЅР° РјРѕРјРµРЅС‚ РЅР°С‡Р°Р»Р° СЂР°Р·РјРµС‰РµРЅРёСЏ Р·Р°РєР°Р·Р°.
+            // РќРѕ РµСЃС‚СЊ РЅСЋР°РЅСЃ: РјРѕР¶РЅРѕ РѕРґРѕР±СЂРёС‚СЊ Р·Р°РєР°Р·, Р° РїРѕС‚РѕРј РґРµР№СЃС‚РІСѓСЋС‰РёР№ РїСЂР°Р№СЃ РёР·РјРµРЅРёС‚СЃСЏ. Р­С‚Р° СЃРёС‚СѓР°С†РёСЏ РґРѕР»Р¶РЅР° РІС‹Р·С‹РІР°С‚СЊ РЅРµ РѕС€РёР±РєСѓ, Р° РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ.
             var orderPrices =
                 from order in query.For<Order>()
                 let orderStart = query.For<OrderPeriod>().Where(x => x.OrderId == order.Id).Min(x => x.Start)

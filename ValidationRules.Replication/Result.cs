@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication
+﻿namespace NuClear.ValidationRules.Replication
 {
     public enum Result
     {

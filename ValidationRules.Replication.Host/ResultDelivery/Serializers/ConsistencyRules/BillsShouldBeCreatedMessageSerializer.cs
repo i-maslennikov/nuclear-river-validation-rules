@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class BillsShouldBeCreatedMessageSerializer : IMessageSerializer
     {
@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"Для заказа необходимо сформировать счета");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"Р”Р»СЏ Р·Р°РєР°Р·Р° РЅРµРѕР±С…РѕРґРёРјРѕ СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃС‡РµС‚Р°");
         }
     }
 }

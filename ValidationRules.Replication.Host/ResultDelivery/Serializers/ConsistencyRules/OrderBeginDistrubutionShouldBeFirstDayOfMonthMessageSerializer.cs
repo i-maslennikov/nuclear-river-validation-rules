@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class OrderBeginDistrubutionShouldBeFirstDayOfMonthMessageSerializer : IMessageSerializer
     {
@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        "Указана некорректная дата начала размещения");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        "РЈРєР°Р·Р°РЅР° РЅРµРєРѕСЂСЂРµРєС‚РЅР°СЏ РґР°С‚Р° РЅР°С‡Р°Р»Р° СЂР°Р·РјРµС‰РµРЅРёСЏ");
         }
     }
 }

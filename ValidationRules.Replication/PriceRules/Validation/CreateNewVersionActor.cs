@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,9 +34,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var lastVersion = _query.For<Version>().OrderByDescending(x => x.Id).FirstOrDefault();
             if (lastVersion == null)
             {
-                // TODO: Синхронизировать с инициализацией состояния.
-                // Если она будет порождать версию - тогда можно считать, что версия есть всегда.
-                // Если только результаты, не привязанные к версии, тогда их нужно будет создавать новую и привязывать результаты к ней.
+                // TODO: РЎРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ СЃ РёРЅРёС†РёР°Р»РёР·Р°С†РёРµР№ СЃРѕСЃС‚РѕСЏРЅРёСЏ.
+                // Р•СЃР»Рё РѕРЅР° Р±СѓРґРµС‚ РїРѕСЂРѕР¶РґР°С‚СЊ РІРµСЂСЃРёСЋ - С‚РѕРіРґР° РјРѕР¶РЅРѕ СЃС‡РёС‚Р°С‚СЊ, С‡С‚Рѕ РІРµСЂСЃРёСЏ РµСЃС‚СЊ РІСЃРµРіРґР°.
+                // Р•СЃР»Рё С‚РѕР»СЊРєРѕ СЂРµР·СѓР»СЊС‚Р°С‚С‹, РЅРµ РїСЂРёРІСЏР·Р°РЅРЅС‹Рµ Рє РІРµСЂСЃРёРё, С‚РѕРіРґР° РёС… РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ СЃРѕР·РґР°РІР°С‚СЊ РЅРѕРІСѓСЋ Рё РїСЂРёРІСЏР·С‹РІР°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹ Рє РЅРµР№.
                 lastVersion = new Version { Id = 0 };
                 _versionRepository.Add(lastVersion);
                 _versionRepository.Save();
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             _versionRepository.Add(nextVersion);
             _versionRepository.Save();
 
-            // TODO: Возможно, не лучшее решение с точки зрения производительности и администратора БД, но трюками займёмся позже.
+            // TODO: Р’РѕР·РјРѕР¶РЅРѕ, РЅРµ Р»СѓС‡С€РµРµ СЂРµС€РµРЅРёРµ СЃ С‚РѕС‡РєРё Р·СЂРµРЅРёСЏ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚Рё Рё Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° Р‘Р”, РЅРѕ С‚СЂСЋРєР°РјРё Р·Р°Р№РјС‘РјСЃСЏ РїРѕР·Р¶Рµ.
             var lastVersionResults = _query.For<Version.ValidationResult>().Where(x => x.VersionId == lastVersion.Id);
             var nextVersionResults = lastVersionResults.ApplyVersion(nextVersion.Id);
             _validationResultRepository.AddRange(nextVersionResults);

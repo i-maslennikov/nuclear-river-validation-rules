@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class BillsSumShouldMatchOrderMessageSerializer : IMessageSerializer
     {
@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"Сумма по счетам не совпадает с планируемой суммой заказа");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"РЎСѓРјРјР° РїРѕ СЃС‡РµС‚Р°Рј РЅРµ СЃРѕРІРїР°РґР°РµС‚ СЃ РїР»Р°РЅРёСЂСѓРµРјРѕР№ СЃСѓРјРјРѕР№ Р·Р°РєР°Р·Р°");
         }
     }
 }

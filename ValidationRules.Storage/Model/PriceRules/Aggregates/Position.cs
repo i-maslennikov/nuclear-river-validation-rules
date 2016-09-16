@@ -1,15 +1,15 @@
-using System;
+п»їusing System;
 
 namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
-    /// Импортированная из ERM сущность номенклатурной позиции
+    /// РРјРїРѕСЂС‚РёСЂРѕРІР°РЅРЅР°СЏ РёР· ERM СЃСѓС‰РЅРѕСЃС‚СЊ РЅРѕРјРµРЅРєР»Р°С‚СѓСЂРЅРѕР№ РїРѕР·РёС†РёРё
     /// </summary>
     public sealed class Position
     {
         public long Id { get; set; }
         public long CategoryCode { get; set; }
-        [Obsolete("Теперь, когда ограничения создаются только для нужных позиций, нет смысла тянуть это поле в агрегаты")]
+        [Obsolete("РўРµРїРµСЂСЊ, РєРѕРіРґР° РѕРіСЂР°РЅРёС‡РµРЅРёСЏ СЃРѕР·РґР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ РЅСѓР¶РЅС‹С… РїРѕР·РёС†РёР№, РЅРµС‚ СЃРјС‹СЃР»Р° С‚СЏРЅСѓС‚СЊ СЌС‚Рѕ РїРѕР»Рµ РІ Р°РіСЂРµРіР°С‚С‹")]
         public bool IsControlledByAmount { get; set; }
         public string Name { get; set; }
     }

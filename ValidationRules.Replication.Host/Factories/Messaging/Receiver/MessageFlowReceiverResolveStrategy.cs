@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 
 using NuClear.Messaging.API.Flows.Metadata;

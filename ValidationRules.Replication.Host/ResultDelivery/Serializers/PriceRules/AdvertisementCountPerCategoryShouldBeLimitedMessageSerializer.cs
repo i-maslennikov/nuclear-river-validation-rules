@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
 {
     public sealed class AdvertisementCountPerCategoryShouldBeLimitedMessageSerializer : IMessageSerializer
     {
@@ -18,8 +18,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Pr
             var dto = message.ReadOversalesMessage();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"В рубрику {_linkFactory.CreateLink(categoryReference)} заказано слишком много объявлений: Заказано {dto.Count}, допустимо не более {dto.Max}.");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"Р’ СЂСѓР±СЂРёРєСѓ {_linkFactory.CreateLink(categoryReference)} Р·Р°РєР°Р·Р°РЅРѕ СЃР»РёС€РєРѕРј РјРЅРѕРіРѕ РѕР±СЉСЏРІР»РµРЅРёР№: Р—Р°РєР°Р·Р°РЅРѕ {dto.Count}, РґРѕРїСѓСЃС‚РёРјРѕ РЅРµ Р±РѕР»РµРµ {dto.Max}.");
         }
     }
 }

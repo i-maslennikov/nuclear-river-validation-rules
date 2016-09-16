@@ -1,4 +1,4 @@
-using NuClear.Replication.Core.DataObjects;
+﻿using NuClear.Replication.Core.DataObjects;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication

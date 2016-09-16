@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
 {
     public sealed class AdvertisementCountPerThemeShouldBeLimitedMessageSerializer : IMessageSerializer
     {
@@ -18,8 +18,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Pr
             var dto = message.ReadOversalesMessage();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"Слишком много продаж в тематику {_linkFactory.CreateLink(themeReference)}. Продано {dto.Count} позиций вместо {dto.Max} возможных");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"РЎР»РёС€РєРѕРј РјРЅРѕРіРѕ РїСЂРѕРґР°Р¶ РІ С‚РµРјР°С‚РёРєСѓ {_linkFactory.CreateLink(themeReference)}. РџСЂРѕРґР°РЅРѕ {dto.Count} РїРѕР·РёС†РёР№ РІРјРµСЃС‚Рѕ {dto.Max} РІРѕР·РјРѕР¶РЅС‹С…");
         }
     }
 }

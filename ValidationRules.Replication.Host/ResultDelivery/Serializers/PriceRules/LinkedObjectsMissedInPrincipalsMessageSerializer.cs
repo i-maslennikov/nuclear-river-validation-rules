@@ -1,4 +1,4 @@
-using System.Linq;
+п»їusing System.Linq;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
 {
@@ -19,15 +19,15 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Pr
             var orderPositions = message.ReadOrderPositions();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"{MakePositionText(orderPositions.First())} содержит объекты привязки, отсутствующие в основных позициях");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"{MakePositionText(orderPositions.First())} СЃРѕРґРµСЂР¶РёС‚ РѕР±СЉРµРєС‚С‹ РїСЂРёРІСЏР·РєРё, РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‰РёРµ РІ РѕСЃРЅРѕРІРЅС‹С… РїРѕР·РёС†РёСЏС…");
         }
 
         private string MakePositionText(MessageExtensions.OrderPositionDto dto)
         {
             return dto.OrderPositionName != dto.PositionName
-                       ? $"Подпозиция {dto.PositionName} позиции {_linkFactory.CreateLink("OrderPosition", dto.OrderPositionId, dto.OrderPositionName)}"
-                       : $"Позиция {_linkFactory.CreateLink("OrderPosition", dto.OrderPositionId, dto.OrderPositionName)}";
+                       ? $"РџРѕРґРїРѕР·РёС†РёСЏ {dto.PositionName} РїРѕР·РёС†РёРё {_linkFactory.CreateLink("OrderPosition", dto.OrderPositionId, dto.OrderPositionName)}"
+                       : $"РџРѕР·РёС†РёСЏ {_linkFactory.CreateLink("OrderPosition", dto.OrderPositionId, dto.OrderPositionName)}";
         }
     }
 }

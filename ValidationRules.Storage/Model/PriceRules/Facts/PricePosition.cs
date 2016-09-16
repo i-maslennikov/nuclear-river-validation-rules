@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.PriceRules.Facts
+﻿namespace NuClear.ValidationRules.Storage.Model.PriceRules.Facts
 {
     public sealed class PricePosition
     {

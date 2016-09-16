@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 
 using NuClear.Messaging.API.Flows;
@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
             Action<int> reporter;
             if (!_flowReporters.TryGetValue(flow.Id, out reporter))
             {
-                throw new ArgumentException($"Поток не поддеривается: {flow.GetType().Name}", nameof(flow));
+                throw new ArgumentException($"РџРѕС‚РѕРє РЅРµ РїРѕРґРґРµСЂРёРІР°РµС‚СЃСЏ: {flow.GetType().Name}", nameof(flow));
             }
 
             reporter.Invoke(length);

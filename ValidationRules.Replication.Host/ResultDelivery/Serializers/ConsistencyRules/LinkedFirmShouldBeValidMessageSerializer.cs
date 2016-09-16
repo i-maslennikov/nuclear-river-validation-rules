@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 
@@ -25,20 +25,20 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             switch (firmState)
             {
                 case InvalidFirmState.Deleted:
-                    format = "Фирма {0} удалена";
+                    format = "Р¤РёСЂРјР° {0} СѓРґР°Р»РµРЅР°";
                     break;
                 case InvalidFirmState.ClosedForever:
-                    format = "Фирма {0} скрыта навсегда";
+                    format = "Р¤РёСЂРјР° {0} СЃРєСЂС‹С‚Р° РЅР°РІСЃРµРіРґР°";
                     break;
                 case InvalidFirmState.ClosedForAscertainment:
-                    format = "Фирма {0} скрыта до выяснения";
+                    format = "Р¤РёСЂРјР° {0} СЃРєСЂС‹С‚Р° РґРѕ РІС‹СЏСЃРЅРµРЅРёСЏ";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
                                         string.Format(format, _linkFactory.CreateLink(firmReference)));
         }
     }

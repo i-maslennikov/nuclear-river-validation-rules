@@ -1,7 +1,7 @@
-namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
+п»їnamespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
-    /// Связь прайс-листа с номеклатурной позицией, импортируется из ERM
+    /// РЎРІСЏР·СЊ РїСЂР°Р№СЃ-Р»РёСЃС‚Р° СЃ РЅРѕРјРµРєР»Р°С‚СѓСЂРЅРѕР№ РїРѕР·РёС†РёРµР№, РёРјРїРѕСЂС‚РёСЂСѓРµС‚СЃСЏ РёР· ERM
     /// </summary>
     public sealed class AdvertisementAmountRestriction
     {

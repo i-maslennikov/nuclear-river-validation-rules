@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates
 {

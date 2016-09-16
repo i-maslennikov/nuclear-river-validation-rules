@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class LinkedCategoryShouldBeActiveMessageSerializer : IMessageSerializer
     {
@@ -18,8 +18,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var categoryReference = message.ReadCategoryReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"В позиции {_linkFactory.CreateLink(orderPositionReference)} найдена неактивная рубрика {_linkFactory.CreateLink(categoryReference)}");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"Р’ РїРѕР·РёС†РёРё {_linkFactory.CreateLink(orderPositionReference)} РЅР°Р№РґРµРЅР° РЅРµР°РєС‚РёРІРЅР°СЏ СЂСѓР±СЂРёРєР° {_linkFactory.CreateLink(categoryReference)}");
         }
     }
 }

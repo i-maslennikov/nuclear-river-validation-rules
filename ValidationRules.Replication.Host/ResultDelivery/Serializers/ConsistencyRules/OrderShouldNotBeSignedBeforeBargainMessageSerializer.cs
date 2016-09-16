@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class OrderShouldNotBeSignedBeforeBargainMessageSerializer : IMessageSerializer
     {
@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                    $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                    "Договор не может иметь дату подписания позднее даты подписания заказа");
+                                    $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                    "Р”РѕРіРѕРІРѕСЂ РЅРµ РјРѕР¶РµС‚ РёРјРµС‚СЊ РґР°С‚Сѓ РїРѕРґРїРёСЃР°РЅРёСЏ РїРѕР·РґРЅРµРµ РґР°С‚С‹ РїРѕРґРїРёСЃР°РЅРёСЏ Р·Р°РєР°Р·Р°");
         }
     }
 }

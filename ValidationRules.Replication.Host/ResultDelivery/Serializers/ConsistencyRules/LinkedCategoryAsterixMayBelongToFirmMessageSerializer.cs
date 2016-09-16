@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class LinkedCategoryAsterixMayBelongToFirmMessageSerializer : IMessageSerializer
     {
@@ -18,8 +18,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var categoryReference = message.ReadCategoryReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"В позиции {_linkFactory.CreateLink(orderPositionReference)} найдена рубрика {_linkFactory.CreateLink(categoryReference)}, не принадлежащая фирме заказа");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"Р’ РїРѕР·РёС†РёРё {_linkFactory.CreateLink(orderPositionReference)} РЅР°Р№РґРµРЅР° СЂСѓР±СЂРёРєР° {_linkFactory.CreateLink(categoryReference)}, РЅРµ РїСЂРёРЅР°РґР»РµР¶Р°С‰Р°СЏ С„РёСЂРјРµ Р·Р°РєР°Р·Р°");
         }
     }
 }

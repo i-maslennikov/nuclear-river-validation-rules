@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 
@@ -26,23 +26,23 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             switch (firmAddressState)
             {
                 case InvalidFirmAddressState.Deleted:
-                    format = "В позиции {0} адрес фирмы {1} скрыт навсегда";
+                    format = "Р’ РїРѕР·РёС†РёРё {0} Р°РґСЂРµСЃ С„РёСЂРјС‹ {1} СЃРєСЂС‹С‚ РЅР°РІСЃРµРіРґР°";
                     break;
                 case InvalidFirmAddressState.NotActive:
-                    format = "В позиции {0} адрес фирмы {1} неактивен";
+                    format = "Р’ РїРѕР·РёС†РёРё {0} Р°РґСЂРµСЃ С„РёСЂРјС‹ {1} РЅРµР°РєС‚РёРІРµРЅ";
                     break;
                 case InvalidFirmAddressState.ClosedForAscertainment:
-                    format = "В позиции {0} адрес фирмы {1} скрыт до выяснения";
+                    format = "Р’ РїРѕР·РёС†РёРё {0} Р°РґСЂРµСЃ С„РёСЂРјС‹ {1} СЃРєСЂС‹С‚ РґРѕ РІС‹СЏСЃРЅРµРЅРёСЏ";
                     break;
                 case InvalidFirmAddressState.NotBelongToFirm:
-                    format = "В позиции {0} адрес фирмы {1} не принадлежит фирме заказа";
+                    format = "Р’ РїРѕР·РёС†РёРё {0} Р°РґСЂРµСЃ С„РёСЂРјС‹ {1} РЅРµ РїСЂРёРЅР°РґР»РµР¶РёС‚ С„РёСЂРјРµ Р·Р°РєР°Р·Р°";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
                                         string.Format(format, _linkFactory.CreateLink(orderPositionReference), _linkFactory.CreateLink(firmAddressReference)));
         }
     }

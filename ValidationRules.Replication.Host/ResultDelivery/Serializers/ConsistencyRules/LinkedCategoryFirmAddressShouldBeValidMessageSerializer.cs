@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class LinkedCategoryFirmAddressShouldBeValidMessageSerializer : IMessageSerializer
     {
@@ -19,8 +19,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var firmAddressReference = message.ReadFirmAddressReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"В позиции {_linkFactory.CreateLink(orderPositionReference)} найдена рубрика {_linkFactory.CreateLink(categoryReference)}, не принадлежащая адресу {_linkFactory.CreateLink(firmAddressReference)}");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"Р’ РїРѕР·РёС†РёРё {_linkFactory.CreateLink(orderPositionReference)} РЅР°Р№РґРµРЅР° СЂСѓР±СЂРёРєР° {_linkFactory.CreateLink(categoryReference)}, РЅРµ РїСЂРёРЅР°РґР»РµР¶Р°С‰Р°СЏ Р°РґСЂРµСЃСѓ {_linkFactory.CreateLink(firmAddressReference)}");
         }
     }
 }

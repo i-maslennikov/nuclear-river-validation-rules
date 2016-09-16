@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class LegalPersonShouldHaveAtLeastOneProfileMessageSerializer : IMessageSerializer
     {
@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"У юр. лица клиента отсутствует профиль");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"РЈ СЋСЂ. Р»РёС†Р° РєР»РёРµРЅС‚Р° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ РїСЂРѕС„РёР»СЊ");
         }
     }
 }

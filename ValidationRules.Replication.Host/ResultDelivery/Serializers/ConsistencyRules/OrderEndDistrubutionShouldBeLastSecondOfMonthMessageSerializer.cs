@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class OrderEndDistrubutionShouldBeLastSecondOfMonthMessageSerializer : IMessageSerializer
     {
@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        "Указана некорректная дата окончания размещения");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        "РЈРєР°Р·Р°РЅР° РЅРµРєРѕСЂСЂРµРєС‚РЅР°СЏ РґР°С‚Р° РѕРєРѕРЅС‡Р°РЅРёСЏ СЂР°Р·РјРµС‰РµРЅРёСЏ");
         }
     }
 }

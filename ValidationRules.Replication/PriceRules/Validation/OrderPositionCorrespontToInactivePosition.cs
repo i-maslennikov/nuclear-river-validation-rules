@@ -1,4 +1,4 @@
-using System.Linq;
+п»їusing System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
@@ -9,11 +9,11 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
-    /// Для заказов, позиции которых ссылаются на не действительные номенклатурные позиции, должна выводиться ошибка.
-    /// "Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа"
+    /// Р”Р»СЏ Р·Р°РєР°Р·РѕРІ, РїРѕР·РёС†РёРё РєРѕС‚РѕСЂС‹С… СЃСЃС‹Р»Р°СЋС‚СЃСЏ РЅР° РЅРµ РґРµР№СЃС‚РІРёС‚РµР»СЊРЅС‹Рµ РЅРѕРјРµРЅРєР»Р°С‚СѓСЂРЅС‹Рµ РїРѕР·РёС†РёРё, РґРѕР»Р¶РЅР° РІС‹РІРѕРґРёС‚СЊСЃСЏ РѕС€РёР±РєР°.
+    /// "РџРѕР·РёС†РёСЏ {0} СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЃРєСЂС‹С‚РѕР№ РїРѕР·РёС†РёРё РїСЂР°Р№СЃ Р»РёСЃС‚Р°. РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ Р°РєС‚РёРІРЅСѓСЋ РїРѕР·РёС†РёСЋ РёР· С‚РµРєСѓС‰РµРіРѕ РґРµР№СЃС‚РІСѓСЋС‰РµРіРѕ РїСЂР°Р№СЃ-Р»РёСЃС‚Р°"
     /// 
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionCorrespontToInactivePosition
-    /// todo: Убрать из этой группы проверок - понятия периода/scope не имеют смысла для этой проверки
+    /// todo: РЈР±СЂР°С‚СЊ РёР· СЌС‚РѕР№ РіСЂСѓРїРїС‹ РїСЂРѕРІРµСЂРѕРє - РїРѕРЅСЏС‚РёСЏ РїРµСЂРёРѕРґР°/scope РЅРµ РёРјРµСЋС‚ СЃРјС‹СЃР»Р° РґР»СЏ СЌС‚РѕР№ РїСЂРѕРІРµСЂРєРё
     /// </summary>
     public sealed class OrderPositionCorrespontToInactivePosition : ValidationResultAccessorBase
     {
@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            // проверка проверяет соответствие только первого периода
+            // РїСЂРѕРІРµСЂРєР° РїСЂРѕРІРµСЂСЏРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РѕР»СЊРєРѕ РїРµСЂРІРѕРіРѕ РїРµСЂРёРѕРґР°
             var orderFirstPeriods = from orderPeriod1 in query.For<OrderPeriod>()
                                     from orderPeriod2 in query.For<OrderPeriod>().Where(x => orderPeriod1.OrderId == x.OrderId && orderPeriod1.Start > x.Start).DefaultIfEmpty()
                                     where orderPeriod2 == null

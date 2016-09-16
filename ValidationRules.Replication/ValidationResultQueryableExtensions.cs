@@ -1,4 +1,4 @@
-using System.Linq;
+п»їusing System.Linq;
 
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -7,7 +7,7 @@ namespace NuClear.ValidationRules.Replication
     internal static class ValidationResultQueryableExtensions
     {
         /// <summary>
-        /// Проставляет для всех сущностей VersionId
+        /// РџСЂРѕСЃС‚Р°РІР»СЏРµС‚ РґР»СЏ РІСЃРµС… СЃСѓС‰РЅРѕСЃС‚РµР№ VersionId
         /// </summary>
         public static IQueryable<Version.ValidationResult> ApplyVersion(this IQueryable<Version.ValidationResult> queryable, long version)
             => queryable.Select(x => new Version.ValidationResult
@@ -22,8 +22,8 @@ namespace NuClear.ValidationRules.Replication
                 });
 
         /// <summary>
-        /// Проставляет для всех сущностей MessageTypeId
-        /// Не копирует VersionId, поскольку всешда применяется для сущностей с ещё незаполненным VersionId.
+        /// РџСЂРѕСЃС‚Р°РІР»СЏРµС‚ РґР»СЏ РІСЃРµС… СЃСѓС‰РЅРѕСЃС‚РµР№ MessageTypeId
+        /// РќРµ РєРѕРїРёСЂСѓРµС‚ VersionId, РїРѕСЃРєРѕР»СЊРєСѓ РІСЃРµС€РґР° РїСЂРёРјРµРЅСЏРµС‚СЃСЏ РґР»СЏ СЃСѓС‰РЅРѕСЃС‚РµР№ СЃ РµС‰С‘ РЅРµР·Р°РїРѕР»РЅРµРЅРЅС‹Рј VersionId.
         /// </summary>
         public static IQueryable<Version.ValidationResult> ApplyMessageType(this IQueryable<Version.ValidationResult> queryable, int messageTypeId)
             => queryable.Select(x => new Version.ValidationResult

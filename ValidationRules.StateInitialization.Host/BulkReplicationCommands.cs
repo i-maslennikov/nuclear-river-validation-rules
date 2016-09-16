@@ -1,4 +1,4 @@
-using NuClear.StateInitialization.Core.Commands;
+﻿using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.Storage;
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Identitites.Connections;

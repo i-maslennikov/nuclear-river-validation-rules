@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class OrderShouldHaveAtLeastOnePositionMessageSerializer : IMessageSerializer
     {
@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                    $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                    "Заказ не содержит ни одной позиции");
+                                    $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                    "Р—Р°РєР°Р· РЅРµ СЃРѕРґРµСЂР¶РёС‚ РЅРё РѕРґРЅРѕР№ РїРѕР·РёС†РёРё");
         }
     }
 }

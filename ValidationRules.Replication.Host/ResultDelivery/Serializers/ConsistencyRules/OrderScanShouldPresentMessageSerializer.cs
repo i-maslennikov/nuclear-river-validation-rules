@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class OrderScanShouldPresentMessageSerializer : IMessageSerializer
     {
@@ -16,8 +16,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var orderReference = message.ReadOrderReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                    $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                    "Отсутствует сканированная копия Бланка заказа");
+                                    $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                    "РћС‚СЃСѓС‚СЃС‚РІСѓРµС‚ СЃРєР°РЅРёСЂРѕРІР°РЅРЅР°СЏ РєРѕРїРёСЏ Р‘Р»Р°РЅРєР° Р·Р°РєР°Р·Р°");
         }
     }
 }

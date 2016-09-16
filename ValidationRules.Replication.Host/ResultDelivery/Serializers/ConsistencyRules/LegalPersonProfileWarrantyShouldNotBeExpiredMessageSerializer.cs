@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
+п»їnamespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules
 {
     public sealed class LegalPersonProfileWarrantyShouldNotBeExpiredMessageSerializer : IMessageSerializer
     {
@@ -17,8 +17,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Co
             var legalPersonProfileReference = message.ReadLegalPersonProfileReference();
 
             return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"У юр. лица клиента, в профиле {legalPersonProfileReference} указана доверенность с датой окончания действия раньше даты подписания заказа");
+                                        $"Р—Р°РєР°Р· {_linkFactory.CreateLink(orderReference)}",
+                                        $"РЈ СЋСЂ. Р»РёС†Р° РєР»РёРµРЅС‚Р°, РІ РїСЂРѕС„РёР»Рµ {legalPersonProfileReference} СѓРєР°Р·Р°РЅР° РґРѕРІРµСЂРµРЅРЅРѕСЃС‚СЊ СЃ РґР°С‚РѕР№ РѕРєРѕРЅС‡Р°РЅРёСЏ РґРµР№СЃС‚РІРёСЏ СЂР°РЅСЊС€Рµ РґР°С‚С‹ РїРѕРґРїРёСЃР°РЅРёСЏ Р·Р°РєР°Р·Р°");
         }
     }
 }

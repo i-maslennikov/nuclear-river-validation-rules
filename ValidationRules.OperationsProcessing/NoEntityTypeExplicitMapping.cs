@@ -1,4 +1,4 @@
-using NuClear.Model.Common.Entities;
+﻿using NuClear.Model.Common.Entities;
 using NuClear.Replication.OperationsProcessing.Primary;
 
 namespace NuClear.ValidationRules.OperationsProcessing

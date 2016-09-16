@@ -1,4 +1,4 @@
-using System.Linq;
+п»їusing System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
@@ -9,11 +9,11 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
-    /// Для заказов, в городах без действующего на момент размещения прайс-листа, должна выводиться ошибка.
-    /// "Заказ не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа"
+    /// Р”Р»СЏ Р·Р°РєР°Р·РѕРІ, РІ РіРѕСЂРѕРґР°С… Р±РµР· РґРµР№СЃС‚РІСѓСЋС‰РµРіРѕ РЅР° РјРѕРјРµРЅС‚ СЂР°Р·РјРµС‰РµРЅРёСЏ РїСЂР°Р№СЃ-Р»РёСЃС‚Р°, РґРѕР»Р¶РЅР° РІС‹РІРѕРґРёС‚СЊСЃСЏ РѕС€РёР±РєР°.
+    /// "Р—Р°РєР°Р· РЅРµ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‚ Р°РєС‚СѓР°Р»СЊРЅРѕРјСѓ РїСЂР°Р№СЃ-Р»РёСЃС‚Сѓ. РќРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ РїРѕР·РёС†РёРё РёР· С‚РµРєСѓС‰РµРіРѕ РґРµР№СЃС‚РІСѓСЋС‰РµРіРѕ РїСЂР°Р№СЃ-Р»РёСЃС‚Р°"
     /// 
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionsDoesntCorrespontToActualPrice
-    /// TODO: странный текст ошибки, нужно исправить.
+    /// TODO: СЃС‚СЂР°РЅРЅС‹Р№ С‚РµРєСЃС‚ РѕС€РёР±РєРё, РЅСѓР¶РЅРѕ РёСЃРїСЂР°РІРёС‚СЊ.
     /// </summary>
     public class OrderPositionsShouldCorrespontToActualPrice : ValidationResultAccessorBase
     {
@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            // проверка проверяет соответствие только первого периода
+            // РїСЂРѕРІРµСЂРєР° РїСЂРѕРІРµСЂСЏРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚РѕР»СЊРєРѕ РїРµСЂРІРѕРіРѕ РїРµСЂРёРѕРґР°
             var orderFirstPeriods = from orderPeriod1 in query.For<OrderPeriod>()
                                     from orderPeriod2 in query.For<OrderPeriod>().Where(x => orderPeriod1.OrderId == x.OrderId && orderPeriod1.Start > x.Start).DefaultIfEmpty()
                                     where orderPeriod2 == null
