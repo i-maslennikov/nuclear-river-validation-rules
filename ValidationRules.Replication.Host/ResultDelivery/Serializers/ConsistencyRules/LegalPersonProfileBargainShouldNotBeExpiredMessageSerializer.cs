@@ -18,7 +18,7 @@
 
             return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"У юр. лица клиента, в профиле {legalPersonProfileReference} указан договор с датой окончания действия раньше даты подписания заказа");
+                                        $"У юр. лица клиента, в профиле {_linkFactory.CreateLink(legalPersonProfileReference)} указан договор с датой окончания действия раньше даты подписания заказа");
         }
     }
 }
