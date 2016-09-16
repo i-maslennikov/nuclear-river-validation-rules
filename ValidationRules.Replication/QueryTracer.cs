@@ -12,12 +12,10 @@ namespace NuClear.ValidationRules.Replication
 {
     public sealed class QueryTracer
     {
-        private readonly ITelemetryPublisher _publisher;
         private readonly ITracer _tracer;
 
-        public QueryTracer(ITelemetryPublisher publisher, ITracer tracer)
+        public QueryTracer(ITracer tracer)
         {
-            _publisher = publisher;
             _tracer = tracer;
         }
 
@@ -30,7 +28,7 @@ namespace NuClear.ValidationRules.Replication
 
                 var innerQueryable = (IQueryable<T>)queryable.GetType().GetField("_innerQueryable", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(queryable);
                 var sqlText = ((IExpressionQuery<T>)innerQueryable).SqlText;
-                _publisher.Trace($"Trace query {queryId}", sqlText);
+                _tracer.Info($"Trace query {queryId}\n{sqlText}");
             }
             catch (Exception exception)
             {
