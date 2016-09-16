@@ -116,7 +116,6 @@ namespace NuClear.ValidationRules.Replication
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),
                     new AssociatedPositionsGroupCount(_query),
-                    new AssociatedPositionsGroupCount(_query),
                     new AssociatedPositionWithoutPrincipal(_query),
                     new ConflictingPrincipalPosition(_query),
                     new DeniedPositionsCheck(_query),
