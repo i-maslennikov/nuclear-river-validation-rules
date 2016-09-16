@@ -46,3 +46,8 @@ create table AccountAggregates.AccountPeriod(
 )
 --create index IX_AccountPeriod_ ON AccountAggregates.Lock (AccountId)
 go
+
+CREATE NONCLUSTERED INDEX IX_AccountPeriod_AccountId_Start_End
+ON [AccountAggregates].[AccountPeriod] ([AccountId],[Start],[End])
+INCLUDE ([Balance],[LockedAmount],[OwerallLockedAmount],[ReleaseAmount],[LimitAmount])
+GO

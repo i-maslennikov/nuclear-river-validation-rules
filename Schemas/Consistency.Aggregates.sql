@@ -27,6 +27,7 @@ create table ConsistencyAggregates.[Order](
     BeginDistribution datetime2(2) not null,
     EndDistributionFact datetime2(2) not null,
     EndDistributionPlan datetime2(2) not null,
+    constraint PK_Order primary key (Id)
 )
 go
 
@@ -146,3 +147,8 @@ create table ConsistencyAggregates.MissingRequiredField(
     ReleaseCountPlan bit not null,
 )
 go
+
+CREATE NONCLUSTERED INDEX IX_Order_Id
+ON [ConsistencyAggregates].[Order] ([Id])
+INCLUDE ([ProjectId],[Number],[BeginDistribution],[EndDistributionPlan])
+GO

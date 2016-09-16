@@ -204,3 +204,18 @@ create table PriceAggregates.Position(
     constraint PK_Position primary key (Id)
 )
 go
+
+CREATE NONCLUSTERED INDEX IX_OrderPosition_ThemeId
+ON [PriceAggregates].[OrderPosition] ([ThemeId])
+INCLUDE ([OrderId])
+GO
+
+CREATE NONCLUSTERED INDEX IX_OrderPosition_ItemPositionId
+ON [PriceAggregates].[OrderPosition] ([ItemPositionId])
+INCLUDE ([OrderId],[Category3Id],[Category1Id])
+GO
+
+CREATE NONCLUSTERED INDEX IX_OrderPeriod_Scope
+ON [PriceAggregates].[OrderPeriod] ([Scope])
+INCLUDE ([OrderId],[OrganizationUnitId],[Start])
+GO
