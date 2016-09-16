@@ -45,16 +45,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             _tokenRepository.AddRange(versionStates.Select(x => new Version.ErmState { Token = x, VersionId = lastVersion.Id }));
             _tokenRepository.Save();
 
-            var nextVersion = new Version { Id = lastVersion.Id + 1 };
-            _versionRepository.Add(nextVersion);
-            _versionRepository.Save();
-
-            // TODO: Возможно, не лучшее решение с точки зрения производительности и администратора БД, но трюками займёмся позже.
-            var lastVersionResults = _query.For<Version.ValidationResult>().Where(x => x.VersionId == lastVersion.Id);
-            var nextVersionResults = lastVersionResults.ApplyVersion(nextVersion.Id);
-            _validationResultRepository.AddRange(nextVersionResults);
-            _validationResultRepository.Save();
-
             return Array.Empty<IEvent>();
         }
     }

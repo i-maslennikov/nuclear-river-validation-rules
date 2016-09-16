@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication
 
         public IReadOnlyCollection<IEvent> ProcessRule(IValidationResultAccessor accessor, long currentVersion)
         {
-            using (Probe.Create($"Rule {accessor.GetType().Name}, {accessor.MessageTypeId}"))
+            using (Probe.Create($"Rule {accessor.GetType().Name}"))
             {
                 IReadOnlyCollection<Version.ValidationResult> sourceObjects;
                 using (Probe.Create($"Query"))
