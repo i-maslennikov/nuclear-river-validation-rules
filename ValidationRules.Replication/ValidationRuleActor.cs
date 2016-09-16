@@ -16,7 +16,6 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication
 {
-    // todo: Интересно, что будет, если сохранять данные в базу только после прогона всех проверок?
     public sealed class ValidationRuleActor : IActor
     {
         private readonly IQuery _query;
@@ -38,6 +37,14 @@ namespace NuClear.ValidationRules.Replication
         {
             var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).FirstOrDefault();
             var currentVersionId = currentVersion?.Id ?? 0;
+
+            using (Probe.Create($"Delete"))
+            {
+                // Данные в целевых таблицах меняем в одной большой транзакции (сейчас она управляется из хендлера)
+                var forBulkDelete = new Version.ValidationResultForBulkDelete { VersionId = currentVersionId };
+                _deleteRepository.Delete(new[] { forBulkDelete });
+            }
+
             return _registry.CreateAccessors().SelectMany(accessor => ProcessRule(accessor, currentVersionId)).ToArray();
         }
 
@@ -60,13 +67,6 @@ namespace NuClear.ValidationRules.Replication
 
                         scope.Complete();
                     }
-                }
-
-                using (Probe.Create($"Delete"))
-                {
-                    // Данные в целевых таблицах меняем в одной большой транзакции (сейчас она управляется из хендлера)
-                    var forBulkDelete = new Version.ValidationResultForBulkDelete { MessageType = accessor.MessageTypeId, VersionId = currentVersion };
-                    _deleteRepository.Delete(new[] { forBulkDelete });
                 }
 
                 using (Probe.Create($"Create"))
