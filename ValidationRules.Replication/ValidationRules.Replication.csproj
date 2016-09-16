@@ -211,7 +211,6 @@
     <Compile Include="ConsistencyRules\Validation\BillsSumShouldMatchOrder.cs" />
     <Compile Include="ConsistencyRules\Validation\BillsShouldBeCreated.cs" />
     <Compile Include="EventCollectionHelper.cs" />
-    <Compile Include="QueryTracer.cs" />
     <Compile Include="ValidationResultAccessorBase.cs" />
     <Compile Include="IValidationResultAccessor.cs" />
     <Compile Include="ConsistencyRules\Validation\LinkedCategoryAsterixMayBelongToFirm.cs" />

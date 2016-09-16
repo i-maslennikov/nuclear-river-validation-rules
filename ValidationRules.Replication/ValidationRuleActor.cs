@@ -19,17 +19,15 @@ namespace NuClear.ValidationRules.Replication
     public sealed class ValidationRuleActor : IActor
     {
         private readonly IQuery _query;
-        private readonly QueryTracer _queryTracer;
         private readonly IBulkRepository<Version.ValidationResult> _repository;
         private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
         private readonly ValidationRuleRegistry _registry;
 
-        public ValidationRuleActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository, QueryTracer queryTracer)
+        public ValidationRuleActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
         {
             _query = query;
             _repository = repository;
             _deleteRepository = deleteRepository;
-            _queryTracer = queryTracer;
             _registry = new ValidationRuleRegistry(query);
         }
 
@@ -59,7 +57,6 @@ namespace NuClear.ValidationRules.Replication
                     {
                         // Запрос к данным источника посылаем вне транзакции, большой беды от этого быть не должно.
                         var query = accessor.GetSource().ApplyVersion(currentVersion);
-                        _queryTracer.Trace(query);
                         sourceObjects = query.ToArray();
 
                         // todo: удалить, добавлено с целью отладкиP
