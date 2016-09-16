@@ -41,7 +41,7 @@ go
 
 create table ConsistencyFacts.Category (
     Id bigint not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(128) not null,
     IsActiveNotDeleted bit not null,
 )
 go
@@ -51,14 +51,14 @@ create table ConsistencyFacts.Firm (
     IsClosedForAscertainment bit not null,
     IsActive bit not null,
     IsDeleted bit not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(250) not null,
 )
 go
 
 create table ConsistencyFacts.FirmAddress (
     Id bigint not null,
     FirmId bigint not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(512) not null,
     IsClosedForAscertainment bit not null,
     IsActive bit not null,
     IsDeleted bit not null,
@@ -77,7 +77,7 @@ create table ConsistencyFacts.LegalPersonProfile (
     LegalPersonId bigint not null,
     BargainEndDate datetime2(2) null,
     WarrantyEndDate datetime2(2) null,
-    Name nvarchar(max) not null,
+    Name nvarchar(256) not null,
 )
 go
 
@@ -99,7 +99,7 @@ create table ConsistencyFacts.[Order](
     EndDistributionFact datetime2(2) not null,
     EndDistributionPlan datetime2(2) not null,
     ReleaseCountPlan int not null,
-    Number nvarchar(max) not null,
+    Number nvarchar(64) not null,
 )
 go
 
@@ -127,7 +127,7 @@ go
 create table ConsistencyFacts.Position (
     Id bigint not null,
     BindingObjectType int not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(256) not null,
 )
 go
 

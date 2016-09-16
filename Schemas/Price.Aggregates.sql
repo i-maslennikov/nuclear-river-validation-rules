@@ -28,21 +28,21 @@ go
 -- справочник
 create table PriceAggregates.Project(
     Id bigint NOT NULL,
-    Name nvarchar(max) NOT NULL,
+    Name nvarchar(64) NOT NULL,
     constraint PK_Project primary key (Id)
 )
 go
 
 create table PriceAggregates.Theme(
     Id bigint NOT NULL,
-    Name nvarchar(max) NOT NULL,
+    Name nvarchar(64) NOT NULL,
     constraint PK_Theme primary key (Id)
 )
 go
 
 create table PriceAggregates.Category(
     Id bigint not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(128) not null,
     constraint PK_Category primary key (Id)
 )
 go
@@ -60,14 +60,14 @@ create table PriceAggregates.AssociatedPositionGroupOvercount(
     PriceId bigint NOT NULL,
     PricePositionId bigint NOT NULL,
     PricePositionName nvarchar(max) NOT NULL,
-    Count int NOT NULL,
+    [Count] int NOT NULL,
 )
 go
 
 create table PriceAggregates.AdvertisementAmountRestriction(
     PriceId bigint NOT NULL,
     CategoryCode bigint NOT NULL,
-    CategoryName nvarchar(max) NOT NULL,
+    CategoryName nvarchar(128) NOT NULL,
     [Min] int NOT NULL,
     [Max] int NOT NULL,
     MissingMinimalRestriction bit NOT NULL,
@@ -79,7 +79,7 @@ go
 create table PriceAggregates.[Order](
     Id bigint NOT NULL,
     FirmId bigint NOT NULL,
-    Number nvarchar(max) NOT NULL,
+    Number nvarchar(64) NOT NULL,
     constraint PK_Order primary key (Id)
 )
 create index IX_Order_FirmId ON PriceAggregates.[Order] ([FirmId]) include (Id)
@@ -157,7 +157,7 @@ go
 create table PriceAggregates.OrderPricePosition(
     OrderId bigint NOT NULL,
 	OrderPositionId bigint NOT NULL,
-	OrderPositionName nvarchar(max) NULL,
+	OrderPositionName nvarchar(256) NOT NULL,
 	PriceId bigint NOT NULL,
 	IsActive bit NOT NULL
 )
@@ -200,7 +200,7 @@ create table PriceAggregates.Position(
     Id bigint NOT NULL,
     CategoryCode bigint NOT NULL,
     IsControlledByAmount bit NOT NULL,
-    Name nvarchar(max) NOT NULL,
+    Name nvarchar(256) NOT NULL,
     constraint PK_Position primary key (Id)
 )
 go

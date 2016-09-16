@@ -30,7 +30,7 @@ create table PriceFacts.Position(
     CategoryCode bigint not null,
     IsControlledByAmount bit not null,
     IsComposite bit not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(256) not null,
     constraint PK_Position primary key (Id)
 )
 create index IX_Position_IsComposite ON PriceFacts.Position (IsComposite)
@@ -100,7 +100,7 @@ create table PriceFacts.[Order](
     EndReleaseNumberFact int not null,
     EndReleaseNumberPlan int not null,
     WorkflowStepId int not null,
-    Number nvarchar(max) not null,
+    Number nvarchar(64) not null,
     constraint PK_Order primary key (Id)
 )
 go
@@ -131,14 +131,14 @@ go
 create table PriceFacts.Project(
     Id bigint not null,
     OrganizationUnitId bigint not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(64) not null,
     constraint PK_Project primary key (Id)
 )
 go
 
 create table PriceFacts.Theme(
     Id bigint not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(64) not null,
     constraint PK_Theme primary key (Id)
 )
 go
@@ -146,7 +146,7 @@ go
 create table PriceFacts.Category(
     Id bigint not null,
     ParentId bigint not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(128) not null,
     constraint PK_Category primary key (Id)
 )
 create index IX_Category_ParentId ON PriceFacts.Category (ParentId)

@@ -23,7 +23,7 @@ go
 create table ConsistencyAggregates.[Order](
     Id bigint not null,
     ProjectId bigint not null,
-    Number nvarchar(max) not null,
+    Number nvarchar(64) not null,
     BeginDistribution datetime2(2) not null,
     EndDistributionFact datetime2(2) not null,
     EndDistributionPlan datetime2(2) not null,
@@ -33,7 +33,7 @@ go
 create table ConsistencyAggregates.InvalidFirm(
     OrderId bigint not null,
     FirmId bigint not null,
-    FirmName nvarchar(max) not null,
+    FirmName nvarchar(250) not null,
     [State] int not null,
 )
 go
@@ -41,9 +41,9 @@ go
 create table ConsistencyAggregates.InvalidFirmAddress(
     OrderId bigint not null,
     FirmAddressId bigint not null,
-    FirmAddressName nvarchar(max) not null,
+    FirmAddressName nvarchar(512) not null,
     OrderPositionId bigint not null,
-    OrderPositionName nvarchar(max) not null,
+    OrderPositionName nvarchar(256) not null,
     [State] int not null,
 )
 go
@@ -51,9 +51,9 @@ go
 create table ConsistencyAggregates.InvalidCategory(
     OrderId bigint not null,
     CategoryId bigint not null,
-    CategoryName nvarchar(max) not null,
+    CategoryName nvarchar(128) not null,
     OrderPositionId bigint not null,
-    OrderPositionName nvarchar(max) not null,
+    OrderPositionName nvarchar(256) not null,
     [State] int not null,
     MayNotBelongToFirm bit not null,
 )
@@ -62,11 +62,11 @@ go
 create table ConsistencyAggregates.InvalidCategoryFirmAddress(
     OrderId bigint not null,
     FirmAddressId bigint not null,
-    FirmAddressName nvarchar(max) not null,
+    FirmAddressName nvarchar(512) not null,
     CategoryId bigint not null,
-    CategoryName nvarchar(max) not null,
+    CategoryName nvarchar(128) not null,
     OrderPositionId bigint not null,
-    OrderPositionName nvarchar(max) not null,
+    OrderPositionName nvarchar(256) not null,
     [State] int not null,
 )
 go
@@ -84,14 +84,14 @@ go
 create table ConsistencyAggregates.LegalPersonProfileBargainExpired(
     OrderId bigint not null,
     LegalPersonProfileId bigint not null,
-    LegalPersonProfileName nvarchar(max) not null,
+    LegalPersonProfileName nvarchar(256) not null,
 )
 go
 
 create table ConsistencyAggregates.LegalPersonProfileWarrantyExpired(
     OrderId bigint not null,
     LegalPersonProfileId bigint not null,
-    LegalPersonProfileName nvarchar(max) not null,
+    LegalPersonProfileName nvarchar(256) not null,
 )
 go
 
