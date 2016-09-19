@@ -145,11 +145,12 @@ go
 
 create table PriceFacts.Category(
     Id bigint not null,
-    ParentId bigint not null,
     Name nvarchar(128) not null,
+    L3Id bigint null,
+    L2Id bigint null,
+    L1Id bigint null,
     constraint PK_Category primary key (Id)
 )
-create index IX_Category_ParentId ON PriceFacts.Category (ParentId)
 go
 
 create table PriceFacts.RulesetRule(

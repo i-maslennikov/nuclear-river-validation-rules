@@ -49,11 +49,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                          ObjectBindingType = rulesetRule.ObjectBindingType
                                      });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Facts::Category>> Category =
-                        new MapSpecification<IQuery, IQueryable<Facts::Category>>(
-                            q => q.For(Find.Erm.Categories())
-                                  .Select(Transform.Category));
-
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Order>> Order =
                         new MapSpecification<IQuery, IQueryable<Facts::Order>>(
                             q => from order in q.For(Find.Erm.Orders())
@@ -141,14 +136,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     PositionId = x.PositionId,
                                     ObjectBindingType = x.ObjectBindingType,
                                 };
-
-                        public static readonly Expression<Func<Erm::Category, Facts::Category>> Category =
-                            x => new Facts::Category
-                            {
-                                Id = x.Id,
-                                ParentId = x.ParentId,
-                                Name = x.Name,
-                            };
 
                         public static readonly Expression<Func<Erm::OrderPosition, Facts::OrderPosition>> OrderPosition =
                             x => new Facts::OrderPosition

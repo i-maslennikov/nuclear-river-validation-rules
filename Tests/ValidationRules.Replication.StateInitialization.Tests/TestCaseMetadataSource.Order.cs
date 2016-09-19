@@ -22,16 +22,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::OrderPositionAdvertisement { Id = 33, PositionId = 21, OrderPositionId = 1, CategoryId = 1 },
                 new Facts::OrderPositionAdvertisement { Id = 34, PositionId = 21, OrderPositionId = 1, CategoryId = 3, FirmAddressId = 111 },
                 new Facts::Position { Id = 21, IsComposite = false },
-                new Facts::Category { Id = 3, ParentId = 2 },
-                new Facts::Category { Id = 2, ParentId = 1 },
-                new Facts::Category { Id = 1 })
+                new Facts::Category { Id = 3, L1Id = 1, L2Id = 2, L3Id = 3 },
+                new Facts::Category { Id = 2, L1Id = 1, L2Id = 2 },
+                new Facts::Category { Id = 1, L1Id = 1 })
             .Aggregate(
                 // OrderPositionAdvertisement
                 new Aggregates::Order { },
 
                 new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, HasNoBinding = true },
                 new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1 },
-                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 1 },
+                new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = null, Category1Id = 1 },
                 new Aggregates::OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1, FirmAddressId = 111 },
 
                 new Aggregates::Position { Id = 21 },
@@ -58,9 +58,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::Position { Id = 23, IsComposite = false },
                 new Facts::Position { Id = 24, IsComposite = false },
                 new Facts::Position { Id = 25, IsComposite = false },
-                new Facts::Category { Id = 3, ParentId = 2 },
-                new Facts::Category { Id = 2, ParentId = 1 },
-                new Facts::Category { Id = 1 })
+                new Facts::Category { Id = 3, L1Id = 1, L2Id = 2, L3Id = 3 },
+                new Facts::Category { Id = 2, L1Id = 1, L2Id = 2 },
+                new Facts::Category { Id = 1, L1Id = 1 })
             .Aggregate(
                 // OrderPositionAdvertisement
                 new Aggregates::Order { },

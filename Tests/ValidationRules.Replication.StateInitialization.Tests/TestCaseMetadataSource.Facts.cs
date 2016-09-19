@@ -126,15 +126,21 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(CategoryFacts))
             .Erm(
-                new Erm::Category { Id = 1, IsActive = true, IsDeleted = false, ParentId = 1, Name = "1" },
-                new Erm::Category { Id = 2, IsActive = false, IsDeleted = false },
-                new Erm::Category { Id = 3, IsActive = true, IsDeleted = true })
+                new Erm::Category { Id = 1, IsActive = true, IsDeleted = false, Level = 1, Name = "1" },
+                new Erm::Category { Id = 2, IsActive = true, IsDeleted = false, Level = 2, ParentId = 1, Name = "2" },
+                new Erm::Category { Id = 3, IsActive = true, IsDeleted = false, Level = 3, ParentId = 2, Name = "3" },
+                new Erm::Category { Id = 4, IsActive = false, IsDeleted = false },
+                new Erm::Category { Id = 5, IsActive = true, IsDeleted = true })
             .Fact(
-                new PriceFacts::Category { Id = 1, ParentId = 1, Name = "1" },
+                new PriceFacts::Category { Id = 1, L1Id = 1, Name = "1" },
+                new PriceFacts::Category { Id = 2, L1Id = 1, L2Id = 2, Name = "2" },
+                new PriceFacts::Category { Id = 3, L1Id = 1, L2Id = 2, L3Id = 3, Name = "3" },
 
                 new ConsistencyFacts::Category { Id = 1, IsActiveNotDeleted = true, Name = "1" },
-                new ConsistencyFacts::Category { Id = 2, IsActiveNotDeleted = false },
-                new ConsistencyFacts::Category { Id = 3, IsActiveNotDeleted = false });
+                new ConsistencyFacts::Category { Id = 2, IsActiveNotDeleted = true, Name = "2" },
+                new ConsistencyFacts::Category { Id = 3, IsActiveNotDeleted = true, Name = "3" },
+                new ConsistencyFacts::Category { Id = 4, IsActiveNotDeleted = false },
+                new ConsistencyFacts::Category { Id = 5, IsActiveNotDeleted = false });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement DeniedPositionFacts

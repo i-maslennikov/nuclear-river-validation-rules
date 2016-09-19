@@ -188,8 +188,8 @@ namespace NuClear.ValidationRules.Replication.Tests.Actors
         public void ShouldRecalculateOrderIfCategoryUpdated()
         {
             Store.Builder
-                    .Has(new Storage.Model.Erm.Category { Id = 3, ParentId = 1, IsActive = true })
-                    .Has(new Category { Id = 3, ParentId = 2 })
+                    .Has(new Storage.Model.Erm.Category { Id = 3, Name = "abc", IsActive = true })
+                    .Has(new Category { Id = 3, Name = "def" })
                     .Has(new OrderPosition { Id = 2, OrderId = 1 })
                     .Has(new OrderPositionAdvertisement { OrderPositionId = 2, CategoryId = 3 });
 

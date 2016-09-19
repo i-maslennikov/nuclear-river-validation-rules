@@ -91,18 +91,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<OrderPosition> GetSource()
             {
-                var categories =
-                    from c3 in _query.For<Facts::Category>()
-                    join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
-                    join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
-                    select new { Category3Id = c3.Id, Category1Id = c1.Id };
-
                 var opas = from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
                            join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                            join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
-                           from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                           from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                            select new OrderPosition
                            {
                                OrderId = orderPosition.OrderId,
@@ -112,9 +106,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                                PackagePositionId = pricePosition.PositionId,
 
                                HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                               Category3Id = opa.CategoryId,
+                               Category3Id = category.L3Id,
                                FirmAddressId = opa.FirmAddressId,
-                               Category1Id = category.Category1Id,
+                               Category1Id = category.L1Id,
 
                                ThemeId = opa.ThemeId,
                            };
@@ -124,7 +118,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                            join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
-                           from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                           from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                            select new OrderPosition
                            {
                                OrderId = orderPosition.OrderId,
@@ -134,9 +128,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                                PackagePositionId = pricePosition.PositionId,
 
                                HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                               Category3Id = opa.CategoryId,
+                               Category3Id = category.L3Id,
                                FirmAddressId = opa.FirmAddressId,
-                               Category1Id = category.Category1Id,
+                               Category1Id = category.L1Id,
 
                                ThemeId = opa.ThemeId,
                            };
@@ -225,18 +219,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<OrderDeniedPosition> GetSource()
             {
-                var categories =
-                    from c3 in _query.For<Facts::Category>()
-                    join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
-                    join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
-                    select new { Category3Id = c3.Id, Category1Id = c1.Id };
-
                 var opas =
                     from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
                     join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                     join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                     select new
                         {
                             PriceId = pricePosition.PriceId,
@@ -245,9 +233,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             CausePackagePositionId = pricePosition.PositionId,
                             CauseItemPositionId = opa.PositionId,
                             HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                            Category3Id = opa.CategoryId,
+                            Category3Id = category.L3Id,
                             FirmAddressId = opa.FirmAddressId,
-                            Category1Id = category.Category1Id,
+                            Category1Id = category.L1Id,
                             Source = "opas",
                         };
 
@@ -257,7 +245,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                     join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
-                    from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                     select new
                         {
                             PriceId = pricePosition.PriceId,
@@ -266,9 +254,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             CausePackagePositionId = pricePosition.PositionId,
                             CauseItemPositionId = pricePosition.PositionId,
                             HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                            Category3Id = opa.CategoryId,
+                            Category3Id = category.L3Id,
                             FirmAddressId = opa.FirmAddressId,
-                            Category1Id = category.Category1Id,
+                            Category1Id = category.L1Id,
                             Source = "pkgs",
                         };
 
@@ -337,18 +325,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<OrderAssociatedPosition> GetSource()
             {
-                var categories =
-                    from c3 in _query.For<Facts::Category>()
-                    join c2 in _query.For<Facts::Category>() on c3.ParentId equals c2.Id
-                    join c1 in _query.For<Facts::Category>() on c2.ParentId equals c1.Id
-                    select new { Category3Id = c3.Id, Category1Id = c1.Id };
-
                 var opas =
                     from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
                     join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                     join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                     select new
                     {
                         PricePositionId = pricePosition.Id,
@@ -357,9 +339,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         CausePackagePositionId = pricePosition.PositionId,
                         CauseItemPositionId = opa.PositionId,
                         HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                        Category3Id = opa.CategoryId,
+                        Category3Id = category.L3Id,
                         opa.FirmAddressId,
-                        category.Category1Id,
+                        Category1Id = category.L1Id,
                         Source = "opas",
                     };
 
@@ -369,7 +351,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                     join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
-                    from category in categories.Where(x => x.Category3Id == opa.CategoryId).DefaultIfEmpty()
+                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                     select new
                     {
                         PricePositionId = pricePosition.Id,
@@ -378,9 +360,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         CausePackagePositionId = pricePosition.PositionId,
                         CauseItemPositionId = pricePosition.PositionId,
                         HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                        Category3Id = opa.CategoryId,
+                        Category3Id = category.L3Id,
                         opa.FirmAddressId,
-                        category.Category1Id,
+                        Category1Id = category.L1Id,
                         Source = "pkgs",
                     };
 
