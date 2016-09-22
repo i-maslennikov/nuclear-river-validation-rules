@@ -3,6 +3,7 @@ using LinqToDB.Mapping;
 
 using AccountAggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
+using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 
 namespace NuClear.ValidationRules.Storage
 {
@@ -10,12 +11,14 @@ namespace NuClear.ValidationRules.Storage
     {
         private const string PriceAggregatesSchema = "PriceAggregates";
         private const string AccountAggregatesSchema = "AccountAggregates";
+        private const string ConsistencyAggregatesSchema = "ConsistencyAggregates";
 
         public static MappingSchema Aggregates
             => new MappingSchema(nameof(Aggregates), new SqlServerMappingSchema())
                 .GetFluentMappingBuilder()
                 .RegisterPriceAggregates()
                 .RegisterAccountAggregates()
+                .RegisterConsistencyAggregates()
                 .MappingSchema;
 
         private static FluentMappingBuilder RegisterPriceAggregates(this FluentMappingBuilder builder)
@@ -69,6 +72,14 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<PriceAggregates::Theme>()
+                  .HasSchemaName(PriceAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<PriceAggregates::Category>()
+                  .HasSchemaName(PriceAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
+
             return builder;
         }
 
@@ -86,6 +97,66 @@ namespace NuClear.ValidationRules.Storage
 
             builder.Entity<AccountAggregates::AccountPeriod>()
                    .HasSchemaName(AccountAggregatesSchema);
+
+            return builder;
+        }
+
+        private static FluentMappingBuilder RegisterConsistencyAggregates(this FluentMappingBuilder builder)
+        {
+            builder.Entity<ConsistencyAggregates::Order>()
+                  .HasSchemaName(ConsistencyAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyAggregates::Order.BargainSignedLaterThanOrder>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.InvalidFirm>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.InvalidFirmAddress>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.InvalidCategoryFirmAddress>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.InvalidCategory>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.HasNoAnyLegalPersonProfile>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.HasNoAnyPosition>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.InvalidBeginDistributionDate>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.InvalidBillsPeriod>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.InvalidBillsTotal>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.InvalidEndDistributionDate>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.LegalPersonProfileBargainExpired>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.LegalPersonProfileWarrantyExpired>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.MissingBargainScan>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.MissingBills>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.MissingRequiredField>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
+            builder.Entity<ConsistencyAggregates::Order.MissingOrderScan>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
 
             return builder;
         }

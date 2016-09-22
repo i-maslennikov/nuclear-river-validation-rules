@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -23,6 +23,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
         private const string PeriodKey = "periodKey";
         private const string OrganizationUnitId = "organizationUnitId";
         private const string Start = "start";
+        private const string End = "end";
 
         private static readonly IReadOnlyDictionary<string, Type> SimpleTypes =
             AppDomain.CurrentDomain.GetAssemblies()
@@ -87,8 +88,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                             new PeriodKey
                                 {
                                     OrganizationUnitId = (long)statisticsKey.Attribute(OrganizationUnitId),
-                                    Start = (DateTime)statisticsKey.Attribute(Start)
-                                });
+                                    Start = (DateTime)statisticsKey.Attribute(Start),
+                                    End = (DateTime)statisticsKey.Attribute(End)
+                            });
                     }
                 }
             }
@@ -162,7 +164,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                                     new XElement(RelatedDataObjectId,
                                                  new XElement(PeriodKey,
                                                               new XAttribute(OrganizationUnitId, complexOutdatedEvent.RelatedDataObjectId.OrganizationUnitId),
-                                                              new XAttribute(Start, complexOutdatedEvent.RelatedDataObjectId.Start))));
+                                                              new XAttribute(Start, complexOutdatedEvent.RelatedDataObjectId.Start),
+                                                              new XAttribute(End, complexOutdatedEvent.RelatedDataObjectId.End))));
             }
 
             var factsStateIncrementedEvent = @event as FactsStateIncrementedEvent;

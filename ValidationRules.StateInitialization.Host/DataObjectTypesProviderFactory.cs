@@ -13,6 +13,11 @@ using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
+using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+
+using Messages = NuClear.ValidationRules.Storage.Model.Messages;
+
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
@@ -31,13 +36,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceFacts::Order),
                             typeof(PriceFacts::OrderPosition),
                             typeof(PriceFacts::OrderPositionAdvertisement),
-                            typeof(PriceFacts::OrganizationUnit),
                             typeof(PriceFacts::Position),
                             typeof(PriceFacts::Price),
                             typeof(PriceFacts::PricePosition),
                             typeof(PriceFacts::PricePositionNotActive),
                             typeof(PriceFacts::Project),
                             typeof(PriceFacts::RulesetRule),
+                            typeof(PriceFacts::Theme),
 
                             typeof(AccountFacts::Account),
                             typeof(AccountFacts::Order),
@@ -46,8 +51,25 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountFacts::Limit),
                             typeof(AccountFacts::OrderPosition),
                             typeof(AccountFacts::ReleaseWithdrawal),
+
+                            typeof(ConsistencyFacts::Bargain),
+                            typeof(ConsistencyFacts::BargainScanFile),
+                            typeof(ConsistencyFacts::Bill),
+                            typeof(ConsistencyFacts::Category),
+                            typeof(ConsistencyFacts::CategoryFirmAddress),
+                            typeof(ConsistencyFacts::Firm),
+                            typeof(ConsistencyFacts::FirmAddress),
+                            typeof(ConsistencyFacts::LegalPersonProfile),
+                            typeof(ConsistencyFacts::Order),
+                            typeof(ConsistencyFacts::OrderPosition),
+                            typeof(ConsistencyFacts::OrderPositionAdvertisement),
+                            typeof(ConsistencyFacts::OrderScanFile),
+                            typeof(ConsistencyFacts::Position),
+                            typeof(ConsistencyFacts::Project),
+                            typeof(ConsistencyFacts::ReleaseWithdrawal),
                         });
             }
+
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
             {
                 return new CommandRegardlessDataObjectTypesProvider(
@@ -67,11 +89,41 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Project),
                             typeof(PriceAggregates::AssociatedPositionGroupOvercount),
                             typeof(PriceAggregates::PricePeriod),
+                            typeof(PriceAggregates::Theme),
+                            typeof(PriceAggregates::Category),
 
                             typeof(AccountAggregates::Order),
                             typeof(AccountAggregates::Lock),
                             typeof(AccountAggregates::Account),
                             typeof(AccountAggregates::AccountPeriod),
+
+                            typeof(ConsistencyAggregates::Order),
+                            typeof(ConsistencyAggregates::Order.BargainSignedLaterThanOrder),
+                            typeof(ConsistencyAggregates::Order.InvalidFirm),
+                            typeof(ConsistencyAggregates::Order.InvalidFirmAddress),
+                            typeof(ConsistencyAggregates::Order.InvalidCategory),
+                            typeof(ConsistencyAggregates::Order.InvalidCategoryFirmAddress),
+                            typeof(ConsistencyAggregates::Order.HasNoAnyLegalPersonProfile),
+                            typeof(ConsistencyAggregates::Order.HasNoAnyPosition),
+                            typeof(ConsistencyAggregates::Order.InvalidBeginDistributionDate),
+                            typeof(ConsistencyAggregates::Order.InvalidBillsPeriod),
+                            typeof(ConsistencyAggregates::Order.InvalidBillsTotal),
+                            typeof(ConsistencyAggregates::Order.InvalidEndDistributionDate),
+                            typeof(ConsistencyAggregates::Order.LegalPersonProfileBargainExpired),
+                            typeof(ConsistencyAggregates::Order.LegalPersonProfileWarrantyExpired),
+                            typeof(ConsistencyAggregates::Order.MissingBargainScan),
+                            typeof(ConsistencyAggregates::Order.MissingBills),
+                            typeof(ConsistencyAggregates::Order.MissingRequiredField),
+                            typeof(ConsistencyAggregates::Order.MissingOrderScan),
+                        });
+            }
+
+            if (command.TargetStorageDescriptor.ConnectionStringIdentity is MessagesConnectionStringIdentity)
+            {
+                return new CommandRegardlessDataObjectTypesProvider(
+                    new List<Type>
+                        {
+                            typeof(Messages::Version.ValidationResult),
                         });
             }
 

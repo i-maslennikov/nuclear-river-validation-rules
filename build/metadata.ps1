@@ -36,14 +36,20 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 	return $entryPointsMetadata
 }
 
-function Get-BulkToolMetadata ($updateSchemasMetadata, $Context){
+function Get-BulkToolMetadata ($updateSchemas, $Context){
 	$metadata = @{}
 
 	$arguments = @()
-	switch -Regex (@($updateSchemasMetadata.Keys)){
-		'Facts' { $arguments += @('-facts', '-aggregates') }
-		'Aggregates' { $arguments += @('-aggregates') }
-	}
+    if($updateSchemas -contains 'Facts') {
+        $arguments += @('-facts', '-aggregates', '-messages')
+    }
+    if($updateSchemas -contains 'Aggregates') {
+        $arguments += @('-aggregates', '-messages')
+    }
+    if($updateSchemas -contains 'Messages') {
+        $arguments += @('-messages')
+    }
+
 	$metadata += @{ 'Arguments' = ($arguments | select -Unique) }
 
 	$Context.EntryPoint = 'ValidationRules.StateInitialization.Host'
@@ -69,7 +75,7 @@ function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 
 	if ($updateSchemasMetadata.Count -ne 0){
 		$metadata += @{ 'UpdateSchemas' = $updateSchemasMetadata }
-		$metadata += Get-BulkToolMetadata $updateSchemasMetadata $Context
+		$metadata += Get-BulkToolMetadata $UpdateSchemas $Context
 	}
 
 	return $metadata
@@ -146,6 +152,8 @@ $AllSchemas = @{
 	'Price.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Price.Aggregates.sql' }
 	'Account.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Account.Facts.sql' }
 	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Account.Aggregates.sql' }
+	'Consistency.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Consistency.Facts.sql' }
+	'Consistency.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Consistency.Aggregates.sql' }
 	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'Schemas\Messages.sql' }
 }
 

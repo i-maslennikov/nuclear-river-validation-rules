@@ -30,24 +30,29 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<PricePosition>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<PricePosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<PricePosition> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<PricePosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<PricePosition> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PricePosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PricePosition> dataObjects)
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<PricePosition> dataObjects)
         {
+            // Поле PriceId не меняется
+            var priceIds = dataObjects.Select(x => x.PriceId);
+
             var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<PricePosition>(x => ids.Contains(x.Id));
+            var orderIds = from orderPosition in _query.For<OrderPosition>().Where(x => ids.Contains(x.PricePositionId))
+                           select orderPosition.OrderId;
 
-            var priceIds = (from pricePosition in _query.For(specification)
-                            select pricePosition.PriceId).Distinct()
-                            .Distinct()
-                            .ToArray();
-
-            return priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Price), x))
-                          .ToArray();
+            return new EventCollectionHelper
+                {
+                    { typeof(Order), orderIds.Distinct() },
+                    { typeof(Price), priceIds.Distinct() },
+                };
         }
     }
 }

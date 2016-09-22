@@ -1,7 +1,7 @@
-namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
+п»їnamespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
-    /// Импортированная из ERM сущность заказа
+    /// РРјРїРѕСЂС‚РёСЂРѕРІР°РЅРЅР°СЏ РёР· ERM СЃСѓС‰РЅРѕСЃС‚СЊ Р·Р°РєР°Р·Р°
     /// </summary>
     public sealed class Order
     {

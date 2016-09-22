@@ -16,13 +16,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
         private static IEnumerable<TestCaseMetadataElement> Tests()
         {
-            var acts = new[] { ErmToFacts, FactsToAggregates };
+            var acts = new[] { ErmToFacts, FactsToAggregates, AggregatesToMessages };
 
             var tests = from arrangeMetadataElement in ScanForDatasets()
                         from actMetadataElement in acts
                         where actMetadataElement.Requirements.All(requirement => arrangeMetadataElement.Contexts.Contains(requirement))
                               && arrangeMetadataElement.Contexts.Contains(actMetadataElement.Target)
-                        select new TestCaseMetadataElement(arrangeMetadataElement, actMetadataElement);
+                        select new TestCaseMetadataElement(arrangeMetadataElement, actMetadataElement, AssertOnlyMentionedTypes);
 
             return tests.OrderBy(x => x.Identity.Id.ToString());
         }
@@ -47,5 +47,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                               .Source(ContextName.Facts)
                               .Target(ContextName.Aggregates)
                               .Action<BulkReplicationAdapter<Aggregates>>();
+
+        private static readonly ActMetadataElement AggregatesToMessages =
+            ActMetadataElement.Config
+                              .Source(ContextName.Aggregates)
+                              .Target(ContextName.Messages)
+                              .Action<BulkReplicationAdapter<Messages>>();
+
+        private static readonly AssertMetadataElement AssertOnlyMentionedTypes =
+            AssertMetadataElement.Config
+                                 .Filter((type, context) => context.Keys.Contains(type));
     }
 }

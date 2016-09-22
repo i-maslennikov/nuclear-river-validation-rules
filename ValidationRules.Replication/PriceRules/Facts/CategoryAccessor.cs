@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -22,38 +21,48 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             _query = query;
         }
 
-        public IQueryable<Category> GetSource() => Specs.Map.Erm.ToFacts.Category.Map(_query);
+        public IQueryable<Category> GetSource()
+            => CategoriesLevel1.Union(CategoriesLevel2).Union(CategoriesLevel3);
+
+        private IQueryable<Category> CategoriesLevel3
+            => from c3 in _query.For(Specs.Find.Erm.Categories()).Where(x => x.Level == 3)
+               from c2 in _query.For(Specs.Find.Erm.Categories()).Where(x => x.Level == 2 && x.Id == c3.ParentId)
+               from c1 in _query.For(Specs.Find.Erm.Categories()).Where(x => x.Level == 1 && x.Id == c2.ParentId)
+               select new Category { Id = c3.Id, Name = c3.Name, L3Id = c3.Id, L2Id = c2.Id, L1Id = c1.Id };
+
+        private IQueryable<Category> CategoriesLevel2
+            => from c2 in _query.For(Specs.Find.Erm.Categories()).Where(x => x.Level == 2)
+               from c1 in _query.For(Specs.Find.Erm.Categories()).Where(x => x.Level == 1 && x.Id == c2.ParentId)
+               select new Category { Id = c2.Id, Name = c2.Name, L3Id = null, L2Id = c2.Id, L1Id = c1.Id };
+
+        private IQueryable<Category> CategoriesLevel1
+            => from c1 in _query.For(Specs.Find.Erm.Categories()).Where(x => x.Level == 1)
+               select new Category { Id = c1.Id, Name = c1.Name, L3Id = null, L2Id = null, L1Id = c1.Id };
 
         public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<Category>(x => ids.Contains(x.Id));
+            return new FindSpecification<Category>(x => ids.Contains(x.L1Id.Value) || ids.Contains(x.L2Id.Value) || ids.Contains(x.L3Id.Value));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Category> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Category> dataObjects)
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Category), x.Id)).ToArray();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Category> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Category> dataObjects)
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Category), x.Id)).ToArray();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Category> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Category> dataObjects)
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Category), x.Id)).ToArray();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Category> dataObjects)
         {
-            // todo: А нужно ли пересчитывать заказы, которые имею продажи в одну из родительских рубрик?
-            // т.е. связаны не с Category.Id, а с Category.ParentId (по факту не бывает) или Category.ParentId.ParentId (очень даже бывает)
-            // нет, не требуется - это должно быть поддержано на уровне вычисления сообщений, а для пересчёта заказа не требуется.
+            var categoryIds = dataObjects.Select(x => x.Id).ToArray();
 
-            var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<Category>(x => ids.Contains(x.Id));
+            var orderIds = from opa in _query.For<OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue && categoryIds.Contains(x.CategoryId.Value))
+                           from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
+                           select orderPosition.OrderId;
 
-            var orderIds = (from category in _query.For(specification)
-                            join opa in _query.For<OrderPositionAdvertisement>() on category.Id equals opa.CategoryId
-                            join orderPosition in _query.For<OrderPosition>() on opa.OrderPositionId equals orderPosition.Id
-                            select orderPosition.OrderId)
-                            .Distinct()
-                            .ToArray();
-
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
-                          .ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

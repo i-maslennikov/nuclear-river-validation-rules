@@ -42,9 +42,14 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Project> dataObjects)
         {
-            var ids = dataObjects.Select(x => x.OrganizationUnitId).ToArray();
-            var orderIds = _query.For<Order>().Where(x => ids.Contains(x.DestOrganizationUnitId)).Select(x => x.Id).ToArray();
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x)).ToArray();
+            var projectIds = dataObjects.Select(x => x.Id).ToArray();
+
+            var orderIds =
+                from project in _query.For<Project>().Where(x => projectIds.Contains(x.Id))
+                from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
+                select order.Id;
+
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

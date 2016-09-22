@@ -17,6 +17,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 { ErmTestConnectionStringIdentity.Instance, ErmConnectionStringIdentity.Instance },
                 { FactsTestConnectionStringIdentity.Instance, FactsConnectionStringIdentity.Instance },
                 { AggregatesTestConnectionStringIdentity.Instance, AggregatesConnectionStringIdentity.Instance },
+                { MessagesTestConnectionStringIdentity.Instance, MessagesConnectionStringIdentity.Instance },
             };
 
         private readonly IConnectionStringSettings _connectionStringSettings;

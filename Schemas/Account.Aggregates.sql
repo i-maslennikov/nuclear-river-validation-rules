@@ -11,7 +11,7 @@ create table AccountAggregates.[Order](
     DestProjectId bigint not null,
     SourceProjectId bigint not null,
     AccountId bigint null,
-    Number nvarchar(max) not null,
+    Number nvarchar(64) not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDate datetime2(2) not null,
     constraint PK_Order primary key (Id)
@@ -46,3 +46,8 @@ create table AccountAggregates.AccountPeriod(
 )
 --create index IX_AccountPeriod_ ON AccountAggregates.Lock (AccountId)
 go
+
+CREATE NONCLUSTERED INDEX IX_AccountPeriod_AccountId_Start_End
+ON [AccountAggregates].[AccountPeriod] ([AccountId],[Start],[End])
+INCLUDE ([Balance],[LockedAmount],[OwerallLockedAmount],[ReleaseAmount],[LimitAmount])
+GO

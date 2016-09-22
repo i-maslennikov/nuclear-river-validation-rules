@@ -47,6 +47,11 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Limit> dataObjects)
-            => dataObjects.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Account), x.AccountId)).ToArray();
+        {
+            // полагаться на поля, отличные от Id не стоит, но здесь расчёт на то, что лимит нельзя перевести с одного ЛС на другой
+            var accountIds = dataObjects.Select(x => x.AccountId);
+
+            return new EventCollectionHelper { { typeof(Account), accountIds.Distinct() } };
+        }
     }
 }

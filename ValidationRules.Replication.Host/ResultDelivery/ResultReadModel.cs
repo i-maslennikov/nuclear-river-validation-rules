@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
@@ -23,17 +23,16 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
             var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
-                // Просто .First() приводит к сообщению, что подключение закрыто.
-                var lastVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).ToArray().First();
-
+                var lastVersion = _query.For<Version>().OrderByDescending(x => x.Id).FirstOrDefault();
+                var lastVersionId = lastVersion?.Id ?? 0;
                 var results = new List<Message>();
                 foreach (var group in filter.GroupBy(x => x.Item2, x => x.Item1))
                 {
                     var query = _query.For<Version.ValidationResultByOrder>()
-                                      .Where(x => x.VersionId == lastVersion.Id)
+                                      .Where(x => x.VersionId == lastVersionId)
                                       .Where(x => x.PeriodStart <= group.Key && group.Key < x.PeriodEnd)
                                       .Where(x => group.Contains(x.OrderId))
-                                      .Select(x => new Message(x.MessageType, x.MessageParams, x.Result));
+                                      .Select(x => new Message((MessageTypeCode)x.MessageType, x.MessageParams, x.Result));
                     results.AddRange(query);
                 }
 

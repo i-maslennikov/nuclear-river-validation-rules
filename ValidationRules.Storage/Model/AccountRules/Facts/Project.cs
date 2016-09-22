@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.AccountRules.Facts
+﻿namespace NuClear.ValidationRules.Storage.Model.AccountRules.Facts
 {
     public sealed class Project
     {

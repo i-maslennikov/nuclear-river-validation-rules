@@ -55,7 +55,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    join destProject in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals destProject.OrganizationUnitId
                    join sourceProject in _query.For<Facts::Project>() on order.SourceOrganizationUnitId equals sourceProject.OrganizationUnitId
-                   from account in _query.For<Facts::Account>().Where(x => x.Id == order.AccountId).DefaultIfEmpty()
+                   from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId).DefaultIfEmpty()
                    select new Order
                        {
                            Id = order.Id,

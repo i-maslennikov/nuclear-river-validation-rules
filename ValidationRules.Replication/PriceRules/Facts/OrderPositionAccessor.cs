@@ -30,24 +30,21 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<OrderPosition>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrderPosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrderPosition> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<OrderPosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<OrderPosition> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<OrderPosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<OrderPosition> dataObjects)
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderPosition> dataObjects)
         {
-            var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<OrderPosition>(x => ids.Contains(x.Id));
+            // поле OrderId не меняется - в базу ходить за старым значением не надо.
+            var orderIds = dataObjects.Select(x => x.OrderId);
 
-            var orderIds = (from orderPosition in _query.For(specification)
-                            select orderPosition.OrderId)
-                            .Distinct()
-                            .ToArray();
-
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
-                          .ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

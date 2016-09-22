@@ -3,6 +3,7 @@ using LinqToDB.Mapping;
 
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
 namespace NuClear.ValidationRules.Storage
 {
@@ -10,6 +11,7 @@ namespace NuClear.ValidationRules.Storage
     {
         private const string PriceFactsSchema = "PriceFacts";
         private const string AccountFactsSchema = "AccountFacts";
+        private const string ConsistencyFactsSchema = "ConsistencyFacts";
 
         public static MappingSchema Facts
         {
@@ -18,7 +20,8 @@ namespace NuClear.ValidationRules.Storage
                 var schema = new MappingSchema(nameof(Facts), new SqlServerMappingSchema());
                 schema.GetFluentMappingBuilder()
                       .RegisterPriceFacts()
-                      .RegisterAccountFacts();
+                      .RegisterAccountFacts()
+                      .RegisterConsistencyFacts();
 
                 return schema;
             }
@@ -44,9 +47,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceFacts::OrderPositionAdvertisement>()
                   .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
-            builder.Entity<PriceFacts::OrganizationUnit>()
-                  .HasSchemaName(PriceFactsSchema)
-                  .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::Price>()
                   .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
@@ -63,6 +63,9 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PriceFacts::Category>()
+                  .HasSchemaName(PriceFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<PriceFacts::Theme>()
                   .HasSchemaName(PriceFactsSchema)
                   .HasPrimaryKey(x => x.Id);
 
@@ -106,6 +109,71 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AccountFacts::OrderPosition>()
               .HasSchemaName(AccountFactsSchema)
               .HasPrimaryKey(x => x.Id);
+
+            return builder;
+        }
+
+        private static FluentMappingBuilder RegisterConsistencyFacts(this FluentMappingBuilder builder)
+        {
+            builder.Entity<ConsistencyFacts::Bargain>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::BargainScanFile>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Bill>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Category>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::CategoryFirmAddress>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Firm>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::FirmAddress>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::LegalPersonProfile>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Order>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity < ConsistencyFacts::OrderPosition> ()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::OrderPositionAdvertisement>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::OrderScanFile>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Position>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::Project>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::ReleaseWithdrawal>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
 
             return builder;
         }

@@ -1,8 +1,8 @@
-namespace NuClear.ValidationRules.Storage.Model.PriceRules.Facts
+п»їnamespace NuClear.ValidationRules.Storage.Model.PriceRules.Facts
 {
     public sealed class RulesetRule
     {
-        public long Id { get; set; } // TODO: убрать хак, заменить на RulesetId
+        public long Id { get; set; } // TODO: СѓР±СЂР°С‚СЊ С…Р°Рє, Р·Р°РјРµРЅРёС‚СЊ РЅР° RulesetId
         public int RuleType { get; set; }
         public long DependentPositionId { get; set; }
         public long PrincipalPositionId { get; set; }

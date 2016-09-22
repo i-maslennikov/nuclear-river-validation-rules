@@ -1,7 +1,7 @@
-namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
+п»їnamespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
-    /// Связь заказа с его позицией и позицией прайс-листа
+    /// РЎРІСЏР·СЊ Р·Р°РєР°Р·Р° СЃ РµРіРѕ РїРѕР·РёС†РёРµР№ Рё РїРѕР·РёС†РёРµР№ РїСЂР°Р№СЃ-Р»РёСЃС‚Р°
     /// </summary>
     public sealed class OrderPricePosition
     {

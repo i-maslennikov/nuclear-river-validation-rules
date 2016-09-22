@@ -15,6 +15,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                      .Name(nameof(OrderPeriod))
                                      .Aggregate(
                                                 new Aggregates::Order { Id = 1 },
+                                                new Aggregates::Project { Id = 123, Name = "123" },
                                                 new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-05-01"), ProjectId = 123 },
                                                 new Aggregates::Period { Start = DateTime.Parse("2011-05-01"), End = DateTime.Parse("2011-06-01"), ProjectId = 123 },
                                                 new Aggregates::Period { Start = DateTime.Parse("2011-06-01"), End = DateTime.MaxValue, ProjectId = 123 },
@@ -22,15 +23,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                 new Aggregates::OrderPeriod { OrderId = 1, Start = DateTime.Parse("2011-05-01") })
                                      .Fact(
                                            new Facts::Order { Id = 1, BeginDistributionDate = DateTime.Parse("2011-01-01"), EndDistributionDateFact = DateTime.Parse("2011-05-01"), EndDistributionDatePlan = DateTime.Parse("2011-06-01")},
-                                           new Facts::Project {Id = 123 });
+                                           new Facts::Project {Id = 123, Name = "123" });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PricePeriod
             => ArrangeMetadataElement.Config
                                      .Name(nameof(PricePeriod))
                                      .Aggregate(
-                                                new Aggregates::Price { Id = 1 },
-                                                new Aggregates::Price { Id = 2 },
+                                                new Aggregates::Project { Id = 123 },
+                                                new Aggregates::Price { Id = 1, BeginDate = DateTime.Parse("2011-01-01") },
+                                                new Aggregates::Price { Id = 2, BeginDate = DateTime.Parse("2011-02-01") },
                                                 new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-02-01"), ProjectId = 123 },
                                                 new Aggregates::Period { Start = DateTime.Parse("2011-02-01"), End = DateTime.MaxValue, ProjectId = 123 },
                                                 new Aggregates::PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-01-01") },
@@ -45,9 +47,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                                      .Name(nameof(PriceAndOrderPeriod))
                                      .Aggregate(
-                                                new Aggregates::Price { Id = 1 },
-                                                new Aggregates::Price { Id = 2 },
-                                                new Aggregates::Price { Id = 3 },
+                                                new Aggregates::Price { Id = 1, BeginDate = DateTime.Parse("2011-01-01") },
+                                                new Aggregates::Price { Id = 2, BeginDate = DateTime.Parse("2011-03-01") },
+                                                new Aggregates::Price { Id = 3, BeginDate = DateTime.Parse("2010-01-01") },
                                                 new Aggregates::Order { Id = 1 },
                                                 new Aggregates::Order { Id = 2 },
                                                 new Aggregates::Order { Id = 3 },

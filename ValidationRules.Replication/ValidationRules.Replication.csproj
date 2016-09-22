@@ -92,11 +92,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.0.2-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.0.2-beta\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
@@ -108,15 +108,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.2\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.API.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Storage.API.2.0.2\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.LinqToDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.2\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -156,15 +156,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceBus.v1_1.1.0.5\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
+      <HintPath>..\packages\ServiceBus.v1_1.1.0.6\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.1\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
@@ -189,16 +189,54 @@
     <Compile Include="AccountRules\Facts\ProjectAccessor.cs" />
     <Compile Include="AccountRules\Facts\AccountAccessor.cs" />
     <Compile Include="AccountRules\Facts\OrderAccessor.cs" />
-    <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositiveActor.cs" />
-    <Compile Include="AccountRules\Validation\LockShouldNotExistActor.cs" />
-    <Compile Include="AccountRules\Validation\AccountShouldExistActor.cs" />
+    <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositive.cs" />
+    <Compile Include="AccountRules\Validation\LockShouldNotExist.cs" />
+    <Compile Include="AccountRules\Validation\AccountShouldExist.cs" />
+    <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="ConsistencyRules\Facts\CategoryAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\ReleaseWithdrawalAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\PositionAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\CategoryFirmAddressAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\FirmAddressAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\OrderPositionAdvertisementAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\ProjectAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\BargainAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\OrderScanFileAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\OrderPositionAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\LegalPersonProfileAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\FirmAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\BillAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\BargainScanFileAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\OrderAccessor.cs" />
+    <Compile Include="ConsistencyRules\Validation\BillsSumShouldMatchOrder.cs" />
+    <Compile Include="ConsistencyRules\Validation\BillsShouldBeCreated.cs" />
+    <Compile Include="EventCollectionHelper.cs" />
+    <Compile Include="ValidationResultAccessorBase.cs" />
+    <Compile Include="IValidationResultAccessor.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedCategoryAsterixMayBelongToFirm.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedCategoryShouldBelongToFirm.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedCategoryShouldBeActive.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedCategoryFirmAddressShouldBeValid.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedFirmAddressShouldBeValid.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderRequiredFieldsShouldBeSpecified.cs" />
+    <Compile Include="ConsistencyRules\Validation\LegalPersonProfileBargainShouldNotBeExpired.cs" />
+    <Compile Include="ConsistencyRules\Validation\BargainScanShouldPresent.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderShouldHaveAtLeastOnePosition.cs" />
+    <Compile Include="ConsistencyRules\Validation\LegalPersonShouldHaveAtLeastOneProfile.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderScanShouldPresent.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderShouldNotBeSignedBeforeBargain.cs" />
+    <Compile Include="ConsistencyRules\Validation\BillsPeriodShouldMatchOrder.cs" />
+    <Compile Include="ConsistencyRules\Validation\LegalPersonProfileWarrantyShouldNotBeExpired.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderEndDistrubutionShouldBeLastSecondOfMonth.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderBeginDistrubutionShouldBeFirstDayOfMonth.cs" />
+    <Compile Include="ConsistencyRules\Validation\LinkedFirmShouldBeValid.cs" />
+    <Compile Include="PriceRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ProjectAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Aggregates\ThemeAggregateRootActor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionNotActive.cs" />
     <Compile Include="PriceRules\Facts\ProjectAccessor.cs" />
-    <Compile Include="PriceRules\Facts\OrganizationUnitAccessor.cs" />
     <Compile Include="PriceRules\Facts\CategoryAccessor.cs" />
     <Compile Include="PriceRules\Facts\PricePositionAccessor.cs" />
-    <Compile Include="PriceRules\Facts\PeriodKeyEqualityComparer.cs" />
     <Compile Include="PriceRules\Facts\PriceAccessor.cs" />
     <Compile Include="PriceRules\Facts\PositionAccessor.cs" />
     <Compile Include="PriceRules\Facts\OrderAccessor.cs" />
@@ -208,27 +246,31 @@
     <Compile Include="PriceRules\Facts\DeniedPositionAccessor.cs" />
     <Compile Include="PriceRules\Facts\AssociatedPositionsGroupAccessor.cs" />
     <Compile Include="PriceRules\Facts\AssociatedPositionAccessor.cs" />
-    <Compile Include="PriceRules\Validation\DeniedPositionsCheckActor.cs" />
-    <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCountActor.cs" />
+    <Compile Include="PriceRules\Facts\ThemeAccessor.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementCountPerCategoryShouldBeLimited.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementCountPerThemeShouldBeLimited.cs" />
+    <Compile Include="PriceRules\Validation\DeniedPositionsCheck.cs" />
+    <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCount.cs" />
     <Compile Include="PriceRules\Validation\Dto\Dto.cs" />
-    <Compile Include="PriceRules\Validation\MaximumAdvertisementAmountActor.cs" />
-    <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecifiedActor.cs" />
-    <Compile Include="PriceRules\Validation\MinimumAdvertisementAmountActor.cs" />
+    <Compile Include="PriceRules\Validation\MaximumAdvertisementAmount.cs" />
+    <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecified.cs" />
+    <Compile Include="PriceRules\Validation\MinimumAdvertisementAmount.cs" />
     <Compile Include="AggregateActor.cs" />
-    <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePositionActor.cs" />
-    <Compile Include="PriceRules\Validation\OrderPositionShouldCorrespontToActualPriceActor.cs" />
-    <Compile Include="PriceRules\Validation\OrderPositionsShouldCorrespontToActualPriceActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePosition.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionShouldCorrespontToActualPrice.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionsShouldCorrespontToActualPrice.cs" />
     <Compile Include="PriceRules\Aggregates\PeriodAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
+    <Compile Include="ValidationResultQueryableExtensions.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />
-    <Compile Include="ValidationRuleShared.cs" />
-    <Compile Include="PriceRules\Validation\ConflictingPrincipalPositionActor.cs" />
-    <Compile Include="PriceRules\Validation\SatisfiedPrincipalPositionDifferentOrderActor.cs" />
-    <Compile Include="PriceRules\Validation\LinkedObjectsMissedInPrincipalsActor.cs" />
-    <Compile Include="PriceRules\Validation\AssociatedPositionWithoutPrincipalActor.cs" />
+    <Compile Include="ValidationRuleActor.cs" />
+    <Compile Include="PriceRules\Validation\ConflictingPrincipalPosition.cs" />
+    <Compile Include="PriceRules\Validation\SatisfiedPrincipalPositionDifferentOrder.cs" />
+    <Compile Include="PriceRules\Validation\LinkedObjectsMissedInPrincipals.cs" />
+    <Compile Include="PriceRules\Validation\AssociatedPositionWithoutPrincipal.cs" />
     <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
     <Compile Include="Commands\IncrementStateCommand.cs" />
     <Compile Include="Commands\CreateNewVersionCommand.cs" />
@@ -261,6 +303,7 @@
     <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Specs.Map.Erm.Facts.cs" />
     <Compile Include="Specifications\Specs.Map.Facts.Aggs.cs" />
+    <Compile Include="MessageTypeCode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

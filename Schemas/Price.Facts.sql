@@ -7,7 +7,6 @@ if object_id('PriceFacts.DeniedPosition') is not null drop table PriceFacts.Deni
 if object_id('PriceFacts.OrderPositionAdvertisement') is not null drop table PriceFacts.OrderPositionAdvertisement
 if object_id('PriceFacts.OrderPosition') is not null drop table PriceFacts.OrderPosition
 if object_id('PriceFacts.Order') is not null drop table PriceFacts.[Order]
-if object_id('PriceFacts.OrganizationUnit') is not null drop table PriceFacts.OrganizationUnit
 if object_id('PriceFacts.PricePosition') is not null drop table PriceFacts.PricePosition
 if object_id('PriceFacts.PricePositionNotActive') is not null drop table PriceFacts.PricePositionNotActive
 if object_id('PriceFacts.Price') is not null drop table PriceFacts.Price
@@ -15,6 +14,7 @@ if object_id('PriceFacts.Project') is not null drop table PriceFacts.Project
 if object_id('PriceFacts.Position') is not null drop table PriceFacts.Position
 if object_id('PriceFacts.Category') is not null drop table PriceFacts.Category
 if object_id('PriceFacts.RulesetRule') is not null drop table PriceFacts.RulesetRule
+if object_id('PriceFacts.Theme') is not null drop table PriceFacts.Theme
 go
 
 create table PriceFacts.Price(
@@ -30,7 +30,7 @@ create table PriceFacts.Position(
     CategoryCode bigint not null,
     IsControlledByAmount bit not null,
     IsComposite bit not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(256) not null,
     constraint PK_Position primary key (Id)
 )
 create index IX_Position_IsComposite ON PriceFacts.Position (IsComposite)
@@ -100,7 +100,7 @@ create table PriceFacts.[Order](
     EndReleaseNumberFact int not null,
     EndReleaseNumberPlan int not null,
     WorkflowStepId int not null,
-    Number nvarchar(max) not null,
+    Number nvarchar(64) not null,
     constraint PK_Order primary key (Id)
 )
 go
@@ -121,32 +121,36 @@ create table PriceFacts.OrderPositionAdvertisement(
     PositionId bigint not null,
     CategoryId bigint null,
     FirmAddressId bigint null,
+    ThemeId bigint null,
     constraint PK_OrderPositionAdvertisement primary key (Id)
 )
 create index IX_OrderPositionAdvertisement_OrderPositionId ON PriceFacts.OrderPositionAdvertisement (OrderPositionId)
 create index IX_OrderPositionAdvertisement_PositionId ON PriceFacts.OrderPositionAdvertisement (PositionId)
 go
 
-create table PriceFacts.OrganizationUnit(
-    Id bigint not null,
-    constraint PK_OrganizationUnit primary key (Id)
-)
-go
-
 create table PriceFacts.Project(
     Id bigint not null,
     OrganizationUnitId bigint not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(64) not null,
     constraint PK_Project primary key (Id)
+)
+go
+
+create table PriceFacts.Theme(
+    Id bigint not null,
+    Name nvarchar(64) not null,
+    constraint PK_Theme primary key (Id)
 )
 go
 
 create table PriceFacts.Category(
     Id bigint not null,
-    ParentId bigint not null,
+    Name nvarchar(128) not null,
+    L3Id bigint null,
+    L2Id bigint null,
+    L1Id bigint null,
     constraint PK_Category primary key (Id)
 )
-create index IX_Category_ParentId ON PriceFacts.Category (ParentId)
 go
 
 create table PriceFacts.RulesetRule(

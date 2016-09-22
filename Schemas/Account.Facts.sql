@@ -14,7 +14,8 @@ create table AccountFacts.[Order](
     Id bigint not null,
     DestOrganizationUnitId bigint not null,
     SourceOrganizationUnitId bigint not null,
-    AccountId bigint null,
+    BranchOfficeOrganizationUnitId bigint null,
+    LegalPersonId bigint null,
     Number nvarchar(64) not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDate datetime2(2) not null,
@@ -31,6 +32,8 @@ go
 
 create table AccountFacts.Account(
     Id bigint not null,
+    BranchOfficeOrganizationUnitId bigint not null,
+    LegalPersonId bigint not null,
     Balance decimal(19,4) not null,
     constraint PK_Account primary key (Id)
 )

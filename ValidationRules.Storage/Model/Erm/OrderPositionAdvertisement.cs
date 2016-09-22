@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.Erm
+﻿namespace NuClear.ValidationRules.Storage.Model.Erm
 {
     public sealed class OrderPositionAdvertisement
     {
@@ -7,5 +7,6 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
         public long PositionId { get; set; }
         public long? CategoryId { get; set; }
         public long? FirmAddressId { get; set; }
+        public long? ThemeId { get; set; }
     }
 }

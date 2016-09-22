@@ -30,25 +30,23 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<PricePositionNotActive>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<PricePositionNotActive> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<PricePositionNotActive> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<PricePositionNotActive> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<PricePositionNotActive> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PricePositionNotActive> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PricePositionNotActive> dataObjects)
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<PricePositionNotActive> dataObjects)
         {
             var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<PricePosition>(x => ids.Contains(x.Id));
 
-            var orderIds = (from pricePositionNotActive in _query.For(specification)
-                            join orderPosition in _query.For<OrderPosition>() on pricePositionNotActive.Id equals orderPosition.PricePositionId
-                            select orderPosition.OrderId).Distinct()
-                            .Distinct()
-                            .ToArray();
+            var orderIds = from orderPosition in _query.For<OrderPosition>().Where(x => ids.Contains(x.PricePositionId))
+                           select orderPosition.OrderId;
 
-            return orderIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Order), x))
-                          .ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

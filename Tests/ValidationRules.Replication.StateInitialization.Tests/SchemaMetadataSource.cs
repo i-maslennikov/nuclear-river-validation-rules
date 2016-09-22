@@ -26,6 +26,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .HasConnectionString<AggregatesTestConnectionStringIdentity>()
             .HasSchema(Schema.Aggregates);
 
+        private static readonly SchemaMetadataElement Messages = SchemaMetadataElement.Config
+            .For(ContextName.Messages)
+            .HasConnectionString<MessagesTestConnectionStringIdentity>()
+            .HasSchema(Schema.Messages);
+
         public SchemaMetadataSource()
         {
             Metadata = new Dictionary<Uri, IMetadataElement>
@@ -33,6 +38,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             { Erm.Identity.Id, Erm },
                             { Facts.Identity.Id, Facts },
                             { CustomerIntelligence.Identity.Id, CustomerIntelligence },
+                            { Messages.Identity.Id, Messages},
                         };
         }
 

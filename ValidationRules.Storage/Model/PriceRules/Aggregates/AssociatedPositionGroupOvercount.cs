@@ -1,7 +1,7 @@
-namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
+п»їnamespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
-    /// Представляет превышение числа AssociatedPositionsGroup для PricePosition (поддерживается не больее одной)
+    /// РџСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РїСЂРµРІС‹С€РµРЅРёРµ С‡РёСЃР»Р° AssociatedPositionsGroup РґР»СЏ PricePosition (РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РЅРµ Р±РѕР»СЊРµРµ РѕРґРЅРѕР№)
     /// </summary>
     public sealed class AssociatedPositionGroupOvercount
     {

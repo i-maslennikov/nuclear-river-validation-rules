@@ -55,13 +55,12 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
             var orderPositionIds = dataObjects.Select(x => x.OrderPositionId);
 
             var accountIds =
-                from order in _query.For<Order>().Where(x => x.AccountId.HasValue)
-                join orderPosition in _query.For<OrderPosition>().Where(x => orderPositionIds.Contains(x.Id)) on order.Id equals orderPosition.OrderId
-                select order.AccountId.Value;
+                from order in _query.For<Order>()
+                from account in _query.For<Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
+                from orderPosition in _query.For<OrderPosition>().Where(x => orderPositionIds.Contains(x.Id) && x.OrderId == order.Id)
+                select account.Id;
 
-            accountIds = accountIds.Distinct();
-
-            return accountIds.Select(id => new RelatedDataObjectOutdatedEvent<long>(typeof(Account), id)).ToArray();
+            return new EventCollectionHelper { { typeof(Account), accountIds.Distinct() } };
         }
     }
 }

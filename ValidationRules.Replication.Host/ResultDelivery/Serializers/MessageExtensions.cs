@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
 {
     public static class MessageExtensions
@@ -87,6 +89,61 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             return Tuple.Create("PricePosition", (long)element.Attribute("id"), (string)element.Attribute("name"));
         }
 
+        public static Tuple<string, long, string> ReadThemeReference(this Message message)
+        {
+            var element = message.Data.Root.Element("theme");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит ссылки на тематику", nameof(message));
+            }
+
+            return Tuple.Create("Theme", (long)element.Attribute("id"), (string)element.Attribute("name"));
+        }
+
+        public static Tuple<string, long, string> ReadCategoryReference(this Message message)
+        {
+            var element = message.Data.Root.Element("category");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит ссылки на рубрику", nameof(message));
+            }
+
+            return Tuple.Create("Category", (long)element.Attribute("id"), (string)element.Attribute("name"));
+        }
+
+        public static Tuple<string, long, string> ReadFirmAddressReference(this Message message)
+        {
+            var element = message.Data.Root.Element("firmAddress");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит ссылки на адрес", nameof(message));
+            }
+
+            return Tuple.Create("FirmAddress", (long)element.Attribute("id"), (string)element.Attribute("name"));
+        }
+
+        public static Tuple<string, long, string> ReadFirmReference(this Message message)
+        {
+            var element = message.Data.Root.Element("firm");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит ссылки на фирму", nameof(message));
+            }
+
+            return Tuple.Create("Firm", (long)element.Attribute("id"), (string)element.Attribute("name"));
+        }
+
+        public static Tuple<string, long, string> ReadLegalPersonProfileReference(this Message message)
+        {
+            var element = message.Data.Root.Element("legalPersonProfile");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит ссылки на профиль юр. лица клиента", nameof(message));
+            }
+
+            return Tuple.Create("LegalPersonProfile", (long)element.Attribute("id"), (string)element.Attribute("name"));
+        }
+
         public static AccountBalanceMessageDto ReadAccountBalanceMessage(this Message message)
         {
             var element = message.Data.Root.Element("message");
@@ -134,14 +191,70 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
                 };
         }
 
-        public class AccountBalanceMessageDto
+        public static OversalesDto ReadOversalesMessage(this Message message)
+        {
+            var element = message.Data.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return new OversalesDto
+            {
+                Max = (int)element.Attribute("max"),
+                Count = (int)element.Attribute("count"),
+            };
+        }
+
+        public static InvalidFirmAddressState ReadFirmAddressState(this Message message)
+        {
+            var element = message.Data.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return (InvalidFirmAddressState)(int)element.Attribute("invalidFirmAddressState");
+        }
+
+        public static InvalidFirmState ReadFirmState(this Message message)
+        {
+            var element = message.Data.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return (InvalidFirmState)(int)element.Attribute("invalidFirmState");
+        }
+
+        public static OrderRequiredFieldsDto ReadOrderRequiredFieldsMessage(this Message message)
+        {
+            var element = message.Data.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return new OrderRequiredFieldsDto
+            {
+                LegalPerson = element.Element("legalPerson") != null,
+                LegalPersonProfile = element.Element("legalPersonProfile") != null,
+                BranchOfficeOrganizationUnit = element.Element("branchOfficeOrganizationUnit") != null,
+                Inspector = element.Element("inspector") != null,
+                ReleaseCountPlan = element.Element("releaseCountPlan") != null,
+                Currency = element.Element("currency") != null,
+            };
+        }
+
+        public sealed class AccountBalanceMessageDto
         {
             public decimal Available { get; set; }
             public decimal Planned { get; set; }
             public decimal Required { get; set; }
         }
 
-        public class OrderPositionDto
+        public sealed class OrderPositionDto
         {
             public long OrderId { get; set; }
             public string OrderNumber { get; set; }
@@ -151,13 +264,29 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             public string PositionName { get; set; }
         }
 
-        public class AdvertisementCountDto
+        public sealed class AdvertisementCountDto
         {
             public int Min { get; set; }
             public int Max { get; set; }
             public int Count { get; set; }
             public string Name { get; set; }
             public DateTime Month { get; set; }
+        }
+
+        public sealed class OversalesDto
+        {
+            public int Max { get; set; }
+            public int Count { get; set; }
+        }
+
+        public sealed class OrderRequiredFieldsDto
+        {
+            public bool LegalPerson { get; set; }
+            public bool LegalPersonProfile { get; set; }
+            public bool BranchOfficeOrganizationUnit { get; set; }
+            public bool Inspector { get; set; }
+            public bool ReleaseCountPlan { get; set; }
+            public bool Currency { get; set; }
         }
     }
 }

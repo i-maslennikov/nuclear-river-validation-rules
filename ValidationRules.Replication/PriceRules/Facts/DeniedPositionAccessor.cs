@@ -30,24 +30,29 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             return new FindSpecification<DeniedPosition>(x => ids.Contains(x.Id));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<DeniedPosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<DeniedPosition> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<DeniedPosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<DeniedPosition> dataObjects)
+            => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<DeniedPosition> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<DeniedPosition> dataObjects)
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<DeniedPosition> dataObjects)
         {
             var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<DeniedPosition>(x => ids.Contains(x.Id));
 
-            var priceIds = (from deniedPosition in _query.For(specification)
-                            select deniedPosition.PriceId)
-                            .Distinct()
-                            .ToArray();
+            // Умное решение - пересчитать все заказы, в order position которых указаны price position, связанные с изменённой denied.
+            // И плюс к тому пересчитать все заказы, оформленные по прайс-листу изменённой denied position, в opa которого указны позиции изменных denied position.
+            // Но я выбрал решение проще - прересчитать все заказы по прайс-листам изменённых denied position, ибо нефиг менять опубликованный прайс-лист.
 
-            return priceIds.Select(x => new RelatedDataObjectOutdatedEvent<long>(typeof(Price), x))
-                          .ToArray();
+            var orderIds = from deniedPosition in _query.For<DeniedPosition>().Where(x => ids.Contains(x.Id))
+                           from pricePosition in _query.For<PricePosition>().Where(x => x.PriceId == deniedPosition.PriceId)
+                           from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
+                           select orderPosition.OrderId;
+
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

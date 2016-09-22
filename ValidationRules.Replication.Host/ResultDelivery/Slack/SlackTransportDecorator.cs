@@ -15,19 +15,6 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
         private readonly SlackTaskClient _client;
         private readonly Task<LoginResponse> _connectionTask;
 
-        public static readonly IDictionary<string, string> UserMap = new Dictionary<string, string>
-            {
-                { "s.tokarev", "a.rechkalov" },
-                { "g.habrus", "a.rechkalov" },
-                { "o.opokina", "a.rechkalov" },
-                { "l.pavel", "m.pashuk" },
-                { "u.starova", "m.pashuk" },
-                { "a.kudryashov", "m.pashuk" },
-                { "s.denis", "d.ivanov" },
-                { "m.kaniukova", "d.ivanov" },
-                { "ki.glushkov", "d.ivanov" },
-            };
-
         public SlackTransportDecorator(ITracer tracer)
         {
             _tracer = tracer;
@@ -39,21 +26,17 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
         public IReadOnlyCollection<string> GetSubscribedUsers()
         {
             EnsureConnected();
-            return _client.Users.Select(x => x.profile.email.Split('@').First()).ToArray();
+            return _client.Users.Where(x => !string.IsNullOrEmpty(x.profile.email)).Select(x => x.profile.email.Split('@').First()).ToArray();
         }
 
         public void SendMessage(string user, IReadOnlyCollection<LocalizedMessage> messages)
         {
             EnsureConnected();
 
-            string mappedUser;
-            if (!UserMap.TryGetValue(user, out mappedUser))
-                return;
-
-            var slackUser = _client.Users.FirstOrDefault(x => x.profile?.email != null && x.profile.email.StartsWith(mappedUser));
+            var slackUser = _client.Users.FirstOrDefault(x => x.profile?.email != null && x.profile.email.StartsWith(user));
             if (slackUser == null)
             {
-                _tracer.Warn($"Пользователь {mappedUser} не найден, сообщения не отправлены");
+                _tracer.Warn($"Пользователь {user} не найден, сообщения не отправлены");
                 return;
             }
 
@@ -86,10 +69,9 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack
         private Attachment MakeAttachment(IGrouping<string, LocalizedMessage> message)
         {
             var sortedByResult = message.OrderByDescending(x => x.Result);
-            var lines = new List<string> { message.Key };
-            lines.AddRange(sortedByResult.Select(item => $"{GetIcon(item.Result)} {item.Message}"));
+            var lines = sortedByResult.Select(item => $"{GetIcon(item.Result)} {item.Message}").ToArray();
 
-            return new Attachment { text = string.Join("\n", lines), color = GetColor(sortedByResult.First().Result) };
+            return new Attachment { pretext = message.Key, text = string.Join("\n", lines), color = GetColor(sortedByResult.First().Result) };
         }
 
         private string GetColor(Result result)

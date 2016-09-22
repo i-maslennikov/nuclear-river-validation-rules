@@ -41,31 +41,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Order> dataObjects)
         {
             var ids = dataObjects.Select(x => x.Id).ToArray();
-            var specification = new FindSpecification<Order>(x => ids.Contains(x.Id));
 
-            var ranges = _query.For<Order>()
-                          .Where(specification)
-                          .GroupBy(x => x.DestOrganizationUnitId, x => new { Start = x.BeginDistributionDate, End = x.EndDistributionDatePlan })
-                          .ToDictionary(x => x.Key, x => x.Distinct());
+            var periodIds =
+                from order in _query.For<Order>().Where(x => ids.Contains(x.Id))
+                group order by order.DestOrganizationUnitId into orders
+                select new PeriodKey { OrganizationUnitId = orders.Key, Start = orders.Min(y => y.BeginDistributionDate), End = orders.Max(y => y.EndDistributionDateFact) };
 
-            var dates = _query.For<Order>()
-                         .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
-                         .Union(_query.For<Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                         .Union(_query.For<Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
-                         .Union(_query.For<Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
-                         .GroupBy(x => x.OrganizationUnitId, x => x.Date)
-                         .ToDictionary(x => x.Key, x => x.Distinct());
-
-            var periodIds = ranges.Join(dates,
-                                     x => x.Key,
-                                     x => x.Key,
-                                     (range, date) => date.Value
-                                                          .Where(d => range.Value.Any(r => r.Start <= d && d <= r.End))
-                                                          .Select(d => new PeriodKey { OrganizationUnitId = range.Key, Start = d }))
-                               .SelectMany(x => x)
-                               .Distinct(PeriodKeyEqualityComparer.Instance);
-
-            return periodIds.Select(x => new RelatedDataObjectOutdatedEvent<PeriodKey>(typeof(Order), x)).ToArray();
+            // И какой тип я должен тут указать?
+            // Тип outdated-сущности - это период. Нет периода в фактах, а агрегатный тип тут указывать некорректно.
+            return new EventCollectionHelper { { typeof(Order), periodIds } };
         }
     }
 }

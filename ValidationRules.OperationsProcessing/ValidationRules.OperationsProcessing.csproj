@@ -92,11 +92,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.0.2-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.0.2-beta\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
@@ -108,15 +108,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.2\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.API.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Storage.API.2.0.2\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.LinqToDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.2\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -156,15 +156,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceBus.v1_1.1.0.5\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
+      <HintPath>..\packages\ServiceBus.v1_1.1.0.6\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.1\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
@@ -185,18 +185,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AfterFinal\MessageCommandsAccumulator.cs" />
+    <Compile Include="Contexts\AccountFactsSubDomain.cs" />
     <Compile Include="Contexts\AggregateSubDomain.cs" />
+    <Compile Include="Contexts\ConsistencyFactsSubDomain.cs" />
     <Compile Include="Contexts\ErmSubDomain.cs" />
-    <Compile Include="Contexts\FactsSubDomain.cs" />
+    <Compile Include="Contexts\PriceFactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
     <Compile Include="Final\AggregateCommandsAccumulator.cs" />
     <Compile Include="AfterFinal\MessageCommandsHandler.cs" />
     <Compile Include="Final\AggregateCommandsHandler.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAccount.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBargain.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBargainFile.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBill.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeCategory.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategoryFirmAddress.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeDeniedPosition.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeFirm.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeFirmAddress.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLegalPersonProfile.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLimit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLock.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeOrderFile.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePeriod.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPositionAdvertisement.cs" />
@@ -205,7 +218,10 @@
     <Compile Include="Identities\EntityTypes\EntityTypePrice.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePricePosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeProject.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeReleaseWithdrawal.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeRuleset.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeRulesetRule.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeTheme.cs" />
     <Compile Include="Identities\Flows\MessagesFlow.cs" />
     <Compile Include="Identities\Flows\CommonEventsFlow.cs" />
     <Compile Include="Identities\Flows\ImportFactsFromErmFlow.cs" />

@@ -80,7 +80,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     from releaseWithdrawal in _query.For<Facts::ReleaseWithdrawal>()
                     join orderPosition in _query.For<Facts::OrderPosition>() on releaseWithdrawal.OrderPositionId equals orderPosition.Id
                     join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id
-                    join account in _query.For<Facts::Account>() on order.AccountId equals account.Id
+                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                     select new { AccountId = account.Id, releaseWithdrawal.Start, releaseWithdrawal.Amount, Type = 1 };
 
                 var limitPeriods =
@@ -127,7 +127,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     from releaseWithdrawal in _query.For<Facts::ReleaseWithdrawal>()
                     join orderPosition in _query.For<Facts::OrderPosition>() on releaseWithdrawal.OrderPositionId equals orderPosition.Id
                     join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id
-                    join account in _query.For<Facts::Account>() on order.AccountId equals account.Id
+                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                     select new { AccountId = account.Id, Start = releaseWithdrawal.Start, ReleaseWithdrawal = releaseWithdrawal.Amount, Limit = 0M, Lock = 0M };
 
                 var limits =

@@ -39,11 +39,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="2GIS.NuClear.Aggregates, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Aggregates.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Aggregates.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Aggregates.2.0.2\lib\portable-net451+win81+wpa81\2GIS.NuClear.Aggregates.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Aggregates.Storage.DI.Unity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Aggregates.Storage.DI.Unity.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.2\lib\portable-net451+win81+wpa81\2GIS.NuClear.Aggregates.Storage.DI.Unity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
@@ -143,11 +143,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.0.2-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.0.2-beta\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.ResourceUtilities, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
@@ -155,7 +155,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.River.Hosting.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Hosting.Common.3.0.2-beta\lib\net461\2GIS.NuClear.River.Hosting.Common.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Hosting.Common.3.2.0-beta\lib\net461\2GIS.NuClear.River.Hosting.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
@@ -179,15 +179,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.2\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Aggregates.Storage.DI.Unity.2.0.2\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.LinqToDB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.1\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Storage.LinqToDB.2.0.2\lib\net451\2GIS.NuClear.Storage.LinqToDB.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -263,15 +263,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceBus.v1_1.1.0.5\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
+      <HintPath>..\packages\ServiceBus.v1_1.1.0.6\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.1\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
@@ -351,28 +351,50 @@
       <DependentUpon>ReplicationService.cs</DependentUpon>
     </Compile>
     <Compile Include="ResultDelivery\DeliverySettingsAspect.cs" />
-    <Compile Include="ResultDelivery\Serializers\AssociatedPositionWithoutPrincipalMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\ConflictingPrincipalPositionMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BargainScanShouldPresentMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsPeriodShouldMatchOrderMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderShouldNotBeSignedBeforeBargainMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderShouldHaveAtLeastOnePositionMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderScanShouldPresentMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderRequiredFieldsShouldBeSpecifiedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderEndDistrubutionShouldBeLastSecondOfMonthMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\OrderBeginDistrubutionShouldBeFirstDayOfMonthMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedFirmShouldBeValidMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedFirmAddressShouldBeValidMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedCategoryShouldBelongToFirmMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedCategoryShouldBeActiveMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedCategoryFirmAddressShouldBeValidMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LinkedCategoryAsterixMayBelongToFirmMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LegalPersonShouldHaveAtLeastOneProfileMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LegalPersonProfileWarrantyShouldNotBeExpiredMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LegalPersonProfileBargainShouldNotBeExpiredMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsSumShouldMatchOrderMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsShouldBeCreatedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\AdvertisementCountPerCategoryShouldBeLimitedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\AssociatedPositionsGroupCountMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\AssociatedPositionWithoutPrincipalMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\ConflictingPrincipalPositionMessageSerializer.cs" />
     <Compile Include="ResultDelivery\IMessageSerializer.cs" />
     <Compile Include="ResultDelivery\ITransportDecorator.cs" />
-    <Compile Include="ResultDelivery\Serializers\LinkedObjectsMissedInPrincipalsMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\LinkedObjectsMissedInPrincipalsMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Message.cs" />
     <Compile Include="ResultDelivery\Serializers\MessageExtensions.cs" />
-    <Compile Include="ResultDelivery\Serializers\SatisfiedPrincipalPositionDifferentOrderMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AssociatedPositionsGroupCountMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\OrderPositionCorrespontToInactivePositionMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\MinimumAdvertisementAmountMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\MaximumAdvertisementAmountMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AccountShouldExistMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\DeniedPositionsCheckMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AccountBalanceShouldBePositiveMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\SatisfiedPrincipalPositionDifferentOrderMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\AdvertisementCountPerThemeShouldBeLimitedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\OrderPositionCorrespontToInactivePositionMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\MinimumAdvertisementAmountMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\MaximumAdvertisementAmountMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AccountRules\AccountShouldExistMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\DeniedPositionsCheckMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AccountRules\AccountBalanceShouldBePositiveMessageSerializer.cs" />
     <Compile Include="ResultDelivery\LocalizedMessage.cs" />
+    <Compile Include="ResultDelivery\MessageRedirection.cs" />
     <Compile Include="ResultDelivery\UnityLocalizedMessageFactory.cs" />
     <Compile Include="ResultDelivery\LinkFactory.cs" />
-    <Compile Include="ResultDelivery\Serializers\LockShouldNotExistMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\OrderPositionShouldCorrespontToActualPriceMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\OrderPositionsShouldCorrespontToActualPriceMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AccountRules\LockShouldNotExistMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\OrderPositionShouldCorrespontToActualPriceMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\OrderPositionsShouldCorrespontToActualPriceMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Slack\SlackTransportDecorator.cs" />
     <Compile Include="Settings\DefaultEntityContainerNameResolver.cs" />
     <Compile Include="Settings\QuartzSettingsAspect.cs" />
@@ -383,6 +405,7 @@
     <Compile Include="ResultDelivery\Slack\DebugTransportDecorator.cs" />
     <Compile Include="ResultDelivery\UserReadModel.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,6 +5,10 @@ using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
 
+using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+
 namespace NuClear.ValidationRules.OperationsProcessing
 {
     public static class EntityTypeMap
@@ -25,21 +29,50 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypePricePosition, Storage.Model.Erm.PricePosition>()
                 .AddMapping<EntityTypeProject, Storage.Model.Erm.Project>();
 
-        private static readonly Action<EntityTypeMappingRegistryBuilder> FactsTypeMap
+        private static readonly Action<EntityTypeMappingRegistryBuilder> AccountFactsTypeMap
             = builder => builder
-                .AddMapping<EntityTypeAssociatedPosition, Storage.Model.PriceRules.Facts.AssociatedPosition>()
-                .AddMapping<EntityTypeAssociatedPositionsGroup, Storage.Model.PriceRules.Facts.AssociatedPositionsGroup>()
-                .AddMapping<EntityTypeCategory, Storage.Model.PriceRules.Facts.Category>()
-                .AddMapping<EntityTypeDeniedPosition, Storage.Model.PriceRules.Facts.DeniedPosition>()
-                .AddMapping<EntityTypeRuleset, Storage.Model.PriceRules.Facts.RulesetRule>()
-                .AddMapping<EntityTypeOrder, Storage.Model.PriceRules.Facts.Order>()
-                .AddMapping<EntityTypeOrderPosition, Storage.Model.PriceRules.Facts.OrderPosition>()
-                .AddMapping<EntityTypeOrderPositionAdvertisement, Storage.Model.PriceRules.Facts.OrderPositionAdvertisement>()
-                .AddMapping<EntityTypeOrganizationUnit, Storage.Model.PriceRules.Facts.OrganizationUnit>()
-                .AddMapping<EntityTypePosition, Storage.Model.PriceRules.Facts.Position>()
-                .AddMapping<EntityTypePrice, Storage.Model.PriceRules.Facts.Price>()
-                .AddMapping<EntityTypePricePosition, Storage.Model.PriceRules.Facts.PricePosition>()
-                .AddMapping<EntityTypeProject, Storage.Model.PriceRules.Facts.Project>();
+                             .AddMapping<EntityTypeAccount, AccountFacts::Account>()
+                             .AddMapping<EntityTypeOrder, AccountFacts::Order>()
+                             .AddMapping<EntityTypeProject, AccountFacts::Project>()
+                             .AddMapping<EntityTypeLock, AccountFacts::Lock>()
+                             .AddMapping<EntityTypeLimit, AccountFacts::Limit>()
+                             .AddMapping<EntityTypeOrderPosition, AccountFacts::OrderPosition>()
+                             .AddMapping<EntityTypeReleaseWithdrawal, AccountFacts::ReleaseWithdrawal>();
+
+        private static readonly Action<EntityTypeMappingRegistryBuilder> ConsistencyFactsTypeMap
+            = builder => builder
+                             .AddMapping<EntityTypeBargain, ConsistencyFacts::Bargain>()
+                             .AddMapping<EntityTypeBargainFile, ConsistencyFacts::BargainScanFile>()
+                             .AddMapping<EntityTypeBill, ConsistencyFacts::Bill>()
+                             .AddMapping<EntityTypeCategory, ConsistencyFacts::Category>()
+                             .AddMapping<EntityTypeCategoryFirmAddress, ConsistencyFacts::CategoryFirmAddress>()
+                             .AddMapping<EntityTypeFirm, ConsistencyFacts::Firm>()
+                             .AddMapping<EntityTypeFirmAddress, ConsistencyFacts::FirmAddress>()
+                             .AddMapping<EntityTypeLegalPersonProfile, ConsistencyFacts::LegalPersonProfile>()
+                             .AddMapping<EntityTypeOrder, ConsistencyFacts::Order>()
+                             .AddMapping<EntityTypeOrderPosition, ConsistencyFacts::OrderPosition>()
+                             .AddMapping<EntityTypeOrderPositionAdvertisement, ConsistencyFacts::OrderPositionAdvertisement>()
+                             .AddMapping<EntityTypeOrderFile, ConsistencyFacts::OrderScanFile>()
+                             .AddMapping<EntityTypePosition, ConsistencyFacts::Position>()
+                             .AddMapping<EntityTypeProject, ConsistencyFacts::Project>()
+                             .AddMapping<EntityTypeReleaseWithdrawal, ConsistencyFacts::ReleaseWithdrawal>();
+
+        private static readonly Action<EntityTypeMappingRegistryBuilder> PriceFactsTypeMap
+            = builder => builder
+                             .AddMapping<EntityTypeAssociatedPosition, PriceFacts::AssociatedPosition>()
+                             .AddMapping<EntityTypeAssociatedPositionsGroup, PriceFacts::AssociatedPositionsGroup>()
+                             .AddMapping<EntityTypeCategory, PriceFacts::Category>()
+                             .AddMapping<EntityTypeDeniedPosition, PriceFacts::DeniedPosition>()
+                             .AddMapping<EntityTypeOrder, PriceFacts::Order>()
+                             .AddMapping<EntityTypeOrderPosition, PriceFacts::OrderPosition>()
+                             .AddMapping<EntityTypeOrderPositionAdvertisement, PriceFacts::OrderPositionAdvertisement>()
+                             .AddMapping<EntityTypePosition, PriceFacts::Position>()
+                             .AddMapping<EntityTypePrice, PriceFacts::Price>()
+                             .AddMapping<EntityTypePricePosition, PriceFacts::PricePosition>()
+                             //.AddMapping<EntityTypePricePositionNotActive, PriceFacts::PricePositionNotActive>()
+                             .AddMapping<EntityTypeProject, PriceFacts::Project>()
+                             .AddMapping<EntityTypeRulesetRule, PriceFacts::RulesetRule>()
+                             .AddMapping<EntityTypeTheme, PriceFacts::Theme>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap
             = builder => builder
@@ -61,11 +94,25 @@ namespace NuClear.ValidationRules.OperationsProcessing
             return builder.Create<ErmSubDomain>();
         }
 
-        public static IEntityTypeMappingRegistry<FactsSubDomain> CreateFactsContext()
+        public static IEntityTypeMappingRegistry<AccountFactsSubDomain> CreateAccountFactsContext()
         {
             var builder = new EntityTypeMappingRegistryBuilder();
-            FactsTypeMap.Invoke(builder);
-            return builder.Create<FactsSubDomain>();
+            AccountFactsTypeMap.Invoke(builder);
+            return builder.Create<AccountFactsSubDomain>();
+        }
+
+        public static IEntityTypeMappingRegistry<ConsistencyFactsSubDomain> CreateConsistencyFactsContext()
+        {
+            var builder = new EntityTypeMappingRegistryBuilder();
+            ConsistencyFactsTypeMap.Invoke(builder);
+            return builder.Create<ConsistencyFactsSubDomain>();
+        }
+
+        public static IEntityTypeMappingRegistry<PriceFactsSubDomain> CreatePriceFactsContext()
+        {
+            var builder = new EntityTypeMappingRegistryBuilder();
+            PriceFactsTypeMap.Invoke(builder);
+            return builder.Create<PriceFactsSubDomain>();
         }
 
         public static IEntityTypeMappingRegistry<AggregateSubDomain> CreateAggregateContext()

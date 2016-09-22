@@ -15,6 +15,6 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
             => CreateLink(reference.Item1, reference.Item2, reference.Item3);
 
         public string CreateLink(string entityName, long entityId, string displayText)
-            => $"<{_settings.ErmProduction}/CreateOrUpdate/{entityName}/{entityId}|{displayText}>";
+            => $"<{_settings.ErmAddress}/CreateOrUpdate/{entityName}/{entityId}|{displayText}>";
     }
 }

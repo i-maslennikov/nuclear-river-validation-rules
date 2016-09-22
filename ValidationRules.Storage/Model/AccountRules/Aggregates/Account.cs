@@ -1,4 +1,4 @@
-namespace NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates
+﻿namespace NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates
 {
     public sealed class Account
     {

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-using NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack;
-
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
     public sealed class ResultDeliveryService
@@ -14,14 +12,16 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
         private readonly ResultReadModel _resultReadModel;
         private readonly UnityLocalizedMessageFactory _unityLocalizedMessageFactory;
         private readonly ResultDeliverySettingsAspect _settings;
+        private readonly IMessageRedirectionService _redirectionService;
 
-        public ResultDeliveryService(ITransportDecorator transport, UserReadModel userReadModel, ResultReadModel resultReadModel, UnityLocalizedMessageFactory unityLocalizedMessageFactory, ResultDeliverySettingsAspect settings)
+        public ResultDeliveryService(ITransportDecorator transport, UserReadModel userReadModel, ResultReadModel resultReadModel, UnityLocalizedMessageFactory unityLocalizedMessageFactory, ResultDeliverySettingsAspect settings, IMessageRedirectionService redirectionService)
         {
             _transport = transport;
             _userReadModel = userReadModel;
             _resultReadModel = resultReadModel;
             _unityLocalizedMessageFactory = unityLocalizedMessageFactory;
             _settings = settings;
+            _redirectionService = redirectionService;
         }
 
         public void Execute(DateTime iterationTime)
@@ -32,24 +32,19 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
             {
                 var messages = _resultReadModel.GetResults(user)
                                                .Select(_unityLocalizedMessageFactory.Localize)
-                                               .Where(x => x.Result >= Result.Info)
+                                               .Where(x => x != null && x.Result >= Result.Info)
+                                               .Distinct(new MessageComparer())
                                                .OrderByDescending(x => x.Result)
                                                .ToArray();
 
-                _transport.SendMessage(user.Key, messages);
+                _transport.SendMessage(_redirectionService.RedirectTo(user.Key), messages);
             }
         }
 
         private Expression<Func<Storage.Model.Erm.User, bool>> GetSubscribedUsersFilter()
         {
-            var users = GetSubscribedUsers();
+            var users = _transport.GetSubscribedUsers().SelectMany(_redirectionService.RedirectFrom).ToArray();
             return x => users.Contains(x.Account);
-        }
-
-        private IReadOnlyCollection<string> GetSubscribedUsers()
-        {
-            //return _transport.GetSubscribedUsers();
-            return SlackTransportDecorator.UserMap.Keys.ToArray();
         }
 
         private Expression<Func<Storage.Model.Erm.TimeZone, bool>> GetCurrentIterationTimeZonesFilter(DateTime iterationTime)
@@ -65,6 +60,19 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                             select timeZone.Id;
 
             return timeZones.ToArray();
+        }
+
+        /// <summary>
+        /// Служит для того, чтобы не выводить пользоветелю два идентичных сообщения.
+        /// Идентичные сообщения возможны, например, в случае проверки запрещённых позиций (совпадают с точностью до порядка наименований позиций, поскольку симметричны)
+        /// </summary>
+        private sealed class MessageComparer : IEqualityComparer<LocalizedMessage>
+        {
+            public bool Equals(LocalizedMessage x, LocalizedMessage y)
+                => x.Result == y.Result && string.Equals(x.Message, y.Message) && string.Equals(x.Header, y.Header);
+
+            public int GetHashCode(LocalizedMessage x)
+                => x.Result.GetHashCode() ^ x.Message.GetHashCode() ^ x.Header.GetHashCode();
         }
     }
 }

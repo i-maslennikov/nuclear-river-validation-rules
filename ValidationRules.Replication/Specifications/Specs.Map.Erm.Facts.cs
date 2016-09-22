@@ -49,11 +49,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                          ObjectBindingType = rulesetRule.ObjectBindingType
                                      });
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Facts::Category>> Category =
-                        new MapSpecification<IQuery, IQueryable<Facts::Category>>(
-                            q => q.For(Find.Erm.Categories())
-                                  .Select(Transform.Category));
-
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Order>> Order =
                         new MapSpecification<IQuery, IQueryable<Facts::Order>>(
                             q => from order in q.For(Find.Erm.Orders())
@@ -84,11 +79,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             q => q.For(Find.Erm.OrderPositionAdvertisements())
                                   .Select(Transform.OrderPositionAdvertisement));
 
-                    public static readonly MapSpecification<IQuery, IQueryable<Facts::OrganizationUnit>> OrganizationUnit =
-                        new MapSpecification<IQuery, IQueryable<Facts::OrganizationUnit>>(
-                            q => q.For(Find.Erm.OrganizationUnits())
-                                  .Select(Transform.OrganizationUnit));
-
                     public static readonly MapSpecification<IQuery, IQueryable<Facts::Position>> Position =
                         new MapSpecification<IQuery, IQueryable<Facts::Position>>(
                             q => q.For(Find.Erm.Positions())
@@ -113,6 +103,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                         new MapSpecification<IQuery, IQueryable<Facts::Project>>(
                             q => q.For(Find.Erm.Projects())
                                   .Select(Transform.Project));
+
+                    public static readonly MapSpecification<IQuery, IQueryable<Facts::Theme>> Theme =
+                        new MapSpecification<IQuery, IQueryable<Facts::Theme>>(
+                            q => q.For(Find.Erm.Theme())
+                                  .Select(Transform.Theme));
 
                     private static class Transform
                     {
@@ -142,13 +137,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     ObjectBindingType = x.ObjectBindingType,
                                 };
 
-                        public static readonly Expression<Func<Erm::Category, Facts::Category>> Category =
-                            x => new Facts::Category
-                            {
-                                Id = x.Id,
-                                ParentId = x.ParentId
-                            };
-
                         public static readonly Expression<Func<Erm::OrderPosition, Facts::OrderPosition>> OrderPosition =
                             x => new Facts::OrderPosition
                                 {
@@ -165,13 +153,8 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     FirmAddressId = x.FirmAddressId,
                                     PositionId = x.PositionId,
                                     OrderPositionId = x.OrderPositionId,
-                                };
-
-                        public static readonly Expression<Func<Erm::OrganizationUnit, Facts::OrganizationUnit>> OrganizationUnit =
-                            x => new Facts::OrganizationUnit
-                                {
-                                    Id = x.Id,
-                                };
+                                    ThemeId = x.ThemeId,
+                            };
 
                         public static readonly Expression<Func<Erm::Position, Facts::Position>> Position =
                             x => new Facts::Position
@@ -216,6 +199,13 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     OrganizationUnitId = x.OrganizationUnitId.Value,
                                     Name = x.DisplayName,
                                 };
+
+                        public static readonly Expression<Func<Erm::Theme, Facts::Theme>> Theme =
+                            x => new Facts::Theme
+                            {
+                                Id = x.Id,
+                                Name = x.Name,
+                            };
                     }
                 }
             }

@@ -8,7 +8,7 @@ go
 
 create table UserContext.UserAccount(
     Id bigint not null,
-    Name nvarchar(max) not null,
+    Name nvarchar(64) not null,
     constraint PK_Account primary key (Id)
 )
 go
@@ -23,7 +23,7 @@ go
 create table UserContext.UserProfile(
     Id bigint not null,
     UserId bigint not null,
-    TimeZoneId nvarchar(max) not null,
+    TimeZoneId nvarchar(64) not null,
     constraint PK_UserProfile primary key (UserId)
 )
 go

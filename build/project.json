@@ -5,7 +5,7 @@
   "dependencies": {
     "2GIS.NuClear.AdvancedSearch.Tools.ConvertTrackedUseCases": "0.1.11",
     "2GIS.NuClear.BuildTools": "0.2.81",
-    "2GIS.NuClear.DataTest": "0.18.0-linq2db"
+    "2GIS.NuClear.DataTest": "0.20.0-linq2db0002"
   },
   "runtimes": {
     "win": {}

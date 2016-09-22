@@ -1,9 +1,9 @@
-using System;
+п»їusing System;
 
 namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
-    /// Импортированная из ERM сущность прайс-листа
+    /// РРјРїРѕСЂС‚РёСЂРѕРІР°РЅРЅР°СЏ РёР· ERM СЃСѓС‰РЅРѕСЃС‚СЊ РїСЂР°Р№СЃ-Р»РёСЃС‚Р°
     /// </summary>
     public sealed class Price
     {
