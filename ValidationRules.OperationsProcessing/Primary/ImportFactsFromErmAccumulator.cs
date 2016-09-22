@@ -23,18 +23,21 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
         private readonly CommandFactory<AccountFactsSubDomain> _accountCommandFactory;
         private readonly CommandFactory<ConsistencyFactsSubDomain> _consistencyCommandFactory;
         private readonly CommandFactory<PriceFactsSubDomain> _priceCommandFactory;
+        private readonly CommandFactory<FirmFactsSubDomain> _firmCommandFactory;
 
         public ImportFactsFromErmAccumulator(ITracer tracer,
                                              ITelemetryPublisher telemetryPublisher,
                                              CommandFactory<AccountFactsSubDomain> accountCommandFactory,
                                              CommandFactory<ConsistencyFactsSubDomain> consistencyCommandFactory,
-                                             CommandFactory<PriceFactsSubDomain> priceCommandFactory)
+                                             CommandFactory<PriceFactsSubDomain> priceCommandFactory,
+                                             CommandFactory<FirmFactsSubDomain> firmCommandFactory)
         {
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
             _accountCommandFactory = accountCommandFactory;
             _consistencyCommandFactory = consistencyCommandFactory;
             _priceCommandFactory = priceCommandFactory;
+            _firmCommandFactory = firmCommandFactory;
         }
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase @event)
@@ -51,6 +54,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             var commands = _accountCommandFactory.CreateCommands(@event)
                 .Concat(_consistencyCommandFactory.CreateCommands(@event))
                 .Concat(_priceCommandFactory.CreateCommands(@event))
+                .Concat(_firmCommandFactory.CreateCommands(@event))
                 .ToList();
 
             commands.Add(incrementStateCommand);

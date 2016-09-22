@@ -9,5 +9,6 @@
         public int BindingObjectTypeEnum { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
+        public int Platform { get; set; }
     }
 }

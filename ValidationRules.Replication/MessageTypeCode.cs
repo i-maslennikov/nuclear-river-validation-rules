@@ -46,5 +46,9 @@ namespace NuClear.ValidationRules.Replication
         LinkedFirmShouldBeValid = 35,
         BillsSumShouldMatchOrder = 36,
         BillsShouldBeCreated = 37,
+
+        FirmAndOrderShouldBelongTheSameOrganizationUnit = 38,
+        FirmShouldHaveLimitedCategoryCount = 39,
+        FirmWithSpecialCategoryShouldHaveSpecialPurchases = 40,
     }
 }

@@ -13,6 +13,9 @@ using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
+using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
@@ -67,6 +70,15 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyFacts::Position),
                             typeof(ConsistencyFacts::Project),
                             typeof(ConsistencyFacts::ReleaseWithdrawal),
+
+                            typeof(FirmFacts::Firm),
+                            typeof(FirmFacts::FirmAddress),
+                            typeof(FirmFacts::FirmAddressCategory),
+                            typeof(FirmFacts::Order),
+                            typeof(FirmFacts::OrderPosition),
+                            typeof(FirmFacts::OrderPositionAdvertisement),
+                            typeof(FirmFacts::Position),
+                            typeof(FirmFacts::Project),
                         });
             }
 
@@ -115,6 +127,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyAggregates::Order.MissingBills),
                             typeof(ConsistencyAggregates::Order.MissingRequiredField),
                             typeof(ConsistencyAggregates::Order.MissingOrderScan),
+
+
+                            typeof(FirmAggregates::Firm),
+                            typeof(FirmAggregates::Order),
+                            typeof(FirmAggregates::Order.CategoryPurchase),
+                            typeof(FirmAggregates::Order.SpecialPosition),
+                            typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
                         });
             }
 

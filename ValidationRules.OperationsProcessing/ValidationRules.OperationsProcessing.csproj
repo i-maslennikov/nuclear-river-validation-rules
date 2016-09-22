@@ -189,6 +189,7 @@
     <Compile Include="Contexts\AggregateSubDomain.cs" />
     <Compile Include="Contexts\ConsistencyFactsSubDomain.cs" />
     <Compile Include="Contexts\ErmSubDomain.cs" />
+    <Compile Include="Contexts\FirmFactsSubDomain.cs" />
     <Compile Include="Contexts\PriceFactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
     <Compile Include="Final\AggregateCommandsAccumulator.cs" />
