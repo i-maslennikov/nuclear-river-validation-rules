@@ -27,7 +27,6 @@
         public const int Project = 158;
         public const int ReleaseWithdrawal = 215;
         public const int Ruleset = 280;
-        public const int RulesetRule = 279;
         public const int Theme = 221;
 
         // Значения, первоисточником которых является VR

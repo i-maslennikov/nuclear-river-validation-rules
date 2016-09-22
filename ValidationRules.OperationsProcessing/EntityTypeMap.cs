@@ -71,7 +71,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                              .AddMapping<EntityTypePricePosition, PriceFacts::PricePosition>()
                              //.AddMapping<EntityTypePricePositionNotActive, PriceFacts::PricePositionNotActive>()
                              .AddMapping<EntityTypeProject, PriceFacts::Project>()
-                             .AddMapping<EntityTypeRulesetRule, PriceFacts::RulesetRule>()
+                             .AddMapping<EntityTypeRuleset, PriceFacts::RulesetRule>()
                              .AddMapping<EntityTypeTheme, PriceFacts::Theme>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap
