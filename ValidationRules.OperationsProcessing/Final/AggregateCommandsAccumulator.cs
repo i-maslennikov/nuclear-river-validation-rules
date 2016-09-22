@@ -21,6 +21,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                     { typeof(Storage.Model.PriceRules.Facts.Price), typeof(Storage.Model.PriceRules.Aggregates.Price) },
                     { typeof(Storage.Model.PriceRules.Facts.Order), typeof(Storage.Model.PriceRules.Aggregates.Order) },
                     { typeof(Storage.Model.PriceRules.Facts.Position), typeof(Storage.Model.PriceRules.Aggregates.Position) },
+                    { typeof(Storage.Model.PriceRules.Facts.Theme), typeof(Storage.Model.PriceRules.Aggregates.Theme) },
+                    { typeof(Storage.Model.PriceRules.Facts.Category), typeof(Storage.Model.PriceRules.Aggregates.Category) },
 
                     { typeof(Storage.Model.ConsistencyRules.Facts.Order), typeof(Storage.Model.ConsistencyRules.Aggregates.Order) },
 
