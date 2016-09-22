@@ -73,3 +73,8 @@ create table AccountFacts.OrderPosition(
     constraint PK_OrderPosition primary key (Id)
 )
 go
+
+CREATE NONCLUSTERED INDEX IX_Order_SourceOrganizationUnitId
+ON [AccountFacts].[Order] ([SourceOrganizationUnitId])
+INCLUDE ([Id],[DestOrganizationUnitId],[BranchOfficeOrganizationUnitId],[LegalPersonId],[Number],[BeginDistributionDate],[EndDistributionDate])
+GO

@@ -218,8 +218,3 @@ CREATE NONCLUSTERED INDEX IX_Order_BargainId_SignupDate
 ON [ConsistencyFacts].[Order] ([BargainId],[SignupDate])
 INCLUDE ([Id])
 GO
-
-CREATE NONCLUSTERED INDEX IX_Order_SourceOrganizationUnitId
-ON [AccountFacts].[Order] ([SourceOrganizationUnitId])
-INCLUDE ([Id],[DestOrganizationUnitId],[BranchOfficeOrganizationUnitId],[LegalPersonId],[Number],[BeginDistributionDate],[EndDistributionDate])
-GO
