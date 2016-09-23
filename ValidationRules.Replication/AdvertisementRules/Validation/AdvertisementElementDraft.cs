@@ -10,7 +10,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
     /// Если для позиции заказа существует РМ, такой что существует ЭРМ с шаблоном, требующим выверки, и ЭРМ имеет статус 'Черновик', , то должна выводиться ошибка:
-    // "В рекламном материале {advertisement}, который подлежит выверке, элемент {advertisementElement} находится в статусе 'Черновик'"
+    /// "В рекламном материале {advertisement}, который подлежит выверке, элемент {advertisementElement} находится в статусе 'Черновик'"
+    /// 
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrdersCheckAdvertisementElementIsDraft
     /// </summary>
     public sealed class AdvertisementElementDraft : ValidationResultAccessorBase
     {

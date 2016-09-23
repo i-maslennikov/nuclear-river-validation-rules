@@ -49,8 +49,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
             var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
 
             var advertisementIds =
-                from elementTemplate in _query.For<AdvertisementElementTemplate>().Where(x => dataObjectIds.Contains(x.Id))
-                join element in _query.For<AdvertisementElement>() on elementTemplate.Id equals element.AdvertisementElementTemplateId
+                from element in _query.For<AdvertisementElement>().Where(x => dataObjectIds.Contains(x.AdvertisementElementTemplateId))
                 select element.AdvertisementId;
 
             return new EventCollectionHelper { { typeof(Advertisement), advertisementIds.Distinct() } }.ToArray();

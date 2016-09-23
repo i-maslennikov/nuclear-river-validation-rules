@@ -2,18 +2,18 @@
 go
 
 if object_id('AdvertisementAggregates.Order') is not null drop table AdvertisementAggregates.[Order]
-if object_id('AdvertisementAggregates.AdvertisementRequired') is not null drop table AdvertisementAggregates.AdvertisementRequired
-if object_id('AdvertisementAggregates.AdvertisementRequiredComposite') is not null drop table AdvertisementAggregates.AdvertisementRequiredComposite
-if object_id('AdvertisementAggregates.LinkedObjectRequiredComposite') is not null drop table AdvertisementAggregates.LinkedObjectRequiredComposite
+if object_id('AdvertisementAggregates.RequiredAdvertisementMissing') is not null drop table AdvertisementAggregates.RequiredAdvertisementMissing
+if object_id('AdvertisementAggregates.RequiredAdvertisementCompositeMissing') is not null drop table AdvertisementAggregates.RequiredAdvertisementCompositeMissing
+if object_id('AdvertisementAggregates.RequiredLinkedObjectCompositeMissing') is not null drop table AdvertisementAggregates.RequiredLinkedObjectCompositeMissing
 if object_id('AdvertisementAggregates.AdvertisementDeleted') is not null drop table AdvertisementAggregates.AdvertisementDeleted
-if object_id('AdvertisementAggregates.AdvertisementNotBelongsToFirm') is not null drop table AdvertisementAggregates.AdvertisementNotBelongsToFirm
+if object_id('AdvertisementAggregates.AdvertisementMustBelongToFirm') is not null drop table AdvertisementAggregates.AdvertisementMustBelongToFirm
 if object_id('AdvertisementAggregates.AdvertisementIsDummy') is not null drop table AdvertisementAggregates.AdvertisementIsDummy
 if object_id('AdvertisementAggregates.WhiteListNotExist') is not null drop table AdvertisementAggregates.WhiteListNotExist
 if object_id('AdvertisementAggregates.WhiteListExist') is not null drop table AdvertisementAggregates.WhiteListExist
 if object_id('AdvertisementAggregates.OrderAdvertisement') is not null drop table AdvertisementAggregates.OrderAdvertisement
 
 if object_id('AdvertisementAggregates.Advertisement') is not null drop table AdvertisementAggregates.Advertisement
-if object_id('AdvertisementAggregates.ElementRequired') is not null drop table AdvertisementAggregates.ElementRequired
+if object_id('AdvertisementAggregates.RequiredElementMissing') is not null drop table AdvertisementAggregates.RequiredElementMissing
 if object_id('AdvertisementAggregates.ElementInvalid') is not null drop table AdvertisementAggregates.ElementInvalid
 if object_id('AdvertisementAggregates.ElementDraft') is not null drop table AdvertisementAggregates.ElementDraft
 
@@ -36,7 +36,7 @@ create table AdvertisementAggregates.[Order] (
 )
 go
 
-create table AdvertisementAggregates.AdvertisementRequired (
+create table AdvertisementAggregates.RequiredAdvertisementMissing (
     OrderId bigint not null,
 
     OrderPositionId bigint not null,
@@ -44,7 +44,7 @@ create table AdvertisementAggregates.AdvertisementRequired (
 )
 go
 
-create table AdvertisementAggregates.AdvertisementRequiredComposite (
+create table AdvertisementAggregates.RequiredAdvertisementCompositeMissing (
     OrderId bigint not null,
 
     OrderPositionId bigint not null,
@@ -54,7 +54,7 @@ create table AdvertisementAggregates.AdvertisementRequiredComposite (
 )
 go
 
-create table AdvertisementAggregates.LinkedObjectRequiredComposite (
+create table AdvertisementAggregates.RequiredLinkedObjectCompositeMissing (
     OrderId bigint not null,
 
     OrderPositionId bigint not null,
@@ -74,7 +74,7 @@ create table AdvertisementAggregates.AdvertisementDeleted (
 )
 go
 
-create table AdvertisementAggregates.AdvertisementNotBelongsToFirm (
+create table AdvertisementAggregates.AdvertisementMustBelongToFirm (
     OrderId bigint not null,
 
     OrderPositionId bigint not null,
@@ -124,7 +124,7 @@ create table AdvertisementAggregates.Advertisement (
 )
 go
 
-create table AdvertisementAggregates.ElementRequired (
+create table AdvertisementAggregates.RequiredElementMissing (
     AdvertisementId bigint not null,
 
     AdvertisementElementId bigint not null,

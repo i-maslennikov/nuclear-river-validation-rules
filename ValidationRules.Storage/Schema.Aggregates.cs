@@ -109,15 +109,15 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Order>()
                   .HasSchemaName(AdvertisementAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementRequired>()
+            builder.Entity<AdvertisementAggregates::Order.RequiredAdvertisementMissing>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementRequiredComposite>()
+            builder.Entity<AdvertisementAggregates::Order.RequiredAdvertisementCompositeMissing>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.LinkedObjectRequiredComposite>()
+            builder.Entity<AdvertisementAggregates::Order.RequiredLinkedObjectCompositeMissing>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.AdvertisementDeleted>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementNotBelongsToFirm>()
+            builder.Entity<AdvertisementAggregates::Order.AdvertisementMustBelongToFirm>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.AdvertisementIsDummy>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
@@ -131,7 +131,7 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Advertisement>()
                   .HasSchemaName(AdvertisementAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementAggregates::Advertisement.ElementRequired>()
+            builder.Entity<AdvertisementAggregates::Advertisement.RequiredElementMissing>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Advertisement.ElementInvalid>()
                   .HasSchemaName(AdvertisementAggregatesSchema);

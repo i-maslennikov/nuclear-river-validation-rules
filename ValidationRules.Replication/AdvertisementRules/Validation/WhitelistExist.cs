@@ -10,6 +10,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
     /// Для фирмы {firm} в белый список выбран рекламный материал {advertisement}
+    /// 
+    /// Source: AdvertisementsOnlyWhiteListOrderValidationRule/AdvertisementChoosenForWhitelist
     /// </summary>
     public sealed class WhiteListExist : ValidationResultAccessorBase
     {

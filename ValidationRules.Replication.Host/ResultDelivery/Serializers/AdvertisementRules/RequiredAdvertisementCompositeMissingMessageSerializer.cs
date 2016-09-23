@@ -1,15 +1,15 @@
 ﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AdvertisementRules
 {
-    public sealed class CompositePositionMustHaveLinkedObjectsMessageSerializer : IMessageSerializer
+    public sealed class RequiredAdvertisementCompositeMissingMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory;
 
-        public CompositePositionMustHaveLinkedObjectsMessageSerializer(LinkFactory linkFactory)
+        public RequiredAdvertisementCompositeMissingMessageSerializer(LinkFactory linkFactory)
         {
             _linkFactory = linkFactory;
         }
 
-        public MessageTypeCode MessageType => MessageTypeCode.CompositePositionMustHaveLinkedObjects;
+        public MessageTypeCode MessageType => MessageTypeCode.RequiredAdvertisementCompositeMissing;
 
         public LocalizedMessage Serialize(Message message)
         {
@@ -19,7 +19,7 @@
 
             return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"В позиции {_linkFactory.CreateLink(orderPositionReference)} необходимо указать хотя бы один объект привязки для подпозиции {_linkFactory.CreateLink(positionReference)}");
+                                        $"В позиции {_linkFactory.CreateLink(orderPositionReference)} необходимо указать рекламные материалы для подпозиции {_linkFactory.CreateLink(positionReference)}");
         }
     }
 }

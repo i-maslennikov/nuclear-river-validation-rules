@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
     {
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Advertisement.ElementRequired> _elementRequiredBulkRepository;
+        private readonly IBulkRepository<Advertisement.RequiredElementMissing> _requiredElementMissingBulkRepository;
         private readonly IBulkRepository<Advertisement.ElementInvalid> _elementInvalidBulkRepository;
         private readonly IBulkRepository<Advertisement.ElementDraft> _elementDraftBulkRepository;
 
@@ -27,14 +27,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             IQuery query,
             IBulkRepository<Advertisement> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
-            IBulkRepository<Advertisement.ElementRequired> elementRequiredBulkRepository,
+            IBulkRepository<Advertisement.RequiredElementMissing> requiredElementMissingBulkRepository,
             IBulkRepository<Advertisement.ElementInvalid> elementInvalidBulkRepository,
             IBulkRepository<Advertisement.ElementDraft> elementDraftBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new AdvertisementAccessor(query))
         {
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
-            _elementRequiredBulkRepository = elementRequiredBulkRepository;
+            _requiredElementMissingBulkRepository = requiredElementMissingBulkRepository;
             _elementInvalidBulkRepository = elementInvalidBulkRepository;
             _elementDraftBulkRepository = elementDraftBulkRepository;
         }
@@ -45,7 +45,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
-                    new ValueObjectActor<Advertisement.ElementRequired>(_query, _elementRequiredBulkRepository, _equalityComparerFactory, new ElementRequiredAccessor(_query)),
+                    new ValueObjectActor<Advertisement.RequiredElementMissing>(_query, _requiredElementMissingBulkRepository, _equalityComparerFactory, new RequiredElementMissingAccessor(_query)),
                     new ValueObjectActor<Advertisement.ElementInvalid>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementInvalidAccessor(_query)),
                     new ValueObjectActor<Advertisement.ElementDraft>(_query, _elementDraftBulkRepository, _equalityComparerFactory, new ElementDraftAccessor(_query)),
                 };
@@ -78,22 +78,22 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementRequiredAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementRequired>
+        public sealed class RequiredElementMissingAccessor : IStorageBasedDataObjectAccessor<Advertisement.RequiredElementMissing>
         {
             private readonly IQuery _query;
 
-            public ElementRequiredAccessor(IQuery query)
+            public RequiredElementMissingAccessor(IQuery query)
             {
                 _query = query;
             }
 
-            public IQueryable<Advertisement.ElementRequired> GetSource()
+            public IQueryable<Advertisement.RequiredElementMissing> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>()
                    join element in _query.For<Facts::AdvertisementElement>() on advertisement.Id equals element.AdvertisementId
                    where element.IsEmpty // ЭРМ пустой
                    join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>() on element.AdvertisementElementTemplateId equals elementTemplate.Id
                    where elementTemplate.IsRequired // шаблон ЭРМ обязателен
-                   select new Advertisement.ElementRequired
+                   select new Advertisement.RequiredElementMissing
                    {
                        AdvertisementId = advertisement.Id,
 
@@ -101,14 +101,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        AdvertisementElementTemplateId = elementTemplate.Id,
                    };
 
-            public FindSpecification<Advertisement.ElementRequired> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Advertisement.RequiredElementMissing> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
                                            .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Distinct()
                                            .ToArray();
-                return new FindSpecification<Advertisement.ElementRequired>(x => aggregateIds.Contains(x.AdvertisementId));
+                return new FindSpecification<Advertisement.RequiredElementMissing>(x => aggregateIds.Contains(x.AdvertisementId));
             }
         }
 

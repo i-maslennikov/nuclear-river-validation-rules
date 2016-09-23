@@ -8,23 +8,27 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// В позиции {orderPosition} необходимо указать хотя бы один объект привязки для подпозиции {position}
+    /// Если для позиции заказа, такой что для любой её номенклатуры существует обязательный шаблон РМ, не существует объекта привязки с такой номенклатурой без указанного РМ, то должна выводиться ошибка:
+    ///"В позиции {orderPosition} необходимо указать рекламные материалы" - для простой позиции
+    ///"В позиции {orderPosition} необходимо указать рекламные материалы для подпозиции {position}" - для сложной позиции
+    /// 
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveAdvertisements
     /// </summary>
-    public sealed class CompositePositionMustHaveLinkedObjects : ValidationResultAccessorBase
+    public sealed class RequiredAdvertisementCompositeMissing : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
+        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public CompositePositionMustHaveLinkedObjects(IQuery query) : base(query, MessageTypeCode.CompositePositionMustHaveLinkedObjects)
+        public RequiredAdvertisementCompositeMissing(IQuery query) : base(query, MessageTypeCode.RequiredAdvertisementCompositeMissing)
         {
         }
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from order in query.For<Order>()
-                              join fail in query.For<Order.LinkedObjectRequiredComposite>() on order.Id equals fail.OrderId
+                              join fail in query.For<Order.RequiredAdvertisementCompositeMissing>() on order.Id equals fail.OrderId
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",

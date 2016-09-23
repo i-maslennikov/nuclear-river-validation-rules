@@ -37,7 +37,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Project> dataObjects) => Array.Empty<IEvent>();
 
-        // пересчитывать агрегат Order не нужно, т.к. нельзя перепривязать заказ к другому проекту
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Project> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Project> dataObjects)
+        {
+            var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
+
+            var orderIds =
+                from project in _query.For<Project>().Where(x => dataObjectIds.Contains(x.Id))
+                join order in _query.For<Order>() on project.OrganizationUnitId equals order.DestOrganizationUnitId
+                select order.Id;
+
+            return new EventCollectionHelper { { typeof(Order), orderIds } }.ToArray();
+        }
     }
 }

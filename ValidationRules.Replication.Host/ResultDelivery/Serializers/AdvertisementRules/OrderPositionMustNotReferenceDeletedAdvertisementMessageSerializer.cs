@@ -1,15 +1,15 @@
 ﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AdvertisementRules
 {
-    public sealed class RemovedAdvertisemendSpecifiedForPositionMessageSerializer : IMessageSerializer
+    public sealed class OrderPositionMustNotReferenceDeletedAdvertisementMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory;
 
-        public RemovedAdvertisemendSpecifiedForPositionMessageSerializer(LinkFactory linkFactory)
+        public OrderPositionMustNotReferenceDeletedAdvertisementMessageSerializer(LinkFactory linkFactory)
         {
             _linkFactory = linkFactory;
         }
 
-        public MessageTypeCode MessageType => MessageTypeCode.RemovedAdvertisemendSpecifiedForPosition;
+        public MessageTypeCode MessageType => MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement;
 
         public LocalizedMessage Serialize(Message message)
         {

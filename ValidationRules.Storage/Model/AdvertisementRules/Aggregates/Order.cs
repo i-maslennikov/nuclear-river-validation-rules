@@ -11,7 +11,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
         public DateTime EndDistributionDatePlan { get; set; }
         public long ProjectId { get; set; }
 
-        public sealed class AdvertisementRequired
+        public sealed class RequiredAdvertisementMissing
         {
             public long OrderId { get; set; }
 
@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long PositionId { get; set; }
         }
 
-        public sealed class AdvertisementRequiredComposite
+        public sealed class RequiredAdvertisementCompositeMissing
         {
             public long OrderId { get; set; }
 
@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long PositionId { get; set; }
         }
 
-        public sealed class LinkedObjectRequiredComposite
+        public sealed class RequiredLinkedObjectCompositeMissing
         {
             public long OrderId { get; set; }
 
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long AdvertisementId { get; set; }
         }
 
-        public sealed class AdvertisementNotBelongsToFirm
+        public sealed class AdvertisementMustBelongToFirm
         {
             public long OrderId { get; set; }
 

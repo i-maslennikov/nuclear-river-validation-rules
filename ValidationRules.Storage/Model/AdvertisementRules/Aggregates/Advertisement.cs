@@ -5,7 +5,7 @@
         public long Id { get; set; }
         public string Name { get; set; }
 
-        public sealed class ElementRequired
+        public sealed class RequiredElementMissing
         {
             public long AdvertisementId { get; set; }
 

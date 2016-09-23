@@ -47,8 +47,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
         {
             var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
 
-            var advertisementIds = from template in _query.For<AdvertisementTemplate>().Where(x => dataObjectIds.Contains(x.Id))
-                                   join advertisement in _query.For<Advertisement>() on template.Id equals advertisement.AdvertisementTemplateId
+            var advertisementIds = from advertisement in _query.For<Advertisement>().Where(x => dataObjectIds.Contains(x.AdvertisementTemplateId))
                                    select advertisement.Id;
 
             // позиция номенклатуры и шаблон РМ является константой для заказа, агрегат Order не пересчитываем

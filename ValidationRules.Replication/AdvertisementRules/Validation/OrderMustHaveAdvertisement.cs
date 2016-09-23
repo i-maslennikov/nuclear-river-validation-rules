@@ -10,7 +10,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
     /// Если для позиции заказа такой, что для любого её РМ такого, что для любого обязательного шаблона ЭРМ найдётся незаполненный ЭРМ, то должна выводиться ошибка:
-    // "В рекламном материале {advertisement} не заполнен обязательный элемент {advertisementElement}"
+    /// "В рекламном материале {advertisement} не заполнен обязательный элемент {advertisementElement}"
+    /// 
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrdersCheckPositionMustHaveAdvertisementElements
     /// </summary>
     public sealed class OrderMustHaveAdvertisement : ValidationResultAccessorBase
     {
@@ -28,7 +30,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var ruleResults = from order in query.For<Order>()
                               join relation in query.For<Order.OrderAdvertisement>() on order.Id equals relation.OrderId
                               join advertisement in query.For<Advertisement>() on relation.AdvertisementId equals advertisement.Id
-                              join fail in query.For<Advertisement.ElementRequired>() on advertisement.Id equals fail.AdvertisementId
+                              join fail in query.For<Advertisement.RequiredElementMissing>() on advertisement.Id equals fail.AdvertisementId
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",

@@ -1,15 +1,15 @@
 ﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AdvertisementRules
 {
-    public sealed class AdvertisementNotBelongsToFirmMessageSerializer : IMessageSerializer
+    public sealed class AdvertisementMustBelongToFirmMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory;
 
-        public AdvertisementNotBelongsToFirmMessageSerializer(LinkFactory linkFactory)
+        public AdvertisementMustBelongToFirmMessageSerializer(LinkFactory linkFactory)
         {
             _linkFactory = linkFactory;
         }
 
-        public MessageTypeCode MessageType => MessageTypeCode.AdvertisementNotBelongsToFirm;
+        public MessageTypeCode MessageType => MessageTypeCode.AdvertisementMustBelongToFirm;
 
         public LocalizedMessage Serialize(Message message)
         {

@@ -3,43 +3,43 @@ using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если для позиции заказа существует объект привязки с удалённым РМ, то должна выводиться ошибка:
-    // "В позиции {orderPosition} выбран удалённый рекламный материал {advertisement}"
+    /// Если для позиции заказа со сложной  позицией  и с IsCompositionOptional=false не существует объекта привязки (на любую подпозицию), то должна выводиться ошибка:
+    /// "В позиции {orderPosition} необходимо указать хотя бы один объект привязки для подпозиции {position}"
+    /// 
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveLinkingObject
     /// </summary>
-    public sealed class RemovedAdvertisemendSpecifiedForPosition : ValidationResultAccessorBase
+    public sealed class RequiredLinkedObjectCompositeMissing : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public RemovedAdvertisemendSpecifiedForPosition(IQuery query) : base(query, MessageTypeCode.RemovedAdvertisemendSpecifiedForPosition)
+        public RequiredLinkedObjectCompositeMissing(IQuery query) : base(query, MessageTypeCode.RequiredLinkedObjectCompositeMissing)
         {
         }
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from order in query.For<Order>()
-                              join fail in query.For<Order.AdvertisementDeleted>() on order.Id equals fail.OrderId
+                              join fail in query.For<Order.RequiredLinkedObjectCompositeMissing>() on order.Id equals fail.OrderId
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
                                                                                  new XElement("order",
                                                                                               new XAttribute("id", order.Id),
                                                                                               new XAttribute("number", order.Number)),
-                                                                                  new XElement("orderPosition",
+                                                                                 new XElement("orderPosition",
                                                                                               new XAttribute("id", fail.OrderPositionId),
-                                                                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)),
-                                                                                  new XElement("advertisement",
-                                                                                              new XAttribute("id", fail.AdvertisementId),
-                                                                                              new XAttribute("name", query.For<Advertisement>().Single(x => x.Id == fail.AdvertisementId).Name))
-                                                                                  )),
+                                                                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.CompositePositionId).Name)),
+                                                                                 new XElement("position",
+                                                                                              new XAttribute("id", fail.PositionId),
+                                                                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)))),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,
                                       ProjectId = order.ProjectId,

@@ -9,24 +9,26 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если для позиции заказа существует объект привязки с РМ, в РМ указана фирма и фирма заказа не содержит этот РМ, то должна выводиться ошибка:
-    // "В позиции {orderPosition} выбран рекламный материал {advertisement}, не принадлежащий фирме {firm}"
+    /// Если для позиции заказа существует объект привязки с удалённым РМ, то должна выводиться ошибка:
+    /// "В позиции {orderPosition} выбран удалённый рекламный материал {advertisement}"
+    /// 
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/RemovedAdvertisemendSpecifiedForPosition
     /// </summary>
-    public sealed class AdvertisementNotBelongsToFirm : ValidationResultAccessorBase
+    public sealed class OrderPositionMustNotReferenceDeletedAdvertisement : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public AdvertisementNotBelongsToFirm(IQuery query) : base(query, MessageTypeCode.AdvertisementNotBelongsToFirm)
+        public OrderPositionMustNotReferenceDeletedAdvertisement(IQuery query) : base(query, MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement)
         {
         }
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from order in query.For<Order>()
-                              join fail in query.For<Order.AdvertisementNotBelongsToFirm>() on order.Id equals fail.OrderId
+                              join fail in query.For<Order.AdvertisementDeleted>() on order.Id equals fail.OrderId
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
@@ -38,10 +40,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                                               new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)),
                                                                                   new XElement("advertisement",
                                                                                               new XAttribute("id", fail.AdvertisementId),
-                                                                                              new XAttribute("name", query.For<Advertisement>().Single(x => x.Id == fail.AdvertisementId).Name)),
-                                                                                  new XElement("firm",
-                                                                                              new XAttribute("id", fail.FirmId),
-                                                                                              new XAttribute("name", query.For<Firm>().Single(x => x.Id == fail.FirmId).Name))
+                                                                                              new XAttribute("name", query.For<Advertisement>().Single(x => x.Id == fail.AdvertisementId).Name))
                                                                                   )),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,

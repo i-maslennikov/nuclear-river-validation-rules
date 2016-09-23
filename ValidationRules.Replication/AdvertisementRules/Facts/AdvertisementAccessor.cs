@@ -49,8 +49,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
             var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
 
             var orderIds =
-                from advertisement in _query.For<Advertisement>().Where(x => dataObjectIds.Contains(x.Id))
-                join opa in _query.For<OrderPositionAdvertisement>() on advertisement.Id equals opa.AdvertisementId
+                from opa in _query.For<OrderPositionAdvertisement>().Where(x => dataObjectIds.Contains((long)x.AdvertisementId))
                 join op in _query.For<OrderPosition>() on opa.OrderPositionId equals op.Id
                 join order in _query.For<Order>() on op.OrderId equals order.Id
                 select order.Id;
