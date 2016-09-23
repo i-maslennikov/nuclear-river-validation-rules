@@ -32,14 +32,14 @@ create table AdvertisementAggregates.[Order] (
 
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDatePlan datetime2(2) not null,
-	ProjectId bigint not null,
+    ProjectId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.AdvertisementRequired (
     OrderId bigint not null,
 
-	OrderPositionId bigint not null,
+    OrderPositionId bigint not null,
     PositionId bigint not null,
 )
 go
@@ -47,71 +47,71 @@ go
 create table AdvertisementAggregates.AdvertisementRequiredComposite (
     OrderId bigint not null,
 
-	OrderPositionId bigint not null,
+    OrderPositionId bigint not null,
     CompositePositionId bigint not null,
 
-	PositionId bigint not null,
+    PositionId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.LinkedObjectRequiredComposite (
     OrderId bigint not null,
 
-	OrderPositionId bigint not null,
+    OrderPositionId bigint not null,
     CompositePositionId bigint not null,
 
-	PositionId bigint not null,
+    PositionId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.AdvertisementDeleted (
     OrderId bigint not null,
 
-	OrderPositionId bigint not null,
+    OrderPositionId bigint not null,
     PositionId bigint not null,
 
-	AdvertisementId bigint not null,
+    AdvertisementId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.AdvertisementNotBelongsToFirm (
     OrderId bigint not null,
 
-	OrderPositionId bigint not null,
+    OrderPositionId bigint not null,
     PositionId bigint not null,
 
-	AdvertisementId bigint not null,
+    AdvertisementId bigint not null,
 
-	FirmId bigint not null,
+    FirmId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.AdvertisementIsDummy (
     OrderId bigint not null,
 
-	PositionId bigint not null,
+    PositionId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.WhiteListNotExist (
     OrderId bigint not null,
 
-	FirmId bigint not null,
+    FirmId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.WhiteListExist (
     OrderId bigint not null,
 
-	FirmId bigint not null,
-	AdvertisementId bigint not null,
+    FirmId bigint not null,
+    AdvertisementId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.OrderAdvertisement (
     OrderId bigint not null,
 
-	AdvertisementId bigint not null,
+    AdvertisementId bigint not null,
 )
 go
 
@@ -120,34 +120,34 @@ go
 create table AdvertisementAggregates.Advertisement (
     Id bigint not null,
 
-	Name nvarchar(128) not null,
+    Name nvarchar(128) not null,
 )
 go
 
 create table AdvertisementAggregates.ElementRequired (
     AdvertisementId bigint not null,
 
-	AdvertisementElementId bigint not null,
+    AdvertisementElementId bigint not null,
 
-	AdvertisementElementTemplateId bigint not null,
+    AdvertisementElementTemplateId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.ElementInvalid (
     AdvertisementId bigint not null,
 
-	AdvertisementElementId bigint not null,
+    AdvertisementElementId bigint not null,
 
-	AdvertisementElementTemplateId bigint not null,
+    AdvertisementElementTemplateId bigint not null,
 )
 go
 
 create table AdvertisementAggregates.ElementDraft (
     AdvertisementId bigint not null,
 
-	AdvertisementElementId bigint not null,
+    AdvertisementElementId bigint not null,
 
-	AdvertisementElementTemplateId bigint not null,
+    AdvertisementElementTemplateId bigint not null,
 )
 go
 
@@ -156,7 +156,7 @@ go
 create table AdvertisementAggregates.AdvertisementElementTemplate (
     Id bigint not null,
 
-	Name nvarchar(128) not null,
+    Name nvarchar(128) not null,
 )
 go
 
@@ -166,7 +166,7 @@ go
 create table AdvertisementAggregates.Firm (
     Id bigint not null,
 
-	Name nvarchar(250) not null,
+    Name nvarchar(250) not null,
 )
 go
 
@@ -175,6 +175,6 @@ go
 create table AdvertisementAggregates.Position (
     Id bigint not null,
 
-	Name nvarchar(256) not null,
+    Name nvarchar(256) not null,
 )
 go

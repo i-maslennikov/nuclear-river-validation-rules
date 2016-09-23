@@ -16,37 +16,37 @@ go
 
 create table AdvertisementFacts.AdvertisementTemplate (
     Id bigint not null,
-	DummyAdvertisementId bigint not null,
+    DummyAdvertisementId bigint not null,
     IsAdvertisementRequired bit not null,
-	IsAllowedToWhiteList bit not null,
-	constraint PK_AdvertisementTemplate primary key (Id)
+    IsAllowedToWhiteList bit not null,
+    constraint PK_AdvertisementTemplate primary key (Id)
 )
 go
 
 create table AdvertisementFacts.Position (
     Id bigint not null,
     AdvertisementTemplateId bigint null,
-	Name nvarchar(256) not null,
+    Name nvarchar(256) not null,
 
-	IsCompositionOptional bit not null,
+    IsCompositionOptional bit not null,
 
-	ChildPositionId bigint null,
+    ChildPositionId bigint null,
 )
 go
 
 create table AdvertisementFacts.PricePosition (
     Id bigint not null,
     PositionId bigint not null,
-	constraint PK_PricePosition primary key (Id)
+    constraint PK_PricePosition primary key (Id)
 )
 go
 
 create table AdvertisementFacts.OrderPositionAdvertisement (
     Id bigint not null,
     OrderPositionId bigint not null,
-	PositionId bigint not null,
-	AdvertisementId bigint null,
-	constraint PK_OrderPositionAdvertisement primary key (Id)
+    PositionId bigint not null,
+    AdvertisementId bigint null,
+    constraint PK_OrderPositionAdvertisement primary key (Id)
 )
 go
 
@@ -63,8 +63,8 @@ INCLUDE ([OrderPositionId],[PositionId])
 create table AdvertisementFacts.OrderPosition (
     Id bigint not null,
     OrderId bigint not null,
-	PricePositionId bigint not null,
-	constraint PK_OrderPosition primary key (Id)
+    PricePositionId bigint not null,
+    constraint PK_OrderPosition primary key (Id)
 )
 go
 
@@ -80,14 +80,14 @@ INCLUDE ([Id],[OrderId])
 
 create table AdvertisementFacts.[Order] (
     Id bigint not null,
-	FirmId bigint not null,
-	Number nvarchar(64) not null,
+    FirmId bigint not null,
+    Number nvarchar(64) not null,
 
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDatePlan datetime2(2) not null,
-	DestOrganizationUnitId bigint not null,
+    DestOrganizationUnitId bigint not null,
 
-	constraint PK_Order primary key (Id)
+    constraint PK_Order primary key (Id)
 )
 go
 
@@ -99,12 +99,12 @@ go
 
 create table AdvertisementFacts.Advertisement (
     Id bigint not null,
-	FirmId bigint null,
-	AdvertisementTemplateId bigint not null,
-	Name nvarchar(128) not null,
-	IsSelectedToWhiteList bit not null,
+    FirmId bigint null,
+    AdvertisementTemplateId bigint not null,
+    Name nvarchar(128) not null,
+    IsSelectedToWhiteList bit not null,
     IsDeleted bit not null,
-	constraint PK_Advertisement primary key (Id)
+    constraint PK_Advertisement primary key (Id)
 )
 go
 
@@ -115,18 +115,18 @@ INCLUDE ([Id])
 
 create table AdvertisementFacts.Firm (
     Id bigint not null,
-	Name nvarchar(250) not null,
-	constraint PK_Firm primary key (Id)
+    Name nvarchar(250) not null,
+    constraint PK_Firm primary key (Id)
 )
 go
 
 create table AdvertisementFacts.AdvertisementElement (
     Id bigint not null,
-	AdvertisementId bigint not null,
-	AdvertisementElementTemplateId bigint not null,
-	IsEmpty bit not null,
-	[Status] int not null,
-	constraint PK_AdvertisementElement primary key (Id)
+    AdvertisementId bigint not null,
+    AdvertisementElementTemplateId bigint not null,
+    IsEmpty bit not null,
+    [Status] int not null,
+    constraint PK_AdvertisementElement primary key (Id)
 )
 go
 
@@ -142,9 +142,9 @@ INCLUDE ([Id],[AdvertisementId])
 
 create table AdvertisementFacts.AdvertisementElementTemplate (
     Id bigint not null,
-	Name nvarchar(128) not null,
-	IsRequired bit not null,
-	NeedsValidation bit not null,
-	constraint PK_AdvertisementElementTemplate primary key (Id)
+    Name nvarchar(128) not null,
+    IsRequired bit not null,
+    NeedsValidation bit not null,
+    constraint PK_AdvertisementElementTemplate primary key (Id)
 )
 go
