@@ -86,3 +86,8 @@ CREATE NONCLUSTERED INDEX IX_OrderPositionAdvertisement_OrderPositionId
 ON [FirmFacts].[OrderPositionAdvertisement] ([OrderPositionId])
 INCLUDE ([PositionId])
 GO
+
+CREATE NONCLUSTERED INDEX IX_FirmAddressCategory_CategoryId
+ON [FirmFacts].[FirmAddressCategory] ([CategoryId])
+INCLUDE ([FirmAddressId])
+GO
