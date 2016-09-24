@@ -77,17 +77,26 @@ create table FirmFacts.Project(
 )
 go
 
+CREATE NONCLUSTERED INDEX IX_Order_DestOrganizationUnitId
+ON [FirmFacts].[Order] ([DestOrganizationUnitId])
+INCLUDE ([Id],[FirmId],[Number],[BeginDistribution],[EndDistributionFact],[WorkflowStep])
+GO
+
+CREATE NONCLUSTERED INDEX IX_OrderPosition_OrderId
+ON [FirmFacts].[OrderPosition] ([OrderId])
+INCLUDE ([Id])
+GO
+
 CREATE NONCLUSTERED INDEX IX_OrderPositionAdvertisement_CategoryId
 ON [FirmFacts].[OrderPositionAdvertisement] ([CategoryId])
 INCLUDE ([OrderPositionId])
 GO
 
-CREATE NONCLUSTERED INDEX IX_OrderPositionAdvertisement_OrderPositionId
-ON [FirmFacts].[OrderPositionAdvertisement] ([OrderPositionId])
-INCLUDE ([PositionId])
-GO
-
 CREATE NONCLUSTERED INDEX IX_FirmAddressCategory_CategoryId
 ON [FirmFacts].[FirmAddressCategory] ([CategoryId])
 INCLUDE ([FirmAddressId])
+GO
+
+CREATE NONCLUSTERED INDEX IX_FirmAddressCategory_FirmAddressId_CategoryId
+ON [FirmFacts].[FirmAddressCategory] ([FirmAddressId],[CategoryId])
 GO
