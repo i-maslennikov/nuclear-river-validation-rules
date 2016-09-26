@@ -9,19 +9,23 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если для позиции заказа существует РМ, такой что существует ЭРМ с шаблоном, требующим выверки, и ЭРМ имеет статус 'Черновик', , то должна выводиться ошибка:
-    /// "В рекламном материале {advertisement}, который подлежит выверке, элемент {advertisementElement} находится в статусе 'Черновик'"
+    /// Для заказов, в которых есть невыверенные РМ, должна выводиться ошибка
+    /// - В рекламном материале "{0}", который подлежит выверке, элемент "{1}" находится в статусе 'Черновик'
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrdersCheckAdvertisementElementIsDraft
+    /// 
+    /// - В рекламном материале "{0}", который подлежит выверке, элемент "{1}" содержит ошибки выверки
+    /// 
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrdersCheckAdvertisementElementWasInvalidated
     /// </summary>
-    public sealed class AdvertisementElementDraft : ValidationResultAccessorBase
+    public sealed class AdvertisementElementShouldBeValid : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public AdvertisementElementDraft(IQuery query) : base(query, MessageTypeCode.AdvertisementElementDraft)
+        public AdvertisementElementShouldBeValid(IQuery query) : base(query, MessageTypeCode.AdvertisementElementShouldBeValid)
         {
         }
 
@@ -30,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var ruleResults = from order in query.For<Order>()
                               join relation in query.For<Order.OrderAdvertisement>() on order.Id equals relation.OrderId
                               join advertisement in query.For<Advertisement>() on relation.AdvertisementId equals advertisement.Id
-                              join fail in query.For<Advertisement.ElementDraft>() on advertisement.Id equals fail.AdvertisementId
+                              join fail in query.For<Advertisement.ElementInvalid>() on advertisement.Id equals fail.AdvertisementId
                               select new Version.ValidationResult
                                   {
                                   MessageParams = new XDocument(new XElement("root",
@@ -42,7 +46,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                                               new XAttribute("name", advertisement.Name)),
                                                                                   new XElement("advertisementElement",
                                                                                               new XAttribute("id", fail.AdvertisementElementId),
-                                                                                              new XAttribute("name", query.For<AdvertisementElementTemplate>().Single(x => x.Id == fail.AdvertisementElementTemplateId).Name))
+                                                                                              new XAttribute("name", query.For<AdvertisementElementTemplate>().Single(x => x.Id == fail.AdvertisementElementTemplateId).Name)),
+                                                                                  new XElement("advertisementElementStatus",
+                                                                                              new XAttribute("id", fail.AdvertisementElementStatus))
                                                                                   )),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,

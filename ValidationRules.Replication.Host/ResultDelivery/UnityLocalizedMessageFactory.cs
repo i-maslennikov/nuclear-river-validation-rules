@@ -20,17 +20,15 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 typeof(LockShouldNotExistMessageSerializer),
 
                 // AdvertisementRules
-                typeof(AdvertisementElementDraftMessageSerializer),
-                typeof(AdvertisementElementInvalidMessageSerializer),
+                typeof(AdvertisementElementShouldBeValidMessageSerializer),
                 typeof(AdvertisementMustBelongToFirmMessageSerializer),
-                typeof(RequiredAdvertisementCompositeMissingMessageSerializer),
                 typeof(RequiredLinkedObjectCompositeMissingMessageSerializer),
                 typeof(OrderMustNotContainDummyAdvertisementMessageSerializer),
                 typeof(OrderMustHaveAdvertisementMessageSerializer),
                 typeof(RequiredAdvertisementMissingMessageSerializer),
                 typeof(OrderPositionMustNotReferenceDeletedAdvertisementMessageSerializer),
-                typeof(WhiteListNotExistMessageSerializer),
-                typeof(WhiteListExistMessageSerializer),
+                typeof(RequiredWhiteListMissingMessageSerializer),
+                typeof(RequiredWhiteListNotMissingMessageSerializer),
 
                 typeof(BargainScanShouldPresentMessageSerializer),
                 typeof(BillsPeriodShouldMatchOrderMessageSerializer),

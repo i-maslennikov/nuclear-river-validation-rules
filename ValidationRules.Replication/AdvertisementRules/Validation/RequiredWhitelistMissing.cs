@@ -13,21 +13,22 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// 
     /// Source: AdvertisementsOnlyWhiteListOrderValidationRule/AdvertisementForWhitelistDoesNotSpecified
     /// </summary>
-    public sealed class WhiteListNotExist : ValidationResultAccessorBase
+    public sealed class RequiredWhiteListMissing : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Warning)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public WhiteListNotExist(IQuery query) : base(query, MessageTypeCode.WhiteListNotExist)
+        public RequiredWhiteListMissing(IQuery query) : base(query, MessageTypeCode.RequiredWhiteListMissing)
         {
         }
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from order in query.For<Order>()
-                              join fail in query.For<Order.WhiteListNotExist>() on order.Id equals fail.OrderId
+                              join fail in query.For<Order.WhiteListAdvertisement>() on order.Id equals fail.OrderId
+                              where fail.AdvertisementId == null
                               select new Version.ValidationResult
                                   {
                                   MessageParams = new XDocument(new XElement("root",

@@ -1,15 +1,15 @@
 ﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AdvertisementRules
 {
-    public sealed class WhiteListExistMessageSerializer : IMessageSerializer
+    public sealed class RequiredWhiteListNotMissingMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory;
 
-        public WhiteListExistMessageSerializer(LinkFactory linkFactory)
+        public RequiredWhiteListNotMissingMessageSerializer(LinkFactory linkFactory)
         {
             _linkFactory = linkFactory;
         }
 
-        public MessageTypeCode MessageType => MessageTypeCode.WhiteListExist;
+        public MessageTypeCode MessageType => MessageTypeCode.RequiredWhiteListNotMissing;
 
         public LocalizedMessage Serialize(Message message)
         {

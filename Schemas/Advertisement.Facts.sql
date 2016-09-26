@@ -85,6 +85,7 @@ create table AdvertisementFacts.[Order] (
 
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDatePlan datetime2(2) not null,
+	EndDistributionDateFact datetime2(2) not null,
     DestOrganizationUnitId bigint not null,
 
     constraint PK_Order primary key (Id)

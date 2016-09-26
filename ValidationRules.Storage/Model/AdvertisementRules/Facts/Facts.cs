@@ -10,6 +10,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts
 
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDatePlan { get; set; }
+        public DateTime EndDistributionDateFact { get; set; }
         public long DestOrganizationUnitId { get; set; }
     }
 

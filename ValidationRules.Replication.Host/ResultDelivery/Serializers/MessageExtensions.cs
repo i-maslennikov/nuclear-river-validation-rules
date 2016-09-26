@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
@@ -259,6 +260,17 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             }
 
             return (InvalidFirmState)(int)element.Attribute("invalidFirmState");
+        }
+
+        public static Advertisement.InvalidAdvertisementElementStatus ReadAdvertisementElementStatus(this Message message)
+        {
+            var element = message.Data.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return (Advertisement.InvalidAdvertisementElementStatus)(int)element.Attribute("advertisementElementStatus");
         }
 
         public static OrderRequiredFieldsDto ReadOrderRequiredFieldsMessage(this Message message)

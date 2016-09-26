@@ -112,17 +112,15 @@ namespace NuClear.ValidationRules.Replication
                     new LockShouldNotExist(_query),
 
                     // AdvertisementRules
-                    new AdvertisementElementDraft(_query),
-                    new AdvertisementElementInvalid(_query),
+                    new AdvertisementElementShouldBeValid(_query),
                     new AdvertisementMustBelongToFirm(_query),
-                    new RequiredAdvertisementCompositeMissing(_query),
                     new RequiredLinkedObjectCompositeMissing(_query),
                     new OrderMustNotContainDummyAdvertisement(_query),
                     new OrderMustHaveAdvertisement(_query),
                     new RequiredAdvertisementMissing(_query),
                     new OrderPositionMustNotReferenceDeletedAdvertisement(_query),
-                    new WhiteListNotExist(_query),
-                    new WhiteListExist(_query),
+                    new RequiredWhiteListMissing(_query),
+                    new RequiredWhiteListNotMissing(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),

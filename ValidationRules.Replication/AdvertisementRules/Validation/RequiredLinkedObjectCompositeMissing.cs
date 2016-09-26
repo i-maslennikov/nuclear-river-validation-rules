@@ -8,8 +8,8 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если для позиции заказа со сложной  позицией  и с IsCompositionOptional=false не существует объекта привязки (на любую подпозицию), то должна выводиться ошибка:
-    /// "В позиции {orderPosition} необходимо указать хотя бы один объект привязки для подпозиции {position}"
+    /// Для заказов, у которых есть сложная позиция с обязательным составом и не указан объект привязки для любой подпозиции, должна выводиться ошибка
+    /// В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции {0}
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveLinkingObject
     /// </summary>

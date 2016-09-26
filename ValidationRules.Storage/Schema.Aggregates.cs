@@ -111,8 +111,6 @@ namespace NuClear.ValidationRules.Storage
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<AdvertisementAggregates::Order.RequiredAdvertisementMissing>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.RequiredAdvertisementCompositeMissing>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.RequiredLinkedObjectCompositeMissing>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.AdvertisementDeleted>()
@@ -121,9 +119,7 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.AdvertisementIsDummy>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.WhiteListNotExist>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.WhiteListExist>()
+            builder.Entity<AdvertisementAggregates::Order.WhiteListAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.OrderAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
@@ -134,8 +130,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Advertisement.RequiredElementMissing>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Advertisement.ElementInvalid>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.ElementDraft>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
 
             builder.Entity<AdvertisementAggregates::AdvertisementElementTemplate>()

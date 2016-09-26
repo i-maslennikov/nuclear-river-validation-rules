@@ -121,8 +121,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                                   .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
                                   .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
                                   .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
-                                  .Distinct();
+                                  .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }));
 
                 // https://github.com/linq2db/linq2db/issues/356
                 dates = dates.Select(x => new { x.Date, x.OrganizationUnitId });

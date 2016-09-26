@@ -21,22 +21,19 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IBulkRepository<Advertisement.RequiredElementMissing> _requiredElementMissingBulkRepository;
         private readonly IBulkRepository<Advertisement.ElementInvalid> _elementInvalidBulkRepository;
-        private readonly IBulkRepository<Advertisement.ElementDraft> _elementDraftBulkRepository;
 
         public AdvertisementAggregateRootActor(
             IQuery query,
             IBulkRepository<Advertisement> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Advertisement.RequiredElementMissing> requiredElementMissingBulkRepository,
-            IBulkRepository<Advertisement.ElementInvalid> elementInvalidBulkRepository,
-            IBulkRepository<Advertisement.ElementDraft> elementDraftBulkRepository)
+            IBulkRepository<Advertisement.ElementInvalid> elementInvalidBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new AdvertisementAccessor(query))
         {
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
             _requiredElementMissingBulkRepository = requiredElementMissingBulkRepository;
             _elementInvalidBulkRepository = elementInvalidBulkRepository;
-            _elementDraftBulkRepository = elementDraftBulkRepository;
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
@@ -47,7 +44,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 {
                     new ValueObjectActor<Advertisement.RequiredElementMissing>(_query, _requiredElementMissingBulkRepository, _equalityComparerFactory, new RequiredElementMissingAccessor(_query)),
                     new ValueObjectActor<Advertisement.ElementInvalid>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementInvalidAccessor(_query)),
-                    new ValueObjectActor<Advertisement.ElementDraft>(_query, _elementDraftBulkRepository, _equalityComparerFactory, new ElementDraftAccessor(_query)),
                 };
 
         public sealed class AdvertisementAccessor : IStorageBasedDataObjectAccessor<Advertisement>
@@ -115,6 +111,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public sealed class ElementInvalidAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementInvalid>
         {
             private const int StatusInvalid = 2;
+            private const int StatusDraft = 3;
 
             private readonly IQuery _query;
 
@@ -128,7 +125,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
                    where advertisement.Id != template.DummyAdvertisementId // РМ - не заглушка
                    join element in _query.For<Facts::AdvertisementElement>() on advertisement.Id equals element.AdvertisementId
-                   where element.Status == StatusInvalid // ЭРМ выверен с ошибками
+                   where element.Status == StatusInvalid || // ЭРМ выверен с ошибками
+                         element.Status == StatusDraft      // ЭРМ - черновик
                    join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>() on element.AdvertisementElementTemplateId equals elementTemplate.Id
                    where elementTemplate.NeedsValidation // ЭРМ должен быть выверен
                    select new Advertisement.ElementInvalid
@@ -137,6 +135,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
                        AdvertisementElementId = element.Id,
                        AdvertisementElementTemplateId = elementTemplate.Id,
+
+                       AdvertisementElementStatus = element.Status == StatusInvalid ? Advertisement.InvalidAdvertisementElementStatus.Invalid :
+                                                    element.Status == StatusDraft ? Advertisement.InvalidAdvertisementElementStatus.Draft :
+                                                    Advertisement.InvalidAdvertisementElementStatus.NotSet,
                    };
 
             public FindSpecification<Advertisement.ElementInvalid> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -147,44 +149,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Advertisement.ElementInvalid>(x => aggregateIds.Contains(x.AdvertisementId));
-            }
-        }
-
-        public sealed class ElementDraftAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementDraft>
-        {
-            private const int StatusDraft = 3;
-
-            private readonly IQuery _query;
-
-            public ElementDraftAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<Advertisement.ElementDraft> GetSource()
-                => from advertisement in _query.For<Facts::Advertisement>()
-                   join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
-                   where advertisement.Id != template.DummyAdvertisementId // РМ - не заглушка
-                   join element in _query.For<Facts::AdvertisementElement>() on advertisement.Id equals element.AdvertisementId
-                   where element.Status == StatusDraft // ЭРМ - черновик
-                   join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>() on element.AdvertisementElementTemplateId equals elementTemplate.Id
-                   where elementTemplate.NeedsValidation // ЭРМ должен быть выверен
-                   select new Advertisement.ElementDraft
-                   {
-                       AdvertisementId = advertisement.Id,
-
-                       AdvertisementElementId = element.Id,
-                       AdvertisementElementTemplateId = elementTemplate.Id,
-                   };
-
-            public FindSpecification<Advertisement.ElementDraft> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
-                return new FindSpecification<Advertisement.ElementDraft>(x => aggregateIds.Contains(x.AdvertisementId));
             }
         }
     }

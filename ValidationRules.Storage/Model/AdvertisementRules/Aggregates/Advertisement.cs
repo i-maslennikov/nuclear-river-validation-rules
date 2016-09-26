@@ -13,20 +13,21 @@
             public long AdvertisementElementTemplateId { get; set; }
         }
 
+        public enum InvalidAdvertisementElementStatus
+        {
+            NotSet = 0,
+            Invalid,
+            Draft,
+        }
+
         public sealed class ElementInvalid
         {
             public long AdvertisementId { get; set; }
 
             public long AdvertisementElementId { get; set; }
             public long AdvertisementElementTemplateId { get; set; }
-        }
 
-        public sealed class ElementDraft
-        {
-            public long AdvertisementId { get; set; }
-
-            public long AdvertisementElementId { get; set; }
-            public long AdvertisementElementTemplateId { get; set; }
+            public InvalidAdvertisementElementStatus AdvertisementElementStatus { get; set; }
         }
     }
 }

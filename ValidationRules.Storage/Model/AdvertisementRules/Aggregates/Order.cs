@@ -16,14 +16,6 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long OrderId { get; set; }
 
             public long OrderPositionId { get; set; }
-            public long PositionId { get; set; }
-        }
-
-        public sealed class RequiredAdvertisementCompositeMissing
-        {
-            public long OrderId { get; set; }
-
-            public long OrderPositionId { get; set; }
             public long CompositePositionId { get; set; }
 
             public long PositionId { get; set; }
@@ -74,17 +66,16 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long AdvertisementId { get; set; }
         }
 
-        public sealed class WhiteListNotExist
+        public sealed class WhiteListAdvertisement
         {
             public long OrderId { get; set; }
-            public long FirmId { get; set; }
-        }
 
-        public sealed class WhiteListExist
-        {
-            public long OrderId { get; set; }
+            public DateTime PeriodStart { get; set; }
+            public DateTime PeriodEnd { get; set; }
+
             public long FirmId { get; set; }
-            public long AdvertisementId { get; set; }
+
+            public long? AdvertisementId { get; set; }
         }
     }
 }

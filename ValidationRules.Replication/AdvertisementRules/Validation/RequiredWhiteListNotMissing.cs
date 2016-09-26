@@ -13,21 +13,22 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// 
     /// Source: AdvertisementsOnlyWhiteListOrderValidationRule/AdvertisementChoosenForWhitelist
     /// </summary>
-    public sealed class WhiteListExist : ValidationResultAccessorBase
+    public sealed class RequiredWhiteListNotMissing : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Info)
                                                                     .WhenMass(Result.Info)
                                                                     .WhenMassPrerelease(Result.Info)
                                                                     .WhenMassRelease(Result.Info);
 
-        public WhiteListExist(IQuery query) : base(query, MessageTypeCode.WhiteListExist)
+        public RequiredWhiteListNotMissing(IQuery query) : base(query, MessageTypeCode.RequiredWhiteListNotMissing)
         {
         }
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from order in query.For<Order>()
-                              join fail in query.For<Order.WhiteListExist>() on order.Id equals fail.OrderId
+                              join fail in query.For<Order.WhiteListAdvertisement>() on order.Id equals fail.OrderId
+                              where fail.AdvertisementId != null
                               select new Version.ValidationResult
                                   {
                                   MessageParams = new XDocument(new XElement("root",
@@ -39,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                                               new XAttribute("name", query.For<Firm>().Single(x => x.Id == fail.FirmId).Name)),
                                                                                   new XElement("advertisement",
                                                                                               new XAttribute("id", fail.AdvertisementId),
-                                                                                              new XAttribute("name", query.For<Advertisement>().Single(x => x.Id == fail.AdvertisementId).Name))
+                                                                                              new XAttribute("name", query.For<Advertisement>().Single(x => x.Id == fail.AdvertisementId.Value).Name))
                                                                                   )),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,

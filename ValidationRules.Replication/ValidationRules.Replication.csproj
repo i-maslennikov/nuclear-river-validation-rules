@@ -209,12 +209,10 @@
     <Compile Include="AdvertisementRules\Facts\AdvertisementTemplateAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\ProjectAccessor.cs" />
     <Compile Include="AdvertisementRules\Validation\RequiredLinkedObjectCompositeMissing.cs" />
-    <Compile Include="AdvertisementRules\Validation\WhiteListExist.cs" />
-    <Compile Include="AdvertisementRules\Validation\WhiteListNotExist.cs" />
-    <Compile Include="AdvertisementRules\Validation\AdvertisementElementDraft.cs" />
-    <Compile Include="AdvertisementRules\Validation\AdvertisementElementInvalid.cs" />
+    <Compile Include="AdvertisementRules\Validation\RequiredWhiteListNotMissing.cs" />
+    <Compile Include="AdvertisementRules\Validation\RequiredWhiteListMissing.cs" />
+    <Compile Include="AdvertisementRules\Validation\AdvertisementElementShouldBeValid.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderMustHaveAdvertisement.cs" />
-    <Compile Include="AdvertisementRules\Validation\RequiredAdvertisementCompositeMissing.cs" />
     <Compile Include="AdvertisementRules\Validation\AdvertisementMustBelongToFirm.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />

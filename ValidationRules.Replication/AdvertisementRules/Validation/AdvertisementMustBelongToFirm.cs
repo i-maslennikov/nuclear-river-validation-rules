@@ -9,8 +9,8 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если для позиции заказа существует объект привязки с РМ, в РМ указана фирма и фирма заказа не содержит этот РМ, то должна выводиться ошибка:
-    /// "В позиции {orderPosition} выбран рекламный материал {advertisement}, не принадлежащий фирме {firm}"
+    /// Для заказов, в РМ которых указана фирма, не являющейся фирмой заказа, должна выводиться ошибка
+    /// -В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/AdvertisementSpecifiedForPositionDoesNotBelongToFirm
     /// </summary>

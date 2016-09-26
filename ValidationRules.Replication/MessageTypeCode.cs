@@ -42,15 +42,13 @@
         BillsShouldBeCreated = 37,
 
         RequiredAdvertisementMissing = 38,
-        RequiredAdvertisementCompositeMissing = 39,
-        RequiredLinkedObjectCompositeMissing = 40,
-        OrderPositionMustNotReferenceDeletedAdvertisement = 41,
-        AdvertisementMustBelongToFirm = 42,
-        OrderMustNotContainDummyAdvertisement = 43,
-        OrderMustHaveAdvertisement = 44,
-        AdvertisementElementInvalid = 45,
-        AdvertisementElementDraft = 46,
-        WhiteListNotExist = 47,
-        WhiteListExist = 48,
+        RequiredLinkedObjectCompositeMissing = 39,
+        OrderPositionMustNotReferenceDeletedAdvertisement = 40,
+        AdvertisementMustBelongToFirm = 41,
+        OrderMustNotContainDummyAdvertisement = 42,
+        OrderMustHaveAdvertisement = 43,
+        AdvertisementElementShouldBeValid = 44,
+        RequiredWhiteListMissing = 45,
+        RequiredWhiteListNotMissing = 46,
     }
 }

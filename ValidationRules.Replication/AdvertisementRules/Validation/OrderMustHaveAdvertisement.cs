@@ -9,8 +9,8 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если для позиции заказа такой, что для любого её РМ такого, что для любого обязательного шаблона ЭРМ найдётся незаполненный ЭРМ, то должна выводиться ошибка:
-    /// "В рекламном материале {advertisement} не заполнен обязательный элемент {advertisementElement}"
+    /// Для заказов, РМ которых такие, что шаблон ЭРМ обязательный, а сам ЭРМ не заполнен, дожна выводиться ошибка
+    /// - В рекламном материале {0} не заполнен обязательный элемент {1}
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrdersCheckPositionMustHaveAdvertisementElements
     /// </summary>

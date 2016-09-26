@@ -9,8 +9,8 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если для позиции заказа существует объект привязки с удалённым РМ, то должна выводиться ошибка:
-    /// "В позиции {orderPosition} выбран удалённый рекламный материал {advertisement}"
+    /// Для заказаов, у которых есть удалённые РМ, должна выводиться ошибка
+    /// В позиции {0} выбран удалённый рекламный материал {1}
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/RemovedAdvertisemendSpecifiedForPosition
     /// </summary>

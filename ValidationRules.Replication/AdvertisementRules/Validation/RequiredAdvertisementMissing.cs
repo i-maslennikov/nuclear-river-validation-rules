@@ -9,11 +9,14 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если для позиции заказа, такой что для любой её номенклатуры существует обязательный шаблон РМ, не существует объекта привязки с такой номенклатурой без указанного РМ, то должна выводиться ошибка:
-    ///"В позиции {orderPosition} необходимо указать рекламные материалы" - для простой позиции
-    ///"В позиции {orderPosition} необходимо указать рекламные материалы для подпозиции {position}" - для сложной позиции
+    /// Для заказов, у которых хотя бы один шаблон РМ обязательный, и для этого шаблона не указан РМ, должна выводиться ошибка:
+    /// - В позиции {0} необходимо указать рекламные материалы (для простой позиции)
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckPositionMustHaveAdvertisements
+    /// 
+    /// - В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции {1} (для сложной позиции)
+    /// 
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveLinkingObject
     /// </summary>
     public sealed class RequiredAdvertisementMissing : ValidationResultAccessorBase
     {
@@ -36,8 +39,11 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                                  new XElement("order",
                                                                                               new XAttribute("id", order.Id),
                                                                                               new XAttribute("number", order.Number)),
-                                                                                  new XElement("orderPosition",
+                                                                                 new XElement("orderPosition",
                                                                                               new XAttribute("id", fail.OrderPositionId),
+                                                                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.CompositePositionId).Name)),
+                                                                                 new XElement("position",
+                                                                                              new XAttribute("id", fail.PositionId),
                                                                                               new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name))
                                                                      )),
                                       PeriodStart = order.BeginDistributionDate,

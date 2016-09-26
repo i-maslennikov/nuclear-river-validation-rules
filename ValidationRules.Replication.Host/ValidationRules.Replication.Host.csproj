@@ -352,15 +352,13 @@
     </Compile>
     <Compile Include="ResultDelivery\DeliverySettingsAspect.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RequiredLinkedObjectCompositeMissingMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\WhiteListExistMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\WhiteListNotExistMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementElementDraftMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementElementInvalidMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RequiredWhiteListNotMissingMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RequiredWhiteListMissingMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementElementShouldBeValidMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderMustHaveAdvertisementMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementMustBelongToFirmMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderMustNotContainDummyAdvertisementMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderPositionMustNotReferenceDeletedAdvertisementMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RequiredAdvertisementCompositeMissingMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RequiredAdvertisementMissingMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BargainScanShouldPresentMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsPeriodShouldMatchOrderMessageSerializer.cs" />

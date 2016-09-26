@@ -15,6 +15,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
 {
     public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>, IDataChangesHandler<Order>
     {
+        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+
         private readonly IQuery _query;
 
         public OrderAccessor(IQuery query)
@@ -31,7 +33,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
                 Number = x.Number,
 
                 BeginDistributionDate = x.BeginDistributionDate,
-                EndDistributionDatePlan = x.EndDistributionDatePlan,
+                EndDistributionDatePlan = x.EndDistributionDatePlan + OneSecond,
+                EndDistributionDateFact = x.EndDistributionDateFact + OneSecond,
                 DestOrganizationUnitId = x.DestOrganizationUnitId,
             });
 

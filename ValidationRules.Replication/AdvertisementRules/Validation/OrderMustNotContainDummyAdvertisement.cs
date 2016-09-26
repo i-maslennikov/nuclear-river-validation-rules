@@ -9,8 +9,8 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Если позиция заказа имеет РМ, в шаблоне которого в качестве заглушки выбран этот же РМ, то должна выводитьс ошибка:
-    /// "Позиция {position} содержит заглушку рекламного материала"
+    /// Для заказов, РМ которых являются заглушками<sup>3</sup>, должна выводиться ошибка
+    /// Позиция {0} содержит заглушку рекламного материала
     /// 
     /// Source: DummyAdvertisementOrderValidationRule/OrderContainsDummyAdvertisementError
     /// </summary>
