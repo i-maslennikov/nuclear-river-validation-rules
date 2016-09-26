@@ -46,7 +46,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 {
                     new ValueObjectActor<Order.FirmOrganiationUnitMismatch>(_query, _invalidFirmRepository, _equalityComparerFactory, new OrderFirmOrganiationUnitMismatchAccessor(_query)),
                     new ValueObjectActor<Order.SpecialPosition>(_query, _specialPositionRepository, _equalityComparerFactory, new SpecialPositionAccessor(_query)),
-                    new ValueObjectActor<Order.CategoryPurchase>(_query, _categoryPurchaseRepository, _equalityComparerFactory, new OrderCategoryPurchase(_query)),
+                    new ValueObjectActor<Order.CategoryPurchase>(_query, _categoryPurchaseRepository, _equalityComparerFactory, new OrderCategoryPurchaseAccessor(_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -136,11 +136,11 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class OrderCategoryPurchase : IStorageBasedDataObjectAccessor<Order.CategoryPurchase>
+        public sealed class OrderCategoryPurchaseAccessor : IStorageBasedDataObjectAccessor<Order.CategoryPurchase>
         {
             private readonly IQuery _query;
 
-            public OrderCategoryPurchase(IQuery query)
+            public OrderCategoryPurchaseAccessor(IQuery query)
             {
                 _query = query;
             }
