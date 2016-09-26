@@ -47,10 +47,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                                let start = publicOrders.Where(x => x.FirmId == firm.Id && x.End > order.End).Min(x => (DateTime?)x.Begin) ?? DateTime.MaxValue // Заказ той-же фирмы, не продляющий наличие спецпозиции, но возобновляющий её в будущем
                                select new { order.FirmId, Begin = order.End, End = start };
 
-
             var results = from period in emptyPeriods.Union(firstEmptyPeriods)
                           from order in query.For<Order>().Where(x => x.FirmId == period.FirmId)
                           from firm in query.For<Firm>().Where(x => x.Id == period.FirmId)
+                          where !query.For<Order.SpecialPosition>().Any(x => x.OrderId == order.Id)
                           where firm.NeedsSpecialPosition && order.Begin < period.End && order.End > period.Begin
                           select new Version.ValidationResult
                               {
