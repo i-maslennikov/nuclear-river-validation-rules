@@ -92,10 +92,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
             .Name(nameof(SampleTest1))
             .Fact(
-                new Facts::Order { ReleaseCountPlan = 0, BeginDistribution = FirstDay1, EndDistributionPlan = LastSecond1, EndDistributionFact = LastSecond2 },
+                new Facts::Order { ReleaseCountPlan = 0, BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondJan, EndDistributionFact = LastSecondMar },
                 new Facts::Project { })
             .Aggregate(
-                new Aggregates::Order { BeginDistribution = FirstDay1, EndDistributionPlan = LastSecond1, EndDistributionFact = LastSecond2 },
+                new Aggregates::Order { BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondJan, EndDistributionFact = LastSecondMar },
                 new Aggregates::Order.HasNoAnyPosition(),
                 new Aggregates::Order.HasNoAnyLegalPersonProfile(),
                 new Aggregates::Order.InvalidEndDistributionDate(),
@@ -107,9 +107,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
             .Name(nameof(SampleTest2))
             .Aggregate(
-                new Aggregates::Order { Id = 1, Number = "123", BeginDistribution = FirstDay1, EndDistributionPlan = LastSecond1, EndDistributionFact = LastSecond2 },
+                new Aggregates::Order { Id = 1, Number = "123", BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondJan, EndDistributionFact = LastSecondMar },
                 new Aggregates::Order.HasNoAnyPosition {OrderId = 1})
             .Message(
-                new Messages::Version.ValidationResult { MessageParams = XDocument.Parse("<root><order id=\"1\" number=\"123\" /></root>"), MessageType = 25, Result = 243, PeriodStart = FirstDay1, PeriodEnd = LastSecond1 });
+                new Messages::Version.ValidationResult { MessageParams = XDocument.Parse("<root><order id=\"1\" number=\"123\" /></root>"), MessageType = 25, Result = 243, PeriodStart = FirstDayJan, PeriodEnd = LastSecondJan });
     }
 }

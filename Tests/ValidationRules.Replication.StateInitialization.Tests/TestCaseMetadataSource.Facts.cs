@@ -11,10 +11,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     public sealed partial class TestCaseMetadataSource
     {
-        private static readonly DateTime FirstDay1 = DateTime.Parse("2012-01-01");
-        private static readonly DateTime FirstDay2 = DateTime.Parse("2012-02-01");
-        private static readonly DateTime LastSecond1 = DateTime.Parse("2012-01-31T23:59:59");
-        private static readonly DateTime LastSecond2 = DateTime.Parse("2012-03-31T23:59:59");
+        private static readonly DateTime FirstDayJan = DateTime.Parse("2012-01-01");
+        private static readonly DateTime FirstDayFeb = DateTime.Parse("2012-02-01");
+        private static readonly DateTime LastSecondJan = DateTime.Parse("2012-01-31T23:59:59");
+        private static readonly DateTime LastSecondMar = DateTime.Parse("2012-03-31T23:59:59");
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmFacts
@@ -47,9 +47,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(BillFacts))
             .Erm(
-                new Erm::Bill { Id = 1, IsActive = true, IsDeleted = false, BeginDistributionDate = FirstDay1, EndDistributionDate = LastSecond1, BillType = 1, OrderId = 2, PayablePlan = 123 })
+                new Erm::Bill { Id = 1, IsActive = true, IsDeleted = false, BeginDistributionDate = FirstDayJan, EndDistributionDate = LastSecondJan, BillType = 1, OrderId = 2, PayablePlan = 123 })
             .Fact(
-                new ConsistencyFacts::Bill { Id = 1, Begin = FirstDay1, End = LastSecond1, OrderId = 2, PayablePlan = 123 });
+                new ConsistencyFacts::Bill { Id = 1, Begin = FirstDayJan, End = LastSecondJan, OrderId = 2, PayablePlan = 123 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement BargainFacts
@@ -92,12 +92,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(LegalPersonProfileFacts))
             .Erm(
-                new Erm::LegalPersonProfile { Id = 1, IsActive = true, IsDeleted = false, BargainEndDate = FirstDay1, WarrantyEndDate = FirstDay2, LegalPersonId = 1, Name = "1" },
+                new Erm::LegalPersonProfile { Id = 1, IsActive = true, IsDeleted = false, BargainEndDate = FirstDayJan, WarrantyEndDate = FirstDayFeb, LegalPersonId = 1, Name = "1" },
                 new Erm::LegalPersonProfile { Id = 2, IsActive = false, IsDeleted = false },
                 new Erm::LegalPersonProfile { Id = 3, IsActive = true, IsDeleted = true },
                 new Erm::LegalPersonProfile { Id = 4, IsActive = false, IsDeleted = true })
             .Fact(
-                new ConsistencyFacts::LegalPersonProfile { Id = 1, BargainEndDate = FirstDay1, WarrantyEndDate = FirstDay2, LegalPersonId = 1, Name = "1" });
+                new ConsistencyFacts::LegalPersonProfile { Id = 1, BargainEndDate = FirstDayJan, WarrantyEndDate = FirstDayFeb, LegalPersonId = 1, Name = "1" });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement AssociatedPositionFacts
@@ -177,12 +177,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(OrderFacts))
             .Erm(
-                new Erm::Order { Id = 1, IsActive = true, BeginDistributionDate = FirstDay1, EndDistributionDateFact = LastSecond1, EndDistributionDatePlan = LastSecond2, BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerCode = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8, CurrencyId = 9, ReleaseCountPlan = 3, OrderType = 2 },
+                new Erm::Order { Id = 1, IsActive = true, BeginDistributionDate = FirstDayJan, EndDistributionDateFact = LastSecondJan, EndDistributionDatePlan = LastSecondMar, BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerCode = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8, CurrencyId = 9, ReleaseCountPlan = 3, OrderType = 2 },
                 new Erm::Order { Id = 2, IsActive = false, IsDeleted = false },
                 new Erm::Order { Id = 3, IsActive = true, IsDeleted = true })
             .Fact(
-                new PriceFacts::Order { Id = 1, BeginDistributionDate = FirstDay1, EndDistributionDateFact = LastSecond1.AddSeconds(1), EndDistributionDatePlan = LastSecond2.AddSeconds(1), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 },
-                new ConsistencyFacts::Order { Id = 1, BeginDistribution = FirstDay1, EndDistributionFact = LastSecond1, EndDistributionPlan = LastSecond2, DestOrganizationUnitId = 2, FirmId = 5, Number = "Number", CurrencyId = 9, ReleaseCountPlan = 3, WorkflowStep = 8, IsFreeOfCharge = true });
+                new PriceFacts::Order { Id = 1, BeginDistributionDate = FirstDayJan, EndDistributionDateFact = LastSecondJan.AddSeconds(1), EndDistributionDatePlan = LastSecondMar.AddSeconds(1), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 },
+                new ConsistencyFacts::Order { Id = 1, BeginDistribution = FirstDayJan, EndDistributionFact = LastSecondJan, EndDistributionPlan = LastSecondMar, DestOrganizationUnitId = 2, FirmId = 5, Number = "Number", CurrencyId = 9, ReleaseCountPlan = 3, WorkflowStep = 8, IsFreeOfCharge = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderPositionFacts

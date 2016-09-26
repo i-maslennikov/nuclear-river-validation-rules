@@ -72,7 +72,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                            ProjectId = project.Id,
                            Begin = order.BeginDistribution,
                            End = order.EndDistributionFact,
-                            Scope = order.WorkflowStep == OrderOnRegistration ? order.Id : GlobalScope,
+                           Scope = order.WorkflowStep == OrderOnRegistration ? order.Id : GlobalScope,
                        };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -102,8 +102,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             public IQueryable<Order.SpecialPosition> GetSource()
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
                     from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
-                    from pricePosition in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId)
+                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
+                    from position in _query.For<Facts::Position>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     where position.CategoryCode == SelfAdvertisementOnlyOnPc || position.CategoryCode == AdvantageousPurchaseWith2Gis && position.Platform == PlatformDesktop
                     select new Order.SpecialPosition { OrderId = orderPosition.OrderId }).Distinct();
 
