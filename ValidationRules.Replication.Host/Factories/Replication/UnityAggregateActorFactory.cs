@@ -13,6 +13,8 @@ using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggrega
 using PriceActors = NuClear.ValidationRules.Replication.PriceRules.Aggregates;
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using ConsistencyActors = NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates;
+using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using FirmActors = NuClear.ValidationRules.Replication.FirmRules.Aggregates;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 {
@@ -33,6 +35,9 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(AccountAggregates::Account), typeof(AccountActors::AccountAggregateRootActor) },
 
                     { typeof(ConsistencyAggregates::Order), typeof(ConsistencyActors::OrderAggregateRootActor) },
+
+                    { typeof(FirmAggregates::Order), typeof(FirmActors::OrderAggregateRootActor) },
+                    { typeof(FirmAggregates::Firm), typeof(FirmActors::FirmAggregateRootActor) },
                 };
 
         public UnityAggregateActorFactory(IUnityContainer unityContainer)
