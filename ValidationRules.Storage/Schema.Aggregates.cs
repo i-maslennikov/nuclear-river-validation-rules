@@ -4,14 +4,17 @@ using LinqToDB.Mapping;
 using AccountAggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
+using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+
 
 namespace NuClear.ValidationRules.Storage
 {
     public static partial class Schema
     {
         private const string PriceAggregatesSchema = "PriceAggregates";
+        private const string ProjectAggregatesSchema = "ProjectAggregates";
         private const string AccountAggregatesSchema = "AccountAggregates";
         private const string AdvertisementAggregatesSchema = "AdvertisementAggregates";
         private const string ConsistencyAggregatesSchema = "ConsistencyAggregates";
@@ -21,6 +24,7 @@ namespace NuClear.ValidationRules.Storage
             => new MappingSchema(nameof(Aggregates), new SqlServerMappingSchema())
                 .GetFluentMappingBuilder()
                 .RegisterPriceAggregates()
+                .RegisterProjectAggregates()
                 .RegisterAccountAggregates()
                 .RegisterAdvertisementAggregates()
                 .RegisterConsistencyAggregates()
@@ -107,6 +111,19 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceAggregates::Category>()
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
+
+            return builder;
+        }
+
+        private static FluentMappingBuilder RegisterProjectAggregates(this FluentMappingBuilder builder)
+        {
+            builder.Entity<ProjectAggregates::Firm>()
+                   .HasSchemaName(ProjectAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectAggregates::Order>()
+                   .HasSchemaName(ProjectAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
 
             return builder;
         }

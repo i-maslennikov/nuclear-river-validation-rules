@@ -248,6 +248,10 @@
     <Compile Include="Model\FirmRules\Facts\OrderPositionAdvertisement.cs" />
     <Compile Include="Model\FirmRules\Facts\SpecialPosition.cs" />
     <Compile Include="Model\FirmRules\Facts\Project.cs" />
+    <Compile Include="Model\ProjectRules\Aggregates\Firm.cs" />
+    <Compile Include="Model\ProjectRules\Aggregates\Order.cs" />
+    <Compile Include="Model\ProjectRules\Facts\Firm.cs" />
+    <Compile Include="Model\ProjectRules\Facts\Order.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AdvertisementAmountRestriction.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AmountControlledPosition.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AssociatedPositionGroupOvercount.cs" />
