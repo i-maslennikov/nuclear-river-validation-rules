@@ -47,25 +47,25 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             var createdEvent = @event as DataObjectCreatedEvent;
             if (createdEvent != null)
             {
-                return new[] { new InitializeAggregateCommand(AggregateRoots[createdEvent.DataObjectType], createdEvent.DataObjectId) };
+                return new[] { new InitializeAggregateCommand(MapDataObjectToAggregate(createdEvent.DataObjectType), createdEvent.DataObjectId) };
             }
 
             var updatedEvent = @event as DataObjectUpdatedEvent;
             if (updatedEvent != null)
             {
-                return new[] { new RecalculateAggregateCommand(AggregateRoots[updatedEvent.DataObjectType], updatedEvent.DataObjectId) };
+                return new[] { new RecalculateAggregateCommand(MapDataObjectToAggregate(updatedEvent.DataObjectType), updatedEvent.DataObjectId) };
             }
 
             var deletedEvent = @event as DataObjectDeletedEvent;
             if (deletedEvent != null)
             {
-                return new[] { new DestroyAggregateCommand(AggregateRoots[deletedEvent.DataObjectType], deletedEvent.DataObjectId) };
+                return new[] { new DestroyAggregateCommand(MapDataObjectToAggregate(deletedEvent.DataObjectType), deletedEvent.DataObjectId) };
             }
 
             var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
             if (outdatedEvent != null)
             {
-                return new[] { new RecalculateAggregateCommand(AggregateRoots[outdatedEvent.RelatedDataObjectType], outdatedEvent.RelatedDataObjectId) };
+                return new[] { new RecalculateAggregateCommand(MapDataObjectToAggregate(outdatedEvent.RelatedDataObjectType), outdatedEvent.RelatedDataObjectId) };
             }
 
             var outdatedPeriodEvent = @event as RelatedDataObjectOutdatedEvent<PeriodKey>;
@@ -87,6 +87,17 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             }
 
             throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+        }
+
+        private Type MapDataObjectToAggregate(Type dataObjectType)
+        {
+            Type result;
+            if (!AggregateRoots.TryGetValue(dataObjectType, out result))
+            {
+                throw new ArgumentException($"Type {dataObjectType.FullName} is not mapped with aggregate root type", nameof(dataObjectType));
+            }
+
+            return result;
         }
     }
 }
