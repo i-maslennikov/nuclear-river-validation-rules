@@ -41,11 +41,11 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
 
             public IQueryable<AdvertisementElementTemplate> GetSource()
-                => from firm in _query.For<Facts::AdvertisementElementTemplate>()
+                => from template in _query.For<Facts::AdvertisementElementTemplate>()
                    select new AdvertisementElementTemplate
                    {
-                       Id = firm.Id,
-                       Name = firm.Name,
+                       Id = template.Id,
+                       Name = template.Name,
                    };
 
             public FindSpecification<AdvertisementElementTemplate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
