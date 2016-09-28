@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Source: ADP/AssociatedPositionWithoutPrincipalTemplate
     /// 
-    /// Q1: Может ли элемент пакета быть удовлетворён другим элементом того-же самого пакета?
+    /// Q1: Может ли элемент пакета быть удовлетворён другим элементом того же самого пакета?
     /// 
     /// Q2: Может ли пакет быть удовлетворён своим элементом или наоборот?
     /// </summary>

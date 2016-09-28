@@ -42,9 +42,9 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 
             var emptyPeriods = from firm in query.For<Firm>().Where(x => x.NeedsSpecialPosition)
                                from order in publicOrders.Where(x => x.FirmId == firm.Id)
-                               from nextOverlappingOrder in publicOrders.Where(x => x.FirmId == firm.Id && x.Begin <= order.End && order.End < x.End).DefaultIfEmpty() // Заказ той-же фирмы, продляющий наличие спецпозиции
+                               from nextOverlappingOrder in publicOrders.Where(x => x.FirmId == firm.Id && x.Begin <= order.End && order.End < x.End).DefaultIfEmpty() // Заказ той же фирмы, продляющий наличие спецпозиции
                                where nextOverlappingOrder == null
-                               let start = publicOrders.Where(x => x.FirmId == firm.Id && x.End > order.End).Min(x => (DateTime?)x.Begin) ?? DateTime.MaxValue // Заказ той-же фирмы, не продляющий наличие спецпозиции, но возобновляющий её в будущем
+                               let start = publicOrders.Where(x => x.FirmId == firm.Id && x.End > order.End).Min(x => (DateTime?)x.Begin) ?? DateTime.MaxValue // Заказ той же фирмы, не продляющий наличие спецпозиции, но возобновляющий её в будущем
                                select new { order.FirmId, Begin = order.End, End = start };
 
             var results = from period in emptyPeriods.Union(firstEmptyPeriods)
