@@ -10,7 +10,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
     /// Для заказов, РМ которых являются заглушками<sup>3</sup>, должна выводиться ошибка
-    /// Позиция {0} содержит заглушку рекламного материала
+    /// "Позиция {0} содержит заглушку рекламного материала"
     /// 
     /// Source: DummyAdvertisementOrderValidationRule/OrderContainsDummyAdvertisementError
     /// </summary>

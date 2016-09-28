@@ -9,9 +9,12 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Для фирмы {firm} в белый список выбран рекламный материал {advertisement}
+    /// Для фирм, у которых выбран в белый список РМ, должно выводиться информационное сообщение
+    /// Для фирмы {0} в белый список выбран рекламный материал {1}
     /// 
     /// Source: AdvertisementsOnlyWhiteListOrderValidationRule/AdvertisementChoosenForWhitelist
+    /// 
+    /// * Поскольку проверок фирм нет, то сообщения выводим в заказах этой фирмы, в которых есть как минимум один РМ с возможностью выбора в белый список.
     /// </summary>
     public sealed class RequiredWhiteListNotMissing : ValidationResultAccessorBase
     {
