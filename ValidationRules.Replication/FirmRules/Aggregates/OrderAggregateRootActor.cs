@@ -88,10 +88,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class SpecialPositionAccessor : IStorageBasedDataObjectAccessor<Order.SpecialPosition>
         {
-            public const long SelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
-            public const long AdvantageousPurchaseWith2Gis = 14; // Выгодные покупки с 2ГИС
-            public const long PlatformDesktop = 1;
-
             private readonly IQuery _query;
 
             public SpecialPositionAccessor(IQuery query)
@@ -103,8 +99,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
                     from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                    where position.CategoryCode == SelfAdvertisementOnlyOnPc || position.CategoryCode == AdvantageousPurchaseWith2Gis && position.Platform == PlatformDesktop
+                    from position in _query.For<Facts::SpecialPosition>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     select new Order.SpecialPosition { OrderId = orderPosition.OrderId }).Distinct();
 
             public FindSpecification<Order.SpecialPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

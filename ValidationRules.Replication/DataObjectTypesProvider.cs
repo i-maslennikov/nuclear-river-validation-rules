@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication
                             typeof(FirmFacts::Order),
                             typeof(FirmFacts::OrderPosition),
                             typeof(FirmFacts::OrderPositionAdvertisement),
-                            typeof(FirmFacts::Position),
+                            typeof(FirmFacts::SpecialPosition),
                             typeof(FirmFacts::Project),
                     };
             }

@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::Order(),
                 new Facts::OrderPosition(),
                 new Facts::OrderPositionAdvertisement(),
-                new Facts::Position(),
+                new Facts::SpecialPosition(),
                 new Facts::Project())
             .Aggregate(
                 new Aggregates::Firm(),

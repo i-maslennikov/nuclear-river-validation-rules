@@ -7,7 +7,7 @@ if object_id('FirmFacts.FirmAddressCategory') is not null drop table FirmFacts.F
 if object_id('FirmFacts.[Order]') is not null drop table FirmFacts.[Order]
 if object_id('FirmFacts.OrderPosition') is not null drop table FirmFacts.OrderPosition
 if object_id('FirmFacts.OrderPositionAdvertisement') is not null drop table FirmFacts.OrderPositionAdvertisement
-if object_id('FirmFacts.Position') is not null drop table FirmFacts.Position
+if object_id('FirmFacts.SpecialPosition') is not null drop table FirmFacts.SpecialPosition
 if object_id('FirmFacts.Project') is not null drop table FirmFacts.Project
 go
 
@@ -62,11 +62,9 @@ create table FirmFacts.OrderPositionAdvertisement(
 )
 go
 
-create table FirmFacts.Position(
+create table FirmFacts.SpecialPosition(
     Id bigint not null,
-    CategoryCode bigint not null,
-    [Platform] int null,
-    constraint PK_Position primary key (Id)
+    constraint PK_SpecialPosition primary key (Id)
 )
 go
 

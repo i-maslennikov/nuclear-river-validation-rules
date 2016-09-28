@@ -377,7 +377,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<FirmFacts::Order, FirmAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<FirmFacts::OrderPosition, FirmAccessors::OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<FirmFacts::OrderPositionAdvertisement, FirmAccessors::OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<FirmFacts::Position, FirmAccessors::PositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<FirmFacts::SpecialPosition, FirmAccessors::SpecialPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<FirmFacts::Project, FirmAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
 
                 .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())

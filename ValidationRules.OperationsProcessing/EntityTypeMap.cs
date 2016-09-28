@@ -83,7 +83,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                              .AddMapping<EntityTypeOrder, FirmFacts::Order>()
                              .AddMapping<EntityTypeOrderPosition, FirmFacts::OrderPosition>()
                              .AddMapping<EntityTypeOrderPositionAdvertisement, FirmFacts::OrderPositionAdvertisement>()
-                             .AddMapping<EntityTypePosition, FirmFacts::Position>()
+                             .AddMapping<EntityTypePosition, FirmFacts::SpecialPosition>()
                              .AddMapping<EntityTypeProject, FirmFacts::Project>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap

@@ -216,7 +216,7 @@
     <Compile Include="FirmRules\Facts\FirmAddressCategoryAccessor.cs" />
     <Compile Include="FirmRules\Facts\FirmAddressAccessor.cs" />
     <Compile Include="FirmRules\Facts\FirmAccessor.cs" />
-    <Compile Include="FirmRules\Facts\PositionAccessor.cs" />
+    <Compile Include="FirmRules\Facts\SpecialPositionAccessor.cs" />
     <Compile Include="FirmRules\Facts\ProjectAccessor.cs" />
     <Compile Include="FirmRules\Facts\OrderPositionAdvertisementAccessor.cs" />
     <Compile Include="FirmRules\Facts\OrderPositionAccessor.cs" />
