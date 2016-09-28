@@ -4,6 +4,8 @@
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public long FirmId { get; set; }
+        public bool IsSelectedToWhiteList { get; set; }
 
         public sealed class RequiredElementMissing
         {

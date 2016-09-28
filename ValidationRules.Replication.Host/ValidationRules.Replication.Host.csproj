@@ -352,8 +352,8 @@
     </Compile>
     <Compile Include="ResultDelivery\DeliverySettingsAspect.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RequiredLinkedObjectCompositeMissingMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RequiredWhiteListNotMissingMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\RequiredWhiteListMissingMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\WhiteListAdvertisementMayPresentMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\WhiteListAdvertisementMustPresentMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementElementShouldBeValidMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderMustHaveAdvertisementMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementMustBelongToFirmMessageSerializer.cs" />

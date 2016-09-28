@@ -109,6 +109,8 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Order>()
                   .HasSchemaName(AdvertisementAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementAggregates::Order.LinkedProject>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.RequiredAdvertisementMissing>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.RequiredLinkedObjectCompositeMissing>()
@@ -118,8 +120,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Order.AdvertisementMustBelongToFirm>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.AdvertisementIsDummy>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.WhiteListAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.OrderAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
@@ -139,6 +139,8 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Firm>()
                   .HasSchemaName(AdvertisementAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementAggregates::Firm.WhiteListDistributionPeriod>()
+                  .HasSchemaName(AdvertisementAggregatesSchema);
 
             builder.Entity<AdvertisementAggregates::Position>()
                   .HasSchemaName(AdvertisementAggregatesSchema)

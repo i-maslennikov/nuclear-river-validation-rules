@@ -2,12 +2,12 @@
 go
 
 if object_id('AdvertisementAggregates.Order') is not null drop table AdvertisementAggregates.[Order]
+if object_id('AdvertisementAggregates.LinkedProject') is not null drop table AdvertisementAggregates.LinkedProject
 if object_id('AdvertisementAggregates.RequiredAdvertisementMissing') is not null drop table AdvertisementAggregates.RequiredAdvertisementMissing
 if object_id('AdvertisementAggregates.RequiredLinkedObjectCompositeMissing') is not null drop table AdvertisementAggregates.RequiredLinkedObjectCompositeMissing
 if object_id('AdvertisementAggregates.AdvertisementDeleted') is not null drop table AdvertisementAggregates.AdvertisementDeleted
 if object_id('AdvertisementAggregates.AdvertisementMustBelongToFirm') is not null drop table AdvertisementAggregates.AdvertisementMustBelongToFirm
 if object_id('AdvertisementAggregates.AdvertisementIsDummy') is not null drop table AdvertisementAggregates.AdvertisementIsDummy
-if object_id('AdvertisementAggregates.WhiteListAdvertisement') is not null drop table AdvertisementAggregates.WhiteListAdvertisement
 if object_id('AdvertisementAggregates.OrderAdvertisement') is not null drop table AdvertisementAggregates.OrderAdvertisement
 
 if object_id('AdvertisementAggregates.Advertisement') is not null drop table AdvertisementAggregates.Advertisement
@@ -17,6 +17,7 @@ if object_id('AdvertisementAggregates.ElementInvalid') is not null drop table Ad
 if object_id('AdvertisementAggregates.AdvertisementElementTemplate') is not null drop table AdvertisementAggregates.AdvertisementElementTemplate
 
 if object_id('AdvertisementAggregates.Firm') is not null drop table AdvertisementAggregates.Firm
+if object_id('AdvertisementAggregates.WhiteListDistributionPeriod') is not null drop table AdvertisementAggregates.WhiteListDistributionPeriod
 
 if object_id('AdvertisementAggregates.Position') is not null drop table AdvertisementAggregates.Position
 go
@@ -29,6 +30,15 @@ create table AdvertisementAggregates.[Order] (
 
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDatePlan datetime2(2) not null,
+    ProjectId bigint not null,
+    FirmId bigint not null,
+    RequireWhiteListAdvertisement bit not null,
+    ProvideWhiteListAdvertisement bit not null,
+)
+go
+
+create table AdvertisementAggregates.LinkedProject (
+    OrderId bigint not null,
     ProjectId bigint not null,
 )
 go
@@ -82,17 +92,6 @@ create table AdvertisementAggregates.AdvertisementIsDummy (
 )
 go
 
-create table AdvertisementAggregates.WhiteListAdvertisement (
-    OrderId bigint not null,
-
-	PeriodStart datetime2(2) not null,
-	PeriodEnd datetime2(2) not null,
-
-    FirmId bigint not null,
-	AdvertisementId bigint null,
-)
-go
-
 create table AdvertisementAggregates.OrderAdvertisement (
     OrderId bigint not null,
 
@@ -104,8 +103,9 @@ go
 
 create table AdvertisementAggregates.Advertisement (
     Id bigint not null,
-
     Name nvarchar(128) not null,
+    FirmId bigint not null,
+    IsSelectedToWhiteList bit not null,
 )
 go
 
@@ -120,12 +120,9 @@ go
 
 create table AdvertisementAggregates.ElementInvalid (
     AdvertisementId bigint not null,
-
     AdvertisementElementId bigint not null,
-
     AdvertisementElementTemplateId bigint not null,
-
-	AdvertisementElementStatus int not null,
+    AdvertisementElementStatus int not null,
 )
 go
 
@@ -143,8 +140,16 @@ go
 
 create table AdvertisementAggregates.Firm (
     Id bigint not null,
-
     Name nvarchar(250) not null,
+)
+go
+
+create table AdvertisementAggregates.WhiteListDistributionPeriod (
+    FirmId bigint not null,
+    [Start] datetime2(2) not null,
+    [End] datetime2(2) not null,
+    AdvertisementId bigint null,
+    ProvidedByOrderId bigint null,
 )
 go
 

@@ -57,10 +57,13 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Advertisement> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>()
+                   where advertisement.FirmId.HasValue
                    select new Advertisement
                    {
                        Id = advertisement.Id,
                        Name = advertisement.Name,
+                       FirmId = advertisement.FirmId.Value,
+                       IsSelectedToWhiteList = advertisement.IsSelectedToWhiteList,
                    };
 
             public FindSpecification<Advertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

@@ -36,6 +36,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
                 EndDistributionDatePlan = x.EndDistributionDatePlan + OneSecond,
                 EndDistributionDateFact = x.EndDistributionDateFact + OneSecond,
                 DestOrganizationUnitId = x.DestOrganizationUnitId,
+                SourceOrganizationUnitId = x.SourceOrganizationUnitId,
+                WorkflowStepId = x.WorkflowStepId,
             });
 
         public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

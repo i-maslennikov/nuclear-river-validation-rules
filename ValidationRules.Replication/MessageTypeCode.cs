@@ -48,7 +48,7 @@
         OrderMustNotContainDummyAdvertisement = 42,
         OrderMustHaveAdvertisement = 43,
         AdvertisementElementShouldBeValid = 44,
-        RequiredWhiteListMissing = 45,
-        RequiredWhiteListNotMissing = 46,
+        WhiteListAdvertisementMustPresent = 45,
+        WhiteListAdvertisementMayPresent = 46,
     }
 }

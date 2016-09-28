@@ -12,6 +12,8 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts
         public DateTime EndDistributionDatePlan { get; set; }
         public DateTime EndDistributionDateFact { get; set; }
         public long DestOrganizationUnitId { get; set; }
+        public long SourceOrganizationUnitId { get; set; }
+        public int WorkflowStepId { get; set; }
     }
 
     // вспомогательный, служит для преобразования DestOrganizationUnitId->ProjectId

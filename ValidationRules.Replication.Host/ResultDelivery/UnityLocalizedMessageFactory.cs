@@ -27,8 +27,8 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 typeof(OrderMustHaveAdvertisementMessageSerializer),
                 typeof(RequiredAdvertisementMissingMessageSerializer),
                 typeof(OrderPositionMustNotReferenceDeletedAdvertisementMessageSerializer),
-                typeof(RequiredWhiteListMissingMessageSerializer),
-                typeof(RequiredWhiteListNotMissingMessageSerializer),
+                typeof(WhiteListAdvertisementMustPresentMessageSerializer),
+                typeof(WhiteListAdvertisementMayPresentMessageSerializer),
 
                 typeof(BargainScanShouldPresentMessageSerializer),
                 typeof(BillsPeriodShouldMatchOrderMessageSerializer),

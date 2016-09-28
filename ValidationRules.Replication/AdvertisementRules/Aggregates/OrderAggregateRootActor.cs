@@ -19,36 +19,36 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
     {
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
+        private readonly IBulkRepository<Order.LinkedProject> _linkedProjectBulkRepository;
         private readonly IBulkRepository<Order.RequiredAdvertisementMissing> _requiredAdvertisementMissingBulkRepository;
         private readonly IBulkRepository<Order.RequiredLinkedObjectCompositeMissing> _requiredLinkedObjectCompositeMissingBulkRepository;
         private readonly IBulkRepository<Order.AdvertisementDeleted> _advertisementDeletedBulkRepository;
         private readonly IBulkRepository<Order.AdvertisementMustBelongToFirm> _advertisementMustBelongToFirmBulkRepository;
         private readonly IBulkRepository<Order.AdvertisementIsDummy> _advertisementIsDummyBulkRepository;
         private readonly IBulkRepository<Order.OrderAdvertisement> _orderAdvertisementBulkRepository;
-        private readonly IBulkRepository<Order.WhiteListAdvertisement> _whiteListAdvertisementBulkRepository;
 
         public OrderAggregateRootActor(
             IQuery query,
             IBulkRepository<Order> orderBulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Order.LinkedProject> linkedProjectBulkRepository,
             IBulkRepository<Order.RequiredAdvertisementMissing> requiredAdvertisementMissingBulkRepository,
             IBulkRepository<Order.RequiredLinkedObjectCompositeMissing> requiredLinkedObjectCompositeMissingBulkRepository,
             IBulkRepository<Order.AdvertisementDeleted> advertisementDeletedBulkRepository,
             IBulkRepository<Order.AdvertisementMustBelongToFirm> advertisementMustBelongToFirmBulkRepository,
             IBulkRepository<Order.AdvertisementIsDummy> advertisementIsDummyBulkRepository,
-            IBulkRepository<Order.OrderAdvertisement> orderAdvertisementBulkRepository,
-            IBulkRepository<Order.WhiteListAdvertisement> whiteListAdvertisementBulkRepository)
+            IBulkRepository<Order.OrderAdvertisement> orderAdvertisementBulkRepository)
             : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
+            _linkedProjectBulkRepository = linkedProjectBulkRepository;
             _requiredAdvertisementMissingBulkRepository = requiredAdvertisementMissingBulkRepository;
             _requiredLinkedObjectCompositeMissingBulkRepository = requiredLinkedObjectCompositeMissingBulkRepository;
             _advertisementDeletedBulkRepository = advertisementDeletedBulkRepository;
             _advertisementMustBelongToFirmBulkRepository = advertisementMustBelongToFirmBulkRepository;
             _advertisementIsDummyBulkRepository = advertisementIsDummyBulkRepository;
             _orderAdvertisementBulkRepository = orderAdvertisementBulkRepository;
-            _whiteListAdvertisementBulkRepository = whiteListAdvertisementBulkRepository;
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
@@ -57,13 +57,13 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
+                    new ValueObjectActor<Order.LinkedProject>(_query, _linkedProjectBulkRepository, _equalityComparerFactory, new LinkedProjectAccessor(_query)),
                     new ValueObjectActor<Order.RequiredAdvertisementMissing>(_query, _requiredAdvertisementMissingBulkRepository, _equalityComparerFactory, new RequiredAdvertisementMissingAccessor(_query)),
                     new ValueObjectActor<Order.RequiredLinkedObjectCompositeMissing>(_query, _requiredLinkedObjectCompositeMissingBulkRepository, _equalityComparerFactory, new RequiredLinkedObjectCompositeMissingAccessor(_query)),
                     new ValueObjectActor<Order.AdvertisementDeleted>(_query, _advertisementDeletedBulkRepository, _equalityComparerFactory, new AdvertisementDeletedAccessor(_query)),
                     new ValueObjectActor<Order.AdvertisementMustBelongToFirm>(_query, _advertisementMustBelongToFirmBulkRepository, _equalityComparerFactory, new AdvertisementMustBelongToFirmAccessor(_query)),
                     new ValueObjectActor<Order.AdvertisementIsDummy>(_query, _advertisementIsDummyBulkRepository, _equalityComparerFactory, new AdvertisementIsDummyAccessor(_query)),
                     new ValueObjectActor<Order.OrderAdvertisement>(_query, _orderAdvertisementBulkRepository, _equalityComparerFactory, new OrderAdvertisementAccessor(_query)),
-                    new ValueObjectActor<Order.WhiteListAdvertisement>(_query, _whiteListAdvertisementBulkRepository, _equalityComparerFactory, new WhiteListAdvertisementAccessor(_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -78,6 +78,15 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                   let require = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                                  from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
+                                  from a in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId)
+                                  from at in _query.For<Facts::AdvertisementTemplate>().Where(x => x.Id == a.AdvertisementTemplateId)
+                                  select at.IsAllowedToWhiteList).Any(x => x)
+                   let provide = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                                  from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
+                                  from a in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId)
+                                  select a.IsSelectedToWhiteList).Any(x => x)
                    select new Order
                        {
                            Id = order.Id,
@@ -86,7 +95,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                            BeginDistributionDate = order.BeginDistributionDate,
                            EndDistributionDatePlan = order.EndDistributionDatePlan,
                            ProjectId = project.Id,
-                       };
+                           FirmId = order.FirmId,
+                           RequireWhiteListAdvertisement = require,
+                           ProvideWhiteListAdvertisement = provide,
+                   };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -96,6 +108,36 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
+            }
+        }
+
+        public sealed class LinkedProjectAccessor : IStorageBasedDataObjectAccessor<Order.LinkedProject>
+        {
+            private readonly IQuery _query;
+
+            public LinkedProjectAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Order.LinkedProject> GetSource()
+            {
+                var linkedOrganizationUnits = _query.For<Facts::Order>().Select(x => new { OrderId = x.Id, OrganizationUnitId = x.DestOrganizationUnitId })
+                                                    .Union(_query.For<Facts::Order>().Select(x => new { OrderId = x.Id, OrganizationUnitId = x.SourceOrganizationUnitId }));
+
+                return from linkedOrganizationUnit in linkedOrganizationUnits
+                       from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == linkedOrganizationUnit.OrganizationUnitId)
+                       select new Order.LinkedProject { OrderId = linkedOrganizationUnit.OrderId, ProjectId = project.Id };
+            }
+
+            public FindSpecification<Order.LinkedProject> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Order.LinkedProject>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
@@ -282,107 +324,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order.AdvertisementIsDummy>(x => aggregateIds.Contains(x.OrderId));
-            }
-        }
-
-        public sealed class WhiteListAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.WhiteListAdvertisement>
-        {
-            private readonly IQuery _query;
-
-            public WhiteListAdvertisementAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<Order.WhiteListAdvertisement> GetSource()
-            {
-                var orderDates = (
-                                  from order in _query.For<Facts::Order>() select new { Date = order.BeginDistributionDate, OrganizationUnitId = order.DestOrganizationUnitId })
-                                 .Union(
-                                  from order in _query.For<Facts::Order>() select new { Date = order.EndDistributionDateFact, OrganizationUnitId = order.DestOrganizationUnitId }
-                                 )
-                                 .Union(
-                                  from order in _query.For<Facts::Order>() select new { Date = order.EndDistributionDatePlan, OrganizationUnitId = order.DestOrganizationUnitId }
-                                 )
-                                 // https://github.com/linq2db/linq2db/issues/356
-                                 .Select(x => new { x.Date, x.OrganizationUnitId });
-
-                var orderPeriods = from order in _query.For<Facts::Order>()
-                                   from orderDate in orderDates
-                                   where order.DestOrganizationUnitId == orderDate.OrganizationUnitId
-                                   where order.BeginDistributionDate <= orderDate.Date
-                                   where orderDate.Date < order.EndDistributionDatePlan
-                                   select new
-                                   {
-                                        OrderId = order.Id,
-                                        order.FirmId,
-                                        PeriodStart = orderDate.Date,
-                                        PeriodEnd = (from orderDate2 in orderDates
-                                                    where orderDate2.OrganizationUnitId == orderDate.OrganizationUnitId
-                                                    orderby orderDate2.Date
-                                                    where orderDate2.Date > orderDate.Date
-                                                    select (DateTime?)orderDate2.Date).FirstOrDefault() ?? DateTime.MaxValue,
-                                   };
-
-                var positionChilds = from position in _query.For<Facts::Position>()
-                                    select new
-                                    {
-                                        PositionId = position.Id,
-                                        ChildPositionId = position.ChildPositionId ?? position.Id,
-                                    };
-
-                var ordersAllowed = from orderPeriod in orderPeriods
-                                    join op in _query.For<Facts::OrderPosition>() on orderPeriod.OrderId equals op.OrderId
-                                    join pp in _query.For<Facts::PricePosition>() on op.PricePositionId equals pp.Id
-                                    join positionChild in positionChilds on pp.PositionId equals positionChild.PositionId
-                                    join p in _query.For<Facts::Position>() on positionChild.ChildPositionId equals p.Id
-                                    join template in _query.For<Facts::AdvertisementTemplate>() on p.AdvertisementTemplateId equals template.Id
-                                    where template.IsAllowedToWhiteList // шаблон может быть выбран в белый список
-                                    select orderPeriod;
-
-                var ordersSelected = from orderPeriod in orderPeriods
-                                     join op in _query.For<Facts::OrderPosition>() on orderPeriod.OrderId equals op.OrderId
-                                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                                     join advertisement in _query.For<Facts::Advertisement>() on opa.AdvertisementId equals advertisement.Id
-                                     where advertisement.IsSelectedToWhiteList // РМ выбран в белый список
-                                     select new { orderPeriod, advertisement };
-
-                var whiteListAdvertisements = (from orderAllowed in ordersAllowed
-                                                join orderSelected in ordersSelected on new
-                                                {
-                                                    orderAllowed.FirmId,
-                                                    orderAllowed.PeriodStart,
-                                                    orderAllowed.PeriodEnd
-                                                } equals new
-                                                {
-                                                    orderSelected.orderPeriod.FirmId,
-                                                    orderSelected.orderPeriod.PeriodStart,
-                                                    orderSelected.orderPeriod.PeriodEnd
-                                                } into ordersSelectedNullable
-                                                from orderSelectedNullable in ordersSelectedNullable.DefaultIfEmpty()
-                                                select new Order.WhiteListAdvertisement
-                                                {
-                                                    OrderId = orderAllowed.OrderId,
-
-                                                    PeriodStart = orderAllowed.PeriodStart,
-                                                    PeriodEnd = orderAllowed.PeriodEnd,
-
-                                                    FirmId = orderAllowed.FirmId,
-
-                                                    AdvertisementId = orderSelectedNullable != null ? (long?)orderSelectedNullable.advertisement.Id: null,
-                                                }).Distinct();
-
-                return whiteListAdvertisements;
-            }
-
-            public FindSpecification<Order.WhiteListAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
-                return new FindSpecification<Order.WhiteListAdvertisement>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
