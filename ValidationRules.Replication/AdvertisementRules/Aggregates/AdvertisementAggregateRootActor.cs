@@ -20,14 +20,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IBulkRepository<Advertisement.RequiredElementMissing> _requiredElementMissingBulkRepository;
-        private readonly IBulkRepository<Advertisement.ElementInvalid> _elementInvalidBulkRepository;
+        private readonly IBulkRepository<Advertisement.ElementNotPassedReview> _elementInvalidBulkRepository;
 
         public AdvertisementAggregateRootActor(
             IQuery query,
             IBulkRepository<Advertisement> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Advertisement.RequiredElementMissing> requiredElementMissingBulkRepository,
-            IBulkRepository<Advertisement.ElementInvalid> elementInvalidBulkRepository)
+            IBulkRepository<Advertisement.ElementNotPassedReview> elementInvalidBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new AdvertisementAccessor(query))
         {
             _query = query;
@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             => new IActor[]
                 {
                     new ValueObjectActor<Advertisement.RequiredElementMissing>(_query, _requiredElementMissingBulkRepository, _equalityComparerFactory, new RequiredElementMissingAccessor(_query)),
-                    new ValueObjectActor<Advertisement.ElementInvalid>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementInvalidAccessor(_query)),
+                    new ValueObjectActor<Advertisement.ElementNotPassedReview>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementNotPassedReviewAccessor(_query)),
                 };
 
         public sealed class AdvertisementAccessor : IStorageBasedDataObjectAccessor<Advertisement>
@@ -111,19 +111,19 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementInvalidAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementInvalid>
+        public sealed class ElementNotPassedReviewAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementNotPassedReview>
         {
             private const int StatusInvalid = 2;
             private const int StatusDraft = 3;
 
             private readonly IQuery _query;
 
-            public ElementInvalidAccessor(IQuery query)
+            public ElementNotPassedReviewAccessor(IQuery query)
             {
                 _query = query;
             }
 
-            public IQueryable<Advertisement.ElementInvalid> GetSource()
+            public IQueryable<Advertisement.ElementNotPassedReview> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
                    join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
                    where advertisement.Id != template.DummyAdvertisementId // РМ - не заглушка
@@ -132,26 +132,26 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                          element.Status == StatusDraft      // ЭРМ - черновик
                    join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>() on element.AdvertisementElementTemplateId equals elementTemplate.Id
                    where elementTemplate.NeedsValidation // ЭРМ должен быть выверен
-                   select new Advertisement.ElementInvalid
+                   select new Advertisement.ElementNotPassedReview
                    {
                        AdvertisementId = advertisement.Id,
 
                        AdvertisementElementId = element.Id,
                        AdvertisementElementTemplateId = elementTemplate.Id,
 
-                       AdvertisementElementStatus = element.Status == StatusInvalid ? Advertisement.InvalidAdvertisementElementStatus.Invalid :
-                                                    element.Status == StatusDraft ? Advertisement.InvalidAdvertisementElementStatus.Draft :
-                                                    Advertisement.InvalidAdvertisementElementStatus.NotSet,
+                       Status = element.Status == StatusInvalid ? Advertisement.ReviewStatus.Invalid :
+                                                    element.Status == StatusDraft ? Advertisement.ReviewStatus.Draft :
+                                                    Advertisement.ReviewStatus.NotSet,
                    };
 
-            public FindSpecification<Advertisement.ElementInvalid> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Advertisement.ElementNotPassedReview> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
                                            .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Distinct()
                                            .ToArray();
-                return new FindSpecification<Advertisement.ElementInvalid>(x => aggregateIds.Contains(x.AdvertisementId));
+                return new FindSpecification<Advertisement.ElementNotPassedReview>(x => aggregateIds.Contains(x.AdvertisementId));
             }
         }
     }

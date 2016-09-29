@@ -122,7 +122,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AdvertisementAggregates::Order.OrderAdvertisement),
                             typeof(AdvertisementAggregates::Advertisement),
                             typeof(AdvertisementAggregates::Advertisement.RequiredElementMissing),
-                            typeof(AdvertisementAggregates::Advertisement.ElementInvalid),
+                            typeof(AdvertisementAggregates::Advertisement.ElementNotPassedReview),
                             typeof(AdvertisementAggregates::AdvertisementElementTemplate),
                             typeof(AdvertisementAggregates::Firm),
                             typeof(AdvertisementAggregates::Firm.WhiteListDistributionPeriod),

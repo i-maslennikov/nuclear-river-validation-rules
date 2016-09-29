@@ -47,7 +47,7 @@
         AdvertisementMustBelongToFirm = 41,
         OrderMustNotContainDummyAdvertisement = 42,
         OrderMustHaveAdvertisement = 43,
-        AdvertisementElementShouldBeValid = 44,
+        AdvertisementElementMustPassReview = 44,
         WhiteListAdvertisementMustPresent = 45,
         WhiteListAdvertisementMayPresent = 46,
     }

@@ -129,7 +129,7 @@ namespace NuClear.ValidationRules.Storage
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<AdvertisementAggregates::Advertisement.RequiredElementMissing>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.ElementInvalid>()
+            builder.Entity<AdvertisementAggregates::Advertisement.ElementNotPassedReview>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
 
             builder.Entity<AdvertisementAggregates::AdvertisementElementTemplate>()

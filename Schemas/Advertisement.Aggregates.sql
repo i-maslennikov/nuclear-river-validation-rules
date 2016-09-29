@@ -12,7 +12,7 @@ if object_id('AdvertisementAggregates.OrderAdvertisement') is not null drop tabl
 
 if object_id('AdvertisementAggregates.Advertisement') is not null drop table AdvertisementAggregates.Advertisement
 if object_id('AdvertisementAggregates.RequiredElementMissing') is not null drop table AdvertisementAggregates.RequiredElementMissing
-if object_id('AdvertisementAggregates.ElementInvalid') is not null drop table AdvertisementAggregates.ElementInvalid
+if object_id('AdvertisementAggregates.ElementNotPassedReview') is not null drop table AdvertisementAggregates.ElementNotPassedReview
 
 if object_id('AdvertisementAggregates.AdvertisementElementTemplate') is not null drop table AdvertisementAggregates.AdvertisementElementTemplate
 
@@ -119,11 +119,11 @@ create table AdvertisementAggregates.RequiredElementMissing (
 )
 go
 
-create table AdvertisementAggregates.ElementInvalid (
+create table AdvertisementAggregates.ElementNotPassedReview (
     AdvertisementId bigint not null,
     AdvertisementElementId bigint not null,
     AdvertisementElementTemplateId bigint not null,
-    AdvertisementElementStatus int not null,
+    [Status] int not null,
 )
 go
 

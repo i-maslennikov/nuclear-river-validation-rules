@@ -18,14 +18,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrdersCheckAdvertisementElementWasInvalidated
     /// </summary>
-    public sealed class AdvertisementElementShouldBeValid : ValidationResultAccessorBase
+    public sealed class AdvertisementElementMustPassReview : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public AdvertisementElementShouldBeValid(IQuery query) : base(query, MessageTypeCode.AdvertisementElementShouldBeValid)
+        public AdvertisementElementMustPassReview(IQuery query) : base(query, MessageTypeCode.AdvertisementElementMustPassReview)
         {
         }
 
@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var ruleResults = from order in query.For<Order>()
                               join relation in query.For<Order.OrderAdvertisement>() on order.Id equals relation.OrderId
                               join advertisement in query.For<Advertisement>() on relation.AdvertisementId equals advertisement.Id
-                              join fail in query.For<Advertisement.ElementInvalid>() on advertisement.Id equals fail.AdvertisementId
+                              join fail in query.For<Advertisement.ElementNotPassedReview>() on advertisement.Id equals fail.AdvertisementId
                               select new Version.ValidationResult
                                   {
                                   MessageParams = new XDocument(new XElement("root",
@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                                               new XAttribute("id", fail.AdvertisementElementId),
                                                                                               new XAttribute("name", query.For<AdvertisementElementTemplate>().Single(x => x.Id == fail.AdvertisementElementTemplateId).Name)),
                                                                                   new XElement("advertisementElementStatus",
-                                                                                              new XAttribute("id", fail.AdvertisementElementStatus))
+                                                                                              new XAttribute("id", fail.Status))
                                                                                   )),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,

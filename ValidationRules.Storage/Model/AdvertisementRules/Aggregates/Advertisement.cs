@@ -15,21 +15,21 @@
             public long AdvertisementElementTemplateId { get; set; }
         }
 
-        public enum InvalidAdvertisementElementStatus
+        public enum ReviewStatus
         {
             NotSet = 0,
             Invalid,
             Draft,
         }
 
-        public sealed class ElementInvalid
+        public sealed class ElementNotPassedReview
         {
             public long AdvertisementId { get; set; }
 
             public long AdvertisementElementId { get; set; }
             public long AdvertisementElementTemplateId { get; set; }
 
-            public InvalidAdvertisementElementStatus AdvertisementElementStatus { get; set; }
+            public ReviewStatus Status { get; set; }
         }
     }
 }

@@ -112,7 +112,7 @@ namespace NuClear.ValidationRules.Replication
                     new LockShouldNotExist(_query),
 
                     // AdvertisementRules
-                    new AdvertisementElementShouldBeValid(_query),
+                    new AdvertisementElementMustPassReview(_query),
                     new AdvertisementMustBelongToFirm(_query),
                     new RequiredLinkedObjectCompositeMissing(_query),
                     new OrderMustNotContainDummyAdvertisement(_query),

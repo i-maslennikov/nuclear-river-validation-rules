@@ -211,7 +211,7 @@
     <Compile Include="AdvertisementRules\Validation\RequiredLinkedObjectCompositeMissing.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMayPresent.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMustPresent.cs" />
-    <Compile Include="AdvertisementRules\Validation\AdvertisementElementShouldBeValid.cs" />
+    <Compile Include="AdvertisementRules\Validation\AdvertisementElementMustPassReview.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderMustHaveAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\AdvertisementMustBelongToFirm.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
