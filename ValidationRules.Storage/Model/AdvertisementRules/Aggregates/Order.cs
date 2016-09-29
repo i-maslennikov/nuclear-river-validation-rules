@@ -48,6 +48,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long PositionId { get; set; }
 
             public long AdvertisementId { get; set; }
+            public string AdvertisementName { get; set; }
         }
 
         public sealed class AdvertisementMustBelongToFirm

@@ -80,12 +80,12 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                    let require = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                                  from a in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId)
+                                  from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.Id == opa.AdvertisementId)
                                   from at in _query.For<Facts::AdvertisementTemplate>().Where(x => x.Id == a.AdvertisementTemplateId)
                                   select at.IsAllowedToWhiteList).Any(x => x)
                    let provide = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                                  from a in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId)
+                                  from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.Id == opa.AdvertisementId)
                                   select a.IsSelectedToWhiteList).Any(x => x)
                    select new Order
                        {
@@ -246,6 +246,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        OrderPositionId = op.Id,
                        PositionId = opa.PositionId,
                        AdvertisementId = advertisement.Id,
+                       AdvertisementName = advertisement.Name,
                    };
 
             public FindSpecification<Order.AdvertisementDeleted> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -273,7 +274,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    join firm in _query.For<Facts::Firm>() on order.FirmId equals firm.Id
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                   join advertisement in _query.For<Facts::Advertisement>() on opa.AdvertisementId equals advertisement.Id
+                   join advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted) on opa.AdvertisementId equals advertisement.Id
                    where advertisement.FirmId != order.FirmId // РМ не принадлежит фирме заказа
                    select new Order.AdvertisementMustBelongToFirm
                    {

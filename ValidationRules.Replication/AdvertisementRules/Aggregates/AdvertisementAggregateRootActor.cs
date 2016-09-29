@@ -57,7 +57,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Advertisement> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>()
-                   where advertisement.FirmId.HasValue
+                   where advertisement.FirmId.HasValue && !advertisement.IsDeleted
                    select new Advertisement
                    {
                        Id = advertisement.Id,
@@ -87,7 +87,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
 
             public IQueryable<Advertisement.RequiredElementMissing> GetSource()
-                => from advertisement in _query.For<Facts::Advertisement>()
+                => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
                    join element in _query.For<Facts::AdvertisementElement>() on advertisement.Id equals element.AdvertisementId
                    where element.IsEmpty // ЭРМ пустой
                    join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>() on element.AdvertisementElementTemplateId equals elementTemplate.Id
@@ -124,7 +124,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
 
             public IQueryable<Advertisement.ElementInvalid> GetSource()
-                => from advertisement in _query.For<Facts::Advertisement>()
+                => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
                    join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
                    where advertisement.Id != template.DummyAdvertisementId // РМ - не заглушка
                    join element in _query.For<Facts::AdvertisementElement>() on advertisement.Id equals element.AdvertisementId

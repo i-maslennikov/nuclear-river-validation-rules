@@ -70,6 +70,7 @@ create table AdvertisementAggregates.AdvertisementDeleted (
     PositionId bigint not null,
 
     AdvertisementId bigint not null,
+    AdvertisementName nvarchar(128) not null,
 )
 go
 
