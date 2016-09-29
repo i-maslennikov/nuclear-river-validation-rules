@@ -21,8 +21,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
             _query = query;
         }
 
+        // Тут мы ещё раз столкнулись с https://github.com/linq2db/linq2db/issues/395
         public IQueryable<Category> GetSource()
-            => CategoriesLevel1.Union(CategoriesLevel2).Union(CategoriesLevel3);
+        {
+            var x = CategoriesLevel1.Union(CategoriesLevel2).Union(CategoriesLevel3);
+            return x.ToArray().AsQueryable();
+        }
 
         private IQueryable<Category> CategoriesLevel3
             => from c3 in _query.For(Specs.Find.Erm.Categories()).Where(x => x.Level == 3)
@@ -42,7 +46,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Facts
         public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<Category>(x => ids.Contains(x.L1Id.Value) || ids.Contains(x.L2Id.Value) || ids.Contains(x.L3Id.Value));
+            return new FindSpecification<Category>(x => x.L1Id.HasValue && ids.Contains(x.L1Id.Value) || x.L2Id.HasValue && ids.Contains(x.L2Id.Value) || x.L3Id.HasValue && ids.Contains(x.L3Id.Value));
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Category> dataObjects)
