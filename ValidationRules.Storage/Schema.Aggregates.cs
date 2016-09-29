@@ -4,6 +4,7 @@ using LinqToDB.Mapping;
 using AccountAggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
 namespace NuClear.ValidationRules.Storage
 {
@@ -12,6 +13,7 @@ namespace NuClear.ValidationRules.Storage
         private const string PriceAggregatesSchema = "PriceAggregates";
         private const string AccountAggregatesSchema = "AccountAggregates";
         private const string ConsistencyAggregatesSchema = "ConsistencyAggregates";
+        private const string FirmAggregatesSchema = "FirmAggregates";
 
         public static MappingSchema Aggregates
             => new MappingSchema(nameof(Aggregates), new SqlServerMappingSchema())
@@ -19,7 +21,30 @@ namespace NuClear.ValidationRules.Storage
                 .RegisterPriceAggregates()
                 .RegisterAccountAggregates()
                 .RegisterConsistencyAggregates()
+                .RegisterFirmAggregates()
                 .MappingSchema;
+
+        private static FluentMappingBuilder RegisterFirmAggregates(this FluentMappingBuilder builder)
+        {
+            builder.Entity<FirmAggregates::Firm>()
+                   .HasSchemaName(FirmAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmAggregates::Order>()
+                   .HasSchemaName(FirmAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmAggregates::Order.CategoryPurchase>()
+                   .HasSchemaName(FirmAggregatesSchema);
+
+            builder.Entity<FirmAggregates::Order.SpecialPosition>()
+                   .HasSchemaName(FirmAggregatesSchema);
+
+            builder.Entity<FirmAggregates::Order.FirmOrganiationUnitMismatch>()
+                   .HasSchemaName(FirmAggregatesSchema);
+
+            return builder;
+        }
 
         private static FluentMappingBuilder RegisterPriceAggregates(this FluentMappingBuilder builder)
         {

@@ -104,6 +104,9 @@ using PriceAccessors = NuClear.ValidationRules.Replication.PriceRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 using ConsistencyAccessors = NuClear.ValidationRules.Replication.ConsistencyRules.Facts;
 
+using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+using FirmAccessors = NuClear.ValidationRules.Replication.FirmRules.Facts;
+
 namespace NuClear.ValidationRules.Replication.Host.DI
 {
     public static class Bootstrapper
@@ -368,9 +371,24 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IStorageBasedDataObjectAccessor<ConsistencyFacts::ReleaseWithdrawal>, ConsistencyAccessors::ReleaseWithdrawalAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<ConsistencyFacts::ReleaseWithdrawal>, ConsistencyAccessors::ReleaseWithdrawalAccessor>(entryPointSpecificLifetimeManagerFactory())
 
+                .RegisterAccessor<FirmFacts::Firm, FirmAccessors::FirmAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<FirmFacts::FirmAddress, FirmAccessors::FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<FirmFacts::FirmAddressCategory, FirmAccessors::FirmAddressCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<FirmFacts::Order, FirmAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<FirmFacts::OrderPosition, FirmAccessors::OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<FirmFacts::OrderPositionAdvertisement, FirmAccessors::OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<FirmFacts::SpecialPosition, FirmAccessors::SpecialPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<FirmFacts::Project, FirmAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
+
                 .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateActorFactory, UnityAggregateActorFactory>(entryPointSpecificLifetimeManagerFactory());
         }
+
+        private static IUnityContainer RegisterAccessor<TFact, TAccessor>(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
+            where TAccessor : IStorageBasedDataObjectAccessor<TFact>, IDataChangesHandler<TFact>
+            => container
+                .RegisterType<IStorageBasedDataObjectAccessor<TFact>, TAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<TFact>, TAccessor>(entryPointSpecificLifetimeManagerFactory());
 
         private static IUnityContainer ConfigureReadWriteModels(this IUnityContainer container)
         {
@@ -404,7 +422,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                             .RegisterInstance(EntityTypeMap.CreateAggregateContext())
                             .RegisterInstance(EntityTypeMap.CreateAccountFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateConsistencyFactsContext())
-                            .RegisterInstance(EntityTypeMap.CreatePriceFactsContext());
+                            .RegisterInstance(EntityTypeMap.CreatePriceFactsContext())
+                            .RegisterInstance(EntityTypeMap.CreateFirmFactsContext());
         }
 
         private static class Scope

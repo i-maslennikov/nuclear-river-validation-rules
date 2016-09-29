@@ -217,6 +217,21 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             return (InvalidFirmAddressState)(int)element.Attribute("invalidFirmAddressState");
         }
 
+        public static CategoryCountDto ReadCategoryCount(this Message message)
+        {
+            var element = message.Data.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return new CategoryCountDto
+                {
+                    Actual = (int)element.Attribute("count"),
+                    Allowed = (int)element.Attribute("allowed")
+                };
+        }
+
         public static InvalidFirmState ReadFirmState(this Message message)
         {
             var element = message.Data.Root.Element("message");
@@ -245,6 +260,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
                 ReleaseCountPlan = element.Element("releaseCountPlan") != null,
                 Currency = element.Element("currency") != null,
             };
+        }
+
+        public sealed class CategoryCountDto
+        {
+            public int Allowed { get; set; }
+            public int Actual { get; set; }
         }
 
         public sealed class AccountBalanceMessageDto

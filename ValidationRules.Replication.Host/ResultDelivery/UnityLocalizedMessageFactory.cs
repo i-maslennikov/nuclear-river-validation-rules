@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AccountRules;
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules;
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules;
+using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.FirmRules;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
@@ -52,6 +53,10 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 typeof(OrderPositionShouldCorrespontToActualPriceMessageSerializer),
                 typeof(OrderPositionsShouldCorrespontToActualPriceMessageSerializer),
                 typeof(SatisfiedPrincipalPositionDifferentOrderMessageSerializer),
+
+                typeof(FirmAndOrderShouldBelongTheSameOrganizationUnitMessageSerializer),
+                typeof(FirmShouldHaveLimitedCategoryCountMessageSerializer),
+                typeof(FirmWithSpecialCategoryShouldHaveSpecialPurchasesMessageSerializer),
             };
 
         private readonly Dictionary<MessageTypeCode, IMessageSerializer> _serializers;
