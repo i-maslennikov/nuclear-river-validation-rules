@@ -88,7 +88,7 @@ go
 
 create table AdvertisementAggregates.AdvertisementIsDummy (
     OrderId bigint not null,
-
+	OrderPositionId bigint not null,
     PositionId bigint not null,
 )
 go

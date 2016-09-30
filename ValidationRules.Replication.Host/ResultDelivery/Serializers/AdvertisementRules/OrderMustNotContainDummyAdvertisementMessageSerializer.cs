@@ -14,11 +14,11 @@
         public LocalizedMessage Serialize(Message message)
         {
             var orderReference = message.ReadOrderReference();
-            var positionReference = message.ReadPositionReference();
+            var orderPositionReference = message.ReadOrderPositionReference();
 
             return new LocalizedMessage(message.GetLevel(),
                                         $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"Позиция {_linkFactory.CreateLink(positionReference)} содержит заглушку рекламного материала");
+                                        $"Позиция {_linkFactory.CreateLink(orderPositionReference)} содержит заглушку рекламного материала");
         }
     }
 }

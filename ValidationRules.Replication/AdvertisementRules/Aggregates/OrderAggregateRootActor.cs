@@ -314,6 +314,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    select new Order.AdvertisementIsDummy
                    {
                        OrderId = order.Id,
+                       OrderPositionId = op.Id,
                        PositionId = opa.PositionId,
                    };
 

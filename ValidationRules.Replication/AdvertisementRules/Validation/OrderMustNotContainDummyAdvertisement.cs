@@ -35,8 +35,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                                  new XElement("order",
                                                                                               new XAttribute("id", order.Id),
                                                                                               new XAttribute("number", order.Number)),
-                                                                                  new XElement("position",
-                                                                                              new XAttribute("id", fail.PositionId),
+                                                                                 new XElement("orderPosition",
+                                                                                              new XAttribute("id", fail.OrderPositionId),
                                                                                               new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name))
                                                                                   )),
                                       PeriodStart = order.BeginDistributionDate,

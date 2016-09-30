@@ -67,6 +67,8 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
         {
             public long OrderId { get; set; }
 
+            public long OrderPositionId { get; set; }
+
             public long PositionId { get; set; }
         }
 
