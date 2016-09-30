@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                                               new XAttribute("id", fail.AdvertisementElementId),
                                                                                               new XAttribute("name", query.For<AdvertisementElementTemplate>().Single(x => x.Id == fail.AdvertisementElementTemplateId).Name)),
                                                                                   new XElement("advertisementElementStatus",
-                                                                                              new XAttribute("id", fail.Status))
+                                                                                              new XAttribute("id", (int)fail.Status))
                                                                                   )),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,
