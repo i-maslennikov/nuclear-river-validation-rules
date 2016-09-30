@@ -12,6 +12,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// "В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции '{1}'"
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveLinkingObject
+    ///
+    /// * Ошибки по проверкам OrderPositionAdvertisementMustBeCreated и OrderPositionAdvertisementMustHaveAdvertisement 
+    /// визуально для пользователя не различаются. Можно объединить и оставить универсальное сообщение.
     /// </summary>
     public sealed class OrderPositionAdvertisementMustBeCreated : ValidationResultAccessorBase
     {
