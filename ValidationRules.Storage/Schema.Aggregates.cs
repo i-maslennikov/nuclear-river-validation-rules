@@ -111,9 +111,9 @@ namespace NuClear.ValidationRules.Storage
                   .HasPrimaryKey(x => x.Id);
             builder.Entity<AdvertisementAggregates::Order.LinkedProject>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.RequiredAdvertisementMissing>()
+            builder.Entity<AdvertisementAggregates::Order.MissingAdvertisementReference>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.RequiredLinkedObjectCompositeMissing>()
+            builder.Entity<AdvertisementAggregates::Order.MissingOrderPositionAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.AdvertisementDeleted>()
                    .HasSchemaName(AdvertisementAggregatesSchema);

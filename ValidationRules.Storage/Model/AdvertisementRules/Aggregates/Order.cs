@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long ProjectId { get; set; }
         }
 
-        public sealed class RequiredAdvertisementMissing
+        public sealed class MissingAdvertisementReference
         {
             public long OrderId { get; set; }
 
@@ -30,7 +30,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long PositionId { get; set; }
         }
 
-        public sealed class RequiredLinkedObjectCompositeMissing
+        public sealed class MissingOrderPositionAdvertisement
         {
             public long OrderId { get; set; }
 

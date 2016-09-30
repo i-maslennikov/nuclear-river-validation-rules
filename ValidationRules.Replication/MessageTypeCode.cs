@@ -41,8 +41,8 @@
         BillsSumShouldMatchOrder = 36,
         BillsShouldBeCreated = 37,
 
-        RequiredAdvertisementMissing = 38,
-        RequiredLinkedObjectCompositeMissing = 39,
+        OrderPositionAdvertisementMustHaveAdvertisement = 38,
+        OrderPositionAdvertisementMustBeCreated = 39,
         OrderPositionMustNotReferenceDeletedAdvertisement = 40,
         AdvertisementMustBelongToFirm = 41,
         OrderMustNotContainDummyAdvertisement = 42,

@@ -20,8 +20,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IBulkRepository<Order.LinkedProject> _linkedProjectBulkRepository;
-        private readonly IBulkRepository<Order.RequiredAdvertisementMissing> _requiredAdvertisementMissingBulkRepository;
-        private readonly IBulkRepository<Order.RequiredLinkedObjectCompositeMissing> _requiredLinkedObjectCompositeMissingBulkRepository;
+        private readonly IBulkRepository<Order.MissingAdvertisementReference> _missingAdvertisementReferenceBulkRepository;
+        private readonly IBulkRepository<Order.MissingOrderPositionAdvertisement> _missingOrderPositionAdvertisementBulkRepository;
         private readonly IBulkRepository<Order.AdvertisementDeleted> _advertisementDeletedBulkRepository;
         private readonly IBulkRepository<Order.AdvertisementMustBelongToFirm> _advertisementMustBelongToFirmBulkRepository;
         private readonly IBulkRepository<Order.AdvertisementIsDummy> _advertisementIsDummyBulkRepository;
@@ -32,8 +32,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             IBulkRepository<Order> orderBulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order.LinkedProject> linkedProjectBulkRepository,
-            IBulkRepository<Order.RequiredAdvertisementMissing> requiredAdvertisementMissingBulkRepository,
-            IBulkRepository<Order.RequiredLinkedObjectCompositeMissing> requiredLinkedObjectCompositeMissingBulkRepository,
+            IBulkRepository<Order.MissingAdvertisementReference> missingAdvertisementReferenceBulkRepository,
+            IBulkRepository<Order.MissingOrderPositionAdvertisement> missingOrderPositionAdvertisementBulkRepository,
             IBulkRepository<Order.AdvertisementDeleted> advertisementDeletedBulkRepository,
             IBulkRepository<Order.AdvertisementMustBelongToFirm> advertisementMustBelongToFirmBulkRepository,
             IBulkRepository<Order.AdvertisementIsDummy> advertisementIsDummyBulkRepository,
@@ -43,8 +43,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
             _linkedProjectBulkRepository = linkedProjectBulkRepository;
-            _requiredAdvertisementMissingBulkRepository = requiredAdvertisementMissingBulkRepository;
-            _requiredLinkedObjectCompositeMissingBulkRepository = requiredLinkedObjectCompositeMissingBulkRepository;
+            _missingAdvertisementReferenceBulkRepository = missingAdvertisementReferenceBulkRepository;
+            _missingOrderPositionAdvertisementBulkRepository = missingOrderPositionAdvertisementBulkRepository;
             _advertisementDeletedBulkRepository = advertisementDeletedBulkRepository;
             _advertisementMustBelongToFirmBulkRepository = advertisementMustBelongToFirmBulkRepository;
             _advertisementIsDummyBulkRepository = advertisementIsDummyBulkRepository;
@@ -58,8 +58,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             => new IActor[]
                 {
                     new ValueObjectActor<Order.LinkedProject>(_query, _linkedProjectBulkRepository, _equalityComparerFactory, new LinkedProjectAccessor(_query)),
-                    new ValueObjectActor<Order.RequiredAdvertisementMissing>(_query, _requiredAdvertisementMissingBulkRepository, _equalityComparerFactory, new RequiredAdvertisementMissingAccessor(_query)),
-                    new ValueObjectActor<Order.RequiredLinkedObjectCompositeMissing>(_query, _requiredLinkedObjectCompositeMissingBulkRepository, _equalityComparerFactory, new RequiredLinkedObjectCompositeMissingAccessor(_query)),
+                    new ValueObjectActor<Order.MissingAdvertisementReference>(_query, _missingAdvertisementReferenceBulkRepository, _equalityComparerFactory, new MissingAdvertisementReferenceAccessor(_query)),
+                    new ValueObjectActor<Order.MissingOrderPositionAdvertisement>(_query, _missingOrderPositionAdvertisementBulkRepository, _equalityComparerFactory, new MissingOrderPositionAdvertisementAccessor(_query)),
                     new ValueObjectActor<Order.AdvertisementDeleted>(_query, _advertisementDeletedBulkRepository, _equalityComparerFactory, new AdvertisementDeletedAccessor(_query)),
                     new ValueObjectActor<Order.AdvertisementMustBelongToFirm>(_query, _advertisementMustBelongToFirmBulkRepository, _equalityComparerFactory, new AdvertisementMustBelongToFirmAccessor(_query)),
                     new ValueObjectActor<Order.AdvertisementIsDummy>(_query, _advertisementIsDummyBulkRepository, _equalityComparerFactory, new AdvertisementIsDummyAccessor(_query)),
@@ -141,16 +141,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class RequiredAdvertisementMissingAccessor : IStorageBasedDataObjectAccessor<Order.RequiredAdvertisementMissing>
+        public sealed class MissingAdvertisementReferenceAccessor : IStorageBasedDataObjectAccessor<Order.MissingAdvertisementReference>
         {
             private readonly IQuery _query;
 
-            public RequiredAdvertisementMissingAccessor(IQuery query)
+            public MissingAdvertisementReferenceAccessor(IQuery query)
             {
                 _query = query;
             }
 
-            public IQueryable<Order.RequiredAdvertisementMissing> GetSource()
+            public IQueryable<Order.MissingAdvertisementReference> GetSource()
             {
                 var positionChilds = from position in _query.For<Facts::Position>()
                                      select new
@@ -168,7 +168,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        where template.IsAdvertisementRequired // РМ должен быть указан
                        join opa in _query.For<Facts::OrderPositionAdvertisement>() on new { OrderPositionId = op.Id, PositionId = p.Id } equals new { opa.OrderPositionId, opa.PositionId }
                        where opa.AdvertisementId == null // РМ не указан
-                       select new Order.RequiredAdvertisementMissing
+                       select new Order.MissingAdvertisementReference
                            {
                                OrderId = order.Id,
                                OrderPositionId = op.Id,
@@ -177,27 +177,27 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        };
             }
 
-            public FindSpecification<Order.RequiredAdvertisementMissing> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.MissingAdvertisementReference> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
                                            .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Distinct()
                                            .ToArray();
-                return new FindSpecification<Order.RequiredAdvertisementMissing>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.MissingAdvertisementReference>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class RequiredLinkedObjectCompositeMissingAccessor : IStorageBasedDataObjectAccessor<Order.RequiredLinkedObjectCompositeMissing>
+        public sealed class MissingOrderPositionAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.MissingOrderPositionAdvertisement>
         {
             private readonly IQuery _query;
 
-            public RequiredLinkedObjectCompositeMissingAccessor(IQuery query)
+            public MissingOrderPositionAdvertisementAccessor(IQuery query)
             {
                 _query = query;
             }
 
-            public IQueryable<Order.RequiredLinkedObjectCompositeMissing> GetSource()
+            public IQueryable<Order.MissingOrderPositionAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join pp in _query.For<Facts::PricePosition>() on op.PricePositionId equals pp.Id
@@ -205,8 +205,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    where !position.IsCompositionOptional // нужен хотя бы один объект привязки
                    join childPosition in _query.For<Facts::Position>() on position.ChildPositionId equals childPosition.Id
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.Id).DefaultIfEmpty()
-                   where opa == null // объект привязки отсутствует
-                   select new Order.RequiredLinkedObjectCompositeMissing
+                   where opa == null // позиция не продана
+                   select new Order.MissingOrderPositionAdvertisement
                    {
                        OrderId = order.Id,
                        OrderPositionId = op.Id,
@@ -214,14 +214,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        PositionId = childPosition.Id,
                    };
 
-            public FindSpecification<Order.RequiredLinkedObjectCompositeMissing> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.MissingOrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
                                            .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Distinct()
                                            .ToArray();
-                return new FindSpecification<Order.RequiredLinkedObjectCompositeMissing>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.MissingOrderPositionAdvertisement>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

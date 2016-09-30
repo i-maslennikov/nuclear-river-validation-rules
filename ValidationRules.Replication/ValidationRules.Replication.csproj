@@ -208,7 +208,7 @@
     <Compile Include="AdvertisementRules\Facts\PositionAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\AdvertisementTemplateAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\ProjectAccessor.cs" />
-    <Compile Include="AdvertisementRules\Validation\RequiredLinkedObjectCompositeMissing.cs" />
+    <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMayPresent.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMustPresent.cs" />
     <Compile Include="AdvertisementRules\Validation\AdvertisementElementMustPassReview.cs" />
@@ -216,7 +216,7 @@
     <Compile Include="AdvertisementRules\Validation\AdvertisementMustBelongToFirm.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
-    <Compile Include="AdvertisementRules\Validation\RequiredAdvertisementMissing.cs" />
+    <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ConsistencyRules\Facts\CategoryAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\ReleaseWithdrawalAccessor.cs" />

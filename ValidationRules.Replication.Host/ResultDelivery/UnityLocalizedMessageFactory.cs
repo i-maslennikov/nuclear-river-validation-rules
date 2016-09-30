@@ -22,10 +22,10 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 // AdvertisementRules
                 typeof(AdvertisementElementMustPassReviewMessageSerializer),
                 typeof(AdvertisementMustBelongToFirmMessageSerializer),
-                typeof(RequiredLinkedObjectCompositeMissingMessageSerializer),
+                typeof(OrderPositionAdvertisementMustBeCreatedMessageSerializer),
                 typeof(OrderMustNotContainDummyAdvertisementMessageSerializer),
                 typeof(OrderMustHaveAdvertisementMessageSerializer),
-                typeof(RequiredAdvertisementMissingMessageSerializer),
+                typeof(OrderPositionAdvertisementMustHaveAdvertisementMessageSerializer),
                 typeof(OrderPositionMustNotReferenceDeletedAdvertisementMessageSerializer),
                 typeof(WhiteListAdvertisementMustPresentMessageSerializer),
                 typeof(WhiteListAdvertisementMayPresentMessageSerializer),

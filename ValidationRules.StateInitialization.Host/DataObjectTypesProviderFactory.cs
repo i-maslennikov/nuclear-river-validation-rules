@@ -114,8 +114,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                             typeof(AdvertisementAggregates::Order),
                             typeof(AdvertisementAggregates::Order.LinkedProject),
-                            typeof(AdvertisementAggregates::Order.RequiredAdvertisementMissing),
-                            typeof(AdvertisementAggregates::Order.RequiredLinkedObjectCompositeMissing),
+                            typeof(AdvertisementAggregates::Order.MissingAdvertisementReference),
+                            typeof(AdvertisementAggregates::Order.MissingOrderPositionAdvertisement),
                             typeof(AdvertisementAggregates::Order.AdvertisementDeleted),
                             typeof(AdvertisementAggregates::Order.AdvertisementMustBelongToFirm),
                             typeof(AdvertisementAggregates::Order.AdvertisementIsDummy),

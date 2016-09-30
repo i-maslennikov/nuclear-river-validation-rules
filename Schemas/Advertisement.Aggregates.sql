@@ -3,8 +3,8 @@ go
 
 if object_id('AdvertisementAggregates.Order') is not null drop table AdvertisementAggregates.[Order]
 if object_id('AdvertisementAggregates.LinkedProject') is not null drop table AdvertisementAggregates.LinkedProject
-if object_id('AdvertisementAggregates.RequiredAdvertisementMissing') is not null drop table AdvertisementAggregates.RequiredAdvertisementMissing
-if object_id('AdvertisementAggregates.RequiredLinkedObjectCompositeMissing') is not null drop table AdvertisementAggregates.RequiredLinkedObjectCompositeMissing
+if object_id('AdvertisementAggregates.MissingAdvertisementReference') is not null drop table AdvertisementAggregates.MissingAdvertisementReference
+if object_id('AdvertisementAggregates.MissingOrderPositionAdvertisement') is not null drop table AdvertisementAggregates.MissingOrderPositionAdvertisement
 if object_id('AdvertisementAggregates.AdvertisementDeleted') is not null drop table AdvertisementAggregates.AdvertisementDeleted
 if object_id('AdvertisementAggregates.AdvertisementMustBelongToFirm') is not null drop table AdvertisementAggregates.AdvertisementMustBelongToFirm
 if object_id('AdvertisementAggregates.AdvertisementIsDummy') is not null drop table AdvertisementAggregates.AdvertisementIsDummy
@@ -43,7 +43,7 @@ create table AdvertisementAggregates.LinkedProject (
 )
 go
 
-create table AdvertisementAggregates.RequiredAdvertisementMissing (
+create table AdvertisementAggregates.MissingAdvertisementReference (
     OrderId bigint not null,
 
     OrderPositionId bigint not null,
@@ -53,7 +53,7 @@ create table AdvertisementAggregates.RequiredAdvertisementMissing (
 )
 go
 
-create table AdvertisementAggregates.RequiredLinkedObjectCompositeMissing (
+create table AdvertisementAggregates.MissingOrderPositionAdvertisement (
     OrderId bigint not null,
 
     OrderPositionId bigint not null,

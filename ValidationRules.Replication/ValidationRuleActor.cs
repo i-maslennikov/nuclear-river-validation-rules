@@ -114,10 +114,10 @@ namespace NuClear.ValidationRules.Replication
                     // AdvertisementRules
                     new AdvertisementElementMustPassReview(_query),
                     new AdvertisementMustBelongToFirm(_query),
-                    new RequiredLinkedObjectCompositeMissing(_query),
+                    new OrderPositionAdvertisementMustBeCreated(_query),
                     new OrderMustNotContainDummyAdvertisement(_query),
                     new OrderMustHaveAdvertisement(_query),
-                    new RequiredAdvertisementMissing(_query),
+                    new OrderPositionAdvertisementMustHaveAdvertisement(_query),
                     new OrderPositionMustNotReferenceDeletedAdvertisement(_query),
                     new WhiteListAdvertisementMustPresent(_query),
                     new WhiteListAdvertisementMayPresent(_query),
