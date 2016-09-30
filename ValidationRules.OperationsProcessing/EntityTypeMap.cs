@@ -8,6 +8,7 @@ using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing
@@ -75,6 +76,17 @@ namespace NuClear.ValidationRules.OperationsProcessing
                              .AddMapping<EntityTypeRuleset, PriceFacts::RulesetRule>()
                              .AddMapping<EntityTypeTheme, PriceFacts::Theme>();
 
+        private static readonly Action<EntityTypeMappingRegistryBuilder> FirmFactsTypeMap
+            = builder => builder
+                             .AddMapping<EntityTypeFirm, FirmFacts::Firm>()
+                             .AddMapping<EntityTypeFirmAddress, FirmFacts::FirmAddress>()
+                             .AddMapping<EntityTypeCategoryFirmAddress, FirmFacts::FirmAddressCategory>()
+                             .AddMapping<EntityTypeOrder, FirmFacts::Order>()
+                             .AddMapping<EntityTypeOrderPosition, FirmFacts::OrderPosition>()
+                             .AddMapping<EntityTypeOrderPositionAdvertisement, FirmFacts::OrderPositionAdvertisement>()
+                             .AddMapping<EntityTypePosition, FirmFacts::SpecialPosition>()
+                             .AddMapping<EntityTypeProject, FirmFacts::Project>();
+
         private static readonly Action<EntityTypeMappingRegistryBuilder> AdvertisementFactsTypeMap
             = builder => builder
                              .AddMapping<EntityTypeOrder, AdvertisementFacts::Order>()
@@ -129,6 +141,13 @@ namespace NuClear.ValidationRules.OperationsProcessing
             var builder = new EntityTypeMappingRegistryBuilder();
             PriceFactsTypeMap.Invoke(builder);
             return builder.Create<PriceFactsSubDomain>();
+        }
+
+        public static IEntityTypeMappingRegistry<FirmFactsSubDomain> CreateFirmFactsContext()
+        {
+            var builder = new EntityTypeMappingRegistryBuilder();
+            FirmFactsTypeMap.Invoke(builder);
+            return builder.Create<FirmFactsSubDomain>();
         }
 
         public static IEntityTypeMappingRegistry<AdvertisementFactsSubDomain> CreateAdvertisementFactsContext()

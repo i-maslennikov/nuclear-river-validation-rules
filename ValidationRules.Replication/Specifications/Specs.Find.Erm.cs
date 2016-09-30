@@ -24,6 +24,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<AssociatedPositionsGroup>(x => x.IsActive && !x.IsDeleted);
                 }
 
+                public static FindSpecification<CategoryFirmAddress> CategoryFirmAddresses()
+                {
+                    return new FindSpecification<CategoryFirmAddress>(x => x.IsActive && !x.IsDeleted);
+                }
+
                 public static FindSpecification<DeniedPosition> DeniedPositions()
                 {
                     return new FindSpecification<DeniedPosition>(x => x.IsActive && !x.IsDeleted);
@@ -37,6 +42,16 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 public static FindSpecification<Category> Categories()
                 {
                     return new FindSpecification<Category>(x => x.IsActive && !x.IsDeleted);
+                }
+
+                public static FindSpecification<Firm> Firms()
+                {
+                    return new FindSpecification<Firm>(x => x.IsActive && !x.IsDeleted);
+                }
+
+                public static FindSpecification<FirmAddress> FirmAddresses()
+                {
+                    return new FindSpecification<FirmAddress>(x => x.IsActive && !x.IsDeleted);
                 }
 
                 public static FindSpecification<Order> Orders()

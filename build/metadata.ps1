@@ -154,6 +154,8 @@ $AllSchemas = @{
 	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Account.Aggregates.sql' }
 	'Consistency.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Consistency.Facts.sql' }
 	'Consistency.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Consistency.Aggregates.sql' }
+	'Firm.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Firm.Facts.sql' }
+	'Firm.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Firm.Aggregates.sql' }
 	'Advertisement.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Advertisement.Facts.sql' }
 	'Advertisement.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Advertisement.Aggregates.sql' }
 	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'Schemas\Messages.sql' }

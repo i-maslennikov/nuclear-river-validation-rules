@@ -5,6 +5,7 @@ using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 
 namespace NuClear.ValidationRules.Storage
 {
@@ -14,6 +15,7 @@ namespace NuClear.ValidationRules.Storage
         private const string AccountFactsSchema = "AccountFacts";
         private const string AdvertisementFactsSchema = "AdvertisementFacts";
         private const string ConsistencyFactsSchema = "ConsistencyFacts";
+        private const string FirmFactsSchema = "FirmFacts";
 
         public static MappingSchema Facts
         {
@@ -23,11 +25,49 @@ namespace NuClear.ValidationRules.Storage
                 schema.GetFluentMappingBuilder()
                       .RegisterPriceFacts()
                       .RegisterAccountFacts()
-                      .RegisterAdvertisementFacts()
-                      .RegisterConsistencyFacts();
+                      .RegisterConsistencyFacts()
+                      .RegisterFirmFacts()
+                      .RegisterAdvertisementFacts();
 
                 return schema;
             }
+        }
+
+        private static FluentMappingBuilder RegisterFirmFacts(this FluentMappingBuilder builder)
+        {
+            builder.Entity<FirmFacts::Firm>()
+                  .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmFacts::FirmAddress>()
+                  .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmFacts::FirmAddressCategory>()
+                  .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmFacts::Order>()
+                  .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmFacts::OrderPosition>()
+                  .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmFacts::OrderPositionAdvertisement>()
+                  .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmFacts::SpecialPosition>()
+                  .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<FirmFacts::Project>()
+                  .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            return builder;
         }
 
         private static FluentMappingBuilder RegisterAdvertisementFacts(this FluentMappingBuilder builder)

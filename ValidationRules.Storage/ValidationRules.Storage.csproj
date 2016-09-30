@@ -238,6 +238,16 @@
     <Compile Include="Model\Erm\TimeZone.cs" />
     <Compile Include="Model\Erm\UserProfile.cs" />
     <Compile Include="Model\Erm\User.cs" />
+    <Compile Include="Model\FirmRules\Aggregates\Firm.cs" />
+    <Compile Include="Model\FirmRules\Aggregates\Order.cs" />
+    <Compile Include="Model\FirmRules\Facts\Firm.cs" />
+    <Compile Include="Model\FirmRules\Facts\FirmAddress.cs" />
+    <Compile Include="Model\FirmRules\Facts\FirmAddressCategory.cs" />
+    <Compile Include="Model\FirmRules\Facts\Order.cs" />
+    <Compile Include="Model\FirmRules\Facts\OrderPosition.cs" />
+    <Compile Include="Model\FirmRules\Facts\OrderPositionAdvertisement.cs" />
+    <Compile Include="Model\FirmRules\Facts\SpecialPosition.cs" />
+    <Compile Include="Model\FirmRules\Facts\Project.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AdvertisementAmountRestriction.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AmountControlledPosition.cs" />
     <Compile Include="Model\PriceRules\Aggregates\AssociatedPositionGroupOvercount.cs" />

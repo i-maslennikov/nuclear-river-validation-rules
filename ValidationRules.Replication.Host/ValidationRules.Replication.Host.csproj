@@ -379,6 +379,9 @@
     <Compile Include="ResultDelivery\Serializers\ConsistencyRules\LegalPersonProfileBargainShouldNotBeExpiredMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsSumShouldMatchOrderMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ConsistencyRules\BillsShouldBeCreatedMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\FirmRules\FirmWithSpecialCategoryShouldHaveSpecialPurchasesMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\FirmRules\FirmShouldHaveLimitedCategoryCountMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\FirmRules\FirmAndOrderShouldBelongTheSameOrganizationUnitMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\AdvertisementCountPerCategoryShouldBeLimitedMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\AssociatedPositionsGroupCountMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\AssociatedPositionWithoutPrincipalMessageSerializer.cs" />

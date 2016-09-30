@@ -11,6 +11,7 @@ using NuClear.Telemetry.Probing;
 using NuClear.ValidationRules.Replication.AccountRules.Validation;
 using NuClear.ValidationRules.Replication.AdvertisementRules.Validation;
 using NuClear.ValidationRules.Replication.ConsistencyRules.Validation;
+using NuClear.ValidationRules.Replication.FirmRules.Validation;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -135,7 +136,11 @@ namespace NuClear.ValidationRules.Replication
                     new OrderPositionCorrespontToInactivePosition(_query),
                     new OrderPositionShouldCorrespontToActualPrice(_query),
                     new OrderPositionsShouldCorrespontToActualPrice(_query),
-                    new SatisfiedPrincipalPositionDifferentOrder(_query)
+                    new SatisfiedPrincipalPositionDifferentOrder(_query),
+
+                    new FirmAndOrderShouldBelongTheSameOrganizationUnit(_query),
+                    new FirmShouldHaveLimitedCategoryCount(_query),
+                    new FirmWithSpecialCategoryShouldHaveSpecialPurchases(_query),
                 };
             }
         }

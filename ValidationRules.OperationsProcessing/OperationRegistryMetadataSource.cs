@@ -29,6 +29,10 @@ namespace NuClear.ValidationRules.OperationsProcessing
 
                     OperationRegistryMetadataElement
                         .Config
+                        .For<FirmFactsSubDomain>(),
+
+                    OperationRegistryMetadataElement
+                        .Config
                         .For<AdvertisementFactsSubDomain>(),
                 };
 

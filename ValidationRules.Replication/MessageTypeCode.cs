@@ -41,14 +41,18 @@
         BillsSumShouldMatchOrder = 36,
         BillsShouldBeCreated = 37,
 
-        OrderPositionAdvertisementMustHaveAdvertisement = 38,
-        OrderPositionAdvertisementMustBeCreated = 39,
-        OrderPositionMustNotReferenceDeletedAdvertisement = 40,
-        AdvertisementMustBelongToFirm = 41,
-        OrderMustNotContainDummyAdvertisement = 42,
-        OrderMustHaveAdvertisement = 43,
-        AdvertisementElementMustPassReview = 44,
-        WhiteListAdvertisementMustPresent = 45,
-        WhiteListAdvertisementMayPresent = 46,
+        FirmAndOrderShouldBelongTheSameOrganizationUnit = 38,
+        FirmShouldHaveLimitedCategoryCount = 39,
+        FirmWithSpecialCategoryShouldHaveSpecialPurchases = 40,
+
+        OrderPositionAdvertisementMustHaveAdvertisement = 41,
+        OrderPositionAdvertisementMustBeCreated = 42,
+        OrderPositionMustNotReferenceDeletedAdvertisement = 43,
+        AdvertisementMustBelongToFirm = 44,
+        OrderMustNotContainDummyAdvertisement = 45,
+        OrderMustHaveAdvertisement = 46,
+        AdvertisementElementMustPassReview = 47,
+        WhiteListAdvertisementMustPresent = 48,
+        WhiteListAdvertisementMayPresent = 49,
     }
 }
