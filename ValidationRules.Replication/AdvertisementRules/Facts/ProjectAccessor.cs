@@ -43,10 +43,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
 
             var orderIds =
                 from project in _query.For<Project>().Where(x => dataObjectIds.Contains(x.Id))
-                join order in _query.For<Order>() on project.OrganizationUnitId equals order.DestOrganizationUnitId
+                from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.Id || x.SourceOrganizationUnitId == project.Id)
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds } }.ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
         }
     }
 }

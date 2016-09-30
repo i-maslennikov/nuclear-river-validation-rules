@@ -54,7 +54,11 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
                 join order in _query.For<Order>() on op.OrderId equals order.Id
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, {typeof(Advertisement), dataObjectIds } }.ToArray();
+            var firmIds =
+                from advertisement in _query.For<Advertisement>().Where(x => dataObjectIds.Contains(x.Id))
+                select advertisement.FirmId;
+
+            return new EventCollectionHelper { { typeof(Advertisement), dataObjectIds }, { typeof(Order), orderIds.Distinct() }, {typeof(Firm), firmIds.Distinct() } }.ToArray();
         }
     }
 }
