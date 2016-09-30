@@ -10,6 +10,9 @@ using NuClear.ValidationRules.Storage.Identitites.Connections;
 using AccountAggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 
+using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
@@ -54,6 +57,18 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountFacts::Limit),
                             typeof(AccountFacts::OrderPosition),
                             typeof(AccountFacts::ReleaseWithdrawal),
+
+                            typeof(AdvertisementFacts::AdvertisementElementTemplate),
+                            typeof(AdvertisementFacts::AdvertisementElement),
+                            typeof(AdvertisementFacts::AdvertisementTemplate),
+                            typeof(AdvertisementFacts::Advertisement),
+                            typeof(AdvertisementFacts::Firm),
+                            typeof(AdvertisementFacts::Position),
+                            typeof(AdvertisementFacts::PricePosition),
+                            typeof(AdvertisementFacts::OrderPositionAdvertisement),
+                            typeof(AdvertisementFacts::OrderPosition),
+                            typeof(AdvertisementFacts::Order),
+                            typeof(AdvertisementFacts::Project),
 
                             typeof(ConsistencyFacts::Bargain),
                             typeof(ConsistencyFacts::BargainScanFile),
@@ -108,6 +123,22 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountAggregates::Lock),
                             typeof(AccountAggregates::Account),
                             typeof(AccountAggregates::AccountPeriod),
+
+                            typeof(AdvertisementAggregates::Order),
+                            typeof(AdvertisementAggregates::Order.LinkedProject),
+                            typeof(AdvertisementAggregates::Order.MissingAdvertisementReference),
+                            typeof(AdvertisementAggregates::Order.MissingOrderPositionAdvertisement),
+                            typeof(AdvertisementAggregates::Order.AdvertisementDeleted),
+                            typeof(AdvertisementAggregates::Order.AdvertisementMustBelongToFirm),
+                            typeof(AdvertisementAggregates::Order.AdvertisementIsDummy),
+                            typeof(AdvertisementAggregates::Order.OrderAdvertisement),
+                            typeof(AdvertisementAggregates::Advertisement),
+                            typeof(AdvertisementAggregates::Advertisement.RequiredElementMissing),
+                            typeof(AdvertisementAggregates::Advertisement.ElementNotPassedReview),
+                            typeof(AdvertisementAggregates::AdvertisementElementTemplate),
+                            typeof(AdvertisementAggregates::Firm),
+                            typeof(AdvertisementAggregates::Firm.WhiteListDistributionPeriod),
+                            typeof(AdvertisementAggregates::Position),
 
                             typeof(ConsistencyAggregates::Order),
                             typeof(ConsistencyAggregates::Order.BargainSignedLaterThanOrder),

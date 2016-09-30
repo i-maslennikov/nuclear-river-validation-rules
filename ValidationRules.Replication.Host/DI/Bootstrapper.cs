@@ -107,6 +107,9 @@ using ConsistencyAccessors = NuClear.ValidationRules.Replication.ConsistencyRule
 using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 using FirmAccessors = NuClear.ValidationRules.Replication.FirmRules.Facts;
 
+using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+using AdvertisementAccessors = NuClear.ValidationRules.Replication.AdvertisementRules.Facts;
+
 namespace NuClear.ValidationRules.Replication.Host.DI
 {
     public static class Bootstrapper
@@ -380,6 +383,29 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<FirmFacts::SpecialPosition, FirmAccessors::SpecialPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<FirmFacts::Project, FirmAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
 
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::Order>, AdvertisementAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::Order>, AdvertisementAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::Project>, AdvertisementAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::Project>, AdvertisementAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::OrderPosition>, AdvertisementAccessors::OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::OrderPosition>, AdvertisementAccessors::OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::OrderPositionAdvertisement>, AdvertisementAccessors::OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::OrderPositionAdvertisement>, AdvertisementAccessors::OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::PricePosition>, AdvertisementAccessors::PricePositionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::PricePosition>, AdvertisementAccessors::PricePositionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::Position>, AdvertisementAccessors::PositionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::Position>, AdvertisementAccessors::PositionAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::AdvertisementTemplate>, AdvertisementAccessors::AdvertisementTemplateAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::AdvertisementTemplate>, AdvertisementAccessors::AdvertisementTemplateAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::Advertisement>, AdvertisementAccessors::AdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::Advertisement>, AdvertisementAccessors::AdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::Firm>, AdvertisementAccessors::FirmAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::Firm>, AdvertisementAccessors::FirmAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::AdvertisementElement>, AdvertisementAccessors::AdvertisementElementAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::AdvertisementElement>, AdvertisementAccessors::AdvertisementElementAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::AdvertisementElementTemplate>, AdvertisementAccessors::AdvertisementElementTemplateAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<AdvertisementFacts::AdvertisementElementTemplate>, AdvertisementAccessors::AdvertisementElementTemplateAccessor>(entryPointSpecificLifetimeManagerFactory())
+
                 .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateActorFactory, UnityAggregateActorFactory>(entryPointSpecificLifetimeManagerFactory());
         }
@@ -423,7 +449,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                             .RegisterInstance(EntityTypeMap.CreateAccountFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateConsistencyFactsContext())
                             .RegisterInstance(EntityTypeMap.CreatePriceFactsContext())
-                            .RegisterInstance(EntityTypeMap.CreateFirmFactsContext());
+                            .RegisterInstance(EntityTypeMap.CreateFirmFactsContext())
+                            .RegisterInstance(EntityTypeMap.CreateAdvertisementFactsContext());
         }
 
         private static class Scope

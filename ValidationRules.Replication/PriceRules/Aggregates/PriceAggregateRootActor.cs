@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -35,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             _associatedPositionGroupOvercountRepository = associatedPositionGroupOvercountRepository;
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors() => new IEntityActor[0];
+        public IReadOnlyCollection<IEntityActor> GetEntityActors() => Array.Empty<IEntityActor>();
 
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]

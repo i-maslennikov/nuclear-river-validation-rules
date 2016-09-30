@@ -15,6 +15,8 @@ using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyR
 using ConsistencyActors = NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates;
 using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using FirmActors = NuClear.ValidationRules.Replication.FirmRules.Aggregates;
+using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using AdvertisementActors = NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 {
@@ -38,6 +40,12 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 
                     { typeof(FirmAggregates::Order), typeof(FirmActors::OrderAggregateRootActor) },
                     { typeof(FirmAggregates::Firm), typeof(FirmActors::FirmAggregateRootActor) },
+
+                    { typeof(AdvertisementAggregates::Advertisement), typeof(AdvertisementActors::AdvertisementAggregateRootActor) },
+                    { typeof(AdvertisementAggregates::AdvertisementElementTemplate), typeof(AdvertisementActors::AdvertisementElementTemplateAggregateRootActor) },
+                    { typeof(AdvertisementAggregates::Firm), typeof(AdvertisementActors::FirmAggregateRootActor) },
+                    { typeof(AdvertisementAggregates::Order), typeof(AdvertisementActors::OrderAggregateRootActor) },
+                    { typeof(AdvertisementAggregates::Position), typeof(AdvertisementActors::PositionAggregateRootActor) },
                 };
 
         public UnityAggregateActorFactory(IUnityContainer unityContainer)

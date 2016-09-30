@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NuClear.ValidationRules.Replication
+﻿namespace NuClear.ValidationRules.Replication
 {
     public enum MessageTypeCode
     {
@@ -50,5 +44,15 @@ namespace NuClear.ValidationRules.Replication
         FirmAndOrderShouldBelongTheSameOrganizationUnit = 38,
         FirmShouldHaveLimitedCategoryCount = 39,
         FirmWithSpecialCategoryShouldHaveSpecialPurchases = 40,
+
+        OrderPositionAdvertisementMustHaveAdvertisement = 41,
+        OrderPositionAdvertisementMustBeCreated = 42,
+        OrderPositionMustNotReferenceDeletedAdvertisement = 43,
+        AdvertisementMustBelongToFirm = 44,
+        OrderMustNotContainDummyAdvertisement = 45,
+        OrderMustHaveAdvertisement = 46,
+        AdvertisementElementMustPassReview = 47,
+        WhiteListAdvertisementMustPresent = 48,
+        WhiteListAdvertisementMayPresent = 49,
     }
 }

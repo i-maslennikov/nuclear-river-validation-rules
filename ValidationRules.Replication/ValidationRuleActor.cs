@@ -9,6 +9,7 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Telemetry.Probing;
 using NuClear.ValidationRules.Replication.AccountRules.Validation;
+using NuClear.ValidationRules.Replication.AdvertisementRules.Validation;
 using NuClear.ValidationRules.Replication.ConsistencyRules.Validation;
 using NuClear.ValidationRules.Replication.FirmRules.Validation;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
@@ -110,6 +111,17 @@ namespace NuClear.ValidationRules.Replication
                     new AccountShouldExist(_query),
                     new AccountBalanceShouldBePositive(_query),
                     new LockShouldNotExist(_query),
+
+                    // AdvertisementRules
+                    new AdvertisementElementMustPassReview(_query),
+                    new AdvertisementMustBelongToFirm(_query),
+                    new OrderPositionAdvertisementMustBeCreated(_query),
+                    new OrderMustNotContainDummyAdvertisement(_query),
+                    new OrderMustHaveAdvertisement(_query),
+                    new OrderPositionAdvertisementMustHaveAdvertisement(_query),
+                    new OrderPositionMustNotReferenceDeletedAdvertisement(_query),
+                    new WhiteListAdvertisementMustPresent(_query),
+                    new WhiteListAdvertisementMayPresent(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),

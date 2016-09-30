@@ -24,13 +24,15 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
         private readonly CommandFactory<ConsistencyFactsSubDomain> _consistencyCommandFactory;
         private readonly CommandFactory<PriceFactsSubDomain> _priceCommandFactory;
         private readonly CommandFactory<FirmFactsSubDomain> _firmCommandFactory;
+        private readonly CommandFactory<AdvertisementFactsSubDomain> _advertisementCommandFactory;
 
         public ImportFactsFromErmAccumulator(ITracer tracer,
                                              ITelemetryPublisher telemetryPublisher,
                                              CommandFactory<AccountFactsSubDomain> accountCommandFactory,
                                              CommandFactory<ConsistencyFactsSubDomain> consistencyCommandFactory,
                                              CommandFactory<PriceFactsSubDomain> priceCommandFactory,
-                                             CommandFactory<FirmFactsSubDomain> firmCommandFactory)
+                                             CommandFactory<FirmFactsSubDomain> firmCommandFactory,
+                                             CommandFactory<AdvertisementFactsSubDomain> advertisementCommandFactory)
         {
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
@@ -38,6 +40,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             _consistencyCommandFactory = consistencyCommandFactory;
             _priceCommandFactory = priceCommandFactory;
             _firmCommandFactory = firmCommandFactory;
+            _advertisementCommandFactory = advertisementCommandFactory;
         }
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase @event)
@@ -55,6 +58,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                 .Concat(_consistencyCommandFactory.CreateCommands(@event))
                 .Concat(_priceCommandFactory.CreateCommands(@event))
                 .Concat(_firmCommandFactory.CreateCommands(@event))
+                .Concat(_advertisementCommandFactory.CreateCommands(@event))
                 .ToList();
 
             commands.Add(incrementStateCommand);

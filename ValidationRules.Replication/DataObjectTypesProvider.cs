@@ -9,6 +9,7 @@ using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
 namespace NuClear.ValidationRules.Replication
 {
@@ -67,6 +68,18 @@ namespace NuClear.ValidationRules.Replication
                             typeof(FirmFacts::OrderPositionAdvertisement),
                             typeof(FirmFacts::SpecialPosition),
                             typeof(FirmFacts::Project),
+
+                            typeof(AdvertisementFacts::Order),
+                            typeof(AdvertisementFacts::Project),
+                            typeof(AdvertisementFacts::OrderPosition),
+                            typeof(AdvertisementFacts::OrderPositionAdvertisement),
+                            typeof(AdvertisementFacts::PricePosition),
+                            typeof(AdvertisementFacts::Position),
+                            typeof(AdvertisementFacts::AdvertisementTemplate),
+                            typeof(AdvertisementFacts::Advertisement),
+                            typeof(AdvertisementFacts::Firm),
+                            typeof(AdvertisementFacts::AdvertisementElement),
+                            typeof(AdvertisementFacts::AdvertisementElementTemplate),
                     };
             }
 

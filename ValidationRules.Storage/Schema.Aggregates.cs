@@ -2,6 +2,7 @@
 using LinqToDB.Mapping;
 
 using AccountAggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
+using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
@@ -12,6 +13,7 @@ namespace NuClear.ValidationRules.Storage
     {
         private const string PriceAggregatesSchema = "PriceAggregates";
         private const string AccountAggregatesSchema = "AccountAggregates";
+        private const string AdvertisementAggregatesSchema = "AdvertisementAggregates";
         private const string ConsistencyAggregatesSchema = "ConsistencyAggregates";
         private const string FirmAggregatesSchema = "FirmAggregates";
 
@@ -20,6 +22,7 @@ namespace NuClear.ValidationRules.Storage
                 .GetFluentMappingBuilder()
                 .RegisterPriceAggregates()
                 .RegisterAccountAggregates()
+                .RegisterAdvertisementAggregates()
                 .RegisterConsistencyAggregates()
                 .RegisterFirmAggregates()
                 .MappingSchema;
@@ -122,6 +125,51 @@ namespace NuClear.ValidationRules.Storage
 
             builder.Entity<AccountAggregates::AccountPeriod>()
                    .HasSchemaName(AccountAggregatesSchema);
+
+            return builder;
+        }
+
+        private static FluentMappingBuilder RegisterAdvertisementAggregates(this FluentMappingBuilder builder)
+        {
+            builder.Entity<AdvertisementAggregates::Order>()
+                  .HasSchemaName(AdvertisementAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementAggregates::Order.LinkedProject>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
+            builder.Entity<AdvertisementAggregates::Order.MissingAdvertisementReference>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
+            builder.Entity<AdvertisementAggregates::Order.MissingOrderPositionAdvertisement>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
+            builder.Entity<AdvertisementAggregates::Order.AdvertisementDeleted>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
+            builder.Entity<AdvertisementAggregates::Order.AdvertisementMustBelongToFirm>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
+            builder.Entity<AdvertisementAggregates::Order.AdvertisementIsDummy>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
+            builder.Entity<AdvertisementAggregates::Order.OrderAdvertisement>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
+
+            builder.Entity<AdvertisementAggregates::Advertisement>()
+                  .HasSchemaName(AdvertisementAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementAggregates::Advertisement.RequiredElementMissing>()
+                  .HasSchemaName(AdvertisementAggregatesSchema);
+            builder.Entity<AdvertisementAggregates::Advertisement.ElementNotPassedReview>()
+                  .HasSchemaName(AdvertisementAggregatesSchema);
+
+            builder.Entity<AdvertisementAggregates::AdvertisementElementTemplate>()
+                  .HasSchemaName(AdvertisementAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<AdvertisementAggregates::Firm>()
+                  .HasSchemaName(AdvertisementAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementAggregates::Firm.WhiteListDistributionPeriod>()
+                  .HasSchemaName(AdvertisementAggregatesSchema);
+
+            builder.Entity<AdvertisementAggregates::Position>()
+                  .HasSchemaName(AdvertisementAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
 
             return builder;
         }

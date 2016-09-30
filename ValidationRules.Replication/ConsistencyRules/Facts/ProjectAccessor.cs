@@ -8,6 +8,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
@@ -24,8 +25,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
         }
 
         public IQueryable<Project> GetSource()
-            => _query.For<Erm::Project>()
-                     .Where(x => x.IsActive && x.OrganizationUnitId.HasValue)
+            => _query.For(Specs.Find.Erm.Projects())
                      .Select(x => new Project
                          {
                              Id = x.Id,

@@ -3,6 +3,7 @@ using LinqToDB.Mapping;
 
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 
@@ -12,6 +13,7 @@ namespace NuClear.ValidationRules.Storage
     {
         private const string PriceFactsSchema = "PriceFacts";
         private const string AccountFactsSchema = "AccountFacts";
+        private const string AdvertisementFactsSchema = "AdvertisementFacts";
         private const string ConsistencyFactsSchema = "ConsistencyFacts";
         private const string FirmFactsSchema = "FirmFacts";
 
@@ -24,7 +26,8 @@ namespace NuClear.ValidationRules.Storage
                       .RegisterPriceFacts()
                       .RegisterAccountFacts()
                       .RegisterConsistencyFacts()
-                      .RegisterFirmFacts();
+                      .RegisterFirmFacts()
+                      .RegisterAdvertisementFacts();
 
                 return schema;
             }
@@ -62,6 +65,45 @@ namespace NuClear.ValidationRules.Storage
 
             builder.Entity<FirmFacts::Project>()
                   .HasSchemaName(FirmFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            return builder;
+        }
+
+        private static FluentMappingBuilder RegisterAdvertisementFacts(this FluentMappingBuilder builder)
+        {
+            builder.Entity<AdvertisementFacts::AdvertisementElementTemplate>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::AdvertisementElement>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::AdvertisementTemplate>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::Position>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::PricePosition>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::OrderPositionAdvertisement>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::OrderPosition>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::Order>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::Project>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::Advertisement>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::Firm>()
+                  .HasSchemaName(AdvertisementFactsSchema)
                   .HasPrimaryKey(x => x.Id);
 
             return builder;

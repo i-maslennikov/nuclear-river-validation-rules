@@ -109,6 +109,20 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<Account>(x => !x.IsArchived);
                 }
 
+                public static FindSpecification<AdvertisementTemplate> AdvertisementTemplates()
+                {
+                    return new FindSpecification<AdvertisementTemplate>(x => !x.IsDeleted && x.IsPublished && x.DummyAdvertisementId != null);
+                }
+
+                public static FindSpecification<AdvertisementElement> AdvertisementElements()
+                {
+                    return new FindSpecification<AdvertisementElement>(x => !x.IsDeleted);
+                }
+                public static FindSpecification<AdvertisementElementTemplate> AdvertisementElementTemplates()
+                {
+                    return new FindSpecification<AdvertisementElementTemplate>(x => !x.IsDeleted);
+                }
+
                 public static FindSpecification<Lock> Locks()
                 {
                     return new FindSpecification<Lock>(x => x.IsActive && !x.IsDeleted);
@@ -124,9 +138,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<ReleaseWithdrawal>(x => true);
                 }
 
-                public static FindSpecification<Storage.Model.Erm.User> Users()
+                public static FindSpecification<User> Users()
                 {
-                    return new FindSpecification<Storage.Model.Erm.User>(x => x.IsActive && !x.IsDeleted && !x.IsServiceUser);
+                    return new FindSpecification<User>(x => x.IsActive && !x.IsDeleted && !x.IsServiceUser);
                 }
 
                 public static FindSpecification<UserProfile> UserProfiles()

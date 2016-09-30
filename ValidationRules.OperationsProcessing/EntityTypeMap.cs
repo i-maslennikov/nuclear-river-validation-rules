@@ -9,6 +9,7 @@ using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -72,7 +73,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                              .AddMapping<EntityTypePricePosition, PriceFacts::PricePosition>()
                              //.AddMapping<EntityTypePricePositionNotActive, PriceFacts::PricePositionNotActive>()
                              .AddMapping<EntityTypeProject, PriceFacts::Project>()
-                             .AddMapping<EntityTypeRulesetRule, PriceFacts::RulesetRule>()
+                             .AddMapping<EntityTypeRuleset, PriceFacts::RulesetRule>()
                              .AddMapping<EntityTypeTheme, PriceFacts::Theme>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> FirmFactsTypeMap
@@ -85,6 +86,21 @@ namespace NuClear.ValidationRules.OperationsProcessing
                              .AddMapping<EntityTypeOrderPositionAdvertisement, FirmFacts::OrderPositionAdvertisement>()
                              .AddMapping<EntityTypePosition, FirmFacts::SpecialPosition>()
                              .AddMapping<EntityTypeProject, FirmFacts::Project>();
+
+        private static readonly Action<EntityTypeMappingRegistryBuilder> AdvertisementFactsTypeMap
+            = builder => builder
+                             .AddMapping<EntityTypeOrder, AdvertisementFacts::Order>()
+                             .AddMapping<EntityTypeProject, AdvertisementFacts::Project>()
+                             .AddMapping<EntityTypeOrderPosition, AdvertisementFacts::OrderPosition>()
+                             .AddMapping<EntityTypeOrderPositionAdvertisement, AdvertisementFacts::OrderPositionAdvertisement>()
+                             .AddMapping<EntityTypePricePosition, AdvertisementFacts::PricePosition>()
+                             .AddMapping<EntityTypePosition, AdvertisementFacts::Position>()
+                             .AddMapping<EntityTypeAdvertisementTemplate, AdvertisementFacts::AdvertisementTemplate>()
+                             .AddMapping<EntityTypeAdvertisement, AdvertisementFacts::Advertisement>()
+                             .AddMapping<EntityTypeFirm, AdvertisementFacts::Firm>()
+                             .AddMapping<EntityTypeAdvertisementElement, AdvertisementFacts::AdvertisementElement>()
+                             .AddMapping<EntityTypeAdvertisementElementTemplate, AdvertisementFacts::AdvertisementElementTemplate>();
+
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap
             = builder => builder
@@ -132,6 +148,13 @@ namespace NuClear.ValidationRules.OperationsProcessing
             var builder = new EntityTypeMappingRegistryBuilder();
             FirmFactsTypeMap.Invoke(builder);
             return builder.Create<FirmFactsSubDomain>();
+        }
+
+        public static IEntityTypeMappingRegistry<AdvertisementFactsSubDomain> CreateAdvertisementFactsContext()
+        {
+            var builder = new EntityTypeMappingRegistryBuilder();
+            AdvertisementFactsTypeMap.Invoke(builder);
+            return builder.Create<AdvertisementFactsSubDomain>();
         }
 
         public static IEntityTypeMappingRegistry<AggregateSubDomain> CreateAggregateContext()
