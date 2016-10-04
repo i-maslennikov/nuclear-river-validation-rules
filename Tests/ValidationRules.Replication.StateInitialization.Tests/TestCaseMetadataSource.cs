@@ -56,6 +56,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
         private static readonly AssertMetadataElement AssertOnlyMentionedTypes =
             AssertMetadataElement.Config
-                                 .Filter((type, context) => context.Keys.Contains(type));
+                                 .Filter((type, context) => context.Keys.Contains(type) || type == typeof(ValidationRules.Storage.Model.Messages.Version.ValidationResult));
     }
 }
