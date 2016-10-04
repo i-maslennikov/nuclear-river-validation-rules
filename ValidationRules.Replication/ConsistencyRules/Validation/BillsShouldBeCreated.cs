@@ -9,7 +9,7 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 {
     /// <summary>
-    /// Для заказов, у которых период размещения не совпадает с датами в счетах на оплату, должна выводиться ошибка
+    /// Для заказов, с ненулевой с суммой заказа, должна выводиться ошибка
     /// "Для заказа необходимо сформировать счета"
     /// 
     /// Source: BillsSumsOrderValidationRule

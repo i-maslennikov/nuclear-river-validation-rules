@@ -124,6 +124,7 @@
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
     <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Identitites\Connections\MessagesTestConnectionStringIdentity.cs" />
+    <Compile Include="Price\OrderPositionsShouldCorrespontToActualPrice.cs" />
     <Compile Include="ContextName.cs" />
     <Compile Include="Identitites\Connections\AggregatesTestConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\ErmTestConnectionStringIdentity.cs" />
