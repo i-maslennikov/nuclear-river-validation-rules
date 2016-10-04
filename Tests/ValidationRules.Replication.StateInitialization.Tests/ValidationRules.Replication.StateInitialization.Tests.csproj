@@ -107,22 +107,30 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="Advertisement\WhiteListAdvertisementMustPresent.cs" />
+    <Compile Include="Advertisement\AdvertisementMustBelongToFirm.cs" />
+    <Compile Include="Advertisement\AdvertisementElementMustPassReview.cs" />
+    <Compile Include="Advertisement\OrderMustHaveAdvertisement.cs" />
+    <Compile Include="Advertisement\OrderMustNotContainDummyAdvertisement.cs" />
+    <Compile Include="Advertisement\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
+    <Compile Include="Advertisement\OrderPositionAdvertisementMustBeCreated.cs" />
+    <Compile Include="Advertisement\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="ArrangeMetadataElementBuilderExtensions.cs" />
     <Compile Include="BulkReplicationAdapter.cs" />
     <Compile Include="ConnectionStringName.cs" />
-    <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
-    <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
-    <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
-    <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
-    <Compile Include="Identitites\Connections\MessagesTestConnectionStringIdentity.cs" />
-    <Compile Include="Price\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
+    <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
+    <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
+    <Compile Include="Identitites\Connections\MessagesTestConnectionStringIdentity.cs" />
     <Compile Include="ContextName.cs" />
     <Compile Include="Identitites\Connections\AggregatesTestConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\ErmTestConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\FactsTestConnectionStringIdentity.cs" />
     <Compile Include="Keys.cs" />
     <Compile Include="MappedConnectionStringSettings.cs" />
+    <Compile Include="Price\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunnerConnectionStringSettings.cs" />
     <Compile Include="SchemaMetadataSource.cs" />
@@ -155,6 +163,7 @@
       <Name>ValidationRules.Storage</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
