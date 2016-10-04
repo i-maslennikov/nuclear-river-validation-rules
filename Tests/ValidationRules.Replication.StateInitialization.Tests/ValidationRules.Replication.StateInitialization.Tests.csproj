@@ -116,14 +116,13 @@
     <Compile Include="Advertisement\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="Advertisement\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="Advertisement\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
-    <Compile Include="Advertisement\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="ArrangeMetadataElementBuilderExtensions.cs" />
     <Compile Include="BulkReplicationAdapter.cs" />
     <Compile Include="ConnectionStringName.cs" />
     <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
-    <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
-    <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
+    <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
+    <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Identitites\Connections\MessagesTestConnectionStringIdentity.cs" />
     <Compile Include="ContextName.cs" />
     <Compile Include="Identitites\Connections\AggregatesTestConnectionStringIdentity.cs" />
@@ -137,10 +136,6 @@
     <Compile Include="SchemaMetadataSource.cs" />
     <Compile Include="TestCaseMetadataSource.cs" />
     <Compile Include="TestCaseMetadataSource.Facts.cs" />
-    <Compile Include="TestCaseMetadataSource.Order.cs" />
-    <Compile Include="TestCaseMetadataSource.Period.cs" />
-    <Compile Include="TestCaseMetadataSource.Position.cs" />
-    <Compile Include="TestCaseMetadataSource.Price.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -164,6 +159,7 @@
       <Name>ValidationRules.Storage</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

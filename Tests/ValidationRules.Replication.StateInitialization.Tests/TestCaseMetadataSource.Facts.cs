@@ -6,6 +6,7 @@ using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -16,6 +17,67 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static readonly DateTime LastSecondJan = DateTime.Parse("2012-01-31T23:59:59");
         private static readonly DateTime LastSecondMar = DateTime.Parse("2012-03-31T23:59:59");
         private static readonly DateTime LastSecondApr = DateTime.Parse("2012-04-30T23:59:59");
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement AdvertisementFacts
+        => ArrangeMetadataElement.Config
+            .Name(nameof(AdvertisementFacts))
+            .Erm(
+                new Erm::Advertisement { Id = 1, IsDeleted = false, Name = "Advertisement1" },
+                new Erm::Advertisement { Id = 2, IsDeleted = true, Name = "Advertisement2" })
+            .Fact(
+                new AdvertisementFacts::Advertisement { Id = 1, IsDeleted = false, Name = "Advertisement1" },
+                new AdvertisementFacts::Advertisement { Id = 2, IsDeleted = true, Name = "Advertisement2" });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement AdvertisementTemplateFacts
+        => ArrangeMetadataElement.Config
+            .Name(nameof(AdvertisementTemplateFacts))
+            .Erm(
+                new Erm::AdvertisementTemplate { Id = 1, IsDeleted = false, IsPublished = true, DummyAdvertisementId = 1 },
+                new Erm::AdvertisementTemplate { Id = 2, IsDeleted = true },
+                new Erm::AdvertisementTemplate { Id = 3, IsPublished = false },
+                new Erm::AdvertisementTemplate { Id = 4, DummyAdvertisementId = null})
+            .Fact(
+                new AdvertisementFacts::AdvertisementTemplate { Id = 1, DummyAdvertisementId = 1 });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement AdvertisementElementFacts
+        => ArrangeMetadataElement.Config
+            .Name(nameof(AdvertisementElementFacts))
+            .Erm(
+                new Erm::AdvertisementElement { Id = 1, IsDeleted = false },
+                new Erm::AdvertisementElementStatus { Id = 1, Status = 1 },
+
+                new Erm::AdvertisementElement { Id = 2, IsDeleted = false },
+
+                new Erm::AdvertisementElement { Id = 3, IsDeleted = true },
+                new Erm::AdvertisementElementStatus { Id = 3, Status = 3 })
+            .Fact(
+                new AdvertisementFacts::AdvertisementElement { Id = 1, IsEmpty = true, Status = 1 });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement AdvertisementElementTemplateFacts
+        => ArrangeMetadataElement.Config
+            .Name(nameof(AdvertisementElementTemplateFacts))
+            .Erm(
+                new Erm::AdvertisementElementTemplate { Id = 1, Name = "AdvertisementElementTemplate1", IsDeleted = false },
+                new Erm::AdvertisementElementTemplate { Id = 2, IsDeleted = true })
+            .Fact(
+                new AdvertisementFacts::AdvertisementElementTemplate { Id = 1, Name = "AdvertisementElementTemplate1" });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement PositionChildFacts
+        => ArrangeMetadataElement.Config
+            .Name(nameof(PositionChildFacts))
+            .Erm(
+                new Erm::Position { Id = 1 },
+                new Erm::PositionChild {MasterPositionId = 1, ChildPositionId = 1 },
+
+                new Erm::Position { Id = 2 })
+            .Fact(
+                new AdvertisementFacts::Position { Id = 1, ChildPositionId = 1},
+                new AdvertisementFacts::Position { Id = 2, ChildPositionId = null });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmFacts
