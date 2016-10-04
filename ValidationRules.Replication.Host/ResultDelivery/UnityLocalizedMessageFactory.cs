@@ -9,6 +9,7 @@ using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.Advert
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ConsistencyRules;
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules;
 using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.FirmRules;
+using NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ThemeRules;
 
 namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
 {
@@ -69,6 +70,12 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 typeof(FirmAndOrderShouldBelongTheSameOrganizationUnitMessageSerializer),
                 typeof(FirmShouldHaveLimitedCategoryCountMessageSerializer),
                 typeof(FirmWithSpecialCategoryShouldHaveSpecialPurchasesMessageSerializer),
+
+                // ThemeRules
+                typeof(ThemeCategoryShouldBeValidMessageSerializer),
+                typeof(ThemePeriodShouldBeValidMessageSerializer),
+                typeof(DefaultThemeMustHaveOnlySelfAdsMessageSerializer),
+                typeof(DefaultThemeMustBeSpecifiedMessageSerializer),
             };
 
         private readonly Dictionary<MessageTypeCode, IMessageSerializer> _serializers;

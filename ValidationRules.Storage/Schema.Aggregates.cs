@@ -7,6 +7,7 @@ using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggrega
 using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using ThemeAggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
 
 namespace NuClear.ValidationRules.Storage
@@ -19,6 +20,7 @@ namespace NuClear.ValidationRules.Storage
         private const string AdvertisementAggregatesSchema = "AdvertisementAggregates";
         private const string ConsistencyAggregatesSchema = "ConsistencyAggregates";
         private const string FirmAggregatesSchema = "FirmAggregates";
+        private const string ThemeAggregatesSchema = "ThemeAggregates";
 
         public static MappingSchema Aggregates
             => new MappingSchema(nameof(Aggregates), new SqlServerMappingSchema())
@@ -29,7 +31,34 @@ namespace NuClear.ValidationRules.Storage
                 .RegisterAdvertisementAggregates()
                 .RegisterConsistencyAggregates()
                 .RegisterFirmAggregates()
+                .RegisterThemeAggregates()
                 .MappingSchema;
+
+        private static FluentMappingBuilder RegisterThemeAggregates(this FluentMappingBuilder builder)
+        {
+            builder.Entity<ThemeAggregates::Theme>()
+                   .HasSchemaName(ThemeAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+            builder.Entity<ThemeAggregates::Theme.InvalidCategory>()
+                   .HasSchemaName(ThemeAggregatesSchema);
+
+            builder.Entity<ThemeAggregates::Order>()
+                   .HasSchemaName(ThemeAggregatesSchema);
+            builder.Entity<ThemeAggregates::Order.OrderTheme>()
+                   .HasSchemaName(ThemeAggregatesSchema);
+
+            builder.Entity<ThemeAggregates::Project>()
+                   .HasSchemaName(ThemeAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+            builder.Entity<ThemeAggregates::Project.ProjectTheme>()
+                   .HasSchemaName(ThemeAggregatesSchema);
+
+            builder.Entity<ThemeAggregates::Category>()
+                   .HasSchemaName(ThemeAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            return builder;
+        }
 
         private static FluentMappingBuilder RegisterFirmAggregates(this FluentMappingBuilder builder)
         {

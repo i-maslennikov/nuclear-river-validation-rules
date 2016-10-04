@@ -60,5 +60,10 @@
         OrderMustNotIncludeReleasedPeriod = 52,
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
         FirmAddressMustBeLocatedOnTheMap = 54,
+
+        ThemeCategoryShouldBeValid = 55,
+        ThemePeriodShouldBeValid = 56,
+        DefaultThemeMustHaveOnlySelfAds = 57,
+        DefaultThemeMustBeSpecified = 58,
     }
 }

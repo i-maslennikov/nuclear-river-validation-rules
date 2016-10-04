@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts
         public int WorkflowStepId { get; set; }
     }
 
-    // вспомогательный, служит для преобразования DestOrganizationUnitId->ProjectId
+    // вспомогательный, служит для преобразования OrganizationUnitId->ProjectId
     public sealed class Project
     {
         public long Id { get; set; }

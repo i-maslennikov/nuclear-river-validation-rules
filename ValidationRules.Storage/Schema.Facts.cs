@@ -7,6 +7,7 @@ using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+using ThemeFacts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
 
 namespace NuClear.ValidationRules.Storage
 {
@@ -18,6 +19,7 @@ namespace NuClear.ValidationRules.Storage
         private const string AdvertisementFactsSchema = "AdvertisementFacts";
         private const string ConsistencyFactsSchema = "ConsistencyFacts";
         private const string FirmFactsSchema = "FirmFacts";
+        private const string ThemeFactsSchema = "ThemeFacts";
 
         public static MappingSchema Facts
         {
@@ -30,10 +32,48 @@ namespace NuClear.ValidationRules.Storage
                       .RegisterAccountFacts()
                       .RegisterConsistencyFacts()
                       .RegisterFirmFacts()
-                      .RegisterAdvertisementFacts();
+                      .RegisterAdvertisementFacts()
+                      .RegisterThemeFacts();
 
                 return schema;
             }
+        }
+
+        private static FluentMappingBuilder RegisterThemeFacts(this FluentMappingBuilder builder)
+        {
+            builder.Entity<ThemeFacts::Theme>()
+                  .HasSchemaName(ThemeFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ThemeFacts::ThemeCategory>()
+                  .HasSchemaName(ThemeFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ThemeFacts::ThemeOrganizationUnit>()
+                  .HasSchemaName(ThemeFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ThemeFacts::Category>()
+                  .HasSchemaName(ThemeFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ThemeFacts::Order>()
+                  .HasSchemaName(ThemeFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ThemeFacts::OrderPosition>()
+                  .HasSchemaName(ThemeFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ThemeFacts::OrderPositionAdvertisement>()
+                  .HasSchemaName(ThemeFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ThemeFacts::Project>()
+                  .HasSchemaName(ThemeFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            return builder;
         }
 
         private static FluentMappingBuilder RegisterFirmFacts(this FluentMappingBuilder builder)
