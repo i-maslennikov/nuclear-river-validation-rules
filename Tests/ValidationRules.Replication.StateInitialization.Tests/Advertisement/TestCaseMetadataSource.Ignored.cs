@@ -24,6 +24,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::Firm(),
                 new Erm::Order(),
                 new Erm::OrderPosition(),
+                new Erm::PositionChild(),
                 new Erm::OrderPositionAdvertisement(),
                 new Erm::Position(),
                 new Erm::PricePosition(),
