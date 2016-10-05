@@ -107,6 +107,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\LockShouldNotExist.cs" />
+    <Compile Include="Account\AccountShouldExist.cs" />
+    <Compile Include="Account\AccountBalanceShouldBePositive.cs" />
     <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Advertisement\WhiteListAdvertisementMustPresent.cs" />
     <Compile Include="Advertisement\AdvertisementMustBelongToFirm.cs" />
