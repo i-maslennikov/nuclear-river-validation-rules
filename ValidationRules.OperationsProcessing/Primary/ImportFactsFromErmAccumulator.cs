@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
@@ -11,8 +12,11 @@ using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
+using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Primary
 {
@@ -26,6 +30,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
         private readonly CommandFactory<FirmFactsSubDomain> _firmCommandFactory;
         private readonly CommandFactory<AdvertisementFactsSubDomain> _advertisementCommandFactory;
         private readonly CommandFactory<ProjectFactsSubDomain> _projectCommandFactory;
+        private readonly UglyHackCommandFactory _uglyHackCommandFactory;
 
         public ImportFactsFromErmAccumulator(ITracer tracer,
                                              ITelemetryPublisher telemetryPublisher,
@@ -33,8 +38,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                                              CommandFactory<ConsistencyFactsSubDomain> consistencyCommandFactory,
                                              CommandFactory<PriceFactsSubDomain> priceCommandFactory,
                                              CommandFactory<FirmFactsSubDomain> firmCommandFactory,
-                                             CommandFactory<AdvertisementFactsSubDomain> advertisementCommandFactory, 
-                                             CommandFactory<ProjectFactsSubDomain> projectCommandFactory)
+                                             CommandFactory<AdvertisementFactsSubDomain> advertisementCommandFactory,
+                                             CommandFactory<ProjectFactsSubDomain> projectCommandFactory,
+                                             UglyHackCommandFactory uglyHackCommandFactory)
         {
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
@@ -44,6 +50,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             _firmCommandFactory = firmCommandFactory;
             _advertisementCommandFactory = advertisementCommandFactory;
             _projectCommandFactory = projectCommandFactory;
+            _uglyHackCommandFactory = uglyHackCommandFactory;
         }
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase @event)
@@ -63,6 +70,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                 .Concat(_firmCommandFactory.CreateCommands(@event))
                 .Concat(_advertisementCommandFactory.CreateCommands(@event))
                 .Concat(_projectCommandFactory.CreateCommands(@event))
+                .Concat(_uglyHackCommandFactory.CreateCommands(@event))
                 .ToList();
 
             commands.Add(incrementStateCommand);
@@ -93,6 +101,31 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             {
                 var changes = _useCaseFiltrator.Filter(@event);
                 return changes.SelectMany(x => x.Value.Select(y => (ICommand)new SyncDataObjectCommand(_registry.GetEntityType(x.Key), y)));
+            }
+        }
+
+        public class UglyHackCommandFactory
+        {
+            public IEnumerable<ICommand> CreateCommands(TrackedUseCase @event)
+            {
+                var changes = @event.Operations.SelectMany(x => x.AffectedEntities.Changes)
+                                    .SelectMany(x => x.Value.Keys.Select(id => Tuple.Create(x.Key, id)))
+                                    .ToArray();
+
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypePosition.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(PricePositionNotActive), change.Item2);
+                }
+
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeOrderPosition.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(OrderPositionCostPerClick), change.Item2);
+                }
+
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeProject.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(CostPerClickCategoryRestriction), change.Item2);
+                }
             }
         }
     }
