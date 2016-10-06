@@ -31,31 +31,32 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              from opa in query.For<Order.CategoryAdvertisement>().Where(x => x.OrderId == order.Id)
-                              from binding in query.For<Project.Category>().Where(x => x.ProjectId == order.ProjectId && x.CategoryId == opa.CategoryId).DefaultIfEmpty()
-                              from position in query.For<Position>().Where(x => x.Id == opa.PositionId)
-                              from category in query.For<Category>().Where(x => x.Id == opa.CategoryId)
-                              where binding == null
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("number", order.Number)),
-                                              new XElement("orderPosition",
-                                                  new XAttribute("id", opa.OrderPositionId),
-                                                  new XAttribute("name", position.Name)),
-                                              new XElement("category",
-                                                  new XAttribute("id", category.Id),
-                                                  new XAttribute("name", category.Name)))),
-                                      PeriodStart = order.Begin,
-                                      PeriodEnd = order.End,
-                                      ProjectId = order.ProjectId,
+            var ruleResults =
+                from order in query.For<Order>()
+                from opa in query.For<Order.CategoryAdvertisement>().Where(x => x.OrderId == order.Id)
+                from position in query.For<Position>().Where(x => x.Id == opa.PositionId)
+                from category in query.For<Category>().Where(x => x.Id == opa.CategoryId)
+                let categoryBindedToProject = query.For<Project.Category>().Any(x => x.ProjectId == order.ProjectId && x.CategoryId == opa.CategoryId)
+                where !categoryBindedToProject
+                select new Version.ValidationResult
+                    {
+                        MessageParams = new XDocument(
+                            new XElement("root",
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)),
+                                new XElement("orderPosition",
+                                    new XAttribute("id", opa.OrderPositionId),
+                                    new XAttribute("name", position.Name)),
+                                new XElement("category",
+                                    new XAttribute("id", category.Id),
+                                    new XAttribute("name", category.Name)))),
+                        PeriodStart = order.Begin,
+                        PeriodEnd = order.End,
+                        ProjectId = order.ProjectId,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

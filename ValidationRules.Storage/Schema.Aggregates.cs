@@ -117,13 +117,44 @@ namespace NuClear.ValidationRules.Storage
 
         private static FluentMappingBuilder RegisterProjectAggregates(this FluentMappingBuilder builder)
         {
-            builder.Entity<ProjectAggregates::Firm>()
+            builder.Entity<ProjectAggregates::Category>()
+                   .HasSchemaName(ProjectAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectAggregates::FirmAddress>()
                    .HasSchemaName(ProjectAggregatesSchema)
                    .HasPrimaryKey(x => x.Id);
 
             builder.Entity<ProjectAggregates::Order>()
                    .HasSchemaName(ProjectAggregatesSchema)
                    .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectAggregates::Order.AddressAdvertisement>()
+                   .HasSchemaName(ProjectAggregatesSchema);
+
+            builder.Entity<ProjectAggregates::Order.CategoryAdvertisement>()
+                   .HasSchemaName(ProjectAggregatesSchema);
+
+            builder.Entity<ProjectAggregates::Order.CostPerClickAdvertisement>()
+                   .HasSchemaName(ProjectAggregatesSchema);
+
+            builder.Entity<ProjectAggregates::Position>()
+                   .HasSchemaName(ProjectAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectAggregates::Project>()
+                   .HasSchemaName(ProjectAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectAggregates::Project.Category>()
+                   .HasSchemaName(ProjectAggregatesSchema)
+                   .HasTableName("ProjectCategory");
+
+            builder.Entity<ProjectAggregates::Project.CostPerClickRestriction>()
+                   .HasSchemaName(ProjectAggregatesSchema);
+
+            builder.Entity<ProjectAggregates::Project.NextRelease>()
+                   .HasSchemaName(ProjectAggregatesSchema);
 
             return builder;
         }

@@ -11,11 +11,13 @@ namespace NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates
         public DateTime End { get; set; }
         public bool IsDraft { get; set; }
 
-        public class CostPerClickAdvertisement
+        public sealed class AddressAdvertisement
         {
             public long OrderId { get; set; }
-            public long CategoryId { get; set; }
-            public decimal Bid { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PositionId { get; set; }
+            public long AddressId { get; set; }
+            public bool MustBeLocatedOnTheMap { get; set; } // ?
         }
 
         public class CategoryAdvertisement
@@ -26,13 +28,13 @@ namespace NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates
             public long CategoryId { get; set; }
         }
 
-        public sealed class AddressAdvertisement
+        public class CostPerClickAdvertisement
         {
             public long OrderId { get; set; }
             public long OrderPositionId { get; set; }
             public long PositionId { get; set; }
-            public long AddressId { get; set; }
-            public bool MustBeLocatedOnTheMap { get; set; }
+            public long CategoryId { get; set; }
+            public decimal Bid { get; set; }
         }
     }
 }

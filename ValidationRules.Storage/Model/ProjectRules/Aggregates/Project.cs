@@ -7,23 +7,25 @@ namespace NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates
         public long Id { get; set; }
         public string Name { get; set; }
 
-        public sealed class MinimumCostPerClick
+        public class Category
         {
             public long ProjectId { get; set; }
             public long CategoryId { get; set; }
-            public decimal Restriction { get; set; }
+        }
+
+        public sealed class CostPerClickRestriction
+        {
+            public long ProjectId { get; set; }
+            public long CategoryId { get; set; }
+            public decimal Minimum { get; set; }
+            public DateTime Begin { get; set; }
+            public DateTime End { get; set; }
         }
 
         public sealed class NextRelease
         {
             public long ProjectId { get; set; }
             public DateTime Date { get; set; }
-        }
-
-        public class Category
-        {
-            public long ProjectId { get; set; }
-            public long CategoryId { get; set; }
         }
     }
 }

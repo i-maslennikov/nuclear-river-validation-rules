@@ -37,6 +37,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                     { typeof(Storage.Model.AdvertisementRules.Facts.Firm), typeof(Storage.Model.AdvertisementRules.Aggregates.Firm) },
                     { typeof(Storage.Model.AdvertisementRules.Facts.Order), typeof(Storage.Model.AdvertisementRules.Aggregates.Order) },
                     { typeof(Storage.Model.AdvertisementRules.Facts.Position), typeof(Storage.Model.AdvertisementRules.Aggregates.Position) },
+
+                    { typeof(Storage.Model.ProjectRules.Facts.Project), typeof(Storage.Model.ProjectRules.Aggregates.Project) },
+                    { typeof(Storage.Model.ProjectRules.Facts.FirmAddress), typeof(Storage.Model.ProjectRules.Aggregates.FirmAddress) },
+                    { typeof(Storage.Model.ProjectRules.Facts.Order), typeof(Storage.Model.ProjectRules.Aggregates.Order) },
+                    { typeof(Storage.Model.ProjectRules.Facts.Position), typeof(Storage.Model.ProjectRules.Aggregates.Position) },
+                    { typeof(Storage.Model.ProjectRules.Facts.Category), typeof(Storage.Model.ProjectRules.Aggregates.Category) },
                 };
 
         protected override AggregatableMessage<ICommand> Process(EventMessage message)

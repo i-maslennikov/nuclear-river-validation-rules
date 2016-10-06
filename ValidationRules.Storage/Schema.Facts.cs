@@ -167,13 +167,51 @@ namespace NuClear.ValidationRules.Storage
 
         private static FluentMappingBuilder RegisterProjectFacts(this FluentMappingBuilder builder)
         {
-            builder.Entity<ProjectFacts::Firm>()
-                  .HasSchemaName(ProjectFactsSchema)
-                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<ProjectFacts::Category>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::CategoryOrganizationUnit>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::CostPerClickCategoryRestriction>()
+                .HasSchemaName(ProjectFactsSchema);
+
+            builder.Entity<ProjectFacts::FirmAddress>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
 
             builder.Entity<ProjectFacts::Order>()
-                  .HasSchemaName(ProjectFactsSchema)
-                  .HasPrimaryKey(x => x.Id);
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::OrderPosition>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::OrderPositionAdvertisement>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::OrderPositionCostPerClick>()
+                .HasSchemaName(ProjectFactsSchema);
+
+            builder.Entity<ProjectFacts::Position>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::PricePosition>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::Project>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::ReleaseInfo>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
 
             return builder;
         }

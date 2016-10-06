@@ -32,6 +32,8 @@
         public const int AdvertisementElement = 187;
         public const int AdvertisementTemplate = 184;
         public const int AdvertisementElementTemplate = 185;
+        public const int CategoryOrganizationUnit = 161;
+        public const int ReleaseInfo = 203;
 
         // Значения, первоисточником которых является VR
         public const int Period = 10101;

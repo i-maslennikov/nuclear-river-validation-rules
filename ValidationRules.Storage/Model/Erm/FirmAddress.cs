@@ -8,5 +8,6 @@
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public string Address { get; set; }
+        public bool IsLocatedOnTheMap { get; set; }
     }
 }

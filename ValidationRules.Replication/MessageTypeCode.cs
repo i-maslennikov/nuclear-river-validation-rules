@@ -54,5 +54,11 @@
         AdvertisementElementMustPassReview = 47,
         WhiteListAdvertisementMustPresent = 48,
         WhiteListAdvertisementMayPresent = 49,
+
+        ProjectMustContainCostPerClickMinimumRestriction = 50,
+        OrderMustUseCategoriesOnlyAvailableInProject = 51,
+        OrderMustNotIncludeReleasedPeriod = 52,
+        OrderPositionCostPerClickMustNotBeLessMinimum = 53,
+        OrderAdvertisementAddressMustBeLocatedOnTheMap = 54,
     }
 }

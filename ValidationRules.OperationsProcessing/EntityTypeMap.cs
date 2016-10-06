@@ -10,6 +10,7 @@ using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -33,74 +34,88 @@ namespace NuClear.ValidationRules.OperationsProcessing
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AccountFactsTypeMap
             = builder => builder
-                             .AddMapping<EntityTypeAccount, AccountFacts::Account>()
-                             .AddMapping<EntityTypeOrder, AccountFacts::Order>()
-                             .AddMapping<EntityTypeProject, AccountFacts::Project>()
-                             .AddMapping<EntityTypeLock, AccountFacts::Lock>()
-                             .AddMapping<EntityTypeLimit, AccountFacts::Limit>()
-                             .AddMapping<EntityTypeOrderPosition, AccountFacts::OrderPosition>()
-                             .AddMapping<EntityTypeReleaseWithdrawal, AccountFacts::ReleaseWithdrawal>();
+                .AddMapping<EntityTypeAccount, AccountFacts::Account>()
+                .AddMapping<EntityTypeOrder, AccountFacts::Order>()
+                .AddMapping<EntityTypeProject, AccountFacts::Project>()
+                .AddMapping<EntityTypeLock, AccountFacts::Lock>()
+                .AddMapping<EntityTypeLimit, AccountFacts::Limit>()
+                .AddMapping<EntityTypeOrderPosition, AccountFacts::OrderPosition>()
+                .AddMapping<EntityTypeReleaseWithdrawal, AccountFacts::ReleaseWithdrawal>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> ConsistencyFactsTypeMap
             = builder => builder
-                             .AddMapping<EntityTypeBargain, ConsistencyFacts::Bargain>()
-                             .AddMapping<EntityTypeBargainFile, ConsistencyFacts::BargainScanFile>()
-                             .AddMapping<EntityTypeBill, ConsistencyFacts::Bill>()
-                             .AddMapping<EntityTypeCategory, ConsistencyFacts::Category>()
-                             .AddMapping<EntityTypeCategoryFirmAddress, ConsistencyFacts::CategoryFirmAddress>()
-                             .AddMapping<EntityTypeFirm, ConsistencyFacts::Firm>()
-                             .AddMapping<EntityTypeFirmAddress, ConsistencyFacts::FirmAddress>()
-                             .AddMapping<EntityTypeLegalPersonProfile, ConsistencyFacts::LegalPersonProfile>()
-                             .AddMapping<EntityTypeOrder, ConsistencyFacts::Order>()
-                             .AddMapping<EntityTypeOrderPosition, ConsistencyFacts::OrderPosition>()
-                             .AddMapping<EntityTypeOrderPositionAdvertisement, ConsistencyFacts::OrderPositionAdvertisement>()
-                             .AddMapping<EntityTypeOrderFile, ConsistencyFacts::OrderScanFile>()
-                             .AddMapping<EntityTypePosition, ConsistencyFacts::Position>()
-                             .AddMapping<EntityTypeProject, ConsistencyFacts::Project>()
-                             .AddMapping<EntityTypeReleaseWithdrawal, ConsistencyFacts::ReleaseWithdrawal>();
+                .AddMapping<EntityTypeBargain, ConsistencyFacts::Bargain>()
+                .AddMapping<EntityTypeBargainFile, ConsistencyFacts::BargainScanFile>()
+                .AddMapping<EntityTypeBill, ConsistencyFacts::Bill>()
+                .AddMapping<EntityTypeCategory, ConsistencyFacts::Category>()
+                .AddMapping<EntityTypeCategoryFirmAddress, ConsistencyFacts::CategoryFirmAddress>()
+                .AddMapping<EntityTypeFirm, ConsistencyFacts::Firm>()
+                .AddMapping<EntityTypeFirmAddress, ConsistencyFacts::FirmAddress>()
+                .AddMapping<EntityTypeLegalPersonProfile, ConsistencyFacts::LegalPersonProfile>()
+                .AddMapping<EntityTypeOrder, ConsistencyFacts::Order>()
+                .AddMapping<EntityTypeOrderPosition, ConsistencyFacts::OrderPosition>()
+                .AddMapping<EntityTypeOrderPositionAdvertisement, ConsistencyFacts::OrderPositionAdvertisement>()
+                .AddMapping<EntityTypeOrderFile, ConsistencyFacts::OrderScanFile>()
+                .AddMapping<EntityTypePosition, ConsistencyFacts::Position>()
+                .AddMapping<EntityTypeProject, ConsistencyFacts::Project>()
+                .AddMapping<EntityTypeReleaseWithdrawal, ConsistencyFacts::ReleaseWithdrawal>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> PriceFactsTypeMap
             = builder => builder
-                             .AddMapping<EntityTypeAssociatedPosition, PriceFacts::AssociatedPosition>()
-                             .AddMapping<EntityTypeAssociatedPositionsGroup, PriceFacts::AssociatedPositionsGroup>()
-                             .AddMapping<EntityTypeCategory, PriceFacts::Category>()
-                             .AddMapping<EntityTypeDeniedPosition, PriceFacts::DeniedPosition>()
-                             .AddMapping<EntityTypeOrder, PriceFacts::Order>()
-                             .AddMapping<EntityTypeOrderPosition, PriceFacts::OrderPosition>()
-                             .AddMapping<EntityTypeOrderPositionAdvertisement, PriceFacts::OrderPositionAdvertisement>()
-                             .AddMapping<EntityTypePosition, PriceFacts::Position>()
-                             .AddMapping<EntityTypePrice, PriceFacts::Price>()
-                             .AddMapping<EntityTypePricePosition, PriceFacts::PricePosition>()
-                             //.AddMapping<EntityTypePricePositionNotActive, PriceFacts::PricePositionNotActive>()
-                             .AddMapping<EntityTypeProject, PriceFacts::Project>()
-                             .AddMapping<EntityTypeRuleset, PriceFacts::RulesetRule>()
-                             .AddMapping<EntityTypeTheme, PriceFacts::Theme>();
+                .AddMapping<EntityTypeAssociatedPosition, PriceFacts::AssociatedPosition>()
+                .AddMapping<EntityTypeAssociatedPositionsGroup, PriceFacts::AssociatedPositionsGroup>()
+                .AddMapping<EntityTypeCategory, PriceFacts::Category>()
+                .AddMapping<EntityTypeDeniedPosition, PriceFacts::DeniedPosition>()
+                .AddMapping<EntityTypeOrder, PriceFacts::Order>()
+                .AddMapping<EntityTypeOrderPosition, PriceFacts::OrderPosition>()
+                .AddMapping<EntityTypeOrderPositionAdvertisement, PriceFacts::OrderPositionAdvertisement>()
+                .AddMapping<EntityTypePosition, PriceFacts::Position>()
+                .AddMapping<EntityTypePrice, PriceFacts::Price>()
+                .AddMapping<EntityTypePricePosition, PriceFacts::PricePosition>()
+                //.AddMapping<EntityTypePricePositionNotActive, PriceFacts::PricePositionNotActive>()
+                .AddMapping<EntityTypeProject, PriceFacts::Project>()
+                .AddMapping<EntityTypeRuleset, PriceFacts::RulesetRule>()
+                .AddMapping<EntityTypeTheme, PriceFacts::Theme>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> FirmFactsTypeMap
             = builder => builder
-                             .AddMapping<EntityTypeFirm, FirmFacts::Firm>()
-                             .AddMapping<EntityTypeFirmAddress, FirmFacts::FirmAddress>()
-                             .AddMapping<EntityTypeCategoryFirmAddress, FirmFacts::FirmAddressCategory>()
-                             .AddMapping<EntityTypeOrder, FirmFacts::Order>()
-                             .AddMapping<EntityTypeOrderPosition, FirmFacts::OrderPosition>()
-                             .AddMapping<EntityTypeOrderPositionAdvertisement, FirmFacts::OrderPositionAdvertisement>()
-                             .AddMapping<EntityTypePosition, FirmFacts::SpecialPosition>()
-                             .AddMapping<EntityTypeProject, FirmFacts::Project>();
+                .AddMapping<EntityTypeFirm, FirmFacts::Firm>()
+                .AddMapping<EntityTypeFirmAddress, FirmFacts::FirmAddress>()
+                .AddMapping<EntityTypeCategoryFirmAddress, FirmFacts::FirmAddressCategory>()
+                .AddMapping<EntityTypeOrder, FirmFacts::Order>()
+                .AddMapping<EntityTypeOrderPosition, FirmFacts::OrderPosition>()
+                .AddMapping<EntityTypeOrderPositionAdvertisement, FirmFacts::OrderPositionAdvertisement>()
+                .AddMapping<EntityTypePosition, FirmFacts::SpecialPosition>()
+                .AddMapping<EntityTypeProject, FirmFacts::Project>();
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AdvertisementFactsTypeMap
             = builder => builder
-                             .AddMapping<EntityTypeOrder, AdvertisementFacts::Order>()
-                             .AddMapping<EntityTypeProject, AdvertisementFacts::Project>()
-                             .AddMapping<EntityTypeOrderPosition, AdvertisementFacts::OrderPosition>()
-                             .AddMapping<EntityTypeOrderPositionAdvertisement, AdvertisementFacts::OrderPositionAdvertisement>()
-                             .AddMapping<EntityTypePricePosition, AdvertisementFacts::PricePosition>()
-                             .AddMapping<EntityTypePosition, AdvertisementFacts::Position>()
-                             .AddMapping<EntityTypeAdvertisementTemplate, AdvertisementFacts::AdvertisementTemplate>()
-                             .AddMapping<EntityTypeAdvertisement, AdvertisementFacts::Advertisement>()
-                             .AddMapping<EntityTypeFirm, AdvertisementFacts::Firm>()
-                             .AddMapping<EntityTypeAdvertisementElement, AdvertisementFacts::AdvertisementElement>()
-                             .AddMapping<EntityTypeAdvertisementElementTemplate, AdvertisementFacts::AdvertisementElementTemplate>();
+                .AddMapping<EntityTypeOrder, AdvertisementFacts::Order>()
+                .AddMapping<EntityTypeProject, AdvertisementFacts::Project>()
+                .AddMapping<EntityTypeOrderPosition, AdvertisementFacts::OrderPosition>()
+                .AddMapping<EntityTypeOrderPositionAdvertisement, AdvertisementFacts::OrderPositionAdvertisement>()
+                .AddMapping<EntityTypePricePosition, AdvertisementFacts::PricePosition>()
+                .AddMapping<EntityTypePosition, AdvertisementFacts::Position>()
+                .AddMapping<EntityTypeAdvertisementTemplate, AdvertisementFacts::AdvertisementTemplate>()
+                .AddMapping<EntityTypeAdvertisement, AdvertisementFacts::Advertisement>()
+                .AddMapping<EntityTypeFirm, AdvertisementFacts::Firm>()
+                .AddMapping<EntityTypeAdvertisementElement, AdvertisementFacts::AdvertisementElement>()
+                .AddMapping<EntityTypeAdvertisementElementTemplate, AdvertisementFacts::AdvertisementElementTemplate>();
 
+        private static readonly Action<EntityTypeMappingRegistryBuilder> ProjectFactsTypeMap
+            = builder => builder
+                .AddMapping<EntityTypeProject, ProjectFacts::Project>()
+                .AddMapping<EntityTypeCategory, ProjectFacts::Category>()
+                .AddMapping<EntityTypeCategoryOrganizationUnit, ProjectFacts::CategoryOrganizationUnit>()
+                .AddMapping<EntityTypeFirmAddress, ProjectFacts::FirmAddress>()
+                .AddMapping<EntityTypeOrder, ProjectFacts::Order>()
+                .AddMapping<EntityTypeOrderPosition, ProjectFacts::OrderPosition>()
+                .AddMapping<EntityTypeOrderPositionAdvertisement, ProjectFacts::OrderPositionAdvertisement>()
+                .AddMapping<EntityTypePosition, ProjectFacts::Position>()
+                .AddMapping<EntityTypePricePosition, ProjectFacts::PricePosition>()
+                .AddMapping<EntityTypeReleaseInfo, ProjectFacts::ReleaseInfo>()
+                .AddAsPersistenceOnly(typeof(ProjectFacts::OrderPositionCostPerClick))
+                .AddAsPersistenceOnly(typeof(ProjectFacts::CostPerClickCategoryRestriction));
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap
             = builder => builder
@@ -155,6 +170,13 @@ namespace NuClear.ValidationRules.OperationsProcessing
             var builder = new EntityTypeMappingRegistryBuilder();
             AdvertisementFactsTypeMap.Invoke(builder);
             return builder.Create<AdvertisementFactsSubDomain>();
+        }
+
+        public static IEntityTypeMappingRegistry<ProjectFactsSubDomain> CreateProjectFactsContext()
+        {
+            var builder = new EntityTypeMappingRegistryBuilder();
+            ProjectFactsTypeMap.Invoke(builder);
+            return builder.Create<ProjectFactsSubDomain>();
         }
 
         public static IEntityTypeMappingRegistry<AggregateSubDomain> CreateAggregateContext()

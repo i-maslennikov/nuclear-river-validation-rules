@@ -30,10 +30,11 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                from bid in query.For<Order.CostPerClickBid>().Where(x => x.OrderId == order.Id)
-                from restriction in query.For<Project.MinimumCostPerClick>().Where(x => x.ProjectId == order.ProjectId && x.CategoryId == bid.CategoryId)
+                from bid in query.For<Order.CostPerClickAdvertisement>().Where(x => x.OrderId == order.Id)
                 from category in query.For<Category>().Where(x => x.Id == bid.CategoryId)
                 from project in query.For<Project>().Where(x => x.Id == order.ProjectId)
+                from position in query.For<Position>().Where(x => x.Id == bid.PositionId)
+                from restrictionViolated in query.For<Project.CostPerClickRestriction>().Where(x => x.ProjectId == order.ProjectId && x.CategoryId == bid.CategoryId && x.Minimum > bid.Bid && x.Begin < order.End && order.Begin < x.End)
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(
@@ -41,15 +42,16 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                                 new XElement("category",
                                     new XAttribute("id", category.Id),
                                     new XAttribute("name", category.Name)),
-                                new XElement("project",
-                                    new XAttribute("id", project.Id),
-                                    new XAttribute("name", project.Name)),
+                                new XElement("orderPosition",
+                                    new XAttribute("id", bid.OrderPositionId),
+                                    new XAttribute("name", position.Name)),
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
                                     new XAttribute("number", order.Number)))),
-                        PeriodStart = order.Begin,
-                        PeriodEnd = order.End,
+                        PeriodStart = order.Begin > restrictionViolated.Begin ? order.Begin : restrictionViolated.Begin,
+                        PeriodEnd = order.End < restrictionViolated.End ? order.End : restrictionViolated.End,
                         ProjectId = order.ProjectId,
+
                         Result = RuleResult,
                     };
 

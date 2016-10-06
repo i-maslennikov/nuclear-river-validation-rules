@@ -9,14 +9,21 @@ using NuClear.Replication.Core.Actors;
 
 using AccountAggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using AccountActors = NuClear.ValidationRules.Replication.AccountRules.Aggregates;
+
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using PriceActors = NuClear.ValidationRules.Replication.PriceRules.Aggregates;
+
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using ConsistencyActors = NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates;
+
 using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using FirmActors = NuClear.ValidationRules.Replication.FirmRules.Aggregates;
+
 using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using AdvertisementActors = NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates;
+
+using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
+using ProjectActors = NuClear.ValidationRules.Replication.ProjectRules.Aggregates;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 {
@@ -46,6 +53,12 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(AdvertisementAggregates::Firm), typeof(AdvertisementActors::FirmAggregateRootActor) },
                     { typeof(AdvertisementAggregates::Order), typeof(AdvertisementActors::OrderAggregateRootActor) },
                     { typeof(AdvertisementAggregates::Position), typeof(AdvertisementActors::PositionAggregateRootActor) },
+
+                    { typeof(ProjectAggregates::Category), typeof(ProjectActors::CategoryAggregateRootActor) },
+                    { typeof(ProjectAggregates::FirmAddress), typeof(ProjectActors::FirmAddressAggregateRootActor) },
+                    { typeof(ProjectAggregates::Order), typeof(ProjectActors::OrderAggregateRootActor) },
+                    { typeof(ProjectAggregates::Position), typeof(ProjectActors::PositionAggregateRootActor) },
+                    { typeof(ProjectAggregates::Project), typeof(ProjectActors::ProjectAggregateRootActor) },
                 };
 
         public UnityAggregateActorFactory(IUnityContainer unityContainer)

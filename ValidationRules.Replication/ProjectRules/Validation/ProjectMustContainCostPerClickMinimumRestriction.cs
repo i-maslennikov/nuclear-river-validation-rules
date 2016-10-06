@@ -27,31 +27,32 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from project in query.For<Project>()
-                              from order in query.For<Order>().Where(x => x.ProjectId == project.Id)
-                              from position in query.For<Order.CostPerClickAdvertisement>().Where(x => x.OrderId == order.Id)
-                              from category in query.For<Category>().Where(x => x.Id == position.CategoryId)
-                              from restriction in query.For<Project.MinimumCostPerClick>().Where(x => x.ProjectId == order.ProjectId && x.CategoryId == position.CategoryId).DefaultIfEmpty()
-                              where restriction == null
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("category",
-                                                  new XAttribute("id", category.Id),
-                                                  new XAttribute("name", category.Name)),
-                                              new XElement("project",
-                                                  new XAttribute("id", project.Id),
-                                                  new XAttribute("name", project.Name)),
-                                              new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("number", order.Number)))),
-                                      PeriodStart = order.Begin,
-                                      PeriodEnd = order.End,
-                                      ProjectId = order.ProjectId,
+            var ruleResults =
+                from project in query.For<Project>()
+                from order in query.For<Order>().Where(x => x.ProjectId == project.Id)
+                from position in query.For<Order.CostPerClickAdvertisement>().Where(x => x.OrderId == order.Id)
+                from category in query.For<Category>().Where(x => x.Id == position.CategoryId)
+                let restrictionExist = query.For<Project.CostPerClickRestriction>().Any(x => x.ProjectId == order.ProjectId && x.CategoryId == position.CategoryId)
+                where !restrictionExist
+                select new Version.ValidationResult
+                    {
+                        MessageParams = new XDocument(
+                            new XElement("root",
+                                new XElement("category",
+                                    new XAttribute("id", category.Id),
+                                    new XAttribute("name", category.Name)),
+                                new XElement("project",
+                                    new XAttribute("id", project.Id),
+                                    new XAttribute("name", project.Name)),
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)))),
+                        PeriodStart = order.Begin,
+                        PeriodEnd = order.End,
+                        ProjectId = order.ProjectId,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

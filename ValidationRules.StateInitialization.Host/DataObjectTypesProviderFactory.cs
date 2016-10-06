@@ -22,6 +22,9 @@ using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
+using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
+using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
@@ -94,6 +97,19 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(FirmFacts::OrderPositionAdvertisement),
                             typeof(FirmFacts::SpecialPosition),
                             typeof(FirmFacts::Project),
+
+                            typeof(ProjectFacts::Category),
+                            typeof(ProjectFacts::CategoryOrganizationUnit),
+                            typeof(ProjectFacts::CostPerClickCategoryRestriction),
+                            typeof(ProjectFacts::FirmAddress),
+                            typeof(ProjectFacts::Order),
+                            typeof(ProjectFacts::OrderPosition),
+                            typeof(ProjectFacts::OrderPositionAdvertisement),
+                            typeof(ProjectFacts::OrderPositionCostPerClick),
+                            typeof(ProjectFacts::Position),
+                            typeof(ProjectFacts::PricePosition),
+                            typeof(ProjectFacts::Project),
+                            typeof(ProjectFacts::ReleaseInfo),
                         });
             }
 
@@ -159,12 +175,23 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyAggregates::Order.MissingRequiredField),
                             typeof(ConsistencyAggregates::Order.MissingOrderScan),
 
-
                             typeof(FirmAggregates::Firm),
                             typeof(FirmAggregates::Order),
                             typeof(FirmAggregates::Order.CategoryPurchase),
                             typeof(FirmAggregates::Order.SpecialPosition),
                             typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
+
+                            typeof(ProjectAggregates::Category),
+                            typeof(ProjectAggregates::FirmAddress),
+                            typeof(ProjectAggregates::Order),
+                            typeof(ProjectAggregates::Order.AddressAdvertisement),
+                            typeof(ProjectAggregates::Order.CategoryAdvertisement),
+                            typeof(ProjectAggregates::Order.CostPerClickAdvertisement),
+                            typeof(ProjectAggregates::Position),
+                            typeof(ProjectAggregates::Project),
+                            typeof(ProjectAggregates::Project.Category),
+                            typeof(ProjectAggregates::Project.CostPerClickRestriction),
+                            typeof(ProjectAggregates::Project.NextRelease),
                         });
             }
 
