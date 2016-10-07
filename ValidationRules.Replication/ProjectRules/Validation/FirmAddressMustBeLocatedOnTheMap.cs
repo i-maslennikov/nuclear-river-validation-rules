@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public FirmAddressMustBeLocatedOnTheMap(IQuery query) : base(query, MessageTypeCode.OrderAdvertisementAddressMustBeLocatedOnTheMap)
+        public FirmAddressMustBeLocatedOnTheMap(IQuery query) : base(query, MessageTypeCode.FirmAddressMustBeLocatedOnTheMap)
         {
         }
 

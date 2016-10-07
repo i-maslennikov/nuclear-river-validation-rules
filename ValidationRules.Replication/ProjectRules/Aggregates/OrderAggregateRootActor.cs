@@ -38,7 +38,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             _categoryAdvertisementRepository = categoryAdvertisementRepository;
         }
 
-
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
             => new IEntityActor[0];
 
@@ -109,10 +108,10 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                    from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.Id == orderPositionAdvertisement.FirmAddressId)
                    select new Order.AddressAdvertisement
                        {
-                           AddressId = firmAddress.Id,
                            OrderId = order.Id,
                            OrderPositionId = orderPosition.Id,
                            PositionId = orderPositionAdvertisement.PositionId,
+                           AddressId = firmAddress.Id,
                            MustBeLocatedOnTheMap = !ExceptionalCategoryCodes.Contains(position.CategoryCode)
                        };
 

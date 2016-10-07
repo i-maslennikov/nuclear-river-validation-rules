@@ -17,7 +17,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static ArrangeMetadataElement ProjectContextSupport
             => ArrangeMetadataElement.Config
             .Name(nameof(ProjectContextSupport))
-            .Erm()
+            .Erm(
+                new Erm::CategoryOrganizationUnit(),
+                new Erm::CostPerClickCategoryRestriction(),
+                new Erm::OrderPositionCostPerClick())
             .Fact(
                 new Facts::Category(),
                 new Facts::CategoryOrganizationUnit(),

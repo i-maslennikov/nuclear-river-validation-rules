@@ -59,6 +59,6 @@
         OrderMustUseCategoriesOnlyAvailableInProject = 51,
         OrderMustNotIncludeReleasedPeriod = 52,
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
-        OrderAdvertisementAddressMustBeLocatedOnTheMap = 54,
+        FirmAddressMustBeLocatedOnTheMap = 54,
     }
 }
