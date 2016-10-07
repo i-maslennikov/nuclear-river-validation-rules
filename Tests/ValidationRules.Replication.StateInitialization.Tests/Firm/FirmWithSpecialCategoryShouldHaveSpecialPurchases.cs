@@ -59,8 +59,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         MessageParams = XDocument.Parse("<root><firm id=\"1\" name=\"Firm\" /><order id=\"2\" number=\"Order\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
                         Result = 254,
-                        PeriodStart = DateTime.MinValue,
-                        PeriodEnd = DateTime.MaxValue,
+                        PeriodStart = FirstDayJan,
+                        PeriodEnd = LastSecondJan,
                     },
                     new Messages::Version.ValidationResult
                     {
@@ -68,7 +68,48 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
                         Result = 254,
                         PeriodStart = LastSecondMar,
-                        PeriodEnd = DateTime.MaxValue,
+                        PeriodEnd = LastSecondApr,
+                    });
+
+        /// <summary>
+        /// Три заказа образуют непрерывный период, причём накладываются первый + второй и второй + третий
+        /// Любой другой заказ в этот период будет валидным, а в другое время должен вызывать ошибку.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement FirmWithSpecialCategoryShouldHaveSpecialPurchasesWithNonTrivialPeriod
+            => ArrangeMetadataElement
+                .Config
+                .Name(nameof(FirmWithSpecialCategoryShouldHaveSpecialPurchasesWithNonTrivialPeriod))
+                .Aggregate(
+                    new Aggregates::Firm { Id = 3, Name = "Firm", NeedsSpecialPosition = true },
+
+                    new Aggregates::Order { Id = 1, Number = "Order1", FirmId = 3, Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order.SpecialPosition { OrderId = 1 },
+
+                    new Aggregates::Order { Id = 2, Number = "Order2", FirmId = 3, Begin = MonthStart(2), End = MonthStart(5) },
+                    new Aggregates::Order.SpecialPosition { OrderId = 2 },
+
+                    new Aggregates::Order { Id = 3, Number = "Order3", FirmId = 3, Begin = MonthStart(4), End = MonthStart(6) },
+                    new Aggregates::Order.SpecialPosition { OrderId = 3 },
+
+                    new Aggregates::Order { Id = 4, Number = "ValidOrder", FirmId = 3, Begin = MonthStart(1), End = MonthStart(6) },
+                    new Aggregates::Order { Id = 5, Number = "InvalidOrder", FirmId = 3, Begin = MonthStart(-10), End = MonthStart(10) })
+                .Message(
+                    new Messages::Version.ValidationResult
+                    {
+                        MessageParams = XDocument.Parse("<root><firm id=\"3\" name=\"Firm\" /><order id=\"5\" number=\"InvalidOrder\" /></root>"),
+                        MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
+                        Result = 254,
+                        PeriodStart = MonthStart(-10),
+                        PeriodEnd = MonthStart(1),
+                    },
+                    new Messages::Version.ValidationResult
+                    {
+                        MessageParams = XDocument.Parse("<root><firm id=\"3\" name=\"Firm\" /><order id=\"5\" number=\"InvalidOrder\" /></root>"),
+                        MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
+                        Result = 254,
+                        PeriodStart = MonthStart(6),
+                        PeriodEnd = MonthStart(10),
                     });
     }
 }

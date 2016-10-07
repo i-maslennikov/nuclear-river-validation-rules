@@ -18,6 +18,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static readonly DateTime LastSecondMar = DateTime.Parse("2012-03-31T23:59:59");
         private static readonly DateTime LastSecondApr = DateTime.Parse("2012-04-30T23:59:59");
 
+        private static DateTime MonthStart(int i) => DateTime.Parse("2012-01-01").AddMonths(i - 1);
+
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement AdvertisementFacts
         => ArrangeMetadataElement.Config
