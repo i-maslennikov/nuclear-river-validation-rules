@@ -131,6 +131,7 @@
     <Compile Include="Keys.cs" />
     <Compile Include="MappedConnectionStringSettings.cs" />
     <Compile Include="Price\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="Project\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunnerConnectionStringSettings.cs" />
     <Compile Include="SchemaMetadataSource.cs" />
