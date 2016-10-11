@@ -143,7 +143,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             public IQueryable<Project.NextRelease> GetSource()
                 => from project in _query.For<Facts::Project>()
-                   from releaseInfo in _query.For<Facts::ReleaseInfo>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId)
+                   from releaseInfo in _query.For<Facts::ReleaseInfo>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId).OrderByDescending(x => x.PeriodEndDate).Take(1)
                    select new Project.NextRelease
                    {
                        ProjectId = project.Id,
