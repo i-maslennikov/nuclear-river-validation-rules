@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Для заказа, в котором есть сопутствующая позиция и есть основная, но не удовлетворено условие ObjectBindingType.Match должна выводиться ошибка.
     /// "{0} содержит объекты привязки, отсутствующие в основных позициях"
     /// 
-    /// Source: ADP/LinkedObjectsMissedInPrincipals
+    /// Source: AssociatedAndDeniedPricePositionsOrderValidationRule/LinkedObjectsMissedInPrincipals
     /// 
     /// Q1: Позиция Y - сопутствующая для X (с требованием, чтобы объекты привязки совпадали).
     ///     Продана X в рубрику адреса (A, B). Продана Y в рубрику B. Должна ли появиться ошибка?

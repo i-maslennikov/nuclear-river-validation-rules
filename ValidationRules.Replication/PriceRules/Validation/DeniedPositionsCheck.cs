@@ -18,6 +18,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// "{0} является запрещённой для: {1}"
     /// "{0} окажется запрещённой для: {1}"
     /// 
+    /// Source: AssociatedAndDeniedPricePositionsOrderValidationRule/ADPCheckModeSpecificOrder_MessageTemplate
+    ///         AssociatedAndDeniedPricePositionsOrderValidationRule/ADPCheckModeOrderBeingReapproved_MessageTemplate
     /// Когда заказ переведён "на расторжение", он не должен мешать создать другой заказ с конфликтующей позицией, но возврат в размещение должно быть невозможно.
     /// </summary>
     public sealed class DeniedPositionsCheck : ValidationResultAccessorBase
