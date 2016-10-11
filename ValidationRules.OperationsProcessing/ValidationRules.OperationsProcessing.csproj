@@ -199,6 +199,7 @@
     <Compile Include="Final\AggregateCommandsHandler.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAccount.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisement.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementElementStatus.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementElementTemplate.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementElement.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPosition.cs" />

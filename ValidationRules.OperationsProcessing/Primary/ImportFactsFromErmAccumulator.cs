@@ -15,6 +15,7 @@ using NuClear.ValidationRules.OperationsProcessing.Contexts;
 using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 
@@ -125,6 +126,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                 foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeProject.Instance.Id))
                 {
                     yield return new SyncDataObjectCommand(typeof(CostPerClickCategoryRestriction), change.Item2);
+                }
+
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeAdvertisementElementStatus.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(AdvertisementElement), change.Item2);
                 }
             }
         }

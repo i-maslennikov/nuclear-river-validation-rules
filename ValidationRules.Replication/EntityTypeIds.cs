@@ -30,6 +30,7 @@
         public const int Theme = 221;
         public const int Advertisement = 186;
         public const int AdvertisementElement = 187;
+        public const int AdvertisementElementStatus = 316;
         public const int AdvertisementTemplate = 184;
         public const int AdvertisementElementTemplate = 185;
         public const int CategoryOrganizationUnit = 161;

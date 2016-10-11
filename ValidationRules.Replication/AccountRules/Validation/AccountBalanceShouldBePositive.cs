@@ -33,6 +33,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             // Ошибка выводится в городе назначения и городе источнике.
+            // todo: есть решение без union, с вынесением проектов в отдельную таблицу и join
             var orderSourceProjects = query.For<Order>().Select(x => new { x.Id, x.AccountId, x.Number, x.BeginDistributionDate, x.EndDistributionDate, ProjectId = x.SourceProjectId });
             var orderDestProjects = query.For<Order>().Select(x => new { x.Id, x.AccountId, x.Number, x.BeginDistributionDate, x.EndDistributionDate, ProjectId = x.DestProjectId });
 
