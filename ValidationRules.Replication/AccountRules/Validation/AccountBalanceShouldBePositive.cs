@@ -33,33 +33,34 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             // Ошибка выводится в городе назначения и городе источнике.
-            // todo: есть решение без union, с вынесением проектов в отдельную таблицу и join
+            // todo: есть решение без union, с вынесением проектов в отдельную таблицу и join (LinkedProject)
             var orderSourceProjects = query.For<Order>().Select(x => new { x.Id, x.AccountId, x.Number, x.BeginDistributionDate, x.EndDistributionDate, ProjectId = x.SourceProjectId });
             var orderDestProjects = query.For<Order>().Select(x => new { x.Id, x.AccountId, x.Number, x.BeginDistributionDate, x.EndDistributionDate, ProjectId = x.DestProjectId });
 
-            var ruleResults = from accountPeriod in query.For<AccountPeriod>()
-                              join order in orderSourceProjects.Union(orderDestProjects) on accountPeriod.AccountId equals order.AccountId
-                              where order.BeginDistributionDate < accountPeriod.End && accountPeriod.Start < order.EndDistributionDate
-                              where accountPeriod.Balance + accountPeriod.LimitAmount - accountPeriod.ReleaseAmount - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) < -Epsilon
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                                       new XElement("message",
-                                                                    new XAttribute("available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount)),
-                                                                    new XAttribute("planned", accountPeriod.ReleaseAmount),
-                                                                    new XAttribute("required", accountPeriod.ReleaseAmount - (accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount)))),
-                                                       new XElement("account",
-                                                                    new XAttribute("id", accountPeriod.AccountId)),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)))),
-                                      PeriodStart = accountPeriod.Start,
-                                      PeriodEnd = accountPeriod.End,
-                                      ProjectId = order.ProjectId,
+            var ruleResults =
+                from accountPeriod in query.For<AccountPeriod>()
+                join order in orderSourceProjects.Union(orderDestProjects) on accountPeriod.AccountId equals order.AccountId
+                where order.BeginDistributionDate < accountPeriod.End && accountPeriod.Start < order.EndDistributionDate
+                where accountPeriod.Balance + accountPeriod.LimitAmount - accountPeriod.ReleaseAmount - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) < -Epsilon
+                select new Version.ValidationResult
+                    {
+                        MessageParams = new XDocument(
+                            new XElement("root",
+                                         new XElement("message",
+                                                      new XAttribute("available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount)),
+                                                      new XAttribute("planned", accountPeriod.ReleaseAmount),
+                                                      new XAttribute("required", accountPeriod.ReleaseAmount - (accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount)))),
+                                         new XElement("account",
+                                                      new XAttribute("id", accountPeriod.AccountId)),
+                                         new XElement("order",
+                                                      new XAttribute("id", order.Id),
+                                                      new XAttribute("number", order.Number)))),
+                        PeriodStart = accountPeriod.Start,
+                        PeriodEnd = accountPeriod.End,
+                        ProjectId = order.ProjectId,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }
