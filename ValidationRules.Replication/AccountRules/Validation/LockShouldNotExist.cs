@@ -26,20 +26,22 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              join @lock in query.For<Lock>() on order.Id equals @lock.OrderId
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(new XElement("root",
-                                                                                 new XElement("order",
-                                                                                              new XAttribute("id", order.Id),
-                                                                                              new XAttribute("number", order.Number)))),
-                                      PeriodStart = @lock.Start,
-                                      PeriodEnd = @lock.End,
-                                      ProjectId = order.DestProjectId,
+            var ruleResults =
+                from order in query.For<Order>()
+                join @lock in query.For<Lock>() on order.Id equals @lock.OrderId
+                select new Version.ValidationResult
+                    {
+                        MessageParams = new XDocument(
+                            new XElement("root",
+                                         new XElement("order",
+                                                      new XAttribute("id", order.Id),
+                                                      new XAttribute("number", order.Number)))),
+                        PeriodStart = @lock.Start,
+                        PeriodEnd = @lock.End,
+                        ProjectId = order.DestProjectId,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }
