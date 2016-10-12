@@ -2,6 +2,7 @@
 using LinqToDB.Mapping;
 
 using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
@@ -12,6 +13,7 @@ namespace NuClear.ValidationRules.Storage
     public static partial class Schema
     {
         private const string PriceFactsSchema = "PriceFacts";
+        private const string ProjectFactsSchema = "ProjectFacts";
         private const string AccountFactsSchema = "AccountFacts";
         private const string AdvertisementFactsSchema = "AdvertisementFacts";
         private const string ConsistencyFactsSchema = "ConsistencyFacts";
@@ -24,6 +26,7 @@ namespace NuClear.ValidationRules.Storage
                 var schema = new MappingSchema(nameof(Facts), new SqlServerMappingSchema());
                 schema.GetFluentMappingBuilder()
                       .RegisterPriceFacts()
+                      .RegisterProjectFacts()
                       .RegisterAccountFacts()
                       .RegisterConsistencyFacts()
                       .RegisterFirmFacts()
@@ -158,6 +161,57 @@ namespace NuClear.ValidationRules.Storage
                   .HasPrimaryKey(x => x.RuleType)
                   .HasPrimaryKey(x => x.DependentPositionId)
                   .HasPrimaryKey(x => x.PrincipalPositionId);
+
+            return builder;
+        }
+
+        private static FluentMappingBuilder RegisterProjectFacts(this FluentMappingBuilder builder)
+        {
+            builder.Entity<ProjectFacts::Category>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::CategoryOrganizationUnit>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::CostPerClickCategoryRestriction>()
+                .HasSchemaName(ProjectFactsSchema);
+
+            builder.Entity<ProjectFacts::FirmAddress>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::Order>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::OrderPosition>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::OrderPositionAdvertisement>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::OrderPositionCostPerClick>()
+                .HasSchemaName(ProjectFactsSchema);
+
+            builder.Entity<ProjectFacts::Position>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::PricePosition>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::Project>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ProjectFacts::ReleaseInfo>()
+                .HasSchemaName(ProjectFactsSchema)
+                .HasPrimaryKey(x => x.Id);
 
             return builder;
         }

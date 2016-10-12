@@ -192,12 +192,14 @@
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FirmFactsSubDomain.cs" />
     <Compile Include="Contexts\PriceFactsSubDomain.cs" />
+    <Compile Include="Contexts\ProjectFactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
     <Compile Include="Final\AggregateCommandsAccumulator.cs" />
     <Compile Include="AfterFinal\MessageCommandsHandler.cs" />
     <Compile Include="Final\AggregateCommandsHandler.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAccount.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisement.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementElementStatus.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementElementTemplate.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementElement.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAssociatedPosition.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="Identities\EntityTypes\EntityTypeBill.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeCategory.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeCategoryFirmAddress.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeDeniedPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirm.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirmAddress.cs" />
@@ -224,6 +227,7 @@
     <Compile Include="Identities\EntityTypes\EntityTypePrice.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePricePosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeProject.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeReleaseInfo.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeReleaseWithdrawal.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeRuleset.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeTheme.cs" />

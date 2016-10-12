@@ -110,6 +110,9 @@ using FirmAccessors = NuClear.ValidationRules.Replication.FirmRules.Facts;
 using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 using AdvertisementAccessors = NuClear.ValidationRules.Replication.AdvertisementRules.Facts;
 
+using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using ProjectAccessors = NuClear.ValidationRules.Replication.ProjectRules.Facts;
+
 namespace NuClear.ValidationRules.Replication.Host.DI
 {
     public static class Bootstrapper
@@ -383,6 +386,19 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<FirmFacts::SpecialPosition, FirmAccessors::SpecialPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<FirmFacts::Project, FirmAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
 
+                .RegisterAccessor<ProjectFacts::Category, ProjectAccessors::CategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::CategoryOrganizationUnit, ProjectAccessors::CategoryOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::CostPerClickCategoryRestriction, ProjectAccessors::CostPerClickCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::FirmAddress, ProjectAccessors::FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::Order, ProjectAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::OrderPosition, ProjectAccessors::OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::OrderPositionAdvertisement, ProjectAccessors::OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::OrderPositionCostPerClick, ProjectAccessors::OrderPositionCostPerClickAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::Position, ProjectAccessors::PositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::PricePosition, ProjectAccessors::PricePositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::Project, ProjectAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::ReleaseInfo, ProjectAccessors::ReleaseInfoAccessor>(entryPointSpecificLifetimeManagerFactory)
+
                 .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::Order>, AdvertisementAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<AdvertisementFacts::Order>, AdvertisementAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::Project>, AdvertisementAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory())
@@ -450,7 +466,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                             .RegisterInstance(EntityTypeMap.CreateConsistencyFactsContext())
                             .RegisterInstance(EntityTypeMap.CreatePriceFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateFirmFactsContext())
-                            .RegisterInstance(EntityTypeMap.CreateAdvertisementFactsContext());
+                            .RegisterInstance(EntityTypeMap.CreateAdvertisementFactsContext())
+                            .RegisterInstance(EntityTypeMap.CreateProjectFactsContext());
         }
 
         private static class Scope

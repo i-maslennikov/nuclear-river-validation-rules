@@ -13,6 +13,7 @@ using NuClear.ValidationRules.Replication.AdvertisementRules.Validation;
 using NuClear.ValidationRules.Replication.ConsistencyRules.Validation;
 using NuClear.ValidationRules.Replication.FirmRules.Validation;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
+using NuClear.ValidationRules.Replication.ProjectRules.Validation;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -141,6 +142,12 @@ namespace NuClear.ValidationRules.Replication
                     new FirmAndOrderShouldBelongTheSameOrganizationUnit(_query),
                     new FirmShouldHaveLimitedCategoryCount(_query),
                     new FirmWithSpecialCategoryShouldHaveSpecialPurchases(_query),
+
+                    new FirmAddressMustBeLocatedOnTheMap(_query),
+                    new OrderMustNotIncludeReleasedPeriod(_query),
+                    new OrderMustUseCategoriesOnlyAvailableInProject(_query),
+                    new OrderPositionCostPerClickMustNotBeLessMinimum(_query),
+                    new ProjectMustContainCostPerClickMinimumRestriction(_query),
                 };
             }
         }

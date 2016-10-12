@@ -158,6 +158,8 @@ $AllSchemas = @{
 	'Firm.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Firm.Aggregates.sql' }
 	'Advertisement.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Advertisement.Facts.sql' }
 	'Advertisement.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Advertisement.Aggregates.sql' }
+	'Project.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Project.Facts.sql' }
+	'Project.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Project.Aggregates.sql' }
 	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'Schemas\Messages.sql' }
 }
 
