@@ -7,6 +7,7 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
 
         public bool IsRequired { get; set; }
         public bool NeedsValidation  { get; set; }
+        public bool IsAdvertisementLink { get; set; }
 
         public bool IsDeleted { get; set; }
     }

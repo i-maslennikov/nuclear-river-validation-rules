@@ -44,12 +44,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderPosition> dataObjects)
         {
-            var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
-
-            var orderIds =
-                from op in _query.For<OrderPosition>().Where(x => dataObjectIds.Contains(x.Id))
-                join order in _query.For<Order>() on op.OrderId equals order.Id
-                select order.Id;
+            var orderIds = dataObjects.Select(x => x.OrderId);
 
             return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
         }

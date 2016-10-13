@@ -6,6 +6,13 @@
         public string Name { get; set; }
         public long FirmId { get; set; }
         public bool IsSelectedToWhiteList { get; set; }
+        public bool IsAllowedToWhiteList { get; set; }
+
+        public sealed class AdvertisementWebsite
+        {
+            public long AdvertisementId { get; set; }
+            public string Website { get; set; }
+        }
 
         public sealed class RequiredElementMissing
         {

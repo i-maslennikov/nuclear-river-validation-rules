@@ -32,9 +32,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from order in query.For<Order>()
-                              join relation in query.For<Order.OrderAdvertisement>() on order.Id equals relation.OrderId
-                              join advertisement in query.For<Advertisement>() on relation.AdvertisementId equals advertisement.Id
-                              join fail in query.For<Advertisement.ElementNotPassedReview>() on advertisement.Id equals fail.AdvertisementId
+                              from advertisementId in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id).Select(x => x.AdvertisementId).Distinct()
+                              from advertisement in query.For<Advertisement>().Where(x => x.Id == advertisementId)
+                              from fail in query.For<Advertisement.ElementNotPassedReview>().Where(x => x.AdvertisementId == advertisement.Id)
                               select new Version.ValidationResult
                                   {
                                   MessageParams = new XDocument(new XElement("root",

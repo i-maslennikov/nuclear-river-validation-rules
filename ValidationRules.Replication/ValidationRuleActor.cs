@@ -127,6 +127,9 @@ namespace NuClear.ValidationRules.Replication
                     new OrderPositionMustNotReferenceDeletedAdvertisement(_query),
                     new WhiteListAdvertisementMustPresent(_query),
                     new WhiteListAdvertisementMayPresent(_query),
+                    new CouponMustBeUniqueForFirm(_query),
+                    new OrderPeriodMustContainAdvertisementPeriod(_query),
+                    new AdvertisementWebsiteShouldNotBeFirmWebsite(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),

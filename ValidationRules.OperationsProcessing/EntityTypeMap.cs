@@ -100,6 +100,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypeAdvertisementTemplate, AdvertisementFacts::AdvertisementTemplate>()
                 .AddMapping<EntityTypeAdvertisement, AdvertisementFacts::Advertisement>()
                 .AddMapping<EntityTypeFirm, AdvertisementFacts::Firm>()
+                .AddMapping<EntityTypeFirmAddress, AdvertisementFacts::FirmAddress>()
+                .AddMapping<EntityTypeFirmContact, AdvertisementFacts::FirmAddressWebsite>()
                 .AddMapping<EntityTypeAdvertisementElement, AdvertisementFacts::AdvertisementElement>()
                 .AddMapping<EntityTypeAdvertisementElementTemplate, AdvertisementFacts::AdvertisementElementTemplate>();
 

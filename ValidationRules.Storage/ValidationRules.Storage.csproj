@@ -205,6 +205,8 @@
     <Compile Include="Model\AdvertisementRules\Facts\AdvertisementTemplate.cs" />
     <Compile Include="Model\AdvertisementRules\Facts\AdvertisementElementTemplate.cs" />
     <Compile Include="Model\AdvertisementRules\Facts\Firm.cs" />
+    <Compile Include="Model\AdvertisementRules\Facts\FirmAddress.cs" />
+    <Compile Include="Model\AdvertisementRules\Facts\FirmAddressWebsite.cs" />
     <Compile Include="Model\AdvertisementRules\Facts\Order.cs" />
     <Compile Include="Model\AdvertisementRules\Facts\OrderPosition.cs" />
     <Compile Include="Model\AdvertisementRules\Facts\OrderPositionAdvertisement.cs" />
@@ -247,6 +249,7 @@
     <Compile Include="Model\Erm\CostPerClickCategoryRestriction.cs" />
     <Compile Include="Model\Erm\Deal.cs" />
     <Compile Include="Model\Erm\Firm.cs" />
+    <Compile Include="Model\Erm\FirmContact.cs" />
     <Compile Include="Model\Erm\FirmAddress.cs" />
     <Compile Include="Model\Erm\LegalPerson.cs" />
     <Compile Include="Model\Erm\LegalPersonProfile.cs" />

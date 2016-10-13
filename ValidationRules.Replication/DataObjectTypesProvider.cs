@@ -84,6 +84,8 @@ namespace NuClear.ValidationRules.Replication
                             typeof(AdvertisementFacts::AdvertisementTemplate),
                             typeof(AdvertisementFacts::Advertisement),
                             typeof(AdvertisementFacts::Firm),
+                            typeof(AdvertisementFacts::FirmAddress),
+                            typeof(AdvertisementFacts::FirmAddressWebsite),
                             typeof(AdvertisementFacts::AdvertisementElement),
                             typeof(AdvertisementFacts::AdvertisementElementTemplate),
 

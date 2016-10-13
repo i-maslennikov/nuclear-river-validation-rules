@@ -30,6 +30,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
                 Name = x.Name,
                 IsRequired = x.IsRequired,
                 NeedsValidation = x.NeedsValidation,
+                IsAdvertisementLink = x.IsAdvertisementLink,
             });
 
         public FindSpecification<AdvertisementElementTemplate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

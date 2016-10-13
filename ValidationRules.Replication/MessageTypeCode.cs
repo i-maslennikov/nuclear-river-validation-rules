@@ -74,5 +74,9 @@
         OrderMustHaveActiveDeal = 62,
         OrderMustHaveActiveLegalEntities = 63,
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
+
+        CouponMustBeUniqueForFirm = 65,
+        OrderPeriodMustContainAdvertisementPeriod = 66,
+        AdvertisementWebsiteShouldNotBeFirmWebsite = 67,
     }
 }

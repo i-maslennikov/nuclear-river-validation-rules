@@ -29,6 +29,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
                 AdvertisementId = x.AdvertisementId,
                 AdvertisementElementTemplateId = x.AdvertisementElementTemplateId,
                 IsEmpty = (x.BeginDate == null || x.EndDate == null) && x.FileId == null && string.IsNullOrEmpty(x.Text),
+                Text = x.Text,
+                BeginDate = x.BeginDate,
+                EndDate = x.EndDate,
                 Status = y.Status,
             });
 

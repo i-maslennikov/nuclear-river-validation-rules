@@ -31,12 +31,15 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults =
-                from order in query.For<Order>().Where(x => x.RequireWhiteListAdvertisement)
+                from order in query.For<Order>()
                 from project in query.For<Order.LinkedProject>().Where(x => x.OrderId == order.Id)
+                from advertisementId in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id).Select(x => x.AdvertisementId).Distinct()
+                let isAllowedToWhiteList = query.For<Advertisement>().Any(x => x.Id == advertisementId && x.IsAllowedToWhiteList)
+                let isSelectedToWhiteList = query.For<Advertisement>().Any(x => x.Id == advertisementId && x.IsSelectedToWhiteList)
                 from uncoveredPeriod in query.For<Firm.WhiteListDistributionPeriod>()
                                                          .Where(x => x.FirmId == order.FirmId && x.Start < order.EndDistributionDatePlan && order.BeginDistributionDate < x.End)
                                                          .Where(x => x.ProvidedByOrderId == null)
-                where !order.ProvideWhiteListAdvertisement
+                where isAllowedToWhiteList && !isSelectedToWhiteList
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(

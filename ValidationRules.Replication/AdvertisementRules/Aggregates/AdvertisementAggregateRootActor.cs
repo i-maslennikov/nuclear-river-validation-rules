@@ -19,6 +19,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
     {
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
+        private readonly IBulkRepository<Advertisement.AdvertisementWebsite> _advertisementWebsiteBulkRepository;
         private readonly IBulkRepository<Advertisement.RequiredElementMissing> _requiredElementMissingBulkRepository;
         private readonly IBulkRepository<Advertisement.ElementNotPassedReview> _elementInvalidBulkRepository;
 
@@ -26,12 +27,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             IQuery query,
             IBulkRepository<Advertisement> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Advertisement.AdvertisementWebsite> advertisementWebsiteBulkRepository,
             IBulkRepository<Advertisement.RequiredElementMissing> requiredElementMissingBulkRepository,
             IBulkRepository<Advertisement.ElementNotPassedReview> elementInvalidBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new AdvertisementAccessor(query))
         {
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
+            _advertisementWebsiteBulkRepository = advertisementWebsiteBulkRepository;
             _requiredElementMissingBulkRepository = requiredElementMissingBulkRepository;
             _elementInvalidBulkRepository = elementInvalidBulkRepository;
         }
@@ -42,6 +45,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
+                    new ValueObjectActor<Advertisement.AdvertisementWebsite>(_query, _advertisementWebsiteBulkRepository, _equalityComparerFactory, new AdvertisementWebsiteAccessor(_query)),
                     new ValueObjectActor<Advertisement.RequiredElementMissing>(_query, _requiredElementMissingBulkRepository, _equalityComparerFactory, new RequiredElementMissingAccessor(_query)),
                     new ValueObjectActor<Advertisement.ElementNotPassedReview>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementNotPassedReviewAccessor(_query)),
                 };
@@ -56,14 +60,15 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
 
             public IQueryable<Advertisement> GetSource()
-                => from advertisement in _query.For<Facts::Advertisement>()
-                   where advertisement.FirmId.HasValue && !advertisement.IsDeleted
+                => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.FirmId != null)
+                   from advertisementTemplate in _query.For<Facts::AdvertisementTemplate>().Where(x => advertisement.AdvertisementTemplateId == x.Id)
                    select new Advertisement
                    {
                        Id = advertisement.Id,
                        Name = advertisement.Name,
                        FirmId = advertisement.FirmId.Value,
                        IsSelectedToWhiteList = advertisement.IsSelectedToWhiteList,
+                       IsAllowedToWhiteList = advertisementTemplate.IsAllowedToWhiteList,
                    };
 
             public FindSpecification<Advertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -74,6 +79,37 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Advertisement>(x => aggregateIds.Contains(x.Id));
+            }
+        }
+
+        public sealed class AdvertisementWebsiteAccessor : IStorageBasedDataObjectAccessor<Advertisement.AdvertisementWebsite>
+        {
+            private readonly IQuery _query;
+
+            public AdvertisementWebsiteAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Advertisement.AdvertisementWebsite> GetSource()
+                => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
+                   from element in _query.For<Facts::AdvertisementElement>().Where(x => x.AdvertisementId == advertisement.Id)
+                   from elementTemplate in _query.For<Facts::AdvertisementElementTemplate>().Where(x => x.Id == element.AdvertisementElementTemplateId)
+                   where elementTemplate.IsAdvertisementLink // РМ - рекламная ссылка
+                   select new Advertisement.AdvertisementWebsite
+                   {
+                       AdvertisementId = advertisement.Id,
+                       Website = element.Text,
+                   };
+
+            public FindSpecification<Advertisement.AdvertisementWebsite> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Advertisement.AdvertisementWebsite>(x => aggregateIds.Contains(x.AdvertisementId));
             }
         }
 

@@ -11,8 +11,6 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
         public DateTime EndDistributionDatePlan { get; set; }
         public long ProjectId { get; set; }
         public long FirmId { get; set; }
-        public bool RequireWhiteListAdvertisement { get; set; }
-        public bool ProvideWhiteListAdvertisement { get; set; }
 
         public sealed class LinkedProject
         {
@@ -72,9 +70,27 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long PositionId { get; set; }
         }
 
-        public sealed class OrderAdvertisement
+        public sealed class CouponOrderPosition
         {
             public long OrderId { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PositionId { get; set; }
+            public long AdvertisementId { get; set; }
+        }
+
+        public sealed class AdvertisementPeriodNotInOrderPeriod
+        {
+            public long OrderId { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PositionId { get; set; }
+            public long AdvertisementId { get; set; }
+        }
+
+        public sealed class OrderPositionAdvertisement
+        {
+            public long OrderId { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PositionId { get; set; }
             public long AdvertisementId { get; set; }
         }
     }

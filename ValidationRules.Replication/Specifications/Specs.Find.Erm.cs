@@ -54,6 +54,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<FirmAddress>(x => x.IsActive && !x.IsDeleted);
                 }
 
+                public static FindSpecification<FirmContact> FirmContact()
+                {
+                    return new FindSpecification<FirmContact>(x => x.FirmAddressId != null);
+                }
+
                 public static FindSpecification<Order> Orders()
                 {
                     return new FindSpecification<Order>(x => x.IsActive && !x.IsDeleted && x.WorkflowStepId != OrderStateArchive && x.WorkflowStepId != OrderStateRejected);
