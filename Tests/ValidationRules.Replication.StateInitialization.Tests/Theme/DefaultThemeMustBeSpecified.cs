@@ -80,8 +80,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(DefaultThemeMustBeSpecified_TwoDefaultTheme))
                 .Fact(
                     new Facts::Project { Id = 1, OrganizationUnitId = 2, Name = "Project1" },
-                    new Facts::ThemeOrganizationUnit { ThemeId = 3, OrganizationUnitId = 2 },
-                    new Facts::ThemeOrganizationUnit { ThemeId = 4, OrganizationUnitId = 2 },
+                    new Facts::ThemeOrganizationUnit { Id = 1, ThemeId = 3, OrganizationUnitId = 2 },
+                    new Facts::ThemeOrganizationUnit { Id = 2, ThemeId = 4, OrganizationUnitId = 2 },
 
                     new Facts::Theme { Id = 3, Name = "Theme3", BeginDistribution = FirstDayJan, EndDistribution = FirstDayMar, IsDefault = true },
                     new Facts::Theme { Id = 4, Name = "Theme4", BeginDistribution = FirstDayFeb, EndDistribution = FirstDayMar, IsDefault = true }
