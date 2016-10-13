@@ -239,6 +239,7 @@
     <Compile Include="Model\Erm\PositionChild.cs" />
     <Compile Include="Model\Erm\ReleaseInfo.cs" />
     <Compile Include="Model\Erm\ReleaseWithdrawal.cs" />
+    <Compile Include="Model\Erm\SalesModelCategoryRestriction.cs" />
     <Compile Include="Model\Erm\Theme.cs" />
     <Compile Include="Model\Erm\TimeZone.cs" />
     <Compile Include="Model\Erm\UserProfile.cs" />
@@ -316,6 +317,7 @@
     <Compile Include="Model\ProjectRules\Facts\PricePosition.cs" />
     <Compile Include="Model\ProjectRules\Facts\Project.cs" />
     <Compile Include="Model\ProjectRules\Facts\ReleaseInfo.cs" />
+    <Compile Include="Model\ProjectRules\Facts\SalesModelCategoryRestriction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.Messages.cs" />
     <Compile Include="Schema.Aggregates.cs" />

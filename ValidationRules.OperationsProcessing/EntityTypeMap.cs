@@ -115,7 +115,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypePricePosition, ProjectFacts::PricePosition>()
                 .AddMapping<EntityTypeReleaseInfo, ProjectFacts::ReleaseInfo>()
                 .AddAsPersistenceOnly(typeof(ProjectFacts::OrderPositionCostPerClick))
-                .AddAsPersistenceOnly(typeof(ProjectFacts::CostPerClickCategoryRestriction));
+                .AddAsPersistenceOnly(typeof(ProjectFacts::CostPerClickCategoryRestriction))
+                .AddAsPersistenceOnly(typeof(ProjectFacts::SalesModelCategoryRestriction));
 
         private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap
             = builder => builder

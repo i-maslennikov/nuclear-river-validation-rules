@@ -60,5 +60,8 @@
         OrderMustNotIncludeReleasedPeriod = 52,
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
         FirmAddressMustBeLocatedOnTheMap = 54,
+
+        OrderPositionCostPerClickMustBeSpecified = 55,
+        OrderPositionSalesModelMustMatchCategorySalesModel = 56,
     }
 }
