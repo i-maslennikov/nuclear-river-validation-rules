@@ -30,7 +30,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .Erm(
                 new Erm::ThemeOrganizationUnit { Id = 1, ThemeId = 2, OrganizationUnitId = 3, IsActive = true, IsDeleted = false },
                 new Erm::ThemeOrganizationUnit { Id = 2, ThemeId = 2, OrganizationUnitId = 3, IsActive = false, IsDeleted = false },
-                new Erm::ThemeOrganizationUnit { Id = 2, ThemeId = 2, OrganizationUnitId = 3, IsActive = true, IsDeleted = true })
+                new Erm::ThemeOrganizationUnit { Id = 3, ThemeId = 2, OrganizationUnitId = 3, IsActive = true, IsDeleted = true })
             .Fact(
                 new ThemeFacts::ThemeOrganizationUnit { Id = 1, ThemeId = 2, OrganizationUnitId = 3 });
 
