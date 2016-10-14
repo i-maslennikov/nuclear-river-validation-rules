@@ -30,9 +30,9 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                from sm in query.For<Project.SalesModelRestriction>().Where(x => x.End > order.Begin && order.End > order.Begin && x.ProjectId == order.ProjectId)
-                from adv in query.For<Order.CategoryAdvertisement>().Where(x => x.OrderId == order.Id && x.CategoryId == sm.CategoryId && x.IsSalesModelRestrictionApplicable)
-                where sm.SalesModel != adv.SalesModel
+                from restriction in query.For<Project.SalesModelRestriction>().Where(x => x.End > order.Begin && order.End > x.Begin && x.ProjectId == order.ProjectId)
+                from adv in query.For<Order.CategoryAdvertisement>().Where(x => x.OrderId == order.Id && x.CategoryId == restriction.CategoryId && x.IsSalesModelRestrictionApplicable)
+                where restriction.SalesModel != adv.SalesModel
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(
@@ -49,8 +49,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                                 new XElement("project",
                                     new XAttribute("id", order.ProjectId),
                                     new XAttribute("number", query.For<Project>().Single(x => x.Id == order.ProjectId).Name)))),
-                        PeriodStart = order.Begin,
-                        PeriodEnd = order.End,
+                        PeriodStart = order.Begin > restriction.Begin ? order.Begin : restriction.Begin,
+                        PeriodEnd = order.End < restriction.End ? order.End : restriction.End,
                         ProjectId = order.ProjectId,
 
                         Result = RuleResult,
