@@ -17,6 +17,16 @@ namespace NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates
             public long OrderId { get; set; }
         }
 
+        public sealed class NotApplicapleForDesktopPosition
+        {
+            public long OrderId { get; set; }
+        }
+
+        public sealed class SelfAdvertisementPosition
+        {
+            public long OrderId { get; set; }
+        }
+
         public sealed class SpecialPosition
         {
             public long OrderId { get; set; }

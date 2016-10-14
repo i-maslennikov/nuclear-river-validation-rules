@@ -47,6 +47,12 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<FirmAggregates::Order.SpecialPosition>()
                    .HasSchemaName(FirmAggregatesSchema);
 
+            builder.Entity<FirmAggregates::Order.NotApplicapleForDesktopPosition>()
+                   .HasSchemaName(FirmAggregatesSchema);
+
+            builder.Entity<FirmAggregates::Order.SelfAdvertisementPosition>()
+                   .HasSchemaName(FirmAggregatesSchema);
+
             builder.Entity<FirmAggregates::Order.FirmOrganiationUnitMismatch>()
                    .HasSchemaName(FirmAggregatesSchema);
 

@@ -16,6 +16,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Facts
     {
         public const long SelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
         public const long AdvantageousPurchaseWith2Gis = 14; // Выгодные покупки с 2ГИС
+        public const long PlatformIndependent = 0;
         public const long PlatformDesktop = 1;
 
         private readonly IQuery _query;
@@ -27,8 +28,15 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Facts
 
         public IQueryable<SpecialPosition> GetSource()
             => from position in _query.For(Specs.Find.Erm.Positions())
-               where position.CategoryCode == SelfAdvertisementOnlyOnPc || position.CategoryCode == AdvantageousPurchaseWith2Gis && position.Platform == PlatformDesktop
-               select new SpecialPosition { Id = position.Id };
+               let isAdvantageousPurchaseOnPc = position.CategoryCode == AdvantageousPurchaseWith2Gis && position.Platform == PlatformDesktop
+               let isSelfAdvertisementOnPc = position.CategoryCode == SelfAdvertisementOnlyOnPc
+               select new SpecialPosition
+                   {
+                       Id = position.Id,
+                       IsSelfAdvertisementOnPc = position.CategoryCode == SelfAdvertisementOnlyOnPc,
+                       IsAdvantageousPurchaseOnPc = isAdvantageousPurchaseOnPc,
+                       IsApplicapleForPc = position.Platform == PlatformDesktop || position.Platform == PlatformIndependent,
+                   };
 
         public FindSpecification<SpecialPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

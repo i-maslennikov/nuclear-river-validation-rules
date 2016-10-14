@@ -4,6 +4,8 @@ if object_id('FirmAggregates.Order') is not null drop table FirmAggregates.[Orde
 if object_id('FirmAggregates.Firm') is not null drop table FirmAggregates.Firm
 if object_id('FirmAggregates.FirmOrganiationUnitMismatch') is not null drop table FirmAggregates.FirmOrganiationUnitMismatch
 if object_id('FirmAggregates.CategoryPurchase') is not null drop table FirmAggregates.CategoryPurchase
+if object_id('FirmAggregates.NotApplicapleForDesktopPosition') is not null drop table FirmAggregates.NotApplicapleForDesktopPosition
+if object_id('FirmAggregates.SelfAdvertisementPosition') is not null drop table FirmAggregates.SelfAdvertisementPosition
 if object_id('FirmAggregates.SpecialPosition') is not null drop table FirmAggregates.SpecialPosition
 go
 
@@ -35,6 +37,16 @@ go
 create table FirmAggregates.CategoryPurchase(
     OrderId bigint not null,
     CategoryId bigint not null,
+)
+go
+
+create table FirmAggregates.NotApplicapleForDesktopPosition(
+    OrderId bigint not null,
+)
+go
+
+create table FirmAggregates.SelfAdvertisementPosition(
+    OrderId bigint not null,
 )
 go
 

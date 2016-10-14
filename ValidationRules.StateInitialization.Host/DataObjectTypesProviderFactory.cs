@@ -178,8 +178,10 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(FirmAggregates::Firm),
                             typeof(FirmAggregates::Order),
                             typeof(FirmAggregates::Order.CategoryPurchase),
-                            typeof(FirmAggregates::Order.SpecialPosition),
                             typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
+                            typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
+                            typeof(FirmAggregates::Order.SelfAdvertisementPosition),
+                            typeof(FirmAggregates::Order.SpecialPosition),
 
                             typeof(ProjectAggregates::Category),
                             typeof(ProjectAggregates::FirmAddress),
