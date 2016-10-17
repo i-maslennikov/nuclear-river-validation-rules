@@ -55,7 +55,12 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Facts
                 from op in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
                 select op.OrderId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();
+            var projectIds =
+                from themeOrgUnit in _query.For<ThemeOrganizationUnit>().Where(x => dataObjectIds.Contains(x.ThemeId))
+                from project in _query.For<Project>().Where(x => x.OrganizationUnitId == themeOrgUnit.OrganizationUnitId)
+                select project.Id;
+
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, { typeof(Project), projectIds.Distinct() } }.ToArray();
         }
     }
 }

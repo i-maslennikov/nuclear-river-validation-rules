@@ -284,9 +284,9 @@
     <Compile Include="ThemeRules\Facts\CategoryAccessor.cs" />
     <Compile Include="ThemeRules\Facts\ThemeAccessor.cs" />
     <Compile Include="ThemeRules\Validation\DefaultThemeMustHaveOnlySelfAds.cs" />
-    <Compile Include="ThemeRules\Validation\DefaultThemeMustBeSpecified.cs" />
-    <Compile Include="ThemeRules\Validation\ThemePeriodShouldBeValid.cs" />
-    <Compile Include="ThemeRules\Validation\ThemeCategoryShouldBeValid.cs" />
+    <Compile Include="ThemeRules\Validation\DefaultThemeMustBeExactlyOne.cs" />
+    <Compile Include="ThemeRules\Validation\ThemePeriodMustContainOrderPeriod.cs" />
+    <Compile Include="ThemeRules\Validation\ThemeCategoryMustBeActiveAndNotDeleted.cs" />
     <Compile Include="ValidationResultAccessorBase.cs" />
     <Compile Include="IValidationResultAccessor.cs" />
     <Compile Include="ConsistencyRules\Validation\LinkedCategoryAsterixMayBelongToFirm.cs" />

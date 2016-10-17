@@ -13,23 +13,20 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
     /// 
     /// Source: ThemeCategoriesValidationRule/ThemeUsesInactiveCategory
     /// </summary>
-    public sealed class ThemeCategoryShouldBeValid : ValidationResultAccessorBase
+    public sealed class ThemeCategoryMustBeActiveAndNotDeleted : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public ThemeCategoryShouldBeValid(IQuery query) : base(query, MessageTypeCode.ThemeCategoryShouldBeValid)
+        public ThemeCategoryMustBeActiveAndNotDeleted(IQuery query) : base(query, MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted)
         {
         }
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var orderProjects = query.For<Order>().Select(x => new { x.Id, x.BeginDistributionDate, x.EndDistributionDateFact, ProjectId = x.SourceProjectId })
-                         .Union(query.For<Order>().Select(x => new { x.Id, x.BeginDistributionDate, x.EndDistributionDateFact, ProjectId = x.DestProjectId }));
-
-            var invalidPeriods = (from order in orderProjects
+            var invalidPeriods = from order in query.For<Order>()
                                   from orderTheme in query.For<Order.OrderTheme>().Where(x => x.OrderId == order.Id)
                                   from invalidCategory in query.For<Theme.InvalidCategory>().Where(x => x.ThemeId == orderTheme.ThemeId)
                                   select new
@@ -39,22 +36,35 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                                      order.BeginDistributionDate,
                                      order.EndDistributionDateFact,
                                      order.ProjectId
-                                  }).Distinct();
+                                  };
 
-            var ruleResults = from invalidPeriod in invalidPeriods
+            var invalidMaxPeriods = from invalidPeriod in invalidPeriods
+                                    group invalidPeriod by new { invalidPeriod.ProjectId, invalidPeriod.ThemeId, invalidPeriod.CategoryId }
+                                    into grps
+                                    select new
+                                    {
+                                        grps.Key.ThemeId,
+                                        grps.Key.CategoryId,
+                                        BeginDistributionDate = grps.Min(x => x.BeginDistributionDate),
+                                        EndDistributionDateFact = grps.Max(x => x.EndDistributionDateFact),
+                                        grps.Key.ProjectId,
+                                    };
+
+
+            var ruleResults = from invalidMaxPeriod in invalidMaxPeriods
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
                                                                                  new XElement("theme",
-                                                                                              new XAttribute("id", invalidPeriod.ThemeId),
-                                                                                              new XAttribute("name", query.For<Theme>().Single(x => x.Id == invalidPeriod.ThemeId).Name)),
+                                                                                              new XAttribute("id", invalidMaxPeriod.ThemeId),
+                                                                                              new XAttribute("name", query.For<Theme>().Single(x => x.Id == invalidMaxPeriod.ThemeId).Name)),
                                                                                  new XElement("category",
-                                                                                              new XAttribute("id", invalidPeriod.CategoryId),
-                                                                                              new XAttribute("name", query.For<Category>().Single(x => x.Id == invalidPeriod.CategoryId).Name))
+                                                                                              new XAttribute("id", invalidMaxPeriod.CategoryId),
+                                                                                              new XAttribute("name", query.For<Category>().Single(x => x.Id == invalidMaxPeriod.CategoryId).Name))
                                                                      )),
-                                      PeriodStart = invalidPeriod.BeginDistributionDate,
-                                      PeriodEnd = invalidPeriod.EndDistributionDateFact,
-                                      ProjectId = invalidPeriod.ProjectId,
+                                      PeriodStart = invalidMaxPeriod.BeginDistributionDate,
+                                      PeriodEnd = invalidMaxPeriod.EndDistributionDateFact,
+                                      ProjectId = invalidMaxPeriod.ProjectId,
 
                                       Result = RuleResult,
                                   };

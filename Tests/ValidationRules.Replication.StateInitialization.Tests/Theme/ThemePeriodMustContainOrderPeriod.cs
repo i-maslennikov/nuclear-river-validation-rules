@@ -12,12 +12,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement ThemePeriodShouldBeValidPositive
+        private static ArrangeMetadataElement ThemePeriodMustContainOrderPeriodPositive
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(ThemePeriodShouldBeValidPositive))
+                .Name(nameof(ThemePeriodMustContainOrderPeriodPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, SourceOrganizationUnitId = 2, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb},
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb},
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayFeb, EndDistribution = FirstDayFeb }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, SourceProjectId = 3, DestProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb },
                     new Aggregates::Order.OrderTheme { OrderId = 1, ThemeId = 5 },
 
                     new Aggregates::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayFeb, EndDistribution = FirstDayFeb }
@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order1\" /><theme id = \"5\" name=\"Theme5\" /></root>"),
-                        MessageType = (int)MessageTypeCode.ThemePeriodShouldBeValid,
+                        MessageType = (int)MessageTypeCode.ThemePeriodMustContainOrderPeriod,
                         Result = 255,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
@@ -44,12 +44,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 );
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement ThemePeriodShouldBeValidNegative
+        private static ArrangeMetadataElement ThemePeriodMustContainOrderPeriodNegative
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(ThemePeriodShouldBeValidNegative))
+                .Name(nameof(ThemePeriodMustContainOrderPeriodNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, SourceOrganizationUnitId = 2, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
@@ -58,7 +58,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, SourceProjectId = 3, DestProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb },
                     new Aggregates::Order.OrderTheme { OrderId = 1, ThemeId = 5 },
 
                     new Aggregates::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb }

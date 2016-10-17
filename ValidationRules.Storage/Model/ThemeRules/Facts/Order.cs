@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates
+namespace NuClear.ValidationRules.Storage.Model.ThemeRules.Facts
 {
     public sealed class Order
     {
@@ -10,15 +10,8 @@ namespace NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates
 
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDateFact { get; set; }
-
-        public long ProjectId { get; set; }
+        public long DestOrganizationUnitId { get; set; }
 
         public bool IsSelfAds { get; set; }
-
-        public sealed class OrderTheme
-        {
-            public long OrderId { get; set; }
-            public long ThemeId { get; set; }
-        }
     }
 }

@@ -19,18 +19,18 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
     {
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Project.ProjectTheme> _projectThemeBulkRepository;
+        private readonly IBulkRepository<Project.ProjectDefaultTheme> _projectDefaultThemeBulkRepository;
 
         public ProjectAggregateRootActor(
             IQuery query,
             IBulkRepository<Project> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
-            IBulkRepository<Project.ProjectTheme> projectThemeBulkRepository)
+            IBulkRepository<Project.ProjectDefaultTheme> projectDefaultThemeBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new ProjectAccessor(query))
         {
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
-            _projectThemeBulkRepository = projectThemeBulkRepository;
+            _projectDefaultThemeBulkRepository = projectDefaultThemeBulkRepository;
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
-                    new ValueObjectActor<Project.ProjectTheme>(_query, _projectThemeBulkRepository, _equalityComparerFactory, new ProjectThemeAccessor(_query)),
+                    new ValueObjectActor<Project.ProjectDefaultTheme>(_query, _projectDefaultThemeBulkRepository, _equalityComparerFactory, new ProjectDefaultThemeAccessor(_query)),
                 };
 
         public sealed class ProjectAccessor : IStorageBasedDataObjectAccessor<Project>
@@ -70,37 +70,41 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             }
         }
 
-        public sealed class ProjectThemeAccessor : IStorageBasedDataObjectAccessor<Project.ProjectTheme>
+        public sealed class ProjectDefaultThemeAccessor : IStorageBasedDataObjectAccessor<Project.ProjectDefaultTheme>
         {
             private readonly IQuery _query;
 
-            public ProjectThemeAccessor(IQuery query)
+            public ProjectDefaultThemeAccessor(IQuery query)
             {
                 _query = query;
             }
 
-            public IQueryable<Project.ProjectTheme> GetSource()
+            public IQueryable<Project.ProjectDefaultTheme> GetSource()
             {
                 var themeProjects =
                     from project in _query.For<Facts::Project>()
                     from themeOrgUnit in _query.For<Facts::ThemeOrganizationUnit>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId)
-                    select new Project.ProjectTheme
+                    from theme in _query.For<Facts::Theme>().Where(x => x.Id == themeOrgUnit.ThemeId)
+                    where theme.IsDefault // тематика по умолчанию
+                    select new Project.ProjectDefaultTheme
                     {
                         ProjectId = project.Id,
-                        ThemeId = themeOrgUnit.ThemeId,
+                        ThemeId = theme.Id,
+                        Start = theme.BeginDistribution,
+                        End = theme.EndDistribution,
                     };
 
                 return themeProjects;
             }
 
-            public FindSpecification<Project.ProjectTheme> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Project.ProjectDefaultTheme> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
                                            .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Distinct()
                                            .ToArray();
-                return new FindSpecification<Project.ProjectTheme>(x => aggregateIds.Contains(x.ProjectId));
+                return new FindSpecification<Project.ProjectDefaultTheme>(x => aggregateIds.Contains(x.ProjectId));
             }
         }
     }

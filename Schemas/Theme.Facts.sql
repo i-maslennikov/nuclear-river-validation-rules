@@ -48,7 +48,7 @@ create table ThemeFacts.Category (
     Id bigint not null,
 
 	Name nvarchar(128) not null,
-	IsInvalid bit not null,
+	IsNotActiveOrDeleted bit not null,
 
     constraint PK_Category primary key (Id)
 )
@@ -61,7 +61,6 @@ create table ThemeFacts.[Order] (
 
 	BeginDistributionDate datetime2(2) not null,
 	EndDistributionDateFact datetime2(2) not null,
-	SourceOrganizationUnitId bigint not null,
 	DestOrganizationUnitId bigint not null,
 
 	IsSelfAds bit not null,

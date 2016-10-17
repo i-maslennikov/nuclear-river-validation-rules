@@ -72,10 +72,10 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery
                 typeof(FirmWithSpecialCategoryShouldHaveSpecialPurchasesMessageSerializer),
 
                 // ThemeRules
-                typeof(ThemeCategoryShouldBeValidMessageSerializer),
-                typeof(ThemePeriodShouldBeValidMessageSerializer),
+                typeof(ThemeCategoryMustBeActiveAndNotDeletedMessageSerializer),
+                typeof(ThemePeriodMustContainOrderPeriodMessageSerializer),
                 typeof(DefaultThemeMustHaveOnlySelfAdsMessageSerializer),
-                typeof(DefaultThemeMustBeSpecifiedMessageSerializer),
+                typeof(DefaultThemeMustBeExactlyOneMessageSerializer),
             };
 
         private readonly Dictionary<MessageTypeCode, IMessageSerializer> _serializers;

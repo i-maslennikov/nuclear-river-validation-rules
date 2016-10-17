@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Facts
         {
             Id = x.Id,
             Name = x.Name,
-            IsInvalid = !x.IsActive || x.IsDeleted,
+            IsNotActiveOrDeleted = !x.IsActive || x.IsDeleted,
         });
 
         public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

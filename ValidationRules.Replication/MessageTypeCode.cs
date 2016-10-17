@@ -61,9 +61,9 @@
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
         FirmAddressMustBeLocatedOnTheMap = 54,
 
-        ThemeCategoryShouldBeValid = 55,
-        ThemePeriodShouldBeValid = 56,
+        ThemeCategoryMustBeActiveAndNotDeleted = 55,
+        ThemePeriodMustContainOrderPeriod = 56,
         DefaultThemeMustHaveOnlySelfAds = 57,
-        DefaultThemeMustBeSpecified = 58,
+        DefaultThemeMustBeExactlyOne = 58,
     }
 }

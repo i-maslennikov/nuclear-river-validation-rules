@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Facts
 
             var orderIds =
                 from project in _query.For<Project>().Where(x => dataObjectIds.Contains(x.Id))
-                from order in _query.For<Order>().Where(x => x.SourceOrganizationUnitId == project.OrganizationUnitId || x.DestOrganizationUnitId == project.OrganizationUnitId)
+                from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
                 select order.Id;
 
             return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } }.ToArray();

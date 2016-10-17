@@ -1,15 +1,15 @@
 ﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.ThemeRules
 {
-    public sealed class ThemePeriodShouldBeValidMessageSerializer : IMessageSerializer
+    public sealed class ThemePeriodMustContainOrderPeriodMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory;
 
-        public ThemePeriodShouldBeValidMessageSerializer(LinkFactory linkFactory)
+        public ThemePeriodMustContainOrderPeriodMessageSerializer(LinkFactory linkFactory)
         {
             _linkFactory = linkFactory;
         }
 
-        public MessageTypeCode MessageType => MessageTypeCode.ThemePeriodShouldBeValid;
+        public MessageTypeCode MessageType => MessageTypeCode.ThemePeriodMustContainOrderPeriod;
 
         public LocalizedMessage Serialize(Message message)
         {

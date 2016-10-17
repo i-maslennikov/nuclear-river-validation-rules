@@ -210,7 +210,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ThemeAggregates::Order),
                             typeof(ThemeAggregates::Order.OrderTheme),
                             typeof(ThemeAggregates::Project),
-                            typeof(ThemeAggregates::Project.ProjectTheme),
+                            typeof(ThemeAggregates::Project.ProjectDefaultTheme),
                             typeof(ThemeAggregates::Category),
                         });
             }

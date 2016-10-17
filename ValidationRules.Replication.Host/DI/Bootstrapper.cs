@@ -478,7 +478,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                             .RegisterInstance(EntityTypeMap.CreateConsistencyFactsContext())
                             .RegisterInstance(EntityTypeMap.CreatePriceFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateFirmFactsContext())
-                            .RegisterInstance(EntityTypeMap.CreateAdvertisementFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateProjectFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateAdvertisementFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateThemeFactsContext());

@@ -50,7 +50,7 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ThemeAggregates::Project>()
                    .HasSchemaName(ThemeAggregatesSchema)
                    .HasPrimaryKey(x => x.Id);
-            builder.Entity<ThemeAggregates::Project.ProjectTheme>()
+            builder.Entity<ThemeAggregates::Project.ProjectDefaultTheme>()
                    .HasSchemaName(ThemeAggregatesSchema);
 
             builder.Entity<ThemeAggregates::Category>()

@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(DefaultThemeMustHaveOnlySelfAdsPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, SourceOrganizationUnitId = 2, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, SourceProjectId = 3, DestProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
                     new Aggregates::Order.OrderTheme { OrderId = 1, ThemeId = 5 },
 
                     new Aggregates::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(DefaultThemeMustHaveOnlySelfAdsNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, SourceOrganizationUnitId = 2, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
@@ -58,7 +58,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = false }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, SourceProjectId = 3, DestProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
                     new Aggregates::Order.OrderTheme { OrderId = 1, ThemeId = 5 },
 
                     new Aggregates::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = false }

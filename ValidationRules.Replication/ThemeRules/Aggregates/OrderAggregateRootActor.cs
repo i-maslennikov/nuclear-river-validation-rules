@@ -53,16 +53,14 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from sourceProject in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.SourceOrganizationUnitId)
-                   from destProject in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                   from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                    select new Order
                    {
                        Id = order.Id,
                        Number = order.Number,
                        BeginDistributionDate = order.BeginDistributionDate,
                        EndDistributionDateFact = order.EndDistributionDateFact,
-                       SourceProjectId = sourceProject.Id,
-                       DestProjectId = destProject.Id,
+                       ProjectId = project.Id,
                        IsSelfAds = order.IsSelfAds,
                    };
 

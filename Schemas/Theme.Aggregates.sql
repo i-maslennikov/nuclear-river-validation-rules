@@ -38,8 +38,7 @@ create table ThemeAggregates.[Order] (
 	BeginDistributionDate datetime2(2) not null,
 	EndDistributionDateFact datetime2(2) not null,
 
-	SourceProjectId bigint not null,
-	DestProjectId bigint not null,
+	ProjectId bigint not null,
 
 	IsSelfAds bit not null,
 )
@@ -57,9 +56,11 @@ create table ThemeAggregates.Project (
     Name nvarchar(64) not null,
 )
 go
-create table ThemeAggregates.ProjectTheme (
+create table ThemeAggregates.ProjectDefaultTheme (
 	ProjectId bigint not null,
     ThemeId bigint not null,
+	[Start] datetime(2) not null,
+	[End] datetime(2) not null,
 )
 go
 

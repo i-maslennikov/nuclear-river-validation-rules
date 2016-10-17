@@ -13,14 +13,14 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
     /// 
     /// Source: ThemePeriodOverlapsOrderPeriodValidationRule/ThemePeriodDoesNotOverlapOrderPeriod
     /// </summary>
-    public sealed class ThemePeriodShouldBeValid : ValidationResultAccessorBase
+    public sealed class ThemePeriodMustContainOrderPeriod : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public ThemePeriodShouldBeValid(IQuery query) : base(query, MessageTypeCode.ThemePeriodShouldBeValid)
+        public ThemePeriodMustContainOrderPeriod(IQuery query) : base(query, MessageTypeCode.ThemePeriodMustContainOrderPeriod)
         {
         }
 
@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                                                                      )),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDateFact,
-                                      ProjectId = order.DestProjectId,
+                                      ProjectId = order.ProjectId,
 
                                       Result = RuleResult,
                                   };

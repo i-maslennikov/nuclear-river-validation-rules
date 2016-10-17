@@ -31,7 +31,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Facts
             Number = x.Number,
             BeginDistributionDate = x.BeginDistributionDate,
             EndDistributionDateFact = x.EndDistributionDateFact + OneSecond,
-            SourceOrganizationUnitId = x.SourceOrganizationUnitId,
             DestOrganizationUnitId = x.DestOrganizationUnitId,
 
             IsSelfAds = x.OrderType == SelfAdsOrderType

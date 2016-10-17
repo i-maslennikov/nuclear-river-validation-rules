@@ -151,8 +151,9 @@ namespace NuClear.ValidationRules.Replication
                     new ProjectMustContainCostPerClickMinimumRestriction(_query),
 
                     // ThemeRules
-                    new ThemeCategoryShouldBeValid(_query),
-                    new ThemePeriodShouldBeValid(_query),
+                    new DefaultThemeMustBeExactlyOne(_query),
+                    new ThemeCategoryMustBeActiveAndNotDeleted(_query),
+                    new ThemePeriodMustContainOrderPeriod(_query),
                     new DefaultThemeMustHaveOnlySelfAds(_query),
                 };
             }

@@ -45,7 +45,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                                                                  )),
                               PeriodStart = order.BeginDistributionDate,
                               PeriodEnd = order.EndDistributionDateFact,
-                              ProjectId = order.DestProjectId,
+                              ProjectId = order.ProjectId,
 
                               Result = RuleResult,
                           };
