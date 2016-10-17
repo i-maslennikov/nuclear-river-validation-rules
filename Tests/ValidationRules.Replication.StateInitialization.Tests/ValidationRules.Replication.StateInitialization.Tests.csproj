@@ -125,6 +125,7 @@
     <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
+    <Compile Include="Firm\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
     <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Identitites\Connections\MessagesTestConnectionStringIdentity.cs" />
     <Compile Include="Price\OrderPositionsShouldCorrespontToActualPrice.cs" />
