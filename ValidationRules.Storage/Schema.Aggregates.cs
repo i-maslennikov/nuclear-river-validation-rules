@@ -249,6 +249,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ConsistencyAggregates::Order.HasNoAnyPosition>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
+            builder.Entity<ConsistencyAggregates::Order.InactiveReference>()
+                  .HasSchemaName(ConsistencyAggregatesSchema);
+
             builder.Entity<ConsistencyAggregates::Order.InvalidBeginDistributionDate>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 

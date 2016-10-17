@@ -60,5 +60,9 @@
         OrderMustNotIncludeReleasedPeriod = 52,
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
         FirmAddressMustBeLocatedOnTheMap = 54,
+
+        OrderMustHaveActiveDeal = 55,
+        OrderMustHaveActiveLegalEntities = 56,
+        AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 57,
     }
 }

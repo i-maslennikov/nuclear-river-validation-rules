@@ -29,26 +29,28 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
         {
             var ruleResults = from order in query.For<Order>()
                               from missing in query.For<Order.MissingRequiredField>().Where(x => x.OrderId == order.Id)
+                              where missing.Currency || missing.BranchOfficeOrganizationUnit || missing.Inspector
+                                    || missing.LegalPerson || missing.LegalPersonProfile || missing.ReleaseCountPlan
                               select new Version.ValidationResult
-                              {
-                                  MessageParams = new XDocument(
+                                  {
+                                      MessageParams = new XDocument(
                                           new XElement("root",
-                                                       new XElement("message",
-                                                                    missing.Currency ? new XElement("currency") : null,
-                                                                    missing.BranchOfficeOrganizationUnit ? new XElement("branchOfficeOrganizationUnit") : null,
-                                                                    missing.Inspector ? new XElement("inspector") : null,
-                                                                    missing.LegalPerson ? new XElement("legalPerson") : null,
-                                                                    missing.LegalPersonProfile ? new XElement("legalPersonProfile") : null,
-                                                                    missing.ReleaseCountPlan ? new XElement("releaseCountPlan") : null),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)))),
-                                  PeriodStart = order.BeginDistribution,
-                                  PeriodEnd = order.EndDistributionPlan,
-                                  ProjectId = order.ProjectId,
+                                              new XElement("message",
+                                                  missing.Currency ? new XElement("currency") : null,
+                                                  missing.BranchOfficeOrganizationUnit ? new XElement("branchOfficeOrganizationUnit") : null,
+                                                  missing.Inspector ? new XElement("inspector") : null,
+                                                  missing.LegalPerson ? new XElement("legalPerson") : null,
+                                                  missing.LegalPersonProfile ? new XElement("legalPersonProfile") : null,
+                                                  missing.ReleaseCountPlan ? new XElement("releaseCountPlan") : null),
+                                              new XElement("order",
+                                                  new XAttribute("id", order.Id),
+                                                  new XAttribute("number", order.Number)))),
+                                      PeriodStart = order.BeginDistribution,
+                                      PeriodEnd = order.EndDistributionPlan,
+                                      ProjectId = order.ProjectId,
 
-                                  Result = RuleResult,
-                              };
+                                      Result = RuleResult,
+                                  };
 
             return ruleResults;
         }

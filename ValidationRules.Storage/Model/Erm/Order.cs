@@ -14,6 +14,7 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
         public long? InspectorCode { get; set; }
         public long? CurrencyId { get; set; }
         public long? BargainId { get; set; }
+        public long? DealId { get; set; }
         public long OwnerCode { get; set; }
         public DateTime SignupDate { get; set; }
         public DateTime BeginDistributionDate { get; set; }

@@ -13,6 +13,7 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts
         public long? InspectorId { get; set; }
         public long? CurrencyId { get; set; }
         public long? BargainId { get; set; }
+        public long? DealId { get; set; }
         public int WorkflowStep { get; set; }
         public bool IsFreeOfCharge { get; set; }
 

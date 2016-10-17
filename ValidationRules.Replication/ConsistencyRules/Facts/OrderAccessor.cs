@@ -38,6 +38,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                              InspectorId = order.InspectorCode,
                              CurrencyId = order.CurrencyId,
                              BargainId = order.BargainId,
+                             DealId = order.DealId,
                              WorkflowStep = order.WorkflowStepId,
                              IsFreeOfCharge = FreeOfChargeOrderTypes.Contains(order.OrderType),
 
@@ -47,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                              EndDistributionPlan = order.EndDistributionDatePlan,
                              ReleaseCountPlan = order.ReleaseCountPlan,
                              Number = order.Number,
-                     });
+                         });
 
         public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

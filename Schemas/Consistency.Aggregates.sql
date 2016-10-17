@@ -1,6 +1,7 @@
 ﻿if not exists (select * from sys.schemas where name = 'ConsistencyAggregates') exec('create schema ConsistencyAggregates')
 
 if object_id('ConsistencyAggregates.Order') is not null drop table ConsistencyAggregates.[Order]
+if object_id('ConsistencyAggregates.InactiveReference') is not null drop table ConsistencyAggregates.InactiveReference
 if object_id('ConsistencyAggregates.InvalidFirm') is not null drop table ConsistencyAggregates.InvalidFirm
 if object_id('ConsistencyAggregates.InvalidFirmAddress') is not null drop table ConsistencyAggregates.InvalidFirmAddress
 if object_id('ConsistencyAggregates.InvalidCategory') is not null drop table ConsistencyAggregates.InvalidCategory
@@ -28,6 +29,16 @@ create table ConsistencyAggregates.[Order](
     EndDistributionFact datetime2(2) not null,
     EndDistributionPlan datetime2(2) not null,
     constraint PK_Order primary key (Id)
+)
+go
+
+create table ConsistencyAggregates.InactiveReference(
+    OrderId bigint not null,
+    Deal bit not null,
+    LegalPerson bit not null,
+    LegalPersonProfile bit not null,
+    BranchOfficeOrganizationUnit bit not null,
+    BranchOffice bit not null,
 )
 go
 
@@ -145,6 +156,7 @@ create table ConsistencyAggregates.MissingRequiredField(
     Inspector bit not null,
     Currency bit not null,
     ReleaseCountPlan bit not null,
+    Deal bit not null,
 )
 go
 
