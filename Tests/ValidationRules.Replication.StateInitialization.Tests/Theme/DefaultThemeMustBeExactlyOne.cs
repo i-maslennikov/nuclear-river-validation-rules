@@ -122,6 +122,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         PeriodEnd = DateTime.MaxValue,
                         ProjectId = 1,
                     }
-                ).RunOnlyThis();
+                );
     }
 }
