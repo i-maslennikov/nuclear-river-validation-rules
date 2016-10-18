@@ -41,6 +41,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Facts
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Category> dataObjects)
             => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Category), x.Id)).ToArray();
 
+        // Пересчитывать заказ нужно, если у рубрик изменится уровень (только тогда изменится поле IsSalesModelRestrictionApplicable).
+        // Но если у рубрики (в которую есть продажи) изменится уровень - это будет меньшей из проблем.
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Category> dataObjects)
             => Array.Empty<IEvent>();
     }
