@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Facts
 
         public IQueryable<Category> GetSource()
             => from x in _query.For(Specs.Find.Erm.Categories())
-               select new Category { Id = x.Id, Name = x.Name };
+               select new Category { Id = x.Id, Name = x.Name, Level = x.Level };
 
         public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
@@ -41,6 +41,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Facts
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Category> dataObjects)
             => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Category), x.Id)).ToArray();
 
+        // Пересчитывать заказ нужно, если у рубрик изменится уровень (только тогда изменится поле IsSalesModelRestrictionApplicable).
+        // Но если у рубрики (в которую есть продажи) изменится уровень - это будет меньшей из проблем.
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Category> dataObjects)
             => Array.Empty<IEvent>();
     }

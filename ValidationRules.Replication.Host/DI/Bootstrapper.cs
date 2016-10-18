@@ -401,6 +401,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<ProjectFacts::PricePosition, ProjectAccessors::PricePositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<ProjectFacts::Project, ProjectAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<ProjectFacts::ReleaseInfo, ProjectAccessors::ReleaseInfoAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ProjectFacts::SalesModelCategoryRestriction, ProjectAccessors::SalesModelCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory)
 
                 .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::Order>, AdvertisementAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<AdvertisementFacts::Order>, AdvertisementAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory())

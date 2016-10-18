@@ -66,6 +66,9 @@
         DefaultThemeMustHaveOnlySelfAds = 57,
         DefaultThemeMustBeExactlyOne = 58,
 
-        FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 59,
+        OrderPositionCostPerClickMustBeSpecified = 59,
+        OrderPositionSalesModelMustMatchCategorySalesModel = 60,
+
+        FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 61,
     }
 }

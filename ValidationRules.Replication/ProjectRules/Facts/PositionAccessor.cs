@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Facts
 
         public IQueryable<Position> GetSource()
             => from x in _query.For(Specs.Find.Erm.Positions())
-               select new Position { Id = x.Id, Name = x.Name, CategoryCode = x.CategoryCode};
+               select new Position { Id = x.Id, Name = x.Name, CategoryCode = x.CategoryCode, SalesModel = x.SalesModel, PositionsGroup = x.PositionsGroup };
 
         public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

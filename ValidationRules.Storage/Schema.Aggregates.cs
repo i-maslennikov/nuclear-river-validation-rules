@@ -188,6 +188,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ProjectAggregates::Project.CostPerClickRestriction>()
                    .HasSchemaName(ProjectAggregatesSchema);
 
+            builder.Entity<ProjectAggregates::Project.SalesModelRestriction>()
+                   .HasSchemaName(ProjectAggregatesSchema);
+
             builder.Entity<ProjectAggregates::Project.NextRelease>()
                    .HasSchemaName(ProjectAggregatesSchema);
 

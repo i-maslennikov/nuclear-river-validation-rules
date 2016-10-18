@@ -136,6 +136,8 @@
     <Compile Include="Keys.cs" />
     <Compile Include="MappedConnectionStringSettings.cs" />
     <Compile Include="Price\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="Project\OrderPositionSalesModelMustMatchCategorySalesModel.cs" />
+    <Compile Include="Project\OrderPositionCostPerClickMustBeSpecified.cs" />
     <Compile Include="Project\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="Project\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
     <Compile Include="Project\OrderMustUseCategoriesOnlyAvailableInProject.cs" />

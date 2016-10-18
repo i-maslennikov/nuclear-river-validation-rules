@@ -22,6 +22,15 @@ namespace NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates
             public DateTime End { get; set; }
         }
 
+        public sealed class SalesModelRestriction
+        {
+            public long ProjectId { get; set; }
+            public long CategoryId { get; set; }
+            public int SalesModel { get; set; }
+            public DateTime Begin { get; set; }
+            public DateTime End { get; set; }
+        }
+
         public sealed class NextRelease
         {
             public long ProjectId { get; set; }

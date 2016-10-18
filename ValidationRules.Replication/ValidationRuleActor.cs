@@ -148,7 +148,9 @@ namespace NuClear.ValidationRules.Replication
                     new FirmAddressMustBeLocatedOnTheMap(_query),
                     new OrderMustNotIncludeReleasedPeriod(_query),
                     new OrderMustUseCategoriesOnlyAvailableInProject(_query),
+                    new OrderPositionCostPerClickMustBeSpecified(_query),
                     new OrderPositionCostPerClickMustNotBeLessMinimum(_query),
+                    new OrderPositionSalesModelMustMatchCategorySalesModel(_query),
                     new ProjectMustContainCostPerClickMinimumRestriction(_query),
 
                     // ThemeRules

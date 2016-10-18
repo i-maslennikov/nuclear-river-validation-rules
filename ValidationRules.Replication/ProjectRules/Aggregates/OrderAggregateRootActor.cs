@@ -124,6 +124,9 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
         public sealed class CategoryAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
         {
+            private const int PositionsGroupMedia = 1;
+            private const int CategoryLevelThree = 3;
+
             private readonly IQuery _query;
 
             public CategoryAdvertisementAccessor(IQuery query)
@@ -135,13 +138,17 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
+                   from position in _query.For<Facts::Position>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                   from category in _query.For<Facts::Category>().Where(x => x.Id == orderPositionAdvertisement.CategoryId)
                    where orderPositionAdvertisement.CategoryId.HasValue
                    select new Order.CategoryAdvertisement
                        {
                            OrderId = order.Id,
                            OrderPositionId = orderPosition.Id,
                            PositionId = orderPositionAdvertisement.PositionId,
-                           CategoryId = orderPositionAdvertisement.CategoryId.Value,
+                           CategoryId = category.Id,
+                           SalesModel = position.SalesModel,
+                           IsSalesModelRestrictionApplicable = category.Level == CategoryLevelThree && position.PositionsGroup != PositionsGroupMedia
                        };
 
             public FindSpecification<Order.CategoryAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

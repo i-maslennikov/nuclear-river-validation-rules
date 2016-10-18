@@ -4,6 +4,7 @@
     {
         public long Id { get; set; }
         public long CategoryCode { get; set; }
+        public int SalesModel { get; set; }
         public long? AdvertisementTemplateId { get; set; }
         public bool IsControlledByAmount { get; set; }
         public bool IsComposite { get; set; }
@@ -12,5 +13,6 @@
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
         public int Platform { get; set; }
+        public int PositionsGroup { get; set; }
     }
 }

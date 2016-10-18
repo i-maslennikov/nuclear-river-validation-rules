@@ -113,6 +113,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ProjectFacts::PricePosition),
                             typeof(ProjectFacts::Project),
                             typeof(ProjectFacts::ReleaseInfo),
+                            typeof(ProjectFacts::SalesModelCategoryRestriction),
 
                             typeof(ThemeFacts::Theme),
                             typeof(ThemeFacts::ThemeCategory),
@@ -205,6 +206,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ProjectAggregates::Project),
                             typeof(ProjectAggregates::Project.Category),
                             typeof(ProjectAggregates::Project.CostPerClickRestriction),
+                            typeof(ProjectAggregates::Project.SalesModelRestriction),
                             typeof(ProjectAggregates::Project.NextRelease),
 
                             typeof(ThemeAggregates::Theme),

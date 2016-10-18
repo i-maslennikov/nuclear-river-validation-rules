@@ -128,6 +128,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                     yield return new SyncDataObjectCommand(typeof(CostPerClickCategoryRestriction), change.Item2);
                 }
 
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeProject.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(SalesModelCategoryRestriction), change.Item2);
+                }
+
                 foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeAdvertisementElementStatus.Instance.Id))
                 {
                     yield return new SyncDataObjectCommand(typeof(AdvertisementElement), change.Item2);
