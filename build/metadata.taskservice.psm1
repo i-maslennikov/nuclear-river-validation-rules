@@ -61,10 +61,10 @@ function Get-TargetHostsMetadata ($Context){
 		'Production' {
 			switch ($Context.EntryPoint){
 				'ValidationRules.Replication.Host'{
-					return @{ 'TargetHosts' = @('uk-erm-sb01', 'uk-erm-sb03', 'uk-erm-sb04') }
+					return @{ 'TargetHosts' = @('uk-erm-bus01', 'uk-erm-bus02', 'uk-erm-bus03', 'uk-erm-bus04') }
 				}
 				'ConvertUseCasesService' {
-					return @{ 'TargetHosts' = @('uk-erm-sb01') }
+					return @{ 'TargetHosts' = @('uk-erm-bus01') }
 				}
 				'ConvertUseCasesService-Production' { return @{} }
 				default {

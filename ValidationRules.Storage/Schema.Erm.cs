@@ -62,6 +62,8 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<UserProfile>().HasSchemaName(SecuritySchema).HasTableName("UserProfiles").HasPrimaryKey(x => x.Id);
                 config.Entity<TimeZone>().HasSchemaName(SharedSchema).HasTableName("TimeZones").HasPrimaryKey(x => x.Id);
                 config.Entity<Theme>().HasSchemaName(BillingSchema).HasTableName("Themes").HasPrimaryKey(x => x.Id);
+                config.Entity<ThemeCategory>().HasSchemaName(BillingSchema).HasTableName("ThemeCategories").HasPrimaryKey(x => x.Id);
+                config.Entity<ThemeOrganizationUnit>().HasSchemaName(BillingSchema).HasTableName("ThemeOrganizationUnits").HasPrimaryKey(x => x.Id);
 
                 config.Entity<Bargain>().HasSchemaName(BillingSchema).HasTableName("Bargains").HasPrimaryKey(x => x.Id);
                 config.Entity<BargainFile>().HasSchemaName(BillingSchema).HasTableName("BargainFiles").HasPrimaryKey(x => x.Id);

@@ -8,6 +8,7 @@ using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.
 using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using ThemeFacts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -16,11 +17,33 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static readonly DateTime FirstDayJan = DateTime.Parse("2012-01-01");
         private static readonly DateTime FirstDayFeb = DateTime.Parse("2012-02-01");
         private static readonly DateTime FirstDayMar = DateTime.Parse("2012-03-01");
+        private static readonly DateTime FirstDayApr = DateTime.Parse("2012-04-01");
         private static readonly DateTime LastSecondJan = DateTime.Parse("2012-01-31T23:59:59");
         private static readonly DateTime LastSecondMar = DateTime.Parse("2012-03-31T23:59:59");
         private static readonly DateTime LastSecondApr = DateTime.Parse("2012-04-30T23:59:59");
 
         private static DateTime MonthStart(int i) => DateTime.Parse("2012-01-01").AddMonths(i - 1);
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement ThemeOrganizationUnitFacts
+        => ArrangeMetadataElement.Config
+            .Name(nameof(ThemeOrganizationUnitFacts))
+            .Erm(
+                new Erm::ThemeOrganizationUnit { Id = 1, ThemeId = 2, OrganizationUnitId = 3, IsActive = true, IsDeleted = false },
+                new Erm::ThemeOrganizationUnit { Id = 2, ThemeId = 2, OrganizationUnitId = 3, IsActive = false, IsDeleted = false },
+                new Erm::ThemeOrganizationUnit { Id = 3, ThemeId = 2, OrganizationUnitId = 3, IsActive = true, IsDeleted = true })
+            .Fact(
+                new ThemeFacts::ThemeOrganizationUnit { Id = 1, ThemeId = 2, OrganizationUnitId = 3 });
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement ThemeCategoryFacts
+        => ArrangeMetadataElement.Config
+            .Name(nameof(ThemeCategoryFacts))
+            .Erm(
+                new Erm::ThemeCategory { Id = 1, ThemeId = 2, CategoryId = 3, IsDeleted = false },
+                new Erm::ThemeCategory { Id = 2, ThemeId = 2, CategoryId = 3, IsDeleted = true })
+            .Fact(
+                new ThemeFacts::ThemeCategory { Id = 1, ThemeId = 2, CategoryId = 3 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement AdvertisementFacts

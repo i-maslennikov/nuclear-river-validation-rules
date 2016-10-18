@@ -61,8 +61,13 @@
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
         FirmAddressMustBeLocatedOnTheMap = 54,
 
-        OrderMustHaveActiveDeal = 55,
-        OrderMustHaveActiveLegalEntities = 56,
-        AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 57,
+        ThemeCategoryMustBeActiveAndNotDeleted = 55,
+        ThemePeriodMustContainOrderPeriod = 56,
+        DefaultThemeMustHaveOnlySelfAds = 57,
+        DefaultThemeMustBeExactlyOne = 58,
+
+        OrderMustHaveActiveDeal = 59,
+        OrderMustHaveActiveLegalEntities = 60,
+        AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 61,
     }
 }

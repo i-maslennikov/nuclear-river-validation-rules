@@ -21,6 +21,8 @@ using FirmActors = NuClear.ValidationRules.Replication.FirmRules.Aggregates;
 
 using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using AdvertisementActors = NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates;
+using ThemeAggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
+using ThemeActors = NuClear.ValidationRules.Replication.ThemeRules.Aggregates;
 
 using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using ProjectActors = NuClear.ValidationRules.Replication.ProjectRules.Aggregates;
@@ -59,6 +61,11 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(ProjectAggregates::Order), typeof(ProjectActors::OrderAggregateRootActor) },
                     { typeof(ProjectAggregates::Position), typeof(ProjectActors::PositionAggregateRootActor) },
                     { typeof(ProjectAggregates::Project), typeof(ProjectActors::ProjectAggregateRootActor) },
+
+                    { typeof(ThemeAggregates::Category), typeof(ThemeActors::CategoryAggregateRootActor) },
+                    { typeof(ThemeAggregates::Order), typeof(ThemeActors::OrderAggregateRootActor) },
+                    { typeof(ThemeAggregates::Theme), typeof(ThemeActors::ThemeAggregateRootActor) },
+                    { typeof(ThemeAggregates::Project), typeof(ThemeActors::ProjectAggregateRootActor) },
                 };
 
         public UnityAggregateActorFactory(IUnityContainer unityContainer)

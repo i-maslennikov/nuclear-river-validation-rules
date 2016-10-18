@@ -113,6 +113,9 @@ using AdvertisementAccessors = NuClear.ValidationRules.Replication.Advertisement
 using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 using ProjectAccessors = NuClear.ValidationRules.Replication.ProjectRules.Facts;
 
+using ThemeFacts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
+using ThemeAccessors = NuClear.ValidationRules.Replication.ThemeRules.Facts;
+
 namespace NuClear.ValidationRules.Replication.Host.DI
 {
     public static class Bootstrapper
@@ -411,6 +414,15 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IStorageBasedDataObjectAccessor<AdvertisementFacts::AdvertisementElementTemplate>, AdvertisementAccessors::AdvertisementElementTemplateAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<AdvertisementFacts::AdvertisementElementTemplate>, AdvertisementAccessors::AdvertisementElementTemplateAccessor>(entryPointSpecificLifetimeManagerFactory())
 
+                .RegisterAccessor<ThemeFacts::Theme, ThemeAccessors::ThemeAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ThemeFacts::ThemeCategory, ThemeAccessors::ThemeCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ThemeFacts::ThemeOrganizationUnit, ThemeAccessors::ThemeOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ThemeFacts::Category, ThemeAccessors::CategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ThemeFacts::Order, ThemeAccessors::OrderAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ThemeFacts::OrderPosition, ThemeAccessors::OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ThemeFacts::OrderPositionAdvertisement, ThemeAccessors::OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<ThemeFacts::Project, ThemeAccessors::ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
+
                 .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateActorFactory, UnityAggregateActorFactory>(entryPointSpecificLifetimeManagerFactory());
         }
@@ -455,8 +467,9 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                             .RegisterInstance(EntityTypeMap.CreateConsistencyFactsContext())
                             .RegisterInstance(EntityTypeMap.CreatePriceFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateFirmFactsContext())
+                            .RegisterInstance(EntityTypeMap.CreateProjectFactsContext())
                             .RegisterInstance(EntityTypeMap.CreateAdvertisementFactsContext())
-                            .RegisterInstance(EntityTypeMap.CreateProjectFactsContext());
+                            .RegisterInstance(EntityTypeMap.CreateThemeFactsContext());
         }
 
         private static class Scope

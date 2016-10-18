@@ -25,6 +25,9 @@ using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.
 using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 
+using ThemeAggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
+using ThemeFacts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
+
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
@@ -114,6 +117,15 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ProjectFacts::PricePosition),
                             typeof(ProjectFacts::Project),
                             typeof(ProjectFacts::ReleaseInfo),
+
+                            typeof(ThemeFacts::Theme),
+                            typeof(ThemeFacts::ThemeCategory),
+                            typeof(ThemeFacts::ThemeOrganizationUnit),
+                            typeof(ThemeFacts::Category),
+                            typeof(ThemeFacts::Order),
+                            typeof(ThemeFacts::OrderPosition),
+                            typeof(ThemeFacts::OrderPositionAdvertisement),
+                            typeof(ThemeFacts::Project),
                         });
             }
 
@@ -197,6 +209,14 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ProjectAggregates::Project.Category),
                             typeof(ProjectAggregates::Project.CostPerClickRestriction),
                             typeof(ProjectAggregates::Project.NextRelease),
+
+                            typeof(ThemeAggregates::Theme),
+                            typeof(ThemeAggregates::Theme.InvalidCategory),
+                            typeof(ThemeAggregates::Order),
+                            typeof(ThemeAggregates::Order.OrderTheme),
+                            typeof(ThemeAggregates::Project),
+                            typeof(ThemeAggregates::Project.ProjectDefaultTheme),
+                            typeof(ThemeAggregates::Category),
                         });
             }
 
