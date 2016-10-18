@@ -26,11 +26,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 1 },
                     new Facts::OrderPosition { Id = 2, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 3, OrderPositionId = 2, PositionId = 4 },
-                    new Facts::SpecialPosition { Id = 4 })
+                    new Facts::SpecialPosition { Id = 4, IsAdvantageousPurchaseOnPc = true },
+
+                    new Facts::Order { Id = 2 },
+                    new Facts::OrderPosition { Id = 3, OrderId = 2 },
+                    new Facts::OrderPositionAdvertisement { Id = 4, OrderPositionId = 3, PositionId = 5 },
+                    new Facts::SpecialPosition { Id = 5, IsSelfAdvertisementOnPc = true })
                 .Aggregate(
                     new Aggregates::Firm { Id = 1, NeedsSpecialPosition = true },
 
-                    new Aggregates::Order.SpecialPosition { OrderId = 1 });
+                    new Aggregates::Order.SpecialPosition { OrderId = 1 },
+                    new Aggregates::Order.SpecialPosition { OrderId = 2 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmWithSpecialCategoryShouldHaveSpecialPurchasesFooBar

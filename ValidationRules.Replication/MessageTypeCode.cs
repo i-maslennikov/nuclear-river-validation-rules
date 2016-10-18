@@ -68,5 +68,7 @@
 
         OrderPositionCostPerClickMustBeSpecified = 59,
         OrderPositionSalesModelMustMatchCategorySalesModel = 60,
+
+        FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 61,
     }
 }

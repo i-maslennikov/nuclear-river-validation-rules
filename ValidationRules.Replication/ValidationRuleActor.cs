@@ -142,6 +142,7 @@ namespace NuClear.ValidationRules.Replication
 
                     new FirmAndOrderShouldBelongTheSameOrganizationUnit(_query),
                     new FirmShouldHaveLimitedCategoryCount(_query),
+                    new FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions(_query),
                     new FirmWithSpecialCategoryShouldHaveSpecialPurchases(_query),
 
                     new FirmAddressMustBeLocatedOnTheMap(_query),
