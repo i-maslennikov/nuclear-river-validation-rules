@@ -16,6 +16,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 {
     public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>, IDataChangesHandler<Order>
     {
+        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
         private static readonly int[] FreeOfChargeOrderTypes = { 2, 7, 9 };
 
         private readonly IQuery _query;
@@ -44,8 +45,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 
                              SignupDate = order.SignupDate,
                              BeginDistribution = order.BeginDistributionDate,
-                             EndDistributionFact = order.EndDistributionDateFact,
-                             EndDistributionPlan = order.EndDistributionDatePlan,
+                             EndDistributionFact = order.EndDistributionDateFact + OneSecond,
+                             EndDistributionPlan = order.EndDistributionDatePlan + OneSecond,
                              ReleaseCountPlan = order.ReleaseCountPlan,
                              Number = order.Number,
                          });

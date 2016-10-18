@@ -465,7 +465,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.InvalidEndDistributionDate> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   where order.EndDistributionPlan != order.BeginDistribution.AddMonths(order.ReleaseCountPlan).AddSeconds(-1)
+                   where order.EndDistributionPlan != order.BeginDistribution.AddMonths(order.ReleaseCountPlan)
                    select new Order.InvalidEndDistributionDate
                    {
                        OrderId = order.Id,
