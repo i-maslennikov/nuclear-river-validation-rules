@@ -32,17 +32,17 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var dates = query.For<Project.ProjectDefaultTheme>().Select(x => new { x.ProjectId, Date = x.Start })
-                 .Union(query.For<Project.ProjectDefaultTheme>().Select(x => new {x.ProjectId, Date = x.End }))
-                 .Union(query.For<Project.ProjectDefaultTheme>().Select(x => new { x.ProjectId, Date = DateTime.MinValue }));
+                     .Union(query.For<Project.ProjectDefaultTheme>().Select(x => new {x.ProjectId, Date = x.End }))
+                     .Union(query.For<Project>().Select(x => new { ProjectId = x.Id, Date = DateTime.MinValue })); // Фиктивное начало для каждого проекта, даже если в нём нет ни одной тематики по умолчанию
 
             var projectPeriods = from date in dates
                                  let nextDate = dates.FirstOrDefault(x => x.ProjectId == date.ProjectId && x.Date > date.Date).Date
                                  select new
-                                 {
-                                   Start = date.Date,
-                                   End = nextDate != null ? nextDate.Date : DateTime.MaxValue,
-                                   date.ProjectId
-                                 };
+                                     {
+                                         Start = date.Date,
+                                         End = nextDate != null ? nextDate.Date : DateTime.MaxValue,
+                                         date.ProjectId
+                                     };
 
             var ruleResults = from projectPeriod in projectPeriods
                               let themeCount = query.For<Project.ProjectDefaultTheme>().Count(x => x.ProjectId == projectPeriod.ProjectId && x.Start < projectPeriod.End && x.End > projectPeriod.Start)
