@@ -4,6 +4,7 @@ go
 if object_id('ProjectFacts.Category') is not null drop table ProjectFacts.Category
 if object_id('ProjectFacts.CategoryOrganizationUnit') is not null drop table ProjectFacts.CategoryOrganizationUnit
 if object_id('ProjectFacts.CostPerClickCategoryRestriction') is not null drop table ProjectFacts.CostPerClickCategoryRestriction
+if object_id('ProjectFacts.SalesModelCategoryRestriction') is not null drop table ProjectFacts.SalesModelCategoryRestriction
 if object_id('ProjectFacts.FirmAddress') is not null drop table ProjectFacts.FirmAddress
 if object_id('ProjectFacts.[Order]') is not null drop table ProjectFacts.[Order]
 if object_id('ProjectFacts.OrderPosition') is not null drop table ProjectFacts.OrderPosition
@@ -17,6 +18,7 @@ go
 
 create table ProjectFacts.Category(
     Id bigint not null,
+    [Level] int not null,
     Name nvarchar(max) not null,
 )
 go
@@ -33,6 +35,14 @@ create table ProjectFacts.CostPerClickCategoryRestriction(
     CategoryId bigint not null,
     [Begin] datetime2(2) not null,
     MinCostPerClick decimal(19,4) not null,
+)
+go
+
+create table ProjectFacts.SalesModelCategoryRestriction(
+    ProjectId bigint not null,
+    CategoryId bigint not null,
+    [Begin] datetime2(2) not null,
+    SalesModel int not null,
 )
 go
 
@@ -79,6 +89,8 @@ go
 create table ProjectFacts.Position(
     Id bigint not null,
     CategoryCode bigint not null,
+    SalesModel int not null,
+    PositionsGroup int not null,
     Name nvarchar(max) not null,
 )
 go

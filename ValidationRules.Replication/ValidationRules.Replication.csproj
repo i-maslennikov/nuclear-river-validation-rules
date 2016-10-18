@@ -266,9 +266,12 @@
     <Compile Include="ProjectRules\Facts\CategoryAccessor.cs" />
     <Compile Include="ProjectRules\Facts\OrderAccessor.cs" />
     <Compile Include="ProjectRules\Facts\ReleaseInfoAccessor.cs" />
+    <Compile Include="ProjectRules\Facts\SalesModelCategoryRestrictionAccessor.cs" />
     <Compile Include="ProjectRules\Validation\FirmAddressMustBeLocatedOnTheMap.cs" />
     <Compile Include="ProjectRules\Validation\OrderMustNotIncludeReleasedPeriod.cs" />
     <Compile Include="ProjectRules\Validation\OrderMustUseCategoriesOnlyAvailableInProject.cs" />
+    <Compile Include="ProjectRules\Validation\OrderPositionSalesModelMustMatchCategorySalesModel.cs" />
+    <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustBeSpecified.cs" />
     <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
     <Compile Include="ThemeRules\Aggregates\CategoryAggregateRootActor.cs" />

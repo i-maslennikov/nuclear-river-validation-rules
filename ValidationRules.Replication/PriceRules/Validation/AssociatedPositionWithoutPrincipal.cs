@@ -12,7 +12,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Для заказа, в котором есть сопутствующая позиция и нет основной должна выводиться ошибка.
     /// "{0} является сопутствующей, основная позиция не найдена"
     /// 
-    /// Source: ADP/AssociatedPositionWithoutPrincipalTemplate
+    /// Source: AssociatedAndDeniedPricePositionsOrderValidationRule/AssociatedPositionWithoutPrincipalTemplate
     /// 
     /// Q1: Может ли элемент пакета быть удовлетворён другим элементом того же самого пакета?
     /// 

@@ -26,6 +26,8 @@ namespace NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates
             public long OrderPositionId { get; set; }
             public long PositionId { get; set; }
             public long CategoryId { get; set; }
+            public int SalesModel { get; set; }
+            public bool IsSalesModelRestrictionApplicable { get; set; }
         }
 
         public class CostPerClickAdvertisement
