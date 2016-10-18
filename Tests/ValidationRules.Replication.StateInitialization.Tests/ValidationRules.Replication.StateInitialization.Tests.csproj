@@ -149,6 +149,10 @@
     <Compile Include="TestCaseMetadataSource.Period.cs" />
     <Compile Include="TestCaseMetadataSource.Position.cs" />
     <Compile Include="TestCaseMetadataSource.Price.cs" />
+    <Compile Include="Theme\DefaultThemeMustBeExactlyOne.cs" />
+    <Compile Include="Theme\DefaultThemeMustHaveOnlySelfAds.cs" />
+    <Compile Include="Theme\ThemeCategoryMustBeActiveAndNotDeleted.cs" />
+    <Compile Include="Theme\ThemePeriodMustContainOrderPeriod.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

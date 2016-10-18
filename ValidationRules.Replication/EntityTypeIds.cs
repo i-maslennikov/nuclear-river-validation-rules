@@ -28,6 +28,8 @@
         public const int ReleaseWithdrawal = 215;
         public const int Ruleset = 280;
         public const int Theme = 221;
+        public const int ThemeCategory = 223;
+        public const int ThemeOrganizationUnit = 224;
         public const int Advertisement = 186;
         public const int AdvertisementElement = 187;
         public const int AdvertisementElementStatus = 316;
