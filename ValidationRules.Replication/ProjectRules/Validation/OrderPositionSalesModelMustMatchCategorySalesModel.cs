@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                                     new XAttribute("number", order.Number)),
                                 new XElement("project",
                                     new XAttribute("id", order.ProjectId),
-                                    new XAttribute("number", query.For<Project>().Single(x => x.Id == order.ProjectId).Name)))),
+                                    new XAttribute("name", query.For<Project>().Single(x => x.Id == order.ProjectId).Name)))),
                         PeriodStart = order.Begin > restriction.Begin ? order.Begin : restriction.Begin,
                         PeriodEnd = order.End < restriction.End ? order.End : restriction.End,
                         ProjectId = order.ProjectId,
