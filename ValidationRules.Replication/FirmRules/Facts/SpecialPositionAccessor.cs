@@ -28,13 +28,11 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Facts
 
         public IQueryable<SpecialPosition> GetSource()
             => from position in _query.For(Specs.Find.Erm.Positions())
-               let isAdvantageousPurchaseOnPc = position.CategoryCode == AdvantageousPurchaseWith2Gis && position.Platform == PlatformDesktop
-               let isSelfAdvertisementOnPc = position.CategoryCode == SelfAdvertisementOnlyOnPc
                select new SpecialPosition
                    {
                        Id = position.Id,
                        IsSelfAdvertisementOnPc = position.CategoryCode == SelfAdvertisementOnlyOnPc,
-                       IsAdvantageousPurchaseOnPc = isAdvantageousPurchaseOnPc,
+                       IsAdvantageousPurchaseOnPc = position.CategoryCode == AdvantageousPurchaseWith2Gis && position.Platform == PlatformDesktop,
                        IsApplicapleForPc = position.Platform == PlatformDesktop || position.Platform == PlatformIndependent,
                    };
 
