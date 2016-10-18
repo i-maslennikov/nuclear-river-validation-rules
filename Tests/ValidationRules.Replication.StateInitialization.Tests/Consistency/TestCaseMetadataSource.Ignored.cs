@@ -109,7 +109,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.HasNoAnyLegalPersonProfile(),
                 new Aggregates::Order.InvalidEndDistributionDate(),
                 new Aggregates::Order.MissingOrderScan(),
-                new Aggregates::Order.MissingRequiredField {BranchOfficeOrganizationUnit = true, Currency = true, Inspector = true, LegalPerson = true, LegalPersonProfile = true, ReleaseCountPlan = true });
+                new Aggregates::Order.MissingRequiredField {BranchOfficeOrganizationUnit = true, Currency = true, Inspector = true, LegalPerson = true, LegalPersonProfile = true, ReleaseCountPlan = true, Deal = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement SampleTest2
