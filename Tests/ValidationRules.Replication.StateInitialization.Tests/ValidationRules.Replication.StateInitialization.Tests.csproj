@@ -127,6 +127,7 @@
     <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
+    <Compile Include="Firm\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
     <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Identitites\Connections\MessagesTestConnectionStringIdentity.cs" />
     <Compile Include="Price\OrderPositionsShouldCorrespontToActualPrice.cs" />
@@ -137,6 +138,8 @@
     <Compile Include="Keys.cs" />
     <Compile Include="MappedConnectionStringSettings.cs" />
     <Compile Include="Price\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="Project\OrderPositionSalesModelMustMatchCategorySalesModel.cs" />
+    <Compile Include="Project\OrderPositionCostPerClickMustBeSpecified.cs" />
     <Compile Include="Project\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="Project\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
     <Compile Include="Project\OrderMustUseCategoriesOnlyAvailableInProject.cs" />

@@ -64,6 +64,9 @@ go
 
 create table FirmFacts.SpecialPosition(
     Id bigint not null,
+    IsSelfAdvertisementOnPc bit not null,
+    IsAdvantageousPurchaseOnPc bit not null,
+    IsApplicapleForPc bit not null,
     constraint PK_SpecialPosition primary key (Id)
 )
 go

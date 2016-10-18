@@ -66,8 +66,13 @@
         DefaultThemeMustHaveOnlySelfAds = 57,
         DefaultThemeMustBeExactlyOne = 58,
 
-        OrderMustHaveActiveDeal = 59,
-        OrderMustHaveActiveLegalEntities = 60,
-        AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 61,
+        OrderPositionCostPerClickMustBeSpecified = 59,
+        OrderPositionSalesModelMustMatchCategorySalesModel = 60,
+
+        FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 61,
+
+        OrderMustHaveActiveDeal = 62,
+        OrderMustHaveActiveLegalEntities = 63,
+        AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
     }
 }

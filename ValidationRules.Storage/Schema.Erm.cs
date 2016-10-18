@@ -58,6 +58,7 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<CategoryOrganizationUnit>().HasSchemaName(BusinessDirectorySchema).HasTableName("CategoryOrganizationUnits").HasPrimaryKey(x => x.Id);
                 config.Entity<CategoryFirmAddress>().HasSchemaName(BusinessDirectorySchema).HasTableName("CategoryFirmAddresses").HasPrimaryKey(x => x.Id);
                 config.Entity<CostPerClickCategoryRestriction>().HasSchemaName(BusinessDirectorySchema).HasTableName("CostPerClickCategoryRestrictions");
+                config.Entity<SalesModelCategoryRestriction>().HasSchemaName(BusinessDirectorySchema).HasTableName("SalesModelCategoryRestrictions");
                 config.Entity<User>().HasSchemaName(SecuritySchema).HasTableName("Users").HasPrimaryKey(x => x.Id);
                 config.Entity<UserProfile>().HasSchemaName(SecuritySchema).HasTableName("UserProfiles").HasPrimaryKey(x => x.Id);
                 config.Entity<TimeZone>().HasSchemaName(SharedSchema).HasTableName("TimeZones").HasPrimaryKey(x => x.Id);

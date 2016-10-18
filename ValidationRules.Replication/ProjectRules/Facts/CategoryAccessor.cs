@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Facts
 
         public IQueryable<Category> GetSource()
             => from x in _query.For(Specs.Find.Erm.Categories())
-               select new Category { Id = x.Id, Name = x.Name };
+               select new Category { Id = x.Id, Name = x.Name, Level = x.Level };
 
         public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

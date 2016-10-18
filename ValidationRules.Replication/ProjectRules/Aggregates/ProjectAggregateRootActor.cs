@@ -22,6 +22,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         private readonly IBulkRepository<Project.Category> _categoryRepository;
         private readonly IBulkRepository<Project.CostPerClickRestriction> _costPerClickRestrictionRepository;
         private readonly IBulkRepository<Project.NextRelease> _nextReleaseRepository;
+        private readonly IBulkRepository<Project.SalesModelRestriction> _salesModelRestrictionRepository;
 
         public ProjectAggregateRootActor(
             IQuery query,
@@ -29,6 +30,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Project.Category> categoryRepository,
             IBulkRepository<Project.CostPerClickRestriction> costPerClickRestrictionRepository,
+            IBulkRepository<Project.SalesModelRestriction> salesModelRestrictionRepository,
             IBulkRepository<Project.NextRelease> nextReleaseRepository)
             : base(query, bulkRepository, equalityComparerFactory, new ProjectAccessor(query))
         {
@@ -37,6 +39,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             _categoryRepository = categoryRepository;
             _costPerClickRestrictionRepository = costPerClickRestrictionRepository;
             _nextReleaseRepository = nextReleaseRepository;
+            _salesModelRestrictionRepository = salesModelRestrictionRepository;
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
@@ -47,6 +50,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 {
                     new ValueObjectActor<Project.Category>(_query, _categoryRepository, _equalityComparerFactory, new CategoryAccessor(_query)),
                     new ValueObjectActor<Project.CostPerClickRestriction>(_query, _costPerClickRestrictionRepository, _equalityComparerFactory, new CostPerClickRestrictionAccessor(_query)),
+                    new ValueObjectActor<Project.SalesModelRestriction>(_query, _salesModelRestrictionRepository, _equalityComparerFactory, new SalesModelRestrictionAccessor(_query)),
                     new ValueObjectActor<Project.NextRelease>(_query, _nextReleaseRepository, _equalityComparerFactory, new NextReleaseAccessor(_query)),
                 };
 
@@ -129,6 +133,39 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Project.CostPerClickRestriction>(x => aggregateIds.Contains(x.ProjectId));
+            }
+        }
+
+        public sealed class SalesModelRestrictionAccessor : IStorageBasedDataObjectAccessor<Project.SalesModelRestriction>
+        {
+            private readonly IQuery _query;
+
+            public SalesModelRestrictionAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Project.SalesModelRestriction> GetSource()
+                => from project in _query.For<Facts::Project>()
+                   from restriction in _query.For<Facts::SalesModelCategoryRestriction>().Where(x => x.ProjectId == project.Id)
+                   let nextRestriction = _query.For<Facts::SalesModelCategoryRestriction>().Where(x => x.ProjectId == project.Id && x.CategoryId == restriction.CategoryId && x.Begin > restriction.Begin).Min(x => (DateTime?)x.Begin)
+                   select new Project.SalesModelRestriction
+                   {
+                       ProjectId = restriction.ProjectId,
+                       CategoryId = restriction.CategoryId,
+                       SalesModel = restriction.SalesModel,
+                       Begin = restriction.Begin,
+                       End = nextRestriction ?? DateTime.MaxValue
+                   };
+
+            public FindSpecification<Project.SalesModelRestriction> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Project.SalesModelRestriction>(x => aggregateIds.Contains(x.ProjectId));
             }
         }
 

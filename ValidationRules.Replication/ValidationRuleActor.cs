@@ -145,12 +145,15 @@ namespace NuClear.ValidationRules.Replication
 
                     new FirmAndOrderShouldBelongTheSameOrganizationUnit(_query),
                     new FirmShouldHaveLimitedCategoryCount(_query),
+                    new FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions(_query),
                     new FirmWithSpecialCategoryShouldHaveSpecialPurchases(_query),
 
                     new FirmAddressMustBeLocatedOnTheMap(_query),
                     new OrderMustNotIncludeReleasedPeriod(_query),
                     new OrderMustUseCategoriesOnlyAvailableInProject(_query),
+                    new OrderPositionCostPerClickMustBeSpecified(_query),
                     new OrderPositionCostPerClickMustNotBeLessMinimum(_query),
+                    new OrderPositionSalesModelMustMatchCategorySalesModel(_query),
                     new ProjectMustContainCostPerClickMinimumRestriction(_query),
 
                     // ThemeRules

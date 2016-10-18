@@ -10,6 +10,7 @@ if object_id('ProjectAggregates.Position') is not null drop table ProjectAggrega
 if object_id('ProjectAggregates.Project') is not null drop table ProjectAggregates.Project
 if object_id('ProjectAggregates.ProjectCategory') is not null drop table ProjectAggregates.ProjectCategory
 if object_id('ProjectAggregates.CostPerClickRestriction') is not null drop table ProjectAggregates.CostPerClickRestriction
+if object_id('ProjectAggregates.SalesModelRestriction') is not null drop table ProjectAggregates.SalesModelRestriction
 if object_id('ProjectAggregates.NextRelease') is not null drop table ProjectAggregates.NextRelease
 go
 
@@ -50,6 +51,8 @@ create table ProjectAggregates.CategoryAdvertisement(
     OrderPositionId bigint not null,
     PositionId bigint not null,
     CategoryId bigint not null,
+    SalesModel int not null,
+    IsSalesModelRestrictionApplicable bit not null,
 )
 go
 
@@ -84,6 +87,15 @@ create table ProjectAggregates.CostPerClickRestriction(
     ProjectId bigint not null,
     CategoryId bigint not null,
     Minimum decimal(19,4) not null,
+    [Begin] datetime2(2) not null,
+    [End] datetime2(2) not null,
+)
+go
+
+create table ProjectAggregates.SalesModelRestriction(
+    ProjectId bigint not null,
+    CategoryId bigint not null,
+    SalesModel int not null,
     [Begin] datetime2(2) not null,
     [End] datetime2(2) not null,
 )

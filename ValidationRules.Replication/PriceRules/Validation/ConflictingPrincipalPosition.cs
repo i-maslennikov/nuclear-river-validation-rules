@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Для заказов, в котором есть сопутствующая позиция и есть основная, но не удовлетворено условие ObjectBindingType.Different, должна выводиться ошибка.
     /// "{0} содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1}"
     /// 
-    /// Source: ADP/ConflictingPrincipalPosition
+    /// Source: AssociatedAndDeniedPricePositionsOrderValidationRule/ConflictingPrincipalPosition
     /// 
     /// Q1: Позиция Y - сопутствующая для X (с требованием, чтобы объекты привязки различались).
     ///     Две X проданы в рубрики A и B. Продана Y в рубрику A. Должна ли появиться ошибка?

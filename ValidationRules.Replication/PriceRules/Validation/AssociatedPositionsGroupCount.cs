@@ -11,6 +11,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// <summary>
     /// Для прайс-листов, у позиций которых более одной AssociatedPositionsGroup должно выводиться предупреждение.
     /// "В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой."
+    /// 
+    /// Source: AssociatedAndDeniedPricePositionsOrderValidationRule/InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions
     /// </summary>
     public sealed class AssociatedPositionsGroupCount : ValidationResultAccessorBase
     {

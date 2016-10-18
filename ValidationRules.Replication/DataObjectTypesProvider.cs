@@ -99,6 +99,7 @@ namespace NuClear.ValidationRules.Replication
                             typeof(ProjectFacts::PricePosition),
                             typeof(ProjectFacts::Project),
                             typeof(ProjectFacts::ReleaseInfo),
+                            typeof(ProjectFacts::SalesModelCategoryRestriction),
 
                             typeof(ThemeFacts::Theme),
                             typeof(ThemeFacts::ThemeCategory),

@@ -15,7 +15,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Позиция {0} данного Заказа является основной для следующих позиций:
     /// Позиция {0} Заказа {1}
     /// 
-    /// Source: ADP/ADPValidation_Template
+    /// Source: AssociatedAndDeniedPricePositionsOrderValidationRule/ADPValidation_Template
     /// 
     /// Q1: X является сопутствующей для Y (объект привязки совпадает)
     ///     Оформлен заказ №1 с X(A,B), Y(A) и заказ №2 с Y(B).
