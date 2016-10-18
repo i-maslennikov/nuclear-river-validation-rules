@@ -23,6 +23,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static DateTime MonthStart(int i) => DateTime.Parse("2012-01-01").AddMonths(i - 1);
 
         // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement SalesModelCategoryRestrictions
+        => ArrangeMetadataElement.Config
+            .Name(nameof(SalesModelCategoryRestrictions))
+            .Erm(
+                new Erm::SalesModelCategoryRestriction { ProjectId = 1, BeginningDate = MonthStart(1), CategoryId = 1, SalesModel = 2 })
+            .Fact(
+                new ProjectFacts::SalesModelCategoryRestriction { ProjectId = 1, Begin = MonthStart(1), CategoryId = 1, SalesModel = 2 });
+
+        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement AdvertisementFacts
         => ArrangeMetadataElement.Config
             .Name(nameof(AdvertisementFacts))
@@ -213,9 +222,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new ConsistencyFacts::Category { Id = 4, IsActiveNotDeleted = false },
                 new ConsistencyFacts::Category { Id = 5, IsActiveNotDeleted = false },
 
-                new ProjectFacts::Category { Id = 1, Name = "1"},
-                new ProjectFacts::Category { Id = 2, Name = "2" },
-                new ProjectFacts::Category { Id = 3, Name = "3" });
+                new ProjectFacts::Category { Id = 1, Name = "1", Level = 1 },
+                new ProjectFacts::Category { Id = 2, Name = "2", Level = 2 },
+                new ProjectFacts::Category { Id = 3, Name = "3", Level = 3 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement DeniedPositionFacts
