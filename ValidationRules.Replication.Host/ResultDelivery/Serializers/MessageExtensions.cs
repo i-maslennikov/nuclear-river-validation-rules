@@ -307,6 +307,17 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             };
         }
 
+        public static int ReadProjectThemeCount(this Message message)
+        {
+            var element = message.Data.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return (int)element.Attribute("themeCount");
+        }
+
         public sealed class CategoryCountDto
         {
             public int Allowed { get; set; }

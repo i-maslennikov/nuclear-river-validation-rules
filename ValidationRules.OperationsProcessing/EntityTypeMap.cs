@@ -11,6 +11,7 @@ using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.
 using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using ThemeFacts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -117,6 +118,17 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddAsPersistenceOnly(typeof(ProjectFacts::OrderPositionCostPerClick))
                 .AddAsPersistenceOnly(typeof(ProjectFacts::CostPerClickCategoryRestriction));
 
+        private static readonly Action<EntityTypeMappingRegistryBuilder> ThemeFactsTypeMap
+            = builder => builder
+                .AddMapping<EntityTypeTheme, ThemeFacts::Theme>()
+                .AddMapping<EntityTypeThemeCategory, ThemeFacts::ThemeCategory>()
+                .AddMapping<EntityTypeThemeOrganizationUnit, ThemeFacts::ThemeOrganizationUnit>()
+                .AddMapping<EntityTypeCategory, ThemeFacts::Category>()
+                .AddMapping<EntityTypeOrder, ThemeFacts::Order>()
+                .AddMapping<EntityTypeOrderPosition, ThemeFacts::OrderPosition>()
+                .AddMapping<EntityTypeOrderPositionAdvertisement, ThemeFacts::OrderPositionAdvertisement>()
+                .AddMapping<EntityTypeProject, ThemeFacts::Project>();
+
         private static readonly Action<EntityTypeMappingRegistryBuilder> AggregateTypeMap
             = builder => builder
                 .AddMapping<EntityTypeOrder, Storage.Model.PriceRules.Aggregates.Order>()
@@ -177,6 +189,13 @@ namespace NuClear.ValidationRules.OperationsProcessing
             var builder = new EntityTypeMappingRegistryBuilder();
             ProjectFactsTypeMap.Invoke(builder);
             return builder.Create<ProjectFactsSubDomain>();
+        }
+
+        public static IEntityTypeMappingRegistry<AdvertisementFactsSubDomain> CreateThemeFactsContext()
+        {
+            var builder = new EntityTypeMappingRegistryBuilder();
+            ThemeFactsTypeMap.Invoke(builder);
+            return builder.Create<AdvertisementFactsSubDomain>();
         }
 
         public static IEntityTypeMappingRegistry<AggregateSubDomain> CreateAggregateContext()
