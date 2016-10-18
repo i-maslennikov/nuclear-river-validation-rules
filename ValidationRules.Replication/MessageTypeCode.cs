@@ -61,7 +61,12 @@
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
         FirmAddressMustBeLocatedOnTheMap = 54,
 
-        OrderPositionCostPerClickMustBeSpecified = 55,
-        OrderPositionSalesModelMustMatchCategorySalesModel = 56,
+        ThemeCategoryMustBeActiveAndNotDeleted = 55,
+        ThemePeriodMustContainOrderPeriod = 56,
+        DefaultThemeMustHaveOnlySelfAds = 57,
+        DefaultThemeMustBeExactlyOne = 58,
+
+        OrderPositionCostPerClickMustBeSpecified = 59,
+        OrderPositionSalesModelMustMatchCategorySalesModel = 60,
     }
 }

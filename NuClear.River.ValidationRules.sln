@@ -50,6 +50,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{2798
 		Schemas\Price.Facts.sql = Schemas\Price.Facts.sql
 		Schemas\Project.Aggregates.sql = Schemas\Project.Aggregates.sql
 		Schemas\Project.Facts.sql = Schemas\Project.Facts.sql
+		Schemas\Theme.Aggregates.sql = Schemas\Theme.Aggregates.sql
+		Schemas\Theme.Facts.sql = Schemas\Theme.Facts.sql
 		Schemas\User.Facts.sql = Schemas\User.Facts.sql
 	EndProjectSection
 EndProject

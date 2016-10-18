@@ -14,6 +14,7 @@ using NuClear.ValidationRules.Replication.ConsistencyRules.Validation;
 using NuClear.ValidationRules.Replication.FirmRules.Validation;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
 using NuClear.ValidationRules.Replication.ProjectRules.Validation;
+using NuClear.ValidationRules.Replication.ThemeRules.Validation;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -150,6 +151,12 @@ namespace NuClear.ValidationRules.Replication
                     new OrderPositionCostPerClickMustNotBeLessMinimum(_query),
                     new OrderPositionSalesModelMustMatchCategorySalesModel(_query),
                     new ProjectMustContainCostPerClickMinimumRestriction(_query),
+
+                    // ThemeRules
+                    new DefaultThemeMustBeExactlyOne(_query),
+                    new ThemeCategoryMustBeActiveAndNotDeleted(_query),
+                    new ThemePeriodMustContainOrderPeriod(_query),
+                    new DefaultThemeMustHaveOnlySelfAds(_query),
                 };
             }
         }
