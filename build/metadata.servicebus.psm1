@@ -52,12 +52,7 @@ function Get-TopicsMetadata ($Context) {
 							'ConnectionStringName' = 'ServiceBus'
 						} + $subscriptionProperties
 					}
-					$deleteTopic = @{
-						'DeleteConvertUseCasesTopic-ERMProduction' = @{
-							'Name' = "topic.performedoperations.production.$($Context.Country).import".ToLowerInvariant()
-							'ConnectionStringName' = 'ServiceBus'
-						}
-					}
+					$deleteTopic = @{}
 					$deleteSubscription = @{}
 				}
 
@@ -100,8 +95,6 @@ function Get-TopicsMetadata ($Context) {
 
 				} + $ermEventsFlowTopic
 
-				'DeleteTopics' = $deleteTopic
-
 				'CreateSubscriptions' = @{
 					'CommonEventsFlowSubscription' = @{
 						'TopicName' = 'topic.river.validationrules.common'
@@ -115,8 +108,6 @@ function Get-TopicsMetadata ($Context) {
 						'ConnectionStringName' = 'ServiceBus'
 					} + $subscriptionProperties
 				} + $ermEventsFlowSubscription
-
-				'DeleteSubscriptions' = $deleteSubscription
 			} 
 		}
 
