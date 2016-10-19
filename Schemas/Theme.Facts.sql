@@ -15,10 +15,10 @@ go
 create table ThemeFacts.Theme (
     Id bigint not null,
 
-	Name nvarchar(64) not null,
-	BeginDistribution datetime2 not null,
-	EndDistribution datetime2 not null,
-	IsDefault bit not null,
+    Name nvarchar(64) not null,
+    BeginDistribution datetime2(2) not null,
+    EndDistribution datetime2(2) not null,
+    IsDefault bit not null,
 
     constraint PK_Theme primary key (Id)
 )
@@ -27,8 +27,8 @@ go
 create table ThemeFacts.ThemeCategory (
     Id bigint not null,
 
-	ThemeId bigint not null,
-	CategoryId bigint not null,
+    ThemeId bigint not null,
+    CategoryId bigint not null,
 
     constraint PK_ThemeCategory primary key (Id)
 )
@@ -37,8 +37,8 @@ go
 create table ThemeFacts.ThemeOrganizationUnit (
     Id bigint not null,
 
-	ThemeId bigint not null,
-	OrganizationUnitId bigint not null,
+    ThemeId bigint not null,
+    OrganizationUnitId bigint not null,
 
     constraint PK_ThemeOrganizationUnit primary key (Id)
 )
@@ -47,8 +47,8 @@ go
 create table ThemeFacts.Category (
     Id bigint not null,
 
-	Name nvarchar(128) not null,
-	IsNotActiveOrDeleted bit not null,
+    Name nvarchar(128) not null,
+    IsNotActiveOrDeleted bit not null,
 
     constraint PK_Category primary key (Id)
 )
@@ -57,13 +57,13 @@ go
 create table ThemeFacts.[Order] (
     Id bigint not null,
 
-	Number nvarchar(64) not null,
+    Number nvarchar(64) not null,
 
-	BeginDistributionDate datetime2(2) not null,
-	EndDistributionDateFact datetime2(2) not null,
-	DestOrganizationUnitId bigint not null,
+    BeginDistributionDate datetime2(2) not null,
+    EndDistributionDateFact datetime2(2) not null,
+    DestOrganizationUnitId bigint not null,
 
-	IsSelfAds bit not null,
+    IsSelfAds bit not null,
 
     constraint PK_Order primary key (Id)
 )
@@ -72,7 +72,7 @@ go
 create table ThemeFacts.Project (
     Id bigint not null,
     OrganizationUnitId bigint not null,
-	Name nvarchar(64) not null,
+    Name nvarchar(64) not null,
 
     constraint PK_Project primary key (Id)
 )
@@ -89,7 +89,7 @@ go
 create table ThemeFacts.OrderPositionAdvertisement (
     Id bigint not null,
     OrderPositionId bigint not null,
-	ThemeId bigint not null,
+    ThemeId bigint not null,
 
     constraint PK_OrderPositionAdvertisement primary key (Id)
 )

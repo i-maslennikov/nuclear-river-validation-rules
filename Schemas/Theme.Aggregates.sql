@@ -8,7 +8,7 @@ if object_id('ThemeAggregates.Order') is not null drop table ThemeAggregates.[Or
 if object_id('ThemeAggregates.OrderTheme') is not null drop table ThemeAggregates.OrderTheme
 
 if object_id('ThemeAggregates.Project') is not null drop table ThemeAggregates.Project
-if object_id('ThemeAggregates.ProjectTheme') is not null drop table ThemeAggregates.ProjectTheme
+if object_id('ThemeAggregates.ProjectDefaultTheme') is not null drop table ThemeAggregates.ProjectDefaultTheme
 
 if object_id('ThemeAggregates.Category') is not null drop table ThemeAggregates.Category
 go
@@ -18,10 +18,10 @@ create table ThemeAggregates.Theme (
     Id bigint not null,
 
     Name nvarchar(64) not null,
-	BeginDistribution datetime2(2) not null,
-	EndDistribution datetime2(2) not null,
+    BeginDistribution datetime2(2) not null,
+    EndDistribution datetime2(2) not null,
 
-	IsDefault bit not null,
+    IsDefault bit not null,
 )
 go
 create table ThemeAggregates.InvalidCategory (
@@ -35,12 +35,12 @@ create table ThemeAggregates.[Order] (
     Id bigint not null,
 
     Number nvarchar(64) not null,
-	BeginDistributionDate datetime2(2) not null,
-	EndDistributionDateFact datetime2(2) not null,
+    BeginDistributionDate datetime2(2) not null,
+    EndDistributionDateFact datetime2(2) not null,
 
-	ProjectId bigint not null,
+    ProjectId bigint not null,
 
-	IsSelfAds bit not null,
+    IsSelfAds bit not null,
 )
 go
 create table ThemeAggregates.OrderTheme (
@@ -56,11 +56,12 @@ create table ThemeAggregates.Project (
     Name nvarchar(64) not null,
 )
 go
+
 create table ThemeAggregates.ProjectDefaultTheme (
-	ProjectId bigint not null,
+    ProjectId bigint not null,
     ThemeId bigint not null,
-	[Start] datetime(2) not null,
-	[End] datetime(2) not null,
+    [Start] datetime2(2) not null,
+    [End] datetime2(2) not null,
 )
 go
 
