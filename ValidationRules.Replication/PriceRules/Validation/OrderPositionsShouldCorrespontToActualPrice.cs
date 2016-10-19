@@ -18,9 +18,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     public class OrderPositionsShouldCorrespontToActualPrice : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                            .WhenMass(Result.Error)
-                                                            .WhenMassPrerelease(Result.Error)
-                                                            .WhenMassRelease(Result.Error);
+                                                            .WhenMass(Result.None)
+                                                            .WhenMassPrerelease(Result.None)
+                                                            .WhenMassRelease(Result.None);
 
         public OrderPositionsShouldCorrespontToActualPrice(IQuery query) : base(query, MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice)
         {

@@ -20,16 +20,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         private static readonly int RuleResultError =
             new ResultBuilder()
                 .WhenSingle(Result.Error)
-                .WhenMass(Result.Error)
-                .WhenMassPrerelease(Result.Error)
-                .WhenMassRelease(Result.Error);
+                .WhenMass(Result.None)
+                .WhenMassPrerelease(Result.None)
+                .WhenMassRelease(Result.None);
 
         private static readonly int RuleResultWarning =
             new ResultBuilder()
                 .WhenSingle(Result.Warning)
-                .WhenMass(Result.Warning)
-                .WhenMassPrerelease(Result.Warning)
-                .WhenMassRelease(Result.Warning);
+                .WhenMass(Result.None)
+                .WhenMassPrerelease(Result.None)
+                .WhenMassRelease(Result.None);
 
         public OrderPositionShouldCorrespontToActualPrice(IQuery query) : base(query, MessageTypeCode.OrderPositionShouldCorrespontToActualPrice)
         {

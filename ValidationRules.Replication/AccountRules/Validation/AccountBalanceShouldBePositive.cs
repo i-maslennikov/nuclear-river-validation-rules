@@ -19,8 +19,8 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
     {
         // В erm эта проверка не вызывается при ручной проверке, только при сборке (в том числе бете)
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.Error)
+                                                                    .WhenMass(Result.Error)
+                                                                    .WhenMassPrerelease(Result.None)
                                                                     .WhenMassRelease(Result.Error);
 
         // todo: завести настройку SignificantDigitsNumber и вообще решить вопрос с настройками проверок

@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     public sealed class MinimalAdvertisementRestrictionShouldBeSpecified : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
-                                                                    .WhenMass(Result.Error)
+                                                                    .WhenMass(Result.None)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 

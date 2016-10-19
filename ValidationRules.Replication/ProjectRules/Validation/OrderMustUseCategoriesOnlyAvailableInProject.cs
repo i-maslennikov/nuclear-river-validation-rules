@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     public sealed class OrderMustUseCategoriesOnlyAvailableInProject : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
+                                                                    .WhenMass(Result.None)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
