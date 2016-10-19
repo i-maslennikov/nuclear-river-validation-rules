@@ -15,7 +15,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderPositionsShouldCorrespontToActualPrice
             => ArrangeMetadataElement.Config
-                    .Name(nameof(PriceContextSupport))
+                    .Name(nameof(OrderPositionsShouldCorrespontToActualPrice))
                     .Aggregate(
                         new Aggregates::Order { Id = 1, Number = "InvalidOrder" },
                         new Aggregates::OrderPeriod { OrderId = 1, Start = FirstDayJan },
@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             {
                                 MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"InvalidOrder\" /></root>"),
                                 MessageType = (int)MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
-                                Result = 255,
+                                Result = 3,
                                 PeriodStart = FirstDayJan,
                                 PeriodEnd = FirstDayMar,
                             });

@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageParams = XDocument.Parse(
                                 "<root><order id=\"1\" number=\"Order\" /><orderPosition id=\"1\" name=\"Position\" /><category id=\"12\" name=\"Category\" /></root>"),
                             MessageType = (int)MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
-                            Result = 255,
+                            Result = 243,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(3),
                         });
