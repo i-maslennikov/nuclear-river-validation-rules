@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
@@ -85,5 +86,39 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         ProjectId = 3,
                     }
                 );
+
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement WhiteListAdvertisementMayAndMustPresent
+            => ArrangeMetadataElement
+                .Config
+                .Name(nameof(WhiteListAdvertisementMayAndMustPresent))
+                .Aggregate(
+                    new Aggregates::Order { Id = 1, Number = "Order", BeginDistributionDate = MonthStart(1), EndDistributionDatePlan = MonthStart(3), RequireWhiteListAdvertisement = true },
+                    new Aggregates::Order.LinkedProject { OrderId = 1 },
+
+                    new Aggregates::Firm.WhiteListDistributionPeriod { Start = DateTime.MinValue, End = MonthStart(1), ProvidedByOrderId = null, AdvertisementId = null },
+                    new Aggregates::Firm.WhiteListDistributionPeriod { Start = MonthStart(1), End = MonthStart(2), ProvidedByOrderId = 111, AdvertisementId = 111 },
+                    new Aggregates::Firm.WhiteListDistributionPeriod { Start = MonthStart(2), End = DateTime.MaxValue, ProvidedByOrderId = null, AdvertisementId = null },
+
+                    new Aggregates::Advertisement { Name = "Advertisement", IsSelectedToWhiteList = true },
+                    new Aggregates::Firm { Name = "Firm" }
+                )
+                .Message(
+                    new Messages::Version.ValidationResult
+                        {
+                            MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order\" /><firm id = \"0\" name=\"Firm\" /><advertisement id=\"0\" name=\"Advertisement\" /></root>"),
+                            MessageType = (int)MessageTypeCode.WhiteListAdvertisementMayPresent,
+                            Result = 85,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
+                        },
+                    new Messages::Version.ValidationResult
+                        {
+                            MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order\" /><firm id = \"0\" name=\"Firm\" /></root>"),
+                            MessageType = (int)MessageTypeCode.WhiteListAdvertisementMustPresent,
+                            Result = 250,
+                            PeriodStart = MonthStart(2),
+                            PeriodEnd = MonthStart(3),
+                        });
     }
 }
