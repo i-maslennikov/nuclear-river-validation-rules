@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<order id=\"1\" number=\"Order1\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
-                            Result = 240,
+                            Result = 204,
                             PeriodStart = FirstDayFeb,
                             PeriodEnd = FirstDayMar,
                         },
@@ -60,7 +60,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<order id=\"2\" number=\"Order2\" />" +
                                                             "</root>"),
                         MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
-                        Result = 240,
+                        Result = 204,
                         PeriodStart = FirstDayFeb,
                         PeriodEnd = FirstDayMar,
                     });

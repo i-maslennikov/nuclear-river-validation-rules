@@ -13,14 +13,17 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// "Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа"
     /// 
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionCorrespontToInactivePosition
+    /// 
+    /// Q: Получается, если позицию скрыли после одобрения - то заказ попадёт в сборку?
+    /// 
     /// todo: Убрать из этой группы проверок - понятия периода/scope не имеют смысла для этой проверки
     /// </summary>
     public sealed class OrderPositionCorrespontToInactivePosition : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
+                                                                    .WhenMass(Result.None)
+                                                                    .WhenMassPrerelease(Result.None)
+                                                                    .WhenMassRelease(Result.None);
 
         public OrderPositionCorrespontToInactivePosition(IQuery query) : base(query, MessageTypeCode.OrderPositionCorrespontToInactivePosition)
         {

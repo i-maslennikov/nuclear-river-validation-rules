@@ -11,6 +11,8 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
     /// <summary>
     /// Для заказов, у которых есть блокировки, должна выводиться ошибка.
     /// "Заказ {0} имеет созданную блокировку на указанный период"
+    /// 
+    /// Source: LockNoExistsOrderValidationRule/OrdersCheckOrderHasLock
     /// </summary>
     public sealed class LockShouldNotExist : ValidationResultAccessorBase
     {

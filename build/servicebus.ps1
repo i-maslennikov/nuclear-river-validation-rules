@@ -36,23 +36,11 @@ function Deploy-ServiceBus ($entryPointName){
 			Create-Topic $connectionString $metadata.Name $metadata.Properties
 		}
 	}
-	if ($serviceBusMetadata['DeleteTopics']){
-		foreach($metadata in $serviceBusMetadata.DeleteTopics.Values){
-			$connectionString = Get-EntryPointConnectionString $entryPointName $metadata.ConnectionStringName
-			Delete-Topic $connectionString $metadata.Name
-		}
-	}
 
 	if ($serviceBusMetadata['CreateSubscriptions']){
 		foreach($metadata in $serviceBusMetadata.CreateSubscriptions.Values){
 			$connectionString = Get-EntryPointConnectionString $entryPointName $metadata.ConnectionStringName
 			Create-Subscription $connectionString $metadata.TopicName $metadata.Name $metadata.Properties
-		}
-	}
-	if ($serviceBusMetadata['DeleteSubscriptions']){
-		foreach($metadata in $serviceBusMetadata.DeleteSubscriptions.Values){
-			$connectionString = Get-EntryPointConnectionString $entryPointName $metadata.ConnectionStringName
-			Delete-Subscription $connectionString $metadata.TopicName $metadata.Name
 		}
 	}
 }
