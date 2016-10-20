@@ -62,8 +62,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
 
-                    new Aggregates::Position { Id = 5, Name = "Position5" },
-                    new Aggregates::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 7}
+                    new Aggregates::Position { Id = 5, Name = "Position5" }
                 )
                 .Message(
                 );

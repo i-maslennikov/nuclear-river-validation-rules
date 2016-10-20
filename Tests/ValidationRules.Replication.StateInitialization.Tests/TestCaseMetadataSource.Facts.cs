@@ -123,7 +123,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                 new Erm::Position { Id = 2 })
             .Fact(
-                new AdvertisementFacts::Position { Id = 1, Name = "Position", ChildPositionId = 1},
+                new AdvertisementFacts::Position { Id = 1, Name = "Position", ChildPositionId = 1, CategoryCode = 11 },
                 new AdvertisementFacts::Position { Id = 2, ChildPositionId = null },
                 new ProjectFacts::Position { Id = 1, Name = "Position", CategoryCode = 11 },
                 new ProjectFacts::Position { Id = 2 });

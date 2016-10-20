@@ -23,6 +23,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
+                    new Facts::Advertisement { Id = 6, AdvertisementTemplateId = 7 },
                     new Facts::AdvertisementTemplate { Id = 7, DummyAdvertisementId = 6 }, // Id заглушки совпадает с Id РМ
 
                     new Facts::Position { Id = 5, Name = "Position5" }
