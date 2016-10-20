@@ -122,6 +122,8 @@
     <Compile Include="ArrangeMetadataElementBuilderExtensions.cs" />
     <Compile Include="BulkReplicationAdapter.cs" />
     <Compile Include="ConnectionStringName.cs" />
+    <Compile Include="Consistency\OrderMustHaveActiveLegalEntities.cs" />
+    <Compile Include="Consistency\OrderMustHaveActiveDeal.cs" />
     <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />

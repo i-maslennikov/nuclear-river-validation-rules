@@ -16,6 +16,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
 {
     public sealed class BillAccessor : IStorageBasedDataObjectAccessor<Bill>, IDataChangesHandler<Bill>
     {
+        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
         private const int BillTypePayment = 1;
 
         private readonly IQuery _query;
@@ -33,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Facts
                              Id = x.Id,
                              OrderId = x.OrderId,
                              Begin = x.BeginDistributionDate,
-                             End = x.EndDistributionDate,
+                             End = x.EndDistributionDate + OneSecond,
                              PayablePlan = x.PayablePlan,
                          });
 

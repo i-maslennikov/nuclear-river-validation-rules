@@ -23,6 +23,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         private readonly IBulkRepository<Order.BargainSignedLaterThanOrder> _orderBargainSignedLaterThanOrderRepository;
         private readonly IBulkRepository<Order.HasNoAnyLegalPersonProfile> _orderHasNoAnyLegalPersonProfileRepository;
         private readonly IBulkRepository<Order.HasNoAnyPosition> _orderHasNoAnyPositionRepository;
+        private readonly IBulkRepository<Order.InactiveReference> _inactiveReferenceRepository;
         private readonly IBulkRepository<Order.InvalidBeginDistributionDate> _orderInvalidBeginDistributionDateRepository;
         private readonly IBulkRepository<Order.InvalidEndDistributionDate> _orderInvalidEndDistributionDateRepository;
         private readonly IBulkRepository<Order.InvalidBillsPeriod> _orderInvalidBillsPeriodRepository;
@@ -44,6 +45,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IBulkRepository<Order.BargainSignedLaterThanOrder> orderBargainSignedLaterThanOrderRepository,
             IBulkRepository<Order.HasNoAnyLegalPersonProfile> orderHasNoAnyLegalPersonProfileRepository,
             IBulkRepository<Order.HasNoAnyPosition> orderHasNoAnyPositionRepository,
+            IBulkRepository<Order.InactiveReference> inactiveReferenceRepository,
             IBulkRepository<Order.InvalidBeginDistributionDate> orderInvalidBeginDistributionDateRepository,
             IBulkRepository<Order.InvalidEndDistributionDate> orderInvalidEndDistributionDateRepository,
             IBulkRepository<Order.InvalidBillsPeriod> orderInvalidBillsPeriodRepository,
@@ -63,6 +65,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             _orderBargainSignedLaterThanOrderRepository = orderBargainSignedLaterThanOrderRepository;
             _orderHasNoAnyLegalPersonProfileRepository = orderHasNoAnyLegalPersonProfileRepository;
             _orderHasNoAnyPositionRepository = orderHasNoAnyPositionRepository;
+            _inactiveReferenceRepository = inactiveReferenceRepository;
             _orderInvalidBeginDistributionDateRepository = orderInvalidBeginDistributionDateRepository;
             _orderInvalidEndDistributionDateRepository = orderInvalidEndDistributionDateRepository;
             _orderInvalidBillsPeriodRepository = orderInvalidBillsPeriodRepository;
@@ -86,6 +89,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     new ValueObjectActor<Order.BargainSignedLaterThanOrder>(_query, _orderBargainSignedLaterThanOrderRepository, _equalityComparerFactory, new OrderBargainSignedLaterThanOrderAccessor (_query)),
                     new ValueObjectActor<Order.HasNoAnyLegalPersonProfile>(_query, _orderHasNoAnyLegalPersonProfileRepository, _equalityComparerFactory, new OrderHasNoAnyLegalPersonProfileAccessor (_query)),
                     new ValueObjectActor<Order.HasNoAnyPosition>(_query, _orderHasNoAnyPositionRepository, _equalityComparerFactory, new OrderHasNoAnyPositionAccessor (_query)),
+                    new ValueObjectActor<Order.InactiveReference>(_query, _inactiveReferenceRepository, _equalityComparerFactory, new InactiveReferenceAccessor (_query)),
                     new ValueObjectActor<Order.InvalidBeginDistributionDate>(_query, _orderInvalidBeginDistributionDateRepository, _equalityComparerFactory, new OrderInvalidBeginDistributionDateAccessor (_query)),
                     new ValueObjectActor<Order.InvalidEndDistributionDate>(_query, _orderInvalidEndDistributionDateRepository, _equalityComparerFactory, new OrderInvalidEndDistributionDateAccessor (_query)),
                     new ValueObjectActor<Order.InvalidBillsPeriod>(_query, _orderInvalidBillsPeriodRepository, _equalityComparerFactory, new OrderInvalidBillsPeriodAccessor (_query)),
@@ -383,6 +387,45 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
+        public sealed class InactiveReferenceAccessor : IStorageBasedDataObjectAccessor<Order.InactiveReference>
+        {
+            private readonly IQuery _query;
+
+            public InactiveReferenceAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            // todo: сравнить запросы left join и exists
+            public IQueryable<Order.InactiveReference> GetSource()
+                => from order in _query.For<Facts::Order>()
+                   from boou in _query.For<Facts::BranchOfficeOrganizationUnit>().Where(x => x.Id == order.BranchOfficeOrganizationUnitId.Value).DefaultIfEmpty()
+                   from bo in _query.For<Facts::BranchOffice>().Where(x => x.Id == boou.BranchOfficeId).DefaultIfEmpty()
+                   from legalPerson in _query.For<Facts::LegalPerson>().Where(x => x.Id == order.LegalPersonId.Value).DefaultIfEmpty()
+                   from legalPersonProfile in _query.For<Facts::LegalPersonProfile>().Where(x => x.Id == order.LegalPersonProfileId.Value).DefaultIfEmpty()
+                   from deal in _query.For<Facts::Deal>().Where(x => x.Id == order.DealId.Value).DefaultIfEmpty()
+                   where boou == null || bo == null || legalPerson == null || legalPersonProfile == null || deal == null
+                   select new Order.InactiveReference
+                       {
+                           OrderId = order.Id,
+                           BranchOfficeOrganizationUnit = order.BranchOfficeOrganizationUnitId.HasValue && boou == null,
+                           BranchOffice = boou != null && bo == null,
+                           LegalPerson = order.LegalPersonId.HasValue && legalPerson == null,
+                           LegalPersonProfile = order.LegalPersonProfileId.HasValue && legalPersonProfile == null,
+                           Deal = order.DealId.HasValue && deal == null,
+                       };
+
+            public FindSpecification<Order.InactiveReference> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Order.InactiveReference>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
         public sealed class OrderInvalidBeginDistributionDateAccessor : IStorageBasedDataObjectAccessor<Order.InvalidBeginDistributionDate>
         {
             private readonly IQuery _query;
@@ -422,7 +465,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.InvalidEndDistributionDate> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   where order.EndDistributionPlan != order.BeginDistribution.AddMonths(order.ReleaseCountPlan).AddSeconds(-1)
+                   where order.EndDistributionPlan != order.BeginDistribution.AddMonths(order.ReleaseCountPlan)
                    select new Order.InvalidEndDistributionDate
                    {
                        OrderId = order.Id,
@@ -639,7 +682,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.MissingRequiredField> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   where !(order.BranchOfficeOrganizationUnitId.HasValue && order.CurrencyId.HasValue && order.InspectorId.HasValue && order.LegalPersonId.HasValue && order.LegalPersonProfileId.HasValue)
+                   where !(order.BranchOfficeOrganizationUnitId.HasValue && order.CurrencyId.HasValue && order.InspectorId.HasValue && order.LegalPersonId.HasValue && order.LegalPersonProfileId.HasValue && order.DealId.HasValue)
                    select new Order.MissingRequiredField
                        {
                            OrderId = order.Id,
@@ -649,6 +692,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                            LegalPerson = !order.LegalPersonId.HasValue,
                            LegalPersonProfile = !order.LegalPersonProfileId.HasValue,
                            ReleaseCountPlan = order.ReleaseCountPlan == 0,
+                           Deal = !order.DealId.HasValue,
                        };
 
             public FindSpecification<Order.MissingRequiredField> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

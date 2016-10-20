@@ -92,6 +92,7 @@ namespace NuClear.ValidationRules.Replication
             {
                 return new IValidationResultAccessor[]
                 {
+                    new AdvantageousPurchasesBannerMustBeSoldInTheSameCategory(_query),
                     new BargainScanShouldPresent(_query),
                     new BillsPeriodShouldMatchOrder(_query),
                     new LegalPersonProfileBargainShouldNotBeExpired(_query),
@@ -105,6 +106,8 @@ namespace NuClear.ValidationRules.Replication
                     new LinkedFirmShouldBeValid(_query),
                     new OrderBeginDistrubutionShouldBeFirstDayOfMonth(_query),
                     new OrderEndDistrubutionShouldBeLastSecondOfMonth(_query),
+                    new OrderMustHaveActiveDeal(_query),
+                    new OrderMustHaveActiveLegalEntities(_query),
                     new OrderRequiredFieldsShouldBeSpecified(_query),
                     new OrderScanShouldPresent(_query),
                     new OrderShouldHaveAtLeastOnePosition(_query),

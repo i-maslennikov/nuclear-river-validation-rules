@@ -70,5 +70,9 @@
         OrderPositionSalesModelMustMatchCategorySalesModel = 60,
 
         FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 61,
+
+        OrderMustHaveActiveDeal = 62,
+        OrderMustHaveActiveLegalEntities = 63,
+        AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
     }
 }

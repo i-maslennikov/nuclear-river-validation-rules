@@ -218,7 +218,11 @@
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
+    <Compile Include="ConsistencyRules\Facts\BranchOfficeAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\BranchOfficeOrganizationUnitAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\CategoryAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\DealAccessor.cs" />
+    <Compile Include="ConsistencyRules\Facts\LegalPersonAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\ReleaseWithdrawalAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\PositionAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\CategoryFirmAddressAccessor.cs" />
@@ -233,6 +237,9 @@
     <Compile Include="ConsistencyRules\Facts\BillAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\BargainScanFileAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\OrderAccessor.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderMustHaveActiveLegalEntities.cs" />
+    <Compile Include="ConsistencyRules\Validation\AdvantageousPurchasesBannerMustBeSoldInTheSameCategory.cs" />
+    <Compile Include="ConsistencyRules\Validation\OrderMustHaveActiveDeal.cs" />
     <Compile Include="ConsistencyRules\Validation\BillsSumShouldMatchOrder.cs" />
     <Compile Include="ConsistencyRules\Validation\BillsShouldBeCreated.cs" />
     <Compile Include="EventCollectionHelper.cs" />

@@ -25,11 +25,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::Bargain(),
                 new Erm::BargainFile(),
                 new Erm::Bill(),
+                new Erm::BranchOffice(),
+                new Erm::BranchOfficeOrganizationUnit(),
                 new Erm::Category(),
                 new Erm::CategoryFirmAddress(),
+                new Erm::Deal(),
                 new Erm::DeniedPosition(),
                 new Erm::Firm(),
                 new Erm::FirmAddress(),
+                new Erm::LegalPerson(),
                 new Erm::LegalPersonProfile(),
                 new Erm::Limit(),
                 new Erm::Lock(),
@@ -54,10 +58,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::Bargain(),
                 new Facts::BargainScanFile(),
                 new Facts::Bill(),
+                new Facts::BranchOffice(),
+                new Facts::BranchOfficeOrganizationUnit(),
                 new Facts::Category(),
                 new Facts::CategoryFirmAddress(),
+                new Facts::Deal(),
                 new Facts::Firm(),
                 new Facts::FirmAddress(),
+                new Facts::LegalPerson(),
                 new Facts::LegalPersonProfile(),
                 new Facts::Order(),
                 new Facts::OrderPosition(),
@@ -71,6 +79,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.BargainSignedLaterThanOrder(),
                 new Aggregates::Order.HasNoAnyLegalPersonProfile(),
                 new Aggregates::Order.HasNoAnyPosition(),
+                new Aggregates::Order.InactiveReference(),
                 new Aggregates::Order.InvalidBeginDistributionDate(),
                 new Aggregates::Order.InvalidBillsPeriod(),
                 new Aggregates::Order.InvalidBillsTotal(),
@@ -100,7 +109,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.HasNoAnyLegalPersonProfile(),
                 new Aggregates::Order.InvalidEndDistributionDate(),
                 new Aggregates::Order.MissingOrderScan(),
-                new Aggregates::Order.MissingRequiredField {BranchOfficeOrganizationUnit = true, Currency = true, Inspector = true, LegalPerson = true, LegalPersonProfile = true, ReleaseCountPlan = true });
+                new Aggregates::Order.MissingRequiredField {BranchOfficeOrganizationUnit = true, Currency = true, Inspector = true, LegalPerson = true, LegalPersonProfile = true, ReleaseCountPlan = true, Deal = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement SampleTest2

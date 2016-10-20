@@ -4,10 +4,14 @@ go
 if object_id('ConsistencyFacts.Bargain') is not null drop table ConsistencyFacts.Bargain
 if object_id('ConsistencyFacts.BargainScanFile') is not null drop table ConsistencyFacts.BargainScanFile
 if object_id('ConsistencyFacts.Bill') is not null drop table ConsistencyFacts.Bill
+if object_id('ConsistencyFacts.BranchOffice') is not null drop table ConsistencyFacts.BranchOffice
+if object_id('ConsistencyFacts.BranchOfficeOrganizationUnit') is not null drop table ConsistencyFacts.BranchOfficeOrganizationUnit
 if object_id('ConsistencyFacts.Firm') is not null drop table ConsistencyFacts.Firm
 if object_id('ConsistencyFacts.Category') is not null drop table ConsistencyFacts.Category
 if object_id('ConsistencyFacts.CategoryFirmAddress') is not null drop table ConsistencyFacts.CategoryFirmAddress
+if object_id('ConsistencyFacts.Deal') is not null drop table ConsistencyFacts.Deal
 if object_id('ConsistencyFacts.FirmAddress') is not null drop table ConsistencyFacts.FirmAddress
+if object_id('ConsistencyFacts.LegalPerson') is not null drop table ConsistencyFacts.LegalPerson
 if object_id('ConsistencyFacts.LegalPersonProfile') is not null drop table ConsistencyFacts.LegalPersonProfile
 if object_id('ConsistencyFacts.[Order]') is not null drop table ConsistencyFacts.[Order]
 if object_id('ConsistencyFacts.OrderPosition') is not null drop table ConsistencyFacts.OrderPosition
@@ -42,11 +46,30 @@ create table ConsistencyFacts.Bill (
 )
 go
 
+create table ConsistencyFacts.BranchOffice (
+    Id bigint not null,
+    constraint PK_BranchOffice primary key (Id)
+)
+go
+
+create table ConsistencyFacts.BranchOfficeOrganizationUnit (
+    Id bigint not null,
+    BranchOfficeId bigint not null,
+    constraint PK_BranchOfficeOrganizationUnit primary key (Id)
+)
+go
+
 create table ConsistencyFacts.Category (
     Id bigint not null,
     Name nvarchar(128) not null,
     IsActiveNotDeleted bit not null,
     constraint PK_Category primary key (Id)
+)
+go
+
+create table ConsistencyFacts.Deal (
+    Id bigint not null,
+    constraint PK_Deal primary key (Id)
 )
 go
 
@@ -79,6 +102,12 @@ create table ConsistencyFacts.CategoryFirmAddress (
 )
 go
 
+create table ConsistencyFacts.LegalPerson(
+    Id bigint not null,
+    constraint PK_LegalPerson primary key (Id)
+)
+go
+
 create table ConsistencyFacts.LegalPersonProfile (
     Id bigint not null,
     LegalPersonId bigint not null,
@@ -99,6 +128,7 @@ create table ConsistencyFacts.[Order](
     InspectorId bigint null,
     CurrencyId bigint null,
     BargainId bigint null,
+    DealId bigint null,
     WorkflowStep int not null,
     IsFreeOfCharge bit not null,
 

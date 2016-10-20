@@ -152,7 +152,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .Erm(
                 new Erm::Bill { Id = 1, IsActive = true, IsDeleted = false, BeginDistributionDate = FirstDayJan, EndDistributionDate = LastSecondJan, BillType = 1, OrderId = 2, PayablePlan = 123 })
             .Fact(
-                new ConsistencyFacts::Bill { Id = 1, Begin = FirstDayJan, End = LastSecondJan, OrderId = 2, PayablePlan = 123 });
+                new ConsistencyFacts::Bill { Id = 1, Begin = FirstDayJan, End = LastSecondJan.AddSeconds(1), OrderId = 2, PayablePlan = 123 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement BargainFacts
@@ -289,7 +289,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::Order { Id = 3, IsActive = true, IsDeleted = true })
             .Fact(
                 new PriceFacts::Order { Id = 1, BeginDistributionDate = FirstDayJan, EndDistributionDateFact = LastSecondJan.AddSeconds(1), EndDistributionDatePlan = LastSecondMar.AddSeconds(1), BeginReleaseNumber = 1, DestOrganizationUnitId = 2, EndReleaseNumberFact = 3, EndReleaseNumberPlan = 4, FirmId = 5, Number = "Number", OwnerId = 6, SourceOrganizationUnitId = 7, WorkflowStepId = 8 },
-                new ConsistencyFacts::Order { Id = 1, BeginDistribution = FirstDayJan, EndDistributionFact = LastSecondJan, EndDistributionPlan = LastSecondMar, DestOrganizationUnitId = 2, FirmId = 5, Number = "Number", CurrencyId = 9, ReleaseCountPlan = 3, WorkflowStep = 8, IsFreeOfCharge = true },
+                new ConsistencyFacts::Order { Id = 1, BeginDistribution = FirstDayJan, EndDistributionFact = LastSecondJan.AddSeconds(1), EndDistributionPlan = LastSecondMar.AddSeconds(1), DestOrganizationUnitId = 2, FirmId = 5, Number = "Number", CurrencyId = 9, ReleaseCountPlan = 3, WorkflowStep = 8, IsFreeOfCharge = true },
                 new ProjectFacts::Order {Id = 1, Number = "Number", BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondMar.AddSeconds(1), DestOrganizationUnitId = 2, WorkflowStep = 8 });
 
         // ReSharper disable once UnusedMember.Local

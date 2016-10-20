@@ -306,6 +306,14 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<ConsistencyFacts::BranchOffice>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::BranchOfficeOrganizationUnit>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
             builder.Entity<ConsistencyFacts::Category>()
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -314,11 +322,19 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<ConsistencyFacts::Deal>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
             builder.Entity<ConsistencyFacts::Firm>()
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);
 
             builder.Entity<ConsistencyFacts::FirmAddress>()
+                   .HasSchemaName(ConsistencyFactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<ConsistencyFacts::LegalPerson>()
                    .HasSchemaName(ConsistencyFactsSchema)
                    .HasPrimaryKey(x => x.Id);
 
