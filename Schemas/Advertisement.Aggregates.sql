@@ -2,6 +2,7 @@
 go
 
 if object_id('AdvertisementAggregates.Order') is not null drop table AdvertisementAggregates.[Order]
+if object_id('AdvertisementAggregates.OrderPositionAdvertisement') is not null drop table AdvertisementAggregates.OrderPositionAdvertisement
 if object_id('AdvertisementAggregates.LinkedProject') is not null drop table AdvertisementAggregates.LinkedProject
 if object_id('AdvertisementAggregates.MissingAdvertisementReference') is not null drop table AdvertisementAggregates.MissingAdvertisementReference
 if object_id('AdvertisementAggregates.MissingOrderPositionAdvertisement') is not null drop table AdvertisementAggregates.MissingOrderPositionAdvertisement
@@ -9,7 +10,6 @@ if object_id('AdvertisementAggregates.AdvertisementDeleted') is not null drop ta
 if object_id('AdvertisementAggregates.AdvertisementMustBelongToFirm') is not null drop table AdvertisementAggregates.AdvertisementMustBelongToFirm
 if object_id('AdvertisementAggregates.AdvertisementIsDummy') is not null drop table AdvertisementAggregates.AdvertisementIsDummy
 if object_id('AdvertisementAggregates.CouponOrderPosition') is not null drop table AdvertisementAggregates.CouponOrderPosition
-if object_id('AdvertisementAggregates.OrderAdvertisement') is not null drop table AdvertisementAggregates.OrderAdvertisement
 
 if object_id('AdvertisementAggregates.Advertisement') is not null drop table AdvertisementAggregates.Advertisement
 if object_id('AdvertisementAggregates.AdvertisementWebsite') is not null drop table AdvertisementAggregates.AdvertisementWebsite
@@ -90,7 +90,7 @@ go
 
 create table AdvertisementAggregates.AdvertisementIsDummy (
     OrderId bigint not null,
-	OrderPositionId bigint not null,
+    OrderPositionId bigint not null,
     PositionId bigint not null,
 )
 go
@@ -118,13 +118,13 @@ create table AdvertisementAggregates.Advertisement (
     Name nvarchar(128) not null,
     FirmId bigint not null,
     IsSelectedToWhiteList bit not null,
-	IsAllowedToWhiteList bit not null,
+    IsAllowedToWhiteList bit not null,
 )
 go
 
 create table AdvertisementAggregates.AdvertisementWebsite (
-	AdvertisementId bigint not null,
-	Website nvarchar(256) not null,
+    AdvertisementId bigint not null,
+    Website nvarchar(256) not null,
 )
 go
 
@@ -148,8 +148,8 @@ go
 create table AdvertisementAggregates.ElementPeriod (
     AdvertisementId bigint not null,
     AdvertisementElementId bigint not null,
-	[Start] datetime2(2) not null,
-	[End] datetime2(2) not null,
+    [Start] datetime2(2) not null,
+    [End] datetime2(2) not null,
 )
 go
 
@@ -172,8 +172,8 @@ create table AdvertisementAggregates.Firm (
 go
 
 create table AdvertisementAggregates.FirmWebsite (
-	FirmId bigint not null,
-	Website nvarchar(256) not null,
+    FirmId bigint not null,
+    Website nvarchar(256) not null,
 )
 go
 

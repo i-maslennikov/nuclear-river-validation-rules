@@ -31,7 +31,7 @@ create table AdvertisementFacts.Position (
     Name nvarchar(256) not null,
 
     IsCompositionOptional bit not null,
-	CategoryCode long not null,
+    CategoryCode bigint not null,
 
     ChildPositionId bigint null,
 )
@@ -136,7 +136,7 @@ go
 create table AdvertisementFacts.FirmAddressWebsite (
     Id bigint not null,
     FirmAddressId bigint not null,
-	Website nvarchar(256) not null,
+    Website nvarchar(256) not null,
     constraint PK_FirmAddressWebsite primary key (Id)
 )
 go
@@ -147,9 +147,9 @@ create table AdvertisementFacts.AdvertisementElement (
     AdvertisementElementTemplateId bigint not null,
     IsEmpty bit not null,
     [Status] int not null,
-	[Text] nvarchar(max) not null,
-	[BeginDate] datetime2(2) null,
-	[EndDate] datetime2(2) null,
+    [Text] nvarchar(max) not null,
+    [BeginDate] datetime2(2) null,
+    [EndDate] datetime2(2) null,
     constraint PK_AdvertisementElement primary key (Id)
 )
 go
@@ -169,7 +169,7 @@ create table AdvertisementFacts.AdvertisementElementTemplate (
     Name nvarchar(128) not null,
     IsRequired bit not null,
     NeedsValidation bit not null,
-	IsAdvertisementLink bit not null,
+    IsAdvertisementLink bit not null,
     constraint PK_AdvertisementElementTemplate primary key (Id)
 )
 go
