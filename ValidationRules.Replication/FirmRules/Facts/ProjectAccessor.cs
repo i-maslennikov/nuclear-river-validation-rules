@@ -53,7 +53,12 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Facts
                 from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds } };
+            var firmIds =
+                from project in _query.For<Project>().Where(x => ids.Contains(x.Id))
+                from firm in _query.For<Firm>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId)
+                select firm.Id;
+
+            return new EventCollectionHelper { { typeof(Order), orderIds }, { typeof(Firm), firmIds } };
         }
     }
 }

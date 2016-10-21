@@ -56,7 +56,11 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Facts
                 from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
                 select orderPosition.OrderId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
+            var firmIds =
+                from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
+                select order.FirmId;
+
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, { typeof(Firm), firmIds.Distinct() } };
         }
     }
 }

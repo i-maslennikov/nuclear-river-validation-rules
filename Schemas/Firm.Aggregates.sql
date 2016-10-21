@@ -2,11 +2,11 @@
 
 if object_id('FirmAggregates.Order') is not null drop table FirmAggregates.[Order]
 if object_id('FirmAggregates.Firm') is not null drop table FirmAggregates.Firm
+if object_id('FirmAggregates.AdvantageousPurchasePositionDistributionPeriod') is not null drop table FirmAggregates.AdvantageousPurchasePositionDistributionPeriod
 if object_id('FirmAggregates.FirmOrganiationUnitMismatch') is not null drop table FirmAggregates.FirmOrganiationUnitMismatch
 if object_id('FirmAggregates.CategoryPurchase') is not null drop table FirmAggregates.CategoryPurchase
 if object_id('FirmAggregates.NotApplicapleForDesktopPosition') is not null drop table FirmAggregates.NotApplicapleForDesktopPosition
 if object_id('FirmAggregates.SelfAdvertisementPosition') is not null drop table FirmAggregates.SelfAdvertisementPosition
-if object_id('FirmAggregates.SpecialPosition') is not null drop table FirmAggregates.SpecialPosition
 go
 
 create table FirmAggregates.[Order](
@@ -24,8 +24,16 @@ go
 create table FirmAggregates.Firm(
     Id bigint not null,
     Name nvarchar(250) not null,
-    NeedsSpecialPosition bit not null,
     constraint PK_Firm primary key (Id)
+)
+go
+
+create table FirmAggregates.AdvantageousPurchasePositionDistributionPeriod(
+    FirmId bigint not null,
+    Scope bigint not null,
+    HasPosition bit not null,
+    [Begin] datetime2(2) not null,
+    [End] datetime2(2) not null,
 )
 go
 
@@ -46,11 +54,6 @@ create table FirmAggregates.NotApplicapleForDesktopPosition(
 go
 
 create table FirmAggregates.SelfAdvertisementPosition(
-    OrderId bigint not null,
-)
-go
-
-create table FirmAggregates.SpecialPosition(
     OrderId bigint not null,
 )
 go

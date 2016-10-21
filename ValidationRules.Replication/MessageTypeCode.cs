@@ -78,5 +78,7 @@
         CouponMustBeSoldOnceAtTime = 65,
         OrderPeriodMustContainAdvertisementPeriod = 66,
         AdvertisementWebsiteShouldNotBeFirmWebsite = 67,
+
+        FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder = 68,
     }
 }

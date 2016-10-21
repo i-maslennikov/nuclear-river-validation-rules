@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
@@ -14,108 +12,83 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement FirmWithSpecialCategoryShouldHaveSpecialPurchases
+        private static ArrangeMetadataElement FirmWithSpecialCategoryShouldHaveSpecialPurchasesAggregate
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(FirmWithSpecialCategoryShouldHaveSpecialPurchases))
+                .Name(nameof(FirmWithSpecialCategoryShouldHaveSpecialPurchasesAggregate))
                 .Fact(
+                    // Для фирмы с рубрикой "Выгодные покупки" создаются периоды размещения позиций "Самореклама только для ПК", "Выгодные покупки с 2ГИС (для ПК)"
                     new Facts::Firm { Id = 1 },
                     new Facts::FirmAddress { Id = 2, FirmId = 1 },
                     new Facts::FirmAddressCategory { Id = 3, FirmAddressId = 2, CategoryId = 18599 },
 
-                    new Facts::Order { Id = 1 },
+                    new Facts::Order { Id = 1, FirmId = 1, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(4), WorkflowStep = 5 },
                     new Facts::OrderPosition { Id = 2, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 3, OrderPositionId = 2, PositionId = 4 },
                     new Facts::SpecialPosition { Id = 4, IsAdvantageousPurchaseOnPc = true },
 
-                    new Facts::Order { Id = 2 },
+                    new Facts::Order { Id = 2, FirmId = 1, BeginDistribution = MonthStart(2), EndDistributionFact = MonthStart(5), WorkflowStep = 1 },
                     new Facts::OrderPosition { Id = 3, OrderId = 2 },
                     new Facts::OrderPositionAdvertisement { Id = 4, OrderPositionId = 3, PositionId = 5 },
-                    new Facts::SpecialPosition { Id = 5, IsSelfAdvertisementOnPc = true })
-                .Aggregate(
-                    new Aggregates::Firm { Id = 1, NeedsSpecialPosition = true },
+                    new Facts::SpecialPosition { Id = 5, IsSelfAdvertisementOnPc = true },
 
-                    new Aggregates::Order.SpecialPosition { OrderId = 1 },
-                    new Aggregates::Order.SpecialPosition { OrderId = 2 });
+                    new Facts::Order { Id = 3, FirmId = 1, BeginDistribution = MonthStart(3), EndDistributionFact = MonthStart(6), WorkflowStep = 4 },
+
+                    // Для фирмы без рубрики "Выгодные покупки" периоды не создаются
+                    new Facts::Firm { Id = 2 },
+                    new Facts::FirmAddress { Id = 3, FirmId = 2 })
+                .Aggregate(
+                    new Aggregates::Firm.AdvantageousPurchasePositionDistributionPeriod { FirmId = 1, Begin = DateTime.MinValue, End = DateTime.MaxValue, HasPosition = false, Scope = 0 },
+                    new Aggregates::Firm.AdvantageousPurchasePositionDistributionPeriod { FirmId = 1, Begin = MonthStart(1), End = MonthStart(4), HasPosition = true, Scope = 0 },
+                    new Aggregates::Firm.AdvantageousPurchasePositionDistributionPeriod { FirmId = 1, Begin = MonthStart(2), End = MonthStart(5), HasPosition = true, Scope = 2 },
+                    new Aggregates::Firm.AdvantageousPurchasePositionDistributionPeriod { FirmId = 1, Begin = MonthStart(3), End = MonthStart(6), HasPosition = false, Scope = 0 });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement FirmWithSpecialCategoryShouldHaveSpecialPurchasesFooBar
+        private static ArrangeMetadataElement FirmWithSpecialCategoryShouldHaveSpecialPurchasesMessage
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(FirmWithSpecialCategoryShouldHaveSpecialPurchasesFooBar))
+                .Name(nameof(FirmWithSpecialCategoryShouldHaveSpecialPurchasesMessage))
                 .Aggregate(
-                    // Ошибка есть в фирме с рубрикой, но без позиции.
-                    new Aggregates::Firm { Id = 1, Name = "Firm", NeedsSpecialPosition = true },
-                    new Aggregates::Order { Id = 2, Number = "Order", FirmId = 1, Begin = FirstDayJan, End = LastSecondJan },
+                    new Aggregates::Firm.AdvantageousPurchasePositionDistributionPeriod { FirmId = 1, Begin = DateTime.MinValue, End = DateTime.MaxValue, HasPosition = false, Scope = 0 },
+                    new Aggregates::Firm.AdvantageousPurchasePositionDistributionPeriod { FirmId = 1, Begin = MonthStart(1), End = MonthStart(2), HasPosition = true, Scope = 0 },
+                    new Aggregates::Firm.AdvantageousPurchasePositionDistributionPeriod { FirmId = 1, Begin = MonthStart(1), End = MonthStart(3), HasPosition = true, Scope = 2 },
 
-                    // Если добавили позицию - ошибки нет
-                    new Aggregates::Firm { Id = 3, Name = "Firm", NeedsSpecialPosition = true },
-                    new Aggregates::Order { Id = 4, Number = "Order", FirmId = 3, Begin = FirstDayJan, End = LastSecondMar },
-                    new Aggregates::Order.SpecialPosition { OrderId = 4 },
-
-                    // Но в те месяцы, когда позиция уже не размещается - ошибка есть
-                    new Aggregates::Order { Id = 5, Number = "Order", FirmId = 3, Begin = FirstDayFeb, End = LastSecondApr, Scope = 5 },
-
-                    // Даже если в заказе "на утверждении" позиция добавлена
-                    new Aggregates::Order { Id = 6, Number = "Order", FirmId = 3, Begin = FirstDayFeb, End = LastSecondApr, Scope = 5 },
-                    new Aggregates::Order.SpecialPosition { OrderId = 6 })
+                    new Aggregates::Firm { Id = 1, Name = "Firm" },
+                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) })
                 .Message(
+                    // Фирма №1
                     new Messages::Version.ValidationResult
-                    {
-                        MessageParams = XDocument.Parse("<root><firm id=\"1\" name=\"Firm\" /><order id=\"2\" number=\"Order\" /></root>"),
-                        MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                        Result = 254,
-                        PeriodStart = FirstDayJan,
-                        PeriodEnd = LastSecondJan,
+                        {
+                            MessageParams = XDocument.Parse("<root><firm id=\"1\" name=\"Firm\" /></root>"),
+                            MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
+                            Result = 252,
+                            PeriodStart = DateTime.MinValue,
+                            PeriodEnd = MonthStart(1),
+                        },
+                    new Messages::Version.ValidationResult
+                        {
+                            MessageParams = XDocument.Parse("<root><firm id=\"1\" name=\"Firm\" /></root>"),
+                            MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
+                            Result = 252,
+                            PeriodStart = MonthStart(2),
+                            PeriodEnd = MonthStart(3),
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><firm id=\"3\" name=\"Firm\" /><order id=\"5\" number=\"Order\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><firm id=\"1\" name=\"Firm\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                        Result = 254,
-                        PeriodStart = LastSecondMar,
-                        PeriodEnd = LastSecondApr,
-                    });
-
-        /// <summary>
-        /// Три заказа образуют непрерывный период, причём накладываются первый + второй и второй + третий
-        /// Любой другой заказ в этот период будет валидным, а в другое время должен вызывать ошибку.
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement FirmWithSpecialCategoryShouldHaveSpecialPurchasesWithNonTrivialPeriod
-            => ArrangeMetadataElement
-                .Config
-                .Name(nameof(FirmWithSpecialCategoryShouldHaveSpecialPurchasesWithNonTrivialPeriod))
-                .Aggregate(
-                    new Aggregates::Firm { Id = 3, Name = "Firm", NeedsSpecialPosition = true },
-
-                    new Aggregates::Order { Id = 1, Number = "Order1", FirmId = 3, Begin = MonthStart(1), End = MonthStart(3) },
-                    new Aggregates::Order.SpecialPosition { OrderId = 1 },
-
-                    new Aggregates::Order { Id = 2, Number = "Order2", FirmId = 3, Begin = MonthStart(2), End = MonthStart(5) },
-                    new Aggregates::Order.SpecialPosition { OrderId = 2 },
-
-                    new Aggregates::Order { Id = 3, Number = "Order3", FirmId = 3, Begin = MonthStart(4), End = MonthStart(6) },
-                    new Aggregates::Order.SpecialPosition { OrderId = 3 },
-
-                    new Aggregates::Order { Id = 4, Number = "ValidOrder", FirmId = 3, Begin = MonthStart(1), End = MonthStart(6) },
-                    new Aggregates::Order { Id = 5, Number = "InvalidOrder", FirmId = 3, Begin = MonthStart(-10), End = MonthStart(10) })
-                .Message(
-                    new Messages::Version.ValidationResult
-                    {
-                        MessageParams = XDocument.Parse("<root><firm id=\"3\" name=\"Firm\" /><order id=\"5\" number=\"InvalidOrder\" /></root>"),
-                        MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                        Result = 254,
-                        PeriodStart = MonthStart(-10),
-                        PeriodEnd = MonthStart(1),
+                        Result = 252,
+                        PeriodStart = MonthStart(3),
+                        PeriodEnd = DateTime.MaxValue,
                     },
                     new Messages::Version.ValidationResult
-                    {
-                        MessageParams = XDocument.Parse("<root><firm id=\"3\" name=\"Firm\" /><order id=\"5\" number=\"InvalidOrder\" /></root>"),
-                        MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                        Result = 254,
-                        PeriodStart = MonthStart(6),
-                        PeriodEnd = MonthStart(10),
-                    });
+                        {
+                            MessageParams = XDocument.Parse("<root><firm id=\"1\" name=\"Firm\" /><order id=\"1\" number=\"Order\" /></root>"),
+                            MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
+                            Result = 2,
+                            PeriodStart = MonthStart(2),
+                            PeriodEnd = MonthStart(3),
+                        });
     }
 }
