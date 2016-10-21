@@ -94,6 +94,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    from element in _query.For<Facts::AdvertisementElement>().Where(x => x.AdvertisementId == advertisement.Id)
                    from elementTemplate in _query.For<Facts::AdvertisementElementTemplate>().Where(x => x.Id == element.AdvertisementElementTemplateId)
                    where elementTemplate.IsAdvertisementLink // РМ - рекламная ссылка
+                   where element.Text != null // нет смысла хранить null ссылки
                    select new Advertisement.AdvertisementWebsite
                    {
                        AdvertisementId = advertisement.Id,
