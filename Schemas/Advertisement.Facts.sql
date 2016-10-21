@@ -147,7 +147,7 @@ create table AdvertisementFacts.AdvertisementElement (
     AdvertisementElementTemplateId bigint not null,
     IsEmpty bit not null,
     [Status] int not null,
-    [Text] nvarchar(max) not null,
+    [Text] nvarchar(max) null,
     [BeginDate] datetime2(2) null,
     [EndDate] datetime2(2) null,
     constraint PK_AdvertisementElement primary key (Id)
