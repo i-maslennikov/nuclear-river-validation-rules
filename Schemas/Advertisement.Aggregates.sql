@@ -10,6 +10,7 @@ if object_id('AdvertisementAggregates.AdvertisementDeleted') is not null drop ta
 if object_id('AdvertisementAggregates.AdvertisementMustBelongToFirm') is not null drop table AdvertisementAggregates.AdvertisementMustBelongToFirm
 if object_id('AdvertisementAggregates.AdvertisementIsDummy') is not null drop table AdvertisementAggregates.AdvertisementIsDummy
 if object_id('AdvertisementAggregates.CouponOrderPosition') is not null drop table AdvertisementAggregates.CouponOrderPosition
+if object_id('AdvertisementAggregates.AdvertisementPeriodNotInOrderPeriod') is not null drop table AdvertisementAggregates.AdvertisementPeriodNotInOrderPeriod
 
 if object_id('AdvertisementAggregates.Advertisement') is not null drop table AdvertisementAggregates.Advertisement
 if object_id('AdvertisementAggregates.AdvertisementWebsite') is not null drop table AdvertisementAggregates.AdvertisementWebsite
@@ -36,6 +37,8 @@ create table AdvertisementAggregates.[Order] (
     EndDistributionDatePlan datetime2(2) not null,
     ProjectId bigint not null,
     FirmId bigint not null,
+    RequireWhiteListAdvertisement bit not null,
+    ProvideWhiteListAdvertisement bit not null,
 )
 go
 
@@ -103,6 +106,14 @@ create table AdvertisementAggregates.CouponOrderPosition (
 )
 go
 
+create table AdvertisementAggregates.AdvertisementPeriodNotInOrderPeriod (
+    OrderId bigint not null,
+    OrderPositionId bigint not null,
+    PositionId bigint not null,
+    AdvertisementId bigint not null,
+)
+go
+
 create table AdvertisementAggregates.OrderPositionAdvertisement (
     OrderId bigint not null,
     OrderPositionId bigint not null,
@@ -118,7 +129,6 @@ create table AdvertisementAggregates.Advertisement (
     Name nvarchar(128) not null,
     FirmId bigint not null,
     IsSelectedToWhiteList bit not null,
-    IsAllowedToWhiteList bit not null,
 )
 go
 

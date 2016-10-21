@@ -11,6 +11,8 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
         public DateTime EndDistributionDatePlan { get; set; }
         public long ProjectId { get; set; }
         public long FirmId { get; set; }
+        public bool RequireWhiteListAdvertisement { get; set; }
+        public bool ProvideWhiteListAdvertisement { get; set; }
 
         public sealed class LinkedProject
         {

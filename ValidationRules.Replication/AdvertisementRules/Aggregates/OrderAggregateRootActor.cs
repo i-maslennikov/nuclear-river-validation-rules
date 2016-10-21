@@ -86,6 +86,15 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                   let require = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                                  from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
+                                  from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.Id == opa.AdvertisementId)
+                                  from at in _query.For<Facts::AdvertisementTemplate>().Where(x => x.Id == a.AdvertisementTemplateId)
+                                  select at.IsAllowedToWhiteList).Any(x => x)
+                   let provide = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                                  from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
+                                  from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.Id == opa.AdvertisementId)
+                                  select a.IsSelectedToWhiteList).Any(x => x)
                    select new Order
                        {
                            Id = order.Id,
@@ -95,6 +104,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                            EndDistributionDatePlan = order.EndDistributionDatePlan,
                            ProjectId = project.Id,
                            FirmId = order.FirmId,
+                           RequireWhiteListAdvertisement = require,
+                           ProvideWhiteListAdvertisement = provide,
                    };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

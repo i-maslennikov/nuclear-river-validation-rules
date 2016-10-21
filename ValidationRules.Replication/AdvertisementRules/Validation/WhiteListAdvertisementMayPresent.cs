@@ -30,15 +30,13 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults =
-                from order in query.For<Order>()
+                from order in query.For<Order>().Where(x => x.RequireWhiteListAdvertisement)
                 from project in query.For<Order.LinkedProject>().Where(x => x.OrderId == order.Id)
-                from advertisementId in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id).Select(x => x.AdvertisementId).Distinct()
-                from advertisement in query.For<Advertisement>().Where(x => x.Id == advertisementId)
-                let isAllowedToWhiteList = query.For<Advertisement>().Any(x => x.Id == advertisementId && x.IsAllowedToWhiteList)
+                from advertisement in query.For<Advertisement>().Where(x => x.FirmId == order.FirmId && x.IsSelectedToWhiteList)
                 let allPeriodsCoveredByOtherOrders = query.For<Firm.WhiteListDistributionPeriod>()
                                                          .Where(x => x.FirmId == order.FirmId && x.Start < order.EndDistributionDatePlan && order.BeginDistributionDate < x.End)
                                                          .All(x => x.ProvidedByOrderId.HasValue)
-                where isAllowedToWhiteList && (advertisement.IsSelectedToWhiteList || allPeriodsCoveredByOtherOrders)
+                where allPeriodsCoveredByOtherOrders || order.ProvideWhiteListAdvertisement
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(

@@ -61,14 +61,12 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Advertisement> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.FirmId != null)
-                   from advertisementTemplate in _query.For<Facts::AdvertisementTemplate>().Where(x => advertisement.AdvertisementTemplateId == x.Id)
                    select new Advertisement
                    {
                        Id = advertisement.Id,
                        Name = advertisement.Name,
                        FirmId = advertisement.FirmId.Value,
                        IsSelectedToWhiteList = advertisement.IsSelectedToWhiteList,
-                       IsAllowedToWhiteList = advertisementTemplate.IsAllowedToWhiteList,
                    };
 
             public FindSpecification<Advertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

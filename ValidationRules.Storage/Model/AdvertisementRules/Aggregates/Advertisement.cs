@@ -6,7 +6,6 @@
         public string Name { get; set; }
         public long FirmId { get; set; }
         public bool IsSelectedToWhiteList { get; set; }
-        public bool IsAllowedToWhiteList { get; set; }
 
         public sealed class AdvertisementWebsite
         {
