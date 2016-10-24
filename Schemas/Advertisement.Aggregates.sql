@@ -134,7 +134,7 @@ go
 
 create table AdvertisementAggregates.AdvertisementWebsite (
     AdvertisementId bigint not null,
-    Website nvarchar(256) not null,
+    Website nvarchar(1024) not null,
 )
 go
 
