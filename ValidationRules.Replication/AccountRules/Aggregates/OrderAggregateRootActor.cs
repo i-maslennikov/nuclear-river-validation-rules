@@ -62,6 +62,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                            DestProjectId = destProject.Id,
                            SourceProjectId = sourceProject.Id,
                            AccountId = account.Id,
+                           IsFreeOfCharge = order.IsFreeOfCharge,
                            Number = order.Number,
                            BeginDistributionDate = order.BeginDistributionDate,
                            EndDistributionDate = order.EndDistributionDate,

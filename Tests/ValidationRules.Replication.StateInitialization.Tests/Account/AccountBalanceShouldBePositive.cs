@@ -32,11 +32,18 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::ReleaseWithdrawal { Id = 6, OrderPositionId = 2, Amount = 2, Start = FirstDayFeb },
                     new Facts::Lock { Id = 2, OrderId = 2, AccountId = 1, Start = FirstDayJan, Amount = 1 },
 
+                    new Facts::Order { Id = 3, Number = "Order3", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true},
+                    new Facts::OrderPosition { Id = 4, OrderId = 3 },
+                    new Facts::ReleaseWithdrawal { Id = 7, OrderPositionId = 4, Amount = 0, Start = FirstDayJan },
+                    new Facts::ReleaseWithdrawal { Id = 8, OrderPositionId = 4, Amount = 0, Start = FirstDayFeb },
+                    new Facts::Lock { Id = 3, OrderId = 3, AccountId = 1, Start = FirstDayJan, Amount = 0 },
+
                     new Facts::Limit { Id = 1, AccountId = 1, Amount = 10, Start = FirstDayJan },
                     new Facts::Project())
                 .Aggregate(
                     new Aggregates::Order { Id = 1, Number = "Order1", AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
                     new Aggregates::Order { Id = 2, Number = "Order2", AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
+                    new Aggregates::Order { Id = 3, Number = "Order3", AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true},
                     new Aggregates::AccountPeriod { AccountId = 1, Balance = 3, LockedAmount = 11, OwerallLockedAmount = 11, ReleaseAmount = 11, LimitAmount = 10, Start = FirstDayJan, End = FirstDayFeb },
                     new Aggregates::AccountPeriod { AccountId = 1, Balance = 3, LockedAmount = 0, OwerallLockedAmount = 11, ReleaseAmount = 12, LimitAmount = 0, Start = FirstDayFeb, End = FirstDayMar })
                 .Message(
@@ -63,6 +70,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 204,
                         PeriodStart = FirstDayFeb,
                         PeriodEnd = FirstDayMar,
-                    });
+                    }).RunOnlyThis();
     }
 }
