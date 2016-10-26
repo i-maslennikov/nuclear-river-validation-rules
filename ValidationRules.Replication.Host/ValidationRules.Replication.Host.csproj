@@ -397,7 +397,7 @@
     <Compile Include="ResultDelivery\Serializers\PriceRules\LinkedObjectsMissedInPrincipalsMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Message.cs" />
     <Compile Include="ResultDelivery\Serializers\MessageExtensions.cs" />
-    <Compile Include="ResultDelivery\Serializers\PriceRules\CouponMustBeUniqueForFirmMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\CouponMustBeSoldOnceAtTimeMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\SatisfiedPrincipalPositionDifferentOrderMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\AdvertisementCountPerThemeShouldBeLimitedMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\OrderPositionCorrespontToInactivePositionMessageSerializer.cs" />

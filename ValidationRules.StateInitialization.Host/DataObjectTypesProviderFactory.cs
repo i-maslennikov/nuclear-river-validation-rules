@@ -166,7 +166,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AdvertisementAggregates::Order.AdvertisementDeleted),
                             typeof(AdvertisementAggregates::Order.AdvertisementMustBelongToFirm),
                             typeof(AdvertisementAggregates::Order.AdvertisementIsDummy),
-                            typeof(AdvertisementAggregates::Order.CouponOrderPosition),
+                            typeof(AdvertisementAggregates::Order.CouponDistributionPeriod),
                             typeof(AdvertisementAggregates::Order.OrderPositionAdvertisement),
                             typeof(AdvertisementAggregates::Advertisement),
                             typeof(AdvertisementAggregates::Advertisement.AdvertisementWebsite),

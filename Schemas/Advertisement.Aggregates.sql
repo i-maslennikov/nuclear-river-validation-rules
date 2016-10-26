@@ -9,7 +9,7 @@ if object_id('AdvertisementAggregates.MissingOrderPositionAdvertisement') is not
 if object_id('AdvertisementAggregates.AdvertisementDeleted') is not null drop table AdvertisementAggregates.AdvertisementDeleted
 if object_id('AdvertisementAggregates.AdvertisementMustBelongToFirm') is not null drop table AdvertisementAggregates.AdvertisementMustBelongToFirm
 if object_id('AdvertisementAggregates.AdvertisementIsDummy') is not null drop table AdvertisementAggregates.AdvertisementIsDummy
-if object_id('AdvertisementAggregates.CouponOrderPosition') is not null drop table AdvertisementAggregates.CouponOrderPosition
+if object_id('AdvertisementAggregates.CouponDistributionPeriod') is not null drop table AdvertisementAggregates.CouponDistributionPeriod
 if object_id('AdvertisementAggregates.AdvertisementPeriodNotInOrderPeriod') is not null drop table AdvertisementAggregates.AdvertisementPeriodNotInOrderPeriod
 
 if object_id('AdvertisementAggregates.Advertisement') is not null drop table AdvertisementAggregates.Advertisement
@@ -35,6 +35,7 @@ create table AdvertisementAggregates.[Order] (
 
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDatePlan datetime2(2) not null,
+    EndDistributionDateFact datetime2(2) not null,
     ProjectId bigint not null,
     FirmId bigint not null,
     RequireWhiteListAdvertisement bit not null,
@@ -98,11 +99,14 @@ create table AdvertisementAggregates.AdvertisementIsDummy (
 )
 go
 
-create table AdvertisementAggregates.CouponOrderPosition (
+create table AdvertisementAggregates.CouponDistributionPeriod (
     OrderId bigint not null,
     OrderPositionId bigint not null,
     PositionId bigint not null,
     AdvertisementId bigint not null,
+    [Begin] datetime2(2) not null,
+    [End] datetime2(2) not null,
+    Scope bigint not null,
 )
 go
 

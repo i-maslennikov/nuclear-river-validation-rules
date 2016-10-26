@@ -1,15 +1,15 @@
 ﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.PriceRules
 {
-    public sealed class CouponMustBeUniqueForFirmMessageSerializer : IMessageSerializer
+    public sealed class CouponMustBeSoldOnceAtTimeMessageSerializer : IMessageSerializer
     {
         private readonly LinkFactory _linkFactory;
 
-        public CouponMustBeUniqueForFirmMessageSerializer(LinkFactory linkFactory)
+        public CouponMustBeSoldOnceAtTimeMessageSerializer(LinkFactory linkFactory)
         {
             _linkFactory = linkFactory;
         }
 
-        public MessageTypeCode MessageType => MessageTypeCode.CouponMustBeUniqueForFirm;
+        public MessageTypeCode MessageType => MessageTypeCode.CouponMustBeSoldOnceAtTime;
 
         public LocalizedMessage Serialize(Message message)
         {

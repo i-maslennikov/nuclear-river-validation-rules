@@ -212,7 +212,7 @@
     <Compile Include="AdvertisementRules\Facts\ProjectAccessor.cs" />
     <Compile Include="AdvertisementRules\Validation\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPeriodMustContainAdvertisementPeriod.cs" />
-    <Compile Include="AdvertisementRules\Validation\CouponMustBeUniqueForFirm.cs" />
+    <Compile Include="AdvertisementRules\Validation\CouponMustBeSoldOnceAtTime.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMayPresent.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMustPresent.cs" />

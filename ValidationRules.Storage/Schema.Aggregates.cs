@@ -232,7 +232,7 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.AdvertisementIsDummy>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.CouponOrderPosition>()
+            builder.Entity<AdvertisementAggregates::Order.CouponDistributionPeriod>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.OrderPositionAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);

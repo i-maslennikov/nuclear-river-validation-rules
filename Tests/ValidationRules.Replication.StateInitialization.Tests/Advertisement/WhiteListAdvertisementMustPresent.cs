@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::AdvertisementTemplate { Id = 8, IsAllowedToWhiteList = true } // должен быть РМ в белом списке
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, EndDistributionDateFact = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true },
                     new Aggregates::Order.LinkedProject { OrderId = 1, ProjectId = 3 },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
@@ -46,8 +46,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
                         ProjectId = 3,
-                    }
-                ).RunOnlyThis();
+                    });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement WhiteListAdvertisementMayPresent
@@ -66,7 +65,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::AdvertisementTemplate { Id = 8, IsAllowedToWhiteList = true } // должен быть РМ в белом списке
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true, ProvideWhiteListAdvertisement = true },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, EndDistributionDateFact = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true, ProvideWhiteListAdvertisement = true },
                     new Aggregates::Order.LinkedProject { OrderId = 1, ProjectId = 3 },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
