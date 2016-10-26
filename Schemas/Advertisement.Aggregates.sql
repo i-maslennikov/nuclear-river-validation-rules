@@ -106,14 +106,6 @@ create table AdvertisementAggregates.CouponOrderPosition (
 )
 go
 
-create table AdvertisementAggregates.AdvertisementPeriodNotInOrderPeriod (
-    OrderId bigint not null,
-    OrderPositionId bigint not null,
-    PositionId bigint not null,
-    AdvertisementId bigint not null,
-)
-go
-
 create table AdvertisementAggregates.OrderPositionAdvertisement (
     OrderId bigint not null,
     OrderPositionId bigint not null,
@@ -152,6 +144,15 @@ create table AdvertisementAggregates.ElementNotPassedReview (
     AdvertisementElementId bigint not null,
     AdvertisementElementTemplateId bigint not null,
     [Status] int not null,
+)
+go
+
+create table AdvertisementAggregates.ElementOffsetInDays (
+    AdvertisementId bigint not null,
+    AdvertisementElementId bigint not null,
+	EndToBeginOffset int not null,
+    EndToMonthBeginOffset int not null,
+    MonthEndToBeginOffset int not null,
 )
 go
 

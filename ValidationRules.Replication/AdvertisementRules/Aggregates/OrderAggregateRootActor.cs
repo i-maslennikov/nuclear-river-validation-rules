@@ -27,7 +27,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         private readonly IBulkRepository<Order.AdvertisementIsDummy> _advertisementIsDummyBulkRepository;
         private readonly IBulkRepository<Order.CouponOrderPosition> _couponOrderPositionBulkRepository;
         private readonly IBulkRepository<Order.OrderPositionAdvertisement> _orderPositionAdvertisementBulkRepository;
-        private readonly IBulkRepository<Order.AdvertisementPeriodNotInOrderPeriod> _advertisementPeriodNotInOrderPeriodBulkRepository;
 
         public OrderAggregateRootActor(
             IQuery query,
@@ -40,8 +39,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             IBulkRepository<Order.AdvertisementMustBelongToFirm> advertisementMustBelongToFirmBulkRepository,
             IBulkRepository<Order.AdvertisementIsDummy> advertisementIsDummyBulkRepository,
             IBulkRepository<Order.CouponOrderPosition> couponOrderPositionBulkRepository,
-            IBulkRepository<Order.OrderPositionAdvertisement> orderPositionAdvertisementBulkRepository,
-            IBulkRepository<Order.AdvertisementPeriodNotInOrderPeriod> advertisementPeriodNotInOrderPeriodBulkRepository)
+            IBulkRepository<Order.OrderPositionAdvertisement> orderPositionAdvertisementBulkRepository)
             : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
             _query = query;
@@ -54,7 +52,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             _advertisementIsDummyBulkRepository = advertisementIsDummyBulkRepository;
             _couponOrderPositionBulkRepository = couponOrderPositionBulkRepository;
             _orderPositionAdvertisementBulkRepository = orderPositionAdvertisementBulkRepository;
-            _advertisementPeriodNotInOrderPeriodBulkRepository = advertisementPeriodNotInOrderPeriodBulkRepository;
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
@@ -71,7 +68,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     new ValueObjectActor<Order.AdvertisementIsDummy>(_query, _advertisementIsDummyBulkRepository, _equalityComparerFactory, new AdvertisementIsDummyAccessor(_query)),
                     new ValueObjectActor<Order.CouponOrderPosition>(_query, _couponOrderPositionBulkRepository, _equalityComparerFactory, new CouponOrderPositionAccessor(_query)),
                     new ValueObjectActor<Order.OrderPositionAdvertisement>(_query, _orderPositionAdvertisementBulkRepository, _equalityComparerFactory, new OrderPositionAdvertisementAccessor(_query)),
-                    new ValueObjectActor<Order.AdvertisementPeriodNotInOrderPeriod>(_query, _advertisementPeriodNotInOrderPeriodBulkRepository, _equalityComparerFactory, new AdvertisementPeriodNotInOrderPeriodAccessor(_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -374,60 +370,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order.CouponOrderPosition>(x => aggregateIds.Contains(x.OrderId));
-            }
-        }
-
-        public sealed class AdvertisementPeriodNotInOrderPeriodAccessor : IStorageBasedDataObjectAccessor<Order.AdvertisementPeriodNotInOrderPeriod>
-        {
-            private const int DiffDays = 4;
-
-            private readonly IQuery _query;
-
-            public AdvertisementPeriodNotInOrderPeriodAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<Order.AdvertisementPeriodNotInOrderPeriod> GetSource()
-            {
-                var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistributionDate, OrderId = x.Id })
-                     .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrderId = x.Id }));
-                dates = dates.Select(x => new { x.Date, x.OrderId });
-
-                var periods =
-                    from date in dates
-                    let nextDate = dates.Where(x => x.Date > date.Date).Min(x => (DateTime?)x.Date)
-                    where nextDate.HasValue
-                    select new { date.OrderId, Start = date.Date, End = nextDate.Value };
-
-                var vo = from order in _query.For<Facts::Order>()
-                         from period in periods.Where(x => x.OrderId == order.Id)
-                         from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                         from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
-                         from advertisement in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId)
-                         where !advertisement.IsDeleted
-                         from element in _query.For<Facts::AdvertisementElement>().Where(x => x.AdvertisementId == advertisement.Id)
-                         where element.EndDate < period.Start.AddDays(DiffDays) ||
-                               period.End < element.BeginDate.Value.AddDays(DiffDays)
-                         select new Order.AdvertisementPeriodNotInOrderPeriod
-                         {
-                             OrderId = order.Id,
-                             OrderPositionId = op.Id,
-                             PositionId = opa.PositionId,
-                             AdvertisementId = advertisement.Id,
-                         };
-
-                return vo;
-            }
-
-            public FindSpecification<Order.AdvertisementPeriodNotInOrderPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
-                return new FindSpecification<Order.AdvertisementPeriodNotInOrderPeriod>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

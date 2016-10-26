@@ -234,8 +234,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.CouponOrderPosition>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementPeriodNotInOrderPeriod>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.OrderPositionAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
 
@@ -247,6 +245,8 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Advertisement.RequiredElementMissing>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Advertisement.ElementNotPassedReview>()
+                  .HasSchemaName(AdvertisementAggregatesSchema);
+            builder.Entity<AdvertisementAggregates::Advertisement.ElementOffsetInDays>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
 
             builder.Entity<AdvertisementAggregates::AdvertisementElementTemplate>()

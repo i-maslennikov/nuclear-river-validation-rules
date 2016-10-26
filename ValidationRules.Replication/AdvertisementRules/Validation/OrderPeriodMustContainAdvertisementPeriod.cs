@@ -17,6 +17,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// </summary>
     public sealed class OrderPeriodMustContainAdvertisementPeriod : ValidationResultAccessorBase
     {
+        private const int MaxOffsetInDays = 5;
+
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
@@ -30,7 +32,12 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         {
 
             var ruleResults = from order in query.For<Order>()
-                              from fail in query.For<Order.AdvertisementPeriodNotInOrderPeriod>().Where(x => x.OrderId == order.Id)
+                              from opa in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
+                              from advertisement in query.For<Advertisement>().Where(x => x.Id == opa.AdvertisementId)
+                              from elementOffset in query.For<Advertisement.ElementOffsetInDays>().Where(x => x.AdvertisementId == advertisement.Id)
+                              where elementOffset.EndToBeginOffset < MaxOffsetInDays ||
+                                    elementOffset.EndToMonthBeginOffset < MaxOffsetInDays ||
+                                    elementOffset.MonthEndToBeginOffset < MaxOffsetInDays
                               select new Version.ValidationResult
                               {
                                   MessageParams = new XDocument(new XElement("root",
@@ -38,11 +45,11 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                                                   new XAttribute("id", order.Id),
                                                                                                   new XAttribute("number", order.Number)),
                                                                                       new XElement("orderPosition",
-                                                                                                  new XAttribute("id", fail.OrderPositionId),
-                                                                                                  new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)),
+                                                                                                  new XAttribute("id", opa.OrderPositionId),
+                                                                                                  new XAttribute("name", query.For<Position>().Single(x => x.Id == opa.PositionId).Name)),
                                                                                       new XElement("advertisement",
-                                                                                                  new XAttribute("id", fail.AdvertisementId),
-                                                                                                  new XAttribute("name", query.For<Advertisement>().Single(x => x.Id == fail.AdvertisementId).Name))
+                                                                                                  new XAttribute("id", advertisement.Id),
+                                                                                                  new XAttribute("name", advertisement.Name))
                                                                                       )),
                                   PeriodStart = order.BeginDistributionDate,
                                   PeriodEnd = order.EndDistributionDatePlan,

@@ -37,5 +37,16 @@
 
             public ReviewStatus Status { get; set; }
         }
+
+        public sealed class ElementOffsetInDays
+        {
+            public long AdvertisementId { get; set; }
+
+            public long AdvertisementElementId { get; set; }
+
+            public int EndToBeginOffset { get; set; }
+            public int EndToMonthBeginOffset { get; set; }
+            public int MonthEndToBeginOffset { get; set; }
+        }
     }
 }
