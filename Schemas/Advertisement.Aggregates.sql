@@ -17,6 +17,7 @@ if object_id('AdvertisementAggregates.AdvertisementWebsite') is not null drop ta
 if object_id('AdvertisementAggregates.RequiredElementMissing') is not null drop table AdvertisementAggregates.RequiredElementMissing
 if object_id('AdvertisementAggregates.ElementNotPassedReview') is not null drop table AdvertisementAggregates.ElementNotPassedReview
 if object_id('AdvertisementAggregates.ElementPeriod') is not null drop table AdvertisementAggregates.ElementPeriod
+if object_id('AdvertisementAggregates.ElementOffsetInDays') is not null drop table AdvertisementAggregates.ElementOffsetInDays
 
 if object_id('AdvertisementAggregates.AdvertisementElementTemplate') is not null drop table AdvertisementAggregates.AdvertisementElementTemplate
 
@@ -154,7 +155,7 @@ go
 create table AdvertisementAggregates.ElementOffsetInDays (
     AdvertisementId bigint not null,
     AdvertisementElementId bigint not null,
-	EndToBeginOffset int not null,
+    EndToBeginOffset int not null,
     EndToMonthBeginOffset int not null,
     MonthEndToBeginOffset int not null,
 )

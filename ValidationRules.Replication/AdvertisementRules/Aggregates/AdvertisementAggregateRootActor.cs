@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     new ValueObjectActor<Advertisement.AdvertisementWebsite>(_query, _advertisementWebsiteBulkRepository, _equalityComparerFactory, new AdvertisementWebsiteAccessor(_query)),
                     new ValueObjectActor<Advertisement.RequiredElementMissing>(_query, _requiredElementMissingBulkRepository, _equalityComparerFactory, new RequiredElementMissingAccessor(_query)),
                     new ValueObjectActor<Advertisement.ElementNotPassedReview>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementNotPassedReviewAccessor(_query)),
-                    new ValueObjectActor<Advertisement.ElementOffsetInDays>(_query, _elementPeriodOffsetBulkRepository, _equalityComparerFactory, new ElementPeriodOffsetAccessor(_query)),
+                    new ValueObjectActor<Advertisement.ElementOffsetInDays>(_query, _elementPeriodOffsetBulkRepository, _equalityComparerFactory, new ElementOffsetInDaysAccessor(_query)),
                 };
 
         public sealed class AdvertisementAccessor : IStorageBasedDataObjectAccessor<Advertisement>
@@ -194,30 +194,27 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementPeriodOffsetAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementOffsetInDays>
+        public sealed class ElementOffsetInDaysAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementOffsetInDays>
         {
             private readonly IQuery _query;
 
-            public ElementPeriodOffsetAccessor(IQuery query)
+            public ElementOffsetInDaysAccessor(IQuery query)
             {
                 _query = query;
             }
 
             public IQueryable<Advertisement.ElementOffsetInDays> GetSource()
-            {
-                var test = from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
-                       from element in _query.For<Facts::AdvertisementElement>().Where(x => x.AdvertisementId == advertisement.Id)
-                       where element.BeginDate != null && element.EndDate != null
-                       select new Advertisement.ElementOffsetInDays
-                           {
-                               AdvertisementId = advertisement.Id,
-                               AdvertisementElementId = element.Id,
-                               EndToBeginOffset = (int)(element.EndDate.Value - element.BeginDate.Value).TotalDays + 1,
-                               EndToMonthBeginOffset = element.EndDate.Value.Day,
-                               MonthEndToBeginOffset = DateTime.DaysInMonth(element.BeginDate.Value.Year, element.BeginDate.Value.Month) - element.BeginDate.Value.Day + 1
-                           };
-                return test;
-            }
+                => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
+                   from element in _query.For<Facts::AdvertisementElement>().Where(x => x.AdvertisementId == advertisement.Id)
+                   where element.BeginDate != null && element.EndDate != null
+                   select new Advertisement.ElementOffsetInDays
+                       {
+                           AdvertisementId = advertisement.Id,
+                           AdvertisementElementId = element.Id,
+                           EndToBeginOffset = (int)(element.EndDate.Value - element.BeginDate.Value).TotalDays + 1,
+                           EndToMonthBeginOffset = element.EndDate.Value.Day,
+                           MonthEndToBeginOffset = DateTime.DaysInMonth(element.BeginDate.Value.Year, element.BeginDate.Value.Month) - element.BeginDate.Value.Day + 1
+                       };
 
             public FindSpecification<Advertisement.ElementOffsetInDays> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

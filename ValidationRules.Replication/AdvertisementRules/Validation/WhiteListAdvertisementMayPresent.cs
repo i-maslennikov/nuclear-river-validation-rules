@@ -33,10 +33,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                 from order in query.For<Order>().Where(x => x.RequireWhiteListAdvertisement)
                 from project in query.For<Order.LinkedProject>().Where(x => x.OrderId == order.Id)
                 from advertisement in query.For<Advertisement>().Where(x => x.FirmId == order.FirmId && x.IsSelectedToWhiteList)
-                let allPeriodsCoveredByOtherOrders = query.For<Firm.WhiteListDistributionPeriod>()
+                let orderPeriodCoveredByOtherOrders = query.For<Firm.WhiteListDistributionPeriod>()
                                                          .Where(x => x.FirmId == order.FirmId && x.Start < order.EndDistributionDatePlan && order.BeginDistributionDate < x.End)
                                                          .All(x => x.ProvidedByOrderId.HasValue)
-                where allPeriodsCoveredByOtherOrders || order.ProvideWhiteListAdvertisement
+                where orderPeriodCoveredByOtherOrders || order.ProvideWhiteListAdvertisement
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(
