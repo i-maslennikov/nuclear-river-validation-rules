@@ -23,13 +23,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 0, IsDeleted = false },
+                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 0, AdvertisementTemplateId = 9, IsDeleted = false },
+                    new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
                     new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, IsEmpty = true }, // ЭРМ пустой
                     new Facts::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8", IsRequired = true } // ЭРМ не должен быть пустым
                 )
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-                    new Aggregates::Order.OrderAdvertisement { OrderId = 1, AdvertisementId = 6 },
+                    new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
                     new Aggregates::Advertisement.RequiredElementMissing { AdvertisementId = 6, AdvertisementElementId = 7, AdvertisementElementTemplateId = 8 },
@@ -60,13 +61,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 0, IsDeleted = false },
+                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 0, AdvertisementTemplateId = 9, IsDeleted = false },
+                    new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
                     new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, IsEmpty = false },
                     new Facts::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8", IsRequired = true } // ЭРМ не должен быть пустым
                 )
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-                    new Aggregates::Order.OrderAdvertisement { OrderId = 1, AdvertisementId = 6 },
+                    new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
 

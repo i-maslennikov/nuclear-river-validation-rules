@@ -24,7 +24,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Facts::Position { Id = 5, Name = "Position5" },
-                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 8 }, // Фирмы в РМ и в заказе не совпадают
+                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 8, AdvertisementTemplateId = 9 }, // Фирмы в РМ и в заказе не совпадают
+                    new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
                     new Facts::Firm { Id = 7, Name = "Firm7" }
                 )
                 .Aggregate(
@@ -60,7 +61,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Facts::Position { Id = 5, Name = "Position5" },
-                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 7 },
+                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 7, AdvertisementTemplateId = 9 },
+                    new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
                     new Facts::Firm { Id = 7, Name = "Firm7" }
                 )
                 .Aggregate(

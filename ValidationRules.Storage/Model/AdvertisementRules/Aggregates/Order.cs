@@ -9,6 +9,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
 
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDatePlan { get; set; }
+        public DateTime EndDistributionDateFact { get; set; }
         public long ProjectId { get; set; }
         public long FirmId { get; set; }
         public bool RequireWhiteListAdvertisement { get; set; }
@@ -72,9 +73,23 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long PositionId { get; set; }
         }
 
-        public sealed class OrderAdvertisement
+        // todo: подумать об аггрегате "купон". ну или в фирму попробовать затолкать.
+        public sealed class CouponDistributionPeriod
         {
             public long OrderId { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PositionId { get; set; }
+            public long AdvertisementId { get; set; }
+            public DateTime Begin { get; set; }
+            public DateTime End { get; set; }
+            public long Scope { get; set; }
+        }
+
+        public sealed class OrderPositionAdvertisement
+        {
+            public long OrderId { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PositionId { get; set; }
             public long AdvertisementId { get; set; }
         }
     }

@@ -29,8 +29,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
             {
                 Id = position.Id,
                 AdvertisementTemplateId = position.AdvertisementTemplateId,
-                IsCompositionOptional = position.IsCompositionOptional,
                 Name = position.Name,
+
+                IsCompositionOptional = position.IsCompositionOptional,
+                CategoryCode = position.CategoryCode,
 
                 ChildPositionId = child.ChildPositionId,
             };

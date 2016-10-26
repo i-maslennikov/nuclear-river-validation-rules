@@ -148,6 +148,12 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementFacts::Firm>()
                   .HasSchemaName(AdvertisementFactsSchema)
                   .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::FirmAddress>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementFacts::FirmAddressWebsite>()
+                  .HasSchemaName(AdvertisementFactsSchema)
+                  .HasPrimaryKey(x => x.Id);
 
             return builder;
         }

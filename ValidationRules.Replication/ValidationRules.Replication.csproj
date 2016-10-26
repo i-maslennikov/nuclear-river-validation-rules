@@ -199,6 +199,8 @@
     <Compile Include="AdvertisementRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="AdvertisementRules\Facts\AdvertisementElementTemplateAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\AdvertisementElementAccessor.cs" />
+    <Compile Include="AdvertisementRules\Facts\FirmAddressWebsiteAccessor.cs" />
+    <Compile Include="AdvertisementRules\Facts\FirmAddressAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\FirmAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\AdvertisementAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\OrderAccessor.cs" />
@@ -208,6 +210,9 @@
     <Compile Include="AdvertisementRules\Facts\PositionAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\AdvertisementTemplateAccessor.cs" />
     <Compile Include="AdvertisementRules\Facts\ProjectAccessor.cs" />
+    <Compile Include="AdvertisementRules\Validation\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
+    <Compile Include="AdvertisementRules\Validation\OrderPeriodMustContainAdvertisementPeriod.cs" />
+    <Compile Include="AdvertisementRules\Validation\CouponMustBeSoldOnceAtTime.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMayPresent.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMustPresent.cs" />

@@ -318,6 +318,17 @@ namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers
             return (int)element.Attribute("themeCount");
         }
 
+        public static string ReadWebsite(this Message message)
+        {
+            var element = message.Data.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return element.Attribute("website").Value;
+        }
+
         public sealed class CategoryCountDto
         {
             public int Allowed { get; set; }

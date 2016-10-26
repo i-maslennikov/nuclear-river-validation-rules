@@ -7,6 +7,12 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
         public long Id { get; set; }
         public string Name { get; set; }
 
+        public sealed class FirmWebsite
+        {
+            public long FirmId { get; set; }
+            public string Website { get; set; }
+        }
+
         public sealed class WhiteListDistributionPeriod
         {
             public long FirmId { get; set; }

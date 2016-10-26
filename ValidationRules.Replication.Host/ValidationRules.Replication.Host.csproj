@@ -351,7 +351,9 @@
       <DependentUpon>ReplicationService.cs</DependentUpon>
     </Compile>
     <Compile Include="ResultDelivery\DeliverySettingsAspect.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementWebsiteShouldNotBeFirmWebsiteMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementElementMustPassReviewMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementMustBelongToFirmMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderPositionAdvertisementMustBeCreatedMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\WhiteListAdvertisementMayPresentMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\WhiteListAdvertisementMustPresentMessageSerializer.cs" />
@@ -360,7 +362,7 @@
     <Compile Include="ResultDelivery\Serializers\ThemeRules\ThemePeriodMustContainOrderPeriodMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\ThemeRules\ThemeCategoryMustBeActiveAndNotDeletedMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderMustHaveAdvertisementMessageSerializer.cs" />
-    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\AdvertisementMustBelongToFirmMessageSerializer.cs" />
+    <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderPeriodMustContainAdvertisementPeriodMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderMustNotContainDummyAdvertisementMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderPositionMustNotReferenceDeletedAdvertisementMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\AdvertisementRules\OrderPositionAdvertisementMustHaveAdvertisementMessageSerializer.cs" />
@@ -395,6 +397,7 @@
     <Compile Include="ResultDelivery\Serializers\PriceRules\LinkedObjectsMissedInPrincipalsMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Message.cs" />
     <Compile Include="ResultDelivery\Serializers\MessageExtensions.cs" />
+    <Compile Include="ResultDelivery\Serializers\PriceRules\CouponMustBeSoldOnceAtTimeMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\SatisfiedPrincipalPositionDifferentOrderMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\AdvertisementCountPerThemeShouldBeLimitedMessageSerializer.cs" />
     <Compile Include="ResultDelivery\Serializers\PriceRules\OrderPositionCorrespontToInactivePositionMessageSerializer.cs" />

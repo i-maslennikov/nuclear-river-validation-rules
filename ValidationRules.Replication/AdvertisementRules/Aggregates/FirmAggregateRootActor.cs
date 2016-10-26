@@ -19,17 +19,20 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
     {
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
+        private readonly IBulkRepository<Firm.FirmWebsite> _firmWebsiteBulkRepository;
         private readonly IBulkRepository<Firm.WhiteListDistributionPeriod> _whiteListDistributionPeriodBulkRepository;
 
         public FirmAggregateRootActor(
             IQuery query,
             IBulkRepository<Firm> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Firm.FirmWebsite> firmWebsiteBulkRepository,
             IBulkRepository<Firm.WhiteListDistributionPeriod> whiteListDistributionPeriodBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new FirmAccessor(query))
         {
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
+            _firmWebsiteBulkRepository = firmWebsiteBulkRepository;
             _whiteListDistributionPeriodBulkRepository = whiteListDistributionPeriodBulkRepository;
         }
 
@@ -39,7 +42,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
-                    new ValueObjectActor<Firm.WhiteListDistributionPeriod>(_query, _whiteListDistributionPeriodBulkRepository, _equalityComparerFactory, new WhiteListDistributionPeriodAccessor(_query)),
+                    new ValueObjectActor<Firm.FirmWebsite>(_query, _firmWebsiteBulkRepository, _equalityComparerFactory, new FirmWebsiteAccessor(_query)),
+                    new ValueObjectActor<Firm.WhiteListDistributionPeriod>(_query, _whiteListDistributionPeriodBulkRepository, _equalityComparerFactory, new WhiteListDistributionPeriodAccessor(_query))
                 };
 
         public sealed class FirmAccessor : IStorageBasedDataObjectAccessor<Firm>
@@ -67,6 +71,36 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Firm>(x => aggregateIds.Contains(x.Id));
+            }
+        }
+
+        public sealed class FirmWebsiteAccessor : IStorageBasedDataObjectAccessor<Firm.FirmWebsite>
+        {
+            private readonly IQuery _query;
+
+            public FirmWebsiteAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Firm.FirmWebsite> GetSource() =>
+                from firm in _query.For<Facts::Firm>()
+                from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.FirmId == firm.Id)
+                from firmAddressWebsite in _query.For<Facts::FirmAddressWebsite>().Where(x => x.FirmAddressId == firmAddress.Id)
+                select new Firm.FirmWebsite
+                    {
+                        FirmId = firm.Id,
+                        Website = firmAddressWebsite.Website
+                    };
+
+            public FindSpecification<Firm.FirmWebsite> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Firm.FirmWebsite>(x => aggregateIds.Contains(x.FirmId));
             }
         }
 

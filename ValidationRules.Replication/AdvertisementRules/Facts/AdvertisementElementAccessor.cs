@@ -21,16 +21,20 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Facts
             _query = query;
         }
 
-        public IQueryable<AdvertisementElement> GetSource() => _query
-            .For(Specs.Find.Erm.AdvertisementElements())
-            .Join(_query.For<Storage.Model.Erm.AdvertisementElementStatus>(), x => x.Id, x => x.Id, (x, y) => new AdvertisementElement
-            {
-                Id = x.Id,
-                AdvertisementId = x.AdvertisementId,
-                AdvertisementElementTemplateId = x.AdvertisementElementTemplateId,
-                IsEmpty = (x.BeginDate == null || x.EndDate == null) && x.FileId == null && string.IsNullOrEmpty(x.Text),
-                Status = y.Status,
-            });
+        public IQueryable<AdvertisementElement> GetSource() =>
+            from element in _query.For(Specs.Find.Erm.AdvertisementElements())
+            from status in _query.For<Storage.Model.Erm.AdvertisementElementStatus>().Where(x => x.Id == element.Id)
+            select new AdvertisementElement
+                {
+                    Id = element.Id,
+                    AdvertisementId = element.AdvertisementId,
+                    AdvertisementElementTemplateId = element.AdvertisementElementTemplateId,
+                    IsEmpty = (element.BeginDate == null || element.EndDate == null) && element.FileId == null && string.IsNullOrEmpty(element.Text),
+                    Text = element.Text,
+                    BeginDate = element.BeginDate,
+                    EndDate = element.EndDate,
+                    Status = status.Status,
+                };
 
         public FindSpecification<AdvertisementElement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

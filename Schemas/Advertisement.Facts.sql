@@ -10,6 +10,8 @@ if object_id('AdvertisementFacts.Order') is not null drop table AdvertisementFac
 if object_id('AdvertisementFacts.Project') is not null drop table AdvertisementFacts.Project
 if object_id('AdvertisementFacts.Advertisement') is not null drop table AdvertisementFacts.Advertisement
 if object_id('AdvertisementFacts.Firm') is not null drop table AdvertisementFacts.Firm
+if object_id('AdvertisementFacts.FirmAddress') is not null drop table AdvertisementFacts.FirmAddress
+if object_id('AdvertisementFacts.FirmAddressWebsite') is not null drop table AdvertisementFacts.FirmAddressWebsite
 if object_id('AdvertisementFacts.AdvertisementElement') is not null drop table AdvertisementFacts.AdvertisementElement
 if object_id('AdvertisementFacts.AdvertisementElementTemplate') is not null drop table AdvertisementFacts.AdvertisementElementTemplate
 go
@@ -29,6 +31,7 @@ create table AdvertisementFacts.Position (
     Name nvarchar(256) not null,
 
     IsCompositionOptional bit not null,
+    CategoryCode bigint not null,
 
     ChildPositionId bigint null,
 )
@@ -123,12 +126,30 @@ create table AdvertisementFacts.Firm (
 )
 go
 
+create table AdvertisementFacts.FirmAddress (
+    Id bigint not null,
+    FirmId bigint not null,
+    constraint PK_FirmAddress primary key (Id)
+)
+go
+
+create table AdvertisementFacts.FirmAddressWebsite (
+    Id bigint not null,
+    FirmAddressId bigint not null,
+    Website nvarchar(256) not null,
+    constraint PK_FirmAddressWebsite primary key (Id)
+)
+go
+
 create table AdvertisementFacts.AdvertisementElement (
     Id bigint not null,
     AdvertisementId bigint not null,
     AdvertisementElementTemplateId bigint not null,
     IsEmpty bit not null,
     [Status] int not null,
+    [Text] nvarchar(max) null,
+    [BeginDate] datetime2(2) null,
+    [EndDate] datetime2(2) null,
     constraint PK_AdvertisementElement primary key (Id)
 )
 go
@@ -148,6 +169,7 @@ create table AdvertisementFacts.AdvertisementElementTemplate (
     Name nvarchar(128) not null,
     IsRequired bit not null,
     NeedsValidation bit not null,
+    IsAdvertisementLink bit not null,
     constraint PK_AdvertisementElementTemplate primary key (Id)
 )
 go

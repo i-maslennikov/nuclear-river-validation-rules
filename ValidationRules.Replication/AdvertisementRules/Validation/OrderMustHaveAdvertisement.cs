@@ -28,8 +28,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from order in query.For<Order>()
-                              join relation in query.For<Order.OrderAdvertisement>() on order.Id equals relation.OrderId
-                              join advertisement in query.For<Advertisement>() on relation.AdvertisementId equals advertisement.Id
+                              from advertisementId in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id).Select(x => x.AdvertisementId).Distinct()
+                              from advertisement in query.For<Advertisement>().Where(x => x.Id == advertisementId)
                               join fail in query.For<Advertisement.RequiredElementMissing>() on advertisement.Id equals fail.AdvertisementId
                               select new Version.ValidationResult
                                   {

@@ -13,6 +13,7 @@
         public const int DeniedPosition = 180;
         public const int Firm = 146;
         public const int FirmAddress = 164;
+        public const int FirmContact = 165;
         public const int LegalPersonProfile = 219;
         public const int Limit = 192;
         public const int Lock = 159;

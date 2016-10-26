@@ -111,6 +111,9 @@
     <Compile Include="Account\AccountShouldExist.cs" />
     <Compile Include="Account\AccountBalanceShouldBePositive.cs" />
     <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="Advertisement\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
+    <Compile Include="Advertisement\OrderPeriodMustContainAdvertisementPeriod.cs" />
+    <Compile Include="Advertisement\CouponMustBeSoldOnceAtTime.cs" />
     <Compile Include="Advertisement\WhiteListAdvertisementMustPresent.cs" />
     <Compile Include="Advertisement\AdvertisementMustBelongToFirm.cs" />
     <Compile Include="Advertisement\AdvertisementElementMustPassReview.cs" />

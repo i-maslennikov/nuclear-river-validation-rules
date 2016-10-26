@@ -9,6 +9,7 @@
         public string Name { get; set; }
 
         public bool IsCompositionOptional { get; set; }
+        public long CategoryCode { get; set; }
 
         public long? ChildPositionId { get; set; }
     }

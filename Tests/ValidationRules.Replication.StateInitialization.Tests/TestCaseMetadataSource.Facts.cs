@@ -25,6 +25,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static DateTime MonthStart(int i) => DateTime.Parse("2012-01-01").AddMonths(i - 1);
 
         // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement FirmContactsFacts
+        => ArrangeMetadataElement.Config
+            .Name(nameof(FirmContactsFacts))
+            .Erm(
+                new Erm::FirmContact { Id = 1, FirmAddressId = 1, ContactType = 4, Contact = "http://localhost"},
+                new Erm::FirmContact { Id = 2, FirmAddressId = null, ContactType = 4, Contact = "http://localhost" },
+                new Erm::FirmContact { Id = 3, FirmAddressId = 1, ContactType = 3, Contact = "http://localhost" })
+            .Fact(
+                new AdvertisementFacts::FirmAddressWebsite { Id = 1, FirmAddressId = 1, Website = "http://localhost" });
+
+        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement ThemeOrganizationUnitFacts
         => ArrangeMetadataElement.Config
             .Name(nameof(ThemeOrganizationUnitFacts))
@@ -112,7 +123,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                 new Erm::Position { Id = 2 })
             .Fact(
-                new AdvertisementFacts::Position { Id = 1, Name = "Position", ChildPositionId = 1},
+                new AdvertisementFacts::Position { Id = 1, Name = "Position", ChildPositionId = 1, CategoryCode = 11 },
                 new AdvertisementFacts::Position { Id = 2, ChildPositionId = null },
                 new ProjectFacts::Position { Id = 1, Name = "Position", CategoryCode = 11 },
                 new ProjectFacts::Position { Id = 2 });

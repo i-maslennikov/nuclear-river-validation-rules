@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 )
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-                    new Aggregates::Order.OrderAdvertisement { OrderId = 1, AdvertisementId = 6 },
+                    new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
                     new Aggregates::Advertisement.ElementNotPassedReview { AdvertisementId = 6, AdvertisementElementId = 7, AdvertisementElementTemplateId = 8, Status = Aggregates::Advertisement.ReviewStatus.Invalid },
@@ -73,7 +73,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 )
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-                    new Aggregates::Order.OrderAdvertisement { OrderId = 1, AdvertisementId = 6 },
+                    new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
 
