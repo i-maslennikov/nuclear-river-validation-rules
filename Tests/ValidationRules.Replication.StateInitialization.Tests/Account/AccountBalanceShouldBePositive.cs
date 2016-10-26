@@ -60,16 +60,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             PeriodEnd = FirstDayMar,
                         },
                     new Messages::Version.ValidationResult
-                    {
-                        MessageParams = XDocument.Parse("<root>" +
+                        {
+                            MessageParams = XDocument.Parse("<root>" +
                                                             "<message available=\"-8.0000\" planned=\"12.0000\" required=\"20.0000\" />" +
                                                             "<account id=\"1\" />" +
                                                             "<order id=\"2\" number=\"Order2\" />" +
                                                             "</root>"),
-                        MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
-                        Result = 204,
-                        PeriodStart = FirstDayFeb,
-                        PeriodEnd = FirstDayMar,
-                    }).RunOnlyThis();
+                            MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
+                            Result = 204,
+                            PeriodStart = FirstDayFeb,
+                            PeriodEnd = FirstDayMar,
+                        });
     }
 }

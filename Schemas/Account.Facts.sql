@@ -16,7 +16,7 @@ create table AccountFacts.[Order](
     SourceOrganizationUnitId bigint not null,
     BranchOfficeOrganizationUnitId bigint null,
     LegalPersonId bigint null,
-	IsFreeOfCharge bit not null,
+    IsFreeOfCharge bit not null,
     Number nvarchar(64) not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDate datetime2(2) not null,

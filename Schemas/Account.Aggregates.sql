@@ -11,7 +11,7 @@ create table AccountAggregates.[Order](
     DestProjectId bigint not null,
     SourceProjectId bigint not null,
     AccountId bigint null,
-	IsFreeOfCharge bit not null,
+    IsFreeOfCharge bit not null,
     Number nvarchar(64) not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDate datetime2(2) not null,
