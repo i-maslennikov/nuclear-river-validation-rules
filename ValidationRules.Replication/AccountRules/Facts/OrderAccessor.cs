@@ -18,6 +18,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
         private const int OrderOnTermination = 4;
         private const int OrderApproved = 5;
         private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+        private static readonly int[] FreeOfChargeOrderTypes = { 2, 7, 9 };
 
         private readonly IQuery _query;
 
@@ -36,6 +37,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Facts
                              SourceOrganizationUnitId = order.SourceOrganizationUnitId,
                              BranchOfficeOrganizationUnitId = order.BranchOfficeOrganizationUnitId,
                              LegalPersonId = order.LegalPersonId,
+                             IsFreeOfCharge = FreeOfChargeOrderTypes.Contains(order.OrderType),
                              Number = order.Number,
                              BeginDistributionDate = order.BeginDistributionDate,
                              EndDistributionDate = order.EndDistributionDateFact + OneSecond,

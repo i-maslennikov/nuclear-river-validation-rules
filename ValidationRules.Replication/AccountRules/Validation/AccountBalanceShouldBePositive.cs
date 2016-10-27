@@ -34,8 +34,9 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         {
             // Ошибка выводится в городе назначения и городе источнике.
             // todo: есть решение без union, с вынесением проектов в отдельную таблицу и join (LinkedProject)
-            var orderSourceProjects = query.For<Order>().Select(x => new { x.Id, x.AccountId, x.Number, x.BeginDistributionDate, x.EndDistributionDate, ProjectId = x.SourceProjectId });
-            var orderDestProjects = query.For<Order>().Select(x => new { x.Id, x.AccountId, x.Number, x.BeginDistributionDate, x.EndDistributionDate, ProjectId = x.DestProjectId });
+            var nonFreeOfChargeOrders = query.For<Order>().Where(x => !x.IsFreeOfCharge);
+            var orderSourceProjects = nonFreeOfChargeOrders.Select(x => new { x.Id, x.AccountId, x.Number, x.BeginDistributionDate, x.EndDistributionDate, ProjectId = x.SourceProjectId });
+            var orderDestProjects = nonFreeOfChargeOrders.Select(x => new { x.Id, x.AccountId, x.Number, x.BeginDistributionDate, x.EndDistributionDate, ProjectId = x.DestProjectId });
 
             var ruleResults =
                 from accountPeriod in query.For<AccountPeriod>()
