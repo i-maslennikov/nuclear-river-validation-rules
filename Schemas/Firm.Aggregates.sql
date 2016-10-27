@@ -24,6 +24,7 @@ go
 create table FirmAggregates.Firm(
     Id bigint not null,
     Name nvarchar(250) not null,
+    ProjectId bigint not null,
     constraint PK_Firm primary key (Id)
 )
 go
