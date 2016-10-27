@@ -51,6 +51,15 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Facts
             => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Order), x.Id)).ToArray();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Order> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var ids = dataObjects.Select(x => x.Id).ToArray();
+
+            var firmIds =
+                from order in _query.For<Order>().Where(x => ids.Contains(x.Id))
+                from firm in _query.For<Firm>().Where(x => x.Id == order.FirmId)
+                select firm.Id;
+
+            return new EventCollectionHelper { { typeof(Firm), firmIds } };
+        }
     }
 }

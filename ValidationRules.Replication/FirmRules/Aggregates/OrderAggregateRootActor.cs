@@ -18,7 +18,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
     {
         private readonly IQuery _query;
         private readonly IBulkRepository<Order.FirmOrganiationUnitMismatch> _invalidFirmRepository;
-        private readonly IBulkRepository<Order.SpecialPosition> _specialPositionRepository;
         private readonly IBulkRepository<Order.NotApplicapleForDesktopPosition> _notApplicapleForDesktopPositionRepository;
         private readonly IBulkRepository<Order.SelfAdvertisementPosition> _selfAdvertisementPositionRepository;
         private readonly IBulkRepository<Order.CategoryPurchase> _categoryPurchaseRepository;
@@ -29,7 +28,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             IBulkRepository<Order> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order.FirmOrganiationUnitMismatch> invalidFirmRepository,
-            IBulkRepository<Order.SpecialPosition> specialPositionRepository,
             IBulkRepository<Order.CategoryPurchase> categoryPurchaseRepository,
             IBulkRepository<Order.NotApplicapleForDesktopPosition> notApplicapleForDesktopPositionRepository,
             IBulkRepository<Order.SelfAdvertisementPosition> selfAdvertisementPositionRepository)
@@ -41,7 +39,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             _categoryPurchaseRepository = categoryPurchaseRepository;
             _notApplicapleForDesktopPositionRepository = notApplicapleForDesktopPositionRepository;
             _selfAdvertisementPositionRepository = selfAdvertisementPositionRepository;
-            _specialPositionRepository = specialPositionRepository;
         }
 
 
@@ -51,7 +48,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             => new IActor[]
                 {
                     new ValueObjectActor<Order.FirmOrganiationUnitMismatch>(_query, _invalidFirmRepository, _equalityComparerFactory, new OrderFirmOrganiationUnitMismatchAccessor(_query)),
-                    new ValueObjectActor<Order.SpecialPosition>(_query, _specialPositionRepository, _equalityComparerFactory, new SpecialPositionAccessor(_query)),
                     new ValueObjectActor<Order.NotApplicapleForDesktopPosition>(_query, _notApplicapleForDesktopPositionRepository, _equalityComparerFactory, new NotApplicapleForDesktopPositionAccessor(_query)),
                     new ValueObjectActor<Order.SelfAdvertisementPosition>(_query, _selfAdvertisementPositionRepository, _equalityComparerFactory, new SelfAdvertisementPositionAccessor(_query)),
                     new ValueObjectActor<Order.CategoryPurchase>(_query, _categoryPurchaseRepository, _equalityComparerFactory, new OrderCategoryPurchaseAccessor(_query)),
@@ -91,29 +87,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
-            }
-        }
-
-        public sealed class SpecialPositionAccessor : IStorageBasedDataObjectAccessor<Order.SpecialPosition>
-        {
-            private readonly IQuery _query;
-
-            public SpecialPositionAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<Order.SpecialPosition> GetSource()
-                => (from orderPosition in _query.For<Facts::OrderPosition>()
-                    from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
-                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::SpecialPosition>().Where(x => x.IsAdvantageousPurchaseOnPc || x.IsSelfAdvertisementOnPc).Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                    select new Order.SpecialPosition { OrderId = orderPosition.OrderId }).Distinct();
-
-            public FindSpecification<Order.SpecialPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.SpecialPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

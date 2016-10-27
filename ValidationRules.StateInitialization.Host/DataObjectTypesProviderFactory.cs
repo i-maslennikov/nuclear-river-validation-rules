@@ -200,12 +200,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyAggregates::Order.MissingOrderScan),
 
                             typeof(FirmAggregates::Firm),
+                            typeof(FirmAggregates::Firm.AdvantageousPurchasePositionDistributionPeriod),
                             typeof(FirmAggregates::Order),
                             typeof(FirmAggregates::Order.CategoryPurchase),
                             typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
                             typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
                             typeof(FirmAggregates::Order.SelfAdvertisementPosition),
-                            typeof(FirmAggregates::Order.SpecialPosition),
 
                             typeof(ProjectAggregates::Category),
                             typeof(ProjectAggregates::FirmAddress),

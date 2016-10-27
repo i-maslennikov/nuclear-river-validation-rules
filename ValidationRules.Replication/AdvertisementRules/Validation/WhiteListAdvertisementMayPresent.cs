@@ -33,10 +33,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                 from order in query.For<Order>().Where(x => x.RequireWhiteListAdvertisement)
                 from project in query.For<Order.LinkedProject>().Where(x => x.OrderId == order.Id)
                 from advertisement in query.For<Advertisement>().Where(x => x.FirmId == order.FirmId && x.IsSelectedToWhiteList)
-                let orderPeriodCoveredByOtherOrders = query.For<Firm.WhiteListDistributionPeriod>()
-                                                         .Where(x => x.FirmId == order.FirmId && x.Start < order.EndDistributionDatePlan && order.BeginDistributionDate < x.End)
-                                                         .All(x => x.ProvidedByOrderId.HasValue)
-                where orderPeriodCoveredByOtherOrders || order.ProvideWhiteListAdvertisement
+                from period in query.For<Firm.WhiteListDistributionPeriod>()
+                                    .Where(x => x.FirmId == order.FirmId && x.Start < order.EndDistributionDatePlan && order.BeginDistributionDate < x.End)
+                                    .Where(x => x.ProvidedByOrderId.HasValue)
+                where period != null || order.ProvideWhiteListAdvertisement
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(
@@ -50,8 +50,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                 new XElement("advertisement",
                                     new XAttribute("id", advertisement.Id),
                                     new XAttribute("name", advertisement.Name)))),
-                        PeriodStart = order.BeginDistributionDate,
-                        PeriodEnd = order.EndDistributionDatePlan,
+                        PeriodStart = period != null && period.Start > order.BeginDistributionDate ? period.Start : order.BeginDistributionDate,
+                        PeriodEnd = period != null && period.End < order.EndDistributionDatePlan ? period.End : order.EndDistributionDatePlan,
                         ProjectId = project.ProjectId,
 
                         Result = RuleResult,

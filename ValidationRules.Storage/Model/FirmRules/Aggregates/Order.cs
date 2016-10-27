@@ -27,11 +27,6 @@ namespace NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates
             public long OrderId { get; set; }
         }
 
-        public sealed class SpecialPosition
-        {
-            public long OrderId { get; set; }
-        }
-
         public class CategoryPurchase
         {
             public long OrderId { get; set; }

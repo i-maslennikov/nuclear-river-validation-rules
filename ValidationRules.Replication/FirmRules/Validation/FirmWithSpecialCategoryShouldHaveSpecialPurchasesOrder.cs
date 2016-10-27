@@ -15,15 +15,15 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// 
     /// Source: AreThereAnyAdvertisementsInAdvantageousPurchasesRubricOrderValidationRule
     /// </summary>
-    public sealed class FirmWithSpecialCategoryShouldHaveSpecialPurchases : ValidationResultAccessorBase
+    public sealed class FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder : ValidationResultAccessorBase
     {
-        private const long GlobalScope = 0;
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
+        public const long GlobalScope = 0;
+        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
+                                                                    .WhenMass(Result.None)
+                                                                    .WhenMassPrerelease(Result.None)
+                                                                    .WhenMassRelease(Result.None);
 
-        public FirmWithSpecialCategoryShouldHaveSpecialPurchases(IQuery query) : base(query, MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases)
+        public FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder(IQuery query) : base(query, MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder)
         {
         }
 
@@ -37,8 +37,9 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                 from begin in dates
                 from end in dates.Where(x => x.FirmId == begin.FirmId && x.Date > begin.Date).OrderBy(x => x.Date).Take(1)
                 from firm in query.For<Firm>().Where(x => x.Id == begin.FirmId)
+                from order in query.For<Order>().Where(x => x.FirmId == begin.FirmId && x.Begin < end.Date && begin.Date < x.End)
                 where query.For<Firm.AdvantageousPurchasePositionDistributionPeriod>()
-                           .Where(x => x.FirmId == begin.FirmId && x.Begin < end.Date && begin.Date < x.End && x.Scope == GlobalScope)
+                           .Where(x => x.FirmId == begin.FirmId && x.Begin < end.Date && begin.Date < x.End && (x.Scope == GlobalScope || x.Scope == order.Id))
                            .All(x => !x.HasPosition)
                 select new Version.ValidationResult
                     {
@@ -46,7 +47,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                             new XDocument(new XElement("root",
                                 new XElement("firm",
                                     new XAttribute("id", firm.Id),
-                                    new XAttribute("name", firm.Name)))),
+                                    new XAttribute("name", firm.Name)),
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)))),
                         PeriodStart = begin.Date,
                         PeriodEnd = end.Date,
                         ProjectId = firm.ProjectId,
