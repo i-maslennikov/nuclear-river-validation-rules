@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// </summary>
     public sealed class FirmWithSpecialCategoryShouldHaveSpecialPurchases : ValidationResultAccessorBase
     {
-        public const long GlobalScope = 0;
+        private const long GlobalScope = 0;
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
