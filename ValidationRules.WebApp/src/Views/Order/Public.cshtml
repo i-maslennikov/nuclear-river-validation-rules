@@ -1,0 +1,38 @@
+﻿@model NuClear.ValidationRules.WebApp.Model.ResultContainer
+
+@{
+    ViewData["Title"] = "Заказы";
+
+}
+
+<div class="panel-group" id="collapse" role="tablist" aria-multiselectable="true">
+    @foreach (var messageGroup in Model.GetResultsByType())
+    {
+        <div class="panel @messageGroup.Class">
+            <div class="panel-heading " role="tab" id="collapse-heading-one">
+                <div class="panel-title ">
+                    <a role="button" data-toggle="collapse" href="#@messageGroup.PanelId" aria-expanded="false" aria-controls="@messageGroup.PanelId">
+                        @messageGroup.Title
+                    </a>
+                </div>
+                
+            </div>
+            <div id="@messageGroup.PanelId" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapse-heading-one">
+                    <table class="table table-condensed table-hover table-bordered">
+                        <tbody>
+                            @foreach (var message in messageGroup.Messages)
+                            {
+                                <tr class="@message.Class">
+                                    <td class="col-xs-3 col-lg-2">
+                                        <div>@Html.Raw(@message.OrderLink)</div>
+                                        <div class="small">@Model.PeriodFor(message.OrderId)</div>
+                                    </td>
+                                    <td>@Html.Raw(@message.Text)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    }
+</div>
