@@ -33,7 +33,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                 {
                                     Id = x.Id,
                                     CategoryCode = x.CategoryCode,
-                                    IsControlledByAmount = x.IsControlledByAmount,
                                     Name = x.Name
                                 }));
 

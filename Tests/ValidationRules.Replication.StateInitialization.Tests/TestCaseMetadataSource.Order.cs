@@ -127,7 +127,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::OrderPricePosition { OrderId = 1, OrderPositionId = 1, PriceId = 1, IsActive = true },
                     new Aggregates::OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
 
-                    new Aggregates::Position { Id = 1, CategoryCode = 10, IsControlledByAmount = true },
+                    new Aggregates::Position { Id = 1, CategoryCode = 10 },
                     new Aggregates::AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10 });
 
         // ReSharper disable once UnusedMember.Local
