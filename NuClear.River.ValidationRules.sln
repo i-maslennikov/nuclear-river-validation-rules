@@ -71,6 +71,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.StateInitia
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Storage", "ValidationRules.Storage\ValidationRules.Storage.csproj", "{E799A2EE-408F-467A-8B50-FC729E92D3F3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Querying", "Querying", "{7B0EFE8C-9B37-4CD6-B759-CA0BA22B204F}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ValidationRules.WebApp", "ValidationRules.WebApp\src\ValidationRules.WebApp.xproj", "{CA720170-AB4A-4CB4-A896-1E88CF28F3A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +113,10 @@ Global
 		{E799A2EE-408F-467A-8B50-FC729E92D3F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E799A2EE-408F-467A-8B50-FC729E92D3F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E799A2EE-408F-467A-8B50-FC729E92D3F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA720170-AB4A-4CB4-A896-1E88CF28F3A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA720170-AB4A-4CB4-A896-1E88CF28F3A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA720170-AB4A-4CB4-A896-1E88CF28F3A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA720170-AB4A-4CB4-A896-1E88CF28F3A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,6 +127,7 @@ Global
 		{8D547BD0-0127-4FC4-AD50-ECDD7BB17152} = {D0CF69C9-AB27-4062-8B7A-D7391C65EFE3}
 		{0AC56434-B3DA-48FB-B896-96E45D3122CE} = {D5758A2D-BB93-47E5-A13B-4EEC203D4371}
 		{70926221-57BA-4FBC-949F-2BFABA903480} = {D5758A2D-BB93-47E5-A13B-4EEC203D4371}
+		{CA720170-AB4A-4CB4-A896-1E88CF28F3A2} = {7B0EFE8C-9B37-4CD6-B759-CA0BA22B204F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.ServiceBus.6.0.1304.0\lib\NET45
