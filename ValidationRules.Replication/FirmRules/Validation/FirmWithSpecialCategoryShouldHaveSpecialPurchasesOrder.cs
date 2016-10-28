@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -17,7 +18,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// </summary>
     public sealed class FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder : ValidationResultAccessorBase
     {
-        public const long GlobalScope = 0;
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.None)
                                                                     .WhenMassPrerelease(Result.None)
@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                 from firm in query.For<Firm>().Where(x => x.Id == begin.FirmId)
                 from order in query.For<Order>().Where(x => x.FirmId == begin.FirmId && x.Begin < end.Date && begin.Date < x.End)
                 where query.For<Firm.AdvantageousPurchasePositionDistributionPeriod>()
-                           .Where(x => x.FirmId == begin.FirmId && x.Begin < end.Date && begin.Date < x.End && (x.Scope == GlobalScope || x.Scope == order.Id))
+                           .Where(x => x.FirmId == begin.FirmId && x.Begin < end.Date && begin.Date < x.End && Scope.CanSee(order.Scope, x.Scope))
                            .All(x => !x.HasPosition)
                 select new Version.ValidationResult
                     {

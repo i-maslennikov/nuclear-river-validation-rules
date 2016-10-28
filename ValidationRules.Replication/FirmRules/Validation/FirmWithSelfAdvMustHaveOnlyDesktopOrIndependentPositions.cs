@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Specifications;
 
 using Order = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates.Order;
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -44,12 +45,12 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 
             var errorsInSelfAdvOrders =
                 from order in selfAdvOrders
-                where nonDesktopOrders.Where(x => x.Scope == 0 || x.Scope == order.Id).Any(x => x.FirmId == order.FirmId && x.Begin < order.End && order.Begin < x.End)
+                where nonDesktopOrders.Where(x => Scope.CanSee(order.Scope, x.Scope)).Any(x => x.FirmId == order.FirmId && x.Begin < order.End && order.Begin < x.End)
                 select order;
 
             var errorsInNonDesktopOrders =
                 from order in nonDesktopOrders
-                where selfAdvOrders.Where(x => x.Scope == 0 || x.Scope == order.Id).Any(x => x.FirmId == order.FirmId && x.Begin < order.End && order.Begin < x.End)
+                where selfAdvOrders.Where(x => Scope.CanSee(order.Scope, x.Scope)).Any(x => x.FirmId == order.FirmId && x.Begin < order.End && order.Begin < x.End)
                 select order;
 
             var result =

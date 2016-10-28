@@ -288,6 +288,7 @@
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustBeSpecified.cs" />
     <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
+    <Compile Include="Specifications\Scope.cs" />
     <Compile Include="ThemeRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\ProjectAggregateRootActor.cs" />
