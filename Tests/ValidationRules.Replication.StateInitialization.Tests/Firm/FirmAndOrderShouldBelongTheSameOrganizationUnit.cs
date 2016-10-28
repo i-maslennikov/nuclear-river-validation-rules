@@ -20,10 +20,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Project { Id = 1, OrganizationUnitId = 2 },
                     new Facts::Project { Id = 2, OrganizationUnitId = 1 },
                     new Facts::Firm { Id = 1, OrganizationUnitId = 1, Name = "Firm" },
-                    new Facts::Order { Id = 2, FirmId = 1, DestOrganizationUnitId = 2, Number = "InvalidOrder", BeginDistribution = FirstDayJan, EndDistributionFact = LastSecondJan, WorkflowStep = 5 })
+                    new Facts::Order { Id = 2, FirmId = 1, DestOrganizationUnitId = 2, Number = "InvalidOrder", BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb, WorkflowStep = 5 })
                 .Aggregate(
                     new Aggregates::Firm { Id = 1, Name = "Firm", ProjectId = 2 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = LastSecondJan, ProjectId = 1 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 },
                     new Aggregates::Order.FirmOrganiationUnitMismatch { OrderId = 2 })
                 .Message(
                     new Messages::Version.ValidationResult
@@ -32,9 +32,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageType = (int)MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
                             Result = 255,
                             PeriodStart = FirstDayJan,
-                            PeriodEnd = LastSecondJan,
+                            PeriodEnd = FirstDayFeb,
                             ProjectId = 1,
-                        }).RunOnlyThis();
+                        });
     }
 }
 

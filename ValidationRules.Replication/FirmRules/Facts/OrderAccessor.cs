@@ -15,6 +15,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Facts
 {
     public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>, IDataChangesHandler<Order>
     {
+        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+
         private readonly IQuery _query;
 
         public OrderAccessor(IQuery query)
@@ -28,7 +30,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Facts
                    {
                        Id = order.Id,
                        BeginDistribution = order.BeginDistributionDate,
-                       EndDistributionFact = order.EndDistributionDateFact,
+                       EndDistributionFact = order.EndDistributionDateFact + OneSecond,
                        DestOrganizationUnitId = order.DestOrganizationUnitId,
                        FirmId = order.FirmId,
                        Number = order.Number,
