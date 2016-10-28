@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
@@ -338,8 +339,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public sealed class CouponDistributionPeriodAccessor : IStorageBasedDataObjectAccessor<Order.CouponDistributionPeriod>
         {
             private const int CouponPositionCategoryCode = 14;
-            private const long GlobalScope = 0;
-            private const int OrderStateOnRegistration = 1;
 
             private readonly IQuery _query;
 
@@ -349,10 +348,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
 
             public IQueryable<Order.CouponDistributionPeriod> GetSource()
-                => BeginToEndFact().Union(EndFactToEndPlan());
-
-            private IQueryable<Order.CouponDistributionPeriod> BeginToEndFact()
-                => from order in _query.For<Facts::Order>()
+                => from order in GetOrdersFact().Union(GetOrdersPlan())
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
                    join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
@@ -366,30 +362,19 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                            OrderPositionId = op.Id,
                            PositionId = position.Id,
                            AdvertisementId = advertisement.Id,
-                           Begin = order.BeginDistributionDate,
-                           End = order.EndDistributionDateFact,
-                           Scope = order.WorkflowStepId == OrderStateOnRegistration ? order.Id : GlobalScope
+                           Begin = order.Begin,
+                           End = order.End,
+                           Scope = order.Scope
                    };
 
-            private IQueryable<Order.CouponDistributionPeriod> EndFactToEndPlan()
-                => from order in _query.For<Facts::Order>().Where(x => x.EndDistributionDateFact != x.EndDistributionDatePlan)
-                   join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
-                   join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                   join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
-                   join advertisement in _query.For<Facts::Advertisement>() on opa.AdvertisementId equals advertisement.Id
-                   join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
-                   where position.CategoryCode == CouponPositionCategoryCode // выгодные покупки с 2ГИС
-                   where opa.AdvertisementId != template.DummyAdvertisementId // РМ не является заглушкой
-                   select new Order.CouponDistributionPeriod
-                   {
-                       OrderId = order.Id,
-                       OrderPositionId = op.Id,
-                       PositionId = position.Id,
-                       AdvertisementId = advertisement.Id,
-                       Begin = order.EndDistributionDateFact,
-                       End = order.EndDistributionDatePlan,
-                       Scope = order.Id
-                   };
+            private IQueryable<OrderDto> GetOrdersFact()
+                => _query.For<Facts::Order>()
+                         .Select(x => new OrderDto { Id = x.Id, Begin = x.BeginDistributionDate, End = x.EndDistributionDateFact, Scope = Scope.Compute(x.WorkflowStepId, x.Id) });
+
+            private IQueryable<OrderDto> GetOrdersPlan()
+                => _query.For<Facts::Order>()
+                         .Where(x => x.EndDistributionDateFact != x.EndDistributionDatePlan)
+                         .Select(x => new OrderDto { Id = x.Id, Begin = x.EndDistributionDateFact, End = x.EndDistributionDatePlan, Scope = x.Id });
 
             public FindSpecification<Order.CouponDistributionPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -399,6 +384,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order.CouponDistributionPeriod>(x => aggregateIds.Contains(x.OrderId));
+            }
+
+            private sealed class OrderDto
+            {
+                public long Id { get; set; }
+                public DateTime Begin { get; set; }
+                public DateTime End { get; set; }
+                public long Scope { get; set; }
             }
         }
 
