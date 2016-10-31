@@ -93,7 +93,31 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 _query = query;
             }
 
-            public IQueryable<PricePeriod> GetSource() => Specs.Map.Facts.ToAggregates.PricePeriods.Map(_query);
+            public IQueryable<PricePeriod> GetSource()
+            {
+                var dates = _query.For<Facts::Order>()
+                                  .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }));
+
+                var prices =
+                    from price in _query.For<Facts::Price>()
+                    let nextPrice = _query.For<Facts::Price>().Where(x => x.OrganizationUnitId == price.OrganizationUnitId && x.BeginDate > price.BeginDate).Min(x => (DateTime?)x.BeginDate)
+                    select new { price.Id, price.OrganizationUnitId, Begin = price.BeginDate, End = nextPrice ?? DateTime.MaxValue };
+
+                var result =
+                    from date in dates
+                    from price in prices.Where(x => x.OrganizationUnitId == date.OrganizationUnitId && x.Begin <= date.Date && date.Date < x.End )
+                    select new PricePeriod
+                        {
+                            OrganizationUnitId = date.OrganizationUnitId,
+                            PriceId = price.Id,
+                            Start = date.Date
+                        };
+
+                return result;
+            }
 
             public FindSpecification<PricePeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -104,10 +128,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
         public sealed class OrderPeriodAccessor : IStorageBasedDataObjectAccessor<OrderPeriod>
         {
-            private const int OrderOnRegistration = 1;
-            private const int OrderOnTermination = 4;
-            private const int GlobalScope = 0;
-
             private readonly IQuery _query;
 
             public OrderPeriodAccessor(IQuery query)
@@ -123,21 +143,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                                   .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                   .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }));
 
-                // https://github.com/linq2db/linq2db/issues/356
-                dates = dates.Select(x => new { x.Date, x.OrganizationUnitId });
-
-                var result = _query.For<Facts::Order>()
-                                   .SelectMany(order => dates.Where(date => date.OrganizationUnitId == order.DestOrganizationUnitId &&
-                                                                            order.BeginDistributionDate <= date.Date && date.Date < order.EndDistributionDatePlan)
-                                                             .Select(x => new OrderPeriod
-                                                                 {
-                                                                     OrderId = order.Id,
-                                                                     OrganizationUnitId = order.DestOrganizationUnitId,
-                                                                     Start = x.Date,
-                                                                     Scope = order.WorkflowStepId == OrderOnTermination && order.EndDistributionDateFact <= x.Date
-                                                                                 ? order.Id
-                                                                                 : (order.WorkflowStepId == OrderOnRegistration ? order.Id : GlobalScope)
-                                                                 }));
+                var result =
+                    from order in _query.For<Facts::Order>()
+                    from date in dates.Where(date => date.OrganizationUnitId == order.DestOrganizationUnitId && order.BeginDistributionDate <= date.Date && date.Date < order.EndDistributionDatePlan)
+                    select new OrderPeriod
+                        {
+                            OrderId = order.Id,
+                            OrganizationUnitId = order.DestOrganizationUnitId,
+                            Start = date.Date,
+                            Scope = order.EndDistributionDateFact > date.Date ? Scope.Compute(order.WorkflowStepId, order.Id) : order.Id
+                        };
 
                 return result;
             }

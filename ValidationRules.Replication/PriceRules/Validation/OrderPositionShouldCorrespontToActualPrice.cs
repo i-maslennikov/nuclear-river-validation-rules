@@ -15,6 +15,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionDoesntCorrespontToActualPrice
     /// </summary>
     // todo: подумать о рефакторинге: актуальный прайс-лист должен вычисляться на этапе агрегатов, а эту проверку разделить на две.
+    // todo: другой вариант: единичная выдаёт ошибку, массовая - предупреждение, это будет соответствовать поведению erm (учитывая, что единичная для одобренного заказа не вызывается).
     public sealed class OrderPositionShouldCorrespontToActualPrice : ValidationResultAccessorBase
     {
         private static readonly int RuleResultError =

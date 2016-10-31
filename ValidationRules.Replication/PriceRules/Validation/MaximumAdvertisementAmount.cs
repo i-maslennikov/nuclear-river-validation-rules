@@ -5,6 +5,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
+using NuClear.ValidationRules.Replication.Specifications;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
@@ -16,6 +17,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Source: AdvertisementAmountOrderValidationRule/AdvertisementAmountErrorMessage
     /// </summary>
+    // todo: теперь мы можем выводить число позиций в одобренных заказах (см. первый вариант сообщения)
     public sealed class MaximumAdvertisementAmount : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
@@ -29,55 +31,58 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var restrictionGrid = from restriction in query.For<AdvertisementAmountRestriction>()
-                                  join pp in query.For<PricePeriod>() on restriction.PriceId equals pp.PriceId
-                                  select new { Key = new { pp.Start, pp.OrganizationUnitId, restriction.CategoryCode }, restriction.Min, restriction.Max, restriction.CategoryName };
+            var restrictionGrid =
+                from restriction in query.For<AdvertisementAmountRestriction>()
+                from pp in query.For<PricePeriod>().Where(x => x.PriceId == restriction.PriceId)
+                select new { pp.Start, pp.OrganizationUnitId, restriction.CategoryCode, restriction.Min, restriction.Max, restriction.CategoryName };
 
-            var saleGrid = from position in query.For<AmountControlledPosition>()
-                           join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
-                           where op.Scope == 0
-                           group new { op.Start, op.OrganizationUnitId, position.CategoryCode, op.Scope }
-                               by new { op.Start, op.OrganizationUnitId, position.CategoryCode } into groups
-                           select new { groups.Key, Count = groups.Count() };
+            var saleGrid =
+                from position in query.For<AmountControlledPosition>()
+                from op in query.For<OrderPeriod>().Where(x => x.OrderId == position.OrderId)
+                group new { op.Start, op.OrganizationUnitId, position.CategoryCode, op.Scope }
+                    by new { op.Start, op.OrganizationUnitId, position.CategoryCode, op.Scope }
+                into groups
+                select new { groups.Key, Count = groups.Count() };
 
-            var ruleViolations = from restriction in restrictionGrid
-                                 from sale in saleGrid.Where(x => x.Key == restriction.Key).DefaultIfEmpty()
-                                 select new { restriction.Key, restriction.Min, restriction.Max, sale.Count, restriction.CategoryName };
+            var violations =
+                from position in query.For<AmountControlledPosition>()
+                from op in query.For<OrderPeriod>().Where(x => x.OrderId == position.OrderId)
+                from restriction in restrictionGrid.Where(x => x.Start == op.Start &&
+                                                               x.OrganizationUnitId == op.OrganizationUnitId &&
+                                                               x.CategoryCode == position.CategoryCode)
+                let count = saleGrid.Where(x => x.Key.CategoryCode == position.CategoryCode &&
+                                                x.Key.OrganizationUnitId == op.OrganizationUnitId &&
+                                                x.Key.Start == op.Start &&
+                                                Scope.CanSee(op.Scope, x.Key.Scope))
+                                    .Sum(x => x.Count)
+                where count > restriction.Max
+                select new { op.OrderId, op.Start, op.OrganizationUnitId, restriction.Min, restriction.Max, Count = count, restriction.CategoryName };
 
-            var orderRuleViolations = from position in query.For<AmountControlledPosition>()
-                                      join op in query.For<OrderPeriod>() on position.OrderId equals op.OrderId
-                                      join order in query.For<Order>() on op.OrderId equals order.Id
-                                      join violation in ruleViolations on new { op.Start, op.OrganizationUnitId, position.CategoryCode }
-                                          equals new { violation.Key.Start, violation.Key.OrganizationUnitId, violation.Key.CategoryCode }
-                                      join period in query.For<Period>() on new { op.Start, op.OrganizationUnitId }
-                                          equals new { period.Start, period.OrganizationUnitId }
-                                      join project in query.For<Project>() on period.ProjectId equals project.Id
-                                      let count = op.Scope == 0 ? violation.Count : violation.Count + 1
-                                      where count > violation.Max
-                                      select new Version.ValidationResult
-                                      {
-                                          MessageParams =
-                                                new XDocument(new XElement("root",
-                                                                new XElement("message",
-                                                                            new XAttribute("min", violation.Min),
-                                                                            new XAttribute("max", violation.Max),
-                                                                            new XAttribute("count", count),
-                                                                            new XAttribute("name", violation.CategoryName),
-                                                                            new XAttribute("month", period.Start)),
-                                                                new XElement("order",
-                                                                            new XAttribute("id", order.Id),
-                                                                            new XAttribute("number", order.Number)),
-                                                                new XElement("project",
-                                                                            new XAttribute("id", project.Id),
-                                                                            new XAttribute("number", project.Name)))),
-                                          PeriodStart = period.Start,
-                                          PeriodEnd = period.End,
-                                          ProjectId = period.ProjectId,
+            var messages =
+                from violation in violations
+                from order in query.For<Order>().Where(x => x.Id == violation.OrderId)
+                from period in query.For<Period>().Where(x => x.Start == violation.Start && x.OrganizationUnitId == violation.OrganizationUnitId)
+                select new Version.ValidationResult
+                {
+                    MessageParams =
+                            new XDocument(new XElement("root",
+                                new XElement("message",
+                                    new XAttribute("min", violation.Min),
+                                    new XAttribute("max", violation.Max),
+                                    new XAttribute("count", violation.Count),
+                                    new XAttribute("name", violation.CategoryName),
+                                    new XAttribute("month", violation.Start)),
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)))),
+                    PeriodStart = period.Start,
+                    PeriodEnd = period.End,
+                    ProjectId = period.ProjectId,
 
-                                          Result = RuleResult,
-                                      };
+                    Result = RuleResult,
+                };
 
-            return orderRuleViolations;
+            return messages;
         }
     }
 }

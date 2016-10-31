@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -34,46 +35,44 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from orderPeriod in query.For<OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
                 select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.ThemeId };
 
-            var approvedSaleCounts =
-                sales.Where(x => x.Scope == 0)
-                         .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.ThemeId })
-                         .Select(x => new { x.Key, Count = x.Count() });
-
-            var perOrderSaleCounts =
-                sales.GroupBy(x => new { x.OrderId, x.Scope, x.Start, x.OrganizationUnitId, x.ThemeId })
-                         .Select(x => new { x.Key, Count = x.Count() });
+            var saleCounts =
+                sales.GroupBy(x => new { x.Scope, x.Start, x.OrganizationUnitId, x.ThemeId })
+                     .Select(x => new { x.Key, Count = x.Count() });
 
             var oversales =
-                from c in approvedSaleCounts
-                join co in perOrderSaleCounts on c.Key equals new { co.Key.Start, co.Key.OrganizationUnitId, co.Key.ThemeId }
-                let count = c.Count + (co.Key.Scope == 0 ? 0 : co.Count)
+                from sale in sales
+                let count = saleCounts.Where(x => x.Key.ThemeId == sale.ThemeId
+                                                  && x.Key.OrganizationUnitId == sale.OrganizationUnitId
+                                                  && x.Key.Start == sale.Start
+                                                  && Scope.CanSee(sale.Scope, x.Key.Scope))
+                                      .Sum(x => x.Count)
                 where count > MaxPositionsPerTheme
-                select new { c.Key.Start, c.Key.OrganizationUnitId, co.Key.OrderId, Count = count, c.Key.ThemeId };
+                select new { sale.Start, sale.OrganizationUnitId, sale.OrderId, sale.ThemeId, Count = count };
 
             var messages =
-                from oversale in oversales.Distinct()
+                from oversale in oversales
                 join period in query.For<Period>() on new { oversale.Start, oversale.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                 join order in query.For<Order>() on oversale.OrderId equals order.Id
                 join theme in query.For<Theme>() on oversale.ThemeId equals theme.Id
                 select new Version.ValidationResult
-                {
-                                   MessageParams =
-                                       new XDocument(new XElement("root",
-                                                                  new XElement("message",
-                                                                               new XAttribute("max", MaxPositionsPerTheme),
-                                                                               new XAttribute("count", oversale.Count)),
-                                                                  new XElement("theme",
-                                                                               new XAttribute("id", theme.Id),
-                                                                               new XAttribute("name", theme.Name)),
-                                                                  new XElement("order",
-                                                                               new XAttribute("id", order.Id),
-                                                                               new XAttribute("number", order.Number)))),
-                                   PeriodStart = period.Start,
-                                   PeriodEnd = period.End,
-                                   ProjectId = period.ProjectId,
+                    {
+                        MessageParams =
+                            new XDocument(new XElement("root",
+                                new XElement("message",
+                                    new XAttribute("max", MaxPositionsPerTheme),
+                                    new XAttribute("count", oversale.Count)),
+                                new XElement("theme",
+                                    new XAttribute("id", theme.Id),
+                                    new XAttribute("name", theme.Name)),
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)))),
+                        PeriodStart = period.Start,
+                        PeriodEnd = period.End,
+                        ProjectId = period.ProjectId,
 
-                                   Result = RuleResult,
-                               };
+                        Result = RuleResult,
+                    };
 
             return messages;
         }

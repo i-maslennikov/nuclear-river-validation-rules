@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -43,47 +44,45 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from position in query.For<Position>().Where(x => x.Id == orderPosition.ItemPositionId && x.CategoryCode == TargetCategoryCode)
                 select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.Category1Id, orderPosition.Category3Id };
 
-            var approvedSaleCounts =
-                sales.Where(x => x.Scope == 0)
-                         .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.Category1Id, x.Category3Id })
-                         .Select(x => new { x.Key, Count = x.Count() });
-
-            var perOrderSaleCounts =
-                sales.GroupBy(x => new { x.OrderId, x.Scope, x.Start, x.OrganizationUnitId, x.Category1Id, x.Category3Id })
-                         .Select(x => new { x.Key, Count = x.Count() });
+            var saleCounts =
+                sales.GroupBy(x => new { x.Scope, x.Start, x.OrganizationUnitId, x.Category1Id, x.Category3Id })
+                     .Select(x => new { x.Key, Count = x.Count() });
 
             var oversales =
-                from c in approvedSaleCounts
-                join co in perOrderSaleCounts on c.Key equals new { co.Key.Start, co.Key.OrganizationUnitId, co.Key.Category1Id, co.Key.Category3Id }
-                let count = c.Count + (co.Key.Scope == 0 ? 0 : co.Count)
+                from sale in sales
+                let count = saleCounts.Where(x => x.Key.Category1Id == sale.Category1Id
+                                                  && x.Key.Category3Id == sale.Category3Id
+                                                  && x.Key.OrganizationUnitId == sale.OrganizationUnitId
+                                                  && x.Key.Start == sale.Start
+                                                  && Scope.CanSee(sale.Scope, x.Key.Scope))
+                                      .Sum(x => x.Count)
                 where count > MaxPositionsPerCategory
-                select new { c.Key.Start, c.Key.OrganizationUnitId, co.Key.OrderId, Count = count, c.Key.Category1Id, c.Key.Category3Id };
+                select new { sale.Start, sale.OrganizationUnitId, sale.OrderId, sale.Category1Id, sale.Category3Id, Count = count };
 
             var messages =
                 from oversale in oversales.Distinct()
-                join period in query.For<Period>() on new { oversale.Start , oversale.OrganizationUnitId }  equals new { period.Start, period.OrganizationUnitId}
+                join period in query.For<Period>() on new { oversale.Start, oversale.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                 join order in query.For<Order>() on oversale.OrderId equals order.Id
                 join category in query.For<Category>() on oversale.Category3Id ?? oversale.Category1Id equals category.Id
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new XDocument(new XElement("root",
-                                                       new XElement("message",
-                                                                    new XAttribute("max", MaxPositionsPerCategory),
-                                                                    new XAttribute("count", oversale.Count)),
-                                                        new XElement("category",
-                                                                    new XAttribute("id", category.Id),
-                                                                    new XAttribute("name", category.Name)),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)))),
+                                new XElement("message",
+                                    new XAttribute("max", MaxPositionsPerCategory),
+                                    new XAttribute("count", oversale.Count)),
+                                new XElement("category",
+                                    new XAttribute("id", category.Id),
+                                    new XAttribute("name", category.Name)),
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)))),
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         ProjectId = period.ProjectId,
 
                         Result = RuleResult,
                     };
-
 
             return messages;
         }

@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
                         associated => principals.Where(principal => MatchedPeriod<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
-                                                .Where(principal => MatchedScope<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
+                                                .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
                                                 .Where(principal => MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
@@ -58,7 +58,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
                         denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
-                                            .Where(principal => MatchedScope<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                                            .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
                                             .Where(principal => MatchedBindingObjects<OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
@@ -72,7 +72,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
                         denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
-                                            .Where(principal => MatchedScope<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                                            .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
                                             .Where(principal => !MatchedBindingObjects<OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
@@ -86,7 +86,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
                         denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
-                                            .Where(principal => MatchedScope<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                                            .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
                     return (Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
@@ -100,14 +100,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return (principal, dto) => principal.FirmId == dto.FirmId &&
                                                principal.Start == dto.Start &&
                                                principal.OrganizationUnitId == dto.OrganizationUnitId;
-                }
-
-                /// <summary>
-                /// Возвращает выражение для определения "видят" ли друг друга позиции
-                /// </summary>
-                public static Expression<Func<Dto<OrderPosition>, Dto<T>, bool>> MatchedScope<T>()
-                {
-                    return (principal, dto) => principal.Scope == 0 || principal.Scope == dto.Scope;
                 }
 
                 /// <summary>

@@ -35,37 +35,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                     CategoryCode = x.CategoryCode,
                                     Name = x.Name
                                 }));
-
-                    public static readonly MapSpecification<IQuery, IQueryable<Aggregates::PricePeriod>> PricePeriods
-                        = new MapSpecification<IQuery, IQueryable<Aggregates::PricePeriod>>(
-                            q =>
-                                {
-                                    var dates = q.For<Facts::Order>()
-                                                 .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
-                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                                 .Union(q.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                                 .Union(q.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
-                                                 .Distinct();
-
-                                    var result = dates.Select(date => new
-                                                                    {
-                                                                        PriceId = (long?)q.For<Facts::Price>()
-                                                                                            .Where(price => price.OrganizationUnitId == date.OrganizationUnitId && price.BeginDate <= date.Date)
-                                                                                            .OrderByDescending(price => price.BeginDate)
-                                                                                            .FirstOrDefault()
-                                                                                            .Id,
-                                                                        Period = date
-                                                                    })
-                                                      .Where(x => x.PriceId.HasValue)
-                                                      .Select(x => new Aggregates::PricePeriod
-                                                                    {
-                                                                        OrganizationUnitId = x.Period.OrganizationUnitId,
-                                                                        PriceId = x.PriceId.Value,
-                                                                        Start = x.Period.Date
-                                                                    });
-
-                                    return result;
-                                });
                 }
             }
         }

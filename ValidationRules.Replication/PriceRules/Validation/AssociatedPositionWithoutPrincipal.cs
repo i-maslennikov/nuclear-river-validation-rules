@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -18,6 +19,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Q2: Может ли пакет быть удовлетворён своим элементом или наоборот?
     /// </summary>
+    // todo: переименовать PrincipalPositionMustExistForAssociated
     public sealed class AssociatedPositionWithoutPrincipal : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
@@ -48,55 +50,58 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 join associatedPosition in associatedPositions on
                     new { orderPosition.FirmId, orderPosition.Start, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
                     new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId }
-                where orderPosition.Scope == 0 || orderPosition.Scope == associatedPosition.Scope
+                where Scope.CanSee(associatedPosition.Scope, orderPosition.Scope)
                 select new
-                {
-                    associatedPosition.position.CauseOrderPositionId,
-                    associatedPosition.position.CauseItemPositionId,
-                };
+                    {
+                        associatedPosition.Start,
+                        associatedPosition.position.CauseOrderPositionId,
+                        associatedPosition.position.CauseItemPositionId,
+                    };
 
             var notSatisfiedPositions =
-                (from position in associatedPositions
-                 from satisfied in satisfiedPositions.Where(x => x.CauseOrderPositionId == position.position.CauseOrderPositionId &&
-                                                                 x.CauseItemPositionId == position.position.CauseItemPositionId).DefaultIfEmpty()
-                 where satisfied == null
-                 select new
-                 {
-                     position.FirmId,
-                     position.position.OrderId,
-                     position.position.CauseOrderPositionId,
-                     position.position.CausePackagePositionId,
-                     position.position.CauseItemPositionId,
+                from position in associatedPositions
+                from satisfied in satisfiedPositions.Where(x => x.CauseOrderPositionId == position.position.CauseOrderPositionId &&
+                                                                x.CauseItemPositionId == position.position.CauseItemPositionId &&
+                                                                x.Start == position.Start).DefaultIfEmpty()
+                where satisfied == null
+                select new
+                    {
+                        position.FirmId,
+                        position.position.OrderId,
+                        position.position.CauseOrderPositionId,
+                        position.position.CausePackagePositionId,
+                        position.position.CauseItemPositionId,
 
-                     position.Start,
-                     position.OrganizationUnitId,
-                 }).Distinct(); // схлопнем позиции по всем нарушенным правилам
+                        position.Start,
+                        position.OrganizationUnitId,
+                    };
 
-            var messages = from conflict in notSatisfiedPositions
-                           join period in query.For<Period>() on new { conflict.Start, conflict.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                           select new Version.ValidationResult
-                           {
-                               MessageParams =
-                                    new XDocument(new XElement("root",
-                                                               new XElement("firm",
-                                                                            new XAttribute("id", conflict.FirmId)),
-                                                               new XElement("position",
-                                                                            new XAttribute("orderId", conflict.OrderId),
-                                                                            new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == conflict.OrderId).Number),
-                                                                            new XAttribute("orderPositionId", conflict.CauseOrderPositionId),
-                                                                            new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == conflict.CausePackagePositionId).Name),
-                                                                            new XAttribute("positionId", conflict.CauseItemPositionId),
-                                                                            new XAttribute("positionName", query.For<Position>().Single(x => x.Id == conflict.CauseItemPositionId).Name)),
-                                                               new XElement("order",
-                                                                            new XAttribute("id", conflict.OrderId),
-                                                                            new XAttribute("number", query.For<Order>().Single(x => x.Id == conflict.OrderId).Number)))),
+            var messages =
+                from conflict in notSatisfiedPositions.Distinct()
+                join period in query.For<Period>() on new { conflict.Start, conflict.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new XDocument(new XElement("root",
+                                new XElement("firm",
+                                    new XAttribute("id", conflict.FirmId)),
+                                new XElement("position",
+                                    new XAttribute("orderId", conflict.OrderId),
+                                    new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == conflict.OrderId).Number),
+                                    new XAttribute("orderPositionId", conflict.CauseOrderPositionId),
+                                    new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == conflict.CausePackagePositionId).Name),
+                                    new XAttribute("positionId", conflict.CauseItemPositionId),
+                                    new XAttribute("positionName", query.For<Position>().Single(x => x.Id == conflict.CauseItemPositionId).Name)),
+                                new XElement("order",
+                                    new XAttribute("id", conflict.OrderId),
+                                    new XAttribute("number", query.For<Order>().Single(x => x.Id == conflict.OrderId).Number)))),
 
-                               PeriodStart = period.Start,
-                               PeriodEnd = period.End,
-                               ProjectId = period.ProjectId,
+                        PeriodStart = period.Start,
+                        PeriodEnd = period.End,
+                        ProjectId = period.ProjectId,
 
-                               Result = RuleResult,
-                           };
+                        Result = RuleResult,
+                    };
 
             return messages;
         }
