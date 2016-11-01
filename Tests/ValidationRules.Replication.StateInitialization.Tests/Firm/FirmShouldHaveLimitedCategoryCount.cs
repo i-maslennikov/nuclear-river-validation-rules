@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, CategoryId = 5 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3 },
-                    new Aggregates::Order.CategoryPurchase {OrderId = 1, CategoryId = 5});
+                    new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = 5 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmShouldHaveLimitedCategoryCountWhenNonIntersectingPeriods
@@ -34,8 +34,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(FirmShouldHaveLimitedCategoryCountWhenNonIntersectingPeriods))
                 .Aggregate(
                     new Aggregates::Firm { Id = 1, Name = "Firm" },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = LastSecondJan, ProjectId = 1 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "ValidOrder", Begin = FirstDayFeb, End = LastSecondMar, ProjectId = 1 })
+                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "ValidOrder", Begin = FirstDayFeb, End = FirstDayApr, ProjectId = 1 })
                 .Aggregate(
                     Enumerable.Range(1, 30).Select(i => new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = i }).ToArray()
                     )
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayJan,
-                        PeriodEnd = LastSecondJan,
+                        PeriodEnd = FirstDayFeb,
                         ProjectId = 1,
                     });
 
@@ -60,8 +60,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(FirmShouldHaveLimitedCategoryCountIntersectingPeriods))
                 .Aggregate(
                     new Aggregates::Firm { Id = 1, Name = "Firm" },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = LastSecondMar, ProjectId = 1 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayFeb, End = LastSecondApr, ProjectId = 1 })
+                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = FirstDayApr, ProjectId = 1 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayFeb, End = FirstDayMay, ProjectId = 1 })
                 .Aggregate(
                     Enumerable.Range(1, 15).Select(i => new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = i }).ToArray()
                     )
@@ -74,8 +74,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" number=\"InvalidOrder\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
-                        PeriodStart = FirstDayJan,
-                        PeriodEnd = LastSecondMar,
+                        PeriodStart = FirstDayFeb,
+                        PeriodEnd = FirstDayApr,
                         ProjectId = 1,
                     },
                     new Messages::Version.ValidationResult
@@ -84,9 +84,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,
-                        PeriodEnd = LastSecondApr,
+                        PeriodEnd = FirstDayApr,
                         ProjectId = 1,
                     });
     }
 }
-
