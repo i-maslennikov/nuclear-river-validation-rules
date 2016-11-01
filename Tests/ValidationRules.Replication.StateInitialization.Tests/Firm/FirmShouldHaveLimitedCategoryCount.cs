@@ -89,4 +89,3 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     });
     }
 }
-

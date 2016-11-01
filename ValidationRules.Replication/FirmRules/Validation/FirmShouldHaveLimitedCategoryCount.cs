@@ -31,63 +31,46 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var dates = query.For<Order>().Select(x => new { Date = x.Begin, x.FirmId })
-                 .Union(query.For<Order>().Select(x => new { Date = x.End, x.FirmId }));
-            dates = dates.Select(x => new { x.Date, x.FirmId });
+                             .Union(query.For<Order>().Select(x => new { Date = x.End, x.FirmId }));
 
             var firmPeriods =
                 from date in dates
-                let nextDate = dates.Where(x => x.FirmId == date.FirmId && x.Date > date.Date).Min(x => (DateTime?)x.Date)
-                where nextDate.HasValue
-                select new { date.FirmId, Start = date.Date, End = nextDate.Value };
+                from nextDate in dates.OrderBy(x => x.Date).Where(x => x.FirmId == date.FirmId && x.Date > date.Date).Take(1)
+                select new { date.FirmId, Begin = date.Date, End = nextDate.Date };
 
-            var dtos =
+            var categoryPurchases =
                 from order in query.For<Order>()
-                from firmPeriod in firmPeriods.Where(x => x.FirmId == order.FirmId &&
-                                                          x.Start >= order.Begin &&
-                                                          x.End <= order.End)
-                select new
-                    {
-                        order.ProjectId,
-                        order.FirmId,
-                        OrderId = order.Id,
-                        OrderNumber = order.Number,
-                        firmPeriod.Start,
-                        firmPeriod.End,
-                        order.Scope,
-                    };
+                from purchase in query.For<Order.CategoryPurchase>().Where(x => x.OrderId == order.Id)
+                select new { order.Begin, order.End, order.Scope, purchase.CategoryId, order.FirmId };
 
             var messages =
-                from dto in dtos
-                let categoryCount = query.For<Order.CategoryPurchase>().Where(x => x.OrderId == dto.OrderId).Select(x => x.CategoryId)
-                              .Union(from dto2 in dtos.Where(x => x.FirmId == dto.FirmId &&
-                                                            x.Start == dto.Start &&
-                                                            x.End == dto.End &&
-                                                            (x.Scope == 0 || x.Scope == dto.Scope))
-                                     from categoryPurchase in query.For<Order.CategoryPurchase>().Where(x => x.OrderId == dto2.OrderId)
-                                     select categoryPurchase.CategoryId
-                                    ).Count()
-                where categoryCount > MaxCategoriesAlowedForFirm
+                from firmPeriod in firmPeriods
+                from order in query.For<Order>().Where(x => x.FirmId == firmPeriod.FirmId && x.Begin <= firmPeriod.Begin && firmPeriod.End <= x.End)
+                let count = categoryPurchases.Where(x => x.FirmId == firmPeriod.FirmId && x.Begin <= firmPeriod.Begin && firmPeriod.End <= x.End && (x.Scope == 0 || x.Scope == order.Scope))
+                                             .Select(x => x.CategoryId)
+                                             .Distinct()
+                                             .Count()
+                where count > MaxCategoriesAlowedForFirm
                 select new Version.ValidationResult
-                    {
-                        MessageParams =
+                {
+                    MessageParams =
                             new XDocument(new XElement("root",
-                                                       new XElement("message",
-                                                                    new XAttribute("count", categoryCount),
-                                                                    new XAttribute("allowed", MaxCategoriesAlowedForFirm)),
-                                                       new XElement("firm",
-                                                                    new XAttribute("id", dto.FirmId),
-                                                                    new XAttribute("name", query.For<Firm>().Single(x => x.Id == dto.FirmId).Name)),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", dto.OrderId),
-                                                                    new XAttribute("number", dto.OrderNumber))
-                                        )),
-                        PeriodStart = dto.Start,
-                        PeriodEnd = dto.End,
-                        ProjectId = dto.ProjectId,
+                                new XElement("message",
+                                    new XAttribute("count", count),
+                                    new XAttribute("allowed", MaxCategoriesAlowedForFirm)),
+                                new XElement("firm",
+                                    new XAttribute("id", firmPeriod.FirmId),
+                                    new XAttribute("name", query.For<Firm>().Single(x => x.Id == firmPeriod.FirmId).Name)),
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number))
+                                )),
+                    PeriodStart = firmPeriod.Begin,
+                    PeriodEnd = firmPeriod.End,
+                    ProjectId = order.ProjectId,
 
-                        Result = RuleResult,
-                    };
-
+                    Result = RuleResult,
+                };
 
             return messages;
         }
