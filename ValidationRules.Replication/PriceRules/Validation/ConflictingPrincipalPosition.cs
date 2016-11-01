@@ -37,6 +37,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     ///     X продана для B - можно ли одобрить заказ?
     /// A: Erm позволяет одобрить заказ, но при проверке первого - появляется ошибка.
     /// </summary>
+    // todo: переименовать PrincipalPositionMustHaveDifferentBindingObject
     public sealed class ConflictingPrincipalPosition : ValidationResultAccessorBase
     {
         private const int Different = 3;
@@ -94,35 +95,35 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var messages = from conflict in conflictingPositions
                            select new Version.ValidationResult
-                           {
-                               MessageParams =
-                                    new XDocument(new XElement("root",
-                                                               new XElement("firm",
-                                                                            new XAttribute("id", conflict.FirmId)),
-                                                               new XElement("position",
-                                                                            new XAttribute("orderId", conflict.OrderAssociatedPosition.OrderId),
-                                                                            new XAttribute("orderNumber", conflict.OrderAssociatedPositionNames.OrderNumber),
-                                                                            new XAttribute("orderPositionId", conflict.OrderAssociatedPosition.CauseOrderPositionId),
-                                                                            new XAttribute("orderPositionName", conflict.OrderAssociatedPositionNames.OrderPositionName),
-                                                                            new XAttribute("positionId", conflict.OrderAssociatedPosition.CauseItemPositionId),
-                                                                            new XAttribute("positionName", conflict.OrderAssociatedPositionNames.ItemPositionName)),
-                                                               new XElement("position",
-                                                                            new XAttribute("orderId", conflict.OrderPrincipalPosition.OrderId),
-                                                                            new XAttribute("orderNumber", conflict.OrderPrincipalPositionNames.OrderNumber),
-                                                                            new XAttribute("orderPositionId", conflict.OrderPrincipalPosition.OrderPositionId),
-                                                                            new XAttribute("orderPositionName", conflict.OrderPrincipalPositionNames.OrderPositionName),
-                                                                            new XAttribute("positionId", conflict.OrderPrincipalPosition.ItemPositionId),
-                                                                            new XAttribute("positionName", conflict.OrderPrincipalPositionNames.ItemPositionName)),
-                                                               new XElement("order",
-                                                                            new XAttribute("id", conflict.OrderAssociatedPosition.OrderId),
-                                                                            new XAttribute("number", conflict.OrderAssociatedPositionNames.OrderNumber)))),
+                               {
+                                   MessageParams =
+                                       new XDocument(new XElement("root",
+                                           new XElement("firm",
+                                               new XAttribute("id", conflict.FirmId)),
+                                           new XElement("position",
+                                               new XAttribute("orderId", conflict.OrderAssociatedPosition.OrderId),
+                                               new XAttribute("orderNumber", conflict.OrderAssociatedPositionNames.OrderNumber),
+                                               new XAttribute("orderPositionId", conflict.OrderAssociatedPosition.CauseOrderPositionId),
+                                               new XAttribute("orderPositionName", conflict.OrderAssociatedPositionNames.OrderPositionName),
+                                               new XAttribute("positionId", conflict.OrderAssociatedPosition.CauseItemPositionId),
+                                               new XAttribute("positionName", conflict.OrderAssociatedPositionNames.ItemPositionName)),
+                                           new XElement("position",
+                                               new XAttribute("orderId", conflict.OrderPrincipalPosition.OrderId),
+                                               new XAttribute("orderNumber", conflict.OrderPrincipalPositionNames.OrderNumber),
+                                               new XAttribute("orderPositionId", conflict.OrderPrincipalPosition.OrderPositionId),
+                                               new XAttribute("orderPositionName", conflict.OrderPrincipalPositionNames.OrderPositionName),
+                                               new XAttribute("positionId", conflict.OrderPrincipalPosition.ItemPositionId),
+                                               new XAttribute("positionName", conflict.OrderPrincipalPositionNames.ItemPositionName)),
+                                           new XElement("order",
+                                               new XAttribute("id", conflict.OrderAssociatedPosition.OrderId),
+                                               new XAttribute("number", conflict.OrderAssociatedPositionNames.OrderNumber)))),
 
-                               PeriodStart = conflict.Start,
-                               PeriodEnd = conflict.End,
-                               ProjectId = conflict.ProjectId,
+                                   PeriodStart = conflict.Start,
+                                   PeriodEnd = conflict.End,
+                                   ProjectId = conflict.ProjectId,
 
-                               Result = RuleResult,
-                           };
+                                   Result = RuleResult,
+                               };
 
             return messages;
         }

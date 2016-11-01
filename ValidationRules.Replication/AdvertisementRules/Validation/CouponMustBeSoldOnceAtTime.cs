@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -31,9 +32,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var couponOverlapPeriods =
                 from period in query.For<Order.CouponDistributionPeriod>()
                 from intersectingPeriod in query.For<Order.CouponDistributionPeriod>()
-                                                .Where(x => x.AdvertisementId == period.AdvertisementId && x.Begin < period.End && period.Begin < x.End && (x.Scope == 0 || x.Scope == period.Scope))
+                                                .Where(x => x.AdvertisementId == period.AdvertisementId && x.Begin < period.End && period.Begin < x.End && Scope.CanSee(period.Scope, x.Scope))
                 where query.For<Order.CouponDistributionPeriod>()
-                                                .Count(x => x.AdvertisementId == period.AdvertisementId && x.Begin < period.End && period.Begin < x.End && (x.Scope == 0 || x.Scope == period.Scope)) > 1
+                                                .Count(x => x.AdvertisementId == period.AdvertisementId && x.Begin < period.End && period.Begin < x.End && Scope.CanSee(period.Scope, x.Scope)) > 1
                 let order = query.For<Order>().Single(x => x.Id == period.OrderId)
                 let advertisement = query.For<Advertisement>().Single(x => x.Id == period.AdvertisementId)
                 let position = query.For<Position>().Single(x => x.Id == intersectingPeriod.PositionId)

@@ -9,8 +9,9 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
+
+using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
@@ -38,9 +39,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 _query = query;
             }
 
-            public IQueryable<Position> GetSource() => Specs.Map.Facts.ToAggregates.Positions.Map(_query);
+            public IQueryable<Position> GetSource()
+                => from position in _query.For<Facts::Position>()
+                   select new Position { Id = position.Id, CategoryCode = position.CategoryCode, Name = position.Name };
 
-            public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+        public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
                                            .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))

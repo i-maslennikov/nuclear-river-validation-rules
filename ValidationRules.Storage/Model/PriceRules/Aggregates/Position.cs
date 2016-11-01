@@ -9,8 +9,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     {
         public long Id { get; set; }
         public long CategoryCode { get; set; }
-        [Obsolete("Теперь, когда ограничения создаются только для нужных позиций, нет смысла тянуть это поле в агрегаты")]
-        public bool IsControlledByAmount { get; set; }
         public string Name { get; set; }
     }
 }

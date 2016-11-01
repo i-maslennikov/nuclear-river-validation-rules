@@ -38,7 +38,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 {
                     FirmId = denied.FirmId,
                     OrganizationUnitId = denied.OrganizationUnitId,
-                    Scope = denied.Scope,
                     Start = denied.Start,
 
                     DeniedOrderId = denied.Position.OrderId,
@@ -102,25 +101,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                     {
                         MessageParams =
                             new XDocument(new XElement("root",
-                                                       new XElement("firm",
-                                                                    new XAttribute("id", conflict.FirmId)),
-                                                       new XElement("position",
-                                                                    new XAttribute("orderId", conflict.DeniedOrderId),
-                                                                    new XAttribute("orderNumber", names.DeniedPosition.OrderNumber),
-                                                                    new XAttribute("orderPositionId", conflict.DeniedCauseOrderPositionId),
-                                                                    new XAttribute("orderPositionName", names.DeniedPosition.OrderPositionName),
-                                                                    new XAttribute("positionId", conflict.DeniedCauseItemPositionId),
-                                                                    new XAttribute("positionName", names.DeniedPosition.ItemPositionName)),
-                                                       new XElement("position",
-                                                                    new XAttribute("orderId", conflict.PrincipalOrderId),
-                                                                    new XAttribute("orderNumber", names.OrderPosition.OrderNumber),
-                                                                    new XAttribute("orderPositionId", conflict.PrincipalOrderPositionId),
-                                                                    new XAttribute("orderPositionName", names.OrderPosition.OrderPositionName),
-                                                                    new XAttribute("positionId", conflict.PrincipalItemPositionId),
-                                                                    new XAttribute("positionName", names.OrderPosition.ItemPositionName)),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", conflict.DeniedOrderId),
-                                                                    new XAttribute("number", names.DeniedPosition.OrderNumber)))),
+                                new XElement("firm",
+                                    new XAttribute("id", conflict.FirmId)),
+                                new XElement("position",
+                                    new XAttribute("orderId", conflict.DeniedOrderId),
+                                    new XAttribute("orderNumber", names.DeniedPosition.OrderNumber),
+                                    new XAttribute("orderPositionId", conflict.DeniedCauseOrderPositionId),
+                                    new XAttribute("orderPositionName", names.DeniedPosition.OrderPositionName),
+                                    new XAttribute("positionId", conflict.DeniedCauseItemPositionId),
+                                    new XAttribute("positionName", names.DeniedPosition.ItemPositionName)),
+                                new XElement("position",
+                                    new XAttribute("orderId", conflict.PrincipalOrderId),
+                                    new XAttribute("orderNumber", names.OrderPosition.OrderNumber),
+                                    new XAttribute("orderPositionId", conflict.PrincipalOrderPositionId),
+                                    new XAttribute("orderPositionName", names.OrderPosition.OrderPositionName),
+                                    new XAttribute("positionId", conflict.PrincipalItemPositionId),
+                                    new XAttribute("positionName", names.OrderPosition.ItemPositionName)),
+                                new XElement("order",
+                                    new XAttribute("id", conflict.DeniedOrderId),
+                                    new XAttribute("number", names.DeniedPosition.OrderNumber)))),
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         ProjectId = period.ProjectId,
@@ -139,7 +138,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             public long FirmId { get; set; }
             public DateTime Start { get; set; }
             public long OrganizationUnitId { get; set; }
-            public long Scope { get; set; }
 
             public long PrincipalOrderId { get; set; }
             public long PrincipalOrderPositionId { get; set; }

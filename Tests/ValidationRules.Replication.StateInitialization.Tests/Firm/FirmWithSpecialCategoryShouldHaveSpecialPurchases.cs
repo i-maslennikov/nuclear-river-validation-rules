@@ -54,8 +54,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Firm.AdvantageousPurchasePositionDistributionPeriod { FirmId = 1, Begin = MonthStart(1), End = MonthStart(3), HasPosition = true, Scope = 2 },
 
                     new Aggregates::Firm { Id = 1, Name = "Firm" },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) })
+                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3), Scope = 0 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3), Scope = 2 })
                 .Message(
                     // Фирма №1
                     new Messages::Version.ValidationResult

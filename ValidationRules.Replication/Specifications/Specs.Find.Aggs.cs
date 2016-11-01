@@ -13,11 +13,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
         {
             public static class Aggs
             {
-                public static FindSpecification<Aggregates::OrderPricePosition> OrderPricePositions(IReadOnlyCollection<long> aggregateIds)
-                {
-                    return new FindSpecification<Aggregates::OrderPricePosition>(x => aggregateIds.Contains(x.OrderId));
-                }
-
                 public static FindSpecification<Aggregates::Period> Periods(IReadOnlyCollection<PeriodKey> aggregateIds)
                 {
                     var result = new FindSpecification<Aggregates::Period>(x => false);

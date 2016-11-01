@@ -9,7 +9,6 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
@@ -68,7 +67,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 _query = query;
             }
 
-            public IQueryable<Order> GetSource() => Specs.Map.Facts.ToAggregates.Orders.Map(_query);
+            public IQueryable<Order> GetSource()
+                => from order in _query.For<Facts::Order>()
+                   select new Order { Id = order.Id, FirmId = order.FirmId, Number = order.Number, };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -176,7 +177,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public FindSpecification<OrderPricePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return Specs.Find.Aggs.OrderPricePositions(aggregateIds);
+                return new FindSpecification<OrderPricePosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

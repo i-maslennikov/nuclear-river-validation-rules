@@ -42,7 +42,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 2, OrderPositionId = 5, PositionId = 5, AdvertisementId = 6, Begin = MonthStart(1), End = MonthStart(3), Scope = 2 },
 
-                    new Aggregates::Order.CouponDistributionPeriod { OrderId = 3, OrderPositionId = 6, PositionId = 5, AdvertisementId = 6, Begin = MonthStart(1), End = MonthStart(3), Scope = 0 });
+                    new Aggregates::Order.CouponDistributionPeriod { OrderId = 3, OrderPositionId = 6, PositionId = 5, AdvertisementId = 6, Begin = MonthStart(1), End = MonthStart(3), Scope = -1 });
 
         // ReSharper disable once UnusedMember.Local
         // ReSharper disable once InconsistentNaming

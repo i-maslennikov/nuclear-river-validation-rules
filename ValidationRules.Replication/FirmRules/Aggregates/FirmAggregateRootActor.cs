@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
@@ -74,9 +75,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
         {
-            private const long GlobalScope = 0;
-            private const long OrderStateOnTermination = 4;
-            private const long OrderStateApproved = 5;
             private const long SpecialCategoryId = 18599; // Выгодные покупки с 2ГИС.
 
             private readonly IQuery _query;
@@ -96,7 +94,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
                 var periodsForAllFirms =
                     from firm in _query.For<Facts::Firm>()
-                    select new { FirmId = firm.Id, Begin = DateTime.MinValue, End = DateTime.MaxValue, Has = false, Scope = GlobalScope };
+                    select new { FirmId = firm.Id, Begin = DateTime.MinValue, End = DateTime.MaxValue, Has = false, Scope = Scope.ApprovedScope };
 
                 var periodsForAllOrders =
                     from order in _query.For<Facts::Order>()
@@ -104,7 +102,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                                from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                                from position in _query.For<Facts::SpecialPosition>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
                                select position).Any(x => x.IsAdvantageousPurchaseOnPc || x.IsSelfAdvertisementOnPc)
-                    let scope = order.WorkflowStep == OrderStateOnTermination || order.WorkflowStep == OrderStateApproved ? GlobalScope : order.Id
+                    let scope = Scope.Compute(order.WorkflowStep, order.Id)
                     select new { order.FirmId, Begin = order.BeginDistribution, End = order.EndDistributionFact, Has = has, Scope = scope };
 
                 var periodsForFirmsWithCategory =

@@ -8,6 +8,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
@@ -55,9 +56,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
         {
-            private const int GlobalScope = 0;
-            private const int OrderOnRegistration = 1;
-
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query)
@@ -76,7 +74,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                            ProjectId = project.Id,
                            Begin = order.BeginDistribution,
                            End = order.EndDistributionFact,
-                           Scope = order.WorkflowStep == OrderOnRegistration ? order.Id : GlobalScope,
+                           Scope = Scope.Compute(order.WorkflowStep, order.Id),
                        };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

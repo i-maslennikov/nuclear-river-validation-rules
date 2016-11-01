@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(FirmShouldHaveLimitedCategoryCount))
                 .Fact(
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2 },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, WorkflowStep = 5 },
                     new Facts::OrderPosition { Id = 4, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, CategoryId = 5 })
                 .Aggregate(

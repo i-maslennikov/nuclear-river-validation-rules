@@ -15,7 +15,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             new Facts::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
             )
         .Aggregate(
-            new Aggregates::Position { Id = 1, CategoryCode = 2, IsControlledByAmount = true, Name = "1" }
+            new Aggregates::Position { Id = 1, CategoryCode = 2, Name = "1" }
             );
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -46,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
             var messages =
                 from firmPeriod in firmPeriods
                 from order in query.For<Order>().Where(x => x.FirmId == firmPeriod.FirmId && x.Begin <= firmPeriod.Begin && firmPeriod.End <= x.End)
-                let count = categoryPurchases.Where(x => x.FirmId == firmPeriod.FirmId && x.Begin <= firmPeriod.Begin && firmPeriod.End <= x.End && (x.Scope == 0 || x.Scope == order.Scope))
+                let count = categoryPurchases.Where(x => x.FirmId == firmPeriod.FirmId && x.Begin <= firmPeriod.Begin && firmPeriod.End <= x.End && Scope.CanSee(order.Scope, x.Scope))
                                              .Select(x => x.CategoryId)
                                              .Distinct()
                                              .Count()
