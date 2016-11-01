@@ -38,7 +38,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 {
                     FirmId = denied.FirmId,
                     OrganizationUnitId = denied.OrganizationUnitId,
-                    Scope = denied.Scope,
                     Start = denied.Start,
 
                     DeniedOrderId = denied.Position.OrderId,
@@ -139,7 +138,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             public long FirmId { get; set; }
             public DateTime Start { get; set; }
             public long OrganizationUnitId { get; set; }
-            public long Scope { get; set; }
 
             public long PrincipalOrderId { get; set; }
             public long PrincipalOrderPositionId { get; set; }

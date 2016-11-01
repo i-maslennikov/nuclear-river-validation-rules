@@ -76,7 +76,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                    {
                                        // можно включать все поля, какие захотим иметь в выборке, кроме двух: PrincipalPositionId, Source
                                        Start = x.associated.Start,
-                                       Scope = x.associated.Scope,
                                        Category1Id = x.associated.Position.Category1Id,
                                        Category3Id = x.associated.Position.Category3Id,
                                        CauseItemPositionId = x.associated.Position.CauseItemPositionId,
