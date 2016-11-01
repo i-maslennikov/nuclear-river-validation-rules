@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.WebApp.Serializers.AdvertisementRules
             _linkFactory = linkFactory;
         }
 
-        public MessageTypeCode MessageType => MessageTypeCode.CouponMustBeUniqueForFirm;
+        public MessageTypeCode MessageType => MessageTypeCode.CouponMustBeSoldOnceAtTime;
 
         public MessageTemplate Serialize(ValidationResult message)
         {

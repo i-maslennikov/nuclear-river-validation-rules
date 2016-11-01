@@ -55,7 +55,30 @@ namespace NuClear.ValidationRules.WebApp.Serializers
         WhiteListAdvertisementMustPresent = 48,
         WhiteListAdvertisementMayPresent = 49,
 
-        CouponMustBeUniqueForFirm = 65,
+        ProjectMustContainCostPerClickMinimumRestriction = 50,
+        OrderMustUseCategoriesOnlyAvailableInProject = 51,
+        OrderMustNotIncludeReleasedPeriod = 52,
+        OrderPositionCostPerClickMustNotBeLessMinimum = 53,
+        FirmAddressMustBeLocatedOnTheMap = 54,
+
+        ThemeCategoryMustBeActiveAndNotDeleted = 55,
+        ThemePeriodMustContainOrderPeriod = 56,
+        DefaultThemeMustHaveOnlySelfAds = 57,
+        DefaultThemeMustBeExactlyOne = 58,
+
+        OrderPositionCostPerClickMustBeSpecified = 59,
+        OrderPositionSalesModelMustMatchCategorySalesModel = 60,
+
+        FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 61,
+
+        OrderMustHaveActiveDeal = 62,
+        OrderMustHaveActiveLegalEntities = 63,
+        AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
+
+        CouponMustBeSoldOnceAtTime = 65,
         OrderPeriodMustContainAdvertisementPeriod = 66,
+        AdvertisementWebsiteShouldNotBeFirmWebsite = 67,
+
+        FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder = 68,
     }
 }

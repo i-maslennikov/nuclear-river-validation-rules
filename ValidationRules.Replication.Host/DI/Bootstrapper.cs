@@ -86,8 +86,6 @@ using NuClear.Storage.LinqToDB.Writings;
 using NuClear.Storage.Readings;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.Replication.Host.ResultDelivery;
-using NuClear.ValidationRules.Replication.Host.ResultDelivery.Slack;
 using NuClear.WCF.Client;
 using NuClear.WCF.Client.Config;
 
@@ -141,8 +139,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .ConfigureWcf()
                      .ConfigureOperationsProcessing()
                      .ConfigureStorage(storageSettings, EntryPointSpecificLifetimeManagerFactory)
-                     .ConfigureReplication(EntryPointSpecificLifetimeManagerFactory)
-                     .ConfigureResultDelivery();
+                     .ConfigureReplication(EntryPointSpecificLifetimeManagerFactory);
 
             ReplicationRoot.Instance.PerformTypesMassProcessing(massProcessors, true, typeof(object));
 
@@ -443,12 +440,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 };
 
             return container.RegisterInstance<IConnectionStringIdentityResolver>(new ConnectionStringIdentityResolver(readConnectionStringNameMap, writeConnectionStringNameMap));
-        }
-
-        private static IUnityContainer ConfigureResultDelivery(this IUnityContainer container)
-        {
-            return container.RegisterType<ITransportDecorator, SlackTransportDecorator>()
-                            .RegisterType<IMessageRedirectionService, FirstWeekMessageRedirection>();
         }
 
         private static IUnityContainer RegisterContexts(this IUnityContainer container)
