@@ -315,6 +315,28 @@ namespace NuClear.ValidationRules.WebApp.Serializers
             };
         }
 
+        public static int ReadProjectThemeCount(this ValidationResult message)
+        {
+            var element = message.MessageParams.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return (int)element.Attribute("themeCount");
+        }
+
+        public static string ReadWebsite(this ValidationResult message)
+        {
+            var element = message.MessageParams.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return element.Attribute("website").Value;
+        }
+
         public sealed class CategoryCountDto
         {
             public int Allowed { get; set; }

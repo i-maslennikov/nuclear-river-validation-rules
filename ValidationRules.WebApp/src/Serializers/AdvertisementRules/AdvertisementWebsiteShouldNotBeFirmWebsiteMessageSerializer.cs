@@ -1,4 +1,6 @@
-﻿namespace NuClear.ValidationRules.Replication.Host.ResultDelivery.Serializers.AdvertisementRules
+﻿using NuClear.ValidationRules.WebApp.Entity;
+
+namespace NuClear.ValidationRules.WebApp.Serializers.AdvertisementRules
 {
     public sealed class AdvertisementWebsiteShouldNotBeFirmWebsiteMessageSerializer : IMessageSerializer
     {
@@ -11,16 +13,19 @@
 
         public MessageTypeCode MessageType => MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite;
 
-        public LocalizedMessage Serialize(Message message)
+        public MessageTemplate Serialize(ValidationResult message)
         {
             var orderReference = message.ReadOrderReference();
             var firmReference = message.ReadFirmReference();
             var orderPositionReference = message.ReadOrderPositionReference();
             var website = message.ReadWebsite();
 
-            return new LocalizedMessage(message.GetLevel(),
-                                        $"Заказ {_linkFactory.CreateLink(orderReference)}",
-                                        $"Для фирмы {_linkFactory.CreateLink(firmReference)} заказана рекламная ссылка {website} позиция {_linkFactory.CreateLink(orderPositionReference)}, дублирующая контакт фирмы");
+            return new MessageTemplate(
+                orderReference,
+                "Для фирмы {0} заказана рекламная ссылка {1} позиция {2}, дублирующая контакт фирмы",
+                _linkFactory.CreateLink(firmReference),
+                website,
+                _linkFactory.CreateLink(orderPositionReference));
         }
     }
 }
