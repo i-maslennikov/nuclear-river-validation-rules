@@ -4,7 +4,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
 {
     public static class Scope
     {
-        [Sql.Expression("case when {0} in (4, 5) then 0 when {0} = 2 then -1 when {0} = 1 then {1} else -1 end")]
+        [Sql.Expression("case when {0} in (4, 5) then 0 when {0} = 2 then -1 when {0} = 1 then {1} else -2 end")]
         public static long Compute(int state, long id)
         {
             switch (state)
