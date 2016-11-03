@@ -55,13 +55,13 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
-                                                                                 new XElement("theme",
-                                                                                              new XAttribute("id", invalidMaxPeriod.ThemeId),
-                                                                                              new XAttribute("name", query.For<Theme>().Single(x => x.Id == invalidMaxPeriod.ThemeId).Name)),
-                                                                                 new XElement("category",
-                                                                                              new XAttribute("id", invalidMaxPeriod.CategoryId),
-                                                                                              new XAttribute("name", query.For<Category>().Single(x => x.Id == invalidMaxPeriod.CategoryId).Name))
-                                                                     )),
+                                          new XElement("theme",
+                                              new XAttribute("id", invalidMaxPeriod.ThemeId),
+                                              new XAttribute("name", query.For<Theme>().Single(x => x.Id == invalidMaxPeriod.ThemeId).Name)),
+                                          new XElement("category",
+                                              new XAttribute("id", invalidMaxPeriod.CategoryId),
+                                              new XAttribute("name", query.For<Category>().Single(x => x.Id == invalidMaxPeriod.CategoryId).Name)))),
+
                                       PeriodStart = invalidMaxPeriod.BeginDistributionDate,
                                       PeriodEnd = invalidMaxPeriod.EndDistributionDateFact,
                                       ProjectId = invalidMaxPeriod.ProjectId,

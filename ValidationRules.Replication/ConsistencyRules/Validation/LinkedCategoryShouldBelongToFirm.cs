@@ -31,24 +31,25 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                               from category in query.For<Order.InvalidCategory>().Where(x => x.OrderId == order.Id)
                               where category.State == InvalidCategoryState.NotBelongToFirm && !category.MayNotBelongToFirm
                               select new Version.ValidationResult
-                              {
-                                  MessageParams = new XDocument(
+                                  {
+                                      MessageParams = new XDocument(
                                           new XElement("root",
-                                                       new XElement("category",
-                                                                    new XAttribute("id", category.CategoryId),
-                                                                    new XAttribute("name", category.CategoryName)),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)),
-                                                       new XElement("orderPosition",
-                                                                    new XAttribute("id", category.OrderPositionId),
-                                                                    new XAttribute("name", category.OrderPositionName)))),
-                                  PeriodStart = order.BeginDistribution,
-                                  PeriodEnd = order.EndDistributionPlan,
-                                  ProjectId = order.ProjectId,
+                                              new XElement("category",
+                                                  new XAttribute("id", category.CategoryId),
+                                                  new XAttribute("name", category.CategoryName)),
+                                              new XElement("order",
+                                                  new XAttribute("id", order.Id),
+                                                  new XAttribute("number", order.Number)),
+                                              new XElement("orderPosition",
+                                                  new XAttribute("id", category.OrderPositionId),
+                                                  new XAttribute("name", category.OrderPositionName)))),
 
-                                  Result = RuleResult,
-                              };
+                                      PeriodStart = order.BeginDistribution,
+                                      PeriodEnd = order.EndDistributionPlan,
+                                      OrderId = order.Id,
+
+                                      Result = RuleResult,
+                                  };
 
             return ruleResults;
         }

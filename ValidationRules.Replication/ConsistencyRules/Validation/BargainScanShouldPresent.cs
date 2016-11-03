@@ -30,18 +30,19 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
             var ruleResults = from order in query.For<Order>()
                               from date in query.For<Order.MissingBargainScan>().Where(x => x.OrderId == order.Id)
                               select new Version.ValidationResult
-                              {
-                                  MessageParams = new XDocument(
+                                  {
+                                      MessageParams = new XDocument(
                                           new XElement("root",
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)))),
-                                  PeriodStart = order.BeginDistribution,
-                                  PeriodEnd = order.EndDistributionPlan,
-                                  ProjectId = order.ProjectId,
+                                              new XElement("order",
+                                                  new XAttribute("id", order.Id),
+                                                  new XAttribute("number", order.Number)))),
 
-                                  Result = RuleResult,
-                              };
+                                      PeriodStart = order.BeginDistribution,
+                                      PeriodEnd = order.EndDistributionPlan,
+                                      OrderId = order.Id,
+
+                                      Result = RuleResult,
+                                  };
 
             return ruleResults;
         }

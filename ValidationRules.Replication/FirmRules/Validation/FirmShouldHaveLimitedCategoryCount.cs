@@ -53,8 +53,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                                              .Count()
                 where count > MaxCategoriesAlowedForFirm
                 select new Version.ValidationResult
-                {
-                    MessageParams =
+                    {
+                        MessageParams =
                             new XDocument(new XElement("root",
                                 new XElement("message",
                                     new XAttribute("count", count),
@@ -64,14 +64,14 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                                     new XAttribute("name", query.For<Firm>().Single(x => x.Id == firmPeriod.FirmId).Name)),
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
-                                    new XAttribute("number", order.Number))
-                                )),
-                    PeriodStart = firmPeriod.Begin,
-                    PeriodEnd = firmPeriod.End,
-                    ProjectId = order.ProjectId,
+                                    new XAttribute("number", order.Number)))),
 
-                    Result = RuleResult,
-                };
+                        PeriodStart = firmPeriod.Begin,
+                        PeriodEnd = firmPeriod.End,
+                        OrderId = order.Id,
+
+                        Result = RuleResult,
+                    };
 
             return messages;
         }

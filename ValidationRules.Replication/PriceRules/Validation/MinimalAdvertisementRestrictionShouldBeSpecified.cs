@@ -36,11 +36,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
-                                                                                 new XElement("project",
-                                                                                              new XAttribute("id", project.Id),
-                                                                                              new XAttribute("name", project.Name)),
-                                                                                 new XElement("pricePosition",
-                                                                                              new XAttribute("name", restriction.CategoryName)))),
+                                          new XElement("project",
+                                              new XAttribute("id", project.Id),
+                                              new XAttribute("name", project.Name)),
+                                          new XElement("pricePosition",
+                                              new XAttribute("name", restriction.CategoryName)))),
+
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
                                       ProjectId = period.ProjectId,

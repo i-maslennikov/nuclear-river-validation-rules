@@ -48,20 +48,21 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                               let themeCount = query.For<Project.ProjectDefaultTheme>().Count(x => x.ProjectId == projectPeriod.ProjectId && x.Start < projectPeriod.End && x.End > projectPeriod.Start)
                               where themeCount != 1
                               select new Version.ValidationResult
-                              {
-                                  MessageParams = new XDocument(
+                                  {
+                                      MessageParams = new XDocument(
                                           new XElement("root",
                                               new XElement("project",
                                                   new XAttribute("id", projectPeriod.ProjectId),
                                                   new XAttribute("name", query.For<Project>().Single(x => x.Id == projectPeriod.ProjectId).Name)),
                                               new XElement("message",
                                                   new XAttribute("themeCount", themeCount)))),
-                                  PeriodStart = projectPeriod.Start,
-                                  PeriodEnd = projectPeriod.End,
-                                  ProjectId = projectPeriod.ProjectId,
 
-                                  Result = RuleResult,
-                              };
+                                      PeriodStart = projectPeriod.Start,
+                                      PeriodEnd = projectPeriod.End,
+                                      ProjectId = projectPeriod.ProjectId,
+
+                                      Result = RuleResult,
+                                  };
 
             return ruleResults;
         }

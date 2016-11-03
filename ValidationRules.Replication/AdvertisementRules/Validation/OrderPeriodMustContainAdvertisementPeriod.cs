@@ -30,7 +30,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-
             var ruleResults = from order in query.For<Order>()
                               from opa in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
                               from advertisement in query.For<Advertisement>().Where(x => x.Id == opa.AdvertisementId)
@@ -39,24 +38,25 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                     elementOffset.EndToMonthBeginOffset < MaxOffsetInDays ||
                                     elementOffset.MonthEndToBeginOffset < MaxOffsetInDays
                               select new Version.ValidationResult
-                              {
-                                  MessageParams = new XDocument(new XElement("root",
-                                                                                      new XElement("order",
-                                                                                                  new XAttribute("id", order.Id),
-                                                                                                  new XAttribute("number", order.Number)),
-                                                                                      new XElement("orderPosition",
-                                                                                                  new XAttribute("id", opa.OrderPositionId),
-                                                                                                  new XAttribute("name", query.For<Position>().Single(x => x.Id == opa.PositionId).Name)),
-                                                                                      new XElement("advertisement",
-                                                                                                  new XAttribute("id", advertisement.Id),
-                                                                                                  new XAttribute("name", advertisement.Name))
-                                                                                      )),
-                                  PeriodStart = order.BeginDistributionDate,
-                                  PeriodEnd = order.EndDistributionDatePlan,
-                                  ProjectId = order.ProjectId,
+                                  {
+                                      MessageParams = new XDocument(new XElement("root",
+                                          new XElement("order",
+                                              new XAttribute("id", order.Id),
+                                              new XAttribute("number", order.Number)),
+                                          new XElement("orderPosition",
+                                              new XAttribute("id", opa.OrderPositionId),
+                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == opa.PositionId).Name)),
+                                          new XElement("advertisement",
+                                              new XAttribute("id", advertisement.Id),
+                                              new XAttribute("name", advertisement.Name))
+                                          )),
 
-                                  Result = RuleResult,
-                              };
+                                      PeriodStart = order.BeginDistributionDate,
+                                      PeriodEnd = order.EndDistributionDatePlan,
+                                      OrderId = order.Id,
+
+                                      Result = RuleResult,
+                                  };
 
             return ruleResults;
         }

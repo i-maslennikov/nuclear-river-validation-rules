@@ -160,7 +160,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountAggregates::AccountPeriod),
 
                             typeof(AdvertisementAggregates::Order),
-                            typeof(AdvertisementAggregates::Order.LinkedProject),
                             typeof(AdvertisementAggregates::Order.MissingAdvertisementReference),
                             typeof(AdvertisementAggregates::Order.MissingOrderPositionAdvertisement),
                             typeof(AdvertisementAggregates::Order.AdvertisementDeleted),

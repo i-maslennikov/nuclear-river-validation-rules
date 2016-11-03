@@ -30,21 +30,22 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
             var ruleResults = from order in query.For<Order>()
                               from expired in query.For<Order.LegalPersonProfileBargainExpired>().Where(x => x.OrderId == order.Id)
                               select new Version.ValidationResult
-                              {
-                                  MessageParams = new XDocument(
+                                  {
+                                      MessageParams = new XDocument(
                                           new XElement("root",
-                                                       new XElement("legalPersonProfile",
-                                                                    new XAttribute("id", expired.LegalPersonProfileId),
-                                                                    new XAttribute("name", expired.LegalPersonProfileName)),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)))),
-                                  PeriodStart = order.BeginDistribution,
-                                  PeriodEnd = order.EndDistributionPlan,
-                                  ProjectId = order.ProjectId,
+                                              new XElement("legalPersonProfile",
+                                                  new XAttribute("id", expired.LegalPersonProfileId),
+                                                  new XAttribute("name", expired.LegalPersonProfileName)),
+                                              new XElement("order",
+                                                  new XAttribute("id", order.Id),
+                                                  new XAttribute("number", order.Number)))),
 
-                                  Result = RuleResult,
-                              };
+                                      PeriodStart = order.BeginDistribution,
+                                      PeriodEnd = order.EndDistributionPlan,
+                                      OrderId = order.Id,
+
+                                      Result = RuleResult,
+                                  };
 
             return ruleResults;
         }

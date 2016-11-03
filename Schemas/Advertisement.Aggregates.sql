@@ -3,7 +3,6 @@ go
 
 if object_id('AdvertisementAggregates.Order') is not null drop table AdvertisementAggregates.[Order]
 if object_id('AdvertisementAggregates.OrderPositionAdvertisement') is not null drop table AdvertisementAggregates.OrderPositionAdvertisement
-if object_id('AdvertisementAggregates.LinkedProject') is not null drop table AdvertisementAggregates.LinkedProject
 if object_id('AdvertisementAggregates.MissingAdvertisementReference') is not null drop table AdvertisementAggregates.MissingAdvertisementReference
 if object_id('AdvertisementAggregates.MissingOrderPositionAdvertisement') is not null drop table AdvertisementAggregates.MissingOrderPositionAdvertisement
 if object_id('AdvertisementAggregates.AdvertisementDeleted') is not null drop table AdvertisementAggregates.AdvertisementDeleted
@@ -41,12 +40,6 @@ create table AdvertisementAggregates.[Order] (
     FirmId bigint not null,
     RequireWhiteListAdvertisement bit not null,
     ProvideWhiteListAdvertisement bit not null,
-)
-go
-
-create table AdvertisementAggregates.LinkedProject (
-    OrderId bigint not null,
-    ProjectId bigint not null,
 )
 go
 

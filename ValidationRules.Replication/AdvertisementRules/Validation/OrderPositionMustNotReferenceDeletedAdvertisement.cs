@@ -32,19 +32,20 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
-                                                                                 new XElement("order",
-                                                                                              new XAttribute("id", order.Id),
-                                                                                              new XAttribute("number", order.Number)),
-                                                                                  new XElement("orderPosition",
-                                                                                              new XAttribute("id", fail.OrderPositionId),
-                                                                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)),
-                                                                                  new XElement("advertisement",
-                                                                                              new XAttribute("id", fail.AdvertisementId),
-                                                                                              new XAttribute("name", fail.AdvertisementName))
-                                                                                  )),
+                                          new XElement("order",
+                                              new XAttribute("id", order.Id),
+                                              new XAttribute("number", order.Number)),
+                                          new XElement("orderPosition",
+                                              new XAttribute("id", fail.OrderPositionId),
+                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)),
+                                          new XElement("advertisement",
+                                              new XAttribute("id", fail.AdvertisementId),
+                                              new XAttribute("name", fail.AdvertisementName))
+                                          )),
+
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,
-                                      ProjectId = order.ProjectId,
+                                      OrderId = order.Id,
 
                                       Result = RuleResult,
                                   };

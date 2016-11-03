@@ -122,7 +122,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                     new XAttribute("number", names.DeniedPosition.OrderNumber)))),
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
-                        ProjectId = period.ProjectId,
+                        OrderId = conflict.DeniedOrderId,
 
                         Result = RuleResult,
                     };

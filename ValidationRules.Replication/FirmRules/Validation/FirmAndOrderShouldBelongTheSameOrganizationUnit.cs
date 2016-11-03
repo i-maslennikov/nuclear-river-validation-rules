@@ -35,15 +35,16 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                     {
                         MessageParams =
                             new XDocument(new XElement("root",
-                                                       new XElement("firm",
-                                                                    new XAttribute("id", firm.Id),
-                                                                    new XAttribute("name", firm.Name)),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)))),
+                                new XElement("firm",
+                                    new XAttribute("id", firm.Id),
+                                    new XAttribute("name", firm.Name)),
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)))),
+
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,
-                        ProjectId = order.ProjectId,
+                        OrderId = order.Id,
 
                         Result = RuleResult,
                     };

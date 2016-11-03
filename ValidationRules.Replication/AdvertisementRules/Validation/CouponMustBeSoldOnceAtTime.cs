@@ -80,7 +80,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 
                                               PeriodStart = coupon.Key.Begin,
                                               PeriodEnd = coupon.Key.End,
-                                              ProjectId = coupon.Key.ProjectId,
+                                              OrderId = coupon.Key.OrderId,
 
                                               Result = RuleResult,
                                           });

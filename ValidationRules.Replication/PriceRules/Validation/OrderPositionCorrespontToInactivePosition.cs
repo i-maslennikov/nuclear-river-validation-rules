@@ -58,16 +58,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(new XElement("root",
-                                                                   new XElement("order",
-                                                                                new XAttribute("id", orderFirstPeriodDto.OrderId),
-                                                                                new XAttribute("number", orderFirstPeriodDto.OrderNumber)),
-                                                                   new XElement("orderPosition",
-                                                                                new XAttribute("id", orderPricePosition.OrderPositionId),
-                                                                                new XAttribute("name", orderPricePosition.OrderPositionName)))),
+                            new XElement("order",
+                                new XAttribute("id", orderFirstPeriodDto.OrderId),
+                                new XAttribute("number", orderFirstPeriodDto.OrderNumber)),
+                            new XElement("orderPosition",
+                                new XAttribute("id", orderPricePosition.OrderPositionId),
+                                new XAttribute("name", orderPricePosition.OrderPositionName)))),
 
                         PeriodStart = orderFirstPeriodDto.Start,
                         PeriodEnd = orderFirstPeriodDto.End,
-                        ProjectId = orderFirstPeriodDto.ProjectId,
+                        OrderId = orderFirstPeriodDto.OrderId,
 
                         Result = RuleResult,
                     };

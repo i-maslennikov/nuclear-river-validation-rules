@@ -39,12 +39,13 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                     {
                         MessageParams = new XDocument(
                             new XElement("root",
-                                         new XElement("order",
-                                                      new XAttribute("id", order.Id),
-                                                      new XAttribute("number", order.Number)))),
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)))),
+
                         PeriodStart = order.BeginDistributionDate,
                         PeriodEnd = order.EndDistributionDate,
-                        ProjectId = order.DestProjectId,
+                        OrderId = order.Id,
 
                         Result = RuleResult,
                     };

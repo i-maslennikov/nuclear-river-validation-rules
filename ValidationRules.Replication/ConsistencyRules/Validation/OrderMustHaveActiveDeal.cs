@@ -42,9 +42,10 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                   new XAttribute("number", order.Number)),
                                               new XElement("message",
                                                   new XAttribute("state", missing.Deal ? "missing" : "inactive")))),
+
                                       PeriodStart = order.BeginDistribution,
                                       PeriodEnd = order.EndDistributionPlan,
-                                      ProjectId = order.ProjectId,
+                                      OrderId = order.Id,
 
                                       Result = RuleResult,
                                   };

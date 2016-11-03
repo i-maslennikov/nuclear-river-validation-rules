@@ -63,8 +63,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from order in query.For<Order>().Where(x => x.Id == violation.OrderId)
                 from period in query.For<Period>().Where(x => x.Start == violation.Start && x.OrganizationUnitId == violation.OrganizationUnitId)
                 select new Version.ValidationResult
-                {
-                    MessageParams =
+                    {
+                        MessageParams =
                             new XDocument(new XElement("root",
                                 new XElement("message",
                                     new XAttribute("min", violation.Min),
@@ -75,12 +75,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
                                     new XAttribute("number", order.Number)))),
-                    PeriodStart = period.Start,
-                    PeriodEnd = period.End,
-                    ProjectId = period.ProjectId,
 
-                    Result = RuleResult,
-                };
+                        PeriodStart = period.Start,
+                        PeriodEnd = period.End,
+                        OrderId = order.Id,
+
+                        Result = RuleResult,
+                    };
 
             return messages;
         }

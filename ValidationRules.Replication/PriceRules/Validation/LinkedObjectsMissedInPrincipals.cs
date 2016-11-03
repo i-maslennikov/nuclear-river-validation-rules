@@ -100,28 +100,28 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var messages = from unsatisfied in unsatisfiedPositions
                            select new Version.ValidationResult
-                           {
-                               MessageParams =
-                                    new XDocument(new XElement("root",
-                                                               new XElement("firm",
-                                                                            new XAttribute("id", unsatisfied.Key.FirmId)),
-                                                               new XElement("position",
-                                                                            new XAttribute("orderId", unsatisfied.Key.OrderId),
-                                                                            new XAttribute("orderNumber", unsatisfied.OrderNumber),
-                                                                            new XAttribute("orderPositionId", unsatisfied.Key.CauseOrderPositionId),
-                                                                            new XAttribute("orderPositionName", unsatisfied.OrderPositionName),
-                                                                            new XAttribute("positionId", unsatisfied.Key.CauseItemPositionId),
-                                                                            new XAttribute("positionName", unsatisfied.ItemPositionName)),
-                                                               new XElement("order",
-                                                                            new XAttribute("id", unsatisfied.Key.OrderId),
-                                                                            new XAttribute("number", unsatisfied.OrderNumber)))),
+                               {
+                                   MessageParams =
+                                       new XDocument(new XElement("root",
+                                           new XElement("firm",
+                                               new XAttribute("id", unsatisfied.Key.FirmId)),
+                                           new XElement("position",
+                                               new XAttribute("orderId", unsatisfied.Key.OrderId),
+                                               new XAttribute("orderNumber", unsatisfied.OrderNumber),
+                                               new XAttribute("orderPositionId", unsatisfied.Key.CauseOrderPositionId),
+                                               new XAttribute("orderPositionName", unsatisfied.OrderPositionName),
+                                               new XAttribute("positionId", unsatisfied.Key.CauseItemPositionId),
+                                               new XAttribute("positionName", unsatisfied.ItemPositionName)),
+                                           new XElement("order",
+                                               new XAttribute("id", unsatisfied.Key.OrderId),
+                                               new XAttribute("number", unsatisfied.OrderNumber)))),
 
-                               PeriodStart = unsatisfied.Key.Start,
-                               PeriodEnd = unsatisfied.End,
-                               ProjectId = unsatisfied.ProjectId,
+                                   PeriodStart = unsatisfied.Key.Start,
+                                   PeriodEnd = unsatisfied.End,
+                                   OrderId = unsatisfied.Key.OrderId,
 
-                               Result = RuleResult,
-                           };
+                                   Result = RuleResult,
+                               };
 
             return messages;
         }
