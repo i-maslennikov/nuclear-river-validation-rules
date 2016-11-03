@@ -75,6 +75,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 255,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(3),
+                        OrderId = 1,
                     },
 
                     // В разных заказах, с пересечением по времени размещения - есть ошибка в обоих заказах
@@ -85,6 +86,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 255,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(3),
+                        OrderId = 2,
                     },
                     new Messages::Version.ValidationResult
                     {
@@ -93,6 +95,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 255,
                         PeriodStart = MonthStart(2),
                         PeriodEnd = MonthStart(4),
+                        OrderId = 3,
                     },
 
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
@@ -103,6 +106,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 255,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(3),
+                        OrderId = 6,
                     },
 
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
@@ -113,6 +117,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 255,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(3),
+                        OrderId = 9,
                     });
     }
 }

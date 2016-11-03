@@ -61,6 +61,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 3,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(2),
+                        OrderId = 1,
                     },
                     new Messages::Version.ValidationResult
                     {
@@ -69,6 +70,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 3,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(2),
+                        OrderId = 2,
                     });
     }
 }

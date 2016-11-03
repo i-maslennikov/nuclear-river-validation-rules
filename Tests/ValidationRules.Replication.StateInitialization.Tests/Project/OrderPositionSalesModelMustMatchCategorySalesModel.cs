@@ -79,22 +79,24 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Position { Id = 4, Name = "Position" })
                 .Message(
                     new Messages::Version.ValidationResult
-                    {
-                        MessageParams = XDocument.Parse(
+                        {
+                            MessageParams = XDocument.Parse(
                                 "<root><category id=\"12\" name=\"Category\" /><orderPosition id=\"1\" name=\"Position\" /><order id=\"1\" number=\"Order\" /><project id=\"0\" name=\"Project\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
-                        Result = 255,
-                        PeriodStart = MonthStart(1),
-                        PeriodEnd = MonthStart(3),
-                    },
+                            MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                            Result = 255,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(3),
+                            OrderId = 1,
+                        },
                     new Messages::Version.ValidationResult
-                    {
-                        MessageParams = XDocument.Parse(
+                        {
+                            MessageParams = XDocument.Parse(
                                 "<root><category id=\"12\" name=\"Category\" /><orderPosition id=\"4\" name=\"Position\" /><order id=\"4\" number=\"Order\" /><project id=\"0\" name=\"Project\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
-                        Result = 255,
-                        PeriodStart = MonthStart(4),
-                        PeriodEnd = MonthStart(8),
-                    });
+                            MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                            Result = 255,
+                            PeriodStart = MonthStart(4),
+                            PeriodEnd = MonthStart(8),
+                            OrderId = 4,
+                        });
     }
 }

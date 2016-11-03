@@ -32,6 +32,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 3,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(3),
+                            OrderId = 1,
                         });
 
         // ReSharper disable once UnusedMember.Local

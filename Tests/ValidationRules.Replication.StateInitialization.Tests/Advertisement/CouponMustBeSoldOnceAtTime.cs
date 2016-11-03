@@ -93,6 +93,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 255,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
+                            OrderId = 1,
                         });
 
         // ReSharper disable once UnusedMember.Local
@@ -130,6 +131,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 255,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
+                            OrderId = 1,
                         },
                     new Messages::Version.ValidationResult
                         {
@@ -143,6 +145,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 255,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
+                            OrderId = 2,
                         });
 
 
@@ -179,6 +182,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 255,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
+                            OrderId = 1,
                         });
     }
 }
