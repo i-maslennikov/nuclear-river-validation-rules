@@ -36,11 +36,11 @@ namespace NuClear.ValidationRules.WebApp.Controllers
                 : _projectRepositiory.GetNextRelease(_userRepositiory.GetDefaultProject(account.Value));
             var orders = _orderRepositiory.GetDraftOrders(account, project, date);
 
-            ViewBag.Message = $"Выведены результаты за {date:Y}";
+            var validationResults = _messageRepositiory.GetMessages(orders.Keys.ToArray(), project, date, DateTime.MaxValue);
 
-            var validationResults = _messageRepositiory.GetMessages(orders.Keys.ToArray(), project);
             var messages = Filter(validationResults, x => x.WhenSingle(), Result.Info);
 
+            ViewBag.Message = $"Выведены результаты за {date:Y}";
             var model = new ResultContainer(_linkFactory)
             {
                 AccountId = account,
@@ -61,8 +61,7 @@ namespace NuClear.ValidationRules.WebApp.Controllers
                 : _projectRepositiory.GetNextRelease(_userRepositiory.GetDefaultProject(account.Value));
             var orders = _orderRepositiory.GetPublicOrders(account, project, date);
 
-            var validationResults = _messageRepositiory.GetMessages(orders.Keys.ToArray(), project);
-            validationResults = validationResults.Where(x => x.PeriodStart <= date && x.PeriodEnd >= date.AddMonths(1)).ToArray();
+            var validationResults = _messageRepositiory.GetMessages(orders.Keys.ToArray(), project, date, date.AddMonths(1));
             var messages = Filter(validationResults, x => x.WhenMass(), Result.Warning);
 
             ViewBag.Message = $"Выведены результаты за {date:Y}";
@@ -85,7 +84,7 @@ namespace NuClear.ValidationRules.WebApp.Controllers
 
         public IActionResult Single(long id)
         {
-            var validationResults = _messageRepositiory.GetMessages(new[] { id }, null);
+            var validationResults = _messageRepositiory.GetMessages(new[] { id }, null, DateTime.MinValue, DateTime.MaxValue);
 
             var model = new SingleCheckContainer(_linkFactory)
                 {
