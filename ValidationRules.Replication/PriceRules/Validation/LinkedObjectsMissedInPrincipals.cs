@@ -84,7 +84,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                        FirmAddressId = x.associated.Position.FirmAddressId,
                                        FirmId = x.associated.FirmId,
                                        OrganizationUnitId = x.associated.OrganizationUnitId,
-                                       OrderId = x.associated.Position.OrderId,
+                                       OrderId = (long?)x.associated.Position.OrderId,
                                    })
                                    .Where(x => x.All(y => y.principal == null))
                                    .Select(grouping => new
@@ -119,6 +119,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                    PeriodStart = unsatisfied.Key.Start,
                                    PeriodEnd = unsatisfied.End,
                                    OrderId = unsatisfied.Key.OrderId,
+                                   ProjectId = null,
 
                                    Result = RuleResult,
                                };
