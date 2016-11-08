@@ -17,7 +17,13 @@ namespace NuClear.ValidationRules.WebApp.Serializers.PriceRules
 
         public MessageTemplate Serialize(ValidationResult validationResult)
         {
-            throw new NotSupportedException("Сообщение не привязано к заказу");
+            var price = validationResult.ReadPriceReference();
+            var pricePosition = validationResult.ReadPricePositionReference();
+
+            return new MessageTemplate(
+                price,
+                "В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой",
+                _linkFactory.CreateLink(pricePosition));
         }
     }
 }

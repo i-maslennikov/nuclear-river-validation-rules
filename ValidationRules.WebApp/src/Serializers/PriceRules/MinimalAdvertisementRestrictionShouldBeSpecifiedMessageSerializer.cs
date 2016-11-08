@@ -17,7 +17,13 @@ namespace NuClear.ValidationRules.WebApp.Serializers.PriceRules
 
         public MessageTemplate Serialize(ValidationResult validationResult)
         {
-            throw new NotSupportedException("Сообщение не привязано к заказу");
+            var price = validationResult.ReadPriceReference();
+            var pricePosition = validationResult.ReadPricePositionReference();
+
+            return new MessageTemplate(
+                price,
+                "В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск",
+                _linkFactory.CreateLink(pricePosition));
         }
     }
 }
