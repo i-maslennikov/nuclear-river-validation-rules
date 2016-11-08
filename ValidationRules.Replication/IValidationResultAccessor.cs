@@ -3,7 +3,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication
 {
-    public interface IValidationResultAccessor : IStorageBasedDataObjectAccessor<Version .ValidationResult>
+    public interface IValidationResultAccessor : IStorageBasedDataObjectAccessor<Version.ValidationResult>
     {
         int MessageTypeId { get; }
     }

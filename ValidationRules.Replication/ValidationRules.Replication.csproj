@@ -263,6 +263,9 @@
     <Compile Include="FirmRules\Validation\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
     <Compile Include="FirmRules\Validation\FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder.cs" />
     <Compile Include="FirmRules\Validation\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
+    <Compile Include="Messages\ArchiveVersionsActor.cs" />
+    <Compile Include="Messages\ErmStatesQueryableExtensions.cs" />
+    <Compile Include="Messages\ValidationResultEqualityComparer.cs" />
     <Compile Include="ProjectRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="ProjectRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="ProjectRules\Aggregates\CategoryAggregateRootActor.cs" />
@@ -288,6 +291,7 @@
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustBeSpecified.cs" />
     <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
+    <Compile Include="Settings\IArchiveVersionsSettings.cs" />
     <Compile Include="Specifications\Scope.cs" />
     <Compile Include="ThemeRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\OrderAggregateRootActor.cs" />
@@ -357,10 +361,9 @@
     <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
-    <Compile Include="PriceRules\Validation\CreateNewVersionActor.cs" />
     <Compile Include="ValidationResultQueryableExtensions.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />
-    <Compile Include="ValidationRuleActor.cs" />
+    <Compile Include="Messages\ValidationRuleActor.cs" />
     <Compile Include="PriceRules\Validation\ConflictingPrincipalPosition.cs" />
     <Compile Include="PriceRules\Validation\SatisfiedPrincipalPositionDifferentOrder.cs" />
     <Compile Include="PriceRules\Validation\LinkedObjectsMissedInPrincipals.cs" />

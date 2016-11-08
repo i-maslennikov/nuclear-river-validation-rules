@@ -1,5 +1,9 @@
-﻿using LinqToDB.DataProvider.SqlServer;
+﻿using System.Xml.Linq;
+
+using LinqToDB;
+using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
+using LinqToDB.SqlQuery;
 
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -14,6 +18,9 @@ namespace NuClear.ValidationRules.Storage
             get
             {
                 var schema = new MappingSchema(nameof(Messages), new SqlServerMappingSchema());
+                // TODO: хранить как SaveOptions.DisableFormatting, прямо сейчас xml хранится с табами
+                schema.SetDataType(typeof(XDocument), new SqlDataType(DataType.NVarChar, 4000));
+
                 var config = schema.GetFluentMappingBuilder();
 
                 config.Entity<Version>()
@@ -24,10 +31,6 @@ namespace NuClear.ValidationRules.Storage
                       .HasSchemaName(MessagesSchema);
 
                 config.Entity<Version.ValidationResult>()
-                      .HasSchemaName(MessagesSchema);
-
-                config.Entity<Version.ValidationResultForBulkDelete>()
-                      .HasTableName(nameof(Version.ValidationResult))
                       .HasSchemaName(MessagesSchema);
 
                 return schema;

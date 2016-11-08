@@ -12,9 +12,8 @@ using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.Telemetry;
-using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.PriceRules.Validation;
+using NuClear.ValidationRules.Replication.Messages;
 
 namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
 {
@@ -22,19 +21,19 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
     {
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
-        private readonly CreateNewVersionActor _createNewVersionActor;
         private readonly ValidationRuleActor _validationRuleActor;
+        private readonly ArchiveVersionsActor _archiveVersionsActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer,
-            CreateNewVersionActor createNewVersionActor,
-            ValidationRuleActor validationRuleActor)
+            ValidationRuleActor validationRuleActor,
+            ArchiveVersionsActor archiveVersionsActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
-            _createNewVersionActor = createNewVersionActor;
             _validationRuleActor = validationRuleActor;
+            _archiveVersionsActor = archiveVersionsActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -79,24 +78,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 return;
             }
 
-            // Транзакция важна для запросов в пространстве Messages, запросы в PriceAggregates нужно выполнять без транзакции, хотя в идеале хотелось бы две независимые транзакции.
+            // Транзакция важна для запросов в пространстве Messages, запросы в Aggregates нужно выполнять без транзакции, хотя в идеале хотелось бы две независимые транзакции.
             var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
-            using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
-                // Задача: добиться того, чтобы все изменения попали в Version, содержащий токен состояния либо более ранний.
-                // Этого легко достичь, просто вызвав обработчик команды CreateNewVersion последним в цепочке.
-                // Благодаря этому все изменения, предшествующие состоянию erm будут гарантированно включены в версию проверок.
                 using (Probe.Create("ValidationRuleActor"))
                 {
                     _validationRuleActor.ExecuteCommands(commands);
                 }
-
-                using (Probe.Create("CreateNewVersionActor"))
+                using (Probe.Create("ArchiveVersionsActor"))
                 {
-                    _createNewVersionActor.ExecuteCommands(commands);
+                    _archiveVersionsActor.ExecuteCommands(commands);
                 }
 
-                transaction.Complete();
+                scope.Complete();
             }
 
             _telemetryPublisher.Publish<MessageProcessedOperationCountIdentity>(commands.Count);
