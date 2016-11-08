@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using LinqToDB;
-
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
@@ -16,41 +14,44 @@ namespace NuClear.ValidationRules.Replication.Messages
 {
     public sealed class ArchiveVersionsActor : IActor
     {
-        private const long ArchiveVersionId = 0;
-
         private readonly IArchiveVersionsSettings _settings;
         private readonly IQuery _query;
-        private readonly IBulkRepository<Version> _versionRepository;
+        private readonly IBulkRepository<Version> _versionDeleteRepository;
         private readonly IBulkRepository<Version.ValidationResult> _validationResultRepository;
+        private readonly IBulkRepository<Version.ErmStateBulkDelete> _ermStateDeleteRepository;
+        private readonly IBulkRepository<Version.ValidationResultBulkDelete> _validationResultDeleteRepository;
 
-        public ArchiveVersionsActor(IArchiveVersionsSettings settings, IQuery query, IBulkRepository<Version> versionRepository, IBulkRepository<Version.ValidationResult> validationResultRepository)
+        public ArchiveVersionsActor(
+            IArchiveVersionsSettings settings,
+            IQuery query,
+            IBulkRepository<Version> versionDeleteRepository,
+            IBulkRepository<Version.ValidationResult> validationResultRepository,
+            IBulkRepository<Version.ErmStateBulkDelete> ermStateDeleteRepository,
+            IBulkRepository<Version.ValidationResultBulkDelete> validationResultDeleteRepository)
         {
             _settings = settings;
             _query = query;
-            _versionRepository = versionRepository;
+            _versionDeleteRepository = versionDeleteRepository;
             _validationResultRepository = validationResultRepository;
+            _ermStateDeleteRepository = ermStateDeleteRepository;
+            _validationResultDeleteRepository = validationResultDeleteRepository;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var archiveDate = DateTime.UtcNow - _settings.ArchiveVersionPeriod;
+            var archiveDate = DateTime.UtcNow - _settings.ArchiveVersionsInterval;
 
             var versions = _query.For<Version>().Where(x => x.Date < archiveDate).OrderByDescending(x => x.Id).ToList();
             if (versions.Count > 1)
             {
-                var newestVersion = versions.First();
-                var archiveVersion = versions.First(x => x.Id == ArchiveVersionId);
+                var keepVersion = versions.First();
+                var keepValidationResults = _query.For<Version.ValidationResult>().GetValidationResults(keepVersion.Id).ApplyVersionId(keepVersion.Id).ToList();
 
-                var createObjects = _query.For<Version.ValidationResult>().GetValidationResults(newestVersion.Id).ToList();
-                _query.For<Version.ValidationResult>().Where(x => x.VersionId <= newestVersion.Id).Delete();
-                _validationResultRepository.Create(createObjects.ApplyVersionId(archiveVersion.Id));
+                _validationResultDeleteRepository.Delete(versions.Select(x => new Version.ValidationResultBulkDelete { VersionId = x.Id }));
+                _ermStateDeleteRepository.Delete(versions.Select(x => new Version.ErmStateBulkDelete { VersionId = x.Id }));
+                _versionDeleteRepository.Delete(versions.Skip(1));
 
-                var reconcileErmStates = _query.For<Version.ErmState>().Where(x => x.VersionId != archiveVersion.Id && x.VersionId <= newestVersion.Id);
-                reconcileErmStates.Set(x => x.VersionId, archiveVersion.Id).Update();
-
-                archiveVersion.Date = newestVersion.Date;
-                _versionRepository.Update(new[] { archiveVersion });
-                _versionRepository.Delete(versions.Where(x => x != archiveVersion));
+                _validationResultRepository.Create(keepValidationResults);
             }
 
             return Array.Empty<IEvent>();

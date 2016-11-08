@@ -6,6 +6,6 @@ namespace NuClear.ValidationRules.Replication.Settings
 {
     public interface IArchiveVersionsSettings : ISettings
     {
-        TimeSpan ArchiveVersionPeriod { get; }
+        TimeSpan ArchiveVersionsInterval { get; }
     }
 }

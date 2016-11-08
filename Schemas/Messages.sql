@@ -7,7 +7,7 @@ go
 
 create table Messages.Version(
     Id bigint NOT NULL,
-	[Date] datetime2(2) NOT NULL,
+    [Date] datetime2(2) NOT NULL,
 
     constraint PK_Version primary key (Id desc)
 )
@@ -31,7 +31,7 @@ create table Messages.ValidationResult(
     OrderId bigint NULL,
 
     Result int NOT NULL,
-	Resolved bit not null,
+    Resolved bit not null,
 )
 go
 CREATE INDEX [IX_ValidationResult_Resolved] ON [Messages].[ValidationResult] ([Resolved])

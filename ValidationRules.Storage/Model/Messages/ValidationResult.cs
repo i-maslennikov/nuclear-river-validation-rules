@@ -14,6 +14,11 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public Guid Token { get; set; }
         }
 
+        public sealed class ErmStateBulkDelete
+        {
+            public long VersionId { get; set; }
+        }
+
         public sealed class ValidationResult
         {
             public long VersionId { get; set; }
@@ -30,6 +35,11 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public int Result { get; set; }
 
             public bool Resolved { get; set; }
+        }
+
+        public sealed class ValidationResultBulkDelete
+        {
+            public long VersionId { get; set; }
         }
     }
 }
