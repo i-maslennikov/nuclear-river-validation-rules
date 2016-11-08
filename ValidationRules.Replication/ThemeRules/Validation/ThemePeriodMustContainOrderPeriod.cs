@@ -29,21 +29,21 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
             var ruleResults = from order in query.For<Order>()
                               from orderTheme in query.For<Order.OrderTheme>().Where(x => x.OrderId == order.Id)
                               from theme in query.For<Theme>().Where(x => x.Id == orderTheme.ThemeId)
-                              where theme.BeginDistribution > order.BeginDistributionDate ||  // тематика начинает размещаться позже заказа
-                                    order.EndDistributionDateFact > theme.EndDistribution     // тематика оканчивает размещаться раньше заказа
+                              where theme.BeginDistribution > order.BeginDistributionDate || // тематика начинает размещаться позже заказа
+                                    order.EndDistributionDateFact > theme.EndDistribution // тематика оканчивает размещаться раньше заказа
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
-                                                                                 new XElement("order",
-                                                                                              new XAttribute("id", order.Id),
-                                                                                              new XAttribute("number", order.Number)),
-                                                                                 new XElement("theme",
-                                                                                              new XAttribute("id", theme.Id),
-                                                                                              new XAttribute("name", theme.Name))
-                                                                     )),
+                                          new XElement("order",
+                                              new XAttribute("id", order.Id),
+                                              new XAttribute("number", order.Number)),
+                                          new XElement("theme",
+                                              new XAttribute("id", theme.Id),
+                                              new XAttribute("name", theme.Name)))),
+
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDateFact,
-                                      ProjectId = order.ProjectId,
+                                      OrderId = order.Id,
 
                                       Result = RuleResult,
                                   };

@@ -43,9 +43,10 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                   inactive.BranchOffice ? new XElement("branchOffice") : null,
                                                   inactive.LegalPerson ? new XElement("legalPerson") : null,
                                                   inactive.LegalPersonProfile ? new XElement("legalPersonProfile") : null))),
+
                                       PeriodStart = order.BeginDistribution,
                                       PeriodEnd = order.EndDistributionPlan,
-                                      ProjectId = order.ProjectId,
+                                      OrderId = order.Id,
 
                                       Result = RuleResult,
                                   };

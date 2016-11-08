@@ -98,7 +98,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
-                        ProjectId = period.ProjectId,
+                        OrderId = conflict.OrderId,
 
                         Result = RuleResult,
                     };

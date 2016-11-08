@@ -30,7 +30,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 )
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, EndDistributionDateFact = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true },
-                    new Aggregates::Order.LinkedProject { OrderId = 1, ProjectId = 3 },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Firm.WhiteListDistributionPeriod { FirmId = 7, Start = FirstDayJan, End = FirstDayFeb, AdvertisementId = null, ProvidedByOrderId = null },
@@ -46,7 +45,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 250,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
-                        ProjectId = 3,
+                        OrderId = 1,
                     });
 
         // ReSharper disable once UnusedMember.Local
@@ -67,7 +66,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 )
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, EndDistributionDateFact = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true, ProvideWhiteListAdvertisement = true },
-                    new Aggregates::Order.LinkedProject { OrderId = 1, ProjectId = 3 },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Firm.WhiteListDistributionPeriod { FirmId = 7, Start = FirstDayJan, End = FirstDayFeb, AdvertisementId = 6, ProvidedByOrderId = 1 },
@@ -83,7 +81,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 85,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
-                        ProjectId = 3,
+                        OrderId = 1,
                     }
                 );
 
@@ -94,7 +92,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(WhiteListAdvertisementMayAndMustPresent))
                 .Aggregate(
                     new Aggregates::Order { Id = 1, Number = "Order", BeginDistributionDate = MonthStart(1), EndDistributionDatePlan = MonthStart(3), RequireWhiteListAdvertisement = true },
-                    new Aggregates::Order.LinkedProject { OrderId = 1 },
 
                     new Aggregates::Firm.WhiteListDistributionPeriod { Start = DateTime.MinValue, End = MonthStart(1), ProvidedByOrderId = null, AdvertisementId = null },
                     new Aggregates::Firm.WhiteListDistributionPeriod { Start = MonthStart(1), End = MonthStart(2), ProvidedByOrderId = 111, AdvertisementId = 111 },
@@ -111,6 +108,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 85,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
+                            OrderId = 1,
                         },
                     new Messages::Version.ValidationResult
                         {
@@ -119,6 +117,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 250,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
+                            OrderId = 1,
                         });
     }
 }

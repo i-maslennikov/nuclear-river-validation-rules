@@ -20,7 +20,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
     {
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Order.LinkedProject> _linkedProjectBulkRepository;
         private readonly IBulkRepository<Order.MissingAdvertisementReference> _missingAdvertisementReferenceBulkRepository;
         private readonly IBulkRepository<Order.MissingOrderPositionAdvertisement> _missingOrderPositionAdvertisementBulkRepository;
         private readonly IBulkRepository<Order.AdvertisementDeleted> _advertisementDeletedBulkRepository;
@@ -33,7 +32,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             IQuery query,
             IBulkRepository<Order> orderBulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
-            IBulkRepository<Order.LinkedProject> linkedProjectBulkRepository,
             IBulkRepository<Order.MissingAdvertisementReference> missingAdvertisementReferenceBulkRepository,
             IBulkRepository<Order.MissingOrderPositionAdvertisement> missingOrderPositionAdvertisementBulkRepository,
             IBulkRepository<Order.AdvertisementDeleted> advertisementDeletedBulkRepository,
@@ -45,7 +43,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
-            _linkedProjectBulkRepository = linkedProjectBulkRepository;
             _missingAdvertisementReferenceBulkRepository = missingAdvertisementReferenceBulkRepository;
             _missingOrderPositionAdvertisementBulkRepository = missingOrderPositionAdvertisementBulkRepository;
             _advertisementDeletedBulkRepository = advertisementDeletedBulkRepository;
@@ -61,7 +58,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
-                    new ValueObjectActor<Order.LinkedProject>(_query, _linkedProjectBulkRepository, _equalityComparerFactory, new LinkedProjectAccessor(_query)),
                     new ValueObjectActor<Order.MissingAdvertisementReference>(_query, _missingAdvertisementReferenceBulkRepository, _equalityComparerFactory, new MissingAdvertisementReferenceAccessor(_query)),
                     new ValueObjectActor<Order.MissingOrderPositionAdvertisement>(_query, _missingOrderPositionAdvertisementBulkRepository, _equalityComparerFactory, new MissingOrderPositionAdvertisementAccessor(_query)),
                     new ValueObjectActor<Order.AdvertisementDeleted>(_query, _advertisementDeletedBulkRepository, _equalityComparerFactory, new AdvertisementDeletedAccessor(_query)),
@@ -114,36 +110,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
-            }
-        }
-
-        public sealed class LinkedProjectAccessor : IStorageBasedDataObjectAccessor<Order.LinkedProject>
-        {
-            private readonly IQuery _query;
-
-            public LinkedProjectAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<Order.LinkedProject> GetSource()
-            {
-                var linkedOrganizationUnits = _query.For<Facts::Order>().Select(x => new { OrderId = x.Id, OrganizationUnitId = x.DestOrganizationUnitId })
-                                                    .Union(_query.For<Facts::Order>().Select(x => new { OrderId = x.Id, OrganizationUnitId = x.SourceOrganizationUnitId }));
-
-                return from linkedOrganizationUnit in linkedOrganizationUnits
-                       from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == linkedOrganizationUnit.OrganizationUnitId)
-                       select new Order.LinkedProject { OrderId = linkedOrganizationUnit.OrderId, ProjectId = project.Id };
-            }
-
-            public FindSpecification<Order.LinkedProject> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
-                return new FindSpecification<Order.LinkedProject>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

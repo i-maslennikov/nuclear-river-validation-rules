@@ -35,26 +35,27 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
             var ruleResults = from order in query.For<Order>()
                               from firmAddress in query.For<Order.InvalidFirmAddress>().Where(x => x.OrderId == order.Id)
                               select new Version.ValidationResult
-                              {
-                                  MessageParams = new XDocument(
+                                  {
+                                      MessageParams = new XDocument(
                                           new XElement("root",
-                                                       new XElement("message",
-                                                                    new XAttribute("invalidFirmAddressState", (int)firmAddress.State)),
-                                                       new XElement("firmAddress",
-                                                                    new XAttribute("id", firmAddress.FirmAddressId),
-                                                                    new XAttribute("name", firmAddress.FirmAddressName)),
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)),
-                                                       new XElement("orderPosition",
-                                                                    new XAttribute("id", firmAddress.OrderPositionId),
-                                                                    new XAttribute("name", firmAddress.OrderPositionName)))),
-                                  PeriodStart = order.BeginDistribution,
-                                  PeriodEnd = order.EndDistributionPlan,
-                                  ProjectId = order.ProjectId,
+                                              new XElement("message",
+                                                  new XAttribute("invalidFirmAddressState", (int)firmAddress.State)),
+                                              new XElement("firmAddress",
+                                                  new XAttribute("id", firmAddress.FirmAddressId),
+                                                  new XAttribute("name", firmAddress.FirmAddressName)),
+                                              new XElement("order",
+                                                  new XAttribute("id", order.Id),
+                                                  new XAttribute("number", order.Number)),
+                                              new XElement("orderPosition",
+                                                  new XAttribute("id", firmAddress.OrderPositionId),
+                                                  new XAttribute("name", firmAddress.OrderPositionName)))),
 
-                                  Result = RuleResult,
-                              };
+                                      PeriodStart = order.BeginDistribution,
+                                      PeriodEnd = order.EndDistributionPlan,
+                                      OrderId = order.Id,
+
+                                      Result = RuleResult,
+                                  };
 
             return ruleResults;
         }

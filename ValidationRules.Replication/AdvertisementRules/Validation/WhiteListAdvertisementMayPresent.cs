@@ -31,7 +31,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>().Where(x => x.RequireWhiteListAdvertisement)
-                from project in query.For<Order.LinkedProject>().Where(x => x.OrderId == order.Id)
                 from advertisement in query.For<Advertisement>().Where(x => x.FirmId == order.FirmId && x.IsSelectedToWhiteList)
                 from period in query.For<Firm.WhiteListDistributionPeriod>()
                                     .Where(x => x.FirmId == order.FirmId && x.Start < order.EndDistributionDatePlan && order.BeginDistributionDate < x.End)
@@ -52,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                     new XAttribute("name", advertisement.Name)))),
                         PeriodStart = period != null && period.Start > order.BeginDistributionDate ? period.Start : order.BeginDistributionDate,
                         PeriodEnd = period != null && period.End < order.EndDistributionDatePlan ? period.End : order.EndDistributionDatePlan,
-                        ProjectId = project.ProjectId,
+                        OrderId = order.Id,
 
                         Result = RuleResult,
                     };

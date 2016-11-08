@@ -34,6 +34,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 240,
                             PeriodStart = FirstDayJan,
                             PeriodEnd = FirstDayFeb,
+                            OrderId = 1,
                         });
     }
 }

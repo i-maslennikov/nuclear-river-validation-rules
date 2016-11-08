@@ -35,18 +35,19 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
-                                                                                 new XElement("price",
-                                                                                              new XAttribute("id", price.Id),
-                                                                                              new XAttribute("beginDate", price.BeginDate)),
-                                                                                 new XElement("project",
-                                                                                              new XAttribute("id", project.Id),
-                                                                                              new XAttribute("name", project.Name)),
-                                                                                 new XElement("pricePosition",
-                                                                                              new XAttribute("id", overcount.PricePositionId),
-                                                                                              new XAttribute("name", overcount.PricePositionName)))),
+                                          new XElement("price",
+                                              new XAttribute("id", price.Id),
+                                              new XAttribute("beginDate", price.BeginDate)),
+                                          new XElement("project",
+                                              new XAttribute("id", project.Id),
+                                              new XAttribute("name", project.Name)),
+                                          new XElement("pricePosition",
+                                              new XAttribute("id", overcount.PricePositionId),
+                                              new XAttribute("name", overcount.PricePositionName)))),
+
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
-                                      ProjectId = period.ProjectId,
+                                      ProjectId = project.Id,
 
                                       Result = RuleResult,
                                   };

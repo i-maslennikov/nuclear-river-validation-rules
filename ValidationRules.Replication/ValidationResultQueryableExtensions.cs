@@ -18,6 +18,7 @@ namespace NuClear.ValidationRules.Replication
                     PeriodEnd = x.PeriodEnd,
                     PeriodStart = x.PeriodStart,
                     ProjectId = x.ProjectId,
+                    OrderId = x.OrderId,
                     Result = x.Result,
                 });
 
@@ -33,6 +34,7 @@ namespace NuClear.ValidationRules.Replication
                     PeriodEnd = x.PeriodEnd,
                     PeriodStart = x.PeriodStart,
                     ProjectId = x.ProjectId,
+                    OrderId = x.OrderId,
                     Result = x.Result,
                 });
     }

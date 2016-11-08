@@ -56,18 +56,19 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
             var result =
                 from order in errorsInSelfAdvOrders.Union(errorsInNonDesktopOrders)
                 select new Version.ValidationResult
-                {
-                    MessageParams =
+                    {
+                        MessageParams =
                             new XDocument(new XElement("root",
-                                                       new XElement("order",
-                                                                    new XAttribute("id", order.Id),
-                                                                    new XAttribute("number", order.Number)))),
-                    PeriodStart = order.Begin,
-                    PeriodEnd = order.End,
-                    ProjectId = order.ProjectId,
+                                new XElement("order",
+                                    new XAttribute("id", order.Id),
+                                    new XAttribute("number", order.Number)))),
 
-                    Result = RuleResult,
-                };
+                        PeriodStart = order.Begin,
+                        PeriodEnd = order.End,
+                        OrderId = order.Id,
+
+                        Result = RuleResult,
+                    };
 
             return result;
         }

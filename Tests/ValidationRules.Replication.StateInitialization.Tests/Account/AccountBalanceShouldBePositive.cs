@@ -58,6 +58,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 204,
                             PeriodStart = FirstDayFeb,
                             PeriodEnd = FirstDayMar,
+                            OrderId = 1,
                         },
                     new Messages::Version.ValidationResult
                         {
@@ -70,6 +71,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             Result = 204,
                             PeriodStart = FirstDayFeb,
                             PeriodEnd = FirstDayMar,
-                        });
+                            OrderId = 2,
+                    });
     }
 }

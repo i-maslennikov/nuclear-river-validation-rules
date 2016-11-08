@@ -47,6 +47,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                                 new XElement("firm",
                                     new XAttribute("id", firm.Id),
                                     new XAttribute("name", firm.Name)))),
+
                         PeriodStart = begin.Date,
                         PeriodEnd = end.Date,
                         ProjectId = firm.ProjectId,

@@ -77,9 +77,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
                                     new XAttribute("number", order.Number)))),
+
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
-                        ProjectId = period.ProjectId,
+                        OrderId = order.Id,
 
                         Result = RuleResult,
                     };

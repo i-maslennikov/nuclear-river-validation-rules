@@ -36,21 +36,21 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
-                                                                                 new XElement("order",
-                                                                                              new XAttribute("id", order.Id),
-                                                                                              new XAttribute("number", order.Number)),
-                                                                                  new XElement("firm",
-                                                                                              new XAttribute("id", order.FirmId),
-                                                                                              new XAttribute("name", query.For<Firm>().Single(x => x.Id == order.FirmId).Name)),
-                                                                                  new XElement("orderPosition",
-                                                                                              new XAttribute("id", opa.OrderPositionId),
-                                                                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == opa.PositionId).Name)),
-                                                                                  new XElement("message",
-                                                                                              new XAttribute("website", firmWebSite.Website))
-                                                                                  )),
+                                          new XElement("order",
+                                              new XAttribute("id", order.Id),
+                                              new XAttribute("number", order.Number)),
+                                          new XElement("firm",
+                                              new XAttribute("id", order.FirmId),
+                                              new XAttribute("name", query.For<Firm>().Single(x => x.Id == order.FirmId).Name)),
+                                          new XElement("orderPosition",
+                                              new XAttribute("id", opa.OrderPositionId),
+                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == opa.PositionId).Name)),
+                                          new XElement("message",
+                                              new XAttribute("website", firmWebSite.Website))
+                                          )),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,
-                                      ProjectId = order.ProjectId,
+                                      OrderId = order.Id,
 
                                       Result = RuleResult,
                                   };

@@ -50,7 +50,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 42,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
-                        ProjectId = 1,
+                        OrderId = 1,
                     });
 
         // ReSharper disable once UnusedMember.Local
@@ -76,7 +76,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 42,
                         PeriodStart = FirstDayFeb,
                         PeriodEnd = FirstDayApr,
-                        ProjectId = 1,
+                        OrderId = 1,
                     },
                     new Messages::Version.ValidationResult
                     {
@@ -85,7 +85,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         Result = 42,
                         PeriodStart = FirstDayFeb,
                         PeriodEnd = FirstDayApr,
-                        ProjectId = 1,
+                        OrderId = 2,
                     });
     }
 }

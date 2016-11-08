@@ -47,9 +47,10 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
                                     new XAttribute("number", order.Number)))),
+
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,
-                        ProjectId = order.ProjectId,
+                        OrderId = order.Id,
 
                         Result = RuleResult,
                     };
