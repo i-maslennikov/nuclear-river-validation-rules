@@ -15,11 +15,10 @@ namespace NuClear.ValidationRules.WebApp.Serializers.FirmRules
 
         public MessageTemplate Serialize(ValidationResult validationResult)
         {
-            var orderReference = validationResult.ReadOrderReference();
             var firmReference = validationResult.ReadFirmReference();
 
             return new MessageTemplate(
-                orderReference,
+                firmReference,
                 "У фирмы {0}, с рубрикой \"Выгодные покупки с 2ГИС\", отсутствуют продажи по позициям \"Самореклама только для ПК\" или \"Выгодные покупки с 2ГИС\"",
                 _linkFactory.CreateLink(firmReference));
         }

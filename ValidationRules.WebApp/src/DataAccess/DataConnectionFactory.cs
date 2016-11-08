@@ -54,8 +54,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
                 .HasTableName("ReleaseInfos");
 
             builder.Entity<ValidationResult>()
-                .HasSchemaName("Messages")
-                .HasTableName("ValidationResultByOrder");
+                .HasSchemaName("Messages");
 
             return builder.MappingSchema;
         }

@@ -16,33 +16,38 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
             _factory = factory;
         }
 
-        public IReadOnlyCollection<ValidationResult> GetMessages(IReadOnlyCollection<long> orderIds, long? projectId)
+        public IReadOnlyCollection<ValidationResult> GetMessages(IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end)
         {
-            return InBatches(orderIds, projectId, 300);
-        }
+            var dateFilter = CreateDateFilter(start, end);
 
-        private IReadOnlyCollection<ValidationResult> InBatches(IReadOnlyCollection<long> orderIds, long? projectId, int batchSize)
-        {
-            return Enumerable.Range(0, 1 + orderIds.Count / batchSize).AsParallel().SelectMany(batchNumber => GetMessages(orderIds, projectId, batchSize, batchNumber)).ToArray();
-        }
-
-        private IReadOnlyCollection<ValidationResult> GetMessages(IReadOnlyCollection<long> orderIds, long? projectId, int batchSize, int batchNumber)
-        {
             using (var connection = _factory.CreateDataConnection("Messages"))
             {
-                var results = connection.GetTable<ValidationResult>()
-                    .Where(x => orderIds.Skip(batchNumber * batchSize).Take(batchSize).Contains(x.OrderId))
-                    .Where(CreateProjectFilter(projectId));
+                var resultsByOrder = connection.GetTable<ValidationResult>().Where(dateFilter).Where(CreateOrderFilter(orderIds));
+                var resultsByProject = connection.GetTable<ValidationResult>().Where(dateFilter).Where(CreateProjectFilter(projectId));
 
-                return results.ToArray();
+                return resultsByOrder.Concat(resultsByProject).ToArray();
             }
+        }
+
+        private Expression<Func<ValidationResult, bool>> CreateDateFilter(DateTime start, DateTime end)
+        {
+            return x => x.PeriodStart < end && start < x.PeriodEnd;
+        }
+
+        private Expression<Func<ValidationResult, bool>> CreateOrderFilter(IReadOnlyCollection<long> orderIds)
+        {
+            if (orderIds.Any())
+                return x => x.OrderId.HasValue && orderIds.Contains(x.OrderId.Value);
+
+            return x => false;
         }
 
         private Expression<Func<ValidationResult, bool>> CreateProjectFilter(long? projectId)
         {
             if (projectId.HasValue)
-                return x => x.ProjectId == projectId.Value;
-            return x => true;
+                return x => x.ProjectId.HasValue && x.ProjectId == projectId.Value;
+
+            return x => false;
         }
     }
 }
