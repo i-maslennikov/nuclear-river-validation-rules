@@ -3,7 +3,7 @@ using LinqToDB.Mapping;
 
 using NuClear.ValidationRules.Storage;
 
-namespace ValidationRules.Querying.Host.DataAccess
+namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
     public class DataConnectionFactory
     {

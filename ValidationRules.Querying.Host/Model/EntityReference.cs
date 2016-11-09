@@ -1,4 +1,4 @@
-namespace ValidationRules.Querying.Host.Model
+namespace NuClear.ValidationRules.Querying.Host.Model
 {
     public class EntityReference
     {

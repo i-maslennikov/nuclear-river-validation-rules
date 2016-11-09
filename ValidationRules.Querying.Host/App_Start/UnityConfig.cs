@@ -1,8 +1,8 @@
 ﻿using System.Web.Http;
 
-using ValidationRules.Querying.Host.DI;
+using NuClear.ValidationRules.Querying.Host.DI;
 
-namespace ValidationRules.Querying.Host
+namespace NuClear.ValidationRules.Querying.Host
 {
     public static class UnityConfig
     {

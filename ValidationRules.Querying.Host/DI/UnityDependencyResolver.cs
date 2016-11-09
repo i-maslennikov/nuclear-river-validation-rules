@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http.Dependencies;
 
 using Microsoft.Practices.Unity;
 
-namespace ValidationRules.Querying.Host.DI
+namespace NuClear.ValidationRules.Querying.Host.DI
 {
     public class UnityDependencyResolver : IDependencyResolver
     {

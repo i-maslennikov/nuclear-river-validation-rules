@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace ValidationRules.Querying.Host.Serialization
+namespace NuClear.ValidationRules.Querying.Host.Serialization
 {
     public class MessageSerializer
     {

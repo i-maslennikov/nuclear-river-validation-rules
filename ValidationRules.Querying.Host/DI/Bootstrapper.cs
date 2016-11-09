@@ -1,8 +1,8 @@
 ﻿using Microsoft.Practices.Unity;
 
-using ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.DataAccess;
 
-namespace ValidationRules.Querying.Host.DI
+namespace NuClear.ValidationRules.Querying.Host.DI
 {
     public static class Bootstrapper
     {

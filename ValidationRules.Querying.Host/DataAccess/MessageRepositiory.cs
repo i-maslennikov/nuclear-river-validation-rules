@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace ValidationRules.Querying.Host.DataAccess
+namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
     public class MessageRepositiory
     {

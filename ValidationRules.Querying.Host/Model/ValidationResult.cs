@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ValidationRules.Querying.Host.Model
+namespace NuClear.ValidationRules.Querying.Host.Model
 {
     public class ValidationResult
     {

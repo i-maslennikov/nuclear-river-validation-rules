@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
 
-using ValidationRules.Querying.Host.DataAccess;
-using ValidationRules.Querying.Host.Serialization;
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Serialization;
 
-namespace ValidationRules.Querying.Host.Controllers
+namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
     public class ReleaseController : ApiController
     {
