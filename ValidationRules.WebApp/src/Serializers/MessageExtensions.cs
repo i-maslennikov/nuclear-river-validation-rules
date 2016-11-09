@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.WebApp.Serializers
                 throw new ArgumentException("Сообщение не содержит ссылки на заказ", nameof(message));
             }
 
-            return Tuple.Create("Order", (long)element.Attribute("id"), (string)element.Attribute("number"));
+            return Tuple.Create("Order", (long)element.Attribute("id"), (string)element.Attribute("name"));
         }
 
         public static Tuple<string, long, string> ReadOrderPositionReference(this ValidationResult message)

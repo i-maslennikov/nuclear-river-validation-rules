@@ -88,7 +88,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><firm id=\"1\" name=\"Firm\" /><order id=\"1\" number=\"Order\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><firm id=\"1\" name=\"Firm\" /><order id=\"1\" name=\"Order\" /></root>"),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
                             Result = 2,
                             PeriodStart = MonthStart(2),

@@ -41,7 +41,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                             new XElement("root",
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
-                                    new XAttribute("number", order.Number)),
+                                    new XAttribute("name", order.Number)),
                                 new XElement("theme",
                                     new XAttribute("id", theme.Id),
                                     new XAttribute("name", theme.Name)))),

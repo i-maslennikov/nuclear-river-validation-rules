@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"1\" number=\"Order\" /><message state=\"missing\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"Order\" /><message state=\"missing\" /></root>"),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveDeal,
                         Result = 175,
                         PeriodStart = MonthStart(1),
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"2\" number=\"Order\" /><message state=\"inactive\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"2\" name=\"Order\" /><message state=\"inactive\" /></root>"),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveDeal,
                         Result = 175,
                         PeriodStart = MonthStart(1),

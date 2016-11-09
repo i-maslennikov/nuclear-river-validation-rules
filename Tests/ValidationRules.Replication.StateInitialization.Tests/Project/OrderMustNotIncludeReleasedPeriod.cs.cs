@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = XDocument.Parse(
-                                "<root><order id=\"1\" number=\"Order\" /></root>"),
+                                "<root><order id=\"1\" name=\"Order\" /></root>"),
                             MessageType = (int)MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
                             Result = 3,
                             PeriodStart = MonthStart(1),

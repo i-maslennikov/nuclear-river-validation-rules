@@ -94,7 +94,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.associated.Position.CausePackagePositionId).Name)),
                                            new XElement("order",
                                                new XAttribute("id", warning.principal.Position.OrderId),
-                                               new XAttribute("number", query.For<Order>().Single(x => x.Id == warning.principal.Position.OrderId).Number)))),
+                                               new XAttribute("name", query.For<Order>().Single(x => x.Id == warning.principal.Position.OrderId).Number)))),
 
                                    PeriodStart = period.Start,
                                    PeriodEnd = period.End,

@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                   new XAttribute("name", categoryFirmAddress.CategoryName)),
                                               new XElement("order",
                                                   new XAttribute("id", order.Id),
-                                                  new XAttribute("number", order.Number)),
+                                                  new XAttribute("name", order.Number)),
                                               new XElement("orderPosition",
                                                   new XAttribute("id", categoryFirmAddress.OrderPositionId),
                                                   new XAttribute("name", categoryFirmAddress.OrderPositionName)))),

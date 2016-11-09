@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                           new XElement("root",
                                               new XElement("order",
                                                   new XAttribute("id", order.Id),
-                                                  new XAttribute("number", order.Number)),
+                                                  new XAttribute("name", order.Number)),
                                               new XElement("message",
                                                   new XAttribute("state", missing.Deal ? "missing" : "inactive")))),
 

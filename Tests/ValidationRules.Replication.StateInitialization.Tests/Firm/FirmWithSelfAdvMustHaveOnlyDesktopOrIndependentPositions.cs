@@ -71,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // Обе позиции в одном заказе - есть ошибка
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"1\" number=\"Order\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"Order\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -82,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах, с пересечением по времени размещения - есть ошибка в обоих заказах
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"2\" number=\"Order\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"2\" name=\"Order\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -91,7 +91,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"3\" number=\"Order\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"3\" name=\"Order\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(2),
@@ -102,7 +102,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"6\" number=\"Order\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"6\" name=\"Order\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -113,7 +113,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"9\" number=\"Order\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"9\" name=\"Order\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),

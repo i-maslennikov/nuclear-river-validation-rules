@@ -82,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"1\" />" +
                                                             "<position orderId=\"2\" orderNumber=\"Order\" orderPositionId=\"2\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
                                                             "<position orderId=\"1\" orderNumber=\"Order\" orderPositionId=\"1\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"2\" number=\"Order\" />" +
+                                                            "<order id=\"2\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
@@ -96,7 +96,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"2\" />" +
                                                             "<position orderId=\"4\" orderNumber=\"Order\" orderPositionId=\"4\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
                                                             "<position orderId=\"3\" orderNumber=\"Order\" orderPositionId=\"3\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"4\" number=\"Order\" />" +
+                                                            "<order id=\"4\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
@@ -110,7 +110,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"3\" />" +
                                                             "<position orderId=\"6\" orderNumber=\"Order\" orderPositionId=\"6\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
                                                             "<position orderId=\"5\" orderNumber=\"Order\" orderPositionId=\"5\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"6\" number=\"Order\" />" +
+                                                            "<order id=\"6\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
@@ -124,7 +124,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"3\" />" +
                                                             "<position orderId=\"5\" orderNumber=\"Order\" orderPositionId=\"5\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
                                                             "<position orderId=\"6\" orderNumber=\"Order\" orderPositionId=\"6\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"5\" number=\"Order\" />" +
+                                                            "<order id=\"5\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
@@ -138,7 +138,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"4\" />" +
                                                             "<position orderId=\"8\" orderNumber=\"Order\" orderPositionId=\"8\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
                                                             "<position orderId=\"7\" orderNumber=\"Order\" orderPositionId=\"7\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"8\" number=\"Order\" />" +
+                                                            "<order id=\"8\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
@@ -152,7 +152,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"4\" />" +
                                                             "<position orderId=\"7\" orderNumber=\"Order\" orderPositionId=\"7\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
                                                             "<position orderId=\"8\" orderNumber=\"Order\" orderPositionId=\"8\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"7\" number=\"Order\" />" +
+                                                            "<order id=\"7\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,

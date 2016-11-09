@@ -71,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><message max=\"10\" count=\"11\" /><theme id=\"3\" name=\"Theme\" /><order id=\"3\" number=\"Order\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><message max=\"10\" count=\"11\" /><theme id=\"3\" name=\"Theme\" /><order id=\"3\" name=\"Order\" /></root>"),
                             MessageType = (int)MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
                             Result = 255,
                             PeriodStart = MonthStart(3),
@@ -80,7 +80,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><message max=\"10\" count=\"11\" /><theme id=\"3\" name=\"Theme\" /><order id=\"4\" number=\"Order\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><message max=\"10\" count=\"11\" /><theme id=\"3\" name=\"Theme\" /><order id=\"4\" name=\"Order\" /></root>"),
                             MessageType = (int)MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
                             Result = 255,
                             PeriodStart = MonthStart(4),

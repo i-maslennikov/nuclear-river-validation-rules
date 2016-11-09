@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                                     new XAttribute("name", query.For<Firm>().Single(x => x.Id == firmPeriod.FirmId).Name)),
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
-                                    new XAttribute("number", order.Number)))),
+                                    new XAttribute("name", order.Number)))),
 
                         PeriodStart = firmPeriod.Begin,
                         PeriodEnd = firmPeriod.End,

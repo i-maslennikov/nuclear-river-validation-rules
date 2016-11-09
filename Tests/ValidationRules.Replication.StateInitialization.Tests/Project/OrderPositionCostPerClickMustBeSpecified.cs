@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 XDocument.Parse(
-                                    "<root><category id=\"12\" name=\"Category\" /><orderPosition id=\"1\" name=\"Position\" /><order id=\"1\" number=\"Order\" /></root>"),
+                                    "<root><category id=\"12\" name=\"Category\" /><orderPosition id=\"1\" name=\"Position\" /><order id=\"1\" name=\"Order\" /></root>"),
                             MessageType = (int)MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
                             Result = 255,
                             PeriodStart = MonthStart(1),

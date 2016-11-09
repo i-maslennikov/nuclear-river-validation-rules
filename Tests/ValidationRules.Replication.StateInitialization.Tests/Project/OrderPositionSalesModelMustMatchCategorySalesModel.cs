@@ -81,7 +81,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = XDocument.Parse(
-                                "<root><category id=\"12\" name=\"Category\" /><orderPosition id=\"1\" name=\"Position\" /><order id=\"1\" number=\"Order\" /><project id=\"0\" name=\"Project\" /></root>"),
+                                "<root><category id=\"12\" name=\"Category\" /><orderPosition id=\"1\" name=\"Position\" /><order id=\"1\" name=\"Order\" /><project id=\"0\" name=\"Project\" /></root>"),
                             MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -91,7 +91,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = XDocument.Parse(
-                                "<root><category id=\"12\" name=\"Category\" /><orderPosition id=\"4\" name=\"Position\" /><order id=\"4\" number=\"Order\" /><project id=\"0\" name=\"Project\" /></root>"),
+                                "<root><category id=\"12\" name=\"Category\" /><orderPosition id=\"4\" name=\"Position\" /><order id=\"4\" name=\"Order\" /><project id=\"0\" name=\"Project\" /></root>"),
                             MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
                             Result = 255,
                             PeriodStart = MonthStart(4),

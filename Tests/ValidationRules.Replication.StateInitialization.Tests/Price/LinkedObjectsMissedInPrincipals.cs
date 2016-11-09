@@ -42,7 +42,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<firm id=\"1\" />" +
                                                             "<position orderId=\"2\" orderNumber=\"Order\" orderPositionId=\"3\" orderPositionName=\"Position\" positionId=\"4\" positionName=\"Position\" />" +
-                                                            "<order id=\"2\" number=\"Order\" />" +
+                                                            "<order id=\"2\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.LinkedObjectsMissedInPrincipals,
                             Result = 255,

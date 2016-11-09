@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     .Message(
                         new Messages::Version.ValidationResult
                             {
-                                MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"InvalidOrder\" /></root>"),
+                                MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"InvalidOrder\" /></root>"),
                                 MessageType = (int)MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
                                 Result = 3,
                                 PeriodStart = FirstDayJan,

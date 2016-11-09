@@ -46,7 +46,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"30\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" number=\"InvalidOrder\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><message count=\"30\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" name=\"InvalidOrder\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayJan,
@@ -72,7 +72,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" number=\"InvalidOrder\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" name=\"InvalidOrder\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,
@@ -81,7 +81,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"2\" number=\"InvalidOrder\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"2\" name=\"InvalidOrder\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,

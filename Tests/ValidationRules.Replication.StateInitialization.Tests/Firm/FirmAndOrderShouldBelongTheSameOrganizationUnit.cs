@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><firm id = \"1\" name=\"Firm\" /><order id = \"2\" number=\"InvalidOrder\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><firm id = \"1\" name=\"Firm\" /><order id = \"2\" name=\"InvalidOrder\" /></root>"),
                             MessageType = (int)MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
                             Result = 255,
                             PeriodStart = FirstDayJan,

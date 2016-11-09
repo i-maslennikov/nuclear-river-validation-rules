@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order1\" /><firm id=\"1\" name=\"Firm1\" /><orderPosition id=\"4\" name=\"Position5\" /><message website=\"http://localhost\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><firm id=\"1\" name=\"Firm1\" /><orderPosition id=\"4\" name=\"Position5\" /><message website=\"http://localhost\" /></root>"),
                         MessageType = (int)MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
                         Result = 2,
                         PeriodStart = FirstDayJan,

@@ -74,7 +74,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                           new XAttribute("name", coupon.Key.AdvertisementName)),
                                                       new XElement("order",
                                                           new XAttribute("id", coupon.Key.OrderId),
-                                                          new XAttribute("number", coupon.Key.OrderNumber)),
+                                                          new XAttribute("name", coupon.Key.OrderNumber)),
                                                       coupon.Distinct().Select(x => new XElement("orderPosition",
                                                           new XAttribute("id", x.Value.OrderPositionId),
                                                           new XAttribute("name", x.Value.OrderPositionName))))),
