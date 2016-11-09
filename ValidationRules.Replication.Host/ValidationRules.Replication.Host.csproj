@@ -345,6 +345,7 @@
     <Compile Include="ReplicationService.Designer.cs">
       <DependentUpon>ReplicationService.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings\ArchiveVersionsSettings.cs" />
     <Compile Include="Settings\DefaultEntityContainerNameResolver.cs" />
     <Compile Include="Settings\QuartzSettingsAspect.cs" />
     <Compile Include="Settings\ReplicationServiceSettings.cs" />

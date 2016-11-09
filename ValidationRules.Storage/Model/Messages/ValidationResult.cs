@@ -6,11 +6,17 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
     public sealed class Version
     {
         public long Id { get; set; }
+        public DateTime Date { get; set; }
 
         public sealed class ErmState
         {
             public long VersionId { get; set; }
             public Guid Token { get; set; }
+        }
+
+        public sealed class ErmStateBulkDelete
+        {
+            public long VersionId { get; set; }
         }
 
         public sealed class ValidationResult
@@ -27,9 +33,11 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public long? OrderId { get; set; }
 
             public int Result { get; set; }
+
+            public bool Resolved { get; set; }
         }
 
-        public sealed class ValidationResultForBulkDelete
+        public sealed class ValidationResultBulkDelete
         {
             public long VersionId { get; set; }
         }

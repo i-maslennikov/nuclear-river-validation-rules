@@ -7,9 +7,10 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
-using NuClear.Telemetry.Probing;
+using NuClear.Storage.API.Writings;
 using NuClear.ValidationRules.Replication.AccountRules.Validation;
 using NuClear.ValidationRules.Replication.AdvertisementRules.Validation;
+using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.ConsistencyRules.Validation;
 using NuClear.ValidationRules.Replication.FirmRules.Validation;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
@@ -18,65 +19,85 @@ using NuClear.ValidationRules.Replication.ThemeRules.Validation;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication
+namespace NuClear.ValidationRules.Replication.Messages
 {
     public sealed class ValidationRuleActor : IActor
     {
         private readonly IQuery _query;
-        private readonly IBulkRepository<Version.ValidationResult> _repository;
-        private readonly IBulkRepository<Version.ValidationResultForBulkDelete> _deleteRepository;
+        private readonly IRepository<Version> _versionRepository;
+        private readonly IBulkRepository<Version.ErmState> _ermStatesRepository;
+        private readonly IBulkRepository<Version.ValidationResult> _validationResultRepository;
         private readonly ValidationRuleRegistry _registry;
 
-        public ValidationRuleActor(IQuery query, IBulkRepository<Version.ValidationResult> repository, IBulkRepository<Version.ValidationResultForBulkDelete> deleteRepository)
+        public ValidationRuleActor(IQuery query,
+                                   IRepository<Version> versionRepository,
+                                   IBulkRepository<Version.ErmState> ermStatesRepository,
+                                   IBulkRepository<Version.ValidationResult> validationResultRepository)
         {
             _query = query;
-            _repository = repository;
-            _deleteRepository = deleteRepository;
+            _versionRepository = versionRepository;
+            _ermStatesRepository = ermStatesRepository;
+            _validationResultRepository = validationResultRepository;
             _registry = new ValidationRuleRegistry(query);
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).FirstOrDefault();
-            var currentVersionId = currentVersion?.Id ?? 0;
+            IReadOnlyCollection<Version.ValidationResult> sourceObjects;
 
-            using (Probe.Create($"Delete"))
+            // Запрос к данным посылаем вне транзакции, большой беды от этого быть не должно.
+            using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
             {
-                // Данные в целевых таблицах меняем в одной большой транзакции (сейчас она управляется из хендлера)
-                var forBulkDelete = new Version.ValidationResultForBulkDelete { VersionId = currentVersionId };
-                _deleteRepository.Delete(new[] { forBulkDelete });
+                sourceObjects = _registry.CreateAccessors().SelectMany(accessor => accessor.GetSource()).ToList();
+                scope.Complete();
             }
 
-            return _registry.CreateAccessors().SelectMany(accessor => ProcessRule(accessor, currentVersionId)).ToArray();
+            var ermStates = commands.Cast<CreateNewVersionCommand>().SelectMany(x => x.States).Select(x => new Version.ErmState { Token = x });
+
+            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().FirstOrDefault();
+            if (currentVersion != null)
+            {
+                var destObjects = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion.Id);
+                var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
+
+                var validationResults = mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved()).ToList();
+                if (validationResults.Count != 0)
+                {
+                    var newVersionId = currentVersion.Id + 1;
+
+                    CreateVersion(newVersionId);
+                    _ermStatesRepository.Create(ermStates.ApplyVersionId(newVersionId));
+                    _validationResultRepository.Create(validationResults.ApplyVersionId(newVersionId));
+                }
+                else
+                {
+                    UpdateVersion(currentVersion.Id);
+                    _ermStatesRepository.Create(ermStates.ApplyVersionId(currentVersion.Id));
+                }
+            }
+            else
+            {
+                CreateVersion(0);
+                _ermStatesRepository.Create(ermStates);
+                _validationResultRepository.Create(sourceObjects);
+            }
+
+
+            return Array.Empty<IEvent>();
         }
 
-        public IReadOnlyCollection<IEvent> ProcessRule(IValidationResultAccessor accessor, long currentVersion)
+        private void CreateVersion(long id)
         {
-            using (Probe.Create($"Rule {accessor.GetType().Name}"))
-            {
-                IReadOnlyCollection<Version.ValidationResult> sourceObjects;
-                using (Probe.Create($"Query"))
-                {
-                    using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
-                    {
-                        // Запрос к данным источника посылаем вне транзакции, большой беды от этого быть не должно.
-                        var query = accessor.GetSource().ApplyVersion(currentVersion);
-                        sourceObjects = query.ToArray();
+            var version = new Version { Id = id, Date = DateTime.UtcNow };
+            _versionRepository.Add(version);
+            _versionRepository.Save();
+        }
 
-                        // todo: удалить, добавлено с целью отладкиP
-                        sourceObjects = sourceObjects.Where(x => x.PeriodStart >= DateTime.Parse("2016-06-01")).ToArray();
-
-                        scope.Complete();
-                    }
-                }
-
-                using (Probe.Create($"Create"))
-                {
-                    _repository.Create(sourceObjects);
-                }
-
-                return Array.Empty<IEvent>();
-            }
+        private void UpdateVersion(long id)
+        {
+            var version = new Version { Id = id, Date = DateTime.UtcNow };
+            _versionRepository.Update(version);
+            _versionRepository.Save();
         }
 
         private sealed class ValidationRuleRegistry

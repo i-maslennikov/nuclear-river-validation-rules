@@ -16,5 +16,6 @@ namespace NuClear.ValidationRules.WebApp.Entity
         public long? ProjectId { get; set; }
 
         public int Result { get; set; }
+        public bool Resolved { get; set; }
     }
 }

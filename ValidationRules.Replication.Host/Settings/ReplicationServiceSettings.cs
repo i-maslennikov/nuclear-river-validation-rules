@@ -59,6 +59,7 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
                    .Use<EnvironmentSettingsAspect>()
                    .Use(new QuartzSettingsAspect(connectionStringSettings.GetConnectionString(InfrastructureConnectionStringIdentity.Instance)))
                    .Use(new ServiceBusReceiverSettingsAspect(connectionStringSettings.GetConnectionString(ServiceBusConnectionStringIdentity.Instance)))
+                   .Use<ArchiveVersionsSettings>()
                    .Use<LogstashSettingsAspect>()
                    .Use<IdentityServiceClientSettingsAspect>();
         }

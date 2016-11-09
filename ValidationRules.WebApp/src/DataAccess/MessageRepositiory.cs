@@ -22,19 +22,37 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
 
             using (var connection = _factory.CreateDataConnection("Messages"))
             {
-                var resultsByOrder = connection.GetTable<ValidationResult>().Where(dateFilter).Where(CreateOrderFilter(orderIds));
-                var resultsByProject = connection.GetTable<ValidationResult>().Where(dateFilter).Where(CreateProjectFilter(projectId));
+                var validationResults = GetValidationResult(connection.GetTable<ValidationResult>());
+
+                var resultsByOrder = validationResults.Where(dateFilter).Where(CreateOrderFilter(orderIds));
+                var resultsByProject = validationResults.Where(dateFilter).Where(CreateProjectFilter(projectId));
 
                 return resultsByOrder.Concat(resultsByProject).ToArray();
             }
         }
 
-        private Expression<Func<ValidationResult, bool>> CreateDateFilter(DateTime start, DateTime end)
+        private static IQueryable<ValidationResult> GetValidationResult(IQueryable<ValidationResult> query)
+        {
+            // если выше по стеку нашли resolved результаты, то отфильтровываем их
+            return from vr in query.Where(x => !x.Resolved)
+                    where !query.Any(x => x.VersionId > vr.VersionId &&
+                                            x.Resolved &&
+
+                                            x.MessageType == vr.MessageType &&
+                                            x.MessageParams == vr.MessageParams &&
+                                            x.PeriodStart == vr.PeriodStart &&
+                                            x.ProjectId == vr.ProjectId &&
+                                            x.OrderId == vr.OrderId &&
+                                            x.Result == vr.Result)
+                    select vr;
+        }
+
+        private static Expression<Func<ValidationResult, bool>> CreateDateFilter(DateTime start, DateTime end)
         {
             return x => x.PeriodStart < end && start < x.PeriodEnd;
         }
 
-        private Expression<Func<ValidationResult, bool>> CreateOrderFilter(IReadOnlyCollection<long> orderIds)
+        private static Expression<Func<ValidationResult, bool>> CreateOrderFilter(IReadOnlyCollection<long> orderIds)
         {
             if (orderIds.Any())
                 return x => x.OrderId.HasValue && orderIds.Contains(x.OrderId.Value);
@@ -42,7 +60,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
             return x => false;
         }
 
-        private Expression<Func<ValidationResult, bool>> CreateProjectFilter(long? projectId)
+        private static Expression<Func<ValidationResult, bool>> CreateProjectFilter(long? projectId)
         {
             if (projectId.HasValue)
                 return x => x.ProjectId.HasValue && x.ProjectId == projectId.Value;
