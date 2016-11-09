@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using NuClear.ValidationRules.Storage.Model.Messages;
+
+using NUnit.Framework;
 
 namespace NuClear.ValidationRules.Replication.Tests
 {

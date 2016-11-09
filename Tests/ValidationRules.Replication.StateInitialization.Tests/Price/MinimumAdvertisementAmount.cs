@@ -3,10 +3,10 @@ using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
-
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
+using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {

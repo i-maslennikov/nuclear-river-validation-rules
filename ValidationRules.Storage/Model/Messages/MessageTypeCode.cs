@@ -1,4 +1,4 @@
-﻿namespace NuClear.ValidationRules.Replication
+﻿namespace NuClear.ValidationRules.Storage.Model.Messages
 {
     public enum MessageTypeCode
     {

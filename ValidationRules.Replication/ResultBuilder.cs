@@ -1,4 +1,6 @@
-﻿namespace NuClear.ValidationRules.Replication
+﻿using NuClear.ValidationRules.Storage.Model.Messages;
+
+namespace NuClear.ValidationRules.Replication
 {
     public sealed class ResultBuilder
     {
