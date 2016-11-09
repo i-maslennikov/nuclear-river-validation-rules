@@ -4,8 +4,8 @@ using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
-
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
+using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {

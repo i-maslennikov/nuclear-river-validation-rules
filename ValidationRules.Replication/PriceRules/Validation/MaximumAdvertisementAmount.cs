@@ -6,6 +6,7 @@ using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {

@@ -4,6 +4,7 @@ using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Order = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates.Order;
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;

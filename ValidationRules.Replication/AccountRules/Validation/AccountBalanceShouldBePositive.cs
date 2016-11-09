@@ -3,6 +3,7 @@ using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 

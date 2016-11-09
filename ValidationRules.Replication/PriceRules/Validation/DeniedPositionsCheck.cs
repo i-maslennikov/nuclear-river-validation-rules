@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;

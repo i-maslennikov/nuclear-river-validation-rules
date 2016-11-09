@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
