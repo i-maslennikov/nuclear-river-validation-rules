@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Microsoft.Practices.Unity;
 
-using Microsoft.Practices.Unity;
+using ValidationRules.Querying.Host.DataAccess;
 
 namespace ValidationRules.Querying.Host.DI
 {
@@ -11,8 +8,15 @@ namespace ValidationRules.Querying.Host.DI
     {
         public static IUnityContainer ConfigureUnity()
         {
-            var container = new UnityContainer();
-            return container;
+            return new UnityContainer()
+                .ConfigureDataAccess();
+        }
+
+        private static IUnityContainer ConfigureDataAccess(this IUnityContainer container)
+        {
+            return container
+                .RegisterType<DataConnectionFactory>(new ContainerControlledLifetimeManager())
+                .RegisterType<MessageRepositiory>(new PerResolveLifetimeManager());
         }
     }
 }
