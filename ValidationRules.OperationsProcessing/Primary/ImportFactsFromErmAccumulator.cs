@@ -58,8 +58,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
         {
             _tracer.DebugFormat("Processing TUC {0}", @event.Id);
 
-            var receivedOperationCount = @event.Operations.Sum(x => x.AffectedEntities.Changes.Sum(y => y.Value.Sum(z => z.Value.Count)));
-            _telemetryPublisher.Publish<ErmReceivedOperationCountIdentity>(receivedOperationCount);
+            _telemetryPublisher.Publish<ErmReceivedOperationCountIdentity>(1);
 
 
             var incrementStateCommand = new IncrementStateCommand(new[] { @event.Id });
