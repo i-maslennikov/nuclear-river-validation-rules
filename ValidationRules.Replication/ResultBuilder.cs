@@ -40,29 +40,12 @@ namespace NuClear.ValidationRules.Replication
         public ResultBuilder WhenMassRelease(Result result)
             => AddResult((int)result, ShiftMassRelease);
 
-        public Result WhenSingle()
-            => GetResult(ShiftSingle);
-
-        public Result WhenMass()
-            => GetResult(ShiftMass);
-
-        public Result WhenMassPrerelease()
-            => GetResult(ShiftMassPrerelease);
-
-        public Result WhenMassRelease()
-            => GetResult(ShiftMassRelease);
-
 
         private ResultBuilder AddResult(int result, int shift)
         {
             _accumulator = _accumulator & ~(ResultMask << shift); // очистка
             _accumulator = _accumulator | result << shift; // установка
             return this;
-        }
-
-        private Result GetResult(int shift)
-        {
-            return (Result)(ResultMask & (_accumulator >> shift));
         }
     }
 }

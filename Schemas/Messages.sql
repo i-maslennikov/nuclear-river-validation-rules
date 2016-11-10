@@ -34,4 +34,6 @@ create table Messages.ValidationResult(
     Resolved bit not null,
 )
 go
+
 CREATE INDEX [IX_ValidationResult_Resolved] ON [Messages].[ValidationResult] ([Resolved])
+CREATE INDEX [IX_ValidationResult_VersionId] ON [Messages].[ValidationResult] ([VersionId])

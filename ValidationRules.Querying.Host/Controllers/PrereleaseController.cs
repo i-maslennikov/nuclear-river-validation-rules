@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             }
 
             var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1));
-            var result = _serializer.Serialize(messages);
+            var result = _serializer.Serialize(messages, ResultExtensions.WhenPrerelease);
             return result;
         }
 
