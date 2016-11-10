@@ -8,6 +8,7 @@ using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
+using NuClear.Telemetry.Probing;
 using NuClear.ValidationRules.Replication.AccountRules.Validation;
 using NuClear.ValidationRules.Replication.AdvertisementRules.Validation;
 using NuClear.ValidationRules.Replication.Commands;
@@ -43,12 +44,20 @@ namespace NuClear.ValidationRules.Replication.Messages
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            IReadOnlyCollection<Version.ValidationResult> sourceObjects;
+            var sourceObjects = Enumerable.Empty<Version.ValidationResult>();
 
-            // Запрос к данным посылаем вне транзакции, большой беды от этого быть не должно.
+            // Запрос к данным посылаем вне транзакции, иначе будет DTC
             using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
             {
-                sourceObjects = _registry.CreateAccessors().SelectMany(accessor => accessor.GetSource()).ToList();
+                foreach (var accessor in _registry.CreateAccessors())
+                {
+                    using (Probe.Create($"Rule {accessor.GetType().Name} Query Source"))
+                    {
+                        var accessorSourceObjects = accessor.GetSource().ToList();
+                        sourceObjects = sourceObjects.Concat(accessorSourceObjects);
+                    }
+                }
+
                 scope.Complete();
             }
 
@@ -57,31 +66,41 @@ namespace NuClear.ValidationRules.Replication.Messages
             var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().FirstOrDefault();
             if (currentVersion != null)
             {
-                var destObjects = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion.Id);
-                var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
-
-                var validationResults = mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved()).ToList();
-                if (validationResults.Count != 0)
+                IReadOnlyCollection<Version.ValidationResult> validationResults;
+                using (Probe.Create("Merge"))
                 {
-                    var newVersionId = currentVersion.Id + 1;
+                    var destObjects = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion.Id);
+                    var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
 
-                    CreateVersion(newVersionId);
-                    _ermStatesRepository.Create(ermStates.ApplyVersionId(newVersionId));
-                    _validationResultRepository.Create(validationResults.ApplyVersionId(newVersionId));
+                    validationResults = mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved()).ToList();
                 }
-                else
+
+                using (Probe.Create("Create"))
                 {
-                    UpdateVersion(currentVersion.Id);
-                    _ermStatesRepository.Create(ermStates.ApplyVersionId(currentVersion.Id));
+                    if (validationResults.Count != 0)
+                    {
+                        var newVersionId = currentVersion.Id + 1;
+
+                        CreateVersion(newVersionId);
+                        _ermStatesRepository.Create(ermStates.ApplyVersionId(newVersionId));
+                        _validationResultRepository.Create(validationResults.ApplyVersionId(newVersionId));
+                    }
+                    else
+                    {
+                        UpdateVersion(currentVersion.Id);
+                        _ermStatesRepository.Create(ermStates.ApplyVersionId(currentVersion.Id));
+                    }
                 }
             }
             else
             {
-                CreateVersion(0);
-                _ermStatesRepository.Create(ermStates);
-                _validationResultRepository.Create(sourceObjects);
+                using (Probe.Create("Create"))
+                {
+                    CreateVersion(0);
+                    _ermStatesRepository.Create(ermStates);
+                    _validationResultRepository.Create(sourceObjects);
+                }
             }
-
 
             return Array.Empty<IEvent>();
         }
