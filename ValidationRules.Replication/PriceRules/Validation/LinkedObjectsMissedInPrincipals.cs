@@ -115,7 +115,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                new XAttribute("positionName", unsatisfied.ItemPositionName)),
                                            new XElement("order",
                                                new XAttribute("id", unsatisfied.Key.OrderId),
-                                               new XAttribute("number", unsatisfied.OrderNumber)))),
+                                               new XAttribute("name", unsatisfied.OrderNumber)))),
 
                                    PeriodStart = unsatisfied.Key.Start,
                                    PeriodEnd = unsatisfied.End,

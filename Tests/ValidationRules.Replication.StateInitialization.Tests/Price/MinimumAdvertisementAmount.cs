@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<message min=\"5\" max=\"9\" count=\"2\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"1\" number=\"Order\" />" +
+                                                            "<order id=\"1\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<message min=\"5\" max=\"9\" count=\"2\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"2\" number=\"Order\" />" +
+                                                            "<order id=\"2\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
@@ -73,7 +73,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<message min=\"5\" max=\"9\" count=\"3\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"3\" number=\"Order\" />" +
+                                                            "<order id=\"3\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
@@ -85,7 +85,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<message min=\"5\" max=\"9\" count=\"4\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"4\" number=\"Order\" />" +
+                                                            "<order id=\"4\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
@@ -97,7 +97,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<message min=\"5\" max=\"9\" count=\"1\" name=\"Category\" month=\"2012-02-01T00:00:00\" />" +
-                                                            "<order id=\"5\" number=\"Order\" />" +
+                                                            "<order id=\"5\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,

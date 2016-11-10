@@ -85,7 +85,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<advertisement id = \"6\" name=\"Advertisement6\" />" +
-                                                            "<order id = \"1\" number=\"Order1\" />" +
+                                                            "<order id = \"1\" name=\"Order1\" />" +
                                                             "<orderPosition id = \"4\" name=\"Position5\" />" +
                                                             "<orderPosition id = \"5\" name=\"Position5\" />" +
                                                             "</root>"),
@@ -123,7 +123,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<advertisement id = \"6\" name=\"Advertisement6\" />" +
-                                                            "<order id = \"1\" number=\"Order1\" />" +
+                                                            "<order id = \"1\" name=\"Order1\" />" +
                                                             "<orderPosition id = \"4\" name=\"Position5\" />" +
                                                             "<orderPosition id = \"6\" name=\"Position5\" />" +
                                                             "</root>"),
@@ -137,7 +137,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<advertisement id = \"6\" name=\"Advertisement6\" />" +
-                                                            "<order id = \"2\" number=\"Order2\" />" +
+                                                            "<order id = \"2\" name=\"Order2\" />" +
                                                             "<orderPosition id = \"5\" name=\"Position5\" />" +
                                                             "<orderPosition id = \"6\" name=\"Position5\" />" +
                                                             "</root>"),
@@ -174,7 +174,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<advertisement id = \"6\" name=\"Advertisement6\" />" +
-                                                            "<order id = \"1\" number=\"Order1\" />" +
+                                                            "<order id = \"1\" name=\"Order1\" />" +
                                                             "<orderPosition id = \"4\" name=\"Position5\" />" +
                                                             "<orderPosition id = \"5\" name=\"Position5\" />" +
                                                             "</root>"),

@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                                     new XAttribute("name", position.Name)),
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
-                                    new XAttribute("number", order.Number)))),
+                                    new XAttribute("name", order.Number)))),
 
                         PeriodStart = order.Begin > restrictionViolated.Begin ? order.Begin : restrictionViolated.Begin,
                         PeriodEnd = order.End < restrictionViolated.End ? order.End : restrictionViolated.End,

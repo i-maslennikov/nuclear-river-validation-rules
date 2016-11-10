@@ -57,7 +57,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><message max=\"2\" count=\"3\" /><category id=\"3\" name=\"Category\" /><order id=\"3\" number=\"Order\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><message max=\"2\" count=\"3\" /><category id=\"3\" name=\"Category\" /><order id=\"3\" name=\"Order\" /></root>"),
                             MessageType = (int)MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                             Result = 254,
                             PeriodStart = MonthStart(3),
@@ -66,7 +66,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><message max=\"2\" count=\"3\" /><category id=\"3\" name=\"Category\" /><order id=\"4\" number=\"Order\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><message max=\"2\" count=\"3\" /><category id=\"3\" name=\"Category\" /><order id=\"4\" name=\"Order\" /></root>"),
                             MessageType = (int)MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                             Result = 254,
                             PeriodStart = MonthStart(4),

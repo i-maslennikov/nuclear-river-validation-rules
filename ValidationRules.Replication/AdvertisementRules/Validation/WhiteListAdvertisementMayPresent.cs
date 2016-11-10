@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                             new XElement("root",
                                 new XElement("order",
                                     new XAttribute("id", order.Id),
-                                    new XAttribute("number", order.Number)),
+                                    new XAttribute("name", order.Number)),
                                 new XElement("firm",
                                     new XAttribute("id", order.FirmId),
                                     new XAttribute("name", query.For<Firm>().Single(x => x.Id == order.FirmId).Name)),

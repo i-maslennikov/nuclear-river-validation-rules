@@ -71,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"1\" />" +
                                                             "<position orderId=\"2\" orderNumber=\"Order\" orderPositionId=\"3\" orderPositionName=\"Position\" positionId=\"4\" positionName=\"Position\" />" +
                                                             "<position orderId=\"1\" orderNumber=\"Order\" orderPositionId=\"1\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"2\" number=\"Order\" />" +
+                                                            "<order id=\"2\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
                             Result = 255,
@@ -85,7 +85,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"2\" />" +
                                                             "<position orderId=\"4\" orderNumber=\"Order\" orderPositionId=\"3\" orderPositionName=\"Position\" positionId=\"4\" positionName=\"Position\" />" +
                                                             "<position orderId=\"3\" orderNumber=\"Order\" orderPositionId=\"1\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"4\" number=\"Order\" />" +
+                                                            "<order id=\"4\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
                             Result = 255,
@@ -99,7 +99,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                             "<firm id=\"3\" />" +
                                                             "<position orderId=\"6\" orderNumber=\"Order\" orderPositionId=\"3\" orderPositionName=\"Position\" positionId=\"4\" positionName=\"Position\" />" +
                                                             "<position orderId=\"5\" orderNumber=\"Order\" orderPositionId=\"1\" orderPositionName=\"Position\" positionId=\"1\" positionName=\"Position\" />" +
-                                                            "<order id=\"6\" number=\"Order\" />" +
+                                                            "<order id=\"6\" name=\"Order\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
                             Result = 255,

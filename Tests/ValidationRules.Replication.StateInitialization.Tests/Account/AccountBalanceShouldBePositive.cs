@@ -53,7 +53,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<message available=\"-8.0000\" planned=\"12.0000\" required=\"20.0000\" />" +
                                                             "<account id=\"1\" />" +
-                                                            "<order id=\"1\" number=\"Order1\" />" +
+                                                            "<order id=\"1\" name=\"Order1\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
                             Result = 204,
@@ -66,7 +66,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageParams = XDocument.Parse("<root>" +
                                                             "<message available=\"-8.0000\" planned=\"12.0000\" required=\"20.0000\" />" +
                                                             "<account id=\"1\" />" +
-                                                            "<order id=\"2\" number=\"Order2\" />" +
+                                                            "<order id=\"2\" name=\"Order2\" />" +
                                                             "</root>"),
                             MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
                             Result = 204,

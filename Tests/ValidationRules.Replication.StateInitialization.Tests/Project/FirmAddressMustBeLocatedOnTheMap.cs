@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = XDocument.Parse(
-                                "<root><firmAddress id=\"2\" name=\"Address\" /><order id=\"1\" number=\"Order\" /><orderPosition id=\"3\" name=\"Position\" /></root>"),
+                                "<root><firmAddress id=\"2\" name=\"Address\" /><order id=\"1\" name=\"Order\" /><orderPosition id=\"3\" name=\"Position\" /></root>"),
                             MessageType = (int)MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
                             Result = 255,
                             PeriodStart = MonthStart(1),

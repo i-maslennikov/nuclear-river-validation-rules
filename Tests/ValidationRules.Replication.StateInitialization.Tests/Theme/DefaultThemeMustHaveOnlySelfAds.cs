@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order1\" /><theme id = \"5\" name=\"Theme5\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><theme id = \"5\" name=\"Theme5\" /></root>"),
                         MessageType = (int)MessageTypeCode.DefaultThemeMustHaveOnlySelfAds,
                         Result = 255,
                         PeriodStart = FirstDayJan,

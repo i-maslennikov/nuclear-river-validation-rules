@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = XDocument.Parse(
-                                "<root><category id=\"12\" name=\"Category\" /><project id=\"0\" name=\"Project\" /><order id=\"1\" number=\"Order\" /></root>"),
+                                "<root><category id=\"12\" name=\"Category\" /><project id=\"0\" name=\"Project\" /><order id=\"1\" name=\"Order\" /></root>"),
                             MessageType = (int)MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
                             Result = 255,
                             PeriodStart = MonthStart(1),

@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                       MessageParams = new XDocument(new XElement("root",
                                           new XElement("order",
                                               new XAttribute("id", order.Id),
-                                              new XAttribute("number", order.Number)),
+                                              new XAttribute("name", order.Number)),
                                           new XElement("advertisement",
                                               new XAttribute("id", advertisement.Id),
                                               new XAttribute("name", advertisement.Name)),

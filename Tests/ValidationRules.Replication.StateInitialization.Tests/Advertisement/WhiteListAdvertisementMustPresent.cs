@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order1\" /><firm id = \"7\" name=\"Firm7\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><firm id = \"7\" name=\"Firm7\" /></root>"),
                         MessageType = (int)MessageTypeCode.WhiteListAdvertisementMustPresent,
                         Result = 250,
                         PeriodStart = FirstDayJan,
@@ -76,7 +76,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order1\" /><firm id = \"7\" name=\"Firm7\" /><advertisement id=\"6\" name=\"Advertisement6\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><firm id = \"7\" name=\"Firm7\" /><advertisement id=\"6\" name=\"Advertisement6\" /></root>"),
                         MessageType = (int)MessageTypeCode.WhiteListAdvertisementMayPresent,
                         Result = 85,
                         PeriodStart = FirstDayJan,
@@ -103,7 +103,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order\" /><firm id = \"0\" name=\"Firm\" /><advertisement id=\"0\" name=\"Advertisement\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order\" /><firm id = \"0\" name=\"Firm\" /><advertisement id=\"0\" name=\"Advertisement\" /></root>"),
                             MessageType = (int)MessageTypeCode.WhiteListAdvertisementMayPresent,
                             Result = 85,
                             PeriodStart = MonthStart(1),
@@ -112,7 +112,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order\" /><firm id = \"0\" name=\"Firm\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order\" /><firm id = \"0\" name=\"Firm\" /></root>"),
                             MessageType = (int)MessageTypeCode.WhiteListAdvertisementMustPresent,
                             Result = 250,
                             PeriodStart = MonthStart(2),

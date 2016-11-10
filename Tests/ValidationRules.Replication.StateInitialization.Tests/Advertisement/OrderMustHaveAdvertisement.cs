@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order1\" /><advertisement id = \"6\" name=\"Advertisement6\" /><advertisementElement id = \"7\" name=\"AdvertisementElementTemplate8\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><advertisement id = \"6\" name=\"Advertisement6\" /><advertisementElement id = \"7\" name=\"AdvertisementElementTemplate8\" /></root>"),
                         MessageType = (int)MessageTypeCode.OrderMustHaveAdvertisement,
                         Result = 254,
                         PeriodStart = FirstDayJan,

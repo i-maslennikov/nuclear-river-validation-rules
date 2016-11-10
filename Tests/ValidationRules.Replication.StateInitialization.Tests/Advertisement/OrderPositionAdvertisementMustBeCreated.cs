@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" number=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><position id = \"6\" name=\"Position6\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><position id = \"6\" name=\"Position6\" /></root>"),
                         MessageType = (int)MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
                         Result = 255,
                         PeriodStart = FirstDayJan,

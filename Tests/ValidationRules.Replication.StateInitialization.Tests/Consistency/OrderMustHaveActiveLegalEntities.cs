@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"1\" number=\"Order\" /><message><branchOfficeOrganizationUnit /><branchOffice /></message></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"Order\" /><message><branchOfficeOrganizationUnit /><branchOffice /></message></root>"),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveLegalEntities,
                         Result = 3,
                         PeriodStart = MonthStart(1),
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"2\" number=\"Order\" /><message><legalPerson /><legalPersonProfile /></message></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"2\" name=\"Order\" /><message><legalPerson /><legalPersonProfile /></message></root>"),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveLegalEntities,
                         Result = 3,
                         PeriodStart = MonthStart(1),
