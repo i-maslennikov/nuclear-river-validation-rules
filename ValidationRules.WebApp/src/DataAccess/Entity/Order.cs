@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NuClear.ValidationRules.WebApp.Entity
+namespace NuClear.ValidationRules.WebApp.DataAccess.Entity
 {
     public class Order
     {

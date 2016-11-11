@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 using LinqToDB.Data;
 
-using NuClear.ValidationRules.WebApp.Entity;
+using NuClear.ValidationRules.WebApp.DataAccess.Entity;
 
 namespace NuClear.ValidationRules.WebApp.DataAccess
 {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.ValidationRules.WebApp.Entity;
+using NuClear.ValidationRules.WebApp.DataAccess.Entity;
 
 namespace NuClear.ValidationRules.WebApp.DataAccess
 {
@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
                     .SingleOrDefault(x => x.Id == projectId);
 
                 if (project == null)
-                    throw new ArgumentNullException($"Проект {projectId}", nameof(project));
+                    throw new ArgumentException($"Проект {projectId}", nameof(project));
 
                 var lastRelease = connection
                     .GetTable<ReleaseInfo>()
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
                     .FirstOrDefault(x => x.OrganizationUnitId == project.OrganizationUnitId);
 
                 if (lastRelease == null)
-                    throw new ArgumentNullException($"Не найден последний релиз для проекта {projectId}", nameof(project));
+                    throw new ArgumentException($"Не найден предыдущий релиз для проекта {projectId}", nameof(project));
 
                 return lastRelease.PeriodEndDate.AddSeconds(1);
             }

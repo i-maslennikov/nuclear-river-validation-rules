@@ -15,16 +15,18 @@ namespace NuClear.ValidationRules.WebApp.Controllers
         private readonly OrderRepositiory _orderRepositiory;
         private readonly UserRepositiory _userRepositiory;
         private readonly ProjectRepositiory _projectRepositiory;
-        private readonly MessageRepositiory _messageRepositiory;
-        private readonly LocalizedMessageFactory _localizedMessageFactory;
+        private readonly QueryingClient _queryingClient;
         private readonly LinkFactory _linkFactory;
 
-        public OrderController(OrderRepositiory orderRepositiory, UserRepositiory userRepositiory, MessageRepositiory messageRepositiory, LocalizedMessageFactory localizedMessageFactory, LinkFactory linkFactory, ProjectRepositiory projectRepositiory)
+        public OrderController(OrderRepositiory orderRepositiory,
+                               UserRepositiory userRepositiory,
+                               QueryingClient queryingClient,
+                               LinkFactory linkFactory,
+                               ProjectRepositiory projectRepositiory)
         {
             _orderRepositiory = orderRepositiory;
             _userRepositiory = userRepositiory;
-            _messageRepositiory = messageRepositiory;
-            _localizedMessageFactory = localizedMessageFactory;
+            _queryingClient = queryingClient;
             _linkFactory = linkFactory;
             _projectRepositiory = projectRepositiory;
         }
@@ -36,85 +38,61 @@ namespace NuClear.ValidationRules.WebApp.Controllers
                 : _projectRepositiory.GetNextRelease(_userRepositiory.GetDefaultProject(account.Value));
             var orders = _orderRepositiory.GetDraftOrders(account, project, date);
 
-            var validationResults = _messageRepositiory.GetMessages(orders.Keys.ToArray(), project, date, DateTime.MaxValue);
+            var validationResults = _queryingClient.Manual(orders.Keys.ToArray(), date, project);
 
-            var messages = Filter(validationResults, x => x.WhenSingle(), Result.Info);
+            var factory = new MessageFactory(_linkFactory, orders);
 
             ViewBag.Message = $"Выведены результаты за {date:Y}";
-            var model = new ResultContainer(_linkFactory)
+
+            return View(new MessageContainerModel
             {
                 AccountId = account,
                 AccountName = account.HasValue ? _userRepositiory.GetAccountName(account.Value) : null,
                 ProjectId = project,
                 ProjectName = project.HasValue ? _projectRepositiory.GetProjectName(project.Value) : null,
-                Results = messages,
-                Orders = orders,
-            };
-
-            return View(model);
+                Results = validationResults.Select(factory.CreateMessage),
+            });
         }
 
         public IActionResult Public(long? account, long? project, int? rule)
         {
             var date = project.HasValue
-                ? _projectRepositiory.GetNextRelease(project.Value)
-                : _projectRepositiory.GetNextRelease(_userRepositiory.GetDefaultProject(account.Value));
+                           ? _projectRepositiory.GetNextRelease(project.Value)
+                           : _projectRepositiory.GetNextRelease(_userRepositiory.GetDefaultProject(account.Value));
             var orders = _orderRepositiory.GetPublicOrders(account, project, date);
 
-            var validationResults = _messageRepositiory.GetMessages(orders.Keys.ToArray(), project, date, date.AddMonths(1));
-            var messages = Filter(validationResults, x => x.WhenMass(), Result.Warning);
+            var validationResults = _queryingClient.Manual(orders.Keys.ToArray(), date, project);
 
             ViewBag.Message = $"Выведены результаты за {date:Y}";
 
+            var factory = new MessageFactory(_linkFactory, orders);
+
             if (rule.HasValue)
-                return Content(string.Join(Environment.NewLine, messages.Where(x => x.MessageType == rule).Select(x => x.Text.RemoveLinks())));
-
-            var model = new ResultContainer(_linkFactory)
             {
-                AccountId = account,
-                AccountName = account.HasValue ? _userRepositiory.GetAccountName(account.Value) : null,
-                ProjectId = project,
-                ProjectName = project.HasValue ? _projectRepositiory.GetProjectName(project.Value) : null,
-                Results = messages,
-                Orders = orders,
-            };
+                return Content(string.Join(Environment.NewLine,
+                                        validationResults.Where(x => x.Rule == rule).Select(factory.CreatePlainTextMessage)));
+            }
 
-            return View(model);
+            return View(new MessageContainerModel
+                {
+                    AccountId = account,
+                    AccountName = account.HasValue ? _userRepositiory.GetAccountName(account.Value) : null,
+                    ProjectId = project,
+                    ProjectName = project.HasValue ? _projectRepositiory.GetProjectName(project.Value) : null,
+                    Results = validationResults.Select(factory.CreateMessage),
+                });
         }
 
         public IActionResult Single(long id)
         {
-            var validationResults = _messageRepositiory.GetMessages(new[] { id }, null, DateTime.MinValue, DateTime.MaxValue);
+            var validationResults = _queryingClient.Single(id);
 
-            var model = new SingleCheckContainer(_linkFactory)
+            var factory = new MessageFactory(_linkFactory, new Dictionary<long,OrderDto>());
+
+            return View(new MessageContainerModel
                 {
-                    WhenSingle = Filter(validationResults, builder => builder.WhenSingle(), Result.Info),
-                    WhenMass = Filter(validationResults, builder => builder.WhenMass(), Result.Info),
-                    WhenMassPrerelease = Filter(validationResults, builder => builder.WhenMassPrerelease(), Result.Info),
-                    WhenMassRelease = Filter(validationResults, builder => builder.WhenMassRelease(), Result.Info),
-                };
-
-            return View(model);
-        }
-
-        private IReadOnlyCollection<MessageViewModel> Filter(IEnumerable<Entity.ValidationResult> results, Func<ResultBuilder, Result> func, Result minLevel)
-            => results.Select(x => Tuple.Create(func.Invoke(new ResultBuilder(x.Result)), _localizedMessageFactory.Localize(x)))
-                      .Where(x => x.Item1 >= minLevel)
-                      .Distinct(new MessageTemplateComparer())
-                      .Select(x => new MessageViewModel(x.Item1, x.Item2, _linkFactory.CreateLink(x.Item2.Order)))
-                      .ToArray();
-
-        internal class MessageTemplateComparer : IEqualityComparer<Tuple<Result, MessageTemplate>>
-        {
-            public bool Equals(Tuple<Result, MessageTemplate> x, Tuple<Result, MessageTemplate> y)
-            {
-                return x.Item2.Equals(y.Item2);
-            }
-
-            public int GetHashCode(Tuple<Result, MessageTemplate> obj)
-            {
-                return obj.Item2.GetHashCode();
-            }
+                    Results = validationResults.Select(factory.CreateMessage),
+                });
         }
     }
 }

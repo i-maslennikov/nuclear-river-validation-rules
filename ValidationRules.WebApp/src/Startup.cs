@@ -37,16 +37,16 @@ namespace NuClear.ValidationRules.WebApp
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddSingleton<DataConnectionFactory>();
-            services.AddSingleton<LocalizedMessageFactory>();
             services.AddSingleton<LinkFactory>();
             services.AddScoped<OrderRepositiory>();
             services.AddScoped<UserRepositiory>();
-            services.AddScoped<MessageRepositiory>();
             services.AddScoped<ProjectRepositiory>();
+            services.AddScoped<QueryingClient>();
 
             services.AddOptions();
             services.Configure<LinkFactorySettings>(Configuration.GetSection("LinkFactorySettings"));
             services.Configure<ConnectionStringSettings>(Configuration.GetSection("ConnectionStringSettings"));
+            services.Configure<QueryingHostSettings>(Configuration.GetSection("QueryingHostSettings"));
             services.AddMvc();
         }
 

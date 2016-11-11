@@ -5,7 +5,7 @@ using LinqToDB.Mapping;
 using Microsoft.Extensions.Options;
 
 using NuClear.ValidationRules.WebApp.Configuration;
-using NuClear.ValidationRules.WebApp.Entity;
+using NuClear.ValidationRules.WebApp.DataAccess.Entity;
 
 namespace NuClear.ValidationRules.WebApp.DataAccess
 {
@@ -52,9 +52,6 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
             builder.Entity<ReleaseInfo>()
                 .HasSchemaName("Billing")
                 .HasTableName("ReleaseInfos");
-
-            builder.Entity<ValidationResult>()
-                .HasSchemaName("Messages");
 
             return builder.MappingSchema;
         }

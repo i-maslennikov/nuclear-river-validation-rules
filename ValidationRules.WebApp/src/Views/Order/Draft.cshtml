@@ -1,4 +1,4 @@
-﻿@model NuClear.ValidationRules.WebApp.Model.ResultContainer
+﻿@model NuClear.ValidationRules.WebApp.Model.MessageContainerModel
 
 @{
     ViewData["Title"] = "Заказы";
@@ -6,31 +6,32 @@
 }
 
 <div class="panel-group" id="collapse" role="tablist" aria-multiselectable="true">
-    @foreach (var order in Model.GetResultsByOrder())
+    @foreach (var messageGroup in Model.ByRule())
     {
-        <div class="panel @order.Class">
+        <div class="panel @messageGroup.Key.Level">
             <div class="panel-heading " role="tab" id="collapse-heading-one">
                 <div class="panel-title ">
-                    <a role="button" data-toggle="collapse" href="#@order.PanelId" aria-expanded="false" aria-controls="@order.PanelId">
-                        @order.Number
-                        <span class="small">@Model.PeriodFor(order.Id)</span>
+                    <a role="button" data-toggle="collapse" href="#@messageGroup.Key.Rule" aria-expanded="false" aria-controls="@messageGroup.Key.Rule">
+                        @messageGroup.Value[0].Text
                     </a>
-                    
-                    <a class ="pull-right" role="button" href="@order.Link" target="_blank" >Открыть</a>
                 </div>
-                
+
             </div>
-            <div id="@order.PanelId" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapse-heading-one">
-                    <table class="table table-condensed table-hover table-bordered">
-                        <tbody>
-                            @foreach (var message in order.Messages)
-                            {
-                                <tr class="@message.Class">
-                                    <td>@Html.Raw(@message.Text)</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+            <div id="@messageGroup.Key.Rule" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapse-heading-one">
+                <table class="table table-condensed table-hover table-bordered">
+                    <tbody>
+                        @foreach (var message in messageGroup.Value)
+                        {
+                            <tr>
+                                <td class="col-xs-3 col-lg-2">
+                                    <div>@Html.Raw(@message.MainReference)</div>
+                                    <div class="small">@message.Period</div>
+                                </td>
+                                <td>@Html.Raw(@message.Text)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     }
