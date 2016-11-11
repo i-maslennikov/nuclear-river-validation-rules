@@ -160,6 +160,7 @@
     <Compile Include="RunnerConnectionStringSettings.cs" />
     <Compile Include="SchemaMetadataSource.cs" />
     <Compile Include="TestCaseMetadataSource.cs" />
+    <Compile Include="TestCaseMetadataSource.Version.cs" />
     <Compile Include="TestCaseMetadataSource.Facts.cs" />
     <Compile Include="TestCaseMetadataSource.Order.cs" />
     <Compile Include="TestCaseMetadataSource.Period.cs" />
