@@ -19,6 +19,7 @@ namespace NuClear.ValidationRules.Replication
                                                    x.MessageType == vr.MessageType &&
                                                    x.MessageParams == vr.MessageParams &&
                                                    x.PeriodStart == vr.PeriodStart &&
+                                                   x.PeriodEnd == vr.PeriodEnd &&
                                                    x.ProjectId == vr.ProjectId &&
                                                    x.OrderId == vr.OrderId &&
                                                    x.Result == vr.Result)
