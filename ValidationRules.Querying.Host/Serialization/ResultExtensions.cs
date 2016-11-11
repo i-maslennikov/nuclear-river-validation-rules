@@ -219,23 +219,29 @@ namespace NuClear.ValidationRules.Querying.Host.Serialization
             return element.Attribute("website").Value;
         }
 
-        private static EntityReference ReadReference(Version.ValidationResult message, string name)
+        private static EntityReference ReadReference(Version.ValidationResult message, string type)
         {
-            var element = message.MessageParams.Root.Element(name);
+            var elementName = MakeFirstLowercase(type);
+            var element = message.MessageParams.Root.Element(elementName);
             if (element == null)
             {
-                throw new ArgumentException($"Сообщение не содержит ссылку на '{name}'", nameof(message));
+                throw new ArgumentException($"Сообщение не содержит ссылку на '{elementName}'", nameof(message));
             }
 
-            return new EntityReference(name, (long)element.Attribute("id"), (string)element.Attribute("name"));
+            return new EntityReference(type, (long)element.Attribute("id"), (string)element.Attribute("name"));
         }
 
-        private static IReadOnlyCollection<EntityReference> ReadReferences(Version.ValidationResult message, string name)
+        private static IReadOnlyCollection<EntityReference> ReadReferences(Version.ValidationResult message, string type)
         {
-            var elements = message.MessageParams.Root.Elements(name);
-            return elements.Select(x => new EntityReference(name, (long)x.Attribute("id"), (string)x.Attribute("name"))).ToArray();
+            var elementName = MakeFirstLowercase(type);
+            var elements = message.MessageParams.Root.Elements(elementName);
+            return elements.Select(x => new EntityReference(type, (long)x.Attribute("id"), (string)x.Attribute("name"))).ToArray();
         }
 
+        private static string MakeFirstLowercase(string s)
+        {
+            return s.Substring(0, 1).ToLowerInvariant() + s.Substring(1);
+        }
 
         public sealed class CategoryCountDto
         {

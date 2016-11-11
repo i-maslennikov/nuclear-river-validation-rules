@@ -12,11 +12,6 @@ namespace NuClear.ValidationRules.Querying.Host.DI
 
         public UnityDependencyResolver(IUnityContainer container)
         {
-            if (container == null)
-            {
-                throw new ArgumentNullException(nameof(container));
-            }
-
             _container = container;
         }
 
