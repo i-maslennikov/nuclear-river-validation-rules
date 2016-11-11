@@ -234,6 +234,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 return new CommandRegardlessDataObjectTypesProvider(
                     new List<Type>
                         {
+                            typeof(Messages::Version),
                             typeof(Messages::Version.ValidationResult),
                         });
             }

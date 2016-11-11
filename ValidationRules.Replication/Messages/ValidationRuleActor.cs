@@ -63,42 +63,30 @@ namespace NuClear.ValidationRules.Replication.Messages
 
             var ermStates = commands.Cast<CreateNewVersionCommand>().SelectMany(x => x.States).Select(x => new Version.ErmState { Token = x });
 
-            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().FirstOrDefault();
-            if (currentVersion != null)
+            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().First();
+            IReadOnlyCollection<Version.ValidationResult> validationResults;
+            using (Probe.Create("Merge"))
             {
-                IReadOnlyCollection<Version.ValidationResult> validationResults;
-                using (Probe.Create("Merge"))
-                {
-                    var destObjects = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion.Id);
-                    var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
+                var destObjects = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion.Id);
+                var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
 
-                    validationResults = mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved()).ToList();
-                }
-
-                using (Probe.Create("Create"))
-                {
-                    if (validationResults.Count != 0)
-                    {
-                        var newVersionId = currentVersion.Id + 1;
-
-                        CreateVersion(newVersionId);
-                        _ermStatesRepository.Create(ermStates.ApplyVersionId(newVersionId));
-                        _validationResultRepository.Create(validationResults.ApplyVersionId(newVersionId));
-                    }
-                    else
-                    {
-                        UpdateVersion(currentVersion.Id);
-                        _ermStatesRepository.Create(ermStates.ApplyVersionId(currentVersion.Id));
-                    }
-                }
+                validationResults = mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved()).ToList();
             }
-            else
+
+            using (Probe.Create("Create"))
             {
-                using (Probe.Create("Create"))
+                if (validationResults.Count != 0)
                 {
-                    CreateVersion(0);
-                    _ermStatesRepository.Create(ermStates);
-                    _validationResultRepository.Create(sourceObjects);
+                    var newVersionId = currentVersion.Id + 1;
+
+                    CreateVersion(newVersionId);
+                    _ermStatesRepository.Create(ermStates.ApplyVersionId(newVersionId));
+                    _validationResultRepository.Create(validationResults.ApplyVersionId(newVersionId));
+                }
+                else
+                {
+                    UpdateVersion(currentVersion.Id);
+                    _ermStatesRepository.Create(ermStates.ApplyVersionId(currentVersion.Id));
                 }
             }
 

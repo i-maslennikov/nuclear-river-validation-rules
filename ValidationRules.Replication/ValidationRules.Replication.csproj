@@ -266,6 +266,7 @@
     <Compile Include="Messages\ArchiveVersionsActor.cs" />
     <Compile Include="Messages\ErmStatesQueryableExtensions.cs" />
     <Compile Include="Messages\ValidationResultEqualityComparer.cs" />
+    <Compile Include="Messages\VersionAccessor.cs" />
     <Compile Include="ProjectRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="ProjectRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="ProjectRules\Aggregates\CategoryAggregateRootActor.cs" />
