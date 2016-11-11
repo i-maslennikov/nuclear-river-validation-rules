@@ -4,6 +4,7 @@ using System.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
+using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -15,6 +16,10 @@ namespace NuClear.ValidationRules.Replication.Messages
     /// </summary>
     public sealed class VersionAccessor : IStorageBasedDataObjectAccessor<Version>
     {
+        public VersionAccessor(IQuery query)
+        {
+        }
+
         public IQueryable<Version> GetSource()
             => new[] { new Version { Id = 0, Date = DateTime.UtcNow } }.AsQueryable();
 
