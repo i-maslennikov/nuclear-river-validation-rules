@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1));
+            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), ResultExtensions.PrereleaseMask);
             var result = _serializer.Serialize(messages, ResultExtensions.WhenPrerelease);
             return result;
         }

@@ -42,7 +42,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             }
         }
 
-        public IReadOnlyCollection<Version.ValidationResult> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end)
+        public IReadOnlyCollection<Version.ValidationResult> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, int resultMask)
         {
             var dateFilter = CreateDateFilter(start, end);
 
@@ -53,7 +53,8 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                 var resultsByOrder = validationResults.Where(dateFilter).Where(CreateOrderFilter(orderIds));
                 var resultsByProject = validationResults.Where(dateFilter).Where(CreateProjectFilter(projectId));
 
-                return resultsByOrder.Concat(resultsByProject).ToArray();
+                var query = resultsByOrder.Concat(resultsByProject).Where(x => (x.Result & resultMask) != 0);
+                return query.ToArray();
             }
         }
 
