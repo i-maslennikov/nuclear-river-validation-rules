@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 using Microsoft.Extensions.Options;
 
@@ -21,41 +22,45 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
             _settings = settings.Value;
         }
 
-        public IReadOnlyCollection<ValidationResult> Single(long orderId)
+        public async Task<IReadOnlyCollection<ValidationResult>> Single(long orderId)
         {
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderId = orderId }), Encoding.UTF8, "application/json");
-            var response = new HttpClient().PostAsync(_settings.Single, httpContent).Result;
-            var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(response.Content.ReadAsStringAsync().Result);
+            var response = await new HttpClient().PostAsync(_settings.Single, httpContent);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
         }
 
-        public IEnumerable<ValidationResult> Manual(IReadOnlyCollection<long> orderIds, DateTime date, long? projectId)
+        public async Task<IEnumerable<ValidationResult>> Manual(IReadOnlyCollection<long> orderIds, DateTime date, long? projectId)
         {
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderIds = orderIds, ReleaseDate = date, ProjectId = projectId }),
                                                 Encoding.UTF8,
                                                 "application/json");
-            var response = new HttpClient().PostAsync(_settings.Manual, httpContent).Result;
-            var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(response.Content.ReadAsStringAsync().Result);
+            var response = await new HttpClient().PostAsync(_settings.Manual, httpContent);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
         }
 
-        public IEnumerable<ValidationResult> Prerelease(IReadOnlyCollection<long> orderIds, DateTime date, long projectId)
+        public async Task<IEnumerable<ValidationResult>> Prerelease(IReadOnlyCollection<long> orderIds, DateTime date, long projectId)
         {
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderIds = orderIds, ReleaseDate = date, ProjectId = projectId }),
                                                 Encoding.UTF8,
                                                 "application/json");
-            var response = new HttpClient().PostAsync(_settings.Prerelease, httpContent).Result;
-            var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(response.Content.ReadAsStringAsync().Result);
+            var response = await new HttpClient().PostAsync(_settings.Prerelease, httpContent);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
         }
 
-        public IEnumerable<ValidationResult> Release(IReadOnlyCollection<long> orderIds, DateTime date, long projectId)
+        public async Task<IEnumerable<ValidationResult>> Release(IReadOnlyCollection<long> orderIds, DateTime date, long projectId)
         {
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderIds = orderIds, ReleaseDate = date, ProjectId = projectId }),
                                                 Encoding.UTF8,
                                                 "application/json");
-            var response = new HttpClient().PostAsync(_settings.Release, httpContent).Result;
-            var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(response.Content.ReadAsStringAsync().Result);
+            var response = await new HttpClient().PostAsync(_settings.Release, httpContent);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
         }
     }

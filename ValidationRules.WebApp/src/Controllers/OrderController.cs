@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,14 +32,14 @@ namespace NuClear.ValidationRules.WebApp.Controllers
             _projectRepositiory = projectRepositiory;
         }
 
-        public IActionResult Draft(long? account, long? project)
+        public async Task<IActionResult> Draft(long? account, long? project)
         {
             var date = project.HasValue
                 ? _projectRepositiory.GetNextRelease(project.Value)
                 : _projectRepositiory.GetNextRelease(_userRepositiory.GetDefaultProject(account.Value));
             var orders = _orderRepositiory.GetDraftOrders(account, project, date);
 
-            var validationResults = _queryingClient.Manual(orders.Keys.ToArray(), date, project);
+            var validationResults = await _queryingClient.Manual(orders.Keys.ToArray(), date, project);
 
             var factory = new MessageFactory(_linkFactory, orders);
 
@@ -54,14 +55,14 @@ namespace NuClear.ValidationRules.WebApp.Controllers
             });
         }
 
-        public IActionResult Public(long? account, long? project, int? rule)
+        public async Task<IActionResult> Public(long? account, long? project, int? rule)
         {
             var date = project.HasValue
                            ? _projectRepositiory.GetNextRelease(project.Value)
                            : _projectRepositiory.GetNextRelease(_userRepositiory.GetDefaultProject(account.Value));
             var orders = _orderRepositiory.GetPublicOrders(account, project, date);
 
-            var validationResults = _queryingClient.Manual(orders.Keys.ToArray(), date, project);
+            var validationResults = await _queryingClient.Manual(orders.Keys.ToArray(), date, project);
 
             ViewBag.Message = $"Выведены результаты за {date:Y}";
 
@@ -83,9 +84,9 @@ namespace NuClear.ValidationRules.WebApp.Controllers
                 });
         }
 
-        public IActionResult Single(long id)
+        public async Task<IActionResult> Single(long id)
         {
-            var validationResults = _queryingClient.Single(id);
+            var validationResults = await _queryingClient.Single(id);
 
             var factory = new MessageFactory(_linkFactory, new Dictionary<long,OrderDto>());
 
