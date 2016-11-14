@@ -16,7 +16,6 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
         public DataConnectionFactory(IOptions<ConnectionStringSettings> settings)
         {
             DataConnection.AddConfiguration("Erm", settings.Value.Erm, SqlServerTools.GetDataProvider(SqlServerVersion.v2012));
-            DataConnection.AddConfiguration("Messages", settings.Value.Messages, SqlServerTools.GetDataProvider(SqlServerVersion.v2012));
             _schema = CreateSchema();
         }
 
