@@ -1,0 +1,16 @@
+﻿using NuClear.ValidationRules.Storage.Model.Messages;
+
+namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
+{
+    public sealed class BillsShouldBeCreatedMessageComposer : IMessageComposer
+    {
+        public MessageTypeCode MessageType => MessageTypeCode.BillsShouldBeCreated;
+
+        public MessageComposerResult Serialize(Version.ValidationResult validationResult)
+        {
+            var orderReference = validationResult.ReadOrderReference();
+
+            return new MessageComposerResult(orderReference, "Для заказа необходимо сформировать счета");
+        }
+    }
+}

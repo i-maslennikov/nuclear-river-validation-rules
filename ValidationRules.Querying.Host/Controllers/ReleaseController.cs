@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
 
+using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
-using NuClear.ValidationRules.Querying.Host.Serialization;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
     public class ReleaseController : ApiController
     {
         private readonly MessageRepositiory _repositiory;
-        private readonly MessageSerializer _serializer;
+        private readonly ValidationResultFactory _factory;
 
-        public ReleaseController(MessageRepositiory repositiory, MessageSerializer serializer)
+        public ReleaseController(MessageRepositiory repositiory, ValidationResultFactory factory)
         {
             _repositiory = repositiory;
-            _serializer = serializer;
+            _factory = factory;
         }
 
         // POST: api/Release
@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             }
 
             var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), ResultExtensions.ReleaseMask);
-            var result = _serializer.Serialize(messages, ResultExtensions.WhenRelease);
+            var result = _factory.ComposeAll(messages, ResultExtensions.WhenRelease);
             return result;
         }
 
