@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             public IReadOnlyCollection<long> OrderIds { get; set; }
             public long ProjectId { get; set; }
             public DateTime ReleaseDate { get; set; }
-            public Guid? State { get; set; }
+            public Guid State { get; set; }
         }
     }
 }
