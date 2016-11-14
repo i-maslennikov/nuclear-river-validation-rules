@@ -65,7 +65,7 @@ function Get-ValidateWebsiteMetadata ($Context) {
 
 	switch($Context.EntryPoint){
 		'ValidationRules.Querying.Host' {
-			$uriPath = 'ValidationRules/$metadata'
+			$uriPath = 'api/version'
 		}
 		default {
 			$uriPath = '/'
@@ -78,7 +78,7 @@ function Get-ValidateWebsiteMetadata ($Context) {
 function Get-IisAppPathMetadata ($Context) {
 
 	switch ($Context.EntryPoint) {
-		'ValidationRules.Querying.Host' { $prefix = "search$($Context['Index']).api" }
+		'ValidationRules.Querying.Host' { $prefix = "validation$($Context['Index']).api" }
 		default {
 			return @{}
 		}
@@ -102,33 +102,6 @@ function Get-IisAppPoolMetadata ($Context) {
 	return @{ 'AppPoolName' = 'ErmAppPool' }
 }
 
-function Get-TakeOfflineMetadata ($Context) {
-	switch($Context.EnvType){
-		'Production' {
-			return @{ 'TakeOffline' = $false }
-		}
-		default {
-			return @{ 'TakeOffline' = $true }
-		}
-	}
-}
-
-function Get-OptionsMetadata ($Context) {
-
-	switch ($Context.Country){
-		'Russia' {
-			return @{
-				'OptionModi' = $true
-			}
-		}
-		default {
-			return @{
-				'OptionModi' = $false
-			}
-		}
-	}
-}
-
 function Get-WebMetadata ($Context) {
 
 	$metadata = @{}
@@ -136,8 +109,6 @@ function Get-WebMetadata ($Context) {
 	$metadata += Get-TargetHostsMetadata $Context
 	$metadata += Get-IisAppPathMetadata $Context
 	$metadata += Get-IisAppPoolMetadata $Context
-	$metadata += Get-TakeOfflineMetadata $Context
-	$metadata += Get-OptionsMetadata $Context
 	$metadata += Get-TransformMetadata $Context
 	
 	$metadata += @{

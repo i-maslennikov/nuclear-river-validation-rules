@@ -16,27 +16,27 @@ Include 'updateschemas.ps1'
 Include 'bulktool.ps1'
 Include 'datatest.ps1'
 
-# OData
-function QueueBuild-OData {
+# Querying.Host
+function QueueBuild-QueryingHost {
 	if ($Metadata['ValidationRules.Querying.Host']){
 		$projectFileName = Get-ProjectFileName '.' 'ValidationRules.Querying.Host'
 		QueueBuild-WebPackage $projectFileName 'ValidationRules.Querying.Host'
 	}
 }
-function QueueDeploy-OData {
+function QueueDeploy-QueryingHost {
 	if ($Metadata['ValidationRules.Querying.Host']){
 		QueueDeploy-WebPackage 'ValidationRules.Querying.Host'
 	}
 }
 
-# task service
-function QueueBuild-TaskService {
+# Replication.Host
+function QueueBuild-ReplicationHost {
 	if ($Metadata['ValidationRules.Replication.Host']){
 		$projectFileName = Get-ProjectFileName '.' 'ValidationRules.Replication.Host'
 		QueueBuild-AppPackage $projectFileName 'ValidationRules.Replication.Host'
 	}
 }
-function QueueDeploy-TaskService {
+function QueueDeploy-ReplicationHost {
 	if ($Metadata['ValidationRules.Replication.Host']){
 		QueueDeploy-WinService 'ValidationRules.Replication.Host'
 	}
@@ -45,8 +45,8 @@ function QueueDeploy-TaskService {
 Task QueueBuild-Packages {
 
 	QueueBuild-BulkTool
-	#QueueBuild-OData
-	QueueBuild-TaskService
+	QueueBuild-QueryingHost
+	QueueBuild-ReplicationHost
 
 	Invoke-MSBuildQueue
 }
@@ -54,8 +54,8 @@ Task QueueBuild-Packages {
 Task QueueDeploy-Packages {
 
 	QueueDeploy-ConvertUseCasesService
-	QueueDeploy-OData
-	QueueDeploy-TaskService
+	QueueDeploy-QueryingHost
+	QueueDeploy-ReplicationHost
 
 	Invoke-DeployQueue
 }

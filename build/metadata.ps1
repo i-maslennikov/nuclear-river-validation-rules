@@ -1,7 +1,7 @@
 ﻿param ([hashtable]$Properties)
 
 Import-Module "$PSScriptRoot\metadata.web.psm1" -DisableNameChecking
-Import-Module "$PSScriptRoot\metadata.taskservice.psm1" -DisableNameChecking
+Import-Module "$PSScriptRoot\metadata.winservice.psm1" -DisableNameChecking
 Import-Module "$PSScriptRoot\metadata.transform.psm1" -DisableNameChecking
 
 function Get-EntryPointsMetadata ($EntryPoints, $Context) {
@@ -10,13 +10,13 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 
 	# конвертер нужен всегда (очистка ресурсов)
 	$Context.EntryPoint = 'ConvertUseCasesService'
-	$entryPointsMetadata += Get-TaskServiceMetadata $Context
+	$entryPointsMetadata += Get-WinServiceMetadata $Context
 
 	# production копия конвертера нужна всегда (очистка ресурсов)
 	$productionContext = $Context.Clone()
 	$productionContext.EnvType = 'Production' 
 	$productionContext.EntryPoint = 'ConvertUseCasesService-Production'
-	$entryPointsMetadata += Get-TaskServiceMetadata $productionContext 
+	$entryPointsMetadata += Get-WinServiceMetadata $productionContext 
 
 	switch ($EntryPoints){
 		'ValidationRules.Querying.Host' {
@@ -26,7 +26,7 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 
 		'ValidationRules.Replication.Host' {
 			$Context.EntryPoint = $_
-			$entryPointsMetadata += Get-TaskServiceMetadata $Context
+			$entryPointsMetadata += Get-WinServiceMetadata $Context
 		}
 		default {
 			throw "Can't find entrypoint $_"
