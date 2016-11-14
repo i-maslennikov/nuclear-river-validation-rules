@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "linq2db": "1.0.7.4",
-    "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
     "Microsoft.AspNet.Localization": "1.0.0-rc1-final",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.1",

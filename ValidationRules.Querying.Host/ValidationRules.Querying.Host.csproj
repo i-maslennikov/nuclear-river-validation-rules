@@ -211,9 +211,6 @@
     <Compile Include="Serialization\Serializers\WhiteListAdvertisementMustPresentMessageSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
