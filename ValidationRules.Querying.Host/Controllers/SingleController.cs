@@ -5,6 +5,7 @@ using System.Web.Http;
 
 using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
@@ -28,8 +29,8 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var messages = _repositiory.GetMessages(versionId, new [] { request.OrderId }, null, DateTime.MinValue, DateTime.MaxValue, ResultExtensions.SingleMask);
-            var result = _factory.ComposeAll(messages, ResultExtensions.WhenSingle);
+            var messages = _repositiory.GetMessages(versionId, new [] { request.OrderId }, null, DateTime.MinValue, DateTime.MaxValue, CombinedResult.SingleMask);
+            var result = _factory.ComposeAll(messages, x => x.ForSingle);
             return result;
         }
 

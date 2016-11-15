@@ -136,7 +136,6 @@
     <Compile Include="App_Start\Int64ToStringConverter.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ResultExtensions.cs" />
     <Compile Include="Controllers\SingleController.cs" />
     <Compile Include="Controllers\ReleaseController.cs" />
     <Compile Include="Controllers\PrereleaseController.cs" />

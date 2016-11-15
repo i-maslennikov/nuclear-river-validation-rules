@@ -18,10 +18,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             _serializers = serializers.ToDictionary(x => x.MessageType, x => x);
         }
 
-        public IReadOnlyCollection<ValidationResult> ComposeAll(IReadOnlyCollection<Version.ValidationResult> messages, Func<Version.ValidationResult, Result> selector)
+        public IReadOnlyCollection<ValidationResult> ComposeAll(IReadOnlyCollection<Version.ValidationResult> messages, Func<CombinedResult, Result> selector)
             => messages.Select(x => Compose(x, selector)).ToArray();
 
-        private ValidationResult Compose(Version.ValidationResult message, Func<Version.ValidationResult, Result> selector)
+        private ValidationResult Compose(Version.ValidationResult message, Func<CombinedResult, Result> selector)
         {
             var x = Compose(message);
 
@@ -30,7 +30,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                 MainReference = x.MainReference,
                 Template = x.Template,
                 References = x.References,
-                Result = selector(message),
+                Result = selector.Invoke(CombinedResult.FromInt32(message.Result)),
                 Rule = message.MessageType,
             };
         }
