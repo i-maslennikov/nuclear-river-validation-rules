@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 
 using LinqToDB;
+using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
 using LinqToDB.SqlQuery;
@@ -18,8 +19,12 @@ namespace NuClear.ValidationRules.Storage
             get
             {
                 var schema = new MappingSchema(nameof(Messages), new SqlServerMappingSchema());
-                // TODO: хранить как SaveOptions.DisableFormatting, прямо сейчас xml хранится с табами
+
+                // XDocument mapping to nvarchar
                 schema.SetDataType(typeof(XDocument), new SqlDataType(DataType.NVarChar, 4000));
+                schema.SetConvertExpression<string, XDocument>(x => XDocument.Parse(x));
+                schema.SetConvertExpression<XDocument, string>(x => x.ToString(SaveOptions.DisableFormatting));
+                schema.SetConvertExpression<XDocument, DataParameter>(x => new DataParameter { DataType = DataType.NVarChar, Value = x.ToString(SaveOptions.DisableFormatting)});
 
                 var config = schema.GetFluentMappingBuilder();
 
