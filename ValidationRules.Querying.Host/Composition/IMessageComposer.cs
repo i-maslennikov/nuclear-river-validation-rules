@@ -6,7 +6,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
     public interface IMessageComposer
     {
         MessageTypeCode MessageType { get; }
-        MessageComposerResult Serialize(Version.ValidationResult validationResult);
+        MessageComposerResult Compose(Version.ValidationResult validationResult);
     }
 
     public class MessageComposerResult

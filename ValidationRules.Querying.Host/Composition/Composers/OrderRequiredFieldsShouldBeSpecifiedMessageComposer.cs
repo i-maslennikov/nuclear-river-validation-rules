@@ -8,7 +8,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.OrderRequiredFieldsShouldBeSpecified;
 
-        public MessageComposerResult Serialize(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Version.ValidationResult validationResult)
         {
             var orderReference = validationResult.ReadOrderReference();
             var dto = validationResult.ReadOrderRequiredFieldsMessage();

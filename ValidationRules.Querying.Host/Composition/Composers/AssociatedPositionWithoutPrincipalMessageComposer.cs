@@ -9,7 +9,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.AssociatedPositionWithoutPrincipal;
 
-        public MessageComposerResult Serialize(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Version.ValidationResult validationResult)
         {
             var orderReference = validationResult.ReadOrderReference();
             var position = validationResult.ReadOrderPositions().First();

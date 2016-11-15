@@ -6,7 +6,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.OrderMustHaveAdvertisement;
 
-        public MessageComposerResult Serialize(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Version.ValidationResult validationResult)
         {
             var orderReference = validationResult.ReadOrderReference();
             var advertisementReference = validationResult.ReadAdvertisementReference();

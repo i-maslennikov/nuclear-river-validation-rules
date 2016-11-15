@@ -9,7 +9,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.DeniedPositionsCheck;
 
-        public MessageComposerResult Serialize(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Version.ValidationResult validationResult)
         {
             var orderReference = validationResult.ReadOrderReference();
             var positions = validationResult.ReadOrderPositions().OrderBy(x => x.OrderPositionId);

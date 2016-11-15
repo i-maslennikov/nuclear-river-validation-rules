@@ -6,7 +6,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.DefaultThemeMustBeExactlyOne;
 
-        public MessageComposerResult Serialize(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Version.ValidationResult validationResult)
         {
             var projectReference = validationResult.ReadProjectReference();
             var themeCount = validationResult.ReadProjectThemeCount();

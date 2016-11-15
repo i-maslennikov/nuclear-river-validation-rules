@@ -45,7 +45,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
             try
             {
-                return composer.Serialize(message);
+                return composer.Compose(message);
             }
             catch (Exception ex)
             {

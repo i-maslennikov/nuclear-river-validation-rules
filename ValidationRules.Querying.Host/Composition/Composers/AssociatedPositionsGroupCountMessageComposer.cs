@@ -6,7 +6,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.AssociatedPositionsGroupCount;
 
-        public MessageComposerResult Serialize(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Version.ValidationResult validationResult)
         {
             var price = validationResult.ReadPriceReference();
             var pricePosition = validationResult.ReadPricePositionReference();
