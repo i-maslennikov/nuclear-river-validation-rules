@@ -143,11 +143,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return new FindSpecification<Lock>(x => x.IsActive && !x.IsDeleted);
                 }
 
-                public static FindSpecification<Limit> Limits()
-                {
-                    return new FindSpecification<Limit>(x => x.IsActive && !x.IsDeleted && x.Status == LimitStateApprooved);
-                }
-
                 public static FindSpecification<ReleaseWithdrawal> ReleaseWithdrawals()
                 {
                     return new FindSpecification<ReleaseWithdrawal>(x => true);

@@ -42,9 +42,9 @@ namespace NuClear.ValidationRules.Replication
                             typeof(AccountFacts::Order),
                             typeof(AccountFacts::Project),
                             typeof(AccountFacts::Lock),
-                            typeof(AccountFacts::Limit),
                             typeof(AccountFacts::OrderPosition),
                             typeof(AccountFacts::ReleaseWithdrawal),
+                            typeof(AccountFacts::UnlimitedOrder),
 
                             typeof(ConsistencyFacts::Bargain),
                             typeof(ConsistencyFacts::BargainScanFile),

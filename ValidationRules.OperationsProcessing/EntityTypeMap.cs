@@ -39,7 +39,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypeOrder, AccountFacts::Order>()
                 .AddMapping<EntityTypeProject, AccountFacts::Project>()
                 .AddMapping<EntityTypeLock, AccountFacts::Lock>()
-                .AddMapping<EntityTypeLimit, AccountFacts::Limit>()
                 .AddMapping<EntityTypeOrderPosition, AccountFacts::OrderPosition>()
                 .AddMapping<EntityTypeReleaseWithdrawal, AccountFacts::ReleaseWithdrawal>();
 

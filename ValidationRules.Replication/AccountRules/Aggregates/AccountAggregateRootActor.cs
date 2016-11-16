@@ -83,11 +83,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                     select new { AccountId = account.Id, releaseWithdrawal.Start, releaseWithdrawal.Amount, Type = 1 };
 
-                var limitPeriods =
-                    from limit in _query.For<Facts::Limit>()
-                    join account in _query.For<Facts::Account>() on limit.AccountId equals account.Id
-                    select new { AccountId = account.Id, limit.Start, limit.Amount, Type = 2 };
-
                 var lockPeriods =
                     from @lock in _query.For<Facts::Lock>()
                     join account in _query.For<Facts::Account>() on @lock.AccountId equals account.Id
@@ -98,7 +93,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     select new { AccountId = @lock.Key, Sum = @lock.Select(x => x.Amount).Sum() };
 
                 var result =
-                    from item in releaseWithdrawalPeriods.Concat(limitPeriods).Concat(lockPeriods).GroupBy(a => new { a.AccountId, a.Start })
+                    from item in releaseWithdrawalPeriods.Concat(lockPeriods).GroupBy(a => new { a.AccountId, a.Start })
                     join account in _query.For<Facts::Account>() on item.Key.AccountId equals account.Id
                     from sum in lockSums.Where(x => x.AccountId == item.Key.AccountId).DefaultIfEmpty()
                     select new AccountPeriod
@@ -108,7 +103,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                             Balance = account.Balance,
                             End = item.Key.Start.AddMonths(1),
                             ReleaseAmount = item.Where(x => x.Type == 1).Select(x => x.Amount).Sum(),
-                            LimitAmount = item.Where(x => x.Type == 2).Select(x => x.Amount).Sum(),
                             LockedAmount = item.Where(x => x.Type == 3).Select(x => x.Amount).Sum(),
                             OwerallLockedAmount = sum.Sum,
                         };
@@ -128,32 +122,21 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     join orderPosition in _query.For<Facts::OrderPosition>() on releaseWithdrawal.OrderPositionId equals orderPosition.Id
                     join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id
                     from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
-                    select new { AccountId = account.Id, Start = releaseWithdrawal.Start, ReleaseWithdrawal = releaseWithdrawal.Amount, Limit = 0M, Lock = 0M };
-
-                var limits =
-                    from limit in _query.For<Facts::Limit>()
-                    join account in _query.For<Facts::Account>() on limit.AccountId equals account.Id
-                    select new { AccountId = account.Id, Start = limit.Start, ReleaseWithdrawal = 0M, Limit = limit.Amount, Lock = 0M };
+                    select new { AccountId = account.Id, Start = releaseWithdrawal.Start, ReleaseWithdrawal = releaseWithdrawal.Amount, Lock = 0M };
 
                 var locks =
                     from @lock in _query.For<Facts::Lock>()
                     join account in _query.For<Facts::Account>() on @lock.AccountId equals account.Id
-                    select new { AccountId = account.Id, Start = @lock.Start, ReleaseWithdrawal = 0M, Limit = 0M, Lock = @lock.Amount };
-
-                var limitSums =
-                    from limit in _query.For<Facts::Limit>().GroupBy(x => x.AccountId)
-                    select new { AccountId = limit.Key, Sum = limit.Select(x => x.Amount).Sum() };
+                    select new { AccountId = account.Id, Start = @lock.Start, ReleaseWithdrawal = 0M, Lock = @lock.Amount };
 
                 var result =
-                    from item in releaseWithdrawals.Union(limits).Union(locks).Select(x => new { x.AccountId, x.Start, x.Limit, x.Lock, x.ReleaseWithdrawal }).GroupBy(a => new { a.AccountId, a.Start })
-                    join sum in limitSums on item.Key.AccountId equals sum.AccountId
+                    from item in releaseWithdrawals.Union(locks).Select(x => new { x.AccountId, x.Start, x.Lock, x.ReleaseWithdrawal }).GroupBy(a => new { a.AccountId, a.Start })
                     select new AccountPeriod
                         {
                             AccountId = item.Key.AccountId,
                             Start = item.Key.Start,
                             End = item.Key.Start.AddMonths(1),
                             ReleaseAmount = item.Select(x => x.ReleaseWithdrawal).Sum(),
-                            LimitAmount = item.Select(x => x.Limit).Sum(),
                             LockedAmount = item.Select(x => x.Lock).Sum(),
                         };
 

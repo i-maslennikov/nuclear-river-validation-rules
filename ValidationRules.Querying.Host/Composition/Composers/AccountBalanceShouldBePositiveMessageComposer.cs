@@ -12,7 +12,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             var dto = validationResult.ReadAccountBalanceMessage();
 
             return new MessageComposerResult(orderReference,
-                $"Для оформления заказа недостаточно средств. Необходимо: {dto.Planned}. Имеется: {dto.Available}. Необходим лимит: {dto.Required}");
+                $"Для оформления заказа недостаточно средств. Необходимо: {dto.Planned}. Имеется: {dto.Available}.");
         }
     }
 }

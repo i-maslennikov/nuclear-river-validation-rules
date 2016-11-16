@@ -283,9 +283,10 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(AccountFactsSchema)
                   .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<AccountFacts::Limit>()
-              .HasSchemaName(AccountFactsSchema)
-              .HasPrimaryKey(x => x.Id);
+            builder.Entity<AccountFacts::UnlimitedOrder>()
+                  .HasSchemaName(AccountFactsSchema)
+                  .HasPrimaryKey(x => x.OrderId)
+                  .HasPrimaryKey(x => x.PeriodStart);
 
             builder.Entity<AccountFacts::ReleaseWithdrawal>()
               .HasSchemaName(AccountFactsSchema)

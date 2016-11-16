@@ -1,9 +1,7 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
@@ -19,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(AccountBalanceShouldBePositive))
                 .Fact(
-                    new Facts::Account { Id = 1, Balance = 3, BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2 },
+                    new Facts::Account { Id = 1, Balance = 11, BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2 },
 
                     new Facts::Order { Id = 1, Number = "Order1", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
                     new Facts::OrderPosition { Id = 2, OrderId = 1 },
@@ -32,6 +30,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::ReleaseWithdrawal { Id = 5, OrderPositionId = 2, Amount = 1, Start = FirstDayJan },
                     new Facts::ReleaseWithdrawal { Id = 6, OrderPositionId = 2, Amount = 2, Start = FirstDayFeb },
                     new Facts::Lock { Id = 2, OrderId = 2, AccountId = 1, Start = FirstDayJan, Amount = 1 },
+                    new Facts::UnlimitedOrder { OrderId = 2, PeriodStart = FirstDayFeb, PeriodEnd = FirstDayMar },
 
                     new Facts::Order { Id = 3, Number = "Order3", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true},
                     new Facts::OrderPosition { Id = 4, OrderId = 3 },
@@ -39,19 +38,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::ReleaseWithdrawal { Id = 8, OrderPositionId = 4, Amount = 0, Start = FirstDayFeb },
                     new Facts::Lock { Id = 3, OrderId = 3, AccountId = 1, Start = FirstDayJan, Amount = 0 },
 
-                    new Facts::Limit { Id = 1, AccountId = 1, Amount = 10, Start = FirstDayJan },
                     new Facts::Project())
                 .Aggregate(
                     new Aggregates::Order { Id = 1, Number = "Order1", AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
                     new Aggregates::Order { Id = 2, Number = "Order2", AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
+                    new Aggregates::Order.DebtPermission { OrderId = 2, Start = FirstDayFeb, End = FirstDayMar },
                     new Aggregates::Order { Id = 3, Number = "Order3", AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true},
-                    new Aggregates::AccountPeriod { AccountId = 1, Balance = 3, LockedAmount = 11, OwerallLockedAmount = 11, ReleaseAmount = 11, LimitAmount = 10, Start = FirstDayJan, End = FirstDayFeb },
-                    new Aggregates::AccountPeriod { AccountId = 1, Balance = 3, LockedAmount = 0, OwerallLockedAmount = 11, ReleaseAmount = 12, LimitAmount = 0, Start = FirstDayFeb, End = FirstDayMar })
+                    new Aggregates::AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 11, OwerallLockedAmount = 11, ReleaseAmount = 11, Start = FirstDayJan, End = FirstDayFeb },
+                    new Aggregates::AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 0, OwerallLockedAmount = 11, ReleaseAmount = 12, Start = FirstDayFeb, End = FirstDayMar })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = XDocument.Parse("<root>" +
-                                                            "<message available=\"-8.0000\" planned=\"12.0000\" required=\"20.0000\" />" +
+                                                            "<message available=\"0.0000\" planned=\"12.0000\" />" +
                                                             "<account id=\"1\" />" +
                                                             "<order id=\"1\" name=\"Order1\" />" +
                                                             "</root>"),
@@ -60,19 +59,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             PeriodStart = FirstDayFeb,
                             PeriodEnd = FirstDayMar,
                             OrderId = 1,
-                        },
-                    new Messages::Version.ValidationResult
-                        {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message available=\"-8.0000\" planned=\"12.0000\" required=\"20.0000\" />" +
-                                                            "<account id=\"1\" />" +
-                                                            "<order id=\"2\" name=\"Order2\" />" +
-                                                            "</root>"),
-                            MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
-                            Result = 204,
-                            PeriodStart = FirstDayFeb,
-                            PeriodEnd = FirstDayMar,
-                            OrderId = 2,
-                    });
+                        });
     }
 }

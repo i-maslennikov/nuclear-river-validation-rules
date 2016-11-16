@@ -182,7 +182,7 @@
   <ItemGroup>
     <Compile Include="AccountRules\Aggregates\AccountAggregateRootActor.cs" />
     <Compile Include="AccountRules\Aggregates\OrderAggregateRootActor.cs" />
-    <Compile Include="AccountRules\Facts\LimitAccessor.cs" />
+    <Compile Include="AccountRules\Facts\UnlimitedOrderAccessor.cs" />
     <Compile Include="AccountRules\Facts\OrderPositionAccessor.cs" />
     <Compile Include="AccountRules\Facts\ReleaseWithdrawalAccessor.cs" />
     <Compile Include="AccountRules\Facts\LockAccessor.cs" />

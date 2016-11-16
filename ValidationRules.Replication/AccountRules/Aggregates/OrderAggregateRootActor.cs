@@ -20,17 +20,20 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IBulkRepository<Lock> _lockBulkRepository;
+        private readonly IBulkRepository<Order.DebtPermission> _debtPermissionBulkRepository;
 
         public OrderAggregateRootActor(
             IQuery query,
+            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> orderBulkRepository,
             IBulkRepository<Lock> lockBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
+            IBulkRepository<Order.DebtPermission> debtPermissionBulkRepository)
             : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
         {
             _query = query;
             _equalityComparerFactory = equalityComparerFactory;
             _lockBulkRepository = lockBulkRepository;
+            _debtPermissionBulkRepository = debtPermissionBulkRepository;
         }
 
         public IReadOnlyCollection<IEntityActor> GetEntityActors()
@@ -39,7 +42,8 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => new IActor[]
                 {
-                    new ValueObjectActor<Lock>(_query, _lockBulkRepository, _equalityComparerFactory, new LockAccessor(_query))
+                    new ValueObjectActor<Lock>(_query, _lockBulkRepository, _equalityComparerFactory, new LockAccessor(_query)),
+                    new ValueObjectActor<Order.DebtPermission>(_query, _debtPermissionBulkRepository, _equalityComparerFactory, new DebtPermissionAccessor(_query)),
                 };
 
         public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
@@ -104,6 +108,35 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Lock>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class DebtPermissionAccessor : IStorageBasedDataObjectAccessor<Order.DebtPermission>
+        {
+            private readonly IQuery _query;
+
+            public DebtPermissionAccessor(IQuery query)
+            {
+                _query = query;
+            }
+
+            public IQueryable<Order.DebtPermission> GetSource()
+                => from x in _query.For<Facts::UnlimitedOrder>()
+                   select new Order.DebtPermission
+                       {
+                           OrderId = x.OrderId,
+                           Start = x.PeriodStart,
+                           End = x.PeriodEnd,
+                       };
+
+            public FindSpecification<Order.DebtPermission> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
+                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
+                                           .Distinct()
+                                           .ToArray();
+                return new FindSpecification<Order.DebtPermission>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }

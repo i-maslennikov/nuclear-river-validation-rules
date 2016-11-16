@@ -5,9 +5,9 @@ if object_id('AccountFacts.Order') is not null drop table AccountFacts.[Order]
 if object_id('AccountFacts.Project') is not null drop table AccountFacts.Project
 if object_id('AccountFacts.Account') is not null drop table AccountFacts.Account
 if object_id('AccountFacts.Lock') is not null drop table AccountFacts.Lock
-if object_id('AccountFacts.Limit') is not null drop table AccountFacts.Limit
 if object_id('AccountFacts.ReleaseWithdrawal') is not null drop table AccountFacts.ReleaseWithdrawal
 if object_id('AccountFacts.OrderPosition') is not null drop table AccountFacts.OrderPosition
+if object_id('AccountFacts.UnlimitedOrder') is not null drop table AccountFacts.UnlimitedOrder
 go
 
 create table AccountFacts.[Order](
@@ -50,12 +50,11 @@ create table AccountFacts.Lock(
 )
 go
 
-create table AccountFacts.Limit(
-    Id bigint not null,
-    AccountId bigint not null,
-    Start datetime2(2) not null,
-    Amount decimal(19,4) not null,
-    constraint PK_Limit primary key (Id)
+create table AccountFacts.UnlimitedOrder(
+    OrderId bigint not null,
+    PeriodStart datetime2(2) not null,
+    PeriodEnd datetime2(2) not null,
+    constraint PK_UnlimitedOrder primary key (OrderId, PeriodStart)
 )
 go
 

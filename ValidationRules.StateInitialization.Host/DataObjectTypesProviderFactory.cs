@@ -60,9 +60,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AccountFacts::Order),
                             typeof(AccountFacts::Project),
                             typeof(AccountFacts::Lock),
-                            typeof(AccountFacts::Limit),
                             typeof(AccountFacts::OrderPosition),
                             typeof(AccountFacts::ReleaseWithdrawal),
+                            typeof(AccountFacts::UnlimitedOrder),
 
                             typeof(AdvertisementFacts::AdvertisementElementTemplate),
                             typeof(AdvertisementFacts::AdvertisementElement),
@@ -155,6 +155,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Category),
 
                             typeof(AccountAggregates::Order),
+                            typeof(AccountAggregates::Order.DebtPermission),
                             typeof(AccountAggregates::Lock),
                             typeof(AccountAggregates::Account),
                             typeof(AccountAggregates::AccountPeriod),

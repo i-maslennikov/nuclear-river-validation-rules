@@ -30,7 +30,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::Firm(),
                 new Erm::FirmAddress(),
                 new Erm::LegalPersonProfile(),
-                new Erm::Limit(),
                 new Erm::Lock(),
                 new Erm::Order(),
                 new Erm::OrderFile(),
@@ -51,7 +50,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::UserProfile())
             .Fact(
                 new Facts::Account(),
-                new Facts::Limit(),
                 new Facts::Lock(),
                 new Facts::Order(),
                 new Facts::OrderPosition(),
