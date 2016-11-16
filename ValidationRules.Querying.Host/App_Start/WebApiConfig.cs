@@ -10,13 +10,6 @@ namespace NuClear.ValidationRules.Querying.Host
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
             config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new Int64ToStringConverter());
         }
     }

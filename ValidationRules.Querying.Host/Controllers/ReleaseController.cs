@@ -20,11 +20,11 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             _factory = factory;
         }
 
-        // POST: api/Release
-        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request)
+        [Route("api/Release/{stateToken}")]
+        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
             long versionId;
-            if (!_repositiory.TryGetVersion(request.State, out versionId))
+            if (!_repositiory.TryGetVersion(stateToken, out versionId))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -39,7 +39,6 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             public IReadOnlyCollection<long> OrderIds { get; set; }
             public long ProjectId { get; set; }
             public DateTime ReleaseDate { get; set; }
-            public Guid State { get; set; }
         }
     }
 }

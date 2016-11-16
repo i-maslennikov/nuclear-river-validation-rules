@@ -16,14 +16,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             _factory = factory;
         }
 
-        public bool TryGetVersion(Guid? state, out long versionId)
-        {
-            return state.HasValue
-                       ? TryGetVersion(state.Value, out versionId)
-                       : TryGetLastVersion(out versionId);
-        }
-
-        private bool TryGetVersion(Guid state, out long versionId)
+        public bool TryGetVersion(Guid state, out long versionId)
         {
             using (var connection = _factory.CreateDataConnection())
             {
@@ -33,12 +26,11 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             }
         }
 
-        public bool TryGetLastVersion(out long versionId)
+        public long GetLatestVersion()
         {
             using (var connection = _factory.CreateDataConnection())
             {
-                versionId = connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
-                return true;
+                return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
             }
         }
 

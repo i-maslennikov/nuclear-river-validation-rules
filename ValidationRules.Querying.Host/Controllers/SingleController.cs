@@ -20,11 +20,11 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             _factory = factory;
         }
 
-        // POST: api/Single
-        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request)
+        [Route("api/Single/{stateToken}")]
+        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
             long versionId;
-            if (!_repositiory.TryGetVersion(request.State, out versionId))
+            if (!_repositiory.TryGetVersion(stateToken, out versionId))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -34,10 +34,18 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             return result;
         }
 
+        [Route("api/Single")]
+        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request)
+        {
+            var versionId = _repositiory.GetLatestVersion();
+            var messages = _repositiory.GetMessages(versionId, new[] { request.OrderId }, null, DateTime.MinValue, DateTime.MaxValue, CombinedResult.SingleMask);
+            var result = _factory.ComposeAll(messages, x => x.ForSingle);
+            return result;
+        }
+
         public class ApiRequest
         {
             public long OrderId { get; set; }
-            public Guid? State { get; set; }
         }
     }
 }

@@ -20,15 +20,24 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             _factory = factory;
         }
 
-        // POST: api/Manual
-        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request)
+        [Route("api/Manual/{stateToken}")]
+        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
             long versionId;
-            if (!_repositiory.TryGetVersion(request.State, out versionId))
+            if (!_repositiory.TryGetVersion(stateToken, out versionId))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
+            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), CombinedResult.ManualMask);
+            var result = _factory.ComposeAll(messages, x => x.ForManual);
+            return result;
+        }
+
+        [Route("api/Manual")]
+        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request)
+        {
+            var versionId = _repositiory.GetLatestVersion();
             var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), CombinedResult.ManualMask);
             var result = _factory.ComposeAll(messages, x => x.ForManual);
             return result;
@@ -39,7 +48,6 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             public IReadOnlyCollection<long> OrderIds { get; set; }
             public long? ProjectId { get; set; }
             public DateTime ReleaseDate { get; set; }
-            public Guid? State { get; set; }
         }
     }
 }
