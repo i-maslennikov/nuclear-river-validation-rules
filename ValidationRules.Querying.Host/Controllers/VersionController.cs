@@ -5,9 +5,11 @@ using System.Web.Http;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
+    [RoutePrefix("api/version")]
     public sealed class VersionController : ApiController
     {
-        public string GetVersion()
+        [Route(""), HttpGet]
+        public IHttpActionResult Get()
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".version.txt");
             if (!File.Exists(path))
@@ -22,7 +24,9 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             }
 
             var versionLine = lines[1];
-            return versionLine.Substring(versionLine.IndexOf(':')).Trim(':', ' ');
+            var version = versionLine.Substring(versionLine.IndexOf(':')).Trim(':', ' ');
+
+            return Ok(version);
         }
     }
 }
