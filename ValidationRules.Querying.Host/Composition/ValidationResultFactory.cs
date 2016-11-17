@@ -11,11 +11,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 {
     public class ValidationResultFactory
     {
-        private readonly Dictionary<MessageTypeCode, IMessageComposer> _serializers;
+        private readonly Dictionary<MessageTypeCode, IMessageComposer> _composers;
 
-        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> serializers)
+        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers)
         {
-            _serializers = serializers.ToDictionary(x => x.MessageType, x => x);
+            _composers = composers.ToDictionary(x => x.MessageType, x => x);
         }
 
         public IReadOnlyCollection<ValidationResult> ComposeAll(IReadOnlyCollection<Version.ValidationResult> messages, Func<CombinedResult, Result> selector)
@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         private MessageComposerResult Compose(Version.ValidationResult message)
         {
             IMessageComposer composer;
-            if (!_serializers.TryGetValue((MessageTypeCode)message.MessageType, out composer))
+            if (!_composers.TryGetValue((MessageTypeCode)message.MessageType, out composer))
             {
                 throw new ArgumentException($"Не найден сериализатор '{message.MessageType}'", nameof(message));
             }
