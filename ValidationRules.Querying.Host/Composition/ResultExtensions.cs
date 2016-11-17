@@ -197,6 +197,23 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             };
         }
 
+        public static OrderInactiveFieldsDto ReadOrderInactiveFieldsMessage(this Version.ValidationResult message)
+        {
+            var element = message.MessageParams.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return new OrderInactiveFieldsDto
+            {
+                LegalPerson = element.Element("legalPerson") != null,
+                LegalPersonProfile = element.Element("legalPersonProfile") != null,
+                BranchOfficeOrganizationUnit = element.Element("branchOfficeOrganizationUnit") != null,
+                BranchOffice = element.Element("branchOffice") != null,
+            };
+        }
+
         public static int ReadProjectThemeCount(this Version.ValidationResult message)
         {
             var element = message.MessageParams.Root.Element("message");
@@ -217,6 +234,17 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             }
 
             return element.Attribute("website").Value;
+        }
+
+        public static DealState ReadDealState(this Version.ValidationResult message)
+        {
+            var element = message.MessageParams.Root.Element("message");
+            if (element == null)
+            {
+                throw new ArgumentException("Сообщение не содержит сообщения", nameof(message));
+            }
+
+            return (DealState)Enum.Parse(typeof(DealState), element.Attribute("state").Value, true);
         }
 
         private static EntityReference ReadReference(Version.ValidationResult message, string type)
@@ -242,6 +270,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             return s.Substring(0, 1).ToLowerInvariant() + s.Substring(1);
         }
+
+        public enum DealState { Missing, Inactive }
 
         public sealed class CategoryCountDto
         {
@@ -279,6 +309,14 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             public int Max { get; set; }
             public int Count { get; set; }
+        }
+
+        public sealed class OrderInactiveFieldsDto
+        {
+            public bool LegalPerson { get; set; }
+            public bool LegalPersonProfile { get; set; }
+            public bool BranchOfficeOrganizationUnit { get; set; }
+            public bool BranchOffice { get; set; }
         }
 
         public sealed class OrderRequiredFieldsDto

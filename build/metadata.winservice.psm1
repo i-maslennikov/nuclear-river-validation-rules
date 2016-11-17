@@ -116,7 +116,7 @@ function Get-ServiceNameMetadata ($Context) {
 	}
 }
 
-function Get-TaskServiceMetadata ($Context) {
+function Get-WinServiceMetadata ($Context) {
 
 	$metadata = @{}
 	$metadata += Get-TargetHostsMetadata $Context
@@ -132,4 +132,4 @@ function Get-TaskServiceMetadata ($Context) {
 	return @{ "$($Context.EntryPoint)" = $metadata }
 }
 
-Export-ModuleMember -Function Get-TaskServiceMetadata
+Export-ModuleMember -Function Get-WinServiceMetadata
