@@ -277,6 +277,7 @@
     <Compile Include="Model\FirmRules\Facts\OrderPositionAdvertisement.cs" />
     <Compile Include="Model\FirmRules\Facts\SpecialPosition.cs" />
     <Compile Include="Model\FirmRules\Facts\Project.cs" />
+    <Compile Include="Model\Messages\CombinedResult.cs" />
     <Compile Include="Model\Messages\MessageTypeCode.cs" />
     <Compile Include="Model\Messages\Result.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Category.cs" />

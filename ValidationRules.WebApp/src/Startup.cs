@@ -21,11 +21,6 @@ namespace NuClear.ValidationRules.WebApp
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
-            if (env.IsDevelopment())
-            {
-                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-                builder.AddApplicationInsightsSettings(developerMode: true);
-            }
             Configuration = builder.Build();
         }
 
@@ -35,18 +30,17 @@ namespace NuClear.ValidationRules.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddApplicationInsightsTelemetry(Configuration);
             services.AddSingleton<DataConnectionFactory>();
-            services.AddSingleton<LocalizedMessageFactory>();
             services.AddSingleton<LinkFactory>();
             services.AddScoped<OrderRepositiory>();
             services.AddScoped<UserRepositiory>();
-            services.AddScoped<MessageRepositiory>();
             services.AddScoped<ProjectRepositiory>();
+            services.AddScoped<QueryingClient>();
 
             services.AddOptions();
             services.Configure<LinkFactorySettings>(Configuration.GetSection("LinkFactorySettings"));
             services.Configure<ConnectionStringSettings>(Configuration.GetSection("ConnectionStringSettings"));
+            services.Configure<QueryingHostSettings>(Configuration.GetSection("QueryingHostSettings"));
             services.AddMvc();
         }
 
@@ -55,8 +49,6 @@ namespace NuClear.ValidationRules.WebApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            app.UseApplicationInsightsRequestTelemetry();
 
             app.UseDeveloperExceptionPage();
             if (env.IsDevelopment())
@@ -67,8 +59,6 @@ namespace NuClear.ValidationRules.WebApp
             //{
             //    app.UseExceptionHandler("/Home/Error");
             //}
-
-            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
 

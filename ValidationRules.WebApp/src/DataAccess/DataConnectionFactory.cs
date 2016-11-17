@@ -5,7 +5,7 @@ using LinqToDB.Mapping;
 using Microsoft.Extensions.Options;
 
 using NuClear.ValidationRules.WebApp.Configuration;
-using NuClear.ValidationRules.WebApp.Entity;
+using NuClear.ValidationRules.WebApp.DataAccess.Entity;
 
 namespace NuClear.ValidationRules.WebApp.DataAccess
 {
@@ -16,7 +16,6 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
         public DataConnectionFactory(IOptions<ConnectionStringSettings> settings)
         {
             DataConnection.AddConfiguration("Erm", settings.Value.Erm, SqlServerTools.GetDataProvider(SqlServerVersion.v2012));
-            DataConnection.AddConfiguration("Messages", settings.Value.Messages, SqlServerTools.GetDataProvider(SqlServerVersion.v2012));
             _schema = CreateSchema();
         }
 
@@ -52,9 +51,6 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
             builder.Entity<ReleaseInfo>()
                 .HasSchemaName("Billing")
                 .HasTableName("ReleaseInfos");
-
-            builder.Entity<ValidationResult>()
-                .HasSchemaName("Messages");
 
             return builder.MappingSchema;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-using NuClear.ValidationRules.WebApp.Entity;
+using NuClear.ValidationRules.WebApp.DataAccess.Entity;
 
 namespace NuClear.ValidationRules.WebApp.DataAccess
 {
