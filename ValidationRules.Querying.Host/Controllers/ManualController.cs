@@ -8,6 +8,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
+    [RoutePrefix("api/Manual")]
     public class ManualController : ApiController
     {
         private readonly MessageRepositiory _repositiory;
@@ -19,7 +20,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             _factory = factory;
         }
 
-        [Route("api/Manual/{stateToken}")]
+        [Route("{stateToken:guid}"), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
             long versionId;
@@ -33,7 +34,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             return Ok(result);
         }
 
-        [Route("api/Manual")]
+        [Route(""), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request)
         {
             var versionId = _repositiory.GetLatestVersion();

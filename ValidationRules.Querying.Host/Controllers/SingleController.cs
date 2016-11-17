@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Web.Http;
 
 using NuClear.ValidationRules.Querying.Host.Composition;
@@ -9,6 +7,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
+    [RoutePrefix("api/Single")]
     public class SingleController : ApiController
     {
         private readonly MessageRepositiory _repositiory;
@@ -20,7 +19,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             _factory = factory;
         }
 
-        [Route("api/Single/{stateToken}")]
+        [Route("{stateToken:guid}"), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
             long versionId;
@@ -34,7 +33,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             return Ok(result);
         }
 
-        [Route("api/Single")]
+        [Route(""), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request)
         {
             var versionId = _repositiory.GetLatestVersion();

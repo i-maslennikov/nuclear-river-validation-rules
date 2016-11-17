@@ -8,6 +8,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
+    [RoutePrefix("api/Release")]
     public class ReleaseController : ApiController
     {
         private readonly MessageRepositiory _repositiory;
@@ -19,7 +20,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             _factory = factory;
         }
 
-        [Route("api/Release/{stateToken}")]
+        [Route("{stateToken:guid}"), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
             long versionId;
