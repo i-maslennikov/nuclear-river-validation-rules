@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Web.Http;
 
 using NuClear.ValidationRules.Querying.Host.Composition;
@@ -21,17 +20,17 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         }
 
         [Route("api/Release/{stateToken}")]
-        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
+        public IHttpActionResult Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
             long versionId;
             if (!_repositiory.TryGetVersion(stateToken, out versionId))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), CombinedResult.ReleaseMask);
             var result = _factory.ComposeAll(messages, x => x.ForRelease);
-            return result;
+            return Ok(result);
         }
 
         public class ApiRequest

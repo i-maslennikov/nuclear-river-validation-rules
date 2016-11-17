@@ -21,17 +21,17 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         }
 
         [Route("api/Prerelease/{stateToken}")]
-        public IReadOnlyCollection<Model.ValidationResult> Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
+        public IHttpActionResult Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
             long versionId;
             if (!_repositiory.TryGetVersion(stateToken, out versionId))
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), CombinedResult.PrereleaseMask);
             var result = _factory.ComposeAll(messages, x => x.ForPrerelease);
-            return result;
+            return Ok(result);
         }
 
         public class ApiRequest
