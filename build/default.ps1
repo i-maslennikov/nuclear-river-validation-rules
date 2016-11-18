@@ -7,6 +7,7 @@ Import-Module "$BuildToolsRoot\modules\metadata.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\entrypoint.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\buildqueue.psm1" -DisableNameChecking
 Import-Module "$BuildToolsRoot\modules\deployqueue.psm1" -DisableNameChecking
+Import-Module "$BuildToolsRoot\modules\deploy.winservice.psm1" -DisableNameChecking
 
 Include "$BuildToolsRoot\psake\nuget.ps1"
 Include "$BuildToolsRoot\psake\unittests.ps1"
@@ -40,6 +41,10 @@ function QueueDeploy-ReplicationHost {
 	if ($Metadata['ValidationRules.Replication.Host']){
 		QueueDeploy-WinService 'ValidationRules.Replication.Host'
 	}
+}
+Task Stop-ReplicationHost -Precondition { $Metadata['ValidationRules.Replication.Host'] } {
+	Load-WinServiceModule 'ValidationRules.Replication.Host'
+	Take-WinServiceOffline 'ValidationRules.Replication.Host'
 }
 
 Task QueueBuild-Packages {
