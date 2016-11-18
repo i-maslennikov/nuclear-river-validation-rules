@@ -215,7 +215,6 @@
     <Compile Include="Identities\EntityTypes\EntityTypeFirmContact.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirmAddress.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeLegalPersonProfile.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeLimit.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeLock.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderFile.cs" />
