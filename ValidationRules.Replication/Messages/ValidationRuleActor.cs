@@ -132,6 +132,8 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new LinkedCategoryShouldBelongToFirm(_query),
                     new LinkedFirmAddressShouldBeValid(_query),
                     new LinkedFirmShouldBeValid(_query),
+                    new BillsSumShouldMatchOrder(_query),
+                    new BillsShouldBeCreated(_query),
                     new OrderBeginDistrubutionShouldBeFirstDayOfMonth(_query),
                     new OrderEndDistrubutionShouldBeLastSecondOfMonth(_query),
                     new OrderMustHaveActiveDeal(_query),
@@ -158,6 +160,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new CouponMustBeSoldOnceAtTime(_query),
                     new OrderPeriodMustContainAdvertisementPeriod(_query),
                     new AdvertisementWebsiteShouldNotBeFirmWebsite(_query),
+                    new FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),
