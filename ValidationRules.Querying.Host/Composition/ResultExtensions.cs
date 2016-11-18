@@ -80,7 +80,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             {
                 Available = (decimal)element.Attribute("available"),
                 Planned = (decimal)element.Attribute("planned"),
-                Required = (decimal)element.Attribute("required"),
             };
         }
 
@@ -283,7 +282,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             public decimal Available { get; set; }
             public decimal Planned { get; set; }
-            public decimal Required { get; set; }
         }
 
         public sealed class OrderPositionDto

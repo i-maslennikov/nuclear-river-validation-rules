@@ -35,7 +35,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::FirmAddress(),
                 new Erm::LegalPerson(),
                 new Erm::LegalPersonProfile(),
-                new Erm::Limit(),
                 new Erm::Lock(),
                 new Erm::Order(),
                 new Erm::OrderFile(),

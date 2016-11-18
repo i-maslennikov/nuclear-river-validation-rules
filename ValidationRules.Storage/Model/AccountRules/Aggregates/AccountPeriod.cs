@@ -27,11 +27,6 @@ namespace NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates
         public decimal ReleaseAmount { get; set; }
 
         /// <summary>
-        /// Сумма, на которую предоставлены лимиты по ЛС.
-        /// </summary>
-        public decimal LimitAmount { get; set; }
-
-        /// <summary>
         /// Начало периода, за который выполнен расчёт баланса ЛС.
         /// </summary>
         public DateTime Start { get; set; }

@@ -203,6 +203,9 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(AccountAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<AccountAggregates::Order.DebtPermission>()
+                  .HasSchemaName(AccountAggregatesSchema);
+
             builder.Entity<AccountAggregates::Lock>()
                    .HasSchemaName(AccountAggregatesSchema);
 

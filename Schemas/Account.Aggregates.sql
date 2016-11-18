@@ -24,8 +24,15 @@ create table AccountAggregates.Lock(
     [Start] datetime2(2) not null,
     [End] datetime2(2) not null,
 )
+
 create index IX_Lock_OrderId ON AccountAggregates.Lock (OrderId)
 go
+
+create table AccountAggregates.DebtPermission(
+    OrderId bigint not null,
+    [Start] datetime2(2) not null,
+    [End] datetime2(2) not null,
+)
 
 create table AccountAggregates.Account(
     Id bigint not null,
@@ -39,7 +46,6 @@ create table AccountAggregates.AccountPeriod(
     LockedAmount decimal(19,4) not null,
     OwerallLockedAmount decimal(19,4) not null,
     ReleaseAmount decimal(19,4) not null,
-    LimitAmount decimal(19,4) not null,
 
     [Start] datetime2(2) not null,
     [End] datetime2(2) not null,
@@ -50,5 +56,5 @@ go
 
 CREATE NONCLUSTERED INDEX IX_AccountPeriod_AccountId_Start_End
 ON [AccountAggregates].[AccountPeriod] ([AccountId],[Start],[End])
-INCLUDE ([Balance],[LockedAmount],[OwerallLockedAmount],[ReleaseAmount],[LimitAmount])
+INCLUDE ([Balance],[LockedAmount],[OwerallLockedAmount],[ReleaseAmount])
 GO

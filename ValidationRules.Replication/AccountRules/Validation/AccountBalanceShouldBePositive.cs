@@ -40,15 +40,15 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                 from accountPeriod in query.For<AccountPeriod>()
                 join order in nonFreeOfChargeOrders on accountPeriod.AccountId equals order.AccountId
                 where order.BeginDistributionDate < accountPeriod.End && accountPeriod.Start < order.EndDistributionDate
-                where accountPeriod.Balance + accountPeriod.LimitAmount - accountPeriod.ReleaseAmount - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) < -Epsilon
+                where accountPeriod.Balance - accountPeriod.ReleaseAmount - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) <= -Epsilon
+                where !query.For<Order.DebtPermission>().Any(x => x.OrderId == order.Id && x.Start <= accountPeriod.Start && accountPeriod.End <= x.End)
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(
                             new XElement("root",
                                 new XElement("message",
                                     new XAttribute("available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount)),
-                                    new XAttribute("planned", accountPeriod.ReleaseAmount),
-                                    new XAttribute("required", accountPeriod.ReleaseAmount - (accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount)))),
+                                    new XAttribute("planned", accountPeriod.ReleaseAmount)),
                                 new XElement("account",
                                     new XAttribute("id", accountPeriod.AccountId)),
                                 new XElement("order",

@@ -40,7 +40,6 @@ namespace NuClear.ValidationRules.Storage
                       .HasPrimaryKey(x => x.RuleType)
                       .HasPrimaryKey(x => x.DependentPositionId)
                       .HasPrimaryKey(x => x.PrincipalPositionId);
-                config.Entity<Limit>().HasSchemaName(BillingSchema).HasTableName("Limits").HasPrimaryKey(x => x.Id);
                 config.Entity<Lock>().HasSchemaName(BillingSchema).HasTableName("Locks").HasPrimaryKey(x => x.Id);
                 config.Entity<Order>().HasSchemaName(BillingSchema).HasTableName("Orders").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPosition>().HasSchemaName(BillingSchema).HasTableName("OrderPositions").HasPrimaryKey(x => x.Id);
@@ -75,6 +74,8 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<LegalPerson>().HasSchemaName(BillingSchema).HasTableName("LegalPersons").HasPrimaryKey(x => x.Id);
                 config.Entity<LegalPersonProfile>().HasSchemaName(BillingSchema).HasTableName("LegalPersonProfiles").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderFile>().HasSchemaName(BillingSchema).HasTableName("OrderFiles").HasPrimaryKey(x => x.Id);
+
+                config.Entity<UnlimitedOrder>().HasSchemaName(OrderValidationSchema).HasTableName("UnlimitedOrders");
 
                 return schema;
             }

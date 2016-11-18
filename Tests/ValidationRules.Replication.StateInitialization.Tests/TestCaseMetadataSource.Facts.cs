@@ -26,6 +26,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static DateTime MonthStart(int i) => DateTime.Parse("2012-01-01").AddMonths(i - 1);
 
         // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement UnlimitedOrder
+        => ArrangeMetadataElement.Config
+            .Name(nameof(UnlimitedOrder))
+            .Erm(
+                new Erm::UnlimitedOrder { OrderId = 1, IsActive = true, PeriodStart = MonthStart(1), PeriodEnd = MonthStart(2).AddSeconds(-1) },
+                new Erm::UnlimitedOrder { OrderId = 2, IsActive = false, PeriodStart = MonthStart(1), PeriodEnd = MonthStart(2).AddSeconds(-1) })
+            .Fact(
+                new AccountFacts::UnlimitedOrder { OrderId = 1, PeriodStart = MonthStart(1), PeriodEnd = MonthStart(2) });
+
+        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmContactsFacts
         => ArrangeMetadataElement.Config
             .Name(nameof(FirmContactsFacts))
