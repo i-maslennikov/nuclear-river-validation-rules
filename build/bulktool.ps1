@@ -13,7 +13,7 @@ function QueueBuild-BulkTool  {
 	}
 }
 
-Task Run-BulkTool -Precondition { $Metadata['ValidationRules.StateInitialization.Host'] } {
+Task Run-BulkTool -Precondition { $Metadata['ValidationRules.StateInitialization.Host'] } -depends Stop-ReplicationHost {
 	$artifactName = Get-Artifacts 'ValidationRules.StateInitialization.Host'
 
 	$exePath = Join-Path $artifactName '2GIS.NuClear.ValidationRules.StateInitialization.Host.exe'
