@@ -12,7 +12,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
@@ -93,9 +93,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                            Id = order.Id,
                            Number = order.Number,
 
-                           BeginDistributionDate = order.BeginDistributionDate,
-                           EndDistributionDatePlan = order.EndDistributionDatePlan,
-                           EndDistributionDateFact = order.EndDistributionDateFact,
+                           BeginDistributionDate = order.BeginDistribution,
+                           EndDistributionDatePlan = order.EndDistributionPlan,
+                           EndDistributionDateFact = order.EndDistributionFact,
                            ProjectId = project.Id,
                            FirmId = order.FirmId,
                            RequireWhiteListAdvertisement = require,
@@ -125,15 +125,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             public IQueryable<Order.MissingAdvertisementReference> GetSource()
             {
                 var positionChilds = from position in _query.For<Facts::Position>()
+                                     from child in _query.For<Facts::PositionChild>().Where(x => x.MasterPositionId == position.Id).DefaultIfEmpty()
                                      select new
                                      {
                                          PositionId = position.Id,
-                                         ChildPositionId = position.ChildPositionId ?? position.Id,
+                                         ChildPositionId = child != null ? child.ChildPositionId : position.Id
                                      };
 
                 return from order in _query.For<Facts::Order>()
                        join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
-                       join pp in _query.For<Facts::PricePosition>() on op.PricePositionId equals pp.Id
+                       join pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on op.PricePositionId equals pp.Id
                        join positionChild in positionChilds on pp.PositionId equals positionChild.PositionId
                        join p in _query.For<Facts::Position>() on positionChild.ChildPositionId equals p.Id
                        join template in _query.For<Facts::AdvertisementTemplate>() on p.AdvertisementTemplateId equals template.Id
@@ -172,18 +173,18 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             public IQueryable<Order.MissingOrderPositionAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
-                   join pp in _query.For<Facts::PricePosition>() on op.PricePositionId equals pp.Id
+                   join pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on op.PricePositionId equals pp.Id
                    join position in _query.For<Facts::Position>() on pp.PositionId equals position.Id
                    where !position.IsCompositionOptional // нужен хотя бы один объект привязки
-                   join childPosition in _query.For<Facts::Position>() on position.ChildPositionId equals childPosition.Id
-                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.Id).DefaultIfEmpty()
+                   join childPosition in _query.For<Facts::PositionChild>() on position.Id equals childPosition.MasterPositionId
+                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.ChildPositionId).DefaultIfEmpty()
                    where opa == null // позиция не продана
                    select new Order.MissingOrderPositionAdvertisement
                    {
                        OrderId = order.Id,
                        OrderPositionId = op.Id,
                        CompositePositionId = pp.PositionId,
-                       PositionId = childPosition.Id,
+                       PositionId = childPosition.ChildPositionId,
                    };
 
             public FindSpecification<Order.MissingOrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -335,12 +336,12 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             private IQueryable<OrderDto> GetOrdersFact()
                 => _query.For<Facts::Order>()
-                         .Select(x => new OrderDto { Id = x.Id, Begin = x.BeginDistributionDate, End = x.EndDistributionDateFact, Scope = Scope.Compute(x.WorkflowStepId, x.Id) });
+                         .Select(x => new OrderDto { Id = x.Id, Begin = x.BeginDistribution, End = x.EndDistributionFact, Scope = Scope.Compute(x.WorkflowStep, x.Id) });
 
             private IQueryable<OrderDto> GetOrdersPlan()
                 => _query.For<Facts::Order>()
-                         .Where(x => x.EndDistributionDateFact != x.EndDistributionDatePlan)
-                         .Select(x => new OrderDto { Id = x.Id, Begin = x.EndDistributionDateFact, End = x.EndDistributionDatePlan, Scope = x.Id });
+                         .Where(x => x.EndDistributionFact != x.EndDistributionPlan)
+                         .Select(x => new OrderDto { Id = x.Id, Begin = x.EndDistributionFact, End = x.EndDistributionPlan, Scope = x.Id });
 
             public FindSpecification<Order.CouponDistributionPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

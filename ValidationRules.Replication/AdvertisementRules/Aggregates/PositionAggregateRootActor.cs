@@ -11,7 +11,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {

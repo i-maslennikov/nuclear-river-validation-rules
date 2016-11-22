@@ -2,7 +2,7 @@
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {

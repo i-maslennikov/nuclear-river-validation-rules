@@ -15,10 +15,7 @@ using NuClear.ValidationRules.OperationsProcessing.Contexts;
 using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
-using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
-using NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
-using NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Primary
 {
@@ -26,32 +23,17 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
     {
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
-        private readonly CommandFactory<AccountFactsSubDomain> _accountCommandFactory;
-        private readonly CommandFactory<ConsistencyFactsSubDomain> _consistencyCommandFactory;
-        private readonly CommandFactory<PriceFactsSubDomain> _priceCommandFactory;
-        private readonly CommandFactory<FirmFactsSubDomain> _firmCommandFactory;
-        private readonly CommandFactory<AdvertisementFactsSubDomain> _advertisementCommandFactory;
-        private readonly CommandFactory<ProjectFactsSubDomain> _projectCommandFactory;
+        private readonly CommandFactory<FactsSubDomain> _factsCommandFactory;
         private readonly UglyHackCommandFactory _uglyHackCommandFactory;
 
         public ImportFactsFromErmAccumulator(ITracer tracer,
                                              ITelemetryPublisher telemetryPublisher,
-                                             CommandFactory<AccountFactsSubDomain> accountCommandFactory,
-                                             CommandFactory<ConsistencyFactsSubDomain> consistencyCommandFactory,
-                                             CommandFactory<PriceFactsSubDomain> priceCommandFactory,
-                                             CommandFactory<FirmFactsSubDomain> firmCommandFactory,
-                                             CommandFactory<AdvertisementFactsSubDomain> advertisementCommandFactory,
-                                             CommandFactory<ProjectFactsSubDomain> projectCommandFactory,
+                                             CommandFactory<FactsSubDomain> factsCommandFactory,
                                              UglyHackCommandFactory uglyHackCommandFactory)
         {
             _tracer = tracer;
             _telemetryPublisher = telemetryPublisher;
-            _accountCommandFactory = accountCommandFactory;
-            _consistencyCommandFactory = consistencyCommandFactory;
-            _priceCommandFactory = priceCommandFactory;
-            _firmCommandFactory = firmCommandFactory;
-            _advertisementCommandFactory = advertisementCommandFactory;
-            _projectCommandFactory = projectCommandFactory;
+            _factsCommandFactory = factsCommandFactory;
             _uglyHackCommandFactory = uglyHackCommandFactory;
         }
 
@@ -65,12 +47,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             var incrementStateCommand = new IncrementStateCommand(new[] { @event.Id });
             var delayCommand = new RecordDelayCommand(@event.Context.Finished.UtcDateTime);
 
-            var commands = _accountCommandFactory.CreateCommands(@event)
-                .Concat(_consistencyCommandFactory.CreateCommands(@event))
-                .Concat(_priceCommandFactory.CreateCommands(@event))
-                .Concat(_firmCommandFactory.CreateCommands(@event))
-                .Concat(_advertisementCommandFactory.CreateCommands(@event))
-                .Concat(_projectCommandFactory.CreateCommands(@event))
+            var commands = _factsCommandFactory.CreateCommands(@event)
                 .Concat(_uglyHackCommandFactory.CreateCommands(@event))
                 .ToList();
 
@@ -115,7 +92,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
 
                 foreach (var change in changes.Where(x => x.Item1.Id == EntityTypePosition.Instance.Id))
                 {
-                    yield return new SyncDataObjectCommand(typeof(PricePositionNotActive), change.Item2);
+                    yield return new SyncDataObjectCommand(typeof(PositionChild), change.Item2);
                 }
 
                 foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeOrderPosition.Instance.Id))

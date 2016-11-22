@@ -11,12 +11,18 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 {
     public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
     {
+        private const int BindingObjectTypeCategoryMultipleAsterix = 1;
+        private const int WorkflowStepOnRegistration = 1;
+        private const int OrderTypeSelfAds = 2;
+        private const int OrderTypeSocialAds = 7;
+        private const int OrderTypeCompensation = 9;
+
         private readonly IQuery _query;
         private readonly IBulkRepository<Order.InvalidFirm> _orderInvalidFirmRepository;
         private readonly IBulkRepository<Order.InvalidFirmAddress> _orderInvalidFirmAddressRepository;
@@ -149,7 +155,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from firm in _query.For<Facts::Firm>().Where(x => x.Id == order.FirmId)
                    let state = firm.IsDeleted ? InvalidFirmState.Deleted
                                    : !firm.IsActive ? InvalidFirmState.ClosedForever
-                                   : firm.IsClosedForAscertainment ? InvalidFirmState.ClosedForAscertainment 
+                                   : firm.IsClosedForAscertainment ? InvalidFirmState.ClosedForAscertainment
                                    : InvalidFirmState.NotSet
                    where state != InvalidFirmState.NotSet // todo: интересно было бы глянуть на сгенерированный sql
                    select new Order.InvalidFirm
@@ -229,7 +235,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId && x.IsActive && !x.IsClosedForAscertainment && !x.IsDeleted)
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
-                   from cfa in _query.For<Facts::CategoryFirmAddress>().Where(x => x.FirmAddressId == opa.FirmAddressId && x.CategoryId == opa.CategoryId).DefaultIfEmpty()
+                   from cfa in _query.For<Facts::FirmAddressCategory>().Where(x => x.FirmAddressId == opa.FirmAddressId && x.CategoryId == opa.CategoryId).DefaultIfEmpty()
                    where cfa == null
                    select new Order.InvalidCategoryFirmAddress
                    {
@@ -256,8 +262,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
         public sealed class InvalidCategoryAccessor : IStorageBasedDataObjectAccessor<Order.InvalidCategory>
         {
-            private const int BindingObjectTypeCategoryMultipleAsterix = 1;
-
             private readonly IQuery _query;
 
             public InvalidCategoryAccessor(IQuery query)
@@ -272,7 +276,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                    from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
                    let categoryBelongToFirmAddress = _query.For<Facts::FirmAddress>()
-                                                           .SelectMany(fa => _query.For<Facts::CategoryFirmAddress>().Where(cfa => cfa.FirmAddressId == fa.Id))
+                                                           .SelectMany(fa => _query.For<Facts::FirmAddressCategory>().Where(cfa => cfa.FirmAddressId == fa.Id))
                                                            .Any(x => x.CategoryId == opa.CategoryId)
                    let state = !category.IsActiveNotDeleted ? InvalidCategoryState.Inactive
                                    : !categoryBelongToFirmAddress ? InvalidCategoryState.NotBelongToFirm
@@ -514,8 +518,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
         public sealed class OrderInvalidBillsTotalAccessor : IStorageBasedDataObjectAccessor<Order.InvalidBillsTotal>
         {
-            private const int WorkflowStepOnRegistration = 1;
-
             private readonly IQuery _query;
 
             public OrderInvalidBillsTotalAccessor(IQuery query)
@@ -639,8 +641,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
         public sealed class OrderMissingBillsAccessor : IStorageBasedDataObjectAccessor<Order.MissingBills>
         {
-            private const int WorkflowStepOnRegistration = 1;
-
             private readonly IQuery _query;
 
             public OrderMissingBillsAccessor(IQuery query)
@@ -654,7 +654,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
                                      select rw.Amount).Sum()
-                   where orderTotal > 0 && !order.IsFreeOfCharge && billCount == 0
+                   let isFreeOfCharge = order.OrderType == OrderTypeSelfAds || order.OrderType == OrderTypeSocialAds || order.OrderType == OrderTypeCompensation
+                   where orderTotal > 0 && !isFreeOfCharge && billCount == 0
                    select new Order.MissingBills
                    {
                        OrderId = order.Id,

@@ -11,7 +11,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
@@ -84,8 +84,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
 
             public IQueryable<Firm.FirmWebsite> GetSource() =>
-                from firm in _query.For<Facts::Firm>()
-                from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.FirmId == firm.Id)
+                from firm in _query.For<Facts::Firm>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
+                from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.FirmId == firm.Id)
                 from firmAddressWebsite in _query.For<Facts::FirmAddressWebsite>().Where(x => x.FirmAddressId == firmAddress.Id)
                 select new Firm.FirmWebsite
                     {
@@ -117,9 +117,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Firm.WhiteListDistributionPeriod> GetSource()
             {
-                var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistributionDate, x.FirmId })
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, x.FirmId }))
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, x.FirmId }));
+                var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistribution, x.FirmId })
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, x.FirmId }))
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, x.FirmId }));
 
                 // todo: проверить, действительно ли тот баг проявляется здесь или можно убрать
                 // https://github.com/linq2db/linq2db/issues/356
@@ -135,7 +135,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 var result =
                     from period in firmPeriods
                     let advertisementPosition = 
-                        (from order in _query.For<Facts::Order>().Where(x => x.FirmId == period.FirmId && x.BeginDistributionDate <= period.Start && period.End <= x.EndDistributionDateFact && x.WorkflowStepId != OrderOnRegistration)
+                        (from order in _query.For<Facts::Order>().Where(x => x.FirmId == period.FirmId && x.BeginDistribution <= period.Start && period.End <= x.EndDistributionFact && x.WorkflowStep != OrderOnRegistration)
                          from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                          from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
                          from a in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId.Value && x.FirmId == period.FirmId && x.IsSelectedToWhiteList && ! x.IsDeleted)

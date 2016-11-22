@@ -11,12 +11,18 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
     public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
     {
+        private const int OrderOnTermination = 4;
+        private const int OrderApproved = 5;
+        private const int OrderTypeSelfAds = 2;
+        private const int OrderTypeSocialAds = 7;
+        private const int OrderTypeCompensation = 9;
+
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IBulkRepository<Lock> _lockBulkRepository;
@@ -57,6 +63,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
+                   where order.WorkflowStep == OrderOnTermination || order.WorkflowStep == OrderApproved
                    join destProject in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals destProject.OrganizationUnitId
                    join sourceProject in _query.For<Facts::Project>() on order.SourceOrganizationUnitId equals sourceProject.OrganizationUnitId
                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId).DefaultIfEmpty()
@@ -66,10 +73,10 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                            DestProjectId = destProject.Id,
                            SourceProjectId = sourceProject.Id,
                            AccountId = account.Id,
-                           IsFreeOfCharge = order.IsFreeOfCharge,
+                           IsFreeOfCharge = order.OrderType == OrderTypeSelfAds || order.OrderType == OrderTypeSocialAds || order.OrderType == OrderTypeCompensation,
                            Number = order.Number,
-                           BeginDistributionDate = order.BeginDistributionDate,
-                           EndDistributionDate = order.EndDistributionDate,
+                           BeginDistributionDate = order.BeginDistribution,
+                           EndDistributionDate = order.EndDistributionFact,
                        };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

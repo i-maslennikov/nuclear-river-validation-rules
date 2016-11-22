@@ -3,7 +3,7 @@
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -19,20 +19,20 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Fact(
                     new Facts::Account { Id = 1, Balance = 11, BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2 },
 
-                    new Facts::Order { Id = 1, Number = "Order1", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
+                    new Facts::Order { Id = 1, Number = "Order1", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
                     new Facts::OrderPosition { Id = 2, OrderId = 1 },
                     new Facts::ReleaseWithdrawal { Id = 3, OrderPositionId = 2, Amount = 10, Start = FirstDayJan },
                     new Facts::ReleaseWithdrawal { Id = 4, OrderPositionId = 2, Amount = 10, Start = FirstDayFeb },
                     new Facts::Lock { Id = 1, OrderId = 1, AccountId = 1, Start = FirstDayJan, Amount = 10 },
 
-                    new Facts::Order { Id = 2, Number = "Order2", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
+                    new Facts::Order { Id = 2, Number = "Order2", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
                     new Facts::OrderPosition { Id = 3, OrderId = 2 },
                     new Facts::ReleaseWithdrawal { Id = 5, OrderPositionId = 2, Amount = 1, Start = FirstDayJan },
                     new Facts::ReleaseWithdrawal { Id = 6, OrderPositionId = 2, Amount = 2, Start = FirstDayFeb },
                     new Facts::Lock { Id = 2, OrderId = 2, AccountId = 1, Start = FirstDayJan, Amount = 1 },
                     new Facts::UnlimitedOrder { OrderId = 2, PeriodStart = FirstDayFeb, PeriodEnd = FirstDayMar },
 
-                    new Facts::Order { Id = 3, Number = "Order3", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true},
+                    new Facts::Order { Id = 3, Number = "Order3", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4, OrderType = 2 },
                     new Facts::OrderPosition { Id = 4, OrderId = 3 },
                     new Facts::ReleaseWithdrawal { Id = 7, OrderPositionId = 4, Amount = 0, Start = FirstDayJan },
                     new Facts::ReleaseWithdrawal { Id = 8, OrderPositionId = 4, Amount = 0, Start = FirstDayFeb },

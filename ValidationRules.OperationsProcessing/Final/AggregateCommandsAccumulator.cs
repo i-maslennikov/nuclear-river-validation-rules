@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Replication.Core;
@@ -8,46 +9,85 @@ using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Final
 {
     public sealed class AggregateCommandsAccumulator :
         MessageProcessingContextAccumulatorBase<CommonEventsFlow, EventMessage, AggregatableMessage<ICommand>>
     {
-        private static readonly IReadOnlyDictionary<Type, Type> AggregateRoots
-            = new Dictionary<Type, Type>
+        private static readonly IReadOnlyDictionary<Type, IReadOnlyCollection<Type>> AggregateRoots
+            = new Dictionary<Type, IReadOnlyCollection<Type>>
                 {
-                    { typeof(Storage.Model.PriceRules.Facts.Project), typeof(Storage.Model.PriceRules.Aggregates.Project) },
-                    { typeof(Storage.Model.PriceRules.Facts.Price), typeof(Storage.Model.PriceRules.Aggregates.Price) },
-                    { typeof(Storage.Model.PriceRules.Facts.Order), typeof(Storage.Model.PriceRules.Aggregates.Order) },
-                    { typeof(Storage.Model.PriceRules.Facts.Position), typeof(Storage.Model.PriceRules.Aggregates.Position) },
-                    { typeof(Storage.Model.PriceRules.Facts.Theme), typeof(Storage.Model.PriceRules.Aggregates.Theme) },
-                    { typeof(Storage.Model.PriceRules.Facts.Category), typeof(Storage.Model.PriceRules.Aggregates.Category) },
-
-                    { typeof(Storage.Model.ConsistencyRules.Facts.Order), typeof(Storage.Model.ConsistencyRules.Aggregates.Order) },
-
-                    { typeof(Storage.Model.AccountRules.Facts.Account), typeof(Storage.Model.AccountRules.Aggregates.Account) },
-                    { typeof(Storage.Model.AccountRules.Facts.Order), typeof(Storage.Model.AccountRules.Aggregates.Order) },
-
-                    { typeof(Storage.Model.FirmRules.Facts.Firm), typeof(Storage.Model.FirmRules.Aggregates.Firm) },
-                    { typeof(Storage.Model.FirmRules.Facts.Order), typeof(Storage.Model.FirmRules.Aggregates.Order) },
-
-                    { typeof(Storage.Model.AdvertisementRules.Facts.Advertisement), typeof(Storage.Model.AdvertisementRules.Aggregates.Advertisement) },
-                    { typeof(Storage.Model.AdvertisementRules.Facts.AdvertisementElementTemplate), typeof(Storage.Model.AdvertisementRules.Aggregates.AdvertisementElementTemplate) },
-                    { typeof(Storage.Model.AdvertisementRules.Facts.Firm), typeof(Storage.Model.AdvertisementRules.Aggregates.Firm) },
-                    { typeof(Storage.Model.AdvertisementRules.Facts.Order), typeof(Storage.Model.AdvertisementRules.Aggregates.Order) },
-                    { typeof(Storage.Model.AdvertisementRules.Facts.Position), typeof(Storage.Model.AdvertisementRules.Aggregates.Position) },
-
-                    { typeof(Storage.Model.ProjectRules.Facts.Project), typeof(Storage.Model.ProjectRules.Aggregates.Project) },
-                    { typeof(Storage.Model.ProjectRules.Facts.FirmAddress), typeof(Storage.Model.ProjectRules.Aggregates.FirmAddress) },
-                    { typeof(Storage.Model.ProjectRules.Facts.Order), typeof(Storage.Model.ProjectRules.Aggregates.Order) },
-                    { typeof(Storage.Model.ProjectRules.Facts.Position), typeof(Storage.Model.ProjectRules.Aggregates.Position) },
-                    { typeof(Storage.Model.ProjectRules.Facts.Category), typeof(Storage.Model.ProjectRules.Aggregates.Category) },
-
-                    { typeof(Storage.Model.ThemeRules.Facts.Theme), typeof(Storage.Model.ThemeRules.Aggregates.Theme) },
-                    { typeof(Storage.Model.ThemeRules.Facts.Order), typeof(Storage.Model.ThemeRules.Aggregates.Order) },
-                    { typeof(Storage.Model.ThemeRules.Facts.Project), typeof(Storage.Model.ThemeRules.Aggregates.Project) },
-                    { typeof(Storage.Model.ThemeRules.Facts.Category), typeof(Storage.Model.ThemeRules.Aggregates.Category) },
+                    { typeof(Order), new[]
+                        {
+                            typeof(Storage.Model.AccountRules.Aggregates.Order),
+                            typeof(Storage.Model.ThemeRules.Aggregates.Order),
+                            typeof(Storage.Model.AdvertisementRules.Aggregates.Order),
+                            typeof(Storage.Model.FirmRules.Aggregates.Order),
+                            typeof(Storage.Model.ConsistencyRules.Aggregates.Order),
+                            typeof(Storage.Model.PriceRules.Aggregates.Order),
+                            typeof(Storage.Model.ProjectRules.Aggregates.Order)
+                        }
+                    },
+                    { typeof(Category), new []
+                        {
+                            typeof(Storage.Model.ThemeRules.Aggregates.Category),
+                            typeof(Storage.Model.PriceRules.Aggregates.Category),
+                            typeof(Storage.Model.ProjectRules.Aggregates.Category)
+                        }
+                    },
+                    { typeof(Project), new []
+                        {
+                            typeof(Storage.Model.ThemeRules.Aggregates.Project),
+                            typeof(Storage.Model.PriceRules.Aggregates.Project),
+                            typeof(Storage.Model.ProjectRules.Aggregates.Project),
+                        }
+                    },
+                    { typeof(Position), new []
+                        {
+                            typeof(Storage.Model.AdvertisementRules.Aggregates.Position),
+                            typeof(Storage.Model.PriceRules.Aggregates.Position),
+                            typeof(Storage.Model.ProjectRules.Aggregates.Position),
+                        }
+                    },
+                    { typeof(Firm), new []
+                        {
+                            typeof(Storage.Model.AdvertisementRules.Aggregates.Firm),
+                            typeof(Storage.Model.FirmRules.Aggregates.Firm)
+                        }
+                    },
+                    { typeof(Theme), new []
+                        {
+                            typeof(Storage.Model.ThemeRules.Aggregates.Theme),
+                            typeof(Storage.Model.PriceRules.Aggregates.Theme)
+                        }
+                    },
+                    { typeof(Price), new []
+                        {
+                            typeof(Storage.Model.PriceRules.Aggregates.Price)
+                        }
+                    },
+                    { typeof(Account), new []
+                        {
+                            typeof(Storage.Model.AccountRules.Aggregates.Account)
+                        }
+                    },
+                    { typeof(Advertisement), new []
+                        {
+                            typeof(Storage.Model.AdvertisementRules.Aggregates.Advertisement)
+                        }
+                    },
+                    { typeof(AdvertisementElementTemplate), new []
+                        {
+                            typeof(Storage.Model.AdvertisementRules.Aggregates.AdvertisementElementTemplate)
+                        }
+                    },
+                    { typeof(FirmAddress), new []
+                        {
+                            typeof(Storage.Model.ProjectRules.Aggregates.FirmAddress)
+                        }
+                    },
                 };
 
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
@@ -64,25 +104,25 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             var createdEvent = @event as DataObjectCreatedEvent;
             if (createdEvent != null)
             {
-                return new[] { new InitializeAggregateCommand(MapDataObjectToAggregate(createdEvent.DataObjectType), createdEvent.DataObjectId) };
+                return AggregateRoots[createdEvent.DataObjectType].Select(x => new InitializeAggregateCommand(x, createdEvent.DataObjectId)).ToList();
             }
 
             var updatedEvent = @event as DataObjectUpdatedEvent;
             if (updatedEvent != null)
             {
-                return new[] { new RecalculateAggregateCommand(MapDataObjectToAggregate(updatedEvent.DataObjectType), updatedEvent.DataObjectId) };
+                return AggregateRoots[updatedEvent.DataObjectType].Select(x => new RecalculateAggregateCommand(x, updatedEvent.DataObjectId)).ToList();
             }
 
             var deletedEvent = @event as DataObjectDeletedEvent;
             if (deletedEvent != null)
             {
-                return new[] { new DestroyAggregateCommand(MapDataObjectToAggregate(deletedEvent.DataObjectType), deletedEvent.DataObjectId) };
+                return AggregateRoots[deletedEvent.DataObjectType].Select(x => new DestroyAggregateCommand(x, deletedEvent.DataObjectId)).ToList();
             }
 
             var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
             if (outdatedEvent != null)
             {
-                return new[] { new RecalculateAggregateCommand(MapDataObjectToAggregate(outdatedEvent.RelatedDataObjectType), outdatedEvent.RelatedDataObjectId) };
+                return AggregateRoots[outdatedEvent.RelatedDataObjectType].Select(x => new RecalculateAggregateCommand(x, outdatedEvent.RelatedDataObjectId)).ToList();
             }
 
             var outdatedPeriodEvent = @event as RelatedDataObjectOutdatedEvent<PeriodKey>;
@@ -104,17 +144,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             }
 
             throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
-        }
-
-        private Type MapDataObjectToAggregate(Type dataObjectType)
-        {
-            Type result;
-            if (!AggregateRoots.TryGetValue(dataObjectType, out result))
-            {
-                throw new ArgumentException($"Type {dataObjectType.FullName} is not mapped with aggregate root type", nameof(dataObjectType));
-            }
-
-            return result;
         }
     }
 }

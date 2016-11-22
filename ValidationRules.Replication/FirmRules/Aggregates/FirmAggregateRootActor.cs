@@ -12,7 +12,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 {
@@ -75,7 +75,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
         {
+            private const long AdvantageousPurchaseWith2Gis = 14; // Выгодные покупки с 2ГИС
+            private const long SelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
             private const long SpecialCategoryId = 18599; // Выгодные покупки с 2ГИС.
+            private const long PlatformDesktop = 1;
 
             private readonly IQuery _query;
 
@@ -88,20 +91,27 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             {
                 var firmsWithCategory =
                     from firmAddressCategory in _query.For<Facts::FirmAddressCategory>().Where(x => x.CategoryId == SpecialCategoryId)
-                    from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.Id == firmAddressCategory.FirmAddressId)
-                    from firm in _query.For<Facts::Firm>().Where(x => x.Id == firmAddress.FirmId)
+                    from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == firmAddressCategory.FirmAddressId)
+                    from firm in _query.For<Facts::Firm>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == firmAddress.FirmId)
                     select firm;
 
                 var periodsForAllFirms =
                     from firm in _query.For<Facts::Firm>()
                     select new { FirmId = firm.Id, Begin = DateTime.MinValue, End = DateTime.MaxValue, Has = false, Scope = Scope.ApprovedScope };
 
+                var specialPositions = _query.For<Facts::Position>().Select(x => new
+                {
+                    x.Id,
+                    IsAdvantageousPurchaseOnPc = x.CategoryCode == AdvantageousPurchaseWith2Gis && x.Platform == PlatformDesktop,
+                    IsSelfAdvertisementOnPc = x.CategoryCode == SelfAdvertisementOnlyOnPc,
+                });
+
                 var periodsForAllOrders =
                     from order in _query.For<Facts::Order>()
                     let has = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                               from position in _query.For<Facts::SpecialPosition>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                               select position).Any(x => x.IsAdvantageousPurchaseOnPc || x.IsSelfAdvertisementOnPc)
+                               from specialPosition in specialPositions.Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                               select specialPosition).Any(x => x.IsAdvantageousPurchaseOnPc || x.IsSelfAdvertisementOnPc)
                     let scope = Scope.Compute(order.WorkflowStep, order.Id)
                     select new { order.FirmId, Begin = order.BeginDistribution, End = order.EndDistributionFact, Has = has, Scope = scope };
 

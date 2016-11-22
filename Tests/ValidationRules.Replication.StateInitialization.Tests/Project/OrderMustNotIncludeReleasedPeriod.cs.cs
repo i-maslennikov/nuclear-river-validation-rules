@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 

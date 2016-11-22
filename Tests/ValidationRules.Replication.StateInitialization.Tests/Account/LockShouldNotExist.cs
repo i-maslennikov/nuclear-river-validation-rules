@@ -1,11 +1,9 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -19,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(LockShouldNotExist))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "InvalidOrder", BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 },
+                    new Facts::Order { Id = 1, Number = "InvalidOrder", BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, WorkflowStep = 4 },
                     new Facts::Account { Id = 2, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 },
                     new Facts::Lock { OrderId = 1, Start = FirstDayJan },
                     new Facts::Project())
