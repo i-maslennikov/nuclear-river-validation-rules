@@ -7,6 +7,7 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Facts
@@ -23,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Facts
         }
 
         public IQueryable<ReleaseInfo> GetSource()
-            => from x in _query.For<Storage.Model.Erm.ReleaseInfo>()
+            => from x in _query.For(Specs.Find.Erm.ReleaseInfos())
                select new ReleaseInfo
                    {
                        Id = x.Id,

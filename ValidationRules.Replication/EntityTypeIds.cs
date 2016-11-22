@@ -24,7 +24,6 @@
         public const int OrderFile = 202;
         public const int OrderPosition = 150;
         public const int OrderPositionAdvertisement = 216;
-        public const int OrganizationUnit = 157;
         public const int Position = 153;
         public const int Price = 155;
         public const int PricePosition = 154;

@@ -47,7 +47,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypeOrderFile, Storage.Model.Erm.OrderFile>()
                 .AddMapping<EntityTypeOrderPosition, Storage.Model.Erm.OrderPosition>()
                 .AddMapping<EntityTypeOrderPositionAdvertisement, Storage.Model.Erm.OrderPositionAdvertisement>()
-                .AddMapping<EntityTypeOrganizationUnit, Storage.Model.Erm.OrganizationUnit>()
                 .AddMapping<EntityTypePosition, Storage.Model.Erm.Position>()
                 .AddMapping<EntityTypePosition, Storage.Model.Erm.Position>()
                 .AddMapping<EntityTypePrice, Storage.Model.Erm.Price>()

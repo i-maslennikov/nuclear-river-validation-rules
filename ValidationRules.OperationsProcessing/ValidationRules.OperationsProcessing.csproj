@@ -225,7 +225,6 @@
     <Compile Include="Identities\EntityTypes\EntityTypePeriod.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPositionAdvertisement.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeOrganizationUnit.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementTemplate.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePrice.cs" />

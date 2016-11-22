@@ -10,7 +10,6 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
         public int Status { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-        public DateTime PeriodStartDate { get; set; }
         public DateTime PeriodEndDate { get; set; }
     }
 }
