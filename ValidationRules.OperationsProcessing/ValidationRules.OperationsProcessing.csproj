@@ -207,13 +207,17 @@
     <Compile Include="Identities\EntityTypes\EntityTypeBargain.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeBargainFile.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeBill.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBranchOffice.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeBranchOfficeOrganizationUnit.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeCategory.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeCategoryFirmAddress.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeDeal.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeDeniedPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirm.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirmContact.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeFirmAddress.cs" />
+    <Compile Include="Identities\EntityTypes\EntityTypeLegalPerson.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeLegalPersonProfile.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeLock.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
@@ -221,7 +225,6 @@
     <Compile Include="Identities\EntityTypes\EntityTypePeriod.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPositionAdvertisement.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypeOrganizationUnit.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementTemplate.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypePrice.cs" />

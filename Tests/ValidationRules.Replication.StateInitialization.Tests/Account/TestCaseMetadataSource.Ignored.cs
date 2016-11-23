@@ -1,6 +1,4 @@
-﻿using System;
-
-using NuClear.DataTest.Metamodel.Dsl;
+﻿using NuClear.DataTest.Metamodel.Dsl;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
@@ -35,7 +33,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::OrderFile(),
                 new Erm::OrderPosition(),
                 new Erm::OrderPositionAdvertisement(),
-                new Erm::OrganizationUnit(),
                 new Erm::Position(),
                 new Erm::Price(),
                 new Erm::PricePosition(),
@@ -44,10 +41,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::ReleaseWithdrawal(),
                 new Erm::Ruleset(),
                 new Erm::RulesetRule(),
-                new Erm::Theme(),
-                new Erm::TimeZone(),
-                new Erm::User(),
-                new Erm::UserProfile())
+                new Erm::Theme())
             .Fact(
                 new Facts::Account(),
                 new Facts::Lock(),

@@ -263,10 +263,7 @@
     <Compile Include="Model\Erm\Theme.cs" />
     <Compile Include="Model\Erm\ThemeCategory.cs" />
     <Compile Include="Model\Erm\ThemeOrganizationUnit.cs" />
-    <Compile Include="Model\Erm\TimeZone.cs" />
     <Compile Include="Model\Erm\UnlimitedOrder.cs" />
-    <Compile Include="Model\Erm\UserProfile.cs" />
-    <Compile Include="Model\Erm\User.cs" />
     <Compile Include="Model\FirmRules\Aggregates\Firm.cs" />
     <Compile Include="Model\FirmRules\Aggregates\Order.cs" />
     <Compile Include="Model\FirmRules\Facts\Firm.cs" />
@@ -312,7 +309,6 @@
     <Compile Include="Model\Erm\Order.cs" />
     <Compile Include="Model\Erm\OrderPosition.cs" />
     <Compile Include="Model\Erm\OrderPositionAdvertisement.cs" />
-    <Compile Include="Model\Erm\OrganizationUnit.cs" />
     <Compile Include="Model\Erm\Position.cs" />
     <Compile Include="Model\Erm\Price.cs" />
     <Compile Include="Model\Erm\PricePosition.cs" />

@@ -12,7 +12,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 private const int RulesetDraftPriority = 0;
                 private const int OrderStateArchive = 6;
                 private const int OrderStateRejected = 3;
-                private const int LimitStateApprooved = 2;
 
                 public static FindSpecification<AssociatedPosition> AssociatedPositions()
                 {
@@ -72,11 +71,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 public static FindSpecification<OrderPositionAdvertisement> OrderPositionAdvertisements()
                 {
                     return new FindSpecification<OrderPositionAdvertisement>(x => true);
-                }
-
-                public static FindSpecification<OrganizationUnit> OrganizationUnits()
-                {
-                    return new FindSpecification<OrganizationUnit>(x => x.IsActive && !x.IsDeleted);
                 }
 
                 public static FindSpecification<Position> Positions()
@@ -146,21 +140,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 public static FindSpecification<ReleaseWithdrawal> ReleaseWithdrawals()
                 {
                     return new FindSpecification<ReleaseWithdrawal>(x => true);
-                }
-
-                public static FindSpecification<User> Users()
-                {
-                    return new FindSpecification<User>(x => x.IsActive && !x.IsDeleted && !x.IsServiceUser);
-                }
-
-                public static FindSpecification<UserProfile> UserProfiles()
-                {
-                    return new FindSpecification<UserProfile>(x => x.IsActive && !x.IsDeleted);
-                }
-
-                public static FindSpecification<TimeZone> TimeZones()
-                {
-                    return new FindSpecification<TimeZone>(x => true);
                 }
 
                 public static FindSpecification<ReleaseInfo> ReleaseInfos()

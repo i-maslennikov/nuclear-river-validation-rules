@@ -10,8 +10,6 @@ namespace NuClear.ValidationRules.Storage
         private const string BillingSchema = "Billing";
         private const string BusinessDirectorySchema = "BusinessDirectory";
         private const string OrderValidationSchema = "OrderValidation";
-        private const string SecuritySchema = "Security";
-        private const string SharedSchema = "Shared";
 
         public static MappingSchema Erm
         {
@@ -35,32 +33,22 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<ReleaseInfo>().HasSchemaName(BillingSchema).HasTableName("ReleaseInfos").HasPrimaryKey(x => x.Id);
                 config.Entity<ReleaseWithdrawal>().HasSchemaName(BillingSchema).HasTableName("ReleasesWithdrawals").HasPrimaryKey(x => x.Id);
                 config.Entity<Ruleset>().HasSchemaName(OrderValidationSchema).HasTableName("Rulesets").HasPrimaryKey(x => x.Id);
-                config.Entity<RulesetRule>().HasSchemaName(OrderValidationSchema).HasTableName("RulesetRules")
-                      .HasPrimaryKey(x => x.RulesetId)
-                      .HasPrimaryKey(x => x.RuleType)
-                      .HasPrimaryKey(x => x.DependentPositionId)
-                      .HasPrimaryKey(x => x.PrincipalPositionId);
+                config.Entity<RulesetRule>().HasSchemaName(OrderValidationSchema).HasTableName("RulesetRules");
                 config.Entity<Lock>().HasSchemaName(BillingSchema).HasTableName("Locks").HasPrimaryKey(x => x.Id);
                 config.Entity<Order>().HasSchemaName(BillingSchema).HasTableName("Orders").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPosition>().HasSchemaName(BillingSchema).HasTableName("OrderPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPositionCostPerClick>().HasSchemaName(BillingSchema).HasTableName("OrderPositionCostPerClicks");
                 config.Entity<OrderPositionAdvertisement>().HasSchemaName(BillingSchema).HasTableName("OrderPositionAdvertisement").HasPrimaryKey(x => x.Id);
-                config.Entity<OrganizationUnit>().HasSchemaName(BillingSchema).HasTableName("OrganizationUnits").HasPrimaryKey(x => x.Id);
                 config.Entity<Price>().HasSchemaName(BillingSchema).HasTableName("Prices").HasPrimaryKey(x => x.Id);
                 config.Entity<PricePosition>().HasSchemaName(BillingSchema).HasTableName("PricePositions").HasPrimaryKey(x => x.Id);
                 config.Entity<Project>().HasSchemaName(BillingSchema).HasTableName("Projects").HasPrimaryKey(x => x.Id);
                 config.Entity<Position>().HasSchemaName(BillingSchema).HasTableName("Positions").HasPrimaryKey(x => x.Id);
-                config.Entity<PositionChild>().HasSchemaName(BillingSchema).HasTableName("PositionChildren")
-                    .HasPrimaryKey(x => x.MasterPositionId)
-                    .HasPrimaryKey(x => x.ChildPositionId);
+                config.Entity<PositionChild>().HasSchemaName(BillingSchema).HasTableName("PositionChildren");
                 config.Entity<Category>().HasSchemaName(BusinessDirectorySchema).HasTableName("Categories").HasPrimaryKey(x => x.Id);
                 config.Entity<CategoryOrganizationUnit>().HasSchemaName(BusinessDirectorySchema).HasTableName("CategoryOrganizationUnits").HasPrimaryKey(x => x.Id);
                 config.Entity<CategoryFirmAddress>().HasSchemaName(BusinessDirectorySchema).HasTableName("CategoryFirmAddresses").HasPrimaryKey(x => x.Id);
                 config.Entity<CostPerClickCategoryRestriction>().HasSchemaName(BusinessDirectorySchema).HasTableName("CostPerClickCategoryRestrictions");
                 config.Entity<SalesModelCategoryRestriction>().HasSchemaName(BusinessDirectorySchema).HasTableName("SalesModelCategoryRestrictions");
-                config.Entity<User>().HasSchemaName(SecuritySchema).HasTableName("Users").HasPrimaryKey(x => x.Id);
-                config.Entity<UserProfile>().HasSchemaName(SecuritySchema).HasTableName("UserProfiles").HasPrimaryKey(x => x.Id);
-                config.Entity<TimeZone>().HasSchemaName(SharedSchema).HasTableName("TimeZones").HasPrimaryKey(x => x.Id);
                 config.Entity<Theme>().HasSchemaName(BillingSchema).HasTableName("Themes").HasPrimaryKey(x => x.Id);
                 config.Entity<ThemeCategory>().HasSchemaName(BillingSchema).HasTableName("ThemeCategories").HasPrimaryKey(x => x.Id);
                 config.Entity<ThemeOrganizationUnit>().HasSchemaName(BillingSchema).HasTableName("ThemeOrganizationUnits").HasPrimaryKey(x => x.Id);

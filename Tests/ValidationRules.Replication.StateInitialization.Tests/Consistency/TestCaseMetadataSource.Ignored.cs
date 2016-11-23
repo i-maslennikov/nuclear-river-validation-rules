@@ -40,7 +40,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::OrderFile(),
                 new Erm::OrderPosition(),
                 new Erm::OrderPositionAdvertisement(),
-                new Erm::OrganizationUnit(),
                 new Erm::Position(),
                 new Erm::Price(),
                 new Erm::PricePosition(),
@@ -49,10 +48,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::ReleaseWithdrawal(),
                 new Erm::Ruleset(),
                 new Erm::RulesetRule(),
-                new Erm::Theme(),
-                new Erm::TimeZone(),
-                new Erm::User(),
-                new Erm::UserProfile())
+                new Erm::Theme())
             .Fact(
                 new Facts::Bargain(),
                 new Facts::BargainScanFile(),
