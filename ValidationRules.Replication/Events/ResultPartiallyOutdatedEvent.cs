@@ -7,7 +7,7 @@ namespace NuClear.ValidationRules.Replication.Events
 {
     public class ResultPartiallyOutdatedEvent : IEvent
     {
-        public ResultPartiallyOutdatedEvent(MessageTypeCode rule, params long[] orderIds)
+        public ResultPartiallyOutdatedEvent(MessageTypeCode rule, IReadOnlyCollection<long> orderIds)
         {
             Rule = rule;
             OrderIds = orderIds;

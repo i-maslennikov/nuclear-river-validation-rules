@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
@@ -42,12 +43,16 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                     new ValueObjectActor<Theme.InvalidCategory>(_query, _invalidCategoryBulkRepository, _equalityComparerFactory, new InvalidCategoryAccessor(_query)),
                 };
 
-        public sealed class ThemeAccessor : IStorageBasedDataObjectAccessor<Theme>
+        public sealed class ThemeAccessor : AggregateDataChangesHandler<Theme>, IStorageBasedDataObjectAccessor<Theme>
         {
             private readonly IQuery _query;
 
             public ThemeAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.DefaultThemeMustHaveOnlySelfAds);
+                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
+                Invalidate(MessageTypeCode.ThemePeriodMustContainOrderPeriod);
+
                 _query = query;
             }
 
@@ -73,12 +78,14 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             }
         }
 
-        public sealed class InvalidCategoryAccessor : IStorageBasedDataObjectAccessor<Theme.InvalidCategory>
+        public sealed class InvalidCategoryAccessor : AggregateDataChangesHandler<Theme.InvalidCategory>, IStorageBasedDataObjectAccessor<Theme.InvalidCategory>
         {
             private readonly IQuery _query;
 
             public InvalidCategoryAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
+
                 _query = query;
             }
 

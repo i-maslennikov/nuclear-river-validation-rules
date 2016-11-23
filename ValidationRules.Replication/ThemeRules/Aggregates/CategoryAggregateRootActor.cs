@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
@@ -31,22 +32,24 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => Array.Empty<IActor>();
 
-        public sealed class CategoryAccessor : IStorageBasedDataObjectAccessor<Category>
+        public sealed class CategoryAccessor : AggregateDataChangesHandler<Category>, IStorageBasedDataObjectAccessor<Category>
         {
             private readonly IQuery _query;
 
             public CategoryAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
+
                 _query = query;
             }
 
             public IQueryable<Category> GetSource()
                 => from category in _query.For<Facts::Category>()
                    select new Category
-                   {
-                       Id = category.Id,
-                       Name = category.Name,
-                   };
+                       {
+                           Id = category.Id,
+                           Name = category.Name,
+                       };
 
             public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

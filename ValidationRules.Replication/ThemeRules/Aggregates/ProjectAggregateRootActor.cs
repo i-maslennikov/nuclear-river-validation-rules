@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
@@ -42,12 +43,14 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                     new ValueObjectActor<Project.ProjectDefaultTheme>(_query, _projectDefaultThemeBulkRepository, _equalityComparerFactory, new ProjectDefaultThemeAccessor(_query)),
                 };
 
-        public sealed class ProjectAccessor : IStorageBasedDataObjectAccessor<Project>
+        public sealed class ProjectAccessor : AggregateDataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {
             private readonly IQuery _query;
 
             public ProjectAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.DefaultThemeMustBeExactlyOne);
+
                 _query = query;
             }
 
@@ -70,12 +73,14 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             }
         }
 
-        public sealed class ProjectDefaultThemeAccessor : IStorageBasedDataObjectAccessor<Project.ProjectDefaultTheme>
+        public sealed class ProjectDefaultThemeAccessor : AggregateDataChangesHandler<Project.ProjectDefaultTheme>, IStorageBasedDataObjectAccessor<Project.ProjectDefaultTheme>
         {
             private readonly IQuery _query;
 
             public ProjectDefaultThemeAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.DefaultThemeMustBeExactlyOne);
+
                 _query = query;
             }
 

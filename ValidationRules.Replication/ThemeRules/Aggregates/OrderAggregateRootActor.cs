@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
@@ -42,12 +43,16 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                     new ValueObjectActor<Order.OrderTheme>(_query, _orderThemeBulkRepository, _equalityComparerFactory, new OrderThemeAccessor(_query)),
                 };
 
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.DefaultThemeMustHaveOnlySelfAds);
+                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
+                Invalidate(MessageTypeCode.ThemePeriodMustContainOrderPeriod);
+
                 _query = query;
             }
 
@@ -75,25 +80,29 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             }
         }
 
-        public sealed class OrderThemeAccessor : IStorageBasedDataObjectAccessor<Order.OrderTheme>
+        public sealed class OrderThemeAccessor : AggregateDataChangesHandler<Order.OrderTheme>, IStorageBasedDataObjectAccessor<Order.OrderTheme>
         {
             private readonly IQuery _query;
 
             public OrderThemeAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.DefaultThemeMustHaveOnlySelfAds);
+                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
+                Invalidate(MessageTypeCode.ThemePeriodMustContainOrderPeriod);
+
                 _query = query;
             }
 
             public IQueryable<Order.OrderTheme> GetSource()
             {
                 var orderThemes = (from order in _query.For<Facts::Order>()
-                                    from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
-                                    select new Order.OrderTheme
-                                    {
-                                        OrderId = order.Id,
-                                        ThemeId = opa.ThemeId
-                                    }).Distinct();
+                                   from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
+                                   select new Order.OrderTheme
+                                   {
+                                       OrderId = order.Id,
+                                       ThemeId = opa.ThemeId
+                                   }).Distinct();
 
                 return orderThemes;
             }
