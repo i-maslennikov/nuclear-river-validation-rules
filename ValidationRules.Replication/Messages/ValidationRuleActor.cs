@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Transactions;
 
 using NuClear.Replication.Core;
@@ -17,6 +18,7 @@ using NuClear.ValidationRules.Replication.FirmRules.Validation;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
 using NuClear.ValidationRules.Replication.ProjectRules.Validation;
 using NuClear.ValidationRules.Replication.ThemeRules.Validation;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -28,7 +30,7 @@ namespace NuClear.ValidationRules.Replication.Messages
         private readonly IRepository<Version> _versionRepository;
         private readonly IBulkRepository<Version.ErmState> _ermStatesRepository;
         private readonly IBulkRepository<Version.ValidationResult> _validationResultRepository;
-        private readonly ValidationRuleRegistry _registry;
+        private readonly Dictionary<MessageTypeCode, IValidationResultAccessor> _accessors;
 
         public ValidationRuleActor(IQuery query,
                                    IRepository<Version> versionRepository,
@@ -39,72 +41,116 @@ namespace NuClear.ValidationRules.Replication.Messages
             _versionRepository = versionRepository;
             _ermStatesRepository = ermStatesRepository;
             _validationResultRepository = validationResultRepository;
-            _registry = new ValidationRuleRegistry(query);
+            _accessors = new ValidationRuleRegistry(query).CreateAccessors().ToDictionary(x => (MessageTypeCode)x.MessageTypeId, x => x);
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var sourceObjects = Enumerable.Empty<Version.ValidationResult>();
+            // Общая идея: "результаты проверок соответствуют указанному состоянию ERM или более позднему"
+            // Конкретные идеи:
+            //  1. Набор ValidationResult для версии не меняется, таблица ValidationResult работает только на наполнение (за исключениям операции архивирования)
+            //  2. Набор ErmStates для версии мутабелен, при этом может быть пустым (если мы уже обработали изменения, но пока не знаем, какой версии они соответствуют)
+            //  3. Версия без изменений не создаётся.
 
-            // Запрос к данным посылаем вне транзакции, иначе будет DTC
-            using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
+            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().First().Id;
+            var versionResult = new List<Version.ValidationResult>();
+
+            foreach (var ruleCommands in commands.OfType<RecalculateValidationRuleCommand>().GroupBy(x => x.Rule))
             {
-                foreach (var accessor in _registry.CreateAccessors())
+                using (Probe.Create($"Rule {ruleCommands.Key}"))
                 {
-                    using (Probe.Create($"Rule {accessor.GetType().Name} Query Source"))
-                    {
-                        var accessorSourceObjects = accessor.GetSource().ToList();
-                        sourceObjects = sourceObjects.Concat(accessorSourceObjects);
-                    }
+                    var filter = CreateFilter(ruleCommands);
+                    var versionRuleResult = CalculateValidationRuleChanges(currentVersion, ruleCommands.Key, filter);
+                    versionResult.AddRange(versionRuleResult);
                 }
-
-                scope.Complete();
             }
 
-            var ermStates = commands.Cast<CreateNewVersionCommand>().SelectMany(x => x.States).Select(x => new Version.ErmState { Token = x });
-
-            var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().First();
-            IReadOnlyCollection<Version.ValidationResult> validationResults;
-            using (Probe.Create("Merge"))
+            var ermStates = commands.OfType<CreateNewVersionCommand>().SelectMany(x => x.States).Select(x => new Version.ErmState { Token = x });
+            if (versionResult.Count > 0)
             {
-                var destObjects = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion.Id);
-                var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
-
-                validationResults = mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved()).ToList();
-            }
-
-            using (Probe.Create("Create"))
-            {
-                if (validationResults.Count != 0)
+                using (Probe.Create("Create New Version"))
                 {
-                    var newVersionId = currentVersion.Id + 1;
-
-                    CreateVersion(newVersionId);
-                    _ermStatesRepository.Create(ermStates.ApplyVersionId(newVersionId));
-                    _validationResultRepository.Create(validationResults.ApplyVersionId(newVersionId));
+                    CreateVersion(currentVersion + 1, ermStates, versionResult);
                 }
-                else
+            }
+            else
+            {
+                using (Probe.Create("Update Existing Version"))
                 {
-                    UpdateVersion(currentVersion.Id);
-                    _ermStatesRepository.Create(ermStates.ApplyVersionId(currentVersion.Id));
+                    UpdateVersion(currentVersion, ermStates);
                 }
             }
 
             return Array.Empty<IEvent>();
         }
 
-        private void CreateVersion(long id)
+        private Expression<Func<Version.ValidationResult, bool>> CreateFilter(IEnumerable<RecalculateValidationRuleCommand> commands)
+        {
+            var ids = Enumerable.Empty<long>();
+            foreach (var command in commands)
+            {
+                var partialCommand = command as RecalculateValidationRulePartiallyCommand;
+                if (partialCommand == null)
+                {
+                    return x => true;
+                }
+
+                ids = ids.Union(partialCommand.Filter);
+            }
+
+            return x => x.OrderId.HasValue && ids.Contains(x.OrderId.Value);
+        }
+
+        private IEnumerable<Version.ValidationResult> CalculateValidationRuleChanges(long version, MessageTypeCode ruleCode, Expression<Func<Version.ValidationResult, bool>> filter)
+        {
+            try
+            {
+                List<Version.ValidationResult> sourceObjects;
+                List<Version.ValidationResult> destObjects;
+
+                using (Probe.Create("Query Source"))
+                using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
+                {
+                    // Запрос к данным посылаем вне транзакции, иначе будет DTC
+                    var accessor = _accessors[ruleCode];
+                    sourceObjects = accessor.GetSource().Where(filter).ToList();
+                    scope.Complete();
+                }
+
+                using (Probe.Create("Query Target"))
+                {
+                    destObjects = _query.For<Version.ValidationResult>().Where(x => x.MessageType == (int)ruleCode).Where(filter).GetValidationResults(version).ToList();
+                }
+
+                using (Probe.Create("Merge"))
+                {
+                    var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
+                    return mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ошибка при вычислении правила {ruleCode}", ex);
+            }
+        }
+
+        private void CreateVersion(long id, IEnumerable<Version.ErmState> ermStates, IEnumerable<Version.ValidationResult> results)
         {
             var version = new Version { Id = id, Date = DateTime.UtcNow };
             _versionRepository.Add(version);
             _versionRepository.Save();
+
+            _validationResultRepository.Create(results.ApplyVersionId(id));
+            _ermStatesRepository.Create(ermStates.ApplyVersionId(id));
         }
 
-        private void UpdateVersion(long id)
+        private void UpdateVersion(long id, IEnumerable<Version.ErmState> ermStates)
         {
             var version = new Version { Id = id, Date = DateTime.UtcNow };
             _versionRepository.Update(version);
             _versionRepository.Save();
+
+            _ermStatesRepository.Create(ermStates.ApplyVersionId(id));
         }
 
         private sealed class ValidationRuleRegistry

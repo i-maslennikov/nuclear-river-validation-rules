@@ -222,6 +222,8 @@
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
+    <Compile Include="Commands\RecalculateValidationRuleCommand.cs" />
+    <Compile Include="Commands\RecalculateValidationRulePartiallyCommand.cs" />
     <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ConsistencyRules\Facts\BranchOfficeAccessor.cs" />
     <Compile Include="ConsistencyRules\Facts\BranchOfficeOrganizationUnitAccessor.cs" />
@@ -248,6 +250,8 @@
     <Compile Include="ConsistencyRules\Validation\BillsSumShouldMatchOrder.cs" />
     <Compile Include="ConsistencyRules\Validation\BillsShouldBeCreated.cs" />
     <Compile Include="EventCollectionHelper.cs" />
+    <Compile Include="Events\ResultOutdatedEvent.cs" />
+    <Compile Include="Events\ResultPartiallyOutdatedEvent.cs" />
     <Compile Include="FirmRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="FirmRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="FirmRules\Facts\FirmAddressCategoryAccessor.cs" />

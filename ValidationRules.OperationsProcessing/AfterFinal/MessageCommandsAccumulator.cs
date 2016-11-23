@@ -36,6 +36,18 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 return new[] { new RecordDelayCommand(batchProcessedEvent.EventTime) };
             }
 
+            var resultOutdatedEvent = @event as ResultOutdatedEvent;
+            if (resultOutdatedEvent != null)
+            {
+                return new[] { new RecalculateValidationRuleCommand(resultOutdatedEvent.Rule) };
+            }
+
+            var resultPartiallyOutdatedEvent = @event as ResultPartiallyOutdatedEvent;
+            if (resultPartiallyOutdatedEvent != null)
+            {
+                return new[] { new RecalculateValidationRulePartiallyCommand(resultPartiallyOutdatedEvent.Rule, resultPartiallyOutdatedEvent.OrderIds) };
+            }
+
             throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
         }
     }
