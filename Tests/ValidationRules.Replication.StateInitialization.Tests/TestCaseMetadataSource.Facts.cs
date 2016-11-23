@@ -470,8 +470,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                 .Name(nameof(ReleaseInfoFacts))
                 .Erm(
-                    new Erm::ReleaseInfo { Id = 1, OrganizationUnitId = 2, PeriodEndDate = LastSecondApr })
+                    new Erm::ReleaseInfo { Id = 1, OrganizationUnitId = 2, PeriodEndDate = LastSecondApr, IsActive = true, IsDeleted = false, IsBeta =  false, Status = 2})
                 .Fact(
-                    new ProjectFacts::ReleaseInfo { Id = 1, OrganizationUnitId = 2, PeriodEndDate = LastSecondApr.AddSeconds(1) });
+                    new ProjectFacts::ReleaseInfo { Id = 1, OrganizationUnitId = 2, PeriodEndDate = FirstDayMay });
     }
 }
