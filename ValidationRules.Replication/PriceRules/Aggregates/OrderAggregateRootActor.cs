@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
@@ -58,12 +59,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     new ValueObjectActor<OrderAssociatedPosition>(_query, _orderAssociatedPositionBulkRepository, _equalityComparerFactory, new OrderAssociatedPositionAccessor(_query)),
                 };
 
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
+                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
+                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
+                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
+                Invalidate(MessageTypeCode.DeniedPositionsCheck);
+                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
+                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
+                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
+                Invalidate(MessageTypeCode.OrderPositionCorrespontToInactivePosition);
+                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
+                Invalidate(MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice);
+                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
+
                 _query = query;
             }
 
@@ -82,12 +96,20 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPositionAccessor : IStorageBasedDataObjectAccessor<OrderPosition>
+        public sealed class OrderPositionAccessor : AggregateDataChangesHandler<OrderPosition>, IStorageBasedDataObjectAccessor<OrderPosition>
         {
             private readonly IQuery _query;
 
             public OrderPositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
+                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
+                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
+                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
+                Invalidate(MessageTypeCode.DeniedPositionsCheck);
+                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
+                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
+
                 _query = query;
             }
 
@@ -147,12 +169,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPricePositionAccessor : IStorageBasedDataObjectAccessor<OrderPricePosition>
+        public sealed class OrderPricePositionAccessor : AggregateDataChangesHandler<OrderPricePosition>, IStorageBasedDataObjectAccessor<OrderPricePosition>
         {
             private readonly IQuery _query;
 
             public OrderPricePositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderPositionCorrespontToInactivePosition);
+                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
+
                 _query = query;
             }
 
@@ -181,12 +206,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class AmountControlledPositionAccessor : IStorageBasedDataObjectAccessor<AmountControlledPosition>
+        public sealed class AmountControlledPositionAccessor : AggregateDataChangesHandler<AmountControlledPosition>, IStorageBasedDataObjectAccessor<AmountControlledPosition>
         {
             private readonly IQuery _query;
 
             public AmountControlledPositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
+                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
+
                 _query = query;
             }
 
@@ -208,7 +236,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderDeniedPositionAccessor : IStorageBasedDataObjectAccessor<OrderDeniedPosition>
+        public sealed class OrderDeniedPositionAccessor : AggregateDataChangesHandler<OrderDeniedPosition>, IStorageBasedDataObjectAccessor<OrderDeniedPosition>
         {
             private const int RulesetRuleTypeDenied = 2;
 
@@ -216,6 +244,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public OrderDeniedPositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.DeniedPositionsCheck);
+
                 _query = query;
             }
 
@@ -314,7 +344,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderAssociatedPositionAccessor : IStorageBasedDataObjectAccessor<OrderAssociatedPosition>
+        public sealed class OrderAssociatedPositionAccessor : AggregateDataChangesHandler<OrderAssociatedPosition>, IStorageBasedDataObjectAccessor<OrderAssociatedPosition>
         {
             private const int RulesetRuleTypeAssociated = 1;
 
@@ -322,6 +352,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public OrderAssociatedPositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
+                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
+                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
+                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
+
                 _query = query;
             }
 

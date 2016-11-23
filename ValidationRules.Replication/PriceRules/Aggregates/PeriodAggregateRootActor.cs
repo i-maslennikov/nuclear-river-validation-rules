@@ -10,6 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
@@ -47,12 +48,27 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     new ValueObjectActor<OrderPeriod>(_query, _orderPeriodBulkRepository, _equalityComparerFactory, new OrderPeriodAccessor(_query)),
                 };
 
-        public sealed class PeriodAccessor : IStorageBasedDataObjectAccessor<Period>
+        public sealed class PeriodAccessor : AggregateDataChangesHandler<Period>, IStorageBasedDataObjectAccessor<Period>
         {
             private readonly IQuery _query;
 
             public PeriodAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
+                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
+                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
+                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
+                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
+                Invalidate(MessageTypeCode.DeniedPositionsCheck);
+                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
+                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
+                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
+                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
+                Invalidate(MessageTypeCode.OrderPositionCorrespontToInactivePosition);
+                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
+                Invalidate(MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice);
+                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
+
                 _query = query;
             }
 
@@ -84,12 +100,19 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class PricePeriodAccessor : IStorageBasedDataObjectAccessor<PricePeriod>
+        public sealed class PricePeriodAccessor : AggregateDataChangesHandler<PricePeriod>, IStorageBasedDataObjectAccessor<PricePeriod>
         {
             private readonly IQuery _query;
 
             public PricePeriodAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
+                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
+                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
+                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
+                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
+                Invalidate(MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice);
+
                 _query = query;
             }
 
@@ -126,12 +149,26 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPeriodAccessor : IStorageBasedDataObjectAccessor<OrderPeriod>
+        public sealed class OrderPeriodAccessor : AggregateDataChangesHandler<OrderPeriod>, IStorageBasedDataObjectAccessor<OrderPeriod>
         {
             private readonly IQuery _query;
 
             public OrderPeriodAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
+                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
+                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
+                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
+                Invalidate(MessageTypeCode.DeniedPositionsCheck);
+                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
+                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
+                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
+                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
+                Invalidate(MessageTypeCode.OrderPositionCorrespontToInactivePosition);
+                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
+                Invalidate(MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice);
+                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
+
                 _query = query;
             }
 

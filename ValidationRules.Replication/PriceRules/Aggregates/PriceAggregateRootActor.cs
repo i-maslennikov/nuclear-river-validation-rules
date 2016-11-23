@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
@@ -45,12 +46,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     new ValueObjectActor<AssociatedPositionGroupOvercount>(_query, _associatedPositionGroupOvercountRepository, _equalityComparerFactory, new AssociatedPositionGroupOvercountAccessor(_query)),
                 };
 
-        public sealed class PriceAccessor : IStorageBasedDataObjectAccessor<Price>
+        public sealed class PriceAccessor : AggregateDataChangesHandler<Price>, IStorageBasedDataObjectAccessor<Price>
         {
             private readonly IQuery _query;
 
             public PriceAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
+
                 _query = query;
             }
 
@@ -68,12 +71,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementAmountRestrictionAccessor : IStorageBasedDataObjectAccessor<AdvertisementAmountRestriction>
+        public sealed class AdvertisementAmountRestrictionAccessor : AggregateDataChangesHandler<AdvertisementAmountRestriction>, IStorageBasedDataObjectAccessor<AdvertisementAmountRestriction>
         {
             private readonly IQuery _query;
 
             public AdvertisementAmountRestrictionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
+                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
+                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
+
                 _query = query;
             }
 
@@ -102,13 +109,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class AssociatedPositionGroupOvercountAccessor : IStorageBasedDataObjectAccessor<AssociatedPositionGroupOvercount>
+        public sealed class AssociatedPositionGroupOvercountAccessor : AggregateDataChangesHandler<AssociatedPositionGroupOvercount>, IStorageBasedDataObjectAccessor<AssociatedPositionGroupOvercount>
         {
             // Предполагается, что когда начнём создавать события на втором этапе - события этого класса будут приводить к вызову одной соответствующей проверки
             private readonly IQuery _query;
 
             public AssociatedPositionGroupOvercountAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
+
                 _query = query;
             }
 

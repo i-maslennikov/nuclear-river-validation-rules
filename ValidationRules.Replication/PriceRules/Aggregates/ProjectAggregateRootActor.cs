@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
@@ -31,12 +32,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => Array.Empty<IActor>();
 
-        public sealed class ProjectAccessor : IStorageBasedDataObjectAccessor<Project>
+        public sealed class ProjectAccessor : AggregateDataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {
             private readonly IQuery _query;
 
             public ProjectAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
+                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
+
                 _query = query;
             }
 
