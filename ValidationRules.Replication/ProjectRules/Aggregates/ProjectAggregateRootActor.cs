@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
@@ -54,12 +55,18 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                     new ValueObjectActor<Project.NextRelease>(_query, _nextReleaseRepository, _equalityComparerFactory, new NextReleaseAccessor(_query)),
                 };
 
-        public sealed class ProjectAccessor : IStorageBasedDataObjectAccessor<Project>
+        public sealed class ProjectAccessor : AggregateDataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {
             private readonly IQuery _query;
 
             public ProjectAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderMustNotIncludeReleasedPeriod);
+                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
+                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
+                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
+                Invalidate(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction);
+
                 _query = query;
             }
 
@@ -78,12 +85,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class CategoryAccessor : IStorageBasedDataObjectAccessor<Project.Category>
+        public sealed class CategoryAccessor : AggregateDataChangesHandler<Project.Category>, IStorageBasedDataObjectAccessor<Project.Category>
         {
             private readonly IQuery _query;
 
             public CategoryAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
+
                 _query = query;
             }
 
@@ -103,12 +112,15 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class CostPerClickRestrictionAccessor : IStorageBasedDataObjectAccessor<Project.CostPerClickRestriction>
+        public sealed class CostPerClickRestrictionAccessor : AggregateDataChangesHandler<Project.CostPerClickRestriction>, IStorageBasedDataObjectAccessor<Project.CostPerClickRestriction>
         {
             private readonly IQuery _query;
 
             public CostPerClickRestrictionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
+                Invalidate(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction);
+
                 _query = query;
             }
 
@@ -136,12 +148,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class SalesModelRestrictionAccessor : IStorageBasedDataObjectAccessor<Project.SalesModelRestriction>
+        public sealed class SalesModelRestrictionAccessor : AggregateDataChangesHandler<Project.SalesModelRestriction>, IStorageBasedDataObjectAccessor<Project.SalesModelRestriction>
         {
             private readonly IQuery _query;
 
             public SalesModelRestrictionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
+
                 _query = query;
             }
 
@@ -169,12 +183,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class NextReleaseAccessor : IStorageBasedDataObjectAccessor<Project.NextRelease>
+        public sealed class NextReleaseAccessor : AggregateDataChangesHandler<Project.NextRelease>, IStorageBasedDataObjectAccessor<Project.NextRelease>
         {
             private readonly IQuery _query;
 
             public NextReleaseAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderMustNotIncludeReleasedPeriod);
+
                 _query = query;
             }
 

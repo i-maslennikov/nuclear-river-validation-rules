@@ -8,6 +8,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
@@ -49,7 +50,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                     new ValueObjectActor<Order.CostPerClickAdvertisement>(_query, _costPerClickAdvertisementRepository, _equalityComparerFactory, new CostPerClickAdvertisementAccessor(_query)),
                 };
 
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private const int OrderOnRegistration = 1;
 
@@ -57,6 +58,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             public OrderAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmAddressMustBeLocatedOnTheMap);
+                Invalidate(MessageTypeCode.OrderMustNotIncludeReleasedPeriod);
+                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
+                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustBeSpecified);
+                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
+                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
+                Invalidate(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction);
+
                 _query = query;
             }
 
@@ -84,7 +93,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class AddressAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.AddressAdvertisement>
+        public sealed class AddressAdvertisementAccessor : AggregateDataChangesHandler<Order.AddressAdvertisement>, IStorageBasedDataObjectAccessor<Order.AddressAdvertisement>
         {
             private static readonly long[] ExceptionalCategoryCodes =
                 {
@@ -97,6 +106,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             public AddressAdvertisementAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmAddressMustBeLocatedOnTheMap);
+
                 _query = query;
             }
 
@@ -122,7 +133,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class CategoryAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
+        public sealed class CategoryAdvertisementAccessor : AggregateDataChangesHandler<Order.CategoryAdvertisement>, IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
         {
             private const int PositionsGroupMedia = 1;
             private const int CategoryLevelThree = 3;
@@ -131,6 +142,10 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             public CategoryAdvertisementAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
+                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustBeSpecified);
+                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
+
                 _query = query;
             }
 
@@ -158,12 +173,16 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class CostPerClickAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.CostPerClickAdvertisement>
+        public sealed class CostPerClickAdvertisementAccessor : AggregateDataChangesHandler<Order.CostPerClickAdvertisement>, IStorageBasedDataObjectAccessor<Order.CostPerClickAdvertisement>
         {
             private readonly IQuery _query;
 
             public CostPerClickAdvertisementAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustBeSpecified);
+                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
+                Invalidate(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction);
+
                 _query = query;
             }
 

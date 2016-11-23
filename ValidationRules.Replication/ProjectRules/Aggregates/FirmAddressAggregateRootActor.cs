@@ -9,6 +9,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
@@ -31,12 +32,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => Array.Empty<IActor>();
 
-        public sealed class FirmAddressAccessor : IStorageBasedDataObjectAccessor<FirmAddress>
+        public sealed class FirmAddressAccessor : AggregateDataChangesHandler<FirmAddress>, IStorageBasedDataObjectAccessor<FirmAddress>
         {
             private readonly IQuery _query;
 
             public FirmAddressAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmAddressMustBeLocatedOnTheMap);
+
                 _query = query;
             }
 
