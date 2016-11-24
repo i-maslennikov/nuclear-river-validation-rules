@@ -53,12 +53,12 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                         }
                     }
 
-                    Task.Delay(500, token);
+                    Task.Delay(500, token).Wait(token);
                 }
                 catch (Exception exception)
                 {
                     _tracer.Error(exception, "Ошибка при асинхронной отправке телеметрии");
-                    Task.Delay(5000, token);
+                    Task.Delay(5000, token).Wait(token);
                 }
             }
         }
