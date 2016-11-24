@@ -11,6 +11,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 
@@ -43,12 +44,17 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     new ValueObjectActor<Firm.AdvantageousPurchasePositionDistributionPeriod>(_query, _advantageousPurchasePositionDistributionPeriodRepository, _equalityComparerFactory, new AdvantageousPurchasePositionDistributionPeriodAccessor(_query)),
                 };
 
-        public sealed class FirmAccessor : IStorageBasedDataObjectAccessor<Firm>
+        public sealed class FirmAccessor : AggregateDataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
         {
             private readonly IQuery _query;
 
             public FirmAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit);
+                Invalidate(MessageTypeCode.FirmShouldHaveLimitedCategoryCount);
+                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases);
+                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder);
+
                 _query = query;
             }
 
@@ -73,7 +79,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
+        public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : AggregateDataChangesHandler<Firm.AdvantageousPurchasePositionDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
         {
             private const long SpecialCategoryId = 18599; // Выгодные покупки с 2ГИС.
 
@@ -81,6 +87,9 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public AdvantageousPurchasePositionDistributionPeriodAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases);
+                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder);
+
                 _query = query;
             }
 

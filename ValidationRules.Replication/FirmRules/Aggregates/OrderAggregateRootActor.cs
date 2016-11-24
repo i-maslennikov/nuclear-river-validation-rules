@@ -10,6 +10,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 
@@ -54,12 +55,17 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     new ValueObjectActor<Order.CategoryPurchase>(_query, _categoryPurchaseRepository, _equalityComparerFactory, new OrderCategoryPurchaseAccessor(_query)),
                 };
 
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit);
+                Invalidate(MessageTypeCode.FirmShouldHaveLimitedCategoryCount);
+                Invalidate(MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions);
+                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder);
+
                 _query = query;
             }
 
@@ -88,12 +94,14 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class NotApplicapleForDesktopPositionAccessor : IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
+        public sealed class NotApplicapleForDesktopPositionAccessor : AggregateDataChangesHandler<Order.NotApplicapleForDesktopPosition>, IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
         {
             private readonly IQuery _query;
 
             public NotApplicapleForDesktopPositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions);
+
                 _query = query;
             }
 
@@ -111,12 +119,14 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class SelfAdvertisementPositionAccessor : IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
+        public sealed class SelfAdvertisementPositionAccessor : AggregateDataChangesHandler<Order.SelfAdvertisementPosition>, IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
         {
             private readonly IQuery _query;
 
             public SelfAdvertisementPositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions);
+
                 _query = query;
             }
 
@@ -134,12 +144,14 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class OrderFirmOrganiationUnitMismatchAccessor : IStorageBasedDataObjectAccessor<Order.FirmOrganiationUnitMismatch>
+        public sealed class OrderFirmOrganiationUnitMismatchAccessor : AggregateDataChangesHandler<Order.FirmOrganiationUnitMismatch>, IStorageBasedDataObjectAccessor<Order.FirmOrganiationUnitMismatch>
         {
             private readonly IQuery _query;
 
             public OrderFirmOrganiationUnitMismatchAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit);
+
                 _query = query;
             }
 
@@ -156,12 +168,14 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class OrderCategoryPurchaseAccessor : IStorageBasedDataObjectAccessor<Order.CategoryPurchase>
+        public sealed class OrderCategoryPurchaseAccessor : AggregateDataChangesHandler<Order.CategoryPurchase>, IStorageBasedDataObjectAccessor<Order.CategoryPurchase>
         {
             private readonly IQuery _query;
 
             public OrderCategoryPurchaseAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.FirmShouldHaveLimitedCategoryCount);
+
                 _query = query;
             }
 
