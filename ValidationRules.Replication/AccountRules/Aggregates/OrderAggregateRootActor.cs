@@ -10,6 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 
@@ -46,12 +47,16 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     new ValueObjectActor<Order.DebtPermission>(_query, _debtPermissionBulkRepository, _equalityComparerFactory, new DebtPermissionAccessor(_query)),
                 };
 
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AccountBalanceShouldBePositive);
+                Invalidate(MessageTypeCode.AccountShouldExist);
+                Invalidate(MessageTypeCode.LockShouldNotExist);
+
                 _query = query;
             }
 
@@ -83,12 +88,14 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class LockAccessor : IStorageBasedDataObjectAccessor<Lock>
+        public sealed class LockAccessor : AggregateDataChangesHandler<Lock>, IStorageBasedDataObjectAccessor<Lock>
         {
             private readonly IQuery _query;
 
             public LockAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.LockShouldNotExist);
+
                 _query = query;
             }
 
@@ -111,12 +118,14 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class DebtPermissionAccessor : IStorageBasedDataObjectAccessor<Order.DebtPermission>
+        public sealed class DebtPermissionAccessor : AggregateDataChangesHandler<Order.DebtPermission>, IStorageBasedDataObjectAccessor<Order.DebtPermission>
         {
             private readonly IQuery _query;
 
             public DebtPermissionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AccountBalanceShouldBePositive);
+
                 _query = query;
             }
 

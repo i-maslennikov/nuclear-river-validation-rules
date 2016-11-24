@@ -10,6 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 
@@ -42,7 +43,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     new ValueObjectActor<AccountPeriod>(_query, _accountPeriodBulkRepository, _equalityComparerFactory, new AccountPeriodAccessor(_query))
                 };
 
-        public sealed class AccountAccessor : IStorageBasedDataObjectAccessor<Account>
+        public sealed class AccountAccessor : AggregateDataChangesHandler<Account>, IStorageBasedDataObjectAccessor<Account>
         {
             private readonly IQuery _query;
 
@@ -65,12 +66,14 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class AccountPeriodAccessor : IStorageBasedDataObjectAccessor<AccountPeriod>
+        public sealed class AccountPeriodAccessor : AggregateDataChangesHandler<AccountPeriod>, IStorageBasedDataObjectAccessor<AccountPeriod>
         {
             private readonly IQuery _query;
 
             public AccountPeriodAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AccountBalanceShouldBePositive);
+
                 _query = query;
             }
 
