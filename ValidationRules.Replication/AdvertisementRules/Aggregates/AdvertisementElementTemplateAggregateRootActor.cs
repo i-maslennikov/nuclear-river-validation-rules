@@ -10,6 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
@@ -31,12 +32,15 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => Array.Empty<IActor>();
 
-        public sealed class AdvertisementElementTemplateAccessor : IStorageBasedDataObjectAccessor<AdvertisementElementTemplate>
+        public sealed class AdvertisementElementTemplateAccessor : AggregateDataChangesHandler<AdvertisementElementTemplate>, IStorageBasedDataObjectAccessor<AdvertisementElementTemplate>
         {
             private readonly IQuery _query;
 
             public AdvertisementElementTemplateAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
+                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
+
                 _query = query;
             }
 

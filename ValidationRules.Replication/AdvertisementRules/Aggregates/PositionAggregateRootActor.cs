@@ -10,6 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
@@ -31,12 +32,21 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public override IReadOnlyCollection<IActor> GetValueObjectActors()
             => Array.Empty<IActor>();
 
-        public sealed class PositionAccessor : IStorageBasedDataObjectAccessor<Position>
+        public sealed class PositionAccessor : AggregateDataChangesHandler<Position>, IStorageBasedDataObjectAccessor<Position>
         {
             private readonly IQuery _query;
 
             public PositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
+                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
+                Invalidate(MessageTypeCode.CouponMustBeSoldOnceAtTime);
+                Invalidate(MessageTypeCode.OrderMustNotContainDummyAdvertisement);
+                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
+                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustBeCreated);
+                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement);
+                Invalidate(MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement);
+
                 _query = query;
             }
 

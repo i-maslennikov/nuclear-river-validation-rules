@@ -11,6 +11,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
@@ -67,12 +68,24 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     new ValueObjectActor<Order.OrderPositionAdvertisement>(_query, _orderPositionAdvertisementBulkRepository, _equalityComparerFactory, new OrderPositionAdvertisementAccessor(_query)),
                 };
 
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
+                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
+                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
+                Invalidate(MessageTypeCode.CouponMustBeSoldOnceAtTime);
+                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
+                Invalidate(MessageTypeCode.OrderMustNotContainDummyAdvertisement);
+                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
+                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustBeCreated);
+                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement);
+                Invalidate(MessageTypeCode.WhiteListAdvertisementMayPresent);
+                Invalidate(MessageTypeCode.WhiteListAdvertisementMustPresent);
+
                 _query = query;
             }
 
@@ -113,12 +126,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class MissingAdvertisementReferenceAccessor : IStorageBasedDataObjectAccessor<Order.MissingAdvertisementReference>
+        public sealed class MissingAdvertisementReferenceAccessor : AggregateDataChangesHandler<Order.MissingAdvertisementReference>, IStorageBasedDataObjectAccessor<Order.MissingAdvertisementReference>
         {
             private readonly IQuery _query;
 
             public MissingAdvertisementReferenceAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement);
+
                 _query = query;
             }
 
@@ -160,12 +175,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class MissingOrderPositionAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.MissingOrderPositionAdvertisement>
+        public sealed class MissingOrderPositionAdvertisementAccessor : AggregateDataChangesHandler<Order.MissingOrderPositionAdvertisement>, IStorageBasedDataObjectAccessor<Order.MissingOrderPositionAdvertisement>
         {
             private readonly IQuery _query;
 
             public MissingOrderPositionAdvertisementAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustBeCreated);
+
                 _query = query;
             }
 
@@ -197,12 +214,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementDeletedAccessor : IStorageBasedDataObjectAccessor<Order.AdvertisementDeleted>
+        public sealed class AdvertisementDeletedAccessor : AggregateDataChangesHandler<Order.AdvertisementDeleted>, IStorageBasedDataObjectAccessor<Order.AdvertisementDeleted>
         {
             private readonly IQuery _query;
 
             public AdvertisementDeletedAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement);
+
                 _query = query;
             }
 
@@ -232,12 +251,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementMustBelongToFirmAccessor : IStorageBasedDataObjectAccessor<Order.AdvertisementMustBelongToFirm>
+        public sealed class AdvertisementMustBelongToFirmAccessor : AggregateDataChangesHandler<Order.AdvertisementMustBelongToFirm>, IStorageBasedDataObjectAccessor<Order.AdvertisementMustBelongToFirm>
         {
             private readonly IQuery _query;
 
             public AdvertisementMustBelongToFirmAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
+
                 _query = query;
             }
 
@@ -268,12 +289,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementIsDummyAccessor : IStorageBasedDataObjectAccessor<Order.AdvertisementIsDummy>
+        public sealed class AdvertisementIsDummyAccessor : AggregateDataChangesHandler<Order.AdvertisementIsDummy>, IStorageBasedDataObjectAccessor<Order.AdvertisementIsDummy>
         {
             private readonly IQuery _query;
 
             public AdvertisementIsDummyAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderMustNotContainDummyAdvertisement);
+
                 _query = query;
             }
 
@@ -302,7 +325,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class CouponDistributionPeriodAccessor : IStorageBasedDataObjectAccessor<Order.CouponDistributionPeriod>
+        public sealed class CouponDistributionPeriodAccessor : AggregateDataChangesHandler<Order.CouponDistributionPeriod>, IStorageBasedDataObjectAccessor<Order.CouponDistributionPeriod>
         {
             private const int CouponPositionCategoryCode = 14;
 
@@ -310,6 +333,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public CouponDistributionPeriodAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.CouponMustBeSoldOnceAtTime);
+
                 _query = query;
             }
 
@@ -361,12 +386,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class OrderPositionAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.OrderPositionAdvertisement>
+        public sealed class OrderPositionAdvertisementAccessor : AggregateDataChangesHandler<Order.OrderPositionAdvertisement>, IStorageBasedDataObjectAccessor<Order.OrderPositionAdvertisement>
         {
             private readonly IQuery _query;
 
             public OrderPositionAdvertisementAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
+                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
+                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
+                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
+
                 _query = query;
             }
 

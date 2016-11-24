@@ -10,6 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
@@ -54,12 +55,20 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     new ValueObjectActor<Advertisement.ElementOffsetInDays>(_query, _elementPeriodOffsetBulkRepository, _equalityComparerFactory, new ElementOffsetInDaysAccessor(_query)),
                 };
 
-        public sealed class AdvertisementAccessor : IStorageBasedDataObjectAccessor<Advertisement>
+        public sealed class AdvertisementAccessor : AggregateDataChangesHandler<Advertisement>, IStorageBasedDataObjectAccessor<Advertisement>
         {
             private readonly IQuery _query;
 
             public AdvertisementAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
+                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
+                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
+                Invalidate(MessageTypeCode.CouponMustBeSoldOnceAtTime);
+                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
+                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
+                Invalidate(MessageTypeCode.WhiteListAdvertisementMayPresent);
+
                 _query = query;
             }
 
@@ -84,12 +93,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementWebsiteAccessor : IStorageBasedDataObjectAccessor<Advertisement.AdvertisementWebsite>
+        public sealed class AdvertisementWebsiteAccessor : AggregateDataChangesHandler<Advertisement.AdvertisementWebsite>, IStorageBasedDataObjectAccessor<Advertisement.AdvertisementWebsite>
         {
             private readonly IQuery _query;
 
             public AdvertisementWebsiteAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
+
                 _query = query;
             }
 
@@ -116,12 +127,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class RequiredElementMissingAccessor : IStorageBasedDataObjectAccessor<Advertisement.RequiredElementMissing>
+        public sealed class RequiredElementMissingAccessor : AggregateDataChangesHandler<Advertisement.RequiredElementMissing>, IStorageBasedDataObjectAccessor<Advertisement.RequiredElementMissing>
         {
             private readonly IQuery _query;
 
             public RequiredElementMissingAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
+
                 _query = query;
             }
 
@@ -150,7 +163,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementNotPassedReviewAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementNotPassedReview>
+        public sealed class ElementNotPassedReviewAccessor : AggregateDataChangesHandler<Advertisement.ElementNotPassedReview>, IStorageBasedDataObjectAccessor<Advertisement.ElementNotPassedReview>
         {
             private const int StatusInvalid = 2;
             private const int StatusDraft = 3;
@@ -159,6 +172,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public ElementNotPassedReviewAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
+
                 _query = query;
             }
 
@@ -194,12 +209,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementOffsetInDaysAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementOffsetInDays>
+        public sealed class ElementOffsetInDaysAccessor : AggregateDataChangesHandler<Advertisement.ElementOffsetInDays>, IStorageBasedDataObjectAccessor<Advertisement.ElementOffsetInDays>
         {
             private readonly IQuery _query;
 
             public ElementOffsetInDaysAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
+
                 _query = query;
             }
 

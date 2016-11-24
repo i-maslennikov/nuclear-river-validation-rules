@@ -10,6 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
@@ -46,12 +47,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     new ValueObjectActor<Firm.WhiteListDistributionPeriod>(_query, _whiteListDistributionPeriodBulkRepository, _equalityComparerFactory, new WhiteListDistributionPeriodAccessor(_query))
                 };
 
-        public sealed class FirmAccessor : IStorageBasedDataObjectAccessor<Firm>
+        public sealed class FirmAccessor : AggregateDataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
         {
             private readonly IQuery _query;
 
             public FirmAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
+                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
+                Invalidate(MessageTypeCode.WhiteListAdvertisementMayPresent);
+                Invalidate(MessageTypeCode.WhiteListAdvertisementMustPresent);
+
                 _query = query;
             }
 
@@ -74,12 +80,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class FirmWebsiteAccessor : IStorageBasedDataObjectAccessor<Firm.FirmWebsite>
+        public sealed class FirmWebsiteAccessor : AggregateDataChangesHandler<Firm.FirmWebsite>, IStorageBasedDataObjectAccessor<Firm.FirmWebsite>
         {
             private readonly IQuery _query;
 
             public FirmWebsiteAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
+
                 _query = query;
             }
 
@@ -104,7 +112,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class WhiteListDistributionPeriodAccessor : IStorageBasedDataObjectAccessor<Firm.WhiteListDistributionPeriod>
+        public sealed class WhiteListDistributionPeriodAccessor : AggregateDataChangesHandler<Firm.WhiteListDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.WhiteListDistributionPeriod>
         {
             private const int OrderOnRegistration = 1;
 
@@ -112,6 +120,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public WhiteListDistributionPeriodAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.WhiteListAdvertisementMayPresent);
+                Invalidate(MessageTypeCode.WhiteListAdvertisementMustPresent);
+
                 _query = query;
             }
 
