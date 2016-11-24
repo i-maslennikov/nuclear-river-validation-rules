@@ -212,7 +212,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
             container.RegisterType<IOperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.Resolve<OperationIdentityRegistryFactory>().RegistryFor<PriceFactsSubDomain>()))
-                    .RegisterType(typeof(IOperationRegistry<>), typeof(OperationRegistry<>), Lifetime.Singleton)
+                    .RegisterType(typeof(IOperationRegistry<>), typeof(EmptyOperationRegistry<>), Lifetime.Singleton)
                     .RegisterType<IEntityTypeExplicitMapping, NoEntityTypeExplicitMapping>(Lifetime.Singleton);
 
 #if DEBUG
