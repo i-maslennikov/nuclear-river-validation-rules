@@ -218,7 +218,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);
 #else
-            container.RegisterType<ITelemetryPublisher, LogstashTelemetryPublisher>(Lifetime.Singleton);
+            container.RegisterType<ITelemetryPublisher, CachingTelemetryPublisherDecorator<LogstashTelemetryPublisher>>(Lifetime.Singleton);
 #endif
 
             // primary
