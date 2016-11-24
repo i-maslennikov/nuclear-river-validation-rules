@@ -10,6 +10,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
@@ -102,12 +103,34 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     new ValueObjectActor<Order.MissingOrderScan>(_query, _orderMissingOrderScanRepository, _equalityComparerFactory, new OrderMissingOrderScanAccessor (_query)),
                 };
 
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.BargainScanShouldPresent);
+                Invalidate(MessageTypeCode.BillsPeriodShouldMatchOrder);
+                Invalidate(MessageTypeCode.BillsShouldBeCreated);
+                Invalidate(MessageTypeCode.BillsSumShouldMatchOrder);
+                Invalidate(MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired);
+                Invalidate(MessageTypeCode.LegalPersonProfileWarrantyShouldNotBeExpired);
+                Invalidate(MessageTypeCode.LegalPersonShouldHaveAtLeastOneProfile);
+                Invalidate(MessageTypeCode.LinkedCategoryAsterixMayBelongToFirm);
+                Invalidate(MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid);
+                Invalidate(MessageTypeCode.LinkedCategoryShouldBeActive);
+                Invalidate(MessageTypeCode.LinkedCategoryShouldBelongToFirm);
+                Invalidate(MessageTypeCode.LinkedFirmAddressShouldBeValid);
+                Invalidate(MessageTypeCode.LinkedFirmShouldBeValid);
+                Invalidate(MessageTypeCode.OrderBeginDistrubutionShouldBeFirstDayOfMonth);
+                Invalidate(MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth);
+                Invalidate(MessageTypeCode.OrderMustHaveActiveDeal);
+                Invalidate(MessageTypeCode.OrderMustHaveActiveLegalEntities);
+                Invalidate(MessageTypeCode.OrderRequiredFieldsShouldBeSpecified);
+                Invalidate(MessageTypeCode.OrderScanShouldPresent);
+                Invalidate(MessageTypeCode.OrderShouldHaveAtLeastOnePosition);
+                Invalidate(MessageTypeCode.OrderShouldNotBeSignedBeforeBargain);
+
                 _query = query;
             }
 
@@ -135,12 +158,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class InvalidFirmAccessor : IStorageBasedDataObjectAccessor<Order.InvalidFirm>
+        public sealed class InvalidFirmAccessor : AggregateDataChangesHandler<Order.InvalidFirm>, IStorageBasedDataObjectAccessor<Order.InvalidFirm>
         {
             private readonly IQuery _query;
 
             public InvalidFirmAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.LinkedFirmShouldBeValid);
+
                 _query = query;
             }
 
@@ -171,12 +196,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class InvalidFirmAddressAccessor : IStorageBasedDataObjectAccessor<Order.InvalidFirmAddress>
+        public sealed class InvalidFirmAddressAccessor : AggregateDataChangesHandler<Order.InvalidFirmAddress>, IStorageBasedDataObjectAccessor<Order.InvalidFirmAddress>
         {
             private readonly IQuery _query;
 
             public InvalidFirmAddressAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.LinkedFirmAddressShouldBeValid);
+
                 _query = query;
             }
 
@@ -213,12 +240,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class InvalidCategoryFirmAddressAccessor : IStorageBasedDataObjectAccessor<Order.InvalidCategoryFirmAddress>
+        public sealed class InvalidCategoryFirmAddressAccessor : AggregateDataChangesHandler<Order.InvalidCategoryFirmAddress>, IStorageBasedDataObjectAccessor<Order.InvalidCategoryFirmAddress>
         {
             private readonly IQuery _query;
 
             public InvalidCategoryFirmAddressAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid);
+
                 _query = query;
             }
 
@@ -254,7 +283,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class InvalidCategoryAccessor : IStorageBasedDataObjectAccessor<Order.InvalidCategory>
+        public sealed class InvalidCategoryAccessor : AggregateDataChangesHandler<Order.InvalidCategory>, IStorageBasedDataObjectAccessor<Order.InvalidCategory>
         {
             private const int BindingObjectTypeCategoryMultipleAsterix = 1;
 
@@ -262,6 +291,10 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public InvalidCategoryAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.LinkedCategoryAsterixMayBelongToFirm);
+                Invalidate(MessageTypeCode.LinkedCategoryShouldBeActive);
+                Invalidate(MessageTypeCode.LinkedCategoryShouldBelongToFirm);
+
                 _query = query;
             }
 
@@ -300,12 +333,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderBargainSignedLaterThanOrderAccessor : IStorageBasedDataObjectAccessor<Order.BargainSignedLaterThanOrder>
+        public sealed class OrderBargainSignedLaterThanOrderAccessor : AggregateDataChangesHandler<Order.BargainSignedLaterThanOrder>, IStorageBasedDataObjectAccessor<Order.BargainSignedLaterThanOrder>
         {
             private readonly IQuery _query;
 
             public OrderBargainSignedLaterThanOrderAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderShouldNotBeSignedBeforeBargain);
+
                 _query = query;
             }
 
@@ -329,12 +364,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderHasNoAnyLegalPersonProfileAccessor : IStorageBasedDataObjectAccessor<Order.HasNoAnyLegalPersonProfile>
+        public sealed class OrderHasNoAnyLegalPersonProfileAccessor : AggregateDataChangesHandler<Order.HasNoAnyLegalPersonProfile>, IStorageBasedDataObjectAccessor<Order.HasNoAnyLegalPersonProfile>
         {
             private readonly IQuery _query;
 
             public OrderHasNoAnyLegalPersonProfileAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.LegalPersonShouldHaveAtLeastOneProfile);
+
                 _query = query;
             }
 
@@ -358,12 +395,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderHasNoAnyPositionAccessor : IStorageBasedDataObjectAccessor<Order.HasNoAnyPosition>
+        public sealed class OrderHasNoAnyPositionAccessor : AggregateDataChangesHandler<Order.HasNoAnyPosition>, IStorageBasedDataObjectAccessor<Order.HasNoAnyPosition>
         {
             private readonly IQuery _query;
 
             public OrderHasNoAnyPositionAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderShouldHaveAtLeastOnePosition);
+
                 _query = query;
             }
 
@@ -387,12 +426,15 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class InactiveReferenceAccessor : IStorageBasedDataObjectAccessor<Order.InactiveReference>
+        public sealed class InactiveReferenceAccessor : AggregateDataChangesHandler<Order.InactiveReference>, IStorageBasedDataObjectAccessor<Order.InactiveReference>
         {
             private readonly IQuery _query;
 
             public InactiveReferenceAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderMustHaveActiveDeal);
+                Invalidate(MessageTypeCode.OrderMustHaveActiveLegalEntities);
+
                 _query = query;
             }
 
@@ -426,12 +468,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderInvalidBeginDistributionDateAccessor : IStorageBasedDataObjectAccessor<Order.InvalidBeginDistributionDate>
+        public sealed class OrderInvalidBeginDistributionDateAccessor : AggregateDataChangesHandler<Order.InvalidBeginDistributionDate>, IStorageBasedDataObjectAccessor<Order.InvalidBeginDistributionDate>
         {
             private readonly IQuery _query;
 
             public OrderInvalidBeginDistributionDateAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderBeginDistrubutionShouldBeFirstDayOfMonth);
+
                 _query = query;
             }
 
@@ -454,12 +498,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderInvalidEndDistributionDateAccessor : IStorageBasedDataObjectAccessor<Order.InvalidEndDistributionDate>
+        public sealed class OrderInvalidEndDistributionDateAccessor : AggregateDataChangesHandler<Order.InvalidEndDistributionDate>, IStorageBasedDataObjectAccessor<Order.InvalidEndDistributionDate>
         {
             private readonly IQuery _query;
 
             public OrderInvalidEndDistributionDateAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth);
+
                 _query = query;
             }
 
@@ -482,12 +528,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderInvalidBillsPeriodAccessor : IStorageBasedDataObjectAccessor<Order.InvalidBillsPeriod>
+        public sealed class OrderInvalidBillsPeriodAccessor : AggregateDataChangesHandler<Order.InvalidBillsPeriod>, IStorageBasedDataObjectAccessor<Order.InvalidBillsPeriod>
         {
             private readonly IQuery _query;
 
             public OrderInvalidBillsPeriodAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.BillsPeriodShouldMatchOrder);
+
                 _query = query;
             }
 
@@ -512,7 +560,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderInvalidBillsTotalAccessor : IStorageBasedDataObjectAccessor<Order.InvalidBillsTotal>
+        public sealed class OrderInvalidBillsTotalAccessor : AggregateDataChangesHandler<Order.InvalidBillsTotal>, IStorageBasedDataObjectAccessor<Order.InvalidBillsTotal>
         {
             private const int WorkflowStepOnRegistration = 1;
 
@@ -520,6 +568,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public OrderInvalidBillsTotalAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.BillsSumShouldMatchOrder);
+
                 _query = query;
             }
 
@@ -546,12 +596,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor : IStorageBasedDataObjectAccessor<Order.LegalPersonProfileBargainExpired>
+        public sealed class OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor : AggregateDataChangesHandler<Order.LegalPersonProfileBargainExpired>, IStorageBasedDataObjectAccessor<Order.LegalPersonProfileBargainExpired>
         {
             private readonly IQuery _query;
 
             public OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired);
+
                 _query = query;
             }
 
@@ -577,12 +629,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor : IStorageBasedDataObjectAccessor<Order.LegalPersonProfileWarrantyExpired>
+        public sealed class OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor : AggregateDataChangesHandler<Order.LegalPersonProfileWarrantyExpired>, IStorageBasedDataObjectAccessor<Order.LegalPersonProfileWarrantyExpired>
         {
             private readonly IQuery _query;
 
             public OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.LegalPersonProfileWarrantyShouldNotBeExpired);
+
                 _query = query;
             }
 
@@ -608,12 +662,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderMissingBargainScanAccessor : IStorageBasedDataObjectAccessor<Order.MissingBargainScan>
+        public sealed class OrderMissingBargainScanAccessor : AggregateDataChangesHandler<Order.MissingBargainScan>, IStorageBasedDataObjectAccessor<Order.MissingBargainScan>
         {
             private readonly IQuery _query;
 
             public OrderMissingBargainScanAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.BargainScanShouldPresent);
+
                 _query = query;
             }
 
@@ -637,7 +693,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderMissingBillsAccessor : IStorageBasedDataObjectAccessor<Order.MissingBills>
+        public sealed class OrderMissingBillsAccessor : AggregateDataChangesHandler<Order.MissingBills>, IStorageBasedDataObjectAccessor<Order.MissingBills>
         {
             private const int WorkflowStepOnRegistration = 1;
 
@@ -645,6 +701,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public OrderMissingBillsAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.BillsShouldBeCreated);
+
                 _query = query;
             }
 
@@ -671,12 +729,15 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class MissingRequiredFieldAccessor : IStorageBasedDataObjectAccessor<Order.MissingRequiredField>
+        public sealed class MissingRequiredFieldAccessor : AggregateDataChangesHandler<Order.MissingRequiredField>, IStorageBasedDataObjectAccessor<Order.MissingRequiredField>
         {
             private readonly IQuery _query;
 
             public MissingRequiredFieldAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderMustHaveActiveDeal);
+                Invalidate(MessageTypeCode.OrderRequiredFieldsShouldBeSpecified);
+
                 _query = query;
             }
 
@@ -706,12 +767,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderMissingOrderScanAccessor : IStorageBasedDataObjectAccessor<Order.MissingOrderScan>
+        public sealed class OrderMissingOrderScanAccessor : AggregateDataChangesHandler<Order.MissingOrderScan>, IStorageBasedDataObjectAccessor<Order.MissingOrderScan>
         {
             private readonly IQuery _query;
 
             public OrderMissingOrderScanAccessor(IQuery query)
             {
+                Invalidate(MessageTypeCode.OrderScanShouldPresent);
+
                 _query = query;
             }
 
