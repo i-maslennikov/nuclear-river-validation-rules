@@ -28,12 +28,12 @@ namespace NuClear.ValidationRules.Replication
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<T> dataObjects)
-            => _dictionary.Select(x => x.Value.Invoke(dataObjects)).ToArray();
+            => _dictionary.Select(x => x.Value.Invoke(dataObjects)).Where(x => x != null).ToArray();
 
         protected void Invalidate(MessageTypeCode ruleCode)
-            => _dictionary[ruleCode] = x => new ResultOutdatedEvent(ruleCode);
+            => _dictionary[ruleCode] = x => x.Any() ? new ResultOutdatedEvent(ruleCode) : null;
 
         protected void Invalidate(MessageTypeCode ruleCode, Func<IReadOnlyCollection<T>, IReadOnlyCollection<long>> onChange)
-            => _dictionary[ruleCode] = x => new ResultPartiallyOutdatedEvent(ruleCode, onChange.Invoke(x));
+            => _dictionary[ruleCode] = x => x.Any() ? new ResultPartiallyOutdatedEvent(ruleCode, onChange.Invoke(x)) : null;
     }
 }
