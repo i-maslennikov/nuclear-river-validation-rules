@@ -66,18 +66,6 @@ namespace NuClear.ValidationRules.Replication
                                             .ToArray();
                 events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
-                commandsToExecute = commands.OfType<RecalculateEntityCommand>()
-                                            .Distinct()
-                                            .Aggregate(new List<ICommand>(),
-                                                (result, next) =>
-                                                    {
-                                                        result.Add(new SyncDataObjectCommand(next.EntityType, next.EntityId));
-                                                        result.Add(new ReplaceValueObjectCommand(next.AggregateRootId, next.EntityId));
-                                                        return result;
-                                                    })
-                                            .ToArray();
-                events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
-
                 commandsToExecute = commands.OfType<RecalculatePeriodAggregateCommand>()
                                             .Distinct()
                                             .Aggregate(new List<ICommand>(),
@@ -87,6 +75,18 @@ namespace NuClear.ValidationRules.Replication
                                                     result.Add(new ReplacePeriodValueObjectCommand(next.PeriodKey));
                                                     return result;
                                                 })
+                                            .ToArray();
+                events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
+
+                commandsToExecute = commands.OfType<RecalculateEntityCommand>()
+                                            .Distinct()
+                                            .Aggregate(new List<ICommand>(),
+                                                (result, next) =>
+                                                    {
+                                                        result.Add(new SyncDataObjectCommand(next.EntityType, next.EntityId));
+                                                        result.Add(new ReplaceValueObjectCommand(next.AggregateRootId, next.EntityId));
+                                                        return result;
+                                                    })
                                             .ToArray();
                 events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
 
