@@ -140,7 +140,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
@@ -177,7 +177,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderPricePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderPricePosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
@@ -207,7 +207,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<AmountControlledPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
@@ -315,7 +315,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderDeniedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
@@ -426,7 +426,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderAssociatedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
