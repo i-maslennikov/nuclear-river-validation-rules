@@ -2,7 +2,6 @@
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -15,40 +14,22 @@ using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Order.AddressAdvertisement> _addressAdvertisementRepository;
-        private readonly IBulkRepository<Order.CategoryAdvertisement> _categoryAdvertisementRepository;
-        private readonly IBulkRepository<Order.CostPerClickAdvertisement> _costPerClickAdvertisementRepository;
-
         public OrderAggregateRootActor(
             IQuery query,
-            IBulkRepository<Order> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.AddressAdvertisement> addressAdvertisementRepository,
             IBulkRepository<Order.CategoryAdvertisement> categoryAdvertisementRepository,
             IBulkRepository<Order.CostPerClickAdvertisement> costPerClickAdvertisementRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _addressAdvertisementRepository = addressAdvertisementRepository;
-            _costPerClickAdvertisementRepository = costPerClickAdvertisementRepository;
-            _categoryAdvertisementRepository = categoryAdvertisementRepository;
+            HasRootEntity(new OrderAccessor(query), bulkRepository,
+               HasValueObject(new AddressAdvertisementAccessor(query), addressAdvertisementRepository),
+               HasValueObject(new CategoryAdvertisementAccessor(query), categoryAdvertisementRepository),
+               HasValueObject(new CostPerClickAdvertisementAccessor(query), costPerClickAdvertisementRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => new IEntityActor[0];
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Order.AddressAdvertisement>(_query, _addressAdvertisementRepository, _equalityComparerFactory, new AddressAdvertisementAccessor(_query)),
-                    new ValueObjectActor<Order.CategoryAdvertisement>(_query, _categoryAdvertisementRepository, _equalityComparerFactory, new CategoryAdvertisementAccessor(_query)),
-                    new ValueObjectActor<Order.CostPerClickAdvertisement>(_query, _costPerClickAdvertisementRepository, _equalityComparerFactory, new CostPerClickAdvertisementAccessor(_query)),
-                };
 
         public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {

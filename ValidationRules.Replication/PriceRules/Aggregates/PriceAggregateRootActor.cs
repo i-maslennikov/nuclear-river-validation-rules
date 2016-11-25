@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,35 +14,20 @@ using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
-    public sealed class PriceAggregateRootActor : EntityActorBase<Price>, IAggregateRootActor
+    public sealed class PriceAggregateRootActor : AggregateRootActor<Price>
     {
-        private readonly IQuery _query;
-        private readonly IBulkRepository<AdvertisementAmountRestriction> _advertisementAmountRestrictionBulkRepository;
-        private readonly IBulkRepository<AssociatedPositionGroupOvercount> _associatedPositionGroupOvercountRepository;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-
         public PriceAggregateRootActor(
             IQuery query,
+            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Price> bulkRepository,
             IBulkRepository<AdvertisementAmountRestriction> advertisementAmountRestrictionBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<AssociatedPositionGroupOvercount> associatedPositionGroupOvercountRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new PriceAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _advertisementAmountRestrictionBulkRepository = advertisementAmountRestrictionBulkRepository;
-            _equalityComparerFactory = equalityComparerFactory;
-            _associatedPositionGroupOvercountRepository = associatedPositionGroupOvercountRepository;
+            HasRootEntity(new PriceAccessor(query), bulkRepository,
+                HasValueObject(new AdvertisementAmountRestrictionAccessor(query), advertisementAmountRestrictionBulkRepository),
+                HasValueObject(new AssociatedPositionGroupOvercountAccessor(query), associatedPositionGroupOvercountRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors() => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<AdvertisementAmountRestriction>(_query, _advertisementAmountRestrictionBulkRepository, _equalityComparerFactory, new AdvertisementAmountRestrictionAccessor(_query)),
-                    new ValueObjectActor<AssociatedPositionGroupOvercount>(_query, _associatedPositionGroupOvercountRepository, _equalityComparerFactory, new AssociatedPositionGroupOvercountAccessor(_query)),
-                };
 
         public sealed class PriceAccessor : AggregateDataChangesHandler<Price>, IStorageBasedDataObjectAccessor<Price>
         {

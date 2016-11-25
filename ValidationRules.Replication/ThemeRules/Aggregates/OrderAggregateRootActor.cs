@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,32 +14,18 @@ using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Order.OrderTheme> _orderThemeBulkRepository;
-
         public OrderAggregateRootActor(
             IQuery query,
-            IBulkRepository<Order> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.OrderTheme> orderThemeBulkRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _orderThemeBulkRepository = orderThemeBulkRepository;
+            HasRootEntity(new OrderAccessor(query), bulkRepository,
+               HasValueObject(new OrderThemeAccessor(query), orderThemeBulkRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Order.OrderTheme>(_query, _orderThemeBulkRepository, _equalityComparerFactory, new OrderThemeAccessor(_query)),
-                };
 
         public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {

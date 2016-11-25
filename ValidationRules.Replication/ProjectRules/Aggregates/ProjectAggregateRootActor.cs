@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,44 +15,24 @@ using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 {
-    public sealed class ProjectAggregateRootActor : EntityActorBase<Project>, IAggregateRootActor
+    public sealed class ProjectAggregateRootActor : AggregateRootActor<Project>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Project.Category> _categoryRepository;
-        private readonly IBulkRepository<Project.CostPerClickRestriction> _costPerClickRestrictionRepository;
-        private readonly IBulkRepository<Project.NextRelease> _nextReleaseRepository;
-        private readonly IBulkRepository<Project.SalesModelRestriction> _salesModelRestrictionRepository;
-
         public ProjectAggregateRootActor(
             IQuery query,
-            IBulkRepository<Project> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Project> bulkRepository,
             IBulkRepository<Project.Category> categoryRepository,
             IBulkRepository<Project.CostPerClickRestriction> costPerClickRestrictionRepository,
             IBulkRepository<Project.SalesModelRestriction> salesModelRestrictionRepository,
             IBulkRepository<Project.NextRelease> nextReleaseRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new ProjectAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _categoryRepository = categoryRepository;
-            _costPerClickRestrictionRepository = costPerClickRestrictionRepository;
-            _nextReleaseRepository = nextReleaseRepository;
-            _salesModelRestrictionRepository = salesModelRestrictionRepository;
+            HasRootEntity(new ProjectAccessor(query), bulkRepository,
+               HasValueObject(new CategoryAccessor(query), categoryRepository),
+               HasValueObject(new CostPerClickRestrictionAccessor(query), costPerClickRestrictionRepository),
+               HasValueObject(new SalesModelRestrictionAccessor(query), salesModelRestrictionRepository),
+               HasValueObject(new NextReleaseAccessor(query), nextReleaseRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => new IEntityActor[0];
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Project.Category>(_query, _categoryRepository, _equalityComparerFactory, new CategoryAccessor(_query)),
-                    new ValueObjectActor<Project.CostPerClickRestriction>(_query, _costPerClickRestrictionRepository, _equalityComparerFactory, new CostPerClickRestrictionAccessor(_query)),
-                    new ValueObjectActor<Project.SalesModelRestriction>(_query, _salesModelRestrictionRepository, _equalityComparerFactory, new SalesModelRestrictionAccessor(_query)),
-                    new ValueObjectActor<Project.NextRelease>(_query, _nextReleaseRepository, _equalityComparerFactory, new NextReleaseAccessor(_query)),
-                };
 
         public sealed class ProjectAccessor : AggregateDataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -17,32 +16,18 @@ using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 {
-    public sealed class FirmAggregateRootActor : EntityActorBase<Firm>, IAggregateRootActor
+    public sealed class FirmAggregateRootActor : AggregateRootActor<Firm>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Firm.AdvantageousPurchasePositionDistributionPeriod> _advantageousPurchasePositionDistributionPeriodRepository;
-
         public FirmAggregateRootActor(
             IQuery query,
-            IBulkRepository<Firm> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Firm> bulkRepository,
             IBulkRepository<Firm.AdvantageousPurchasePositionDistributionPeriod> advantageousPurchasePositionDistributionPeriodRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new FirmAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _advantageousPurchasePositionDistributionPeriodRepository = advantageousPurchasePositionDistributionPeriodRepository;
+            HasRootEntity(new FirmAccessor(query), bulkRepository,
+                HasValueObject(new AdvantageousPurchasePositionDistributionPeriodAccessor(query), advantageousPurchasePositionDistributionPeriodRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Firm.AdvantageousPurchasePositionDistributionPeriod>(_query, _advantageousPurchasePositionDistributionPeriodRepository, _equalityComparerFactory, new AdvantageousPurchasePositionDistributionPeriodAccessor(_query)),
-                };
 
         public sealed class FirmAccessor : AggregateDataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
         {

@@ -2,7 +2,6 @@
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,44 +15,24 @@ using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IBulkRepository<Order.FirmOrganiationUnitMismatch> _invalidFirmRepository;
-        private readonly IBulkRepository<Order.NotApplicapleForDesktopPosition> _notApplicapleForDesktopPositionRepository;
-        private readonly IBulkRepository<Order.SelfAdvertisementPosition> _selfAdvertisementPositionRepository;
-        private readonly IBulkRepository<Order.CategoryPurchase> _categoryPurchaseRepository;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-
         public OrderAggregateRootActor(
             IQuery query,
-            IBulkRepository<Order> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.FirmOrganiationUnitMismatch> invalidFirmRepository,
             IBulkRepository<Order.CategoryPurchase> categoryPurchaseRepository,
             IBulkRepository<Order.NotApplicapleForDesktopPosition> notApplicapleForDesktopPositionRepository,
             IBulkRepository<Order.SelfAdvertisementPosition> selfAdvertisementPositionRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _invalidFirmRepository = invalidFirmRepository;
-            _categoryPurchaseRepository = categoryPurchaseRepository;
-            _notApplicapleForDesktopPositionRepository = notApplicapleForDesktopPositionRepository;
-            _selfAdvertisementPositionRepository = selfAdvertisementPositionRepository;
+            HasRootEntity(new OrderAccessor(query), bulkRepository,
+                HasValueObject(new OrderFirmOrganiationUnitMismatchAccessor(query), invalidFirmRepository),
+                HasValueObject(new NotApplicapleForDesktopPositionAccessor(query), notApplicapleForDesktopPositionRepository),
+                HasValueObject(new SelfAdvertisementPositionAccessor(query), selfAdvertisementPositionRepository),
+                HasValueObject(new OrderCategoryPurchaseAccessor(query), categoryPurchaseRepository));
         }
-
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors() => new IEntityActor[0];
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Order.FirmOrganiationUnitMismatch>(_query, _invalidFirmRepository, _equalityComparerFactory, new OrderFirmOrganiationUnitMismatchAccessor(_query)),
-                    new ValueObjectActor<Order.NotApplicapleForDesktopPosition>(_query, _notApplicapleForDesktopPositionRepository, _equalityComparerFactory, new NotApplicapleForDesktopPositionAccessor(_query)),
-                    new ValueObjectActor<Order.SelfAdvertisementPosition>(_query, _selfAdvertisementPositionRepository, _equalityComparerFactory, new SelfAdvertisementPositionAccessor(_query)),
-                    new ValueObjectActor<Order.CategoryPurchase>(_query, _categoryPurchaseRepository, _equalityComparerFactory, new OrderCategoryPurchaseAccessor(_query)),
-                };
 
         public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {

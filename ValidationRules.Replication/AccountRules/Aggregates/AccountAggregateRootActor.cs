@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,32 +14,18 @@ using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
-    public sealed class AccountAggregateRootActor : EntityActorBase<Account>, IAggregateRootActor
+    public sealed class AccountAggregateRootActor : AggregateRootActor<Account>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<AccountPeriod> _accountPeriodBulkRepository;
-
         public AccountAggregateRootActor(
             IQuery query,
+            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Account> accountBulkRepository,
-            IBulkRepository<AccountPeriod> accountPeriodBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
-            : base(query, accountBulkRepository, equalityComparerFactory, new AccountAccessor(query))
+            IBulkRepository<AccountPeriod> accountPeriodBulkRepository)
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _accountPeriodBulkRepository = accountPeriodBulkRepository;
+            HasRootEntity(new AccountAccessor(query), accountBulkRepository,
+                HasValueObject(new AccountPeriodAccessor(query), accountPeriodBulkRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<AccountPeriod>(_query, _accountPeriodBulkRepository, _equalityComparerFactory, new AccountPeriodAccessor(_query))
-                };
 
         public sealed class AccountAccessor : AggregateDataChangesHandler<Account>, IStorageBasedDataObjectAccessor<Account>
         {

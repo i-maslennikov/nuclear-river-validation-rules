@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,32 +14,18 @@ using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
 {
-    public sealed class ThemeAggregateRootActor : EntityActorBase<Theme>, IAggregateRootActor
+    public sealed class ThemeAggregateRootActor : AggregateRootActor<Theme>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Theme.InvalidCategory> _invalidCategoryBulkRepository;
-
         public ThemeAggregateRootActor(
             IQuery query,
-            IBulkRepository<Theme> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Theme> bulkRepository,
             IBulkRepository<Theme.InvalidCategory> invalidCategoryBulkRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new ThemeAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _invalidCategoryBulkRepository = invalidCategoryBulkRepository;
+            HasRootEntity(new ThemeAccessor(query), bulkRepository,
+               HasValueObject(new InvalidCategoryAccessor(query), invalidCategoryBulkRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Theme.InvalidCategory>(_query, _invalidCategoryBulkRepository, _equalityComparerFactory, new InvalidCategoryAccessor(_query)),
-                };
 
         public sealed class ThemeAccessor : AggregateDataChangesHandler<Theme>, IStorageBasedDataObjectAccessor<Theme>
         {

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,36 +14,20 @@ using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Lock> _lockBulkRepository;
-        private readonly IBulkRepository<Order.DebtPermission> _debtPermissionBulkRepository;
-
         public OrderAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> orderBulkRepository,
             IBulkRepository<Lock> lockBulkRepository,
             IBulkRepository<Order.DebtPermission> debtPermissionBulkRepository)
-            : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _lockBulkRepository = lockBulkRepository;
-            _debtPermissionBulkRepository = debtPermissionBulkRepository;
+            HasRootEntity(new OrderAccessor(query), orderBulkRepository,
+                HasValueObject(new LockAccessor(query), lockBulkRepository),
+                HasValueObject(new DebtPermissionAccessor(query), debtPermissionBulkRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Lock>(_query, _lockBulkRepository, _equalityComparerFactory, new LockAccessor(_query)),
-                    new ValueObjectActor<Order.DebtPermission>(_query, _debtPermissionBulkRepository, _equalityComparerFactory, new DebtPermissionAccessor(_query)),
-                };
 
         public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {

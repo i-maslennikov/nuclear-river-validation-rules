@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,21 +14,16 @@ using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
-    public sealed class ProjectAggregateRootActor : EntityActorBase<Project>, IAggregateRootActor
+    public sealed class ProjectAggregateRootActor : AggregateRootActor<Project>
     {
         public ProjectAggregateRootActor(
             IQuery query,
-            IBulkRepository<Project> bulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
-            : base(query, bulkRepository, equalityComparerFactory, new ProjectAccessor(query))
+            IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Project> bulkRepository)
+            : base(query, equalityComparerFactory)
         {
+            HasRootEntity(new ProjectAccessor(query), bulkRepository);
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => Array.Empty<IActor>();
 
         public sealed class ProjectAccessor : AggregateDataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {

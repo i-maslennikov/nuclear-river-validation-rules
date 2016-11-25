@@ -16,44 +16,24 @@ using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
-    public sealed class AdvertisementAggregateRootActor : EntityActorBase<Advertisement>, IAggregateRootActor
+    public sealed class AdvertisementAggregateRootActor : AggregateRootActor<Advertisement>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Advertisement.AdvertisementWebsite> _advertisementWebsiteBulkRepository;
-        private readonly IBulkRepository<Advertisement.RequiredElementMissing> _requiredElementMissingBulkRepository;
-        private readonly IBulkRepository<Advertisement.ElementNotPassedReview> _elementInvalidBulkRepository;
-        private readonly IBulkRepository<Advertisement.ElementOffsetInDays> _elementPeriodOffsetBulkRepository;
-
         public AdvertisementAggregateRootActor(
             IQuery query,
-            IBulkRepository<Advertisement> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Advertisement> bulkRepository,
             IBulkRepository<Advertisement.AdvertisementWebsite> advertisementWebsiteBulkRepository,
             IBulkRepository<Advertisement.RequiredElementMissing> requiredElementMissingBulkRepository,
             IBulkRepository<Advertisement.ElementNotPassedReview> elementInvalidBulkRepository,
             IBulkRepository<Advertisement.ElementOffsetInDays> elementPeriodOffsetBulkRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new AdvertisementAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _advertisementWebsiteBulkRepository = advertisementWebsiteBulkRepository;
-            _requiredElementMissingBulkRepository = requiredElementMissingBulkRepository;
-            _elementInvalidBulkRepository = elementInvalidBulkRepository;
-            _elementPeriodOffsetBulkRepository = elementPeriodOffsetBulkRepository;
+            HasRootEntity(new AdvertisementAccessor(query), bulkRepository,
+                HasValueObject(new AdvertisementWebsiteAccessor(query), advertisementWebsiteBulkRepository),
+                HasValueObject(new RequiredElementMissingAccessor(query), requiredElementMissingBulkRepository),
+                HasValueObject(new ElementOffsetInDaysAccessor(query), elementPeriodOffsetBulkRepository),
+                HasValueObject(new ElementNotPassedReviewAccessor(query), elementInvalidBulkRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Advertisement.AdvertisementWebsite>(_query, _advertisementWebsiteBulkRepository, _equalityComparerFactory, new AdvertisementWebsiteAccessor(_query)),
-                    new ValueObjectActor<Advertisement.RequiredElementMissing>(_query, _requiredElementMissingBulkRepository, _equalityComparerFactory, new RequiredElementMissingAccessor(_query)),
-                    new ValueObjectActor<Advertisement.ElementNotPassedReview>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementNotPassedReviewAccessor(_query)),
-                    new ValueObjectActor<Advertisement.ElementOffsetInDays>(_query, _elementPeriodOffsetBulkRepository, _equalityComparerFactory, new ElementOffsetInDaysAccessor(_query)),
-                };
 
         public sealed class AdvertisementAccessor : AggregateDataChangesHandler<Advertisement>, IStorageBasedDataObjectAccessor<Advertisement>
         {

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -16,31 +14,12 @@ using Facts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IBulkRepository<Order.InvalidFirm> _orderInvalidFirmRepository;
-        private readonly IBulkRepository<Order.InvalidFirmAddress> _orderInvalidFirmAddressRepository;
-        private readonly IBulkRepository<Order.BargainSignedLaterThanOrder> _orderBargainSignedLaterThanOrderRepository;
-        private readonly IBulkRepository<Order.HasNoAnyLegalPersonProfile> _orderHasNoAnyLegalPersonProfileRepository;
-        private readonly IBulkRepository<Order.HasNoAnyPosition> _orderHasNoAnyPositionRepository;
-        private readonly IBulkRepository<Order.InactiveReference> _inactiveReferenceRepository;
-        private readonly IBulkRepository<Order.InvalidBeginDistributionDate> _orderInvalidBeginDistributionDateRepository;
-        private readonly IBulkRepository<Order.InvalidEndDistributionDate> _orderInvalidEndDistributionDateRepository;
-        private readonly IBulkRepository<Order.InvalidBillsPeriod> _orderInvalidBillsPeriodRepository;
-        private readonly IBulkRepository<Order.InvalidBillsTotal> _orderInvalidBillsTotalRepository;
-        private readonly IBulkRepository<Order.LegalPersonProfileBargainExpired> _orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository;
-        private readonly IBulkRepository<Order.LegalPersonProfileWarrantyExpired> _orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository;
-        private readonly IBulkRepository<Order.MissingBargainScan> _orderMissingBargainScanRepository;
-        private readonly IBulkRepository<Order.MissingBills> _orderMissingBillsRepository;
-        private readonly IBulkRepository<Order.MissingRequiredField> _orderMissingRequiredFieldRepository;
-        private readonly IBulkRepository<Order.MissingOrderScan> _orderMissingOrderScanRepository;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-
         public OrderAggregateRootActor(
             IQuery query,
-            IBulkRepository<Order> orderBulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
             IBulkRepository<Order.InvalidFirmAddress> orderInvalidFirmAddressRepository,
             IBulkRepository<Order.BargainSignedLaterThanOrder> orderBargainSignedLaterThanOrderRepository,
@@ -57,51 +36,26 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IBulkRepository<Order.MissingBills> orderMissingBillsRepository,
             IBulkRepository<Order.MissingRequiredField> orderMissingRequiredFieldRepository,
             IBulkRepository<Order.MissingOrderScan> orderMissingOrderScanRepository)
-            : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _orderInvalidFirmRepository = orderInvalidFirmRepository;
-            _orderInvalidFirmAddressRepository = orderInvalidFirmAddressRepository;
-            _orderBargainSignedLaterThanOrderRepository = orderBargainSignedLaterThanOrderRepository;
-            _orderHasNoAnyLegalPersonProfileRepository = orderHasNoAnyLegalPersonProfileRepository;
-            _orderHasNoAnyPositionRepository = orderHasNoAnyPositionRepository;
-            _inactiveReferenceRepository = inactiveReferenceRepository;
-            _orderInvalidBeginDistributionDateRepository = orderInvalidBeginDistributionDateRepository;
-            _orderInvalidEndDistributionDateRepository = orderInvalidEndDistributionDateRepository;
-            _orderInvalidBillsPeriodRepository = orderInvalidBillsPeriodRepository;
-            _orderInvalidBillsTotalRepository = orderInvalidBillsTotalRepository;
-            _orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository = orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository;
-            _orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository = orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository;
-            _orderMissingBargainScanRepository = orderMissingBargainScanRepository;
-            _orderMissingBillsRepository = orderMissingBillsRepository;
-            _orderMissingRequiredFieldRepository = orderMissingRequiredFieldRepository;
-            _orderMissingOrderScanRepository = orderMissingOrderScanRepository;
+            HasRootEntity(new OrderAccessor(query), bulkRepository,
+                HasValueObject(new InvalidFirmAccessor(query), orderInvalidFirmRepository),
+                HasValueObject(new InvalidFirmAddressAccessor(query), orderInvalidFirmAddressRepository),
+                HasValueObject(new OrderBargainSignedLaterThanOrderAccessor(query), orderBargainSignedLaterThanOrderRepository),
+                HasValueObject(new OrderHasNoAnyLegalPersonProfileAccessor(query), orderHasNoAnyLegalPersonProfileRepository),
+                HasValueObject(new OrderHasNoAnyPositionAccessor(query), orderHasNoAnyPositionRepository),
+                HasValueObject(new InactiveReferenceAccessor(query), inactiveReferenceRepository),
+                HasValueObject(new OrderInvalidBeginDistributionDateAccessor(query), orderInvalidBeginDistributionDateRepository),
+                HasValueObject(new OrderInvalidEndDistributionDateAccessor(query), orderInvalidEndDistributionDateRepository),
+                HasValueObject(new OrderInvalidBillsPeriodAccessor(query), orderInvalidBillsPeriodRepository),
+                HasValueObject(new OrderInvalidBillsTotalAccessor(query), orderInvalidBillsTotalRepository),
+                HasValueObject(new OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor(query), orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository),
+                HasValueObject(new OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor(query), orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository),
+                HasValueObject(new OrderMissingBargainScanAccessor(query), orderMissingBargainScanRepository),
+                HasValueObject(new OrderMissingBillsAccessor(query), orderMissingBillsRepository),
+                HasValueObject(new MissingRequiredFieldAccessor(query), orderMissingRequiredFieldRepository),
+                HasValueObject(new OrderMissingOrderScanAccessor(query), orderMissingOrderScanRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Order.InvalidFirm>(_query, _orderInvalidFirmRepository, _equalityComparerFactory, new InvalidFirmAccessor (_query)),
-                    new ValueObjectActor<Order.InvalidFirmAddress>(_query, _orderInvalidFirmAddressRepository, _equalityComparerFactory, new InvalidFirmAddressAccessor (_query)),
-                    new ValueObjectActor<Order.BargainSignedLaterThanOrder>(_query, _orderBargainSignedLaterThanOrderRepository, _equalityComparerFactory, new OrderBargainSignedLaterThanOrderAccessor (_query)),
-                    new ValueObjectActor<Order.HasNoAnyLegalPersonProfile>(_query, _orderHasNoAnyLegalPersonProfileRepository, _equalityComparerFactory, new OrderHasNoAnyLegalPersonProfileAccessor (_query)),
-                    new ValueObjectActor<Order.HasNoAnyPosition>(_query, _orderHasNoAnyPositionRepository, _equalityComparerFactory, new OrderHasNoAnyPositionAccessor (_query)),
-                    new ValueObjectActor<Order.InactiveReference>(_query, _inactiveReferenceRepository, _equalityComparerFactory, new InactiveReferenceAccessor (_query)),
-                    new ValueObjectActor<Order.InvalidBeginDistributionDate>(_query, _orderInvalidBeginDistributionDateRepository, _equalityComparerFactory, new OrderInvalidBeginDistributionDateAccessor (_query)),
-                    new ValueObjectActor<Order.InvalidEndDistributionDate>(_query, _orderInvalidEndDistributionDateRepository, _equalityComparerFactory, new OrderInvalidEndDistributionDateAccessor (_query)),
-                    new ValueObjectActor<Order.InvalidBillsPeriod>(_query, _orderInvalidBillsPeriodRepository, _equalityComparerFactory, new OrderInvalidBillsPeriodAccessor (_query)),
-                    new ValueObjectActor<Order.InvalidBillsTotal>(_query, _orderInvalidBillsTotalRepository, _equalityComparerFactory, new OrderInvalidBillsTotalAccessor (_query)),
-                    new ValueObjectActor<Order.LegalPersonProfileBargainExpired>(_query, _orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository, _equalityComparerFactory, new OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor (_query)),
-                    new ValueObjectActor<Order.LegalPersonProfileWarrantyExpired>(_query, _orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository, _equalityComparerFactory, new OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor (_query)),
-                    new ValueObjectActor<Order.MissingBargainScan>(_query, _orderMissingBargainScanRepository, _equalityComparerFactory, new OrderMissingBargainScanAccessor (_query)),
-                    new ValueObjectActor<Order.MissingBills>(_query, _orderMissingBillsRepository, _equalityComparerFactory, new OrderMissingBillsAccessor (_query)),
-                    new ValueObjectActor<Order.MissingRequiredField>(_query, _orderMissingRequiredFieldRepository, _equalityComparerFactory, new MissingRequiredFieldAccessor(_query)),
-                    new ValueObjectActor<Order.MissingOrderScan>(_query, _orderMissingOrderScanRepository, _equalityComparerFactory, new OrderMissingOrderScanAccessor (_query)),
-                };
 
         public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -17,22 +16,12 @@ using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Order.MissingAdvertisementReference> _missingAdvertisementReferenceBulkRepository;
-        private readonly IBulkRepository<Order.MissingOrderPositionAdvertisement> _missingOrderPositionAdvertisementBulkRepository;
-        private readonly IBulkRepository<Order.AdvertisementDeleted> _advertisementDeletedBulkRepository;
-        private readonly IBulkRepository<Order.AdvertisementMustBelongToFirm> _advertisementMustBelongToFirmBulkRepository;
-        private readonly IBulkRepository<Order.AdvertisementIsDummy> _advertisementIsDummyBulkRepository;
-        private readonly IBulkRepository<Order.CouponDistributionPeriod> _couponDistributionPeriodRepository;
-        private readonly IBulkRepository<Order.OrderPositionAdvertisement> _orderPositionAdvertisementBulkRepository;
-
         public OrderAggregateRootActor(
             IQuery query,
-            IBulkRepository<Order> orderBulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.MissingAdvertisementReference> missingAdvertisementReferenceBulkRepository,
             IBulkRepository<Order.MissingOrderPositionAdvertisement> missingOrderPositionAdvertisementBulkRepository,
             IBulkRepository<Order.AdvertisementDeleted> advertisementDeletedBulkRepository,
@@ -40,33 +29,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             IBulkRepository<Order.AdvertisementIsDummy> advertisementIsDummyBulkRepository,
             IBulkRepository<Order.CouponDistributionPeriod> couponDistributionPeriodRepository,
             IBulkRepository<Order.OrderPositionAdvertisement> orderPositionAdvertisementBulkRepository)
-            : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _missingAdvertisementReferenceBulkRepository = missingAdvertisementReferenceBulkRepository;
-            _missingOrderPositionAdvertisementBulkRepository = missingOrderPositionAdvertisementBulkRepository;
-            _advertisementDeletedBulkRepository = advertisementDeletedBulkRepository;
-            _advertisementMustBelongToFirmBulkRepository = advertisementMustBelongToFirmBulkRepository;
-            _advertisementIsDummyBulkRepository = advertisementIsDummyBulkRepository;
-            _couponDistributionPeriodRepository = couponDistributionPeriodRepository;
-            _orderPositionAdvertisementBulkRepository = orderPositionAdvertisementBulkRepository;
+            HasRootEntity(new OrderAccessor(query), bulkRepository,
+                HasValueObject(new MissingAdvertisementReferenceAccessor(query), missingAdvertisementReferenceBulkRepository),
+                HasValueObject(new MissingOrderPositionAdvertisementAccessor(query), missingOrderPositionAdvertisementBulkRepository),
+                HasValueObject(new AdvertisementDeletedAccessor(query), advertisementDeletedBulkRepository),
+                HasValueObject(new AdvertisementMustBelongToFirmAccessor(query), advertisementMustBelongToFirmBulkRepository),
+                HasValueObject(new AdvertisementIsDummyAccessor(query), advertisementIsDummyBulkRepository),
+                HasValueObject(new CouponDistributionPeriodAccessor(query), couponDistributionPeriodRepository),
+                HasValueObject(new OrderPositionAdvertisementAccessor(query), orderPositionAdvertisementBulkRepository));
         }
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Order.MissingAdvertisementReference>(_query, _missingAdvertisementReferenceBulkRepository, _equalityComparerFactory, new MissingAdvertisementReferenceAccessor(_query)),
-                    new ValueObjectActor<Order.MissingOrderPositionAdvertisement>(_query, _missingOrderPositionAdvertisementBulkRepository, _equalityComparerFactory, new MissingOrderPositionAdvertisementAccessor(_query)),
-                    new ValueObjectActor<Order.AdvertisementDeleted>(_query, _advertisementDeletedBulkRepository, _equalityComparerFactory, new AdvertisementDeletedAccessor(_query)),
-                    new ValueObjectActor<Order.AdvertisementMustBelongToFirm>(_query, _advertisementMustBelongToFirmBulkRepository, _equalityComparerFactory, new AdvertisementMustBelongToFirmAccessor(_query)),
-                    new ValueObjectActor<Order.AdvertisementIsDummy>(_query, _advertisementIsDummyBulkRepository, _equalityComparerFactory, new AdvertisementIsDummyAccessor(_query)),
-                    new ValueObjectActor<Order.CouponDistributionPeriod>(_query, _couponDistributionPeriodRepository, _equalityComparerFactory, new CouponDistributionPeriodAccessor(_query)),
-                    new ValueObjectActor<Order.OrderPositionAdvertisement>(_query, _orderPositionAdvertisementBulkRepository, _equalityComparerFactory, new OrderPositionAdvertisementAccessor(_query)),
-                };
 
         public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
