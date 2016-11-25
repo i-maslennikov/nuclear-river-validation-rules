@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 HasValueObject(new OrderPeriodAccessor(query), orderPeriodBulkRepository));
         }
 
-        public sealed class PeriodAccessor : AggregateDataChangesHandler<Period>, IStorageBasedDataObjectAccessor<Period>
+        public sealed class PeriodAccessor : DataChangesHandler<Period>, IStorageBasedDataObjectAccessor<Period>
         {
             private readonly IQuery _query;
 
@@ -83,7 +83,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class PricePeriodAccessor : AggregateDataChangesHandler<PricePeriod>, IStorageBasedDataObjectAccessor<PricePeriod>
+        public sealed class PricePeriodAccessor : DataChangesHandler<PricePeriod>, IStorageBasedDataObjectAccessor<PricePeriod>
         {
             private readonly IQuery _query;
 
@@ -132,7 +132,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPeriodAccessor : AggregateDataChangesHandler<OrderPeriod>, IStorageBasedDataObjectAccessor<OrderPeriod>
+        public sealed class OrderPeriodAccessor : DataChangesHandler<OrderPeriod>, IStorageBasedDataObjectAccessor<OrderPeriod>
         {
             private readonly IQuery _query;
 

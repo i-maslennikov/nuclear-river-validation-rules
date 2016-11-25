@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 HasValueObject(new AdvantageousPurchasePositionDistributionPeriodAccessor(query), advantageousPurchasePositionDistributionPeriodRepository));
         }
 
-        public sealed class FirmAccessor : AggregateDataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
+        public sealed class FirmAccessor : DataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
         {
             private readonly IQuery _query;
 
@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : AggregateDataChangesHandler<Firm.AdvantageousPurchasePositionDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
+        public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : DataChangesHandler<Firm.AdvantageousPurchasePositionDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
         {
             private const long SpecialCategoryId = 18599; // Выгодные покупки с 2ГИС.
 

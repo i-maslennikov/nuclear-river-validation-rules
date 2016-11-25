@@ -27,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 HasValueObject(new AccountPeriodAccessor(query), accountPeriodBulkRepository));
         }
 
-        public sealed class AccountAccessor : AggregateDataChangesHandler<Account>, IStorageBasedDataObjectAccessor<Account>
+        public sealed class AccountAccessor : DataChangesHandler<Account>, IStorageBasedDataObjectAccessor<Account>
         {
             private readonly IQuery _query;
 
@@ -50,7 +50,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class AccountPeriodAccessor : AggregateDataChangesHandler<AccountPeriod>, IStorageBasedDataObjectAccessor<AccountPeriod>
+        public sealed class AccountPeriodAccessor : DataChangesHandler<AccountPeriod>, IStorageBasedDataObjectAccessor<AccountPeriod>
         {
             private readonly IQuery _query;
 

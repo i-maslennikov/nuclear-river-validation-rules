@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 HasValueObject(new ElementNotPassedReviewAccessor(query), elementInvalidBulkRepository));
         }
 
-        public sealed class AdvertisementAccessor : AggregateDataChangesHandler<Advertisement>, IStorageBasedDataObjectAccessor<Advertisement>
+        public sealed class AdvertisementAccessor : DataChangesHandler<Advertisement>, IStorageBasedDataObjectAccessor<Advertisement>
         {
             private readonly IQuery _query;
 
@@ -73,7 +73,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementWebsiteAccessor : AggregateDataChangesHandler<Advertisement.AdvertisementWebsite>, IStorageBasedDataObjectAccessor<Advertisement.AdvertisementWebsite>
+        public sealed class AdvertisementWebsiteAccessor : DataChangesHandler<Advertisement.AdvertisementWebsite>, IStorageBasedDataObjectAccessor<Advertisement.AdvertisementWebsite>
         {
             private readonly IQuery _query;
 
@@ -107,7 +107,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class RequiredElementMissingAccessor : AggregateDataChangesHandler<Advertisement.RequiredElementMissing>, IStorageBasedDataObjectAccessor<Advertisement.RequiredElementMissing>
+        public sealed class RequiredElementMissingAccessor : DataChangesHandler<Advertisement.RequiredElementMissing>, IStorageBasedDataObjectAccessor<Advertisement.RequiredElementMissing>
         {
             private readonly IQuery _query;
 
@@ -143,7 +143,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementNotPassedReviewAccessor : AggregateDataChangesHandler<Advertisement.ElementNotPassedReview>, IStorageBasedDataObjectAccessor<Advertisement.ElementNotPassedReview>
+        public sealed class ElementNotPassedReviewAccessor : DataChangesHandler<Advertisement.ElementNotPassedReview>, IStorageBasedDataObjectAccessor<Advertisement.ElementNotPassedReview>
         {
             private const int StatusInvalid = 2;
             private const int StatusDraft = 3;
@@ -189,7 +189,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementOffsetInDaysAccessor : AggregateDataChangesHandler<Advertisement.ElementOffsetInDays>, IStorageBasedDataObjectAccessor<Advertisement.ElementOffsetInDays>
+        public sealed class ElementOffsetInDaysAccessor : DataChangesHandler<Advertisement.ElementOffsetInDays>, IStorageBasedDataObjectAccessor<Advertisement.ElementOffsetInDays>
         {
             private readonly IQuery _query;
 

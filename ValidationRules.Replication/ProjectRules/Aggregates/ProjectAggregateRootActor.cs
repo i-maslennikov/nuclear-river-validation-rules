@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                HasValueObject(new NextReleaseAccessor(query), nextReleaseRepository));
         }
 
-        public sealed class ProjectAccessor : AggregateDataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
+        public sealed class ProjectAccessor : DataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {
             private readonly IQuery _query;
 
@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class CategoryAccessor : AggregateDataChangesHandler<Project.Category>, IStorageBasedDataObjectAccessor<Project.Category>
+        public sealed class CategoryAccessor : DataChangesHandler<Project.Category>, IStorageBasedDataObjectAccessor<Project.Category>
         {
             private readonly IQuery _query;
 
@@ -91,7 +91,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class CostPerClickRestrictionAccessor : AggregateDataChangesHandler<Project.CostPerClickRestriction>, IStorageBasedDataObjectAccessor<Project.CostPerClickRestriction>
+        public sealed class CostPerClickRestrictionAccessor : DataChangesHandler<Project.CostPerClickRestriction>, IStorageBasedDataObjectAccessor<Project.CostPerClickRestriction>
         {
             private readonly IQuery _query;
 
@@ -127,7 +127,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class SalesModelRestrictionAccessor : AggregateDataChangesHandler<Project.SalesModelRestriction>, IStorageBasedDataObjectAccessor<Project.SalesModelRestriction>
+        public sealed class SalesModelRestrictionAccessor : DataChangesHandler<Project.SalesModelRestriction>, IStorageBasedDataObjectAccessor<Project.SalesModelRestriction>
         {
             private readonly IQuery _query;
 
@@ -162,7 +162,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class NextReleaseAccessor : AggregateDataChangesHandler<Project.NextRelease>, IStorageBasedDataObjectAccessor<Project.NextRelease>
+        public sealed class NextReleaseAccessor : DataChangesHandler<Project.NextRelease>, IStorageBasedDataObjectAccessor<Project.NextRelease>
         {
             private readonly IQuery _query;
 

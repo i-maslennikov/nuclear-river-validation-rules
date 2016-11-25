@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             HasRootEntity(new ProjectAccessor(query), bulkRepository);
         }
 
-        public sealed class ProjectAccessor : AggregateDataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
+        public sealed class ProjectAccessor : DataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {
             private readonly IQuery _query;
 

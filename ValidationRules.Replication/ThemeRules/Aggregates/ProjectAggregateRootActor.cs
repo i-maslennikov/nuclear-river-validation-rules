@@ -27,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                HasValueObject(new ProjectDefaultThemeAccessor(query), projectDefaultThemeBulkRepository));
         }
 
-        public sealed class ProjectAccessor : AggregateDataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
+        public sealed class ProjectAccessor : DataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {
             private readonly IQuery _query;
 
@@ -57,7 +57,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             }
         }
 
-        public sealed class ProjectDefaultThemeAccessor : AggregateDataChangesHandler<Project.ProjectDefaultTheme>, IStorageBasedDataObjectAccessor<Project.ProjectDefaultTheme>
+        public sealed class ProjectDefaultThemeAccessor : DataChangesHandler<Project.ProjectDefaultTheme>, IStorageBasedDataObjectAccessor<Project.ProjectDefaultTheme>
         {
             private readonly IQuery _query;
 

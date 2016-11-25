@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 HasValueObject(new OrderAssociatedPositionAccessor(query), orderAssociatedPositionBulkRepository));
         }
 
-        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
@@ -72,7 +72,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPositionAccessor : AggregateDataChangesHandler<OrderPosition>, IStorageBasedDataObjectAccessor<OrderPosition>
+        public sealed class OrderPositionAccessor : DataChangesHandler<OrderPosition>, IStorageBasedDataObjectAccessor<OrderPosition>
         {
             private readonly IQuery _query;
 
@@ -145,7 +145,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPricePositionAccessor : AggregateDataChangesHandler<OrderPricePosition>, IStorageBasedDataObjectAccessor<OrderPricePosition>
+        public sealed class OrderPricePositionAccessor : DataChangesHandler<OrderPricePosition>, IStorageBasedDataObjectAccessor<OrderPricePosition>
         {
             private readonly IQuery _query;
 
@@ -182,7 +182,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class AmountControlledPositionAccessor : AggregateDataChangesHandler<AmountControlledPosition>, IStorageBasedDataObjectAccessor<AmountControlledPosition>
+        public sealed class AmountControlledPositionAccessor : DataChangesHandler<AmountControlledPosition>, IStorageBasedDataObjectAccessor<AmountControlledPosition>
         {
             private readonly IQuery _query;
 
@@ -212,7 +212,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderDeniedPositionAccessor : AggregateDataChangesHandler<OrderDeniedPosition>, IStorageBasedDataObjectAccessor<OrderDeniedPosition>
+        public sealed class OrderDeniedPositionAccessor : DataChangesHandler<OrderDeniedPosition>, IStorageBasedDataObjectAccessor<OrderDeniedPosition>
         {
             private const int RulesetRuleTypeDenied = 2;
 
@@ -320,7 +320,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderAssociatedPositionAccessor : AggregateDataChangesHandler<OrderAssociatedPosition>, IStorageBasedDataObjectAccessor<OrderAssociatedPosition>
+        public sealed class OrderAssociatedPositionAccessor : DataChangesHandler<OrderAssociatedPosition>, IStorageBasedDataObjectAccessor<OrderAssociatedPosition>
         {
             private const int RulesetRuleTypeAssociated = 1;
 

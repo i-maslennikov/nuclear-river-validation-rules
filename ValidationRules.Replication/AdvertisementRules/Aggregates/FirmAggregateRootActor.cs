@@ -30,7 +30,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 HasValueObject(new WhiteListDistributionPeriodAccessor(query), whiteListDistributionPeriodBulkRepository));
         }
 
-        public sealed class FirmAccessor : AggregateDataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
+        public sealed class FirmAccessor : DataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
         {
             private readonly IQuery _query;
 
@@ -63,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class FirmWebsiteAccessor : AggregateDataChangesHandler<Firm.FirmWebsite>, IStorageBasedDataObjectAccessor<Firm.FirmWebsite>
+        public sealed class FirmWebsiteAccessor : DataChangesHandler<Firm.FirmWebsite>, IStorageBasedDataObjectAccessor<Firm.FirmWebsite>
         {
             private readonly IQuery _query;
 
@@ -95,7 +95,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class WhiteListDistributionPeriodAccessor : AggregateDataChangesHandler<Firm.WhiteListDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.WhiteListDistributionPeriod>
+        public sealed class WhiteListDistributionPeriodAccessor : DataChangesHandler<Firm.WhiteListDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.WhiteListDistributionPeriod>
         {
             private const int OrderOnRegistration = 1;
 

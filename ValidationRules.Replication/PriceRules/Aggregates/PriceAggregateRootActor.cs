@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 HasValueObject(new AssociatedPositionGroupOvercountAccessor(query), associatedPositionGroupOvercountRepository));
         }
 
-        public sealed class PriceAccessor : AggregateDataChangesHandler<Price>, IStorageBasedDataObjectAccessor<Price>
+        public sealed class PriceAccessor : DataChangesHandler<Price>, IStorageBasedDataObjectAccessor<Price>
         {
             private readonly IQuery _query;
 
@@ -54,7 +54,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementAmountRestrictionAccessor : AggregateDataChangesHandler<AdvertisementAmountRestriction>, IStorageBasedDataObjectAccessor<AdvertisementAmountRestriction>
+        public sealed class AdvertisementAmountRestrictionAccessor : DataChangesHandler<AdvertisementAmountRestriction>, IStorageBasedDataObjectAccessor<AdvertisementAmountRestriction>
         {
             private readonly IQuery _query;
 
@@ -92,7 +92,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class AssociatedPositionGroupOvercountAccessor : AggregateDataChangesHandler<AssociatedPositionGroupOvercount>, IStorageBasedDataObjectAccessor<AssociatedPositionGroupOvercount>
+        public sealed class AssociatedPositionGroupOvercountAccessor : DataChangesHandler<AssociatedPositionGroupOvercount>, IStorageBasedDataObjectAccessor<AssociatedPositionGroupOvercount>
         {
             // Предполагается, что когда начнём создавать события на втором этапе - события этого класса будут приводить к вызову одной соответствующей проверки
             private readonly IQuery _query;

@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 HasValueObject(new OrderCategoryPurchaseAccessor(query), categoryPurchaseRepository));
         }
 
-        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
@@ -73,7 +73,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class NotApplicapleForDesktopPositionAccessor : AggregateDataChangesHandler<Order.NotApplicapleForDesktopPosition>, IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
+        public sealed class NotApplicapleForDesktopPositionAccessor : DataChangesHandler<Order.NotApplicapleForDesktopPosition>, IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
         {
             private readonly IQuery _query;
 
@@ -98,7 +98,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class SelfAdvertisementPositionAccessor : AggregateDataChangesHandler<Order.SelfAdvertisementPosition>, IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
+        public sealed class SelfAdvertisementPositionAccessor : DataChangesHandler<Order.SelfAdvertisementPosition>, IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
         {
             private readonly IQuery _query;
 
@@ -123,7 +123,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class OrderFirmOrganiationUnitMismatchAccessor : AggregateDataChangesHandler<Order.FirmOrganiationUnitMismatch>, IStorageBasedDataObjectAccessor<Order.FirmOrganiationUnitMismatch>
+        public sealed class OrderFirmOrganiationUnitMismatchAccessor : DataChangesHandler<Order.FirmOrganiationUnitMismatch>, IStorageBasedDataObjectAccessor<Order.FirmOrganiationUnitMismatch>
         {
             private readonly IQuery _query;
 
@@ -147,7 +147,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class OrderCategoryPurchaseAccessor : AggregateDataChangesHandler<Order.CategoryPurchase>, IStorageBasedDataObjectAccessor<Order.CategoryPurchase>
+        public sealed class OrderCategoryPurchaseAccessor : DataChangesHandler<Order.CategoryPurchase>, IStorageBasedDataObjectAccessor<Order.CategoryPurchase>
         {
             private readonly IQuery _query;
 

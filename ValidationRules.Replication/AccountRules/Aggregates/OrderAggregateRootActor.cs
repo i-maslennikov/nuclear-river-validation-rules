@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 HasValueObject(new DebtPermissionAccessor(query), debtPermissionBulkRepository));
         }
 
-        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class LockAccessor : AggregateDataChangesHandler<Lock>, IStorageBasedDataObjectAccessor<Lock>
+        public sealed class LockAccessor : DataChangesHandler<Lock>, IStorageBasedDataObjectAccessor<Lock>
         {
             private readonly IQuery _query;
 
@@ -100,7 +100,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class DebtPermissionAccessor : AggregateDataChangesHandler<Order.DebtPermission>, IStorageBasedDataObjectAccessor<Order.DebtPermission>
+        public sealed class DebtPermissionAccessor : DataChangesHandler<Order.DebtPermission>, IStorageBasedDataObjectAccessor<Order.DebtPermission>
         {
             private readonly IQuery _query;
 

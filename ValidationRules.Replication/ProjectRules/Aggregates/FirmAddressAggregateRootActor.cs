@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             HasRootEntity(new FirmAddressAccessor(query), bulkRepository);
         }
 
-        public sealed class FirmAddressAccessor : AggregateDataChangesHandler<FirmAddress>, IStorageBasedDataObjectAccessor<FirmAddress>
+        public sealed class FirmAddressAccessor : DataChangesHandler<FirmAddress>, IStorageBasedDataObjectAccessor<FirmAddress>
         {
             private readonly IQuery _query;
 

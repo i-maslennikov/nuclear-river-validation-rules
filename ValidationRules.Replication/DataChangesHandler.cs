@@ -9,11 +9,11 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication
 {
-    public abstract class AggregateDataChangesHandler<T> : IDataChangesHandler<T>
+    public abstract class DataChangesHandler<T> : IDataChangesHandler<T>
     {
         private readonly Dictionary<MessageTypeCode, Func<IReadOnlyCollection<T>, IEvent>> _dictionary;
 
-        protected AggregateDataChangesHandler()
+        protected DataChangesHandler()
         {
             _dictionary = new Dictionary<MessageTypeCode, Func<IReadOnlyCollection<T>, IEvent>>();
         }

@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             HasRootEntity(new PositionAccessor(query), bulkRepository);
         }
 
-        public sealed class PositionAccessor : AggregateDataChangesHandler<Position>, IStorageBasedDataObjectAccessor<Position>
+        public sealed class PositionAccessor : DataChangesHandler<Position>, IStorageBasedDataObjectAccessor<Position>
         {
             private readonly IQuery _query;
 

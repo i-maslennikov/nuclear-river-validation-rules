@@ -222,7 +222,7 @@
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
-    <Compile Include="AggregateDataChangesHandler.cs" />
+    <Compile Include="DataChangesHandler.cs" />
     <Compile Include="AggregateRootActor.cs" />
     <Compile Include="Commands\RecalculateValidationRuleCommand.cs" />
     <Compile Include="Commands\RecalculateValidationRulePartiallyCommand.cs" />

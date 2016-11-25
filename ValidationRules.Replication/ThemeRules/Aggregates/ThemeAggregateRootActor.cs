@@ -27,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                HasValueObject(new InvalidCategoryAccessor(query), invalidCategoryBulkRepository));
         }
 
-        public sealed class ThemeAccessor : AggregateDataChangesHandler<Theme>, IStorageBasedDataObjectAccessor<Theme>
+        public sealed class ThemeAccessor : DataChangesHandler<Theme>, IStorageBasedDataObjectAccessor<Theme>
         {
             private readonly IQuery _query;
 
@@ -62,7 +62,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             }
         }
 
-        public sealed class InvalidCategoryAccessor : AggregateDataChangesHandler<Theme.InvalidCategory>, IStorageBasedDataObjectAccessor<Theme.InvalidCategory>
+        public sealed class InvalidCategoryAccessor : DataChangesHandler<Theme.InvalidCategory>, IStorageBasedDataObjectAccessor<Theme.InvalidCategory>
         {
             private readonly IQuery _query;
 

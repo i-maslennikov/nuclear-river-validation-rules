@@ -41,7 +41,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 HasValueObject(new OrderPositionAdvertisementAccessor(query), orderPositionAdvertisementBulkRepository));
         }
 
-        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
@@ -99,7 +99,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class MissingAdvertisementReferenceAccessor : AggregateDataChangesHandler<Order.MissingAdvertisementReference>, IStorageBasedDataObjectAccessor<Order.MissingAdvertisementReference>
+        public sealed class MissingAdvertisementReferenceAccessor : DataChangesHandler<Order.MissingAdvertisementReference>, IStorageBasedDataObjectAccessor<Order.MissingAdvertisementReference>
         {
             private readonly IQuery _query;
 
@@ -148,7 +148,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class MissingOrderPositionAdvertisementAccessor : AggregateDataChangesHandler<Order.MissingOrderPositionAdvertisement>, IStorageBasedDataObjectAccessor<Order.MissingOrderPositionAdvertisement>
+        public sealed class MissingOrderPositionAdvertisementAccessor : DataChangesHandler<Order.MissingOrderPositionAdvertisement>, IStorageBasedDataObjectAccessor<Order.MissingOrderPositionAdvertisement>
         {
             private readonly IQuery _query;
 
@@ -187,7 +187,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementDeletedAccessor : AggregateDataChangesHandler<Order.AdvertisementDeleted>, IStorageBasedDataObjectAccessor<Order.AdvertisementDeleted>
+        public sealed class AdvertisementDeletedAccessor : DataChangesHandler<Order.AdvertisementDeleted>, IStorageBasedDataObjectAccessor<Order.AdvertisementDeleted>
         {
             private readonly IQuery _query;
 
@@ -224,7 +224,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementMustBelongToFirmAccessor : AggregateDataChangesHandler<Order.AdvertisementMustBelongToFirm>, IStorageBasedDataObjectAccessor<Order.AdvertisementMustBelongToFirm>
+        public sealed class AdvertisementMustBelongToFirmAccessor : DataChangesHandler<Order.AdvertisementMustBelongToFirm>, IStorageBasedDataObjectAccessor<Order.AdvertisementMustBelongToFirm>
         {
             private readonly IQuery _query;
 
@@ -262,7 +262,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementIsDummyAccessor : AggregateDataChangesHandler<Order.AdvertisementIsDummy>, IStorageBasedDataObjectAccessor<Order.AdvertisementIsDummy>
+        public sealed class AdvertisementIsDummyAccessor : DataChangesHandler<Order.AdvertisementIsDummy>, IStorageBasedDataObjectAccessor<Order.AdvertisementIsDummy>
         {
             private readonly IQuery _query;
 
@@ -298,7 +298,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class CouponDistributionPeriodAccessor : AggregateDataChangesHandler<Order.CouponDistributionPeriod>, IStorageBasedDataObjectAccessor<Order.CouponDistributionPeriod>
+        public sealed class CouponDistributionPeriodAccessor : DataChangesHandler<Order.CouponDistributionPeriod>, IStorageBasedDataObjectAccessor<Order.CouponDistributionPeriod>
         {
             private const int CouponPositionCategoryCode = 14;
 
@@ -359,7 +359,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class OrderPositionAdvertisementAccessor : AggregateDataChangesHandler<Order.OrderPositionAdvertisement>, IStorageBasedDataObjectAccessor<Order.OrderPositionAdvertisement>
+        public sealed class OrderPositionAdvertisementAccessor : DataChangesHandler<Order.OrderPositionAdvertisement>, IStorageBasedDataObjectAccessor<Order.OrderPositionAdvertisement>
         {
             private readonly IQuery _query;
 

@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                HasValueObject(new CostPerClickAdvertisementAccessor(query), costPerClickAdvertisementRepository));
         }
 
-        public sealed class OrderAccessor : AggregateDataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private const int OrderOnRegistration = 1;
 
@@ -74,7 +74,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class AddressAdvertisementAccessor : AggregateDataChangesHandler<Order.AddressAdvertisement>, IStorageBasedDataObjectAccessor<Order.AddressAdvertisement>
+        public sealed class AddressAdvertisementAccessor : DataChangesHandler<Order.AddressAdvertisement>, IStorageBasedDataObjectAccessor<Order.AddressAdvertisement>
         {
             private static readonly long[] ExceptionalCategoryCodes =
                 {
@@ -114,7 +114,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class CategoryAdvertisementAccessor : AggregateDataChangesHandler<Order.CategoryAdvertisement>, IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
+        public sealed class CategoryAdvertisementAccessor : DataChangesHandler<Order.CategoryAdvertisement>, IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
         {
             private const int PositionsGroupMedia = 1;
             private const int CategoryLevelThree = 3;
@@ -154,7 +154,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class CostPerClickAdvertisementAccessor : AggregateDataChangesHandler<Order.CostPerClickAdvertisement>, IStorageBasedDataObjectAccessor<Order.CostPerClickAdvertisement>
+        public sealed class CostPerClickAdvertisementAccessor : DataChangesHandler<Order.CostPerClickAdvertisement>, IStorageBasedDataObjectAccessor<Order.CostPerClickAdvertisement>
         {
             private readonly IQuery _query;
 

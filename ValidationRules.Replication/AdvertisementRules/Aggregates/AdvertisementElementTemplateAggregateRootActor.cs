@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             HasRootEntity(new AdvertisementElementTemplateAccessor(query), bulkRepository);
         }
 
-        public sealed class AdvertisementElementTemplateAccessor : AggregateDataChangesHandler<AdvertisementElementTemplate>, IStorageBasedDataObjectAccessor<AdvertisementElementTemplate>
+        public sealed class AdvertisementElementTemplateAccessor : DataChangesHandler<AdvertisementElementTemplate>, IStorageBasedDataObjectAccessor<AdvertisementElementTemplate>
         {
             private readonly IQuery _query;
 
