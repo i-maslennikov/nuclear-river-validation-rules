@@ -8,7 +8,6 @@ using NuClear.Messaging.API.Processing.Stages;
 using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
-using NuClear.Replication.Core.Settings;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;
@@ -21,20 +20,17 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
 {
     public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
     {
-        private readonly IReplicationSettings _replicationSettings;
         private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromErmHandler(
-            IReplicationSettings replicationSettings,
             IDataObjectsActorFactory dataObjectsActorFactory,
             IEventLogger eventLogger,
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
-            _replicationSettings = replicationSettings;
             _dataObjectsActorFactory = dataObjectsActorFactory;
             _eventLogger = eventLogger;
             _telemetryPublisher = telemetryPublisher;
@@ -96,33 +92,22 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                 return;
             }
 
-            var events = new List<IEvent>();
-
             // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
             var actors = _dataObjectsActorFactory.Create();
             foreach (var actor in actors)
             {
+                IReadOnlyCollection<IEvent> events;
+
                 var actorType = actor.GetType().GetFriendlyName();
                 using (Probe.Create($"ETL1 {actorType}"))
                 {
-                    foreach (var batch in commands.CreateBatches(_replicationSettings.ReplicationBatchSize))
-                    {
-                        events.AddRange(actor.ExecuteCommands(batch));
-                    }
+                    events = actor.ExecuteCommands(commands);
                 }
-            }
 
-            if (events.Count > 1000 * bucketIds.Count)
-            {
-                _tracer.Warn($"Messages produced huge events amount: from {bucketIds.Count} TUCs to {events.Count} commands\n" +
-                             string.Join(", ", bucketIds));
+                _eventLogger.Log(events);
             }
 
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);
-
-            _tracer.Warn($"ETL1 event count: {events.Count} and only {events.Distinct().Count()} distinct");
-
-            _eventLogger.Log(events);
         }
     }
 }
