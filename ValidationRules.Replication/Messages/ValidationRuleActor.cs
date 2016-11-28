@@ -55,7 +55,7 @@ namespace NuClear.ValidationRules.Replication.Messages
             var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().First().Id;
             var versionResult = new List<Version.ValidationResult>();
 
-            foreach (var ruleCommands in commands.OfType<RecalculateValidationRuleCommand>().GroupBy(x => x.Rule))
+            foreach (var ruleCommands in commands.OfType<IRecalculateValidationRuleCommand>().GroupBy(x => x.Rule))
             {
                 using (Probe.Create($"Rule {ruleCommands.Key}"))
                 {
@@ -84,18 +84,22 @@ namespace NuClear.ValidationRules.Replication.Messages
             return Array.Empty<IEvent>();
         }
 
-        private Expression<Func<Version.ValidationResult, bool>> CreateFilter(IEnumerable<RecalculateValidationRuleCommand> commands)
+        private Expression<Func<Version.ValidationResult, bool>> CreateFilter(IEnumerable<IRecalculateValidationRuleCommand> commands)
         {
             var ids = Enumerable.Empty<long>();
             foreach (var command in commands)
             {
-                var partialCommand = command as RecalculateValidationRulePartiallyCommand;
-                if (partialCommand == null)
+                var recalculateRuleCompleteCommand = command as RecalculateValidationRuleCompleteCommand;
+                if (recalculateRuleCompleteCommand != null)
                 {
                     return x => true;
                 }
 
-                ids = ids.Union(partialCommand.Filter);
+                var recalculateRulePartiallyCommand = command as RecalculateValidationRulePartiallyCommand;
+                if (recalculateRulePartiallyCommand != null)
+                {
+                    ids = ids.Union(recalculateRulePartiallyCommand.Filter);
+                }
             }
 
             return x => x.OrderId.HasValue && ids.Contains(x.OrderId.Value);

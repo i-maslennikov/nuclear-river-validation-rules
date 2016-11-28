@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             var resultOutdatedEvent = @event as ResultOutdatedEvent;
             if (resultOutdatedEvent != null)
             {
-                return new[] { new RecalculateValidationRuleCommand(resultOutdatedEvent.Rule) };
+                return new[] { new RecalculateValidationRuleCompleteCommand(resultOutdatedEvent.Rule) };
             }
 
             var resultPartiallyOutdatedEvent = @event as ResultPartiallyOutdatedEvent;

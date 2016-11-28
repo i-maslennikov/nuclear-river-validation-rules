@@ -4,14 +4,15 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.Commands
 {
-    public class RecalculateValidationRulePartiallyCommand : RecalculateValidationRuleCommand
+    public class RecalculateValidationRulePartiallyCommand : IRecalculateValidationRuleCommand
     {
         public RecalculateValidationRulePartiallyCommand(MessageTypeCode rule, IReadOnlyCollection<long> filter)
-            : base(rule)
         {
+            Rule = rule;
             Filter = filter;
         }
 
+        public MessageTypeCode Rule { get; }
         public IReadOnlyCollection<long> Filter { get; }
     }
 }
