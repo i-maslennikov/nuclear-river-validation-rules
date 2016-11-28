@@ -31,9 +31,9 @@ namespace NuClear.ValidationRules.Replication
             => _dictionary.Select(x => x.Value.Invoke(dataObjects)).Where(x => x != null).ToArray();
 
         protected void Invalidate(MessageTypeCode ruleCode)
-            => _dictionary[ruleCode] = x => x.Any() ? new ResultOutdatedEvent(ruleCode) : null;
+            => _dictionary.Add(ruleCode, x => x.Any() ? new ResultOutdatedEvent(ruleCode) : null);
 
         protected void Invalidate(MessageTypeCode ruleCode, Func<IReadOnlyCollection<T>, IReadOnlyCollection<long>> onChange)
-            => _dictionary[ruleCode] = x => x.Any() ? new ResultPartiallyOutdatedEvent(ruleCode, onChange.Invoke(x)) : null;
+            => _dictionary.Add(ruleCode, x => x.Any() ? new ResultPartiallyOutdatedEvent(ruleCode, onChange.Invoke(x)) : null);
     }
 }
