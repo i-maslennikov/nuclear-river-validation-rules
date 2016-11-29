@@ -29,12 +29,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public ThemeAccessor(IQuery query)
+            public ThemeAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                    };
 
             public IQueryable<Theme> GetSource()
                 => _query.For<Facts::Theme>().Select(x => new Theme { Id = x.Id, Name = x.Name });

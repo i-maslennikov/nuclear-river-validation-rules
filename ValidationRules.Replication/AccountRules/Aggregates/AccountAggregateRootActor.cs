@@ -31,10 +31,13 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AccountAccessor(IQuery query)
+            public AccountAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator();
 
             public IQueryable<Account> GetSource()
                 => _query.For<Facts::Account>().Select(x => new Account { Id = x.Id });
@@ -54,12 +57,16 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AccountPeriodAccessor(IQuery query)
+            public AccountPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AccountBalanceShouldBePositive);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AccountBalanceShouldBePositive
+                    };
 
             public IQueryable<AccountPeriod> GetSource()
             {

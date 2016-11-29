@@ -29,13 +29,17 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public ProjectAccessor(IQuery query)
+            public ProjectAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
-                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionsGroupCount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                    };
 
             public IQueryable<Project> GetSource()
                 => _query.For<Facts::Project>().Select(x => new Project { Id = x.Id, Name = x.Name });

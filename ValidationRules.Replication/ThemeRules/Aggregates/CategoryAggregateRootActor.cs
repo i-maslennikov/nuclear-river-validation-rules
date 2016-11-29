@@ -29,12 +29,16 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public CategoryAccessor(IQuery query)
+            public CategoryAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted,
+                    };
 
             public IQueryable<Category> GetSource()
                 => from category in _query.For<Facts::Category>()

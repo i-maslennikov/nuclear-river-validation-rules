@@ -29,17 +29,21 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public PositionAccessor(IQuery query)
+            public PositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
-                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
-                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
-                Invalidate(MessageTypeCode.DeniedPositionsCheck);
-                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
-                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<Position> GetSource()
                 => from position in _query.For<Facts::Position>()

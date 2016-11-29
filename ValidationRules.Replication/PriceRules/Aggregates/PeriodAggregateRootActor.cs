@@ -35,25 +35,29 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public PeriodAccessor(IQuery query)
+            public PeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
-                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
-                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
-                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
-                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
-                Invalidate(MessageTypeCode.DeniedPositionsCheck);
-                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
-                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
-                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
-                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
-                Invalidate(MessageTypeCode.OrderPositionCorrespontToInactivePosition);
-                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
-                Invalidate(MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice);
-                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionsGroupCount,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<Period> GetSource()
             {
@@ -87,17 +91,21 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public PricePeriodAccessor(IQuery query)
+            public PricePeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
-                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
-                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
-                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
-                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
-                Invalidate(MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionsGroupCount,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                    };
 
             public IQueryable<PricePeriod> GetSource()
             {
@@ -136,24 +144,29 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderPeriodAccessor(IQuery query)
+            public OrderPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
-                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
-                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
-                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
-                Invalidate(MessageTypeCode.DeniedPositionsCheck);
-                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
-                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
-                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
-                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
-                Invalidate(MessageTypeCode.OrderPositionCorrespontToInactivePosition);
-                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
-                Invalidate(MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice);
-                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
 
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<OrderPeriod> GetSource()
             {

@@ -31,12 +31,16 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public ProjectAccessor(IQuery query)
+            public ProjectAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.DefaultThemeMustBeExactlyOne);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DefaultThemeMustBeExactlyOne,
+                    };
 
             public IQueryable<Project> GetSource()
                 => from project in _query.For<Facts::Project>()
@@ -61,12 +65,16 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public ProjectDefaultThemeAccessor(IQuery query)
+            public ProjectDefaultThemeAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.DefaultThemeMustBeExactlyOne);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DefaultThemeMustBeExactlyOne,
+                    };
 
             public IQueryable<Project.ProjectDefaultTheme> GetSource()
             {

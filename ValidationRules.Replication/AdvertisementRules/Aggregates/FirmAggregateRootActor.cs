@@ -34,15 +34,19 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public FirmAccessor(IQuery query)
+            public FirmAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
-                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
-                Invalidate(MessageTypeCode.WhiteListAdvertisementMayPresent);
-                Invalidate(MessageTypeCode.WhiteListAdvertisementMustPresent);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                        MessageTypeCode.WhiteListAdvertisementMayPresent,
+                        MessageTypeCode.WhiteListAdvertisementMustPresent,
+                    };
 
             public IQueryable<Firm> GetSource()
                 => from firm in _query.For<Facts::Firm>()
@@ -67,12 +71,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public FirmWebsiteAccessor(IQuery query)
+            public FirmWebsiteAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                    };
 
             public IQueryable<Firm.FirmWebsite> GetSource() =>
                 from firm in _query.For<Facts::Firm>()
@@ -101,13 +109,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             private readonly IQuery _query;
 
-            public WhiteListDistributionPeriodAccessor(IQuery query)
+            public WhiteListDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.WhiteListAdvertisementMayPresent);
-                Invalidate(MessageTypeCode.WhiteListAdvertisementMustPresent);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.WhiteListAdvertisementMayPresent,
+                        MessageTypeCode.WhiteListAdvertisementMustPresent,
+                    };
 
             public IQueryable<Firm.WhiteListDistributionPeriod> GetSource()
             {

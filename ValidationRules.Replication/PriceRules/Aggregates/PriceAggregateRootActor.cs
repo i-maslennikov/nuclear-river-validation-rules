@@ -33,12 +33,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public PriceAccessor(IQuery query)
+            public PriceAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionsGroupCount,
+                    };
 
             public IQueryable<Price> GetSource()
                 => _query.For<Facts::Price>().Select(price => new Price { Id = price.Id, BeginDate = price.BeginDate });
@@ -58,14 +62,18 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AdvertisementAmountRestrictionAccessor(IQuery query)
+            public AdvertisementAmountRestrictionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
-                Invalidate(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified);
-                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount
+                    };
 
             public IQueryable<AdvertisementAmountRestriction> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>()
@@ -97,12 +105,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             // Предполагается, что когда начнём создавать события на втором этапе - события этого класса будут приводить к вызову одной соответствующей проверки
             private readonly IQuery _query;
 
-            public AssociatedPositionGroupOvercountAccessor(IQuery query)
+            public AssociatedPositionGroupOvercountAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AssociatedPositionsGroupCount);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionsGroupCount
+                    };
 
             public IQueryable<AssociatedPositionGroupOvercount> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>()

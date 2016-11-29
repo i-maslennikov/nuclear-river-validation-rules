@@ -38,15 +38,19 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit);
-                Invalidate(MessageTypeCode.FirmShouldHaveLimitedCategoryCount);
-                Invalidate(MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions);
-                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
+                        MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
+                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -77,12 +81,16 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public NotApplicapleForDesktopPositionAccessor(IQuery query)
+            public NotApplicapleForDesktopPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
+                    };
 
             public IQueryable<Order.NotApplicapleForDesktopPosition> GetSource()
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
@@ -102,12 +110,16 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public SelfAdvertisementPositionAccessor(IQuery query)
+            public SelfAdvertisementPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
+                    };
 
             public IQueryable<Order.SelfAdvertisementPosition> GetSource()
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
@@ -127,12 +139,16 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderFirmOrganiationUnitMismatchAccessor(IQuery query)
+            public OrderFirmOrganiationUnitMismatchAccessor(IQuery query) :base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
+                    };
 
             public IQueryable<Order.FirmOrganiationUnitMismatch> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -151,12 +167,16 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderCategoryPurchaseAccessor(IQuery query)
+            public OrderCategoryPurchaseAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmShouldHaveLimitedCategoryCount);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
+                    };
 
             public IQueryable<Order.CategoryPurchase> GetSource()
                 => from order in _query.For<Facts::Order>()

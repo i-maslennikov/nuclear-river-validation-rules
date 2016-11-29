@@ -39,23 +39,28 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
-                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
-                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
-                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
-                Invalidate(MessageTypeCode.DeniedPositionsCheck);
-                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
-                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
-                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
-                Invalidate(MessageTypeCode.OrderPositionCorrespontToInactivePosition);
-                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
-                Invalidate(MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice);
-                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
 
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -76,18 +81,22 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderPositionAccessor(IQuery query)
+            public OrderPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
-                Invalidate(MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited);
-                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
-                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
-                Invalidate(MessageTypeCode.DeniedPositionsCheck);
-                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
-                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<OrderPosition> GetSource()
             {
@@ -149,13 +158,17 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderPricePositionAccessor(IQuery query)
+            public OrderPricePositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderPositionCorrespontToInactivePosition);
-                Invalidate(MessageTypeCode.OrderPositionShouldCorrespontToActualPrice);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                    };
 
             public IQueryable<OrderPricePosition> GetSource()
                 =>
@@ -186,13 +199,17 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AmountControlledPositionAccessor(IQuery query)
+            public AmountControlledPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.MaximumAdvertisementAmount);
-                Invalidate(MessageTypeCode.MinimumAdvertisementAmount);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                    };
 
             public IQueryable<AmountControlledPosition> GetSource()
                 => from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
@@ -218,12 +235,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             private readonly IQuery _query;
 
-            public OrderDeniedPositionAccessor(IQuery query)
+            public OrderDeniedPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.DeniedPositionsCheck);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DeniedPositionsCheck
+                    };
 
             public IQueryable<OrderDeniedPosition> GetSource()
             {
@@ -326,15 +347,19 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             private readonly IQuery _query;
 
-            public OrderAssociatedPositionAccessor(IQuery query)
+            public OrderAssociatedPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AssociatedPositionWithoutPrincipal);
-                Invalidate(MessageTypeCode.ConflictingPrincipalPosition);
-                Invalidate(MessageTypeCode.LinkedObjectsMissedInPrincipals);
-                Invalidate(MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<OrderAssociatedPosition> GetSource()
             {

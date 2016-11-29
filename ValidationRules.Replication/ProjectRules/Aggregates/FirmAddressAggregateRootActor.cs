@@ -29,12 +29,16 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public FirmAddressAccessor(IQuery query)
+            public FirmAddressAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmAddressMustBeLocatedOnTheMap);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                    };
 
             public IQueryable<FirmAddress> GetSource()
                 => from address in _query.For<Facts::FirmAddress>()

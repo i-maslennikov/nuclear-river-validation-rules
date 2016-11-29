@@ -37,18 +37,22 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmAddressMustBeLocatedOnTheMap);
-                Invalidate(MessageTypeCode.OrderMustNotIncludeReleasedPeriod);
-                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustBeSpecified);
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
-                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
-                Invalidate(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                        MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
+                        MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
+                        MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
+                        MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -85,12 +89,16 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             private readonly IQuery _query;
 
-            public AddressAdvertisementAccessor(IQuery query)
+            public AddressAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmAddressMustBeLocatedOnTheMap);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                    };
 
             public IQueryable<Order.AddressAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -121,14 +129,18 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             private readonly IQuery _query;
 
-            public CategoryAdvertisementAccessor(IQuery query)
+            public CategoryAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustBeSpecified);
-                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
+                        MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                    };
 
             public IQueryable<Order.CategoryAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -158,14 +170,18 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public CostPerClickAdvertisementAccessor(IQuery query)
+            public CostPerClickAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustBeSpecified);
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
-                Invalidate(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
+                        MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                    };
 
             public IQueryable<Order.CostPerClickAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()

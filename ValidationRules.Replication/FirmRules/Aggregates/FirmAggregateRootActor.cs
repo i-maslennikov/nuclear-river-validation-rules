@@ -33,15 +33,19 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public FirmAccessor(IQuery query)
+            public FirmAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit);
-                Invalidate(MessageTypeCode.FirmShouldHaveLimitedCategoryCount);
-                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases);
-                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
+                        MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
+                    };
 
             public IQueryable<Firm> GetSource()
                 => from firm in _query.For<Facts::Firm>()
@@ -70,13 +74,17 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             private readonly IQuery _query;
 
-            public AdvantageousPurchasePositionDistributionPeriodAccessor(IQuery query)
+            public AdvantageousPurchasePositionDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases);
-                Invalidate(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
+                    };
 
             public IQueryable<Firm.AdvantageousPurchasePositionDistributionPeriod> GetSource()
             {

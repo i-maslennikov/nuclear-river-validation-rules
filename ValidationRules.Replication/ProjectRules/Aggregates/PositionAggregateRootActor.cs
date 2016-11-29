@@ -29,16 +29,20 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public PositionAccessor(IQuery query)
+            public PositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.FirmAddressMustBeLocatedOnTheMap);
-                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustBeSpecified);
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
-                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                        MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
+                        MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
+                        MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                    };
 
             public IQueryable<Position> GetSource()
                 => from category in _query.For<Facts::Position>()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,11 +12,11 @@ namespace NuClear.ValidationRules.Replication
 {
     public abstract class DataChangesHandler<T> : IDataChangesHandler<T>
     {
-        private readonly Dictionary<MessageTypeCode, Func<IReadOnlyCollection<T>, IEvent>> _dictionary;
+        private readonly IRuleInvalidator _invalidator;
 
-        protected DataChangesHandler()
+        protected DataChangesHandler(IRuleInvalidator invalidator)
         {
-            _dictionary = new Dictionary<MessageTypeCode, Func<IReadOnlyCollection<T>, IEvent>>();
+            _invalidator = invalidator;
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<T> dataObjects)
@@ -28,12 +29,33 @@ namespace NuClear.ValidationRules.Replication
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<T> dataObjects)
-            => _dictionary.Select(x => x.Value.Invoke(dataObjects)).Where(x => x != null).ToArray();
+            => _invalidator.Invalidate(dataObjects);
 
-        protected void Invalidate(MessageTypeCode ruleCode)
-            => _dictionary.Add(ruleCode, x => x.Any() ? new ResultOutdatedEvent(ruleCode) : null);
+        protected interface IRuleInvalidator
+        {
+            IReadOnlyCollection<IEvent> Invalidate(IReadOnlyCollection<T> dataObjects);
+        }
 
-        protected void Invalidate(MessageTypeCode ruleCode, Func<IReadOnlyCollection<T>, IReadOnlyCollection<long>> onChange)
-            => _dictionary.Add(ruleCode, x => x.Any() ? new ResultPartiallyOutdatedEvent(ruleCode, onChange.Invoke(x)) : null);
+        protected sealed class RuleInvalidator : IRuleInvalidator, IEnumerable
+        {
+            private readonly Dictionary<MessageTypeCode, Func<IReadOnlyCollection<T>, IEvent>> _dictionary;
+
+            public RuleInvalidator()
+            {
+                _dictionary = new Dictionary<MessageTypeCode, Func<IReadOnlyCollection<T>, IEvent>>();
+            }
+
+            public void Add(MessageTypeCode ruleCode)
+                => _dictionary.Add(ruleCode, x => x.Any() ? new ResultOutdatedEvent(ruleCode) : null);
+
+            public void Add(MessageTypeCode ruleCode, Func<IReadOnlyCollection<T>, IReadOnlyCollection<long>> onChange)
+                => _dictionary.Add(ruleCode, x => x.Any() ? new ResultPartiallyOutdatedEvent(ruleCode, onChange.Invoke(x)) : null);
+
+            IReadOnlyCollection<IEvent> IRuleInvalidator.Invalidate(IReadOnlyCollection<T> dataObjects)
+                => _dictionary.Select(x => x.Value.Invoke(dataObjects)).Where(x => x != null).ToArray();
+
+            IEnumerator IEnumerable.GetEnumerator()
+                => ((IEnumerable)_dictionary).GetEnumerator();
+        }
     }
 }

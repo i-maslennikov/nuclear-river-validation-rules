@@ -38,16 +38,20 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public ProjectAccessor(IQuery query)
+            public ProjectAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderMustNotIncludeReleasedPeriod);
-                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
-                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
-                Invalidate(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
+                        MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
+                        MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                    };
 
             public IQueryable<Project> GetSource()
                 => from category in _query.For<Facts::Project>()
@@ -68,12 +72,16 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public CategoryAccessor(IQuery query)
+            public CategoryAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
+                    };
 
             public IQueryable<Project.Category> GetSource()
                 => from project in _query.For<Facts::Project>()
@@ -95,13 +103,17 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public CostPerClickRestrictionAccessor(IQuery query)
+            public CostPerClickRestrictionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum);
-                Invalidate(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                    };
 
             public IQueryable<Project.CostPerClickRestriction> GetSource()
                 => from project in _query.For<Facts::Project>()
@@ -131,12 +143,16 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public SalesModelRestrictionAccessor(IQuery query)
+            public SalesModelRestrictionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                    };
 
             public IQueryable<Project.SalesModelRestriction> GetSource()
                 => from project in _query.For<Facts::Project>()
@@ -166,12 +182,16 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public NextReleaseAccessor(IQuery query)
+            public NextReleaseAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderMustNotIncludeReleasedPeriod);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
+                    };
 
             public IQueryable<Project.NextRelease> GetSource()
                 => from project in _query.For<Facts::Project>()

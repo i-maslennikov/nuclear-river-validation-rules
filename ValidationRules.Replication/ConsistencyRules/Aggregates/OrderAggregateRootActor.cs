@@ -61,32 +61,36 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.BargainScanShouldPresent);
-                Invalidate(MessageTypeCode.BillsPeriodShouldMatchOrder);
-                Invalidate(MessageTypeCode.BillsShouldBeCreated);
-                Invalidate(MessageTypeCode.BillsSumShouldMatchOrder);
-                Invalidate(MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired);
-                Invalidate(MessageTypeCode.LegalPersonProfileWarrantyShouldNotBeExpired);
-                Invalidate(MessageTypeCode.LegalPersonShouldHaveAtLeastOneProfile);
-                Invalidate(MessageTypeCode.LinkedCategoryAsterixMayBelongToFirm);
-                Invalidate(MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid);
-                Invalidate(MessageTypeCode.LinkedCategoryShouldBeActive);
-                Invalidate(MessageTypeCode.LinkedCategoryShouldBelongToFirm);
-                Invalidate(MessageTypeCode.LinkedFirmAddressShouldBeValid);
-                Invalidate(MessageTypeCode.LinkedFirmShouldBeValid);
-                Invalidate(MessageTypeCode.OrderBeginDistrubutionShouldBeFirstDayOfMonth);
-                Invalidate(MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth);
-                Invalidate(MessageTypeCode.OrderMustHaveActiveDeal);
-                Invalidate(MessageTypeCode.OrderMustHaveActiveLegalEntities);
-                Invalidate(MessageTypeCode.OrderRequiredFieldsShouldBeSpecified);
-                Invalidate(MessageTypeCode.OrderScanShouldPresent);
-                Invalidate(MessageTypeCode.OrderShouldHaveAtLeastOnePosition);
-                Invalidate(MessageTypeCode.OrderShouldNotBeSignedBeforeBargain);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.BargainScanShouldPresent,
+                        MessageTypeCode.BillsPeriodShouldMatchOrder,
+                        MessageTypeCode.BillsShouldBeCreated,
+                        MessageTypeCode.BillsSumShouldMatchOrder,
+                        MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired,
+                        MessageTypeCode.LegalPersonProfileWarrantyShouldNotBeExpired,
+                        MessageTypeCode.LegalPersonShouldHaveAtLeastOneProfile,
+                        MessageTypeCode.LinkedCategoryAsterixMayBelongToFirm,
+                        MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid,
+                        MessageTypeCode.LinkedCategoryShouldBeActive,
+                        MessageTypeCode.LinkedCategoryShouldBelongToFirm,
+                        MessageTypeCode.LinkedFirmAddressShouldBeValid,
+                        MessageTypeCode.LinkedFirmShouldBeValid,
+                        MessageTypeCode.OrderBeginDistrubutionShouldBeFirstDayOfMonth,
+                        MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth,
+                        MessageTypeCode.OrderMustHaveActiveDeal,
+                        MessageTypeCode.OrderMustHaveActiveLegalEntities,
+                        MessageTypeCode.OrderRequiredFieldsShouldBeSpecified,
+                        MessageTypeCode.OrderScanShouldPresent,
+                        MessageTypeCode.OrderShouldHaveAtLeastOnePosition,
+                        MessageTypeCode.OrderShouldNotBeSignedBeforeBargain,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -116,12 +120,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public InvalidFirmAccessor(IQuery query)
+            public InvalidFirmAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.LinkedFirmShouldBeValid);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LinkedFirmShouldBeValid,
+                    };
 
             public IQueryable<Order.InvalidFirm> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -154,12 +162,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public InvalidFirmAddressAccessor(IQuery query)
+            public InvalidFirmAddressAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.LinkedFirmAddressShouldBeValid);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LinkedFirmAddressShouldBeValid,
+                    };
 
             public IQueryable<Order.InvalidFirmAddress> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -198,12 +210,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public InvalidCategoryFirmAddressAccessor(IQuery query)
+            public InvalidCategoryFirmAddressAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid,
+                    };
 
             public IQueryable<Order.InvalidCategoryFirmAddress> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -243,14 +259,18 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             private readonly IQuery _query;
 
-            public InvalidCategoryAccessor(IQuery query)
+            public InvalidCategoryAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.LinkedCategoryAsterixMayBelongToFirm);
-                Invalidate(MessageTypeCode.LinkedCategoryShouldBeActive);
-                Invalidate(MessageTypeCode.LinkedCategoryShouldBelongToFirm);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LinkedCategoryAsterixMayBelongToFirm,
+                        MessageTypeCode.LinkedCategoryShouldBeActive,
+                        MessageTypeCode.LinkedCategoryShouldBelongToFirm,
+                    };
 
             public IQueryable<Order.InvalidCategory> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -291,12 +311,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderBargainSignedLaterThanOrderAccessor(IQuery query)
+            public OrderBargainSignedLaterThanOrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderShouldNotBeSignedBeforeBargain);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderShouldNotBeSignedBeforeBargain,
+                    };
 
             public IQueryable<Order.BargainSignedLaterThanOrder> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -322,12 +346,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderHasNoAnyLegalPersonProfileAccessor(IQuery query)
+            public OrderHasNoAnyLegalPersonProfileAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.LegalPersonShouldHaveAtLeastOneProfile);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LegalPersonShouldHaveAtLeastOneProfile,
+                    };
 
             public IQueryable<Order.HasNoAnyLegalPersonProfile> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -353,12 +381,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderHasNoAnyPositionAccessor(IQuery query)
+            public OrderHasNoAnyPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderShouldHaveAtLeastOnePosition);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderShouldHaveAtLeastOnePosition,
+                    };
 
             public IQueryable<Order.HasNoAnyPosition> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -384,13 +416,17 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public InactiveReferenceAccessor(IQuery query)
+            public InactiveReferenceAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderMustHaveActiveDeal);
-                Invalidate(MessageTypeCode.OrderMustHaveActiveLegalEntities);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustHaveActiveDeal,
+                        MessageTypeCode.OrderMustHaveActiveLegalEntities,
+                    };
 
             // todo: сравнить запросы left join и exists
             public IQueryable<Order.InactiveReference> GetSource()
@@ -426,12 +462,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderInvalidBeginDistributionDateAccessor(IQuery query)
+            public OrderInvalidBeginDistributionDateAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderBeginDistrubutionShouldBeFirstDayOfMonth);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderBeginDistrubutionShouldBeFirstDayOfMonth,
+                    };
 
             public IQueryable<Order.InvalidBeginDistributionDate> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -456,12 +496,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderInvalidEndDistributionDateAccessor(IQuery query)
+            public OrderInvalidEndDistributionDateAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth,
+                    };
 
             public IQueryable<Order.InvalidEndDistributionDate> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -486,12 +530,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderInvalidBillsPeriodAccessor(IQuery query)
+            public OrderInvalidBillsPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.BillsPeriodShouldMatchOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.BillsPeriodShouldMatchOrder,
+                    };
 
             public IQueryable<Order.InvalidBillsPeriod> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -520,12 +568,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             private readonly IQuery _query;
 
-            public OrderInvalidBillsTotalAccessor(IQuery query)
+            public OrderInvalidBillsTotalAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.BillsSumShouldMatchOrder);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.BillsSumShouldMatchOrder,
+                    };
 
             public IQueryable<Order.InvalidBillsTotal> GetSource()
                 => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == WorkflowStepOnRegistration)
@@ -554,12 +606,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor(IQuery query)
+            public OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired,
+                    };
 
             public IQueryable<Order.LegalPersonProfileBargainExpired> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -587,12 +643,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor(IQuery query)
+            public OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.LegalPersonProfileWarrantyShouldNotBeExpired);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LegalPersonProfileWarrantyShouldNotBeExpired,
+                    };
 
             public IQueryable<Order.LegalPersonProfileWarrantyExpired> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -620,12 +680,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderMissingBargainScanAccessor(IQuery query)
+            public OrderMissingBargainScanAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.BargainScanShouldPresent);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.BargainScanShouldPresent,
+                    };
 
             public IQueryable<Order.MissingBargainScan> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -653,12 +717,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             private readonly IQuery _query;
 
-            public OrderMissingBillsAccessor(IQuery query)
+            public OrderMissingBillsAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.BillsShouldBeCreated);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.BillsShouldBeCreated,
+                    };
 
             public IQueryable<Order.MissingBills> GetSource()
                 => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == WorkflowStepOnRegistration)
@@ -687,13 +755,17 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public MissingRequiredFieldAccessor(IQuery query)
+            public MissingRequiredFieldAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderMustHaveActiveDeal);
-                Invalidate(MessageTypeCode.OrderRequiredFieldsShouldBeSpecified);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustHaveActiveDeal,
+                        MessageTypeCode.OrderRequiredFieldsShouldBeSpecified,
+                    };
 
             public IQueryable<Order.MissingRequiredField> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -725,12 +797,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderMissingOrderScanAccessor(IQuery query)
+            public OrderMissingOrderScanAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderScanShouldPresent);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderScanShouldPresent,
+                    };
 
             public IQueryable<Order.MissingOrderScan> GetSource()
                 => from order in _query.For<Facts::Order>()

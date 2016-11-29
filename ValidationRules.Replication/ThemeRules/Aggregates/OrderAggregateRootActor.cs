@@ -31,14 +31,18 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.DefaultThemeMustHaveOnlySelfAds);
-                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
-                Invalidate(MessageTypeCode.ThemePeriodMustContainOrderPeriod);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DefaultThemeMustHaveOnlySelfAds,
+                        MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted,
+                        MessageTypeCode.ThemePeriodMustContainOrderPeriod,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -68,14 +72,18 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderThemeAccessor(IQuery query)
+            public OrderThemeAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.DefaultThemeMustHaveOnlySelfAds);
-                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
-                Invalidate(MessageTypeCode.ThemePeriodMustContainOrderPeriod);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DefaultThemeMustHaveOnlySelfAds,
+                        MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted,
+                        MessageTypeCode.ThemePeriodMustContainOrderPeriod,
+                    };
 
             public IQueryable<Order.OrderTheme> GetSource()
             {

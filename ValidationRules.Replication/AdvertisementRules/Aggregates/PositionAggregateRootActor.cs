@@ -29,19 +29,23 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public PositionAccessor(IQuery query)
+            public PositionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
-                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
-                Invalidate(MessageTypeCode.CouponMustBeSoldOnceAtTime);
-                Invalidate(MessageTypeCode.OrderMustNotContainDummyAdvertisement);
-                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
-                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustBeCreated);
-                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement);
-                Invalidate(MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                        MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        MessageTypeCode.OrderMustNotContainDummyAdvertisement,
+                        MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod,
+                        MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
+                        MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
+                        MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement,
+                    };
 
             public IQueryable<Position> GetSource()
                 => (from position in _query.For<Facts::Position>()

@@ -29,13 +29,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AdvertisementElementTemplateAccessor(IQuery query)
+            public AdvertisementElementTemplateAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
-                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementElementMustPassReview,
+                        MessageTypeCode.OrderMustHaveAdvertisement,
+                    };
 
             public IQueryable<AdvertisementElementTemplate> GetSource()
                 => from template in _query.For<Facts::AdvertisementElementTemplate>()

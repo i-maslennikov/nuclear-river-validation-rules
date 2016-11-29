@@ -45,22 +45,26 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
-                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
-                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
-                Invalidate(MessageTypeCode.CouponMustBeSoldOnceAtTime);
-                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
-                Invalidate(MessageTypeCode.OrderMustNotContainDummyAdvertisement);
-                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
-                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustBeCreated);
-                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement);
-                Invalidate(MessageTypeCode.WhiteListAdvertisementMayPresent);
-                Invalidate(MessageTypeCode.WhiteListAdvertisementMustPresent);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementElementMustPassReview,
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                        MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        MessageTypeCode.OrderMustHaveAdvertisement,
+                        MessageTypeCode.OrderMustNotContainDummyAdvertisement,
+                        MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod,
+                        MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
+                        MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
+                        MessageTypeCode.WhiteListAdvertisementMayPresent,
+                        MessageTypeCode.WhiteListAdvertisementMustPresent,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -103,12 +107,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public MissingAdvertisementReferenceAccessor(IQuery query)
+            public MissingAdvertisementReferenceAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
+                    };
 
             public IQueryable<Order.MissingAdvertisementReference> GetSource()
             {
@@ -152,12 +160,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public MissingOrderPositionAdvertisementAccessor(IQuery query)
+            public MissingOrderPositionAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderPositionAdvertisementMustBeCreated);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
+                    };
 
             public IQueryable<Order.MissingOrderPositionAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -191,12 +203,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AdvertisementDeletedAccessor(IQuery query)
+            public AdvertisementDeletedAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement,
+                    };
 
             public IQueryable<Order.AdvertisementDeleted> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -228,12 +244,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AdvertisementMustBelongToFirmAccessor(IQuery query)
+            public AdvertisementMustBelongToFirmAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                    };
 
             public IQueryable<Order.AdvertisementMustBelongToFirm> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -266,12 +286,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AdvertisementIsDummyAccessor(IQuery query)
+            public AdvertisementIsDummyAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderMustNotContainDummyAdvertisement);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustNotContainDummyAdvertisement,
+                    };
 
             public IQueryable<Order.AdvertisementIsDummy> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -304,12 +328,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             private readonly IQuery _query;
 
-            public CouponDistributionPeriodAccessor(IQuery query)
+            public CouponDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.CouponMustBeSoldOnceAtTime);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                    };
 
             public IQueryable<Order.CouponDistributionPeriod> GetSource()
                 => from order in GetOrdersFact().Union(GetOrdersPlan())
@@ -363,15 +391,20 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderPositionAdvertisementAccessor(IQuery query)
+            public OrderPositionAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
-                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
-                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
-                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
 
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementElementMustPassReview,
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                        MessageTypeCode.OrderMustHaveAdvertisement,
+                        MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod,
+                    };
 
             public IQueryable<Order.OrderPositionAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()

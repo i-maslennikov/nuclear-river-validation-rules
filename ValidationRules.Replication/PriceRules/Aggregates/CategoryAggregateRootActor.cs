@@ -29,12 +29,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public CategoryAccessor(IQuery query)
+            public CategoryAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                    };
 
             public IQueryable<Category> GetSource()
                 => _query.For<Facts::Category>().Select(x => new Category { Id = x.Id, Name = x.Name });

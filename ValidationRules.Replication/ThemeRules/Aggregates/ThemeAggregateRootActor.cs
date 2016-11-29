@@ -31,14 +31,18 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public ThemeAccessor(IQuery query)
+            public ThemeAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.DefaultThemeMustHaveOnlySelfAds);
-                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
-                Invalidate(MessageTypeCode.ThemePeriodMustContainOrderPeriod);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DefaultThemeMustHaveOnlySelfAds,
+                        MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted,
+                        MessageTypeCode.ThemePeriodMustContainOrderPeriod,
+                    };
 
             public IQueryable<Theme> GetSource()
                 => from theme in _query.For<Facts::Theme>()
@@ -66,12 +70,16 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public InvalidCategoryAccessor(IQuery query)
+            public InvalidCategoryAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted,
+                    };
 
             public IQueryable<Theme.InvalidCategory> GetSource()
             {

@@ -39,18 +39,22 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AdvertisementAccessor(IQuery query)
+            public AdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
-                Invalidate(MessageTypeCode.AdvertisementMustBelongToFirm);
-                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
-                Invalidate(MessageTypeCode.CouponMustBeSoldOnceAtTime);
-                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
-                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
-                Invalidate(MessageTypeCode.WhiteListAdvertisementMayPresent);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementElementMustPassReview,
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                        MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        MessageTypeCode.OrderMustHaveAdvertisement,
+                        MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod,
+                        MessageTypeCode.WhiteListAdvertisementMayPresent,
+                    };
 
             public IQueryable<Advertisement> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.FirmId != null)
@@ -77,12 +81,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public AdvertisementWebsiteAccessor(IQuery query)
+            public AdvertisementWebsiteAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                    };
 
             public IQueryable<Advertisement.AdvertisementWebsite> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
@@ -111,12 +119,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public RequiredElementMissingAccessor(IQuery query)
+            public RequiredElementMissingAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderMustHaveAdvertisement);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustHaveAdvertisement,
+                    };
 
             public IQueryable<Advertisement.RequiredElementMissing> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
@@ -150,12 +162,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             private readonly IQuery _query;
 
-            public ElementNotPassedReviewAccessor(IQuery query)
+            public ElementNotPassedReviewAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AdvertisementElementMustPassReview);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementElementMustPassReview,
+                    };
 
             public IQueryable<Advertisement.ElementNotPassedReview> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
@@ -193,12 +209,16 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public ElementOffsetInDaysAccessor(IQuery query)
+            public ElementOffsetInDaysAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod,
+                    };
 
             public IQueryable<Advertisement.ElementOffsetInDays> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)

@@ -33,14 +33,18 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AccountBalanceShouldBePositive);
-                Invalidate(MessageTypeCode.AccountShouldExist);
-                Invalidate(MessageTypeCode.LockShouldNotExist);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AccountBalanceShouldBePositive,
+                        MessageTypeCode.AccountShouldExist,
+                        MessageTypeCode.LockShouldNotExist,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -74,12 +78,16 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public LockAccessor(IQuery query)
+            public LockAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.LockShouldNotExist);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LockShouldNotExist
+                    };
 
             public IQueryable<Lock> GetSource()
                 => _query.For<Facts::Lock>().Select(x => new Lock
@@ -104,12 +112,16 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
         {
             private readonly IQuery _query;
 
-            public DebtPermissionAccessor(IQuery query)
+            public DebtPermissionAccessor(IQuery query) : base(CreateInvalidator())
             {
-                Invalidate(MessageTypeCode.AccountBalanceShouldBePositive);
-
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AccountBalanceShouldBePositive
+                    };
 
             public IQueryable<Order.DebtPermission> GetSource()
                 => from x in _query.For<Facts::UnlimitedOrder>()
