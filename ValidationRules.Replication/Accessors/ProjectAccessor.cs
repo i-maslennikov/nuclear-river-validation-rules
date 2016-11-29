@@ -53,7 +53,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
             var orderIds =
                 from project in _query.For<Project>().Where(x => projectIds.Contains(x.Id))
-                from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId || x.SourceOrganizationUnitId == project.Id)
+                from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
                 select order.Id;
 
             var firmIds =

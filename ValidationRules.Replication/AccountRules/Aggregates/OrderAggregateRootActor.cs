@@ -19,9 +19,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
     {
         private const int OrderOnTermination = 4;
         private const int OrderApproved = 5;
-        private const int OrderTypeSelfAds = 2;
-        private const int OrderTypeSocialAds = 7;
-        private const int OrderTypeCompensation = 9;
 
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
@@ -65,15 +62,13 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    where order.WorkflowStep == OrderOnTermination || order.WorkflowStep == OrderApproved
                    join destProject in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals destProject.OrganizationUnitId
-                   join sourceProject in _query.For<Facts::Project>() on order.SourceOrganizationUnitId equals sourceProject.OrganizationUnitId
                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId).DefaultIfEmpty()
                    select new Order
                        {
                            Id = order.Id,
                            DestProjectId = destProject.Id,
-                           SourceProjectId = sourceProject.Id,
                            AccountId = account.Id,
-                           IsFreeOfCharge = order.OrderType == OrderTypeSelfAds || order.OrderType == OrderTypeSocialAds || order.OrderType == OrderTypeCompensation,
+                           IsFreeOfCharge = order.IsFreeOfCharge,
                            Number = order.Number,
                            BeginDistributionDate = order.BeginDistribution,
                            EndDistributionDate = order.EndDistributionFact,

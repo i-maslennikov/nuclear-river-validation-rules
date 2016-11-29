@@ -71,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<Category>(x => ids.Contains(x.Id));
+            return new FindSpecification<Category>(x => x.L1Id.HasValue && ids.Contains(x.L1Id.Value) || x.L2Id.HasValue && ids.Contains(x.L2Id.Value) || x.L3Id.HasValue && ids.Contains(x.L3Id.Value));
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Category> dataObjects)
@@ -96,7 +96,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from themeCategory in _query.For<ThemeCategory>().Where(x => categoryIds.Contains(x.CategoryId))
                 select themeCategory.ThemeId;
 
-            return new EventCollectionHelper { { typeof(Theme), themeIds.Distinct() }, { typeof(Order), orderIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Theme), themeIds.Distinct() }, { typeof(Order), orderIds.Distinct() } };
         }
     }
 }

@@ -8,7 +8,6 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public long FirmId { get; set; }
         public string Number { get; set; }
 
-        public long SourceOrganizationUnitId { get; set; }
         public long DestOrganizationUnitId { get; set; }
 
         public DateTime BeginDistribution { get; set; }
@@ -26,7 +25,8 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
 
 
         public int WorkflowStep { get; set; }
-        public int OrderType { get; set; }
+        public bool IsFreeOfCharge { get; set; }
+        public bool IsSelfAds { get; set; }
 
         public int ReleaseCountPlan { get; set; }
     }

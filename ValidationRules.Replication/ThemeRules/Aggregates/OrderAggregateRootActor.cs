@@ -17,8 +17,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
 {
     public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
     {
-        private const int SelfAdsOrderType = 2;
-
         private readonly IQuery _query;
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IBulkRepository<Order.OrderTheme> _orderThemeBulkRepository;
@@ -63,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                        BeginDistributionDate = order.BeginDistribution,
                        EndDistributionDateFact = order.EndDistributionFact,
                        ProjectId = project.Id,
-                       IsSelfAds = order.OrderType == SelfAdsOrderType,
+                       IsSelfAds = order.IsSelfAds,
                    };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

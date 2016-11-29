@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Lock { Id = 2, OrderId = 2, AccountId = 1, Start = FirstDayJan, Amount = 1 },
                     new Facts::UnlimitedOrder { OrderId = 2, PeriodStart = FirstDayFeb, PeriodEnd = FirstDayMar },
 
-                    new Facts::Order { Id = 3, Number = "Order3", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4, OrderType = 2 },
+                    new Facts::Order { Id = 3, Number = "Order3", BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4, IsFreeOfCharge = true },
                     new Facts::OrderPosition { Id = 4, OrderId = 3 },
                     new Facts::ReleaseWithdrawal { Id = 7, OrderPositionId = 4, Amount = 0, Start = FirstDayJan },
                     new Facts::ReleaseWithdrawal { Id = 8, OrderPositionId = 4, Amount = 0, Start = FirstDayFeb },

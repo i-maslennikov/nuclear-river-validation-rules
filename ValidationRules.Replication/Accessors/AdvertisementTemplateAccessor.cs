@@ -53,8 +53,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                                    select advertisement.Id;
 
             // позиция номенклатуры и шаблон РМ является константой для заказа, агрегат Order не пересчитываем
-
-            return new EventCollectionHelper { { typeof(Advertisement), advertisementIds } }.ToArray();
+            return new EventCollectionHelper { { typeof(Advertisement), advertisementIds } };
         }
     }
 }

@@ -18,6 +18,9 @@ namespace NuClear.ValidationRules.Replication.Accessors
     {
         private const int OrderStateArchive = 6;
         private const int OrderStateRejected = 3;
+        private const int OrderTypeSelfAds = 2;
+        private const int OrderTypeSocialAds = 7;
+        private const int OrderTypeCompensation = 9;
 
         private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
 
@@ -43,7 +46,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 SignupDate = order.SignupDate,
 
                 DestOrganizationUnitId = order.DestOrganizationUnitId,
-                SourceOrganizationUnitId = order.SourceOrganizationUnitId,
 
                 LegalPersonId = order.LegalPersonId,
                 LegalPersonProfileId = order.LegalPersonProfileId,
@@ -54,7 +56,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 DealId = order.DealId,
 
                 WorkflowStep = order.WorkflowStepId,
-                OrderType = order.OrderType,
+                IsFreeOfCharge = order.OrderType == OrderTypeSelfAds || order.OrderType == OrderTypeSocialAds || order.OrderType == OrderTypeCompensation,
+                IsSelfAds = order.OrderType == OrderTypeSelfAds,
 
                 ReleaseCountPlan = order.ReleaseCountPlan,
             });

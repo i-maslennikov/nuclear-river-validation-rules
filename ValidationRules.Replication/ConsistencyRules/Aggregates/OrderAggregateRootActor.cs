@@ -19,9 +19,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
     {
         private const int BindingObjectTypeCategoryMultipleAsterix = 1;
         private const int WorkflowStepOnRegistration = 1;
-        private const int OrderTypeSelfAds = 2;
-        private const int OrderTypeSocialAds = 7;
-        private const int OrderTypeCompensation = 9;
 
         private readonly IQuery _query;
         private readonly IBulkRepository<Order.InvalidFirm> _orderInvalidFirmRepository;
@@ -654,8 +651,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
                                      select rw.Amount).Sum()
-                   let isFreeOfCharge = order.OrderType == OrderTypeSelfAds || order.OrderType == OrderTypeSocialAds || order.OrderType == OrderTypeCompensation
-                   where orderTotal > 0 && !isFreeOfCharge && billCount == 0
+                   where orderTotal > 0 && !order.IsFreeOfCharge && billCount == 0
                    select new Order.MissingBills
                    {
                        OrderId = order.Id,

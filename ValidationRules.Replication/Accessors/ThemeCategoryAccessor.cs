@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         {
             var themeIds = dataObjects.Select(x => x.ThemeId).ToArray();
 
-            return new EventCollectionHelper { { typeof(Theme), themeIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Theme), themeIds.Distinct() } };
         }
     }
 }

@@ -52,7 +52,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from project in _query.For<Project>().Where(x => organizationUnitIds.Contains(x.OrganizationUnitId))
                 select project.Id;
 
-            return new EventCollectionHelper { { typeof(Project), projectIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Project), projectIds.Distinct() } };
         }
     }
 }

@@ -60,7 +60,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from advertisement in _query.For<Advertisement>().Where(x => dataObjectIds.Contains(x.Id))
                 select advertisement.FirmId;
 
-            return new EventCollectionHelper { { typeof(Advertisement), dataObjectIds }, { typeof(Order), orderIds.Distinct() }, {typeof(Firm), firmIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Advertisement), dataObjectIds }, { typeof(Order), orderIds.Distinct() }, {typeof(Firm), firmIds.Distinct() } };
         }
     }
 }

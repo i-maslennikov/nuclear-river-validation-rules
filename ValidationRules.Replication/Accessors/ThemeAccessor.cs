@@ -66,7 +66,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from project in _query.For<Project>().Where(x => x.OrganizationUnitId == themeOrgUnit.OrganizationUnitId)
                 select project.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, { typeof(Project), projectIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, { typeof(Project), projectIds.Distinct() } };
         }
     }
 }

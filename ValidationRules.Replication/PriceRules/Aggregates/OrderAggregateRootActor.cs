@@ -160,17 +160,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 =>
                     from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
                     join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                    from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
-                    from pricePositionNotActive in _query.For<Facts::PricePosition>().Where(x => !x.IsActiveNotDeleted).Where(x => x.Id == orderPosition.PricePositionId).DefaultIfEmpty()
-                    from position in _query.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId || x.Id == pricePositionNotActive.PositionId).DefaultIfEmpty()
+                    from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
+                    from position in _query.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId)
                     select new OrderPricePosition
                     {
                         OrderId = orderPosition.OrderId,
                         OrderPositionId = orderPosition.Id,
 
                         OrderPositionName = position.Name,
-                        PriceId = pricePosition != null ? pricePosition.PriceId : pricePositionNotActive != null ? pricePositionNotActive.PriceId : 0,
-                        IsActive = pricePosition != null || pricePositionNotActive == null
+                        PriceId = pricePosition.PriceId,
+                        IsActive = pricePosition.IsActiveNotDeleted,
                     };
 
 

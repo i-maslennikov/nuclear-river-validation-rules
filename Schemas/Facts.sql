@@ -277,7 +277,6 @@ create table Facts.[Order](
     Id bigint not null,
 	FirmId bigint not null,
 	Number nvarchar(64) not null,
-	SourceOrganizationUnitId bigint not null,
     DestOrganizationUnitId bigint not null,
     BeginDistribution datetime2(2) not null,
 	EndDistributionPlan datetime2(2) not null,
@@ -291,13 +290,13 @@ create table Facts.[Order](
     BargainId bigint null,
     DealId bigint null,
 	WorkflowStep int not null,
-	OrderType int not null,
+	IsFreeOfCharge bit not null,
+	IsSelfAds bit not null,
 	ReleaseCountPlan int not null,
 
     constraint PK_Order primary key (Id)
 )
 go
-CREATE INDEX IX_Order_SourceOrganizationUnitId ON [Facts].[Order] ([SourceOrganizationUnitId]) INCLUDE ([Id],[DestOrganizationUnitId],[BranchOfficeOrganizationUnitId],[LegalPersonId],[Number],[BeginDistribution],[EndDistributionFact])
 CREATE INDEX IX_Order_DestOrganizationUnitId ON [Facts].[Order] ([DestOrganizationUnitId]) INCLUDE ([Id],[FirmId], [BeginDistribution],[EndDistributionFact],[EndDistributionPlan],[Number],[WorkflowStep])
 GO
 CREATE INDEX IX_Order_LegalPersonId_SignupDate ON [Facts].[Order] ([LegalPersonId],[SignupDate]) INCLUDE ([Id])

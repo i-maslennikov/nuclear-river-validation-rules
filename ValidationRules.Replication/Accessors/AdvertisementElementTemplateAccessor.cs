@@ -54,7 +54,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from element in _query.For<AdvertisementElement>().Where(x => dataObjectIds.Contains(x.AdvertisementElementTemplateId))
                 select element.AdvertisementId;
 
-            return new EventCollectionHelper { { typeof(Advertisement), advertisementIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Advertisement), advertisementIds.Distinct() } };
         }
     }
 }

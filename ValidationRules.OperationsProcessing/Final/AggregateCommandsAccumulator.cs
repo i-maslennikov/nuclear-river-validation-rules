@@ -104,25 +104,25 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             var createdEvent = @event as DataObjectCreatedEvent;
             if (createdEvent != null)
             {
-                return AggregateRoots[createdEvent.DataObjectType].Select(x => new InitializeAggregateCommand(x, createdEvent.DataObjectId)).ToList();
+                return MapDataObjectToAggregate(createdEvent.DataObjectType).Select(x => new InitializeAggregateCommand(x, createdEvent.DataObjectId)).ToList();
             }
 
             var updatedEvent = @event as DataObjectUpdatedEvent;
             if (updatedEvent != null)
             {
-                return AggregateRoots[updatedEvent.DataObjectType].Select(x => new RecalculateAggregateCommand(x, updatedEvent.DataObjectId)).ToList();
+                return MapDataObjectToAggregate(updatedEvent.DataObjectType).Select(x => new RecalculateAggregateCommand(x, updatedEvent.DataObjectId)).ToList();
             }
 
             var deletedEvent = @event as DataObjectDeletedEvent;
             if (deletedEvent != null)
             {
-                return AggregateRoots[deletedEvent.DataObjectType].Select(x => new DestroyAggregateCommand(x, deletedEvent.DataObjectId)).ToList();
+                return MapDataObjectToAggregate(deletedEvent.DataObjectType).Select(x => new DestroyAggregateCommand(x, deletedEvent.DataObjectId)).ToList();
             }
 
             var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
             if (outdatedEvent != null)
             {
-                return AggregateRoots[outdatedEvent.RelatedDataObjectType].Select(x => new RecalculateAggregateCommand(x, outdatedEvent.RelatedDataObjectId)).ToList();
+                return MapDataObjectToAggregate(outdatedEvent.RelatedDataObjectType).Select(x => new RecalculateAggregateCommand(x, outdatedEvent.RelatedDataObjectId)).ToList();
             }
 
             var outdatedPeriodEvent = @event as RelatedDataObjectOutdatedEvent<PeriodKey>;
@@ -144,6 +144,17 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             }
 
             throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+        }
+
+        private IReadOnlyCollection<Type> MapDataObjectToAggregate(Type dataObjectType)
+        {
+            IReadOnlyCollection<Type> result;
+            if (!AggregateRoots.TryGetValue(dataObjectType, out result))
+            {
+                throw new ArgumentException($"Type {dataObjectType.FullName} is not mapped with aggregate root type", nameof(dataObjectType));
+            }
+
+            return result;
         }
     }
 }

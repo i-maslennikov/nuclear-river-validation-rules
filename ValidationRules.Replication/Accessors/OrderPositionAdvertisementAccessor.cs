@@ -53,7 +53,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderPositionAdvertisement> dataObjects)
         {
-            var orderPositionIds = dataObjects.Select(x => x.OrderPositionId).ToArray();
+            var orderPositionIds = dataObjects.Select(x => x.OrderPositionId).Distinct().ToArray();
 
             var orderIds =
                 from op in _query.For<OrderPosition>().Where(x => orderPositionIds.Contains(x.Id))
@@ -63,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
                 select order.FirmId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, { typeof(Firm), firmIds.Distinct() } }.ToArray();
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, { typeof(Firm), firmIds.Distinct() } };
         }
     }
 }
