@@ -10,7 +10,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
@@ -76,16 +76,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     };
 
             public IQueryable<AdvertisementAmountRestriction> GetSource()
-                => from pricePosition in _query.For<Facts::PricePosition>()
-                   join position in _query.For<Facts::Position>().Where(x => x.IsControlledByAmount) on pricePosition.PositionId equals position.Id
+                => from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted)
+                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsControlledByAmount) on pricePosition.PositionId equals position.Id
                    group new { pricePosition.PriceId, position.CategoryCode, position.Name, pricePosition.MinAdvertisementAmount, pricePosition.MaxAdvertisementAmount }
                        by new { pricePosition.PriceId, position.CategoryCode } into groups
                    select new AdvertisementAmountRestriction
                        {
                            PriceId = groups.Key.PriceId,
                            CategoryCode = groups.Key.CategoryCode,
-                           CategoryName = (from pp in _query.For<Facts::PricePosition>().Where(x => x.PriceId == groups.Key.PriceId)
-                                           join p in _query.For<Facts::Position>().Where(x => x.IsControlledByAmount && x.CategoryCode == groups.Key.CategoryCode).OrderBy(x => x.Id) on pp.PositionId
+                           CategoryName = (from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.PriceId == groups.Key.PriceId)
+                                           join p in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsControlledByAmount && x.CategoryCode == groups.Key.CategoryCode).OrderBy(x => x.Id) on pp.PositionId
                                                equals p.Id
                                            select p.Name).First(), // Этот кусок кода достаточно точно отражает текущее поведение в erm, решение лучше - создать справочник и слушать поток flowNomenclatures.NomenclatureCategory
                        Max = groups.Min(x => x.MaxAdvertisementAmount) ?? int.MaxValue,
@@ -117,9 +117,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     };
 
             public IQueryable<AssociatedPositionGroupOvercount> GetSource()
-                => from pricePosition in _query.For<Facts::PricePosition>()
+                => from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted)
                    let count = _query.For<Facts::AssociatedPositionsGroup>().Count(x => x.PricePositionId == pricePosition.Id)
-                   let name = _query.For<Facts::Position>().Single(x => x.Id == pricePosition.PositionId).Name
+                   let name = _query.For<Facts::Position>().Where(x => !x.IsDeleted).Single(x => x.Id == pricePosition.PositionId).Name
                    where count > 1
                    select new AssociatedPositionGroupOvercount
                    {

@@ -148,21 +148,17 @@ function Parse-EnvironmentMetadata ($Properties) {
 }
 
 $AllSchemas = @{
-	'Price.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Price.Facts.sql' }
-	'Price.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Price.Aggregates.sql' }
-	'Account.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Account.Facts.sql' }
-	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Account.Aggregates.sql' }
-	'Consistency.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Consistency.Facts.sql' }
-	'Consistency.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Consistency.Aggregates.sql' }
-	'Firm.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Firm.Facts.sql' }
-	'Firm.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Firm.Aggregates.sql' }
-	'Advertisement.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Advertisement.Facts.sql' }
-	'Advertisement.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Advertisement.Aggregates.sql' }
-	'Project.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Project.Facts.sql' }
-	'Project.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Project.Aggregates.sql' }
-	'Theme.Facts' = @{ ConnectionStringKey = 'Facts'; SqlFile = 'Schemas\Theme.Facts.sql' }
-	'Theme.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFile = 'Schemas\Theme.Aggregates.sql' }
-	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFile = 'Schemas\Messages.sql' }
+	'Facts' = @{ ConnectionStringKey = 'Facts'; SqlFiles = @('Schemas\DropOldFacts.sql', 'Schemas\Facts.sql') }
+
+	'Price.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Price.Aggregates.sql') }
+	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Account.Aggregates.sql') }
+	'Consistency.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Consistency.Aggregates.sql') }
+	'Firm.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Firm.Aggregates.sql') }
+	'Advertisement.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Advertisement.Aggregates.sql') }
+	'Project.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Project.Aggregates.sql') }
+	'Theme.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Theme.Aggregates.sql') }
+
+	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFiles = @('Schemas\Messages.sql') }
 }
 
 $AllEntryPoints = @(

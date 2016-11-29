@@ -7,26 +7,15 @@ using NuClear.StateInitialization.Core.DataObjects;
 using NuClear.StateInitialization.Core.Factories;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
 
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
+
 using AccountAggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
-using AccountFacts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
-
 using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
-using AdvertisementFacts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
-
-using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
-using PriceFacts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
-
-using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
-using FirmFacts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
-
-using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
-using ConsistencyFacts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
-
-using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
-using ProjectFacts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
-
 using ThemeAggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
-using ThemeFacts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
+using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
+using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -41,94 +30,48 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 return new CommandRegardlessDataObjectTypesProvider(
                     new List<Type>
                         {
-                            typeof(PriceFacts::AssociatedPosition),
-                            typeof(PriceFacts::AssociatedPositionsGroup),
-                            typeof(PriceFacts::Category),
-                            typeof(PriceFacts::DeniedPosition),
-                            typeof(PriceFacts::Order),
-                            typeof(PriceFacts::OrderPosition),
-                            typeof(PriceFacts::OrderPositionAdvertisement),
-                            typeof(PriceFacts::Position),
-                            typeof(PriceFacts::Price),
-                            typeof(PriceFacts::PricePosition),
-                            typeof(PriceFacts::PricePositionNotActive),
-                            typeof(PriceFacts::Project),
-                            typeof(PriceFacts::RulesetRule),
-                            typeof(PriceFacts::Theme),
-
-                            typeof(AccountFacts::Account),
-                            typeof(AccountFacts::Order),
-                            typeof(AccountFacts::Project),
-                            typeof(AccountFacts::Lock),
-                            typeof(AccountFacts::OrderPosition),
-                            typeof(AccountFacts::ReleaseWithdrawal),
-                            typeof(AccountFacts::UnlimitedOrder),
-
-                            typeof(AdvertisementFacts::AdvertisementElementTemplate),
-                            typeof(AdvertisementFacts::AdvertisementElement),
-                            typeof(AdvertisementFacts::AdvertisementTemplate),
-                            typeof(AdvertisementFacts::Advertisement),
-                            typeof(AdvertisementFacts::Firm),
-                            typeof(AdvertisementFacts::FirmAddress),
-                            typeof(AdvertisementFacts::FirmAddressWebsite),
-                            typeof(AdvertisementFacts::Position),
-                            typeof(AdvertisementFacts::PricePosition),
-                            typeof(AdvertisementFacts::OrderPositionAdvertisement),
-                            typeof(AdvertisementFacts::OrderPosition),
-                            typeof(AdvertisementFacts::Order),
-                            typeof(AdvertisementFacts::Project),
-
-                            typeof(ConsistencyFacts::Bargain),
-                            typeof(ConsistencyFacts::BargainScanFile),
-                            typeof(ConsistencyFacts::Bill),
-                            typeof(ConsistencyFacts::BranchOffice),
-                            typeof(ConsistencyFacts::BranchOfficeOrganizationUnit),
-                            typeof(ConsistencyFacts::Category),
-                            typeof(ConsistencyFacts::CategoryFirmAddress),
-                            typeof(ConsistencyFacts::Deal),
-                            typeof(ConsistencyFacts::Firm),
-                            typeof(ConsistencyFacts::FirmAddress),
-                            typeof(ConsistencyFacts::LegalPerson),
-                            typeof(ConsistencyFacts::LegalPersonProfile),
-                            typeof(ConsistencyFacts::Order),
-                            typeof(ConsistencyFacts::OrderPosition),
-                            typeof(ConsistencyFacts::OrderPositionAdvertisement),
-                            typeof(ConsistencyFacts::OrderScanFile),
-                            typeof(ConsistencyFacts::Position),
-                            typeof(ConsistencyFacts::Project),
-                            typeof(ConsistencyFacts::ReleaseWithdrawal),
-
-                            typeof(FirmFacts::Firm),
-                            typeof(FirmFacts::FirmAddress),
-                            typeof(FirmFacts::FirmAddressCategory),
-                            typeof(FirmFacts::Order),
-                            typeof(FirmFacts::OrderPosition),
-                            typeof(FirmFacts::OrderPositionAdvertisement),
-                            typeof(FirmFacts::SpecialPosition),
-                            typeof(FirmFacts::Project),
-
-                            typeof(ProjectFacts::Category),
-                            typeof(ProjectFacts::CategoryOrganizationUnit),
-                            typeof(ProjectFacts::CostPerClickCategoryRestriction),
-                            typeof(ProjectFacts::FirmAddress),
-                            typeof(ProjectFacts::Order),
-                            typeof(ProjectFacts::OrderPosition),
-                            typeof(ProjectFacts::OrderPositionAdvertisement),
-                            typeof(ProjectFacts::OrderPositionCostPerClick),
-                            typeof(ProjectFacts::Position),
-                            typeof(ProjectFacts::PricePosition),
-                            typeof(ProjectFacts::Project),
-                            typeof(ProjectFacts::ReleaseInfo),
-                            typeof(ProjectFacts::SalesModelCategoryRestriction),
-
-                            typeof(ThemeFacts::Theme),
-                            typeof(ThemeFacts::ThemeCategory),
-                            typeof(ThemeFacts::ThemeOrganizationUnit),
-                            typeof(ThemeFacts::Category),
-                            typeof(ThemeFacts::Order),
-                            typeof(ThemeFacts::OrderPosition),
-                            typeof(ThemeFacts::OrderPositionAdvertisement),
-                            typeof(ThemeFacts::Project),
+                            typeof(Facts::Account),
+                            typeof(Facts::Advertisement),
+                            typeof(Facts::AdvertisementElement),
+                            typeof(Facts::AdvertisementElementTemplate),
+                            typeof(Facts::AdvertisementTemplate),
+                            typeof(Facts::AssociatedPosition),
+                            typeof(Facts::AssociatedPositionsGroup),
+                            typeof(Facts::Bargain),
+                            typeof(Facts::BargainScanFile),
+                            typeof(Facts::Bill),
+                            typeof(Facts::BranchOffice),
+                            typeof(Facts::BranchOfficeOrganizationUnit),
+                            typeof(Facts::Category),
+                            typeof(Facts::CategoryOrganizationUnit),
+                            typeof(Facts::CostPerClickCategoryRestriction),
+                            typeof(Facts::Deal),
+                            typeof(Facts::DeniedPosition),
+                            typeof(Facts::Firm),
+                            typeof(Facts::FirmAddress),
+                            typeof(Facts::FirmAddressCategory),
+                            typeof(Facts::FirmAddressWebsite),
+                            typeof(Facts::LegalPerson),
+                            typeof(Facts::LegalPersonProfile),
+                            typeof(Facts::Lock),
+                            typeof(Facts::Order),
+                            typeof(Facts::OrderPosition),
+                            typeof(Facts::OrderPositionAdvertisement),
+                            typeof(Facts::OrderPositionCostPerClick),
+                            typeof(Facts::OrderScanFile),
+                            typeof(Facts::Position),
+                            typeof(Facts::PositionChild),
+                            typeof(Facts::Price),
+                            typeof(Facts::PricePosition),
+                            typeof(Facts::Project),
+                            typeof(Facts::ReleaseInfo),
+                            typeof(Facts::ReleaseWithdrawal),
+                            typeof(Facts::RulesetRule),
+                            typeof(Facts::SalesModelCategoryRestriction),
+                            typeof(Facts::Theme),
+                            typeof(Facts::ThemeCategory),
+                            typeof(Facts::ThemeOrganizationUnit),
+                            typeof(Facts::UnlimitedOrder),
                         });
             }
 

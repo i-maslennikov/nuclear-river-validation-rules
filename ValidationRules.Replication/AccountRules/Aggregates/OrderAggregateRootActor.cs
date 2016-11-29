@@ -10,12 +10,15 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Facts = NuClear.ValidationRules.Storage.Model.AccountRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
     public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
+        private const int OrderOnTermination = 4;
+        private const int OrderApproved = 5;
+
         public OrderAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
@@ -48,19 +51,18 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
+                   where order.WorkflowStep == OrderOnTermination || order.WorkflowStep == OrderApproved
                    join destProject in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals destProject.OrganizationUnitId
-                   join sourceProject in _query.For<Facts::Project>() on order.SourceOrganizationUnitId equals sourceProject.OrganizationUnitId
                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId).DefaultIfEmpty()
                    select new Order
                        {
                            Id = order.Id,
                            DestProjectId = destProject.Id,
-                           SourceProjectId = sourceProject.Id,
                            AccountId = account.Id,
                            IsFreeOfCharge = order.IsFreeOfCharge,
                            Number = order.Number,
-                           BeginDistributionDate = order.BeginDistributionDate,
-                           EndDistributionDate = order.EndDistributionDate,
+                           BeginDistributionDate = order.BeginDistribution,
+                           EndDistributionDate = order.EndDistributionFact,
                        };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

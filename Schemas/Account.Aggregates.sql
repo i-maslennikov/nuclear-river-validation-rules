@@ -2,6 +2,7 @@
 
 if object_id('AccountAggregates.Order') is not null drop table AccountAggregates.[Order]
 if object_id('AccountAggregates.Lock') is not null drop table AccountAggregates.Lock
+if object_id('AccountAggregates.DebtPermission') is not null drop table AccountAggregates.DebtPermission
 if object_id('AccountAggregates.Account') is not null drop table AccountAggregates.Account
 if object_id('AccountAggregates.AccountPeriod') is not null drop table AccountAggregates.AccountPeriod
 go
@@ -9,7 +10,6 @@ go
 create table AccountAggregates.[Order](
     Id bigint not null,
     DestProjectId bigint not null,
-    SourceProjectId bigint not null,
     AccountId bigint null,
     IsFreeOfCharge bit not null,
     Number nvarchar(64) not null,

@@ -10,7 +10,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 {
@@ -44,9 +44,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                         MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
                     };
 
-            public IQueryable<Position> GetSource()
-                => from category in _query.For<Facts::Position>()
-                   select new Position { Id = category.Id, Name = category.Name };
+            public IQueryable<Position> GetSource() => _query
+                .For<Facts::Position>()
+                .Where(x => !x.IsDeleted)
+                .Select(category => new Position
+                {
+                    Id = category.Id,
+                    Name = category.Name
+                });
 
             public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

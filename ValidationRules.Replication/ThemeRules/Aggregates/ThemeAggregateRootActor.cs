@@ -10,7 +10,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
 {
@@ -86,7 +86,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                 var invalidCategories =
                     from themeCategory in _query.For<Facts::ThemeCategory>()
                     from category in _query.For<Facts::Category>().Where(x => x.Id == themeCategory.CategoryId)
-                    where category.IsNotActiveOrDeleted // рубрика невалидна
+                    where !category.IsActiveNotDeleted // рубрика невалидна
                     select new Theme.InvalidCategory
                     {
                         ThemeId = themeCategory.ThemeId,

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -23,12 +20,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 1 },
                     new Facts::OrderPosition { Id = 2, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 3, OrderPositionId = 2, PositionId = 4 },
-                    new Facts::SpecialPosition { Id = 4, IsSelfAdvertisementOnPc = true, IsApplicapleForPc = true },
+                    new Facts::Position { Id = 4, CategoryCode = 287, Platform = 1},
 
                     new Facts::Order { Id = 5 },
                     new Facts::OrderPosition { Id = 6, OrderId = 5 },
                     new Facts::OrderPositionAdvertisement { Id = 7, OrderPositionId = 6, PositionId = 8 },
-                    new Facts::SpecialPosition { Id = 8, IsApplicapleForPc = false })
+                    new Facts::Position { Id = 8, Platform = ~1 })
                 .Aggregate(
                     new Aggregates::Order.SelfAdvertisementPosition { OrderId = 1 },
                     new Aggregates::Order.NotApplicapleForDesktopPosition { OrderId = 5 });

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 

@@ -10,7 +10,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
@@ -47,13 +47,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                         MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement,
                     };
 
-            public IQueryable<Position> GetSource()
-                => (from position in _query.For<Facts::Position>()
-                   select new Position
+            public IQueryable<Position> GetSource() => _query
+                   .For<Facts::Position>()
+                   .Where(x => !x.IsDeleted)
+                   .Select(x => new Position
                    {
-                       Id = position.Id,
-                       Name = position.Name,
-                   }).Distinct();
+                       Id = x.Id,
+                       Name = x.Name,
+                   });
 
             public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 1, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 1, CategoryId = 12, PositionId = 4 },
                     new Facts::Position { Id = 4, Name = "Position" },
-                    new Facts::Category { Id = 12, Name = "Category" },
+                    new Facts::Category { Id = 12, Name = "Category", IsActiveNotDeleted = true },
                     new Facts::Project())
                 .Aggregate(
                     new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) },
@@ -42,6 +42,24 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         });
 
         // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement OrderMustUseCategoriesOnlyAvailableInProjectCategoryNotActive
+            => ArrangeMetadataElement
+                .Config
+                .Name(nameof(OrderMustUseCategoriesOnlyAvailableInProjectCategoryNotActive))
+                .Fact(
+                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3) },
+                    new Facts::OrderPosition { Id = 1, OrderId = 1 },
+                    new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 1, CategoryId = 12, PositionId = 4 },
+                    new Facts::Position { Id = 4, Name = "Position" },
+                    // category not active
+                    new Facts::Category { Id = 12, Name = "Category", IsActiveNotDeleted = false },
+                    new Facts::Project())
+                .Aggregate(
+                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Position { Id = 4, Name = "Position" })
+                .Message();
+
+        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderMustUseCategoriesOnlyAvailableInProjectNegative
             => ArrangeMetadataElement
                 .Config
@@ -51,7 +69,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 1, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 1, CategoryId = 12, PositionId = 4 },
                     new Facts::Position { Id = 4, Name = "Position" },
-                    new Facts::Category { Id = 12, Name = "Category" },
+                    new Facts::Category { Id = 12, Name = "Category", IsActiveNotDeleted = true },
                     new Facts::Project(),
                     new Facts::CategoryOrganizationUnit { CategoryId = 12 })
                 .Aggregate(

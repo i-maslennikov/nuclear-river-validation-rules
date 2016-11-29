@@ -185,14 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AfterFinal\MessageCommandsAccumulator.cs" />
-    <Compile Include="Contexts\AdvertisementFactsSubDomain.cs" />
-    <Compile Include="Contexts\AccountFactsSubDomain.cs" />
     <Compile Include="Contexts\AggregateSubDomain.cs" />
-    <Compile Include="Contexts\ConsistencyFactsSubDomain.cs" />
     <Compile Include="Contexts\ErmSubDomain.cs" />
-    <Compile Include="Contexts\FirmFactsSubDomain.cs" />
-    <Compile Include="Contexts\PriceFactsSubDomain.cs" />
-    <Compile Include="Contexts\ProjectFactsSubDomain.cs" />
+    <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EntityTypeMap.cs" />
     <Compile Include="Final\AggregateCommandsAccumulator.cs" />
     <Compile Include="AfterFinal\MessageCommandsHandler.cs" />

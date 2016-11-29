@@ -27,10 +27,12 @@ function Update-Schemas ($config) {
 		Write-Host $connectionString
 		$connection = Create-SqlConnection $connectionString
 
-		$sqlFilePath = Join-Path $Metadata.Common.Dir.Solution $schema.SqlFile
-		$sql = Get-Content $sqlFilePath -Raw
+		foreach($sqlFile in $schema.SqlFiles){
+			$sqlFilePath = Join-Path $Metadata.Common.Dir.Solution $sqlFile
+			$sql = Get-Content $sqlFilePath -Raw
 
-		Write-Host ((Split-Path $sqlFilePath -Leaf) + '...')
-		Execute-Sql $sql $connection
+			Write-Host ((Split-Path $sqlFilePath -Leaf) + '...')
+			Execute-Sql $sql $connection
+		}
 	}
 }

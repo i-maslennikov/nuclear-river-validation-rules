@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPositionCostPerClick { OrderPositionId = 1, CategoryId = 12, Amount = 1 },
                     new Facts::Position { Id = 4, Name = "Position" },
                     new Facts::PricePosition { Id = 5, PositionId = 4 },
-                    new Facts::Category { Id = 12, Name = "Category" },
+                    new Facts::Category { Id = 12, Name = "Category", IsActiveNotDeleted = true },
                     new Facts::Project { Name = "Project" },
                     new Facts::CostPerClickCategoryRestriction { Begin = MonthStart(1), CategoryId = 12, MinCostPerClick = 1 },
                     new Facts::CostPerClickCategoryRestriction { Begin = MonthStart(2), CategoryId = 12, MinCostPerClick = 2 })

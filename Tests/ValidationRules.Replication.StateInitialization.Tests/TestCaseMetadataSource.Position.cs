@@ -1,7 +1,7 @@
 ﻿using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {

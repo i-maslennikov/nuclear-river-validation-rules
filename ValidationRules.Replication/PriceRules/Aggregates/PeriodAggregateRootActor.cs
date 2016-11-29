@@ -12,7 +12,7 @@ using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
@@ -61,9 +61,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Period> GetSource()
             {
-                var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
+                var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                   .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
                                   .SelectMany(x => _query.For<Facts::Project>().Where(p => p.OrganizationUnitId == x.OrganizationUnitId).DefaultIfEmpty(),
                                               (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
@@ -110,9 +110,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public IQueryable<PricePeriod> GetSource()
             {
                 var dates = _query.For<Facts::Order>()
-                                  .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                   .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }));
 
                 var prices =
@@ -171,20 +171,20 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public IQueryable<OrderPeriod> GetSource()
             {
                 var dates = _query.For<Facts::Order>()
-                                  .Select(x => new { Date = x.BeginDistributionDate, OrganizationUnitId = x.DestOrganizationUnitId })
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDateFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionDatePlan, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, OrganizationUnitId = x.DestOrganizationUnitId }))
+                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                   .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }));
 
                 var result =
                     from order in _query.For<Facts::Order>()
-                    from date in dates.Where(date => date.OrganizationUnitId == order.DestOrganizationUnitId && order.BeginDistributionDate <= date.Date && date.Date < order.EndDistributionDatePlan)
+                    from date in dates.Where(date => date.OrganizationUnitId == order.DestOrganizationUnitId && order.BeginDistribution <= date.Date && date.Date < order.EndDistributionPlan)
                     select new OrderPeriod
                         {
                             OrderId = order.Id,
                             OrganizationUnitId = order.DestOrganizationUnitId,
                             Start = date.Date,
-                            Scope = order.EndDistributionDateFact > date.Date ? Scope.Compute(order.WorkflowStepId, order.Id) : order.Id
+                            Scope = order.EndDistributionFact > date.Date ? Scope.Compute(order.WorkflowStep, order.Id) : order.Id
                         };
 
                 return result;
