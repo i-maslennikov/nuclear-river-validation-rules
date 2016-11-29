@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IQueryable<OrderPositionCostPerClick> GetSource() => _query
             .For<Erm::OrderPositionCostPerClick>()
             .Where(cpc =>
-                   cpc.BidIndex == _query.For<Storage.Model.Erm.OrderPositionCostPerClick>()
+                   cpc.BidIndex == _query.For<Erm::OrderPositionCostPerClick>()
                                          .Where(x => x.CategoryId == cpc.CategoryId && x.OrderPositionId == cpc.OrderPositionId)
                                          .Max(x => x.BidIndex))
             .Select(cpc => new OrderPositionCostPerClick
@@ -51,14 +51,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderPositionCostPerClick> dataObjects)
-        {
-            var orderPositionIds = dataObjects.Select(x => x.OrderPositionId);
-
-            var orderIds =
-                from op in _query.For<OrderPosition>().Where(x => orderPositionIds.Contains(x.Id))
-                select op.OrderId;
-
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
-        }
+            => Array.Empty<IEvent>();
     }
 }

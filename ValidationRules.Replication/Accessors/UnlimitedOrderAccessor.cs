@@ -50,11 +50,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<UnlimitedOrder> dataObjects)
-        {
-            // Поле OrderId у сущности не меняется - оно входит в идентфиикатор
-            var orderIds = dataObjects.Select(x => x.OrderId);
-
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
-        }
+            => Array.Empty<IEvent>();
     }
 }

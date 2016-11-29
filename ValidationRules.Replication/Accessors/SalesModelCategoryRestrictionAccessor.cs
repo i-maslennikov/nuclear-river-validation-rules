@@ -48,11 +48,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<SalesModelCategoryRestriction> dataObjects)
-        {
-            // ProjectId ограничения не меняется
-            var ids = dataObjects.Select(x => x.ProjectId).Distinct();
-
-            return new EventCollectionHelper { { typeof(Project), ids } };
-        }
+            => Array.Empty<IEvent>();
     }
 }

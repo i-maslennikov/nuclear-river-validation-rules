@@ -90,34 +90,31 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                                     .SelectMany(x => x.Value.Keys.Select(id => Tuple.Create(x.Key, id)))
                                     .ToArray();
 
-                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypePosition.Instance.Id))
-                {
-                    yield return new SyncDataObjectCommand(typeof(PositionChild), change.Item2);
-                }
-
-                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeOrderPosition.Instance.Id))
-                {
-                    yield return new SyncDataObjectCommand(typeof(OrderPositionCostPerClick), change.Item2);
-                }
-
                 foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeProject.Instance.Id))
                 {
                     yield return new SyncDataObjectCommand(typeof(CostPerClickCategoryRestriction), change.Item2);
                 }
-
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeOrderPosition.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(OrderPositionCostPerClick), change.Item2);
+                }
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypePosition.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(PositionChild), change.Item2);
+                }
                 foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeProject.Instance.Id))
                 {
                     yield return new SyncDataObjectCommand(typeof(SalesModelCategoryRestriction), change.Item2);
                 }
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeOrder.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(UnlimitedOrder), change.Item2);
+                }
+
 
                 foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeAdvertisementElementStatus.Instance.Id))
                 {
                     yield return new SyncDataObjectCommand(typeof(AdvertisementElement), change.Item2);
-                }
-
-                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeOrder.Instance.Id))
-                {
-                    yield return new SyncDataObjectCommand(typeof(UnlimitedOrder), change.Item2);
                 }
             }
         }
