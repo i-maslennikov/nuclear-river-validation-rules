@@ -3,7 +3,7 @@
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -18,15 +18,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
                     // Position без ограничений
-                    new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 2 },
+                    new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 2, IsActiveNotDeleted = true },
                     new Facts::Position { Id = 2, CategoryCode = 101, IsControlledByAmount = false },
 
                     // Position с ограничениями
-                    new Facts::PricePosition { Id = 2, PriceId = 1, PositionId = 3, MinAdvertisementAmount = 1, MaxAdvertisementAmount = 2 },
+                    new Facts::PricePosition { Id = 2, PriceId = 1, PositionId = 3, MinAdvertisementAmount = 1, MaxAdvertisementAmount = 2, IsActiveNotDeleted = true },
                     new Facts::Position { Id = 3, CategoryCode = 102, IsControlledByAmount = true },
 
                     // Некорректная Position с ограничениями
-                    new Facts::PricePosition { Id = 3, PriceId = 1, PositionId = 4, MinAdvertisementAmount = null, MaxAdvertisementAmount = null },
+                    new Facts::PricePosition { Id = 3, PriceId = 1, PositionId = 4, MinAdvertisementAmount = null, MaxAdvertisementAmount = null, IsActiveNotDeleted = true },
                     new Facts::Position { Id = 4, CategoryCode = 103, IsControlledByAmount = true },
 
                     // associated
@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
                     // Position с ограничениями
-                    new Facts::PricePosition { Id = 10, PriceId = 1, PositionId = 3 },
+                    new Facts::PricePosition { Id = 10, PriceId = 1, PositionId = 3, IsActiveNotDeleted = true },
                     new Facts::Position { Id = 3, CategoryCode = 1 },
 
                     new Facts::AssociatedPositionsGroup { Id = 20, PricePositionId = 10 },

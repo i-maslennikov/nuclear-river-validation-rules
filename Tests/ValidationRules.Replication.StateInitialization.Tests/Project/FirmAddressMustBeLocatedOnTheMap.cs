@@ -1,10 +1,9 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -21,7 +20,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
-                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address" },
+                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address", IsActive = true },
                     new Facts::Position { Id = 4, Name = "Position" },
                     new Facts::Project())
                 .Aggregate(
@@ -41,6 +40,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             OrderId = 1,
                         });
 
+        // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement FirmAddressMustBeLocatedOnTheMapFirmAddressNotActive
+            => ArrangeMetadataElement
+                .Config
+                .Name(nameof(FirmAddressMustBeLocatedOnTheMapFirmAddressNotActive))
+                .Fact(
+                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
+                    new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
+                    // firm address not active
+                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address", IsActive = false },
+                    new Facts::Position { Id = 4, Name = "Position" },
+                    new Facts::Project())
+                .Aggregate(
+                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(2) },
+                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address" },
+                    new Aggregates::Position { Id = 4, Name = "Position" })
+                .Message();
+
         /// <summary>
         /// Позиции "Рекламная ссылка", "Выгодные покупки с 2ГИС", "Комментарий к адресу" могут продаваться к адресам, не размещённым на карте
         /// </summary>
@@ -53,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
-                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address" },
+                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address", IsActive = true },
                     new Facts::Position { Id = 4, Name = "Position", CategoryCode = 11 },
                     new Facts::Project())
                 .Aggregate(

@@ -1,10 +1,8 @@
-﻿using System;
-
-using NuClear.DataTest.Metamodel.Dsl;
+﻿using NuClear.DataTest.Metamodel.Dsl;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -55,7 +53,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::Position(),
                 new Facts::Price(),
                 new Facts::PricePosition(),
-                new Facts::PricePositionNotActive(),
                 new Facts::Project(),
                 new Facts::RulesetRule(),
                 new Facts::Theme())

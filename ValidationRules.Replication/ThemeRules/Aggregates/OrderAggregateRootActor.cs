@@ -11,7 +11,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
 {
@@ -58,8 +58,8 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                    {
                        Id = order.Id,
                        Number = order.Number,
-                       BeginDistributionDate = order.BeginDistributionDate,
-                       EndDistributionDateFact = order.EndDistributionDateFact,
+                       BeginDistributionDate = order.BeginDistribution,
+                       EndDistributionDateFact = order.EndDistributionFact,
                        ProjectId = project.Id,
                        IsSelfAds = order.IsSelfAds,
                    };
@@ -88,11 +88,11 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             {
                 var orderThemes = (from order in _query.For<Facts::Order>()
                                     from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
+                                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.ThemeId != null && x.OrderPositionId == op.Id)
                                     select new Order.OrderTheme
                                     {
                                         OrderId = order.Id,
-                                        ThemeId = opa.ThemeId
+                                        ThemeId = opa.ThemeId.Value
                                     }).Distinct();
 
                 return orderThemes;

@@ -10,7 +10,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 {
@@ -104,8 +104,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                   from position in _query.For<Facts::Position>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                   from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.Id == orderPositionAdvertisement.FirmAddressId)
+                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                   from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == orderPositionAdvertisement.FirmAddressId)
                    select new Order.AddressAdvertisement
                        {
                            OrderId = order.Id,
@@ -125,7 +125,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
         public sealed class CategoryAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
         {
             private const int PositionsGroupMedia = 1;
-            private const int CategoryLevelThree = 3;
 
             private readonly IQuery _query;
 
@@ -138,8 +137,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                   from position in _query.For<Facts::Position>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                   from category in _query.For<Facts::Category>().Where(x => x.Id == orderPositionAdvertisement.CategoryId)
+                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                   from category in _query.For<Facts::Category>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == orderPositionAdvertisement.CategoryId)
                    where orderPositionAdvertisement.CategoryId.HasValue
                    select new Order.CategoryAdvertisement
                        {
@@ -148,7 +147,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                            PositionId = orderPositionAdvertisement.PositionId,
                            CategoryId = category.Id,
                            SalesModel = position.SalesModel,
-                           IsSalesModelRestrictionApplicable = category.Level == CategoryLevelThree && position.PositionsGroup != PositionsGroupMedia
+                           IsSalesModelRestrictionApplicable = category.L3Id != null && position.PositionsGroup != PositionsGroupMedia
                        };
 
             public FindSpecification<Order.CategoryAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

@@ -3,7 +3,7 @@
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -18,17 +18,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(CouponMustBeSoldOnceAtTime))
                 .Fact(
                     // Заказ на расторжении даёт два периода размещения купона.
-                    new Facts::Order { Id = 1, BeginDistributionDate = MonthStart(1), EndDistributionDateFact = MonthStart(2), EndDistributionDatePlan = MonthStart(3), WorkflowStepId = 4 },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), EndDistributionPlan = MonthStart(3), WorkflowStep = 4 },
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     // Заказ "на оформлении" даёт период, влияющий только на сам заказ
-                    new Facts::Order { Id = 2, BeginDistributionDate = MonthStart(1), EndDistributionDateFact = MonthStart(3), EndDistributionDatePlan = MonthStart(3), WorkflowStepId = 1 },
+                    new Facts::Order { Id = 2, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(3), EndDistributionPlan = MonthStart(3), WorkflowStep = 1 },
                     new Facts::OrderPosition { Id = 5, OrderId = 2, },
                     new Facts::OrderPositionAdvertisement { Id = 2, OrderPositionId = 5, PositionId = 5, AdvertisementId = 6 },
 
                     // Заказ "на утверждении" даёт период, влияющий на сам заказ и все остальные
-                    new Facts::Order { Id = 3, BeginDistributionDate = MonthStart(1), EndDistributionDateFact = MonthStart(3), EndDistributionDatePlan = MonthStart(3), WorkflowStepId = 2 },
+                    new Facts::Order { Id = 3, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(3), EndDistributionPlan = MonthStart(3), WorkflowStep = 2 },
                     new Facts::OrderPosition { Id = 6, OrderId = 3, },
                     new Facts::OrderPositionAdvertisement { Id = 3, OrderPositionId = 6, PositionId = 5, AdvertisementId = 6 },
 

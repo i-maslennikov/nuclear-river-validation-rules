@@ -3,7 +3,7 @@
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -15,10 +15,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderPeriod))
                 .Fact(
-                    new Facts::Order { Id = 1, BeginDistributionDate = MonthStart(1), EndDistributionDateFact = MonthStart(2), EndDistributionDatePlan = MonthStart(2), WorkflowStepId = 1 },
-                    new Facts::Order { Id = 2, BeginDistributionDate = MonthStart(1), EndDistributionDateFact = MonthStart(2), EndDistributionDatePlan = MonthStart(2), WorkflowStepId = 2 },
-                    new Facts::Order { Id = 3, BeginDistributionDate = MonthStart(1), EndDistributionDateFact = MonthStart(2), EndDistributionDatePlan = MonthStart(2), WorkflowStepId = 5 },
-                    new Facts::Order { Id = 4, BeginDistributionDate = MonthStart(1), EndDistributionDateFact = MonthStart(2), EndDistributionDatePlan = MonthStart(3), WorkflowStepId = 4 })
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), EndDistributionPlan = MonthStart(2), WorkflowStep = 1 },
+                    new Facts::Order { Id = 2, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), EndDistributionPlan = MonthStart(2), WorkflowStep = 2 },
+                    new Facts::Order { Id = 3, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), EndDistributionPlan = MonthStart(2), WorkflowStep = 5 },
+                    new Facts::Order { Id = 4, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), EndDistributionPlan = MonthStart(3), WorkflowStep = 4 })
                 .Aggregate(
                     new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 1 },
                     new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(1), Scope = -1 },
@@ -54,8 +54,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Price { Id = 2, OrganizationUnitId = 2, BeginDate = MonthStart(5) },
                     new Facts::Price { Id = 3, OrganizationUnitId = 1, BeginDate = MonthStart(3) },
 
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistributionDate = MonthStart(2), EndDistributionDateFact = MonthStart(3), EndDistributionDatePlan = MonthStart(4) },
-                    new Facts::Order { Id = 3, DestOrganizationUnitId = 1, BeginDistributionDate = MonthStart(5), EndDistributionDateFact = MonthStart(7), EndDistributionDatePlan = MonthStart(7) })
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = MonthStart(2), EndDistributionFact = MonthStart(3), EndDistributionPlan = MonthStart(4) },
+                    new Facts::Order { Id = 3, DestOrganizationUnitId = 1, BeginDistribution = MonthStart(5), EndDistributionFact = MonthStart(7), EndDistributionPlan = MonthStart(7) })
                 .Aggregate(
                     new Aggregates::Period { Start = MonthStart(1), End = MonthStart(2), OrganizationUnitId = 2 },
                     new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3), OrganizationUnitId = 2 },

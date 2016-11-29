@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // Рубрика 12 в проекте 0 допускает размещение с моделью продаж 1 до 4-го месяца и моделью 2 позднее
                     new Facts::Project { Name = "Project" },
                     new Facts::CategoryOrganizationUnit { CategoryId = 12 },
-                    new Facts::Category { Id = 12, Name = "Category", Level = 3 },
+                    new Facts::Category { Id = 12, Name = "Category", L3Id = 3, IsActiveNotDeleted = true },
                     new Facts::SalesModelCategoryRestriction { CategoryId = 12, Begin = MonthStart(1), SalesModel = 1 },
                     new Facts::SalesModelCategoryRestriction { CategoryId = 12, Begin = MonthStart(4), SalesModel = 2 })
                 .Aggregate(

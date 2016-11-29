@@ -17,27 +17,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 {
                     OperationRegistryMetadataElement
                         .Config
-                        .For<AccountFactsSubDomain>(),
-
-                    OperationRegistryMetadataElement
-                        .Config
-                        .For<ConsistencyFactsSubDomain>(),
-
-                    OperationRegistryMetadataElement
-                        .Config
-                        .For<PriceFactsSubDomain>(),
-
-                    OperationRegistryMetadataElement
-                        .Config
-                        .For<FirmFactsSubDomain>(),
-
-                    OperationRegistryMetadataElement
-                        .Config
-                        .For<AdvertisementFactsSubDomain>(),
-
-                    OperationRegistryMetadataElement
-                        .Config
-                        .For<ProjectFactsSubDomain>(),
+                        .For<ErmSubDomain>(),
                 };
 
             Metadata = metadataElements.ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);

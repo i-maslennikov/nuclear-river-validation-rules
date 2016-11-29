@@ -3,7 +3,7 @@
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.ThemeRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -17,14 +17,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(ThemeCategoryMustBeActiveAndNotDeleted_OneOrder))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb},
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb},
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, ThemeId = 5 },
 
                     new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb },
-                    new Facts::Category { Id = 6, Name = "Category6", IsNotActiveOrDeleted = true },
+                    new Facts::Category { Id = 6, Name = "Category6", IsActiveNotDeleted = false },
 
                     new Facts::ThemeCategory { ThemeId = 5, CategoryId = 6 }
                 )
@@ -55,8 +55,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(ThemeCategoryMustBeActiveAndNotDeleted_TwoOrders))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayMar },
-                    new Facts::Order { Id = 2, DestOrganizationUnitId = 2, Number = "Order2", BeginDistributionDate = FirstDayFeb, EndDistributionDateFact = FirstDayApr },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar },
+                    new Facts::Order { Id = 2, DestOrganizationUnitId = 2, Number = "Order2", BeginDistribution = FirstDayFeb, EndDistributionFact = FirstDayApr },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPositionAdvertisement { Id = 2, OrderPositionId = 5, ThemeId = 5 },
 
                     new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayApr },
-                    new Facts::Category { Id = 6, Name = "Category6", IsNotActiveOrDeleted = true },
+                    new Facts::Category { Id = 6, Name = "Category6", IsActiveNotDeleted = false },
 
                     new Facts::ThemeCategory { ThemeId = 5, CategoryId = 6 }
                 )
@@ -98,14 +98,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(ThemeCategoryMustBeActiveAndNotDeletedNaegative))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, ThemeId = 5 },
 
                     new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb },
-                    new Facts::Category { Id = 6, Name = "Category6", IsNotActiveOrDeleted = false },
+                    new Facts::Category { Id = 6, Name = "Category6", IsActiveNotDeleted = true },
 
                     new Facts::ThemeCategory { ThemeId = 5, CategoryId = 6 }
                 )

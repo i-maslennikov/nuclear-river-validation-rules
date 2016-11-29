@@ -4,7 +4,7 @@ using NuClear.DataTest.Metamodel.Dsl;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::BranchOffice(),
                 new Facts::BranchOfficeOrganizationUnit(),
                 new Facts::Category(),
-                new Facts::CategoryFirmAddress(),
+                new Facts::FirmAddressCategory(),
                 new Facts::Deal(),
                 new Facts::Firm(),
                 new Facts::FirmAddress(),

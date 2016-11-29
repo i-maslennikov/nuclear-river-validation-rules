@@ -38,21 +38,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{2798FE00-40AA-420B-A5EC-67FC2EBF88D8}"
 	ProjectSection(SolutionItems) = preProject
 		Schemas\Account.Aggregates.sql = Schemas\Account.Aggregates.sql
-		Schemas\Account.Facts.sql = Schemas\Account.Facts.sql
 		Schemas\Advertisement.Aggregates.sql = Schemas\Advertisement.Aggregates.sql
-		Schemas\Advertisement.Facts.sql = Schemas\Advertisement.Facts.sql
 		Schemas\Consistency.Aggregates.sql = Schemas\Consistency.Aggregates.sql
-		Schemas\Consistency.Facts.sql = Schemas\Consistency.Facts.sql
+		Schemas\DropOldFacts.sql = Schemas\DropOldFacts.sql
+		Schemas\Facts.sql = Schemas\Facts.sql
 		Schemas\Firm.Aggregates.sql = Schemas\Firm.Aggregates.sql
-		Schemas\Firm.Facts.sql = Schemas\Firm.Facts.sql
 		Schemas\Messages.sql = Schemas\Messages.sql
 		Schemas\Price.Aggregates.sql = Schemas\Price.Aggregates.sql
-		Schemas\Price.Facts.sql = Schemas\Price.Facts.sql
 		Schemas\Project.Aggregates.sql = Schemas\Project.Aggregates.sql
-		Schemas\Project.Facts.sql = Schemas\Project.Facts.sql
 		Schemas\Theme.Aggregates.sql = Schemas\Theme.Aggregates.sql
-		Schemas\Theme.Facts.sql = Schemas\Theme.Facts.sql
-		Schemas\User.Facts.sql = Schemas\User.Facts.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D5758A2D-BB93-47E5-A13B-4EEC203D4371}"

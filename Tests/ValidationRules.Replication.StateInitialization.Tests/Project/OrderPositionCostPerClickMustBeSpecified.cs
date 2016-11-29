@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.ProjectRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::PricePosition { Id = 5, PositionId = 5 },
                     new Facts::Position { Id = 4, Name = "Position", SalesModel = 12 },
                     new Facts::Position { Id = 5, Name = "Position", SalesModel = 11 },
-                    new Facts::Category { Id = 12, Name = "Category" },
+                    new Facts::Category { Id = 12, Name = "Category", IsActiveNotDeleted = true },
                     new Facts::CategoryOrganizationUnit { CategoryId = 12 },
                     new Facts::Project())
                 .Aggregate(

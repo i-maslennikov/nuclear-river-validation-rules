@@ -11,7 +11,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.FirmRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 {
@@ -90,6 +90,9 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class NotApplicapleForDesktopPositionAccessor : IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
         {
+            private const long PlatformIndependent = 0;
+            private const long PlatformDesktop = 1;
+
             private readonly IQuery _query;
 
             public NotApplicapleForDesktopPositionAccessor(IQuery query)
@@ -101,7 +104,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
                     from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::SpecialPosition>().Where(x => !x.IsApplicapleForPc).Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                    from position in _query.For<Facts::Position>()
+                        .Where(x => !x.IsDeleted)
+                        .Where(x => x.Platform != PlatformDesktop && x.Platform != PlatformIndependent)
+                        .Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     select new Order.NotApplicapleForDesktopPosition { OrderId = orderPosition.OrderId }).Distinct();
 
             public FindSpecification<Order.NotApplicapleForDesktopPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -113,6 +119,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class SelfAdvertisementPositionAccessor : IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
         {
+            private const long SelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
             private readonly IQuery _query;
 
             public SelfAdvertisementPositionAccessor(IQuery query)
@@ -124,7 +131,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
                     from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::SpecialPosition>().Where(x => x.IsSelfAdvertisementOnPc).Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                    from position in _query.For<Facts::Position>()
+                        .Where(x => !x.IsDeleted)
+                        .Where(x => x.CategoryCode == SelfAdvertisementOnlyOnPc)
+                        .Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     select new Order.SelfAdvertisementPosition { OrderId = orderPosition.OrderId }).Distinct();
 
             public FindSpecification<Order.SelfAdvertisementPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -145,7 +155,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public IQueryable<Order.FirmOrganiationUnitMismatch> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from firm in _query.For<Facts::Firm>().Where(x => x.Id == order.FirmId)
+                   from firm in _query.For<Facts::Firm>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == order.FirmId)
                    where order.DestOrganizationUnitId != firm.OrganizationUnitId
                    select new Order.FirmOrganiationUnitMismatch { OrderId = order.Id };
 

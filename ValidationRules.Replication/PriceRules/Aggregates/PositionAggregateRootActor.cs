@@ -11,7 +11,7 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Facts = NuClear.ValidationRules.Storage.Model.PriceRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
@@ -39,9 +39,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 _query = query;
             }
 
-            public IQueryable<Position> GetSource()
-                => from position in _query.For<Facts::Position>()
-                   select new Position { Id = position.Id, CategoryCode = position.CategoryCode, Name = position.Name };
+            public IQueryable<Position> GetSource() => _query
+                .For<Facts::Position>()
+                .Where(x => !x.IsDeleted)
+                .Select(position => new Position
+                {
+                    Id = position.Id,
+                    CategoryCode = position.CategoryCode,
+                    Name = position.Name
+                });
 
         public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

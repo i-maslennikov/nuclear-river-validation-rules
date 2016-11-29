@@ -3,7 +3,7 @@
 using NuClear.DataTest.Metamodel.Dsl;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
-using Facts = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Facts;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
 
@@ -17,12 +17,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderPositionAdvertisementMustBeCreatedPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
-                    new Facts::PricePosition { Id = 4, PositionId = 5},
-                    new Facts::Position { Id = 5, Name = "Position5", IsCompositionOptional = false, ChildPositionId = 6 },
+                    new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = true },
+                    new Facts::Position { Id = 5, Name = "Position5", IsCompositionOptional = false },
+                    new Facts::PositionChild { MasterPositionId = 5, ChildPositionId = 6 },
                     new Facts::Position { Id = 6, Name = "Position6" }
 
                     // no Facts::OrderPositionAdvertisement
@@ -47,17 +48,44 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 );
 
         // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement OrderPositionAdvertisementMustBeCreatedPricePositionNotActive
+            => ArrangeMetadataElement
+                .Config
+                .Name(nameof(OrderPositionAdvertisementMustBeCreatedPricePositionNotActive))
+                .Fact(
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Project { Id = 3, OrganizationUnitId = 2 },
+
+                    new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
+                    // price position not active
+                    new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = false },
+                    new Facts::Position { Id = 5, Name = "Position5", IsCompositionOptional = false },
+                    new Facts::PositionChild { MasterPositionId = 5, ChildPositionId = 6 },
+                    new Facts::Position { Id = 6, Name = "Position6" }
+
+                    // no Facts::OrderPositionAdvertisement
+                )
+                .Aggregate(
+                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+
+                    new Aggregates::Position { Id = 5, Name = "Position5" },
+                    new Aggregates::Position { Id = 6, Name = "Position6" }
+                )
+                .Message();
+
+        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderPositionAdvertisementMustBeCreatedNegative
             => ArrangeMetadataElement
                 .Config
                 .Name(nameof(OrderPositionAdvertisementMustBeCreatedNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
-                    new Facts::PricePosition { Id = 4, PositionId = 5 },
-                    new Facts::Position { Id = 5, Name = "Position5", IsCompositionOptional = false, ChildPositionId = 6 },
+                    new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = true },
+                    new Facts::Position { Id = 5, Name = "Position5", IsCompositionOptional = false},
+                    new Facts::PositionChild { MasterPositionId = 5, ChildPositionId = 6 },
                     new Facts::Position { Id = 6, Name = "Position6" },
 
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 6, AdvertisementId = 7}
