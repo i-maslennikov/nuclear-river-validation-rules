@@ -31,28 +31,33 @@ function Deploy-ServiceBus ($entryPointName){
 	}
 
 	if ($serviceBusMetadata['CreateTopics']){
-		foreach($metadata in $serviceBusMetadata.CreateTopics.Values){
-			$connectionString = Get-EntryPointConnectionString $entryPointName $metadata.ConnectionStringName
-			Create-Topic $connectionString $metadata.Name $metadata.Properties
+		foreach($createTopicsMetadata in $serviceBusMetadata.CreateTopics.Values){
+			$connectionString = Get-EntryPointConnectionString $entryPointName $createTopicsMetadata.ConnectionStringName
+			Create-Topic $connectionString $createTopicsMetadata.Name $createTopicsMetadata.Properties
 		}
 	}
 	if ($serviceBusMetadata['DeleteTopics']){
-		foreach($metadata in $serviceBusMetadata.DeleteTopics.Values){
-			$connectionString = Get-EntryPointConnectionString $entryPointName $metadata.ConnectionStringName
-			Delete-Topic $connectionString $metadata.Name
+		foreach($deleteTopicsMetadata in $serviceBusMetadata.DeleteTopics.Values){
+			$connectionString = Get-EntryPointConnectionString $entryPointName $deleteTopicsMetadata.ConnectionStringName
+			Delete-Topic $connectionString $deleteTopicsMetadata.Name
 		}
 	}
 
+	$clearSubscriptions = $Metadata['UpdateSchemas'] -and $Metadata['UpdateSchemas'].Count -gt 0
+
 	if ($serviceBusMetadata['CreateSubscriptions']){
-		foreach($metadata in $serviceBusMetadata.CreateSubscriptions.Values){
-			$connectionString = Get-EntryPointConnectionString $entryPointName $metadata.ConnectionStringName
-			Create-Subscription $connectionString $metadata.TopicName $metadata.Name $metadata.Properties
+		foreach($createSubscriptionsMetadata in $serviceBusMetadata.CreateSubscriptions.Values){
+			$connectionString = Get-EntryPointConnectionString $entryPointName $createSubscriptionsMetadata.ConnectionStringName
+			Create-Subscription $connectionString $createSubscriptionsMetadata.TopicName $createSubscriptionsMetadata.Name $createSubscriptionsMetadata.Properties
+			if ($clearSubscriptions){
+				Clear-Subscription $connectionString $createSubscriptionsMetadata.TopicName $createSubscriptionsMetadata.Name
+			}
 		}
 	}
 	if ($serviceBusMetadata['DeleteSubscriptions']){
-		foreach($metadata in $serviceBusMetadata.DeleteSubscriptions.Values){
-			$connectionString = Get-EntryPointConnectionString $entryPointName $metadata.ConnectionStringName
-			Delete-Subscription $connectionString $metadata.TopicName $metadata.Name
+		foreach($deleteSubscriptionsMetadata in $serviceBusMetadata.DeleteSubscriptions.Values){
+			$connectionString = Get-EntryPointConnectionString $entryPointName $deleteSubscriptionsMetadata.ConnectionStringName
+			Delete-Subscription $connectionString $deleteSubscriptionsMetadata.TopicName $deleteSubscriptionsMetadata.Name
 		}
 	}
 }
