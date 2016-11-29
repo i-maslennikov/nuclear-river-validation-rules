@@ -100,7 +100,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::OrderPosition { Id = 21, OrderId = 2, PricePositionId = 21 },
                 new Facts::PricePosition { Id = 20, PriceId = 3, PositionId = 20, IsActiveNotDeleted = true },
                 new Facts::PricePosition { Id = 21, PriceId = 3, PositionId = 20, IsActiveNotDeleted = true },
-                new Facts::Position {Id = 20, Name = "Positio20" },
+                new Facts::Position {Id = 20, Name = "Position20" },
 
                 // 1 order, 1 price position, no position
                 new Facts::Order { Id = 3 },
@@ -147,10 +147,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 2, OrderId = 1, PricePositionId = 4 },
                     new Facts::OrderPositionAdvertisement { Id = 5, OrderPositionId = 2, PositionId = 7 },
                     new Facts::PricePosition { Id = 4, PriceId = 9, PositionId = 7, IsActiveNotDeleted = true },
+                    new Facts::Position { Id = 7, Name = "Position7" },
                     new Facts::DeniedPosition { Id = 11, PriceId = 9, PositionId = 7, PositionDeniedId = 14 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
                     new Aggregates::OrderDeniedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 7, CauseItemPositionId = 7, DeniedPositionId = 14, HasNoBinding = true, Source = "opas by price" },
-                    new Aggregates::OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, IsActive = true });
+                    new Aggregates::OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, OrderPositionName = "Position7", IsActive = true });
     }
 }

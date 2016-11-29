@@ -345,7 +345,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Position { Id = 36, BindingObjectType = 36 },
                 new Position { Id = 37, BindingObjectType = 37 },
 
-                new Position { Id = 999, BindingObjectType = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" });
+                new Position { Id = 999, BindingObjectType = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true, Name = "Name" },
+                new Position { Id = 1000, IsDeleted = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PricePositionFacts
