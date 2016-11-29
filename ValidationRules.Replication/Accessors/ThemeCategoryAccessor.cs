@@ -46,7 +46,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<ThemeCategory> dataObjects)
         {
-            var themeIds = dataObjects.Select(x => x.ThemeId).ToArray();
+            var themeIds = dataObjects.Select(x => x.ThemeId);
 
             return new EventCollectionHelper { { typeof(Theme), themeIds.Distinct() } };
         }
