@@ -40,13 +40,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 _query = query;
             }
 
-            public IQueryable<Position> GetSource()
-                => (from position in _query.For<Facts::Position>()
-                   select new Position
+            public IQueryable<Position> GetSource() => _query
+                   .For<Facts::Position>()
+                   .Where(x => !x.IsDeleted)
+                   .Select(x => new Position
                    {
-                       Id = position.Id,
-                       Name = position.Name,
-                   }).Distinct();
+                       Id = x.Id,
+                       Name = x.Name,
+                   });
 
             public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

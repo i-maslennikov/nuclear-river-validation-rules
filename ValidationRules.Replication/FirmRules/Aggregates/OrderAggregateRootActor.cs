@@ -105,6 +105,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                     from position in _query.For<Facts::Position>()
+                        .Where(x => !x.IsDeleted)
                         .Where(x => x.Platform != PlatformDesktop && x.Platform != PlatformIndependent)
                         .Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     select new Order.NotApplicapleForDesktopPosition { OrderId = orderPosition.OrderId }).Distinct();
@@ -130,7 +131,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
                     from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == SelfAdvertisementOnlyOnPc).Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                    from position in _query.For<Facts::Position>()
+                        .Where(x => !x.IsDeleted)
+                        .Where(x => x.CategoryCode == SelfAdvertisementOnlyOnPc)
+                        .Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     select new Order.SelfAdvertisementPosition { OrderId = orderPosition.OrderId }).Distinct();
 
             public FindSpecification<Order.SelfAdvertisementPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

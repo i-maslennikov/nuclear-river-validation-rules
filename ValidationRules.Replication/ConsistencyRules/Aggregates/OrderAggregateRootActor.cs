@@ -187,7 +187,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                   from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
+                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId)
                    let state = address.FirmId != order.FirmId ? InvalidFirmAddressState.NotBelongToFirm
                                 : address.IsDeleted ? InvalidFirmAddressState.Deleted
@@ -229,7 +229,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id && x.CategoryId.HasValue && x.FirmAddressId.HasValue)
-                   from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
+                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId && x.IsActive && !x.IsClosedForAscertainment && !x.IsDeleted)
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                    from cfa in _query.For<Facts::FirmAddressCategory>().Where(x => x.FirmAddressId == opa.FirmAddressId && x.CategoryId == opa.CategoryId).DefaultIfEmpty()
@@ -271,7 +271,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id && x.CategoryId.HasValue && x.FirmAddressId.HasValue)
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
-                   from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
+                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
                    let categoryBelongToFirmAddress = _query.For<Facts::FirmAddress>()
                                                            .SelectMany(fa => _query.For<Facts::FirmAddressCategory>().Where(cfa => cfa.FirmAddressId == fa.Id))
                                                            .Any(x => x.CategoryId == opa.CategoryId)

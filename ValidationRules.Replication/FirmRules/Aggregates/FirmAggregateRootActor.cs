@@ -99,7 +99,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     from firm in _query.For<Facts::Firm>()
                     select new { FirmId = firm.Id, Begin = DateTime.MinValue, End = DateTime.MaxValue, Has = false, Scope = Scope.ApprovedScope };
 
-                var specialPositions = _query.For<Facts::Position>().Select(x => new
+                var specialPositions = _query.For<Facts::Position>().Where(x => !x.IsDeleted).Select(x => new
                 {
                     x.Id,
                     IsAdvantageousPurchaseOnPc = x.CategoryCode == AdvantageousPurchaseWith2Gis && x.Platform == PlatformDesktop,

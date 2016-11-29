@@ -24,7 +24,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<Position> GetSource() => _query
             .For<Erm::Position>()
-            .Where(x => !x.IsDeleted)
             .Select(x => new Position
             {
                 Id = x.Id,
@@ -41,6 +40,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
                 CategoryCode = x.CategoryCode,
                 Platform = x.Platform,
+                IsDeleted = x.IsDeleted,
             });
 
         public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

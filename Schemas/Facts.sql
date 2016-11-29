@@ -364,6 +364,7 @@ create table Facts.Position(
 	IsComposite bit not null,
     CategoryCode bigint not null,
     [Platform] int not null,
+	IsDeleted bit not null,
     constraint PK_Position primary key (Id)
 )
 create index IX_Position_IsComposite ON Facts.Position (IsComposite)

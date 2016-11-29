@@ -97,7 +97,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                            join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                            join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                           join position in _query.For<Facts::Position>() on opa.PositionId equals position.Id
+                           join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted) on opa.PositionId equals position.Id
                            from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                            select new OrderPosition
                            {
@@ -119,7 +119,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                            join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                            join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                           join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
+                           join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
                            from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                            select new OrderPosition
                            {
@@ -159,7 +159,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public IQueryable<OrderPricePosition> GetSource()
                 =>
                     from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
                     from position in _query.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId)
                     select new OrderPricePosition
@@ -193,7 +193,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 => from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                    join adv in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals adv.OrderPositionId
-                   join position in _query.For<Facts::Position>().Where(x => x.IsControlledByAmount) on adv.PositionId equals position.Id
+                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsControlledByAmount) on adv.PositionId equals position.Id
                    select new AmountControlledPosition
                        {
                            OrderId = orderPosition.OrderId,
@@ -245,7 +245,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                     join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
+                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
                     from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                     select new
                         {
@@ -351,7 +351,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                     join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    join position in _query.For<Facts::Position>().Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
+                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
                     from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                     select new
                     {

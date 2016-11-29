@@ -17,5 +17,7 @@
 
         public long CategoryCode { get; set; }
         public int Platform { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

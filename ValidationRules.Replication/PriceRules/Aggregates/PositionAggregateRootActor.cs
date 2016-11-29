@@ -39,9 +39,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 _query = query;
             }
 
-            public IQueryable<Position> GetSource()
-                => from position in _query.For<Facts::Position>()
-                   select new Position { Id = position.Id, CategoryCode = position.CategoryCode, Name = position.Name };
+            public IQueryable<Position> GetSource() => _query
+                .For<Facts::Position>()
+                .Where(x => !x.IsDeleted)
+                .Select(position => new Position
+                {
+                    Id = position.Id,
+                    CategoryCode = position.CategoryCode,
+                    Name = position.Name
+                });
 
         public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

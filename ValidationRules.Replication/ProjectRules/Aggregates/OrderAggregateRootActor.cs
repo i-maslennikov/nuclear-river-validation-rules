@@ -104,7 +104,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                   from position in _query.For<Facts::Position>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == orderPositionAdvertisement.PositionId)
                    from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == orderPositionAdvertisement.FirmAddressId)
                    select new Order.AddressAdvertisement
                        {
@@ -137,7 +137,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                   from position in _query.For<Facts::Position>().Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == orderPositionAdvertisement.PositionId)
                    from category in _query.For<Facts::Category>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == orderPositionAdvertisement.CategoryId)
                    where orderPositionAdvertisement.CategoryId.HasValue
                    select new Order.CategoryAdvertisement
