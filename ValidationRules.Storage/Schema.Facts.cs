@@ -128,13 +128,8 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ReleaseWithdrawal>()
               .HasSchemaName(FactsSchema)
               .HasPrimaryKey(x => x.Id);
-            // TODO: хак чтобы не делать факты со сложным ключом
             builder.Entity<RulesetRule>()
-                  .HasSchemaName(FactsSchema)
-                  .HasPrimaryKey(x => x.Id)
-                  .HasPrimaryKey(x => x.RuleType)
-                  .HasPrimaryKey(x => x.DependentPositionId)
-                  .HasPrimaryKey(x => x.PrincipalPositionId);
+                  .HasSchemaName(FactsSchema);
             builder.Entity<SalesModelCategoryRestriction>()
                    .HasSchemaName(FactsSchema);
             builder.Entity<Theme>()

@@ -6,7 +6,6 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
-using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
@@ -25,22 +24,23 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IQueryable<RulesetRule> GetSource() =>
-            from ruleset in _query.For<Erm::Ruleset>().Where(x => x.Priority != RulesetDraftPriority && !x.IsDeleted)
+            from ruleset in _query.For<Erm::Ruleset>().Where(x => x.Priority != RulesetDraftPriority && !x.IsDeleted).OrderByDescending(x => x.Priority).Take(1)
             from rulesetRule in _query.For<Erm::RulesetRule>().Where(x => x.RulesetId == ruleset.Id)
             select new RulesetRule
                 {
-                    Id = rulesetRule.RulesetId,
+                    RulesetId = rulesetRule.RulesetId,
                     RuleType = rulesetRule.RuleType,
                     DependentPositionId = rulesetRule.DependentPositionId,
                     PrincipalPositionId = rulesetRule.PrincipalPositionId,
-                    Priority = ruleset.Priority,
                     ObjectBindingType = rulesetRule.ObjectBindingType
                 };
 
         public FindSpecification<RulesetRule> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return Specification<RulesetRule>.Create(x => x.Id, ids);
+            // Исходя из предположения, что в ERM происходит только опреации публикации нового набора правил,
+            // а по старому не происходит никаких событий, я не смотрю наидентификар правила,
+            // поскольку все старые стали неактуальными, а актуальные - всегда новые.
+            return new FindSpecification<RulesetRule>(x => true);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<RulesetRule> dataObjects)

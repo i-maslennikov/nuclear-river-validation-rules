@@ -267,17 +267,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .Erm(
                 new Erm::Ruleset { Id = 1, Priority = 1 },
                 new Erm::RulesetRule { RulesetId = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
+
                 new Erm::Ruleset { Id = 2, Priority = 2 },
                 new Erm::RulesetRule { RulesetId = 2, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
 
                 new Erm::Ruleset { Id = 3, IsDeleted = true },
                 new Erm::RulesetRule { RulesetId = 3 },
-                new Erm::RulesetRule { RulesetId = 0 }
-                )
+
+                new Erm::Ruleset { Id = 4, Priority = 0 },
+                new Erm::RulesetRule { RulesetId = 4 })
             .Fact(
-                new RulesetRule { Id = 1, Priority = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
-                new RulesetRule { Id = 2, Priority = 2, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
-                );
+                new RulesetRule { RulesetId = 2, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderFacts
