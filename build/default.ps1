@@ -77,6 +77,7 @@ Build-ConvertUseCasesService, `
 QueueBuild-Packages
 
 Task Deploy-Packages -depends `
+Stop-ReplicationHost, `
 Deploy-ServiceBus, `
 Update-Schemas, `
 Run-BulkTool, `
