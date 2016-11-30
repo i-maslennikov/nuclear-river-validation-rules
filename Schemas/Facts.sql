@@ -427,7 +427,6 @@ create table Facts.RulesetRule(
     RuleType int not null,
     DependentPositionId bigint not null,
     PrincipalPositionId bigint not null,
-    [Priority] int not null,
     ObjectBindingType int not null
 )
 create index IX_RulesetRule_Id ON Facts.RulesetRule (Id)
