@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<SalesModelCategoryRestriction> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<SalesModelCategoryRestriction>(x => ids.Contains(x.ProjectId));
+            return Specification<SalesModelCategoryRestriction>.Create(x => x.ProjectId, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<SalesModelCategoryRestriction> dataObjects)

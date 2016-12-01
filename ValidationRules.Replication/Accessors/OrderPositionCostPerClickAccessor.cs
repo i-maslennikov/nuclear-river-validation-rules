@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<OrderPositionCostPerClick> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<OrderPositionCostPerClick>(x => ids.Contains(x.OrderPositionId));
+            return Specification<OrderPositionCostPerClick>.Create(x => x.OrderPositionId, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrderPositionCostPerClick> dataObjects)

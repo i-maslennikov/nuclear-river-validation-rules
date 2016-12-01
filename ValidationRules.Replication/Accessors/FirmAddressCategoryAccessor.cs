@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<FirmAddressCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<FirmAddressCategory>(x => ids.Contains(x.Id));
+            return Specification<FirmAddressCategory>.Create(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<FirmAddressCategory> dataObjects)

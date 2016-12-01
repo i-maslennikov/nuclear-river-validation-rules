@@ -180,6 +180,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IBatchableSpecification.cs" />
+    <Compile Include="Specification.cs" />
     <Compile Include="Accessors\PositionChildAccessor.cs" />
     <Compile Include="AccountRules\Aggregates\AccountAggregateRootActor.cs" />
     <Compile Include="AccountRules\Aggregates\OrderAggregateRootActor.cs" />
