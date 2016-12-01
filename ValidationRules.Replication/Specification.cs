@@ -18,6 +18,8 @@ namespace NuClear.ValidationRules.Replication
 
         private sealed class Containment<TKey> : FindSpecification<T>, IBatchableSpecification<T>
         {
+            private static readonly Func<IEnumerable<TKey>, TKey, bool> Contains = Enumerable.Contains;
+
             private readonly Expression<Func<T, TKey>> _field;
             private readonly IReadOnlyCollection<TKey> _allowedKeys;
 
@@ -32,8 +34,7 @@ namespace NuClear.ValidationRules.Replication
             {
                 // x => allowedKeys.Contains(x.field)
 
-                Func<IEnumerable<TKey>, TKey, bool> x = Enumerable.Contains;
-                var body = Expression.Call(null, x.Method, Expression.Constant(allowedKeys), (MemberExpression)field.Body);
+                var body = Expression.Call(null, Contains.Method, Expression.Constant(allowedKeys), (MemberExpression)field.Body);
                 return Expression.Lambda<Func<T, bool>>(body, field.Parameters.Single());
             }
 
