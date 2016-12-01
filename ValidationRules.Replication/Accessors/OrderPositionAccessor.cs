@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<OrderPosition>(x => ids.Contains(x.Id));
+            return Specification<OrderPosition>.Create(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrderPosition> dataObjects)
