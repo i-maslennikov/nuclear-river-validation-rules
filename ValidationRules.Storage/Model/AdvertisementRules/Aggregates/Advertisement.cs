@@ -1,4 +1,6 @@
-﻿namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
+﻿using System;
+
+namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
 {
     public sealed class Advertisement
     {
@@ -47,6 +49,9 @@
             public int EndToBeginOffset { get; set; }
             public int EndToMonthBeginOffset { get; set; }
             public int MonthEndToBeginOffset { get; set; }
+
+            public DateTime BeginMonth { get; set; }
+            public DateTime EndMonth { get; set; }
         }
     }
 }

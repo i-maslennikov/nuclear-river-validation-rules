@@ -195,14 +195,19 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
                    from element in _query.For<Facts::AdvertisementElement>().Where(x => x.AdvertisementId == advertisement.Id)
                    where element.BeginDate != null && element.EndDate != null
+                   let beginDate = element.BeginDate.Value
+                   let endDate = element.EndDate.Value
                    select new Advertisement.ElementOffsetInDays
-                       {
-                           AdvertisementId = advertisement.Id,
-                           AdvertisementElementId = element.Id,
-                           EndToBeginOffset = (int)(element.EndDate.Value - element.BeginDate.Value).TotalDays + 1,
-                           EndToMonthBeginOffset = element.EndDate.Value.Day,
-                           MonthEndToBeginOffset = DateTime.DaysInMonth(element.BeginDate.Value.Year, element.BeginDate.Value.Month) - element.BeginDate.Value.Day + 1
-                       };
+                   {
+                        AdvertisementId = advertisement.Id,
+                        AdvertisementElementId = element.Id,
+                        EndToBeginOffset = (int)(endDate - beginDate).TotalDays + 1,
+                        EndToMonthBeginOffset = endDate.Day,
+                        MonthEndToBeginOffset = DateTime.DaysInMonth(beginDate.Year, beginDate.Month) - beginDate.Day + 1,
+
+                        BeginMonth = beginDate.Day == 1 ? beginDate : new DateTime(beginDate.Year, beginDate.Month, 1),
+                        EndMonth = endDate.Day == 1 ? endDate : new DateTime(endDate.AddMonths(1).Year, endDate.AddMonths(1).Month, 1),
+                   };
 
             public FindSpecification<Advertisement.ElementOffsetInDays> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

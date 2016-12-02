@@ -126,6 +126,7 @@
     <Compile Include="Composition\Composers\FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveDealMessageComposer.cs" />
+    <Compile Include="Composition\Composers\OrderPeriodMustContainAdvertisementPeriodMassMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionSalesModelMustMatchCategorySalesModelMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCostPerClickMustBeSpecifiedMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCostPerClickMustNotBeLessMinimumMessageComposer.cs" />
@@ -191,7 +192,7 @@
     <Compile Include="Composition\Composers\OrderEndDistrubutionShouldBeLastSecondOfMonthMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustNotContainDummyAdvertisementMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderPeriodMustContainAdvertisementPeriodMessageComposer.cs" />
+    <Compile Include="Composition\Composers\OrderPeriodMustContainAdvertisementPeriodSingleMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustBeCreatedMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCorrespontToInactivePositionMessageComposer.cs" />

@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// 
     /// Source: CouponPeriodOrderValidationRule/AdvertisementPeriodEndsBeforeReleasePeriodBegins
     /// </summary>
-    public sealed class OrderPeriodMustContainAdvertisementPeriod : ValidationResultAccessorBase
+    public sealed class OrderPeriodMustContainAdvertisementPeriodSingle : ValidationResultAccessorBase
     {
         private const int MaxOffsetInDays = 5;
 
@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public OrderPeriodMustContainAdvertisementPeriod(IQuery query) : base(query, MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod)
+        public OrderPeriodMustContainAdvertisementPeriodSingle(IQuery query) : base(query, MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodSingle)
         {
         }
 

@@ -151,6 +151,9 @@ create table AdvertisementAggregates.ElementOffsetInDays (
     EndToBeginOffset int not null,
     EndToMonthBeginOffset int not null,
     MonthEndToBeginOffset int not null,
+
+	BeginMonth datetime2(2) not null,
+	EndMonth datetime2(2) not null,
 )
 go
 
