@@ -43,15 +43,15 @@ function Deploy-ServiceBus ($entryPointName){
 		}
 	}
 
-	$clearSubscriptions = $Metadata['UpdateSchemas'] -and $Metadata['UpdateSchemas'].Count -gt 0
+	$recreateSubscriptions = $Metadata['UpdateSchemas'] -and $Metadata['UpdateSchemas'].Count -gt 0
 
 	if ($serviceBusMetadata['CreateSubscriptions']){
 		foreach($createSubscriptionsMetadata in $serviceBusMetadata.CreateSubscriptions.Values){
 			$connectionString = Get-EntryPointConnectionString $entryPointName $createSubscriptionsMetadata.ConnectionStringName
-			Create-Subscription $connectionString $createSubscriptionsMetadata.TopicName $createSubscriptionsMetadata.Name $createSubscriptionsMetadata.Properties
-			if ($clearSubscriptions){
-				Clear-Subscription $connectionString $createSubscriptionsMetadata.TopicName $createSubscriptionsMetadata.Name
+			if ($recreateSubscriptions){
+				Delete-Subscription $connectionString $createSubscriptionsMetadata.TopicName $createSubscriptionsMetadata.Name
 			}
+			Create-Subscription $connectionString $createSubscriptionsMetadata.TopicName $createSubscriptionsMetadata.Name $createSubscriptionsMetadata.Properties
 		}
 	}
 	if ($serviceBusMetadata['DeleteSubscriptions']){
