@@ -99,11 +99,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
 
             public FindSpecification<Project.ProjectDefaultTheme> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Project.ProjectDefaultTheme>(x => aggregateIds.Contains(x.ProjectId));
             }
         }
