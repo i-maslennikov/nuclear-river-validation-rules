@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                 from advertisement in query.For<Advertisement>().Where(x => x.FirmId == order.FirmId && x.IsSelectedToWhiteList)
                 from period in query.For<Firm.WhiteListDistributionPeriod>()
                                     .Where(x => x.FirmId == order.FirmId && x.Start < order.EndDistributionDatePlan && order.BeginDistributionDate < x.End)
-                                    .Where(x => x.ProvidedByOrderId.HasValue)
+                                    .Where(x => x.ProvidedByOrderId.HasValue).DefaultIfEmpty()
                 where period != null || order.ProvideWhiteListAdvertisement
                 select new Version.ValidationResult
                     {
