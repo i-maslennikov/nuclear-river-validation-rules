@@ -14,8 +14,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class RulesetRuleAccessor : IStorageBasedDataObjectAccessor<RulesetRule>, IDataChangesHandler<RulesetRule>
     {
-        private const int RulesetDraftPriority = 0;
-
         private readonly IQuery _query;
 
         public RulesetRuleAccessor(IQuery query)
@@ -23,17 +21,18 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<RulesetRule> GetSource() =>
-            from ruleset in _query.For<Erm::Ruleset>().Where(x => x.Priority != RulesetDraftPriority && !x.IsDeleted).OrderByDescending(x => x.Priority).Take(1)
-            from rulesetRule in _query.For<Erm::RulesetRule>().Where(x => x.RulesetId == ruleset.Id)
-            select new RulesetRule
-                {
-                    RulesetId = rulesetRule.RulesetId,
-                    RuleType = rulesetRule.RuleType,
-                    DependentPositionId = rulesetRule.DependentPositionId,
-                    PrincipalPositionId = rulesetRule.PrincipalPositionId,
-                    ObjectBindingType = rulesetRule.ObjectBindingType
-                };
+        public IQueryable<RulesetRule> GetSource()
+            => from ruleset in _query.For<Erm::Ruleset>().Where(x => !x.IsDeleted)
+               from rulesetRule in _query.For<Erm::RulesetRule>().Where(x => x.RulesetId == ruleset.Id)
+               where ruleset.Priority == _query.For<Erm::Ruleset>().Where(x => !x.IsDeleted).Select(x => x.Priority).Max()
+               select new RulesetRule
+                   {
+                       RulesetId = rulesetRule.RulesetId,
+                       RuleType = rulesetRule.RuleType,
+                       DependentPositionId = rulesetRule.DependentPositionId,
+                       PrincipalPositionId = rulesetRule.PrincipalPositionId,
+                       ObjectBindingType = rulesetRule.ObjectBindingType
+                   };
 
         public FindSpecification<RulesetRule> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
