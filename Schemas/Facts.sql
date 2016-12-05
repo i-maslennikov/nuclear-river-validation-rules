@@ -429,7 +429,6 @@ create table Facts.RulesetRule(
     PrincipalPositionId bigint not null,
     ObjectBindingType int not null
 )
-create index IX_RulesetRule_Id ON Facts.RulesetRule (Id)
 go
 
 create table Facts.SalesModelCategoryRestriction(
