@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         private readonly IBulkRepository<Advertisement.AdvertisementWebsite> _advertisementWebsiteBulkRepository;
         private readonly IBulkRepository<Advertisement.RequiredElementMissing> _requiredElementMissingBulkRepository;
         private readonly IBulkRepository<Advertisement.ElementNotPassedReview> _elementInvalidBulkRepository;
-        private readonly IBulkRepository<Advertisement.ElementOffsetInDays> _elementPeriodOffsetBulkRepository;
+        private readonly IBulkRepository<Advertisement.Coupon> _elementPeriodOffsetBulkRepository;
 
         public AdvertisementAggregateRootActor(
             IQuery query,
@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             IBulkRepository<Advertisement.AdvertisementWebsite> advertisementWebsiteBulkRepository,
             IBulkRepository<Advertisement.RequiredElementMissing> requiredElementMissingBulkRepository,
             IBulkRepository<Advertisement.ElementNotPassedReview> elementInvalidBulkRepository,
-            IBulkRepository<Advertisement.ElementOffsetInDays> elementPeriodOffsetBulkRepository)
+            IBulkRepository<Advertisement.Coupon> elementPeriodOffsetBulkRepository)
             : base(query, bulkRepository, equalityComparerFactory, new AdvertisementAccessor(query))
         {
             _query = query;
@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     new ValueObjectActor<Advertisement.AdvertisementWebsite>(_query, _advertisementWebsiteBulkRepository, _equalityComparerFactory, new AdvertisementWebsiteAccessor(_query)),
                     new ValueObjectActor<Advertisement.RequiredElementMissing>(_query, _requiredElementMissingBulkRepository, _equalityComparerFactory, new RequiredElementMissingAccessor(_query)),
                     new ValueObjectActor<Advertisement.ElementNotPassedReview>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementNotPassedReviewAccessor(_query)),
-                    new ValueObjectActor<Advertisement.ElementOffsetInDays>(_query, _elementPeriodOffsetBulkRepository, _equalityComparerFactory, new ElementOffsetInDaysAccessor(_query)),
+                    new ValueObjectActor<Advertisement.Coupon>(_query, _elementPeriodOffsetBulkRepository, _equalityComparerFactory, new CouponAccessor(_query)),
                 };
 
         public sealed class AdvertisementAccessor : IStorageBasedDataObjectAccessor<Advertisement>
@@ -182,32 +182,37 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementOffsetInDaysAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementOffsetInDays>
+        public sealed class CouponAccessor : IStorageBasedDataObjectAccessor<Advertisement.Coupon>
         {
             private readonly IQuery _query;
 
-            public ElementOffsetInDaysAccessor(IQuery query)
+            public CouponAccessor(IQuery query)
             {
                 _query = query;
             }
 
-            public IQueryable<Advertisement.ElementOffsetInDays> GetSource()
+            public IQueryable<Advertisement.Coupon> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
                    from element in _query.For<Facts::AdvertisementElement>().Where(x => x.AdvertisementId == advertisement.Id)
                    where element.BeginDate != null && element.EndDate != null
-                   select new Advertisement.ElementOffsetInDays
-                       {
-                           AdvertisementId = advertisement.Id,
-                           AdvertisementElementId = element.Id,
-                           EndToBeginOffset = (int)(element.EndDate.Value - element.BeginDate.Value).TotalDays + 1,
-                           EndToMonthBeginOffset = element.EndDate.Value.Day,
-                           MonthEndToBeginOffset = DateTime.DaysInMonth(element.BeginDate.Value.Year, element.BeginDate.Value.Month) - element.BeginDate.Value.Day + 1
-                       };
+                   let beginDate = element.BeginDate.Value
+                   let endDate = element.EndDate.Value
+                   select new Advertisement.Coupon
+                   {
+                        AdvertisementId = advertisement.Id,
+                        AdvertisementElementId = element.Id,
+                        DaysTotal = (int)(endDate - beginDate).TotalDays + 1,
+                        DaysFromMonthBeginToCouponEnd = endDate.Day,
+                        DaysFromCouponBeginToMonthEnd = DateTime.DaysInMonth(beginDate.Year, beginDate.Month) - beginDate.Day + 1,
 
-            public FindSpecification<Advertisement.ElementOffsetInDays> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+                        BeginMonth = beginDate.Day == 1 ? beginDate : new DateTime(beginDate.Year, beginDate.Month, 1),
+                        EndMonth = endDate.Day == 1 ? endDate : new DateTime(endDate.AddMonths(1).Year, endDate.AddMonths(1).Month, 1),
+                   };
+
+            public FindSpecification<Advertisement.Coupon> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Advertisement.ElementOffsetInDays>(x => aggregateIds.Contains(x.AdvertisementId));
+                return new FindSpecification<Advertisement.Coupon>(x => aggregateIds.Contains(x.AdvertisementId));
             }
         }
     }

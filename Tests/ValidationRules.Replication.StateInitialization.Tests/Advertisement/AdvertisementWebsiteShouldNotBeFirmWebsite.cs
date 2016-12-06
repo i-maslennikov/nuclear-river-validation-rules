@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Advertisement { Id = 6, Name = "Advertisement6", AdvertisementTemplateId =  9, FirmId = 1 },
                     new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
 
-                    new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, Text = "http://localhost" },
+                    new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, Text = "http://localhost/path" },
                     new Facts::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8", IsAdvertisementLink = true },
 
                     new Facts::Firm { Id = 1, Name = "Firm1", IsActive = true },
@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 1 },
-                    new Aggregates::Advertisement.AdvertisementWebsite { AdvertisementId = 6, Website = "http://localhost" },
+                    new Aggregates::Advertisement.AdvertisementWebsite { AdvertisementId = 6, Website = "http://localhost/path" },
 
                     new Aggregates::Position { Id = 5, Name = "Position5" },
                     new Aggregates::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8" },
@@ -77,7 +77,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Advertisement { Id = 6, Name = "Advertisement6", AdvertisementTemplateId = 9, FirmId = 1 },
                     new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
 
-                    new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, Text = "http://localhost" },
+                    new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, Text = "http://localhost/path" },
                     new Facts::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8", IsAdvertisementLink = true },
 
                     // firm not active
@@ -90,7 +90,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 1 },
-                    new Aggregates::Advertisement.AdvertisementWebsite { AdvertisementId = 6, Website = "http://localhost" },
+                    new Aggregates::Advertisement.AdvertisementWebsite { AdvertisementId = 6, Website = "http://localhost/path" },
 
                     new Aggregates::Position { Id = 5, Name = "Position5" },
                     new Aggregates::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8" },
@@ -116,7 +116,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Advertisement { Id = 6, Name = "Advertisement6", AdvertisementTemplateId = 9, FirmId = 1 },
                     new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
 
-                    new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, Text = "http://localhost" },
+                    new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, Text = "http://localhost/path" },
                     new Facts::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8", IsAdvertisementLink = true },
 
                     new Facts::Firm { Id = 1, Name = "Firm1", IsActive = true },
@@ -129,7 +129,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 1 },
-                    new Aggregates::Advertisement.AdvertisementWebsite { AdvertisementId = 6, Website = "http://localhost" },
+                    new Aggregates::Advertisement.AdvertisementWebsite { AdvertisementId = 6, Website = "http://localhost/path" },
 
                     new Aggregates::Position { Id = 5, Name = "Position5" },
                     new Aggregates::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8" },

@@ -2,9 +2,9 @@
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
-    public sealed class OrderPeriodMustContainAdvertisementPeriodMessageComposer : IMessageComposer
+    public sealed class OrderCouponPeriodInReleaseMustNotBeLessFiveDaysMessageComposer : IMessageComposer
     {
-        public MessageTypeCode MessageType => MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod;
+        public MessageTypeCode MessageType => MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays;
 
         public MessageComposerResult Compose(Version.ValidationResult validationResult)
         {

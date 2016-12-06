@@ -9,6 +9,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     public sealed partial class TestCaseMetadataSource
     {
+        private static readonly DateTime FirstDayDec = DateTime.Parse("2011-12-01");
         private static readonly DateTime FirstDayJan = DateTime.Parse("2012-01-01");
         private static readonly DateTime FirstDayFeb = DateTime.Parse("2012-02-01");
         private static readonly DateTime FirstDayMar = DateTime.Parse("2012-03-01");

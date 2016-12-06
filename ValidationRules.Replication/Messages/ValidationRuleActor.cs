@@ -158,7 +158,8 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new WhiteListAdvertisementMustPresent(_query),
                     new WhiteListAdvertisementMayPresent(_query),
                     new CouponMustBeSoldOnceAtTime(_query),
-                    new OrderPeriodMustContainAdvertisementPeriod(_query),
+                    new OrderCouponPeriodInReleaseMustNotBeLessFiveDays(_query),
+                    new OrderCouponPeriodMustBeInRelease(_query),
                     new AdvertisementWebsiteShouldNotBeFirmWebsite(_query),
                     new FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder(_query),
 
