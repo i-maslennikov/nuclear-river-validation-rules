@@ -137,11 +137,9 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<RulesetRule>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.RulesetId)
                    .HasPrimaryKey(x => x.RuleType)
                    .HasPrimaryKey(x => x.DependentPositionId)
-                   .HasPrimaryKey(x => x.PrincipalPositionId)
-                   .HasPrimaryKey(x => x.ObjectBindingType);
+                   .HasPrimaryKey(x => x.PrincipalPositionId);
             builder.Entity<SalesModelCategoryRestriction>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.ProjectId)

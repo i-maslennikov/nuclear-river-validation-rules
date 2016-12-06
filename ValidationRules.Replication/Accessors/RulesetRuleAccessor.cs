@@ -27,7 +27,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                where ruleset.Priority == _query.For<Erm::Ruleset>().Where(x => !x.IsDeleted).Select(x => x.Priority).Max()
                select new RulesetRule
                    {
-                       RulesetId = rulesetRule.RulesetId,
                        RuleType = rulesetRule.RuleType,
                        DependentPositionId = rulesetRule.DependentPositionId,
                        PrincipalPositionId = rulesetRule.PrincipalPositionId,
