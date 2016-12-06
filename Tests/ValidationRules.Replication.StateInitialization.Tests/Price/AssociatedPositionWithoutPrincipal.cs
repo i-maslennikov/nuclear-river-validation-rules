@@ -24,8 +24,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Position { Id = 4, IsComposite = true },
                     new Facts::OrderPositionAdvertisement { Id = 5, OrderPositionId = 2, PositionId = 6 },
 
-                    new Facts::RulesetRule { RulesetId = 7, RuleType = 1, DependentPositionId = 6, PrincipalPositionId = 8 },
-                    new Facts::RulesetRule { RulesetId = 9, RuleType = 1, DependentPositionId = 4, PrincipalPositionId = 10 })
+                    new Facts::RulesetRule { RuleType = 1, DependentPositionId = 6, PrincipalPositionId = 8 },
+                    new Facts::RulesetRule { RuleType = 1, DependentPositionId = 4, PrincipalPositionId = 10 })
                 .Aggregate(
                     new Aggregates::OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 6, PrincipalPositionId = 8, HasNoBinding = true, Source = "opas by ruleset" },
                     new Aggregates::OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 10, HasNoBinding = true, Source = "pkgs by ruleset" });
