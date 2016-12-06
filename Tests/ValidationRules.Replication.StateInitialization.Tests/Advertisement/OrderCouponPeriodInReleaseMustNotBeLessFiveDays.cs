@@ -12,10 +12,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement OrderPeriodMustContainAdvertisementPeriodSinglePositive
+        private static ArrangeMetadataElement OrderCouponPeriodInReleaseMustNotBeLessFiveDaysPositive
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(OrderPeriodMustContainAdvertisementPeriodSinglePositive))
+                .Name(nameof(OrderCouponPeriodInReleaseMustNotBeLessFiveDaysPositive))
                 .Fact(
                     new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodSingle,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
                         Result = 254,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodMass,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         Result = 252,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodSingle,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
                         Result = 254,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
@@ -74,7 +74,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodSingle,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
                         Result = 254,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,

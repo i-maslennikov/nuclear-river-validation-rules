@@ -180,7 +180,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdvertisementRules\Validation\OrderPeriodMustContainAdvertisementPeriodMass.cs" />
+    <Compile Include="AdvertisementRules\Validation\OrderCouponPeriodMustBeInRelease.cs" />
     <Compile Include="IBatchableSpecification.cs" />
     <Compile Include="Specification.cs" />
     <Compile Include="Accessors\PositionChildAccessor.cs" />
@@ -211,7 +211,7 @@
     <Compile Include="Accessors\PositionAccessor.cs" />
     <Compile Include="Accessors\AdvertisementTemplateAccessor.cs" />
     <Compile Include="AdvertisementRules\Validation\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
-    <Compile Include="AdvertisementRules\Validation\OrderPeriodMustContainAdvertisementPeriodSingle.cs" />
+    <Compile Include="AdvertisementRules\Validation\OrderCouponPeriodInReleaseMustNotBeLessFiveDays.cs" />
     <Compile Include="AdvertisementRules\Validation\CouponMustBeSoldOnceAtTime.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMayPresent.cs" />
