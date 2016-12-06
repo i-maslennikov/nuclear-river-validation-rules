@@ -9,6 +9,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     public sealed partial class TestCaseMetadataSource
     {
+        private static readonly DateTime FirstDayDec = DateTime.Parse("2011-12-01");
         private static readonly DateTime FirstDayJan = DateTime.Parse("2012-01-01");
         private static readonly DateTime FirstDayFeb = DateTime.Parse("2012-02-01");
         private static readonly DateTime FirstDayMar = DateTime.Parse("2012-03-01");
@@ -267,17 +268,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .Erm(
                 new Erm::Ruleset { Id = 1, Priority = 1 },
                 new Erm::RulesetRule { RulesetId = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
+
                 new Erm::Ruleset { Id = 2, Priority = 2 },
                 new Erm::RulesetRule { RulesetId = 2, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
 
                 new Erm::Ruleset { Id = 3, IsDeleted = true },
                 new Erm::RulesetRule { RulesetId = 3 },
-                new Erm::RulesetRule { RulesetId = 0 }
-                )
+
+                new Erm::Ruleset { Id = 4, Priority = 0 },
+                new Erm::RulesetRule { RulesetId = 4 })
             .Fact(
-                new RulesetRule { Id = 1, Priority = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
-                new RulesetRule { Id = 2, Priority = 2, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 }
-                );
+                new RulesetRule { DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderFacts

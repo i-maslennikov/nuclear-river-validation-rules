@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<ReleaseInfo> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<ReleaseInfo>(x => ids.Contains(x.Id));
+            return Specification<ReleaseInfo>.Create(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<ReleaseInfo> dataObjects)

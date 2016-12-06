@@ -92,11 +92,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.3.3.1-custom-enumerati0006\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.3.3.1-custom-enumerati0006\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
@@ -180,6 +180,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvertisementRules\Validation\OrderCouponPeriodMustBeInRelease.cs" />
+    <Compile Include="IBatchableSpecification.cs" />
+    <Compile Include="Specification.cs" />
     <Compile Include="Accessors\PositionChildAccessor.cs" />
     <Compile Include="AccountRules\Aggregates\AccountAggregateRootActor.cs" />
     <Compile Include="AccountRules\Aggregates\OrderAggregateRootActor.cs" />
@@ -208,7 +211,7 @@
     <Compile Include="Accessors\PositionAccessor.cs" />
     <Compile Include="Accessors\AdvertisementTemplateAccessor.cs" />
     <Compile Include="AdvertisementRules\Validation\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
-    <Compile Include="AdvertisementRules\Validation\OrderPeriodMustContainAdvertisementPeriod.cs" />
+    <Compile Include="AdvertisementRules\Validation\OrderCouponPeriodInReleaseMustNotBeLessFiveDays.cs" />
     <Compile Include="AdvertisementRules\Validation\CouponMustBeSoldOnceAtTime.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMayPresent.cs" />

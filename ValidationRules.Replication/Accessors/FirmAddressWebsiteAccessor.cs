@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<FirmAddressWebsite> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return new FindSpecification<FirmAddressWebsite>(x => ids.Contains(x.Id));
+            return Specification<FirmAddressWebsite>.Create(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<FirmAddressWebsite> dataObjects) => Array.Empty<IEvent>();

@@ -57,9 +57,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                         MessageTypeCode.AdvertisementMustBelongToFirm,
                         MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
                         MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
+                        MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         MessageTypeCode.OrderMustHaveAdvertisement,
                         MessageTypeCode.OrderMustNotContainDummyAdvertisement,
-                        MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod,
                         MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
                         MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
                         MessageTypeCode.WhiteListAdvertisementMayPresent,
@@ -148,11 +149,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public FindSpecification<Order.MissingAdvertisementReference> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.MissingAdvertisementReference>(x => aggregateIds.Contains(x.OrderId));
             }
         }
@@ -191,11 +188,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public FindSpecification<Order.MissingOrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.MissingOrderPositionAdvertisement>(x => aggregateIds.Contains(x.OrderId));
             }
         }
@@ -274,11 +267,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public FindSpecification<Order.AdvertisementMustBelongToFirm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.AdvertisementMustBelongToFirm>(x => aggregateIds.Contains(x.OrderId));
             }
         }
@@ -314,11 +303,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public FindSpecification<Order.AdvertisementIsDummy> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.AdvertisementIsDummy>(x => aggregateIds.Contains(x.OrderId));
             }
         }
@@ -371,11 +356,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public FindSpecification<Order.CouponDistributionPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.CouponDistributionPeriod>(x => aggregateIds.Contains(x.OrderId));
             }
 
@@ -403,8 +384,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementElementMustPassReview,
                         MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                        MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
+                        MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         MessageTypeCode.OrderMustHaveAdvertisement,
-                        MessageTypeCode.OrderPeriodMustContainAdvertisementPeriod,
                     };
 
             public IQueryable<Order.OrderPositionAdvertisement> GetSource()
@@ -422,11 +404,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public FindSpecification<Order.OrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<CreateDataObjectCommand>().Select(c => c.DataObjectId)
-                                           .Concat(commands.OfType<SyncDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
-                                           .Distinct()
-                                           .ToArray();
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.OrderPositionAdvertisement>(x => aggregateIds.Contains(x.OrderId));
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
+﻿using System;
+
+namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
 {
     public sealed class Advertisement
     {
@@ -38,15 +40,18 @@
             public ReviewStatus Status { get; set; }
         }
 
-        public sealed class ElementOffsetInDays
+        public sealed class Coupon
         {
             public long AdvertisementId { get; set; }
 
             public long AdvertisementElementId { get; set; }
 
-            public int EndToBeginOffset { get; set; }
-            public int EndToMonthBeginOffset { get; set; }
-            public int MonthEndToBeginOffset { get; set; }
+            public int DaysTotal { get; set; }
+            public int DaysFromMonthBeginToCouponEnd { get; set; }
+            public int DaysFromCouponBeginToMonthEnd { get; set; }
+
+            public DateTime BeginMonth { get; set; }
+            public DateTime EndMonth { get; set; }
         }
     }
 }

@@ -423,14 +423,12 @@ CREATE NONCLUSTERED INDEX IX_ReleaseWithdrawal_OrderPositionId ON [Facts].[Relea
 GO
 
 create table Facts.RulesetRule(
-    Id bigint not null,
     RuleType int not null,
     DependentPositionId bigint not null,
     PrincipalPositionId bigint not null,
-    [Priority] int not null,
     ObjectBindingType int not null
+    constraint PK_RulesetRule primary key (RuleType, DependentPositionId, PrincipalPositionId)
 )
-create index IX_RulesetRule_Id ON Facts.RulesetRule (Id)
 go
 
 create table Facts.SalesModelCategoryRestriction(

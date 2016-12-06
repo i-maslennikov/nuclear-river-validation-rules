@@ -44,7 +44,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuClear.River.StateInitialization.3.2.0-beta\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuClear.River.StateInitialization.3.3.1-custom-enumerati0006\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
@@ -56,7 +56,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.StateInitialization.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuClear.River.StateInitialization.3.2.0-beta\lib\net461\2GIS.NuClear.StateInitialization.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuClear.River.StateInitialization.3.3.1-custom-enumerati0006\lib\net461\2GIS.NuClear.StateInitialization.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
@@ -112,7 +112,8 @@
     <Compile Include="Account\AccountBalanceShouldBePositive.cs" />
     <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Advertisement\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
-    <Compile Include="Advertisement\OrderPeriodMustContainAdvertisementPeriod.cs" />
+    <Compile Include="Advertisement\OrderCouponPeriodMustBeInRelease.cs" />
+    <Compile Include="Advertisement\OrderCouponPeriodInReleaseMustNotBeLessFiveDays.cs" />
     <Compile Include="Advertisement\CouponMustBeSoldOnceAtTime.cs" />
     <Compile Include="Advertisement\WhiteListAdvertisementMustPresent.cs" />
     <Compile Include="Advertisement\AdvertisementMustBelongToFirm.cs" />
