@@ -34,10 +34,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var ruleResults = from order in query.For<Order>()
                               from opa in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
                               from advertisement in query.For<Advertisement>().Where(x => x.Id == opa.AdvertisementId)
-                              from elementOffset in query.For<Advertisement.ElementOffsetInDays>().Where(x => x.AdvertisementId == advertisement.Id)
-                              where elementOffset.EndToBeginOffset < MaxOffsetInDays ||
-                                    elementOffset.EndToMonthBeginOffset < MaxOffsetInDays ||
-                                    elementOffset.MonthEndToBeginOffset < MaxOffsetInDays
+                              from elementOffset in query.For<Advertisement.Coupon>().Where(x => x.AdvertisementId == advertisement.Id)
+                              where elementOffset.DaysTotal < MaxOffsetInDays ||
+                                    elementOffset.DaysFromMonthBeginToCouponEnd < MaxOffsetInDays ||
+                                    elementOffset.DaysFromCouponBeginToMonthEnd < MaxOffsetInDays
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",

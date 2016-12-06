@@ -16,7 +16,7 @@ if object_id('AdvertisementAggregates.AdvertisementWebsite') is not null drop ta
 if object_id('AdvertisementAggregates.RequiredElementMissing') is not null drop table AdvertisementAggregates.RequiredElementMissing
 if object_id('AdvertisementAggregates.ElementNotPassedReview') is not null drop table AdvertisementAggregates.ElementNotPassedReview
 if object_id('AdvertisementAggregates.ElementPeriod') is not null drop table AdvertisementAggregates.ElementPeriod
-if object_id('AdvertisementAggregates.ElementOffsetInDays') is not null drop table AdvertisementAggregates.ElementOffsetInDays
+if object_id('AdvertisementAggregates.Coupon') is not null drop table AdvertisementAggregates.Coupon
 
 if object_id('AdvertisementAggregates.AdvertisementElementTemplate') is not null drop table AdvertisementAggregates.AdvertisementElementTemplate
 
@@ -145,15 +145,15 @@ create table AdvertisementAggregates.ElementNotPassedReview (
 )
 go
 
-create table AdvertisementAggregates.ElementOffsetInDays (
+create table AdvertisementAggregates.Coupon (
     AdvertisementId bigint not null,
     AdvertisementElementId bigint not null,
-    EndToBeginOffset int not null,
-    EndToMonthBeginOffset int not null,
-    MonthEndToBeginOffset int not null,
+    DaysTotal int not null,
+    DaysFromMonthBeginToCouponEnd int not null,
+    DaysFromCouponBeginToMonthEnd int not null,
 
-	BeginMonth datetime2(2) not null,
-	EndMonth datetime2(2) not null,
+    BeginMonth datetime2(2) not null,
+    EndMonth datetime2(2) not null,
 )
 go
 

@@ -115,7 +115,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AdvertisementAggregates::Advertisement.AdvertisementWebsite),
                             typeof(AdvertisementAggregates::Advertisement.RequiredElementMissing),
                             typeof(AdvertisementAggregates::Advertisement.ElementNotPassedReview),
-                            typeof(AdvertisementAggregates::Advertisement.ElementOffsetInDays),
+                            typeof(AdvertisementAggregates::Advertisement.Coupon),
                             typeof(AdvertisementAggregates::AdvertisementElementTemplate),
                             typeof(AdvertisementAggregates::Firm),
                             typeof(AdvertisementAggregates::Firm.FirmWebsite),

@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var dtos =
                 from order in query.For<Order>()
                 from opa in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
-                from offset in query.For<Advertisement.ElementOffsetInDays>().Where(x => x.AdvertisementId == opa.AdvertisementId)
+                from offset in query.For<Advertisement.Coupon>().Where(x => x.AdvertisementId == opa.AdvertisementId)
                 select new
                     {
                         opa.OrderId,

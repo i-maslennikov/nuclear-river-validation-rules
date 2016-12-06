@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
@@ -38,10 +38,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Aggregates::Position { Id = 5, Name = "Position5" },
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 8, EndToBeginOffset = 1, EndToMonthBeginOffset = 11, MonthEndToBeginOffset = 21, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 9, EndToBeginOffset = 32, EndToMonthBeginOffset = 1, MonthEndToBeginOffset = 31, BeginMonth = FirstDayDec, EndMonth = FirstDayJan },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 10, EndToBeginOffset = 32, EndToMonthBeginOffset = 31, MonthEndToBeginOffset = 1, BeginMonth = FirstDayDec, EndMonth = FirstDayFeb },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 11, EndToBeginOffset = 6, EndToMonthBeginOffset = 6, MonthEndToBeginOffset = 31, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb }
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 8, DaysTotal = 1, DaysFromMonthBeginToCouponEnd = 11, DaysFromCouponBeginToMonthEnd = 21, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 9, DaysTotal = 32, DaysFromMonthBeginToCouponEnd = 1, DaysFromCouponBeginToMonthEnd = 31, BeginMonth = FirstDayDec, EndMonth = FirstDayJan },
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 10, DaysTotal = 32, DaysFromMonthBeginToCouponEnd = 31, DaysFromCouponBeginToMonthEnd = 1, BeginMonth = FirstDayDec, EndMonth = FirstDayFeb },
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 11, DaysTotal = 6, DaysFromMonthBeginToCouponEnd = 6, DaysFromCouponBeginToMonthEnd = 31, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
