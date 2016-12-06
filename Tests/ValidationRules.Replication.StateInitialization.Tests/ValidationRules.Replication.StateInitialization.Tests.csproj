@@ -112,8 +112,8 @@
     <Compile Include="Account\AccountBalanceShouldBePositive.cs" />
     <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Advertisement\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
-    <Compile Include="Advertisement\OrderPeriodMustContainAdvertisementPeriodMass.cs" />
-    <Compile Include="Advertisement\OrderPeriodMustContainAdvertisementPeriodSingle.cs" />
+    <Compile Include="Advertisement\OrderCouponPeriodMustBeInRelease.cs" />
+    <Compile Include="Advertisement\OrderCouponPeriodInReleaseMustNotBeLessFiveDays.cs" />
     <Compile Include="Advertisement\CouponMustBeSoldOnceAtTime.cs" />
     <Compile Include="Advertisement\WhiteListAdvertisementMustPresent.cs" />
     <Compile Include="Advertisement\AdvertisementMustBelongToFirm.cs" />

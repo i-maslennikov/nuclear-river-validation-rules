@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
@@ -12,10 +12,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement OrderPeriodMustContainAdvertisementPeriodSinglePositive
+        private static ArrangeMetadataElement OrderCouponPeriodInReleaseMustNotBeLessFiveDaysPositive
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(OrderPeriodMustContainAdvertisementPeriodSinglePositive))
+                .Name(nameof(OrderCouponPeriodInReleaseMustNotBeLessFiveDaysPositive))
                 .Fact(
                     new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
@@ -38,16 +38,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Aggregates::Position { Id = 5, Name = "Position5" },
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 8, EndToBeginOffset = 1, EndToMonthBeginOffset = 11, MonthEndToBeginOffset = 21, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 9, EndToBeginOffset = 32, EndToMonthBeginOffset = 1, MonthEndToBeginOffset = 31, BeginMonth = FirstDayDec, EndMonth = FirstDayJan },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 10, EndToBeginOffset = 32, EndToMonthBeginOffset = 31, MonthEndToBeginOffset = 1, BeginMonth = FirstDayDec, EndMonth = FirstDayFeb },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 11, EndToBeginOffset = 6, EndToMonthBeginOffset = 6, MonthEndToBeginOffset = 31, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb }
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 8, DaysTotal = 1, DaysFromMonthBeginToCouponEnd = 11, DaysFromCouponBeginToMonthEnd = 21, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 9, DaysTotal = 32, DaysFromMonthBeginToCouponEnd = 1, DaysFromCouponBeginToMonthEnd = 31, BeginMonth = FirstDayDec, EndMonth = FirstDayJan },
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 10, DaysTotal = 32, DaysFromMonthBeginToCouponEnd = 31, DaysFromCouponBeginToMonthEnd = 1, BeginMonth = FirstDayDec, EndMonth = FirstDayFeb },
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 11, DaysTotal = 6, DaysFromMonthBeginToCouponEnd = 6, DaysFromCouponBeginToMonthEnd = 31, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodSingle,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
                         Result = 254,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodMass,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         Result = 252,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodSingle,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
                         Result = 254,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
@@ -74,7 +74,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodSingle,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
                         Result = 254,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,

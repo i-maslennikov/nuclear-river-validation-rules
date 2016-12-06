@@ -76,9 +76,9 @@
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
 
         CouponMustBeSoldOnceAtTime = 65,
-        OrderPeriodMustContainAdvertisementPeriodSingle = 66,
+        OrderCouponPeriodInReleaseMustNotBeLessFiveDays = 66,
         AdvertisementWebsiteShouldNotBeFirmWebsite = 67,
         FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder = 68,
-        OrderPeriodMustContainAdvertisementPeriodMass = 69,
+        OrderCouponPeriodMustBeInRelease = 69,
     }
 }

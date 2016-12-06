@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
@@ -12,10 +12,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement OrderPeriodMustContainAdvertisementPeriodMassPositive
+        private static ArrangeMetadataElement OrderCouponPeriodMustBeInReleasePositive
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(OrderPeriodMustContainAdvertisementPeriodMassPositive))
+                .Name(nameof(OrderCouponPeriodMustBeInReleasePositive))
                 .Aggregate(
                     new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayMay },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId =  4, PositionId = 5, AdvertisementId = 6 },
@@ -23,15 +23,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Aggregates::Position { Id = 5, Name = "Position5" },
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 6, AdvertisementElementId = 8, EndToBeginOffset = 5, EndToMonthBeginOffset = 5, MonthEndToBeginOffset = 5, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 8, DaysTotal = 5, DaysFromMonthBeginToCouponEnd = 5, DaysFromCouponBeginToMonthEnd = 5, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
                     new Aggregates::Advertisement { Id = 7, Name = "Advertisement7" },
-                    new Aggregates::Advertisement.ElementOffsetInDays { AdvertisementId = 7, AdvertisementElementId = 9, EndToBeginOffset = 5, EndToMonthBeginOffset = 5, MonthEndToBeginOffset = 5, BeginMonth = FirstDayMar, EndMonth = FirstDayApr }
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 7, AdvertisementElementId = 9, DaysTotal = 5, DaysFromMonthBeginToCouponEnd = 5, DaysFromCouponBeginToMonthEnd = 5, BeginMonth = FirstDayMar, EndMonth = FirstDayApr }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"6\" name=\"Advertisement6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodMass,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         Result = 252,
                         PeriodStart = FirstDayFeb,
                         PeriodEnd = FirstDayMay,
@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"7\" name=\"Advertisement7\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodMass,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         Result = 252,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayMar,
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><advertisement id = \"7\" name=\"Advertisement7\" /></root>"),
-                        MessageType = (int)MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodMass,
+                        MessageType = (int)MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         Result = 252,
                         PeriodStart = FirstDayApr,
                         PeriodEnd = FirstDayMay,

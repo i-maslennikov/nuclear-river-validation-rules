@@ -10,13 +10,13 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Для ЭРМ с указанными датами размещения, срок размещения не должн быть менее пяти дней
+    /// Для ЭРМ с указанными датами размещения, срок размещения не должн быть менее пяти дней в релизе
     /// 
     /// "Период размещения рекламного материала {0}, выбранного в позиции {1} должен захватывать 5 дней от текущего месяца размещения"
     /// 
     /// Source: CouponPeriodOrderValidationRule/AdvertisementPeriodEndsBeforeReleasePeriodBegins
     /// </summary>
-    public sealed class OrderPeriodMustContainAdvertisementPeriodSingle : ValidationResultAccessorBase
+    public sealed class OrderCouponPeriodInReleaseMustNotBeLessFiveDays : ValidationResultAccessorBase
     {
         private const int MaxOffsetInDays = 5;
 
@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public OrderPeriodMustContainAdvertisementPeriodSingle(IQuery query) : base(query, MessageTypeCode.OrderPeriodMustContainAdvertisementPeriodSingle)
+        public OrderCouponPeriodInReleaseMustNotBeLessFiveDays(IQuery query) : base(query, MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays)
         {
         }
 
@@ -34,10 +34,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var ruleResults = from order in query.For<Order>()
                               from opa in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
                               from advertisement in query.For<Advertisement>().Where(x => x.Id == opa.AdvertisementId)
-                              from elementOffset in query.For<Advertisement.ElementOffsetInDays>().Where(x => x.AdvertisementId == advertisement.Id)
-                              where elementOffset.EndToBeginOffset < MaxOffsetInDays ||
-                                    elementOffset.EndToMonthBeginOffset < MaxOffsetInDays ||
-                                    elementOffset.MonthEndToBeginOffset < MaxOffsetInDays
+                              from elementOffset in query.For<Advertisement.Coupon>().Where(x => x.AdvertisementId == advertisement.Id)
+                              where elementOffset.DaysTotal < MaxOffsetInDays ||
+                                    elementOffset.DaysFromMonthBeginToCouponEnd < MaxOffsetInDays ||
+                                    elementOffset.DaysFromCouponBeginToMonthEnd < MaxOffsetInDays
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",

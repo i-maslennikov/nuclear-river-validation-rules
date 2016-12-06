@@ -247,7 +247,7 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Advertisement.ElementNotPassedReview>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.ElementOffsetInDays>()
+            builder.Entity<AdvertisementAggregates::Advertisement.Coupon>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
 
             builder.Entity<AdvertisementAggregates::AdvertisementElementTemplate>()
