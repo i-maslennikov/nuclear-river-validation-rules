@@ -52,19 +52,22 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<RulesetRule> dataObjects)
         {
-            var positionIds = dataObjects.Select(x => x.DependentPositionId);
+            var positionIds = dataObjects.Select(x => x.DependentPositionId)
+                .Union(dataObjects.Select(x => x.PrincipalPositionId));
 
             // Для пакетов и простых позиций
             var orderIdsFromPricePostion =
                 from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
                 from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
-                select orderPosition.OrderId;
+                from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
+                select order.Id;
 
             // Для элементов пакетов и простых позиций
             var orderIdsFromOpa =
                 from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
                 from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
-                select orderPosition.OrderId;
+                from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
+                select order.Id;
 
             return new EventCollectionHelper { { typeof(Order), orderIdsFromPricePostion.Union(orderIdsFromOpa) } };
         }
