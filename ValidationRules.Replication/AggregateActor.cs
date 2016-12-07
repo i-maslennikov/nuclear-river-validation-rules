@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using LinqToDB.Common;
+
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.Commands;
@@ -32,11 +34,11 @@ namespace NuClear.ValidationRules.Replication
                         .Distinct()
                         .ToArray();
 
-            var events = new List<IEvent>();
+            IEnumerable<IEvent> events = Array<IEvent>.Empty;
 
             if (!aggregateCommands.Any())
             {
-                return events;
+                return Array<IEvent>.Empty;
             }
 
             using (Probe.Create("Aggregate", _aggregateRootActor.EntityType.Name))
@@ -49,7 +51,7 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplaceValueObjectCommand(next.AggregateRootId)
                                                      })
                                      .ToArray();
-                events.AddRange(_leafToRootActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_leafToRootActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
                     aggregateCommands.OfType<InitializeAggregateCommand>()
@@ -59,7 +61,7 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplaceValueObjectCommand(next.AggregateRootId)
                                                      })
                                      .ToArray();
-                events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
                     aggregateCommands.OfType<RecalculateAggregateCommand>()
@@ -69,7 +71,7 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplaceValueObjectCommand(next.AggregateRootId)
                                                      })
                                      .ToArray();
-                events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
                     aggregateCommands.OfType<RecalculateEntityCommand>()
@@ -79,7 +81,7 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplaceValueObjectCommand(next.AggregateRootId, next.EntityId)
                                                      })
                                      .ToArray();
-                events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
                     aggregateCommands.OfType<RecalculatePeriodAggregateCommand>()
@@ -89,9 +91,9 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplacePeriodValueObjectCommand(next.PeriodKey)
                                                      })
                                      .ToArray();
-                events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
 
-                return events;
+                return events.ToArray();
             }
         }
     }
