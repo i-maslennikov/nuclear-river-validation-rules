@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.Replication
 
             using (Probe.Create("Aggregate", _aggregateRootActor.EntityType.Name))
             {
-                IReadOnlyCollection<ICommand> commandsToExecute =
+                var destroyCommands =
                     aggregateCommands.OfType<DestroyAggregateCommand>()
                                      .SelectMany(next => new ICommand[]
                                                      {
@@ -51,9 +51,9 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplaceValueObjectCommand(next.AggregateRootId)
                                                      })
                                      .ToArray();
-                events = events.Union(_leafToRootActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_leafToRootActor.ExecuteCommands(destroyCommands));
 
-                commandsToExecute =
+                var initializeCommands =
                     aggregateCommands.OfType<InitializeAggregateCommand>()
                                      .SelectMany(next => new ICommand[]
                                                      {
@@ -61,9 +61,9 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplaceValueObjectCommand(next.AggregateRootId)
                                                      })
                                      .ToArray();
-                events = events.Union(_rootToLeafActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_rootToLeafActor.ExecuteCommands(initializeCommands));
 
-                commandsToExecute =
+                var recalculateCommands =
                     aggregateCommands.OfType<RecalculateAggregateCommand>()
                                      .SelectMany(next => new ICommand[]
                                                      {
@@ -71,9 +71,9 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplaceValueObjectCommand(next.AggregateRootId)
                                                      })
                                      .ToArray();
-                events = events.Union(_rootToLeafActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_rootToLeafActor.ExecuteCommands(recalculateCommands));
 
-                commandsToExecute =
+                var recalculatePeriodCommands =
                     aggregateCommands.OfType<RecalculatePeriodAggregateCommand>()
                                      .SelectMany(next => new ICommand[]
                                                      {
@@ -81,7 +81,7 @@ namespace NuClear.ValidationRules.Replication
                                                          new ReplacePeriodValueObjectCommand(next.PeriodKey)
                                                      })
                                      .ToArray();
-                events = events.Union(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
+                events = events.Union(_subrootToLeafActor.ExecuteCommands(recalculatePeriodCommands));
 
                 return events.ToArray();
             }
