@@ -43,61 +43,51 @@ namespace NuClear.ValidationRules.Replication
             {
                 IReadOnlyCollection<ICommand> commandsToExecute =
                     aggregateCommands.OfType<DestroyAggregateCommand>()
-                                     .Aggregate(new List<ICommand>(),
-                                         (result, next) =>
-                                             {
-                                                 result.Add(new DeleteDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
-                                                 result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
-                                                 return result;
-                                             })
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new DeleteDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
+                                                         new ReplaceValueObjectCommand(next.AggregateRootId)
+                                                     })
                                      .ToArray();
                 events.AddRange(_leafToRootActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
                     aggregateCommands.OfType<InitializeAggregateCommand>()
-                                     .Aggregate(new List<ICommand>(),
-                                         (result, next) =>
-                                             {
-                                                 result.Add(new CreateDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
-                                                 result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
-                                                 return result;
-                                             })
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new CreateDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
+                                                         new ReplaceValueObjectCommand(next.AggregateRootId)
+                                                     })
                                      .ToArray();
                 events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
                     aggregateCommands.OfType<RecalculateAggregateCommand>()
-                                     .Aggregate(new List<ICommand>(),
-                                         (result, next) =>
-                                             {
-                                                 result.Add(new SyncDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
-                                                 result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
-                                                 return result;
-                                             })
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new SyncDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
+                                                         new ReplaceValueObjectCommand(next.AggregateRootId)
+                                                     })
                                      .ToArray();
                 events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
                     aggregateCommands.OfType<RecalculateEntityCommand>()
-                                     .Aggregate(new List<ICommand>(),
-                                         (result, next) =>
-                                             {
-                                                 result.Add(new SyncDataObjectCommand(next.EntityType, next.EntityId));
-                                                 result.Add(new ReplaceValueObjectCommand(next.AggregateRootId, next.EntityId));
-                                                 return result;
-                                             })
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new SyncDataObjectCommand(next.EntityType, next.EntityId),
+                                                         new ReplaceValueObjectCommand(next.AggregateRootId, next.EntityId)
+                                                     })
                                      .ToArray();
                 events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
                     aggregateCommands.OfType<RecalculatePeriodAggregateCommand>()
-                                     .Aggregate(new List<ICommand>(),
-                                         (result, next) =>
-                                             {
-                                                 result.Add(new SyncPeriodDataObjectCommand(next.PeriodKey));
-                                                 result.Add(new ReplacePeriodValueObjectCommand(next.PeriodKey));
-                                                 return result;
-                                             })
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new SyncPeriodDataObjectCommand(next.PeriodKey),
+                                                         new ReplacePeriodValueObjectCommand(next.PeriodKey)
+                                                     })
                                      .ToArray();
                 events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
 
