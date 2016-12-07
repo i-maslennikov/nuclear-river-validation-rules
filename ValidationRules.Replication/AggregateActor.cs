@@ -41,7 +41,8 @@ namespace NuClear.ValidationRules.Replication
                 return Array<IEvent>.Empty;
             }
 
-            using (Probe.Create("Aggregate", _aggregateRootActor.EntityType.Name))
+            var aggregateNameParts = _aggregateRootActor.EntityType.FullName.Split('.').Reverse().ToArray();
+            using (Probe.Create("Aggregate", aggregateNameParts[2], aggregateNameParts[0]))
             {
                 var destroyCommands =
                     aggregateCommands.OfType<DestroyAggregateCommand>()
