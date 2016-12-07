@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<Period> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
+                var aggregateIds = commands.Cast<SyncPeriodDataObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
                 return Specs.Find.Aggs.Periods(aggregateIds);
             }
         }
@@ -121,7 +121,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<PricePeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
                 return Specs.Find.Aggs.PricePeriods(aggregateIds);
             }
         }
@@ -159,7 +159,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.OfType<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
+                var aggregateIds = commands.Cast<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
                 return Specs.Find.Aggs.OrderPeriods(aggregateIds);
             }
         }
