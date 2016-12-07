@@ -74,16 +74,6 @@ namespace NuClear.ValidationRules.Replication
                 events = events.Union(_rootToLeafActor.ExecuteCommands(commandsToExecute));
 
                 commandsToExecute =
-                    aggregateCommands.OfType<RecalculateEntityCommand>()
-                                     .SelectMany(next => new ICommand[]
-                                                     {
-                                                         new SyncDataObjectCommand(next.EntityType, next.EntityId),
-                                                         new ReplaceValueObjectCommand(next.AggregateRootId, next.EntityId)
-                                                     })
-                                     .ToArray();
-                events = events.Union(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
-
-                commandsToExecute =
                     aggregateCommands.OfType<RecalculatePeriodAggregateCommand>()
                                      .SelectMany(next => new ICommand[]
                                                      {
