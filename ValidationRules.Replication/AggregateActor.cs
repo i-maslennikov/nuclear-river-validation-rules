@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using LinqToDB.Common;
+
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
+using NuClear.Replication.Core.Commands;
 using NuClear.Telemetry.Probing;
 using NuClear.ValidationRules.Replication.Commands;
 
@@ -25,72 +28,62 @@ namespace NuClear.ValidationRules.Replication
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
+            var aggregateCommands =
+                commands.OfType<IAggregateCommand>()
+                        .Where(x => x.AggregateRootType == _aggregateRootActor.EntityType)
+                        .Distinct()
+                        .ToArray();
+
+            IEnumerable<IEvent> events = Array<IEvent>.Empty;
+
+            if (!aggregateCommands.Any())
+            {
+                return Array<IEvent>.Empty;
+            }
+
             using (Probe.Create("Aggregate", _aggregateRootActor.EntityType.Name))
             {
-                var events = new List<IEvent>();
+                var destroyCommands =
+                    aggregateCommands.OfType<DestroyAggregateCommand>()
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new DeleteDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
+                                                         new ReplaceValueObjectCommand(next.AggregateRootId)
+                                                     })
+                                     .ToArray();
+                events = events.Union(_leafToRootActor.ExecuteCommands(destroyCommands));
 
-                IReadOnlyCollection<ICommand> commandsToExecute =
-                    commands.OfType<DestroyAggregateCommand>()
-                            .Distinct()
-                            .Aggregate(new List<ICommand>(),
-                                (result, next) =>
-                                    {
-                                        result.Add(new DeleteDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
-                                        result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
-                                        return result;
-                                    })
-                            .ToArray();
-                events.AddRange(_leafToRootActor.ExecuteCommands(commandsToExecute));
+                var initializeCommands =
+                    aggregateCommands.OfType<InitializeAggregateCommand>()
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new CreateDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
+                                                         new ReplaceValueObjectCommand(next.AggregateRootId)
+                                                     })
+                                     .ToArray();
+                events = events.Union(_rootToLeafActor.ExecuteCommands(initializeCommands));
 
-                commandsToExecute = commands.OfType<InitializeAggregateCommand>()
-                                            .Distinct()
-                                            .Aggregate(new List<ICommand>(),
-                                                (result, next) =>
-                                                    {
-                                                        result.Add(new CreateDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
-                                                        result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
-                                                        return result;
-                                                    })
-                                            .ToArray();
-                events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
+                var recalculateCommands =
+                    aggregateCommands.OfType<RecalculateAggregateCommand>()
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new SyncDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
+                                                         new ReplaceValueObjectCommand(next.AggregateRootId)
+                                                     })
+                                     .ToArray();
+                events = events.Union(_rootToLeafActor.ExecuteCommands(recalculateCommands));
 
-                commandsToExecute = commands.OfType<RecalculateAggregateCommand>()
-                                            .Distinct()
-                                            .Aggregate(new List<ICommand>(),
-                                                (result, next) =>
-                                                    {
-                                                        result.Add(new SyncDataObjectCommand(next.AggregateRootType, next.AggregateRootId));
-                                                        result.Add(new ReplaceValueObjectCommand(next.AggregateRootId));
-                                                        return result;
-                                                    })
-                                            .ToArray();
-                events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
+                var recalculatePeriodCommands =
+                    aggregateCommands.OfType<RecalculatePeriodAggregateCommand>()
+                                     .SelectMany(next => new ICommand[]
+                                                     {
+                                                         new SyncPeriodDataObjectCommand(next.PeriodKey),
+                                                         new ReplacePeriodValueObjectCommand(next.PeriodKey)
+                                                     })
+                                     .ToArray();
+                events = events.Union(_subrootToLeafActor.ExecuteCommands(recalculatePeriodCommands));
 
-                commandsToExecute = commands.OfType<RecalculatePeriodAggregateCommand>()
-                                            .Distinct()
-                                            .Aggregate(new List<ICommand>(),
-                                                (result, next) =>
-                                                {
-                                                    result.Add(new SyncPeriodDataObjectCommand(next.PeriodKey));
-                                                    result.Add(new ReplacePeriodValueObjectCommand(next.PeriodKey));
-                                                    return result;
-                                                })
-                                            .ToArray();
-                events.AddRange(_rootToLeafActor.ExecuteCommands(commandsToExecute));
-
-                commandsToExecute = commands.OfType<RecalculateEntityCommand>()
-                                            .Distinct()
-                                            .Aggregate(new List<ICommand>(),
-                                                (result, next) =>
-                                                    {
-                                                        result.Add(new SyncDataObjectCommand(next.EntityType, next.EntityId));
-                                                        result.Add(new ReplaceValueObjectCommand(next.AggregateRootId, next.EntityId));
-                                                        return result;
-                                                    })
-                                            .ToArray();
-                events.AddRange(_subrootToLeafActor.ExecuteCommands(commandsToExecute));
-
-                return events;
+                return events.ToArray();
             }
         }
     }
