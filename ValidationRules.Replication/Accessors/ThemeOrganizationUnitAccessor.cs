@@ -4,6 +4,7 @@ using System.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
+using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
@@ -35,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<ThemeOrganizationUnit> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
-            return Specification<ThemeOrganizationUnit>.Create(x => x.Id, ids);
+            return SpecificationFactory<ThemeOrganizationUnit>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<ThemeOrganizationUnit> dataObjects) => Array.Empty<IEvent>();
