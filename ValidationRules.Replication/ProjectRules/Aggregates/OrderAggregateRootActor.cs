@@ -2,63 +2,57 @@
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Order.AddressAdvertisement> _addressAdvertisementRepository;
-        private readonly IBulkRepository<Order.CategoryAdvertisement> _categoryAdvertisementRepository;
-        private readonly IBulkRepository<Order.CostPerClickAdvertisement> _costPerClickAdvertisementRepository;
-
         public OrderAggregateRootActor(
             IQuery query,
-            IBulkRepository<Order> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.AddressAdvertisement> addressAdvertisementRepository,
             IBulkRepository<Order.CategoryAdvertisement> categoryAdvertisementRepository,
             IBulkRepository<Order.CostPerClickAdvertisement> costPerClickAdvertisementRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _addressAdvertisementRepository = addressAdvertisementRepository;
-            _costPerClickAdvertisementRepository = costPerClickAdvertisementRepository;
-            _categoryAdvertisementRepository = categoryAdvertisementRepository;
+            HasRootEntity(new OrderAccessor(query), bulkRepository,
+               HasValueObject(new AddressAdvertisementAccessor(query), addressAdvertisementRepository),
+               HasValueObject(new CategoryAdvertisementAccessor(query), categoryAdvertisementRepository),
+               HasValueObject(new CostPerClickAdvertisementAccessor(query), costPerClickAdvertisementRepository));
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => new IEntityActor[0];
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Order.AddressAdvertisement>(_query, _addressAdvertisementRepository, _equalityComparerFactory, new AddressAdvertisementAccessor(_query)),
-                    new ValueObjectActor<Order.CategoryAdvertisement>(_query, _categoryAdvertisementRepository, _equalityComparerFactory, new CategoryAdvertisementAccessor(_query)),
-                    new ValueObjectActor<Order.CostPerClickAdvertisement>(_query, _costPerClickAdvertisementRepository, _equalityComparerFactory, new CostPerClickAdvertisementAccessor(_query)),
-                };
-
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private const int OrderOnRegistration = 1;
 
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                        MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
+                        MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
+                        MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
+                        MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -84,7 +78,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class AddressAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.AddressAdvertisement>
+        public sealed class AddressAdvertisementAccessor : DataChangesHandler<Order.AddressAdvertisement>, IStorageBasedDataObjectAccessor<Order.AddressAdvertisement>
         {
             private static readonly long[] ExceptionalCategoryCodes =
                 {
@@ -95,10 +89,16 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             private readonly IQuery _query;
 
-            public AddressAdvertisementAccessor(IQuery query)
+            public AddressAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                    };
 
             public IQueryable<Order.AddressAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -117,21 +117,29 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             public FindSpecification<Order.AddressAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.AddressAdvertisement>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class CategoryAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
+        public sealed class CategoryAdvertisementAccessor : DataChangesHandler<Order.CategoryAdvertisement>, IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
         {
             private const int PositionsGroupMedia = 1;
 
             private readonly IQuery _query;
 
-            public CategoryAdvertisementAccessor(IQuery query)
+            public CategoryAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
+                        MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                    };
 
             public IQueryable<Order.CategoryAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -152,19 +160,27 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             public FindSpecification<Order.CategoryAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.CategoryAdvertisement>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class CostPerClickAdvertisementAccessor : IStorageBasedDataObjectAccessor<Order.CostPerClickAdvertisement>
+        public sealed class CostPerClickAdvertisementAccessor : DataChangesHandler<Order.CostPerClickAdvertisement>, IStorageBasedDataObjectAccessor<Order.CostPerClickAdvertisement>
         {
             private readonly IQuery _query;
 
-            public CostPerClickAdvertisementAccessor(IQuery query)
+            public CostPerClickAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
+                        MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                    };
 
             public IQueryable<Order.CostPerClickAdvertisement> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -182,7 +198,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             public FindSpecification<Order.CostPerClickAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.CostPerClickAdvertisement>(x => aggregateIds.Contains(x.OrderId));
             }
         }

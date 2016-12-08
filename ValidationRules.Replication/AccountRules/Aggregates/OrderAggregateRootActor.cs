@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
         private const int OrderOnTermination = 4;
         private const int OrderApproved = 5;
-
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Lock> _lockBulkRepository;
-        private readonly IBulkRepository<Order.DebtPermission> _debtPermissionBulkRepository;
 
         public OrderAggregateRootActor(
             IQuery query,
@@ -31,32 +25,29 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             IBulkRepository<Order> orderBulkRepository,
             IBulkRepository<Lock> lockBulkRepository,
             IBulkRepository<Order.DebtPermission> debtPermissionBulkRepository)
-            : base(query, orderBulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _lockBulkRepository = lockBulkRepository;
-            _debtPermissionBulkRepository = debtPermissionBulkRepository;
+            HasRootEntity(new OrderAccessor(query), orderBulkRepository,
+                HasValueObject(new LockAccessor(query), lockBulkRepository),
+                HasValueObject(new DebtPermissionAccessor(query), debtPermissionBulkRepository));
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Lock>(_query, _lockBulkRepository, _equalityComparerFactory, new LockAccessor(_query)),
-                    new ValueObjectActor<Order.DebtPermission>(_query, _debtPermissionBulkRepository, _equalityComparerFactory, new DebtPermissionAccessor(_query)),
-                };
-
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AccountBalanceShouldBePositive,
+                        MessageTypeCode.AccountShouldExist,
+                        MessageTypeCode.LockShouldNotExist,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -85,14 +76,20 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class LockAccessor : IStorageBasedDataObjectAccessor<Lock>
+        public sealed class LockAccessor : DataChangesHandler<Lock>, IStorageBasedDataObjectAccessor<Lock>
         {
             private readonly IQuery _query;
 
-            public LockAccessor(IQuery query)
+            public LockAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LockShouldNotExist
+                    };
 
             public IQueryable<Lock> GetSource()
                 => _query.For<Facts::Lock>().Select(x => new Lock
@@ -109,14 +106,20 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class DebtPermissionAccessor : IStorageBasedDataObjectAccessor<Order.DebtPermission>
+        public sealed class DebtPermissionAccessor : DataChangesHandler<Order.DebtPermission>, IStorageBasedDataObjectAccessor<Order.DebtPermission>
         {
             private readonly IQuery _query;
 
-            public DebtPermissionAccessor(IQuery query)
+            public DebtPermissionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AccountBalanceShouldBePositive
+                    };
 
             public IQueryable<Order.DebtPermission> GetSource()
                 => from x in _query.For<Facts::UnlimitedOrder>()

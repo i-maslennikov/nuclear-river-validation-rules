@@ -1,55 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
 {
-    public sealed class ProjectAggregateRootActor : EntityActorBase<Project>, IAggregateRootActor
+    public sealed class ProjectAggregateRootActor : AggregateRootActor<Project>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Project.ProjectDefaultTheme> _projectDefaultThemeBulkRepository;
-
         public ProjectAggregateRootActor(
             IQuery query,
-            IBulkRepository<Project> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Project> bulkRepository,
             IBulkRepository<Project.ProjectDefaultTheme> projectDefaultThemeBulkRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new ProjectAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _projectDefaultThemeBulkRepository = projectDefaultThemeBulkRepository;
+            HasRootEntity(new ProjectAccessor(query), bulkRepository,
+               HasValueObject(new ProjectDefaultThemeAccessor(query), projectDefaultThemeBulkRepository));
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Project.ProjectDefaultTheme>(_query, _projectDefaultThemeBulkRepository, _equalityComparerFactory, new ProjectDefaultThemeAccessor(_query)),
-                };
-
-        public sealed class ProjectAccessor : IStorageBasedDataObjectAccessor<Project>
+        public sealed class ProjectAccessor : DataChangesHandler<Project>, IStorageBasedDataObjectAccessor<Project>
         {
             private readonly IQuery _query;
 
-            public ProjectAccessor(IQuery query)
+            public ProjectAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DefaultThemeMustBeExactlyOne,
+                    };
 
             public IQueryable<Project> GetSource()
                 => from project in _query.For<Facts::Project>()
@@ -70,14 +61,20 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             }
         }
 
-        public sealed class ProjectDefaultThemeAccessor : IStorageBasedDataObjectAccessor<Project.ProjectDefaultTheme>
+        public sealed class ProjectDefaultThemeAccessor : DataChangesHandler<Project.ProjectDefaultTheme>, IStorageBasedDataObjectAccessor<Project.ProjectDefaultTheme>
         {
             private readonly IQuery _query;
 
-            public ProjectDefaultThemeAccessor(IQuery query)
+            public ProjectDefaultThemeAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DefaultThemeMustBeExactlyOne,
+                    };
 
             public IQueryable<Project.ProjectDefaultTheme> GetSource()
             {

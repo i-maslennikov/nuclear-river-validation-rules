@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -11,46 +10,42 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 {
-    public sealed class FirmAggregateRootActor : EntityActorBase<Firm>, IAggregateRootActor
+    public sealed class FirmAggregateRootActor : AggregateRootActor<Firm>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Firm.AdvantageousPurchasePositionDistributionPeriod> _advantageousPurchasePositionDistributionPeriodRepository;
-
         public FirmAggregateRootActor(
             IQuery query,
-            IBulkRepository<Firm> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Firm> bulkRepository,
             IBulkRepository<Firm.AdvantageousPurchasePositionDistributionPeriod> advantageousPurchasePositionDistributionPeriodRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new FirmAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _advantageousPurchasePositionDistributionPeriodRepository = advantageousPurchasePositionDistributionPeriodRepository;
+            HasRootEntity(new FirmAccessor(query), bulkRepository,
+                HasValueObject(new AdvantageousPurchasePositionDistributionPeriodAccessor(query), advantageousPurchasePositionDistributionPeriodRepository));
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Firm.AdvantageousPurchasePositionDistributionPeriod>(_query, _advantageousPurchasePositionDistributionPeriodRepository, _equalityComparerFactory, new AdvantageousPurchasePositionDistributionPeriodAccessor(_query)),
-                };
-
-        public sealed class FirmAccessor : IStorageBasedDataObjectAccessor<Firm>
+        public sealed class FirmAccessor : DataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
         {
             private readonly IQuery _query;
 
-            public FirmAccessor(IQuery query)
+            public FirmAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
+                        MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
+                    };
 
             public IQueryable<Firm> GetSource()
                 => from firm in _query.For<Facts::Firm>()
@@ -73,7 +68,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
+        public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : DataChangesHandler<Firm.AdvantageousPurchasePositionDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
         {
             private const long AdvantageousPurchaseWith2Gis = 14; // Выгодные покупки с 2ГИС
             private const long SelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
@@ -82,10 +77,17 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             private readonly IQuery _query;
 
-            public AdvantageousPurchasePositionDistributionPeriodAccessor(IQuery query)
+            public AdvantageousPurchasePositionDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
+                    };
 
             public IQueryable<Firm.AdvantageousPurchasePositionDistributionPeriod> GetSource()
             {

@@ -7,6 +7,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Transports
 {
@@ -19,6 +20,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
         private const string RelatedDataObjectId = "relatedDataObjectId";
         private const string State = "state";
         private const string EventHappendTime = "time";
+        private const string RuleCode = "rule";
+        private const string OrderId = "orderId";
 
         private const string PeriodKey = "periodKey";
         private const string OrganizationUnitId = "organizationUnitId";
@@ -119,6 +122,19 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                 return new AggregatesBatchProcessedEvent((DateTime)time);
             }
 
+            if (IsEventOfType(@event, typeof(ResultPartiallyOutdatedEvent)))
+            {
+                var rule = @event.Element(RuleCode);
+                var orderIds = @event.Elements(OrderId);
+                return new ResultPartiallyOutdatedEvent((MessageTypeCode)(int)rule, orderIds.Select(x => (long)x).ToArray());
+            }
+
+            if (IsEventOfType(@event, typeof(ResultOutdatedEvent)))
+            {
+                var rule = @event.Element(RuleCode);
+                return new ResultOutdatedEvent((MessageTypeCode)(int)rule);
+            }
+
             throw new ArgumentException($"Event is unknown or cannot be deserialized: {@event}", nameof(@event));
         }
 
@@ -192,6 +208,19 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
             if (aggregateBatchProcessedEvent != null)
             {
                 return CreateRecord(aggregateBatchProcessedEvent, new[] { new XElement(EventHappendTime, aggregateBatchProcessedEvent.EventTime) });
+            }
+
+            var resultOutdatedEvent = @event as ResultOutdatedEvent;
+            if (resultOutdatedEvent != null)
+            {
+                return CreateRecord(resultOutdatedEvent, new[] { new XElement(RuleCode, (int)resultOutdatedEvent.Rule) });
+            }
+
+            var resultPartiallyOutdatedEvent = @event as ResultPartiallyOutdatedEvent;
+            if (resultPartiallyOutdatedEvent != null)
+            {
+                var orderIds = resultPartiallyOutdatedEvent.OrderIds.Select(x => new XElement(OrderId, x));
+                return CreateRecord(resultPartiallyOutdatedEvent, new[] { new XElement(RuleCode, (int)resultPartiallyOutdatedEvent.Rule) }.Concat(orderIds).ToArray());
             }
 
             throw new ArgumentException($"Unknown event type: {@event.GetType().Name}", nameof(@event));

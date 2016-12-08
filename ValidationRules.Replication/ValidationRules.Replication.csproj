@@ -222,6 +222,11 @@
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
+    <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
+    <Compile Include="DataChangesHandler.cs" />
+    <Compile Include="AggregateRootActor.cs" />
+    <Compile Include="Commands\RecalculateValidationRuleCompleteCommand.cs" />
+    <Compile Include="Commands\RecalculateValidationRulePartiallyCommand.cs" />
     <Compile Include="ConsistencyRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="Accessors\BranchOfficeAccessor.cs" />
     <Compile Include="Accessors\BranchOfficeOrganizationUnitAccessor.cs" />
@@ -238,6 +243,8 @@
     <Compile Include="ConsistencyRules\Validation\BillsSumShouldMatchOrder.cs" />
     <Compile Include="ConsistencyRules\Validation\BillsShouldBeCreated.cs" />
     <Compile Include="EventCollectionHelper.cs" />
+    <Compile Include="Events\ResultOutdatedEvent.cs" />
+    <Compile Include="Events\ResultPartiallyOutdatedEvent.cs" />
     <Compile Include="FirmRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="FirmRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="Accessors\FirmAddressCategoryAccessor.cs" />

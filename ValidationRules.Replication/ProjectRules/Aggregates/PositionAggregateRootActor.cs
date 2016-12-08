@@ -1,44 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 {
-    public sealed class PositionAggregateRootActor : EntityActorBase<Position>, IAggregateRootActor
+    public sealed class PositionAggregateRootActor : AggregateRootActor<Position>
     {
         public PositionAggregateRootActor(
             IQuery query,
-            IBulkRepository<Position> bulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
-            : base(query, bulkRepository, equalityComparerFactory, new PositionAccessor(query))
+            IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Position> bulkRepository)
+            : base(query, equalityComparerFactory)
         {
+            HasRootEntity(new PositionAccessor(query), bulkRepository);
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => Array.Empty<IActor>();
-
-        public sealed class PositionAccessor : IStorageBasedDataObjectAccessor<Position>
+        public sealed class PositionAccessor : DataChangesHandler<Position>, IStorageBasedDataObjectAccessor<Position>
         {
             private readonly IQuery _query;
 
-            public PositionAccessor(IQuery query)
+            public PositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                        MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
+                        MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
+                        MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                    };
 
             public IQueryable<Position> GetSource() => _query
                 .For<Facts::Position>()

@@ -2,7 +2,6 @@
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -10,58 +9,48 @@ using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IBulkRepository<Order.FirmOrganiationUnitMismatch> _invalidFirmRepository;
-        private readonly IBulkRepository<Order.NotApplicapleForDesktopPosition> _notApplicapleForDesktopPositionRepository;
-        private readonly IBulkRepository<Order.SelfAdvertisementPosition> _selfAdvertisementPositionRepository;
-        private readonly IBulkRepository<Order.CategoryPurchase> _categoryPurchaseRepository;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-
         public OrderAggregateRootActor(
             IQuery query,
-            IBulkRepository<Order> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.FirmOrganiationUnitMismatch> invalidFirmRepository,
             IBulkRepository<Order.CategoryPurchase> categoryPurchaseRepository,
             IBulkRepository<Order.NotApplicapleForDesktopPosition> notApplicapleForDesktopPositionRepository,
             IBulkRepository<Order.SelfAdvertisementPosition> selfAdvertisementPositionRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _invalidFirmRepository = invalidFirmRepository;
-            _categoryPurchaseRepository = categoryPurchaseRepository;
-            _notApplicapleForDesktopPositionRepository = notApplicapleForDesktopPositionRepository;
-            _selfAdvertisementPositionRepository = selfAdvertisementPositionRepository;
+            HasRootEntity(new OrderAccessor(query), bulkRepository,
+                HasValueObject(new OrderFirmOrganiationUnitMismatchAccessor(query), invalidFirmRepository),
+                HasValueObject(new NotApplicapleForDesktopPositionAccessor(query), notApplicapleForDesktopPositionRepository),
+                HasValueObject(new SelfAdvertisementPositionAccessor(query), selfAdvertisementPositionRepository),
+                HasValueObject(new OrderCategoryPurchaseAccessor(query), categoryPurchaseRepository));
         }
 
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors() => new IEntityActor[0];
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Order.FirmOrganiationUnitMismatch>(_query, _invalidFirmRepository, _equalityComparerFactory, new OrderFirmOrganiationUnitMismatchAccessor(_query)),
-                    new ValueObjectActor<Order.NotApplicapleForDesktopPosition>(_query, _notApplicapleForDesktopPositionRepository, _equalityComparerFactory, new NotApplicapleForDesktopPositionAccessor(_query)),
-                    new ValueObjectActor<Order.SelfAdvertisementPosition>(_query, _selfAdvertisementPositionRepository, _equalityComparerFactory, new SelfAdvertisementPositionAccessor(_query)),
-                    new ValueObjectActor<Order.CategoryPurchase>(_query, _categoryPurchaseRepository, _equalityComparerFactory, new OrderCategoryPurchaseAccessor(_query)),
-                };
-
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
+                        MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
+                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
+                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -88,17 +77,23 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class NotApplicapleForDesktopPositionAccessor : IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
+        public sealed class NotApplicapleForDesktopPositionAccessor : DataChangesHandler<Order.NotApplicapleForDesktopPosition>, IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
         {
             private const long PlatformIndependent = 0;
             private const long PlatformDesktop = 1;
 
             private readonly IQuery _query;
 
-            public NotApplicapleForDesktopPositionAccessor(IQuery query)
+            public NotApplicapleForDesktopPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
+                    };
 
             public IQueryable<Order.NotApplicapleForDesktopPosition> GetSource()
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
@@ -112,20 +107,26 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public FindSpecification<Order.NotApplicapleForDesktopPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.NotApplicapleForDesktopPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class SelfAdvertisementPositionAccessor : IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
+        public sealed class SelfAdvertisementPositionAccessor : DataChangesHandler<Order.SelfAdvertisementPosition>, IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
         {
             private const long SelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
             private readonly IQuery _query;
 
-            public SelfAdvertisementPositionAccessor(IQuery query)
+            public SelfAdvertisementPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
+                    };
 
             public IQueryable<Order.SelfAdvertisementPosition> GetSource()
                 => (from orderPosition in _query.For<Facts::OrderPosition>()
@@ -139,19 +140,25 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public FindSpecification<Order.SelfAdvertisementPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.SelfAdvertisementPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class OrderFirmOrganiationUnitMismatchAccessor : IStorageBasedDataObjectAccessor<Order.FirmOrganiationUnitMismatch>
+        public sealed class OrderFirmOrganiationUnitMismatchAccessor : DataChangesHandler<Order.FirmOrganiationUnitMismatch>, IStorageBasedDataObjectAccessor<Order.FirmOrganiationUnitMismatch>
         {
             private readonly IQuery _query;
 
-            public OrderFirmOrganiationUnitMismatchAccessor(IQuery query)
+            public OrderFirmOrganiationUnitMismatchAccessor(IQuery query) :base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
+                    };
 
             public IQueryable<Order.FirmOrganiationUnitMismatch> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -161,19 +168,25 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public FindSpecification<Order.FirmOrganiationUnitMismatch> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.FirmOrganiationUnitMismatch>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class OrderCategoryPurchaseAccessor : IStorageBasedDataObjectAccessor<Order.CategoryPurchase>
+        public sealed class OrderCategoryPurchaseAccessor : DataChangesHandler<Order.CategoryPurchase>, IStorageBasedDataObjectAccessor<Order.CategoryPurchase>
         {
             private readonly IQuery _query;
 
-            public OrderCategoryPurchaseAccessor(IQuery query)
+            public OrderCategoryPurchaseAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
+                    };
 
             public IQueryable<Order.CategoryPurchase> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -184,7 +197,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public FindSpecification<Order.CategoryPurchase> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.CategoryPurchase>(x => aggregateIds.Contains(x.OrderId));
             }
         }

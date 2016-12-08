@@ -1,44 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 {
-    public sealed class FirmAddressAggregateRootActor : EntityActorBase<FirmAddress>, IAggregateRootActor
+    public sealed class FirmAddressAggregateRootActor : AggregateRootActor<FirmAddress>
     {
         public FirmAddressAggregateRootActor(
             IQuery query,
-            IBulkRepository<FirmAddress> bulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
-            : base(query, bulkRepository, equalityComparerFactory, new FirmAddressAccessor(query))
+            IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<FirmAddress> bulkRepository)
+            : base(query, equalityComparerFactory)
         {
+            HasRootEntity(new FirmAddressAccessor(query), bulkRepository);
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => Array.Empty<IActor>();
-
-        public sealed class FirmAddressAccessor : IStorageBasedDataObjectAccessor<FirmAddress>
+        public sealed class FirmAddressAccessor : DataChangesHandler<FirmAddress>, IStorageBasedDataObjectAccessor<FirmAddress>
         {
             private readonly IQuery _query;
 
-            public FirmAddressAccessor(IQuery query)
+            public FirmAddressAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                    };
 
             public IQueryable<FirmAddress> GetSource()
                 => from address in _query.For<Facts::FirmAddress>()

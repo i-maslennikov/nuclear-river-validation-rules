@@ -3,58 +3,61 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
-    public sealed class PeriodAggregateRootActor : EntityActorBase<Period>, IAggregateRootActor
+    public sealed class PeriodAggregateRootActor : AggregateRootActor<Period>
     {
-        private readonly IQuery _query;
-        private readonly IBulkRepository<PricePeriod> _pricePeriodBulkRepository;
-        private readonly IBulkRepository<OrderPeriod> _orderPeriodBulkRepository;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-
         public PeriodAggregateRootActor(
             IQuery query,
+            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Period> bulkRepository,
             IBulkRepository<PricePeriod> pricePeriodBulkRepository,
-            IBulkRepository<OrderPeriod> orderPeriodBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
-            : base(query, bulkRepository, equalityComparerFactory, new PeriodAccessor(query))
+            IBulkRepository<OrderPeriod> orderPeriodBulkRepository)
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _pricePeriodBulkRepository = pricePeriodBulkRepository;
-            _orderPeriodBulkRepository = orderPeriodBulkRepository;
-            _equalityComparerFactory = equalityComparerFactory;
+            HasRootEntity(new PeriodAccessor(query), bulkRepository,
+                HasValueObject(new PricePeriodAccessor(query), pricePeriodBulkRepository),
+                HasValueObject(new OrderPeriodAccessor(query), orderPeriodBulkRepository));
         }
 
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors() => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<PricePeriod>(_query, _pricePeriodBulkRepository, _equalityComparerFactory, new PricePeriodAccessor(_query)),
-                    new ValueObjectActor<OrderPeriod>(_query, _orderPeriodBulkRepository, _equalityComparerFactory, new OrderPeriodAccessor(_query)),
-                };
-
-        public sealed class PeriodAccessor : IStorageBasedDataObjectAccessor<Period>
+        public sealed class PeriodAccessor : DataChangesHandler<Period>, IStorageBasedDataObjectAccessor<Period>
         {
             private readonly IQuery _query;
 
-            public PeriodAccessor(IQuery query)
+            public PeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionsGroupCount,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<Period> GetSource()
             {
@@ -84,14 +87,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class PricePeriodAccessor : IStorageBasedDataObjectAccessor<PricePeriod>
+        public sealed class PricePeriodAccessor : DataChangesHandler<PricePeriod>, IStorageBasedDataObjectAccessor<PricePeriod>
         {
             private readonly IQuery _query;
 
-            public PricePeriodAccessor(IQuery query)
+            public PricePeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionsGroupCount,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                    };
 
             public IQueryable<PricePeriod> GetSource()
             {
@@ -126,14 +140,33 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPeriodAccessor : IStorageBasedDataObjectAccessor<OrderPeriod>
+        public sealed class OrderPeriodAccessor : DataChangesHandler<OrderPeriod>, IStorageBasedDataObjectAccessor<OrderPeriod>
         {
             private readonly IQuery _query;
 
-            public OrderPeriodAccessor(IQuery query)
+            public OrderPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
+
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<OrderPeriod> GetSource()
             {

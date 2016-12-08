@@ -17,6 +17,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 {
                     var result = new FindSpecification<Aggregates::Period>(x => false);
 
+                    // todo: PeriodSpecificationForSingleKey не достаточно строгая спецификация, она не использует дату окончания периода - с ней linq2db не генерирует запрос
                     return aggregateIds.Select(PeriodSpecificationForSingleKey)
                                        .Aggregate(result, (current, spec) => current | spec);
                 }
@@ -38,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 }
 
                 private static FindSpecification<Aggregates::Period> PeriodSpecificationForSingleKey(PeriodKey periodKey)
-                    => new FindSpecification<Aggregates.Period>(x => x.OrganizationUnitId == periodKey.OrganizationUnitId && periodKey.Start <= x.End && x.Start <= periodKey.End);
+                    => new FindSpecification<Aggregates.Period>(x => x.OrganizationUnitId == periodKey.OrganizationUnitId && x.Start <= periodKey.End);
 
                 private static FindSpecification<Aggregates::OrderPeriod> OrderSpecificationForSingleKey(PeriodKey periodKey)
                     => new FindSpecification<Aggregates.OrderPeriod>(x => x.OrganizationUnitId == periodKey.OrganizationUnitId && periodKey.Start <= x.Start && x.Start <= periodKey.End);

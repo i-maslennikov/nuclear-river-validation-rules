@@ -1,44 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
-    public sealed class ThemeAggregateRootActor : EntityActorBase<Theme>, IAggregateRootActor
+    public sealed class ThemeAggregateRootActor : AggregateRootActor<Theme>
     {
         public ThemeAggregateRootActor(
             IQuery query,
-            IBulkRepository<Theme> bulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
-            : base(query, bulkRepository, equalityComparerFactory, new ThemeAccessor(query))
+            IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Theme> bulkRepository)
+            : base(query, equalityComparerFactory)
         {
+            HasRootEntity(new ThemeAccessor(query), bulkRepository);
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => Array.Empty<IActor>();
-
-        public sealed class ThemeAccessor : IStorageBasedDataObjectAccessor<Theme>
+        public sealed class ThemeAccessor : DataChangesHandler<Theme>, IStorageBasedDataObjectAccessor<Theme>
         {
             private readonly IQuery _query;
 
-            public ThemeAccessor(IQuery query)
+            public ThemeAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                    };
 
             public IQueryable<Theme> GetSource()
                 => _query.For<Facts::Theme>().Select(x => new Theme { Id = x.Id, Name = x.Name });

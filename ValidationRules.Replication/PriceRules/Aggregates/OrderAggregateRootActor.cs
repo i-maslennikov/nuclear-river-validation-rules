@@ -1,71 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
-    public sealed class OrderAggregateRootActor : EntityActorBase<Order>, IAggregateRootActor
+    public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private readonly IQuery _query;
-        private readonly IBulkRepository<OrderPosition> _orderPositionBulkRepository;
-        private readonly IBulkRepository<OrderPricePosition> _orderPricePositionBulkRepository;
-        private readonly IBulkRepository<AmountControlledPosition> _amountControlledPositionBulkRepository;
-        private readonly IBulkRepository<OrderDeniedPosition> _orderDeniedPositionBulkRepository;
-        private readonly IBulkRepository<OrderAssociatedPosition> _orderAssociatedPositionBulkRepository;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-
         public OrderAggregateRootActor(
             IQuery query,
+            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<OrderPosition> orderPositionBulkRepository,
             IBulkRepository<OrderPricePosition> orderPricePositionBulkRepository,
             IBulkRepository<AmountControlledPosition> amountControlledPositionBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<OrderDeniedPosition> orderDeniedPositionBulkRepository,
             IBulkRepository<OrderAssociatedPosition> orderAssociatedPositionBulkRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new OrderAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _orderPositionBulkRepository = orderPositionBulkRepository;
-            _orderPricePositionBulkRepository = orderPricePositionBulkRepository;
-            _equalityComparerFactory = equalityComparerFactory;
-            _orderDeniedPositionBulkRepository = orderDeniedPositionBulkRepository;
-            _orderAssociatedPositionBulkRepository = orderAssociatedPositionBulkRepository;
-            _amountControlledPositionBulkRepository = amountControlledPositionBulkRepository;
+            HasRootEntity(new OrderAccessor(query), bulkRepository,
+                HasValueObject(new OrderPositionAccessor(query), orderPositionBulkRepository),
+                HasValueObject(new OrderPricePositionAccessor(query), orderPricePositionBulkRepository),
+                HasValueObject(new AmountControlledPositionAccessor(query), amountControlledPositionBulkRepository),
+                HasValueObject(new OrderDeniedPositionAccessor(query), orderDeniedPositionBulkRepository),
+                HasValueObject(new OrderAssociatedPositionAccessor(query), orderAssociatedPositionBulkRepository));
         }
 
-
-        public IReadOnlyCollection<IEntityActor> GetEntityActors() => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<OrderPosition>(_query, _orderPositionBulkRepository, _equalityComparerFactory, new OrderPositionAccessor(_query)),
-                    new ValueObjectActor<OrderPricePosition>(_query, _orderPricePositionBulkRepository, _equalityComparerFactory, new OrderPricePositionAccessor(_query)),
-                    new ValueObjectActor<AmountControlledPosition>(_query, _amountControlledPositionBulkRepository, _equalityComparerFactory, new AmountControlledPositionAccessor(_query)),
-                    new ValueObjectActor<OrderDeniedPosition>(_query, _orderDeniedPositionBulkRepository, _equalityComparerFactory, new OrderDeniedPositionAccessor(_query)),
-                    new ValueObjectActor<OrderAssociatedPosition>(_query, _orderAssociatedPositionBulkRepository, _equalityComparerFactory, new OrderAssociatedPositionAccessor(_query)),
-                };
-
-        public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>
+        public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
 
-            public OrderAccessor(IQuery query)
+            public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
+
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
@@ -82,14 +77,26 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPositionAccessor : IStorageBasedDataObjectAccessor<OrderPosition>
+        public sealed class OrderPositionAccessor : DataChangesHandler<OrderPosition>, IStorageBasedDataObjectAccessor<OrderPosition>
         {
             private readonly IQuery _query;
 
-            public OrderPositionAccessor(IQuery query)
+            public OrderPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.DeniedPositionsCheck,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<OrderPosition> GetSource()
             {
@@ -142,19 +149,26 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class OrderPricePositionAccessor : IStorageBasedDataObjectAccessor<OrderPricePosition>
+        public sealed class OrderPricePositionAccessor : DataChangesHandler<OrderPricePosition>, IStorageBasedDataObjectAccessor<OrderPricePosition>
         {
             private readonly IQuery _query;
 
-            public OrderPricePositionAccessor(IQuery query)
+            public OrderPricePositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
+                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                    };
 
             public IQueryable<OrderPricePosition> GetSource()
                 =>
@@ -175,19 +189,26 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderPricePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderPricePosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class AmountControlledPositionAccessor : IStorageBasedDataObjectAccessor<AmountControlledPosition>
+        public sealed class AmountControlledPositionAccessor : DataChangesHandler<AmountControlledPosition>, IStorageBasedDataObjectAccessor<AmountControlledPosition>
         {
             private readonly IQuery _query;
 
-            public AmountControlledPositionAccessor(IQuery query)
+            public AmountControlledPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                    };
 
             public IQueryable<AmountControlledPosition> GetSource()
                 => from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
@@ -202,21 +223,27 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<AmountControlledPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class OrderDeniedPositionAccessor : IStorageBasedDataObjectAccessor<OrderDeniedPosition>
+        public sealed class OrderDeniedPositionAccessor : DataChangesHandler<OrderDeniedPosition>, IStorageBasedDataObjectAccessor<OrderDeniedPosition>
         {
             private const int RulesetRuleTypeDenied = 2;
 
             private readonly IQuery _query;
 
-            public OrderDeniedPositionAccessor(IQuery query)
+            public OrderDeniedPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.DeniedPositionsCheck
+                    };
 
             public IQueryable<OrderDeniedPosition> GetSource()
             {
@@ -308,21 +335,30 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderDeniedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class OrderAssociatedPositionAccessor : IStorageBasedDataObjectAccessor<OrderAssociatedPosition>
+        public sealed class OrderAssociatedPositionAccessor : DataChangesHandler<OrderAssociatedPosition>, IStorageBasedDataObjectAccessor<OrderAssociatedPosition>
         {
             private const int RulesetRuleTypeAssociated = 1;
 
             private readonly IQuery _query;
 
-            public OrderAssociatedPositionAccessor(IQuery query)
+            public OrderAssociatedPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
+                        MessageTypeCode.ConflictingPrincipalPosition,
+                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
+                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
+                    };
 
             public IQueryable<OrderAssociatedPosition> GetSource()
             {
@@ -414,7 +450,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<OrderAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<OrderAssociatedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }

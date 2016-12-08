@@ -1,55 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
-    public sealed class AccountAggregateRootActor : EntityActorBase<Account>, IAggregateRootActor
+    public sealed class AccountAggregateRootActor : AggregateRootActor<Account>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<AccountPeriod> _accountPeriodBulkRepository;
-
         public AccountAggregateRootActor(
             IQuery query,
+            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Account> accountBulkRepository,
-            IBulkRepository<AccountPeriod> accountPeriodBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
-            : base(query, accountBulkRepository, equalityComparerFactory, new AccountAccessor(query))
+            IBulkRepository<AccountPeriod> accountPeriodBulkRepository)
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _accountPeriodBulkRepository = accountPeriodBulkRepository;
+            HasRootEntity(new AccountAccessor(query), accountBulkRepository,
+                HasValueObject(new AccountPeriodAccessor(query), accountPeriodBulkRepository));
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<AccountPeriod>(_query, _accountPeriodBulkRepository, _equalityComparerFactory, new AccountPeriodAccessor(_query))
-                };
-
-        public sealed class AccountAccessor : IStorageBasedDataObjectAccessor<Account>
+        public sealed class AccountAccessor : DataChangesHandler<Account>, IStorageBasedDataObjectAccessor<Account>
         {
             private readonly IQuery _query;
 
-            public AccountAccessor(IQuery query)
+            public AccountAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator();
 
             public IQueryable<Account> GetSource()
                 => _query.For<Facts::Account>().Select(x => new Account { Id = x.Id });
@@ -65,14 +53,20 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class AccountPeriodAccessor : IStorageBasedDataObjectAccessor<AccountPeriod>
+        public sealed class AccountPeriodAccessor : DataChangesHandler<AccountPeriod>, IStorageBasedDataObjectAccessor<AccountPeriod>
         {
             private readonly IQuery _query;
 
-            public AccountPeriodAccessor(IQuery query)
+            public AccountPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AccountBalanceShouldBePositive
+                    };
 
             public IQueryable<AccountPeriod> GetSource()
             {

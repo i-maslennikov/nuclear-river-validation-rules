@@ -1,58 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
-    public sealed class PriceAggregateRootActor : EntityActorBase<Price>, IAggregateRootActor
+    public sealed class PriceAggregateRootActor : AggregateRootActor<Price>
     {
-        private readonly IQuery _query;
-        private readonly IBulkRepository<AdvertisementAmountRestriction> _advertisementAmountRestrictionBulkRepository;
-        private readonly IBulkRepository<AssociatedPositionGroupOvercount> _associatedPositionGroupOvercountRepository;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-
         public PriceAggregateRootActor(
             IQuery query,
+            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Price> bulkRepository,
             IBulkRepository<AdvertisementAmountRestriction> advertisementAmountRestrictionBulkRepository,
-            IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<AssociatedPositionGroupOvercount> associatedPositionGroupOvercountRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new PriceAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _advertisementAmountRestrictionBulkRepository = advertisementAmountRestrictionBulkRepository;
-            _equalityComparerFactory = equalityComparerFactory;
-            _associatedPositionGroupOvercountRepository = associatedPositionGroupOvercountRepository;
+            HasRootEntity(new PriceAccessor(query), bulkRepository,
+                HasValueObject(new AdvertisementAmountRestrictionAccessor(query), advertisementAmountRestrictionBulkRepository),
+                HasValueObject(new AssociatedPositionGroupOvercountAccessor(query), associatedPositionGroupOvercountRepository));
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors() => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<AdvertisementAmountRestriction>(_query, _advertisementAmountRestrictionBulkRepository, _equalityComparerFactory, new AdvertisementAmountRestrictionAccessor(_query)),
-                    new ValueObjectActor<AssociatedPositionGroupOvercount>(_query, _associatedPositionGroupOvercountRepository, _equalityComparerFactory, new AssociatedPositionGroupOvercountAccessor(_query)),
-                };
-
-        public sealed class PriceAccessor : IStorageBasedDataObjectAccessor<Price>
+        public sealed class PriceAccessor : DataChangesHandler<Price>, IStorageBasedDataObjectAccessor<Price>
         {
             private readonly IQuery _query;
 
-            public PriceAccessor(IQuery query)
+            public PriceAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionsGroupCount,
+                    };
 
             public IQueryable<Price> GetSource()
                 => _query.For<Facts::Price>().Select(price => new Price { Id = price.Id, BeginDate = price.BeginDate });
@@ -68,14 +58,22 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementAmountRestrictionAccessor : IStorageBasedDataObjectAccessor<AdvertisementAmountRestriction>
+        public sealed class AdvertisementAmountRestrictionAccessor : DataChangesHandler<AdvertisementAmountRestriction>, IStorageBasedDataObjectAccessor<AdvertisementAmountRestriction>
         {
             private readonly IQuery _query;
 
-            public AdvertisementAmountRestrictionAccessor(IQuery query)
+            public AdvertisementAmountRestrictionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount
+                    };
 
             public IQueryable<AdvertisementAmountRestriction> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted)
@@ -97,20 +95,26 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<AdvertisementAmountRestriction> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<AdvertisementAmountRestriction>(x => aggregateIds.Contains(x.PriceId));
             }
         }
 
-        public sealed class AssociatedPositionGroupOvercountAccessor : IStorageBasedDataObjectAccessor<AssociatedPositionGroupOvercount>
+        public sealed class AssociatedPositionGroupOvercountAccessor : DataChangesHandler<AssociatedPositionGroupOvercount>, IStorageBasedDataObjectAccessor<AssociatedPositionGroupOvercount>
         {
             // Предполагается, что когда начнём создавать события на втором этапе - события этого класса будут приводить к вызову одной соответствующей проверки
             private readonly IQuery _query;
 
-            public AssociatedPositionGroupOvercountAccessor(IQuery query)
+            public AssociatedPositionGroupOvercountAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionsGroupCount
+                    };
 
             public IQueryable<AssociatedPositionGroupOvercount> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted)
@@ -127,7 +131,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<AssociatedPositionGroupOvercount> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<AssociatedPositionGroupOvercount>(x => aggregateIds.Contains(x.PriceId));
             }
         }

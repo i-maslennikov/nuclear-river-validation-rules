@@ -3,57 +3,50 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
-    public sealed class FirmAggregateRootActor : EntityActorBase<Firm>, IAggregateRootActor
+    public sealed class FirmAggregateRootActor : AggregateRootActor<Firm>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Firm.FirmWebsite> _firmWebsiteBulkRepository;
-        private readonly IBulkRepository<Firm.WhiteListDistributionPeriod> _whiteListDistributionPeriodBulkRepository;
-
         public FirmAggregateRootActor(
             IQuery query,
-            IBulkRepository<Firm> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Firm> bulkRepository,
             IBulkRepository<Firm.FirmWebsite> firmWebsiteBulkRepository,
             IBulkRepository<Firm.WhiteListDistributionPeriod> whiteListDistributionPeriodBulkRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new FirmAccessor(query))
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _firmWebsiteBulkRepository = firmWebsiteBulkRepository;
-            _whiteListDistributionPeriodBulkRepository = whiteListDistributionPeriodBulkRepository;
+            HasRootEntity(new FirmAccessor(query), bulkRepository,
+                HasValueObject(new FirmWebsiteAccessor(query), firmWebsiteBulkRepository),
+                HasValueObject(new WhiteListDistributionPeriodAccessor(query), whiteListDistributionPeriodBulkRepository));
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Firm.FirmWebsite>(_query, _firmWebsiteBulkRepository, _equalityComparerFactory, new FirmWebsiteAccessor(_query)),
-                    new ValueObjectActor<Firm.WhiteListDistributionPeriod>(_query, _whiteListDistributionPeriodBulkRepository, _equalityComparerFactory, new WhiteListDistributionPeriodAccessor(_query))
-                };
-
-        public sealed class FirmAccessor : IStorageBasedDataObjectAccessor<Firm>
+        public sealed class FirmAccessor : DataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
         {
             private readonly IQuery _query;
 
-            public FirmAccessor(IQuery query)
+            public FirmAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                        MessageTypeCode.WhiteListAdvertisementMayPresent,
+                        MessageTypeCode.WhiteListAdvertisementMustPresent,
+                    };
 
             public IQueryable<Firm> GetSource()
                 => from firm in _query.For<Facts::Firm>()
@@ -74,14 +67,20 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class FirmWebsiteAccessor : IStorageBasedDataObjectAccessor<Firm.FirmWebsite>
+        public sealed class FirmWebsiteAccessor : DataChangesHandler<Firm.FirmWebsite>, IStorageBasedDataObjectAccessor<Firm.FirmWebsite>
         {
             private readonly IQuery _query;
 
-            public FirmWebsiteAccessor(IQuery query)
+            public FirmWebsiteAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                    };
 
             public IQueryable<Firm.FirmWebsite> GetSource() =>
                 from firm in _query.For<Facts::Firm>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
@@ -100,16 +99,23 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class WhiteListDistributionPeriodAccessor : IStorageBasedDataObjectAccessor<Firm.WhiteListDistributionPeriod>
+        public sealed class WhiteListDistributionPeriodAccessor : DataChangesHandler<Firm.WhiteListDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.WhiteListDistributionPeriod>
         {
             private const int OrderOnRegistration = 1;
 
             private readonly IQuery _query;
 
-            public WhiteListDistributionPeriodAccessor(IQuery query)
+            public WhiteListDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.WhiteListAdvertisementMayPresent,
+                        MessageTypeCode.WhiteListAdvertisementMustPresent,
+                    };
 
             public IQueryable<Firm.WhiteListDistributionPeriod> GetSource()
             {

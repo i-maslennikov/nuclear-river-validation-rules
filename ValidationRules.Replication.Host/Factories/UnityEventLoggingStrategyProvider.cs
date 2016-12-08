@@ -12,6 +12,7 @@ using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Telemetry;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
+using NuClear.ValidationRules.OperationsProcessing.Telemetry;
 using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories
@@ -62,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
             }
 
             public bool ShouldEventBeLogged(TEvent @event)
-                => !(@event is AggregatesStateIncrementedEvent || @event is AggregatesBatchProcessedEvent);
+                => !(@event is AggregatesStateIncrementedEvent || @event is AggregatesBatchProcessedEvent || @event is ResultOutdatedEvent || @event is ResultPartiallyOutdatedEvent);
 
             public void ReportMessageLoggedCount(long count)
                 => _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(count);
@@ -79,12 +80,10 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
             }
 
             public bool ShouldEventBeLogged(TEvent @event)
-                => @event is AggregatesStateIncrementedEvent || @event is AggregatesBatchProcessedEvent;
+                => @event is AggregatesStateIncrementedEvent || @event is AggregatesBatchProcessedEvent || @event is ResultOutdatedEvent || @event is ResultPartiallyOutdatedEvent;
 
             public void ReportMessageLoggedCount(long count)
-            {
-                // todo: можно отправлять статистику по наполнению очереди пересчёта сообщений, кажется, раньше её не было
-            }
+                => _telemetryPublisher.Publish<MessageEnqueuedOperationCountIdentity>(count);
         }
     }
 }

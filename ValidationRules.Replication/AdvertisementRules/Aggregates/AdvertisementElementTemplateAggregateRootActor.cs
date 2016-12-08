@@ -1,44 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
-    public sealed class AdvertisementElementTemplateAggregateRootActor : EntityActorBase<AdvertisementElementTemplate>, IAggregateRootActor
+    public sealed class AdvertisementElementTemplateAggregateRootActor : AggregateRootActor<AdvertisementElementTemplate>
     {
         public AdvertisementElementTemplateAggregateRootActor(
             IQuery query,
-            IBulkRepository<AdvertisementElementTemplate> bulkRepository,
-            IEqualityComparerFactory equalityComparerFactory)
-            : base(query, bulkRepository, equalityComparerFactory, new AdvertisementElementTemplateAccessor(query))
+            IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<AdvertisementElementTemplate> bulkRepository)
+            : base(query, equalityComparerFactory)
         {
+            HasRootEntity(new AdvertisementElementTemplateAccessor(query), bulkRepository);
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => Array.Empty<IActor>();
-
-        public sealed class AdvertisementElementTemplateAccessor : IStorageBasedDataObjectAccessor<AdvertisementElementTemplate>
+        public sealed class AdvertisementElementTemplateAccessor : DataChangesHandler<AdvertisementElementTemplate>, IStorageBasedDataObjectAccessor<AdvertisementElementTemplate>
         {
             private readonly IQuery _query;
 
-            public AdvertisementElementTemplateAccessor(IQuery query)
+            public AdvertisementElementTemplateAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementElementMustPassReview,
+                        MessageTypeCode.OrderMustHaveAdvertisement,
+                    };
 
             public IQueryable<AdvertisementElementTemplate> GetSource()
                 => from template in _query.For<Facts::AdvertisementElementTemplate>()

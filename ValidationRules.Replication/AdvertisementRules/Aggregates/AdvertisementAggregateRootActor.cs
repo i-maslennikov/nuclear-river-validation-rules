@@ -10,58 +10,52 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
-    public sealed class AdvertisementAggregateRootActor : EntityActorBase<Advertisement>, IAggregateRootActor
+    public sealed class AdvertisementAggregateRootActor : AggregateRootActor<Advertisement>
     {
-        private readonly IQuery _query;
-        private readonly IEqualityComparerFactory _equalityComparerFactory;
-        private readonly IBulkRepository<Advertisement.AdvertisementWebsite> _advertisementWebsiteBulkRepository;
-        private readonly IBulkRepository<Advertisement.RequiredElementMissing> _requiredElementMissingBulkRepository;
-        private readonly IBulkRepository<Advertisement.ElementNotPassedReview> _elementInvalidBulkRepository;
-        private readonly IBulkRepository<Advertisement.Coupon> _elementPeriodOffsetBulkRepository;
-
         public AdvertisementAggregateRootActor(
             IQuery query,
-            IBulkRepository<Advertisement> bulkRepository,
             IEqualityComparerFactory equalityComparerFactory,
+            IBulkRepository<Advertisement> bulkRepository,
             IBulkRepository<Advertisement.AdvertisementWebsite> advertisementWebsiteBulkRepository,
             IBulkRepository<Advertisement.RequiredElementMissing> requiredElementMissingBulkRepository,
             IBulkRepository<Advertisement.ElementNotPassedReview> elementInvalidBulkRepository,
-            IBulkRepository<Advertisement.Coupon> elementPeriodOffsetBulkRepository)
-            : base(query, bulkRepository, equalityComparerFactory, new AdvertisementAccessor(query))
+            IBulkRepository<Advertisement.Coupon> couponRepository)
+            : base(query, equalityComparerFactory)
         {
-            _query = query;
-            _equalityComparerFactory = equalityComparerFactory;
-            _advertisementWebsiteBulkRepository = advertisementWebsiteBulkRepository;
-            _requiredElementMissingBulkRepository = requiredElementMissingBulkRepository;
-            _elementInvalidBulkRepository = elementInvalidBulkRepository;
-            _elementPeriodOffsetBulkRepository = elementPeriodOffsetBulkRepository;
+            HasRootEntity(new AdvertisementAccessor(query), bulkRepository,
+                HasValueObject(new AdvertisementWebsiteAccessor(query), advertisementWebsiteBulkRepository),
+                HasValueObject(new RequiredElementMissingAccessor(query), requiredElementMissingBulkRepository),
+                HasValueObject(new CouponAccessor(query), couponRepository),
+                HasValueObject(new ElementNotPassedReviewAccessor(query), elementInvalidBulkRepository));
         }
 
-        public IReadOnlyCollection<IEntityActor> GetEntityActors()
-            => Array.Empty<IEntityActor>();
-
-        public override IReadOnlyCollection<IActor> GetValueObjectActors()
-            => new IActor[]
-                {
-                    new ValueObjectActor<Advertisement.AdvertisementWebsite>(_query, _advertisementWebsiteBulkRepository, _equalityComparerFactory, new AdvertisementWebsiteAccessor(_query)),
-                    new ValueObjectActor<Advertisement.RequiredElementMissing>(_query, _requiredElementMissingBulkRepository, _equalityComparerFactory, new RequiredElementMissingAccessor(_query)),
-                    new ValueObjectActor<Advertisement.ElementNotPassedReview>(_query, _elementInvalidBulkRepository, _equalityComparerFactory, new ElementNotPassedReviewAccessor(_query)),
-                    new ValueObjectActor<Advertisement.Coupon>(_query, _elementPeriodOffsetBulkRepository, _equalityComparerFactory, new CouponAccessor(_query)),
-                };
-
-        public sealed class AdvertisementAccessor : IStorageBasedDataObjectAccessor<Advertisement>
+        public sealed class AdvertisementAccessor : DataChangesHandler<Advertisement>, IStorageBasedDataObjectAccessor<Advertisement>
         {
             private readonly IQuery _query;
 
-            public AdvertisementAccessor(IQuery query)
+            public AdvertisementAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementElementMustPassReview,
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                        MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
+                        MessageTypeCode.OrderCouponPeriodMustBeInRelease,
+                        MessageTypeCode.OrderMustHaveAdvertisement,
+                        MessageTypeCode.WhiteListAdvertisementMayPresent,
+                    };
 
             public IQueryable<Advertisement> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.FirmId != null)
@@ -84,14 +78,20 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementWebsiteAccessor : IStorageBasedDataObjectAccessor<Advertisement.AdvertisementWebsite>
+        public sealed class AdvertisementWebsiteAccessor : DataChangesHandler<Advertisement.AdvertisementWebsite>, IStorageBasedDataObjectAccessor<Advertisement.AdvertisementWebsite>
         {
             private readonly IQuery _query;
 
-            public AdvertisementWebsiteAccessor(IQuery query)
+            public AdvertisementWebsiteAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
+                    };
 
             public IQueryable<Advertisement.AdvertisementWebsite> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
@@ -112,14 +112,20 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class RequiredElementMissingAccessor : IStorageBasedDataObjectAccessor<Advertisement.RequiredElementMissing>
+        public sealed class RequiredElementMissingAccessor : DataChangesHandler<Advertisement.RequiredElementMissing>, IStorageBasedDataObjectAccessor<Advertisement.RequiredElementMissing>
         {
             private readonly IQuery _query;
 
-            public RequiredElementMissingAccessor(IQuery query)
+            public RequiredElementMissingAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderMustHaveAdvertisement,
+                    };
 
             public IQueryable<Advertisement.RequiredElementMissing> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
@@ -142,17 +148,23 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class ElementNotPassedReviewAccessor : IStorageBasedDataObjectAccessor<Advertisement.ElementNotPassedReview>
+        public sealed class ElementNotPassedReviewAccessor : DataChangesHandler<Advertisement.ElementNotPassedReview>, IStorageBasedDataObjectAccessor<Advertisement.ElementNotPassedReview>
         {
             private const int StatusInvalid = 2;
             private const int StatusDraft = 3;
 
             private readonly IQuery _query;
 
-            public ElementNotPassedReviewAccessor(IQuery query)
+            public ElementNotPassedReviewAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementElementMustPassReview,
+                    };
 
             public IQueryable<Advertisement.ElementNotPassedReview> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
@@ -182,14 +194,21 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
-        public sealed class CouponAccessor : IStorageBasedDataObjectAccessor<Advertisement.Coupon>
+        public sealed class CouponAccessor : DataChangesHandler<Advertisement.Coupon>, IStorageBasedDataObjectAccessor<Advertisement.Coupon>
         {
             private readonly IQuery _query;
 
-            public CouponAccessor(IQuery query)
+            public CouponAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
+                        MessageTypeCode.OrderCouponPeriodMustBeInRelease,
+                    };
 
             public IQueryable<Advertisement.Coupon> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)

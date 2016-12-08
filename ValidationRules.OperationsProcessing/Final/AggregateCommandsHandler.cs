@@ -86,23 +86,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
         {
             var aggregateRootTypes = commands.Select(x => x.AggregateRootType).ToArray();
             var actors = _aggregateActorFactory.Create(aggregateRootTypes);
+            var events = new List<IEvent>();
 
             // TODO: Can agreggate actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
             foreach (var actor in actors)
             {
-                var actorName = actor.GetType().GetFriendlyName();
-
-                using (Probe.Create($"ETL2 {actorName}"))
+                var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
                 {
-                    var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
-                    using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
-                    {
-                        actor.ExecuteCommands(commands);
-                        transaction.Complete();
-                    }
+                    events.AddRange(actor.ExecuteCommands(commands));
+                    transaction.Complete();
                 }
             }
 
+            _eventLogger.Log(events);
             _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(commands.Count);
         }
     }
