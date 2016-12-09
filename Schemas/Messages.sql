@@ -37,3 +37,8 @@ go
 
 CREATE INDEX [IX_ValidationResult_Resolved] ON [Messages].[ValidationResult] ([Resolved])
 CREATE INDEX [IX_ValidationResult_VersionId] ON [Messages].[ValidationResult] ([VersionId])
+
+CREATE NONCLUSTERED INDEX IX_ValidationResult_MessageType_VersionId_Resolved
+ON [Messages].[ValidationResult] ([MessageType],[VersionId],[Resolved])
+INCLUDE ([MessageParams],[PeriodStart],[PeriodEnd],[ProjectId],[OrderId],[Result])
+GO
