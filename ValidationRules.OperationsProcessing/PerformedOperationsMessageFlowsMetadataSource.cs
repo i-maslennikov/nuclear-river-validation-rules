@@ -11,6 +11,7 @@ using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.ValidationRules.OperationsProcessing.AfterFinal;
 using NuClear.ValidationRules.OperationsProcessing.Final;
+using NuClear.ValidationRules.OperationsProcessing.Transports;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -33,7 +34,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                                            .To.Primary().Flow<CommonEventsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<MessagesFlow>()
-                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator>()
                                                            .Accumulator<MessageCommandsAccumulator>()
                                                            .Handler<MessageCommandsHandler>()
                                                            .To.Primary().Flow<MessagesFlow>().Connect()
