@@ -250,6 +250,7 @@
     <Compile Include="Telemetry\MessagesQueueLengthIdentity.cs" />
     <Compile Include="Transports\FlowLengthReporter.cs" />
     <Compile Include="Transports\IFlowLengthReporter.cs" />
+    <Compile Include="Transports\ServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\XmlEventSerializer.cs" />
   </ItemGroup>
   <ItemGroup />
