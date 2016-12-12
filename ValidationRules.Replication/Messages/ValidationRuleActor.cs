@@ -53,14 +53,21 @@ namespace NuClear.ValidationRules.Replication.Messages
             //  3. Версия без изменений не создаётся.
 
             var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().First().Id;
+            IReadOnlyCollection<Version.ValidationResult> currentVersionResults;
             var versionResult = new List<Version.ValidationResult>();
+
+            using (Probe.Create("Query Target"))
+            {
+                var query  =_query.For<Version.ValidationResult>().GetValidationResults(currentVersion);
+                currentVersionResults = query.ToList();
+            }
 
             foreach (var ruleCommands in commands.OfType<IRecalculateValidationRuleCommand>().GroupBy(x => x.Rule))
             {
                 using (Probe.Create($"Rule {ruleCommands.Key}"))
                 {
                     var filter = CreateFilter(ruleCommands);
-                    var versionRuleResult = CalculateValidationRuleChanges(currentVersion, ruleCommands.Key, filter);
+                    var versionRuleResult = CalculateValidationRuleChanges(currentVersionResults, ruleCommands.Key, filter);
                     versionResult.AddRange(versionRuleResult);
                 }
             }
@@ -105,29 +112,25 @@ namespace NuClear.ValidationRules.Replication.Messages
             return x => x.OrderId.HasValue && ids.Contains(x.OrderId.Value);
         }
 
-        private IEnumerable<Version.ValidationResult> CalculateValidationRuleChanges(long version, MessageTypeCode ruleCode, Expression<Func<Version.ValidationResult, bool>> filter)
+        private IEnumerable<Version.ValidationResult> CalculateValidationRuleChanges(IReadOnlyCollection<Version.ValidationResult> currentVersionResults, MessageTypeCode ruleCode, Expression<Func<Version.ValidationResult, bool>> filter)
         {
             try
             {
                 List<Version.ValidationResult> sourceObjects;
-                List<Version.ValidationResult> destObjects;
 
                 using (Probe.Create("Query Source"))
                 using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
                 {
                     // Запрос к данным посылаем вне транзакции, иначе будет DTC
                     var accessor = _accessors[ruleCode];
-                    sourceObjects = accessor.GetSource().Where(filter).ToList();
+                    var query = accessor.GetSource().Where(filter);
+                    sourceObjects = query.ToList();
                     scope.Complete();
-                }
-
-                using (Probe.Create("Query Target"))
-                {
-                    destObjects = _query.For<Version.ValidationResult>().Where(x => x.MessageType == (int)ruleCode).Where(filter).GetValidationResults(version).ToList();
                 }
 
                 using (Probe.Create("Merge"))
                 {
+                    var destObjects = currentVersionResults.Where(x => x.MessageType == (int)ruleCode).Where(filter.Compile());
                     var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
                     return mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved());
                 }
