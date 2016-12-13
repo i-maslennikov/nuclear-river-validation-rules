@@ -23,6 +23,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
+            IBulkRepository<Order.InvalidCategory> invalidCategoryRepository,
+            IBulkRepository<Order.InvalidCategoryFirmAddress> invalidCategoryFirmAddressRepository,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
             IBulkRepository<Order.InvalidFirmAddress> orderInvalidFirmAddressRepository,
             IBulkRepository<Order.BargainSignedLaterThanOrder> orderBargainSignedLaterThanOrderRepository,
@@ -42,6 +44,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
+                HasValueObject(new InvalidCategoryAccessor(query), invalidCategoryRepository),
+                HasValueObject(new InvalidCategoryFirmAddressAccessor(query), invalidCategoryFirmAddressRepository),
                 HasValueObject(new InvalidFirmAccessor(query), orderInvalidFirmRepository),
                 HasValueObject(new InvalidFirmAddressAccessor(query), orderInvalidFirmAddressRepository),
                 HasValueObject(new OrderBargainSignedLaterThanOrderAccessor(query), orderBargainSignedLaterThanOrderRepository),
