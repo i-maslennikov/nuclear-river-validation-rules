@@ -410,20 +410,20 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             // todo: сравнить запросы left join и exists
             public IQueryable<Order.InactiveReference> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from boou in _query.For<Facts::BranchOfficeOrganizationUnit>().Where(x => x.Id == order.BranchOfficeOrganizationUnitId.Value).DefaultIfEmpty()
-                   from bo in _query.For<Facts::BranchOffice>().Where(x => x.Id == boou.BranchOfficeId).DefaultIfEmpty()
-                   from legalPerson in _query.For<Facts::LegalPerson>().Where(x => x.Id == order.LegalPersonId.Value).DefaultIfEmpty()
-                   from legalPersonProfile in _query.For<Facts::LegalPersonProfile>().Where(x => x.Id == order.LegalPersonProfileId.Value).DefaultIfEmpty()
-                   from deal in _query.For<Facts::Deal>().Where(x => x.Id == order.DealId.Value).DefaultIfEmpty()
+                   from boou in _query.For<Facts::BranchOfficeOrganizationUnit>().Where(x => x.Id == order.BranchOfficeOrganizationUnitId).DefaultIfEmpty()
+                   from bo in _query.For<Facts::BranchOffice>().Where(x => boou != null && x.Id == boou.BranchOfficeId).DefaultIfEmpty()
+                   from legalPerson in _query.For<Facts::LegalPerson>().Where(x => x.Id == order.LegalPersonId).DefaultIfEmpty()
+                   from legalPersonProfile in _query.For<Facts::LegalPersonProfile>().Where(x => x.Id == order.LegalPersonProfileId).DefaultIfEmpty()
+                   from deal in _query.For<Facts::Deal>().Where(x => x.Id == order.DealId).DefaultIfEmpty()
                    where boou == null || bo == null || legalPerson == null || legalPersonProfile == null || deal == null
                    select new Order.InactiveReference
                        {
                            OrderId = order.Id,
-                           BranchOfficeOrganizationUnit = order.BranchOfficeOrganizationUnitId.HasValue && boou == null,
+                           BranchOfficeOrganizationUnit = order.BranchOfficeOrganizationUnitId != null && boou == null,
                            BranchOffice = boou != null && bo == null,
-                           LegalPerson = order.LegalPersonId.HasValue && legalPerson == null,
-                           LegalPersonProfile = order.LegalPersonProfileId.HasValue && legalPersonProfile == null,
-                           Deal = order.DealId.HasValue && deal == null,
+                           LegalPerson = order.LegalPersonId != null && legalPerson == null,
+                           LegalPersonProfile = order.LegalPersonProfileId != null && legalPersonProfile == null,
+                           Deal = order.DealId != null && deal == null,
                        };
 
             public FindSpecification<Order.InactiveReference> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -509,13 +509,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.InvalidBillsPeriod> GetSource()
-                => from order in _query.For<Facts::Order>()
-                   let minimumDate = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Min(x => x.Begin)
-                   let maximumDate = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Max(x => x.End)
+                => from bill in _query.For<Facts::Bill>()
+                   group bill by bill.OrderId
+                   into billGroup
+                   let minimumDate = billGroup.Min(x => x.Begin)
+                   let maximumDate = billGroup.Max(x => x.End)
+                   from order in _query.For<Facts::Order>().Where(x => x.Id == billGroup.Key)
                    where order.BeginDistribution != minimumDate || order.EndDistributionPlan != maximumDate
                    select new Order.InvalidBillsPeriod
                        {
-                           OrderId = order.Id,
+                           OrderId = order.Id
                        };
 
             public FindSpecification<Order.InvalidBillsPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

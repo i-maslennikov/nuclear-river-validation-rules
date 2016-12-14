@@ -61,11 +61,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Period> GetSource()
             {
+                // не менять код, он выверен до буквы
                 var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
                                   .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, OrganizationUnitId = x.DestOrganizationUnitId }))
                                   .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, OrganizationUnitId = x.DestOrganizationUnitId }))
                                   .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
-                                  .SelectMany(x => _query.For<Facts::Project>().Where(p => p.OrganizationUnitId == x.OrganizationUnitId).DefaultIfEmpty(),
+                                  .SelectMany(x => _query.For<Facts::Project>().Where(p => p.OrganizationUnitId == x.OrganizationUnitId),
                                               (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
                                   .OrderBy(x => x.Date);
 

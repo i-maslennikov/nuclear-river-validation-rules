@@ -15,6 +15,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                 .Name(nameof(Price))
                 .Fact(
+                    new Facts::Project(),
                     new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
                     // Position без ограничений
@@ -56,6 +57,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                 .Name(nameof(PriceWithAssociatedPositionGroupOvercount))
                 .Fact(
+                    new Facts::Project(),
+
                     new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
                     // Position с ограничениями

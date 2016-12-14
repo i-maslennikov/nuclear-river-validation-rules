@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                      .Union(query.For<Project>().Select(x => new { ProjectId = x.Id, Date = DateTime.MinValue })); // Фиктивное начало для каждого проекта, даже если в нём нет ни одной тематики по умолчанию
 
             var projectPeriods = from date in dates
-                                 let nextDate = dates.FirstOrDefault(x => x.ProjectId == date.ProjectId && x.Date > date.Date).Date
+                                 from nextDate in dates.Where(x => x.ProjectId == date.ProjectId && x.Date > date.Date).OrderBy(x => x.Date).Take(1).DefaultIfEmpty()
                                  select new
                                      {
                                          Start = date.Date,
