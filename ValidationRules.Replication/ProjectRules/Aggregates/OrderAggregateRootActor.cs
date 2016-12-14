@@ -101,7 +101,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                     };
 
             public IQueryable<Order.AddressAdvertisement> GetSource()
-                => from order in _query.For<Facts::Order>()
+                => (from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == orderPositionAdvertisement.PositionId)
@@ -110,10 +110,10 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                        {
                            OrderId = order.Id,
                            OrderPositionId = orderPosition.Id,
-                           PositionId = orderPositionAdvertisement.PositionId,
+                           PositionId = position.Id,
                            AddressId = firmAddress.Id,
                            MustBeLocatedOnTheMap = !ExceptionalCategoryCodes.Contains(position.CategoryCode)
-                       };
+                       }).Distinct();
 
             public FindSpecification<Order.AddressAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

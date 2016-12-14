@@ -390,7 +390,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     };
 
             public IQueryable<Order.OrderPositionAdvertisement> GetSource()
-                => from order in _query.For<Facts::Order>()
+                => (from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                    where opa.AdvertisementId != null
@@ -400,7 +400,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        OrderPositionId = orderPosition.Id,
                        PositionId = opa.PositionId,
                        AdvertisementId = opa.AdvertisementId.Value
-                   };
+                   }).Distinct();
 
             public FindSpecification<Order.OrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
