@@ -272,6 +272,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
                    let categoryBelongToFirmAddress = _query.For<Facts::FirmAddress>()
+                                                           .Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
+                                                           .Where(x => x.FirmId == order.FirmId)
                                                            .SelectMany(fa => _query.For<Facts::FirmAddressCategory>().Where(cfa => cfa.FirmAddressId == fa.Id))
                                                            .Any(x => x.CategoryId == opa.CategoryId)
                    let state = !category.IsActiveNotDeleted ? InvalidCategoryState.Inactive
