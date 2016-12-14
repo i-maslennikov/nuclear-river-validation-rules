@@ -23,6 +23,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
+            IBulkRepository<Order.InvalidCategory> invalidCategoryRepository,
+            IBulkRepository<Order.InvalidCategoryFirmAddress> invalidCategoryFirmAddressRepository,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
             IBulkRepository<Order.InvalidFirmAddress> orderInvalidFirmAddressRepository,
             IBulkRepository<Order.BargainSignedLaterThanOrder> orderBargainSignedLaterThanOrderRepository,
@@ -42,6 +44,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
+                HasValueObject(new InvalidCategoryAccessor(query), invalidCategoryRepository),
+                HasValueObject(new InvalidCategoryFirmAddressAccessor(query), invalidCategoryFirmAddressRepository),
                 HasValueObject(new InvalidFirmAccessor(query), orderInvalidFirmRepository),
                 HasValueObject(new InvalidFirmAddressAccessor(query), orderInvalidFirmAddressRepository),
                 HasValueObject(new OrderBargainSignedLaterThanOrderAccessor(query), orderBargainSignedLaterThanOrderRepository),
@@ -268,6 +272,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
                    let categoryBelongToFirmAddress = _query.For<Facts::FirmAddress>()
+                                                           .Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
+                                                           .Where(x => x.FirmId == order.FirmId)
                                                            .SelectMany(fa => _query.For<Facts::FirmAddressCategory>().Where(cfa => cfa.FirmAddressId == fa.Id))
                                                            .Any(x => x.CategoryId == opa.CategoryId)
                    let state = !category.IsActiveNotDeleted ? InvalidCategoryState.Inactive
