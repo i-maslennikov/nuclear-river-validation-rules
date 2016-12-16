@@ -180,6 +180,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accessors\NomenclatureCategoryAccessor.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderCouponPeriodMustBeInRelease.cs" />
     <Compile Include="Accessors\PositionChildAccessor.cs" />
     <Compile Include="AccountRules\Aggregates\AccountAggregateRootActor.cs" />

@@ -40,6 +40,7 @@ namespace NuClear.ValidationRules.Replication
                             typeof(LegalPerson),
                             typeof(LegalPersonProfile),
                             typeof(Lock),
+                            typeof(NomenclatureCategory),
                             typeof(Order),
                             typeof(OrderPosition),
                             typeof(OrderPositionAdvertisement),

@@ -111,10 +111,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                     yield return new SyncDataObjectCommand(typeof(UnlimitedOrder), change.Item2);
                 }
 
-
                 foreach (var change in changes.Where(x => x.Item1.Id == EntityTypeAdvertisementElementStatus.Instance.Id))
                 {
                     yield return new SyncDataObjectCommand(typeof(AdvertisementElement), change.Item2);
+                }
+
+                foreach (var change in changes.Where(x => x.Item1.Id == EntityTypePricePosition.Instance.Id))
+                {
+                    yield return new SyncDataObjectCommand(typeof(NomenclatureCategory), change.Item2);
                 }
             }
         }

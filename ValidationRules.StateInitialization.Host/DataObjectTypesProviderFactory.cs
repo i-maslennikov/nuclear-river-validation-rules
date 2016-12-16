@@ -54,6 +54,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(Facts::LegalPerson),
                             typeof(Facts::LegalPersonProfile),
                             typeof(Facts::Lock),
+                            typeof(Facts::NomenclatureCategory),
                             typeof(Facts::Order),
                             typeof(Facts::OrderPosition),
                             typeof(Facts::OrderPositionAdvertisement),

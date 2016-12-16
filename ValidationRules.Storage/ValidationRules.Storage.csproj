@@ -192,6 +192,7 @@
     <Compile Include="Model\Facts\Order.cs" />
     <Compile Include="Model\Facts\Account.cs" />
     <Compile Include="Model\Facts\OrderPosition.cs" />
+    <Compile Include="Model\Facts\NomenclatureCategory.cs" />
     <Compile Include="Model\Facts\PositionChild.cs" />
     <Compile Include="Model\Facts\Project.cs" />
     <Compile Include="Model\Facts\ReleaseWithdrawal.cs" />

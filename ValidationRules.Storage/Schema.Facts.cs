@@ -98,6 +98,10 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Lock>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
+            builder.Entity<NomenclatureCategory>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.Id)
+                   .HasPrimaryKey(x => x.PriceId);
             builder.Entity<Order>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
