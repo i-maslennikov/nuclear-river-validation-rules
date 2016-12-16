@@ -98,7 +98,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                             End = item.Key.Start.AddMonths(1),
                             ReleaseAmount = item.Where(x => x.Type == 1).Select(x => x.Amount).Sum(),
                             LockedAmount = item.Where(x => x.Type == 3).Select(x => x.Amount).Sum(),
-                            OwerallLockedAmount = sum.Sum,
+                            OwerallLockedAmount = sum != null ? sum.Sum : 0,
                         };
 
                 return result;
@@ -123,15 +123,23 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     join account in _query.For<Facts::Account>() on @lock.AccountId equals account.Id
                     select new { AccountId = account.Id, Start = @lock.Start, ReleaseWithdrawal = 0M, Lock = @lock.Amount };
 
+                var lockSums =
+                    from @lock in _query.For<Facts::Lock>().GroupBy(x => x.AccountId)
+                    select new { AccountId = @lock.Key, Sum = @lock.Select(x => x.Amount).Sum() };
+
                 var result =
                     from item in releaseWithdrawals.Union(locks).Select(x => new { x.AccountId, x.Start, x.Lock, x.ReleaseWithdrawal }).GroupBy(a => new { a.AccountId, a.Start })
+                    from account in _query.For<Facts::Account>().Where(x => x.Id == item.Key.AccountId)
+                    from sum in lockSums.Where(x => x.AccountId == item.Key.AccountId).DefaultIfEmpty()
                     select new AccountPeriod
                         {
                             AccountId = item.Key.AccountId,
                             Start = item.Key.Start,
                             End = item.Key.Start.AddMonths(1),
+                            Balance = account.Balance,
                             ReleaseAmount = item.Select(x => x.ReleaseWithdrawal).Sum(),
                             LockedAmount = item.Select(x => x.Lock).Sum(),
+                            OwerallLockedAmount = sum == null ? sum.Sum : 0,
                         };
 
                 return result;
