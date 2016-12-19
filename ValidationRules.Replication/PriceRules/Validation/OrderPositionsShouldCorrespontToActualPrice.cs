@@ -29,13 +29,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var result =
+            var orders =
                 from order in query.For<Order>()
-                from begin in query.For<OrderPeriod>().OrderBy(x => x.Start).Where(x => x.OrderId == order.Id).Take(1)
-                from end in query.For<OrderPeriod>().OrderByDescending(x => x.Start).Where(x => x.OrderId == order.Id).Take(1)
-                from period in query.For<Period>().Where(x => x.Start == end.Start && x.OrganizationUnitId == end.OrganizationUnitId)
-                let price = query.For<PricePeriod>().OrderBy(x => x.Start).FirstOrDefault(x => x.Start <= begin.Start && x.OrganizationUnitId == begin.OrganizationUnitId)
-                where price == null
+                from start in query.For<OrderPeriod>().Where(x => x.OrderId == order.Id)
+                from end in query.For<OrderPeriod>().Where(x => x.OrderId == order.Id).SelectMany(x => query.For<Period>().Where(y => y.Start == x.Start && y.OrganizationUnitId == x.OrganizationUnitId))
+                group new { start.Start, end.End } by new { order.Id, order.Number, start.OrganizationUnitId } into groups
+                select new { groups.Key.Id, groups.Key.Number, groups.Key.OrganizationUnitId, Start = groups.Min(x => x.Start), End = groups.Max(x => x.End) };
+
+            var result =
+                from order in orders
+                where !query.For<PricePeriod>().Any(x => x.Start <= order.Start && x.OrganizationUnitId == order.OrganizationUnitId)
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(new XElement("root",
@@ -43,8 +46,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                 new XAttribute("id", order.Id),
                                 new XAttribute("name", order.Number)))),
 
-                        PeriodStart = begin.Start,
-                        PeriodEnd = period.End,
+                        PeriodStart = order.Start,
+                        PeriodEnd = order.End,
                         OrderId = order.Id,
 
                         Result = RuleResult,
