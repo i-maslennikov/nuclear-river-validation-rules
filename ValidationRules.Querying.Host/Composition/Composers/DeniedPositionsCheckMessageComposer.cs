@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                $"{MakePositionText(first)} {{0}} является запрещённой для: {MakePositionText(second)} {{1}}  в заказе {2}",
+                $"{MakePositionText(first)} {{0}} является запрещённой для: {MakePositionText(second)} {{1}}  в заказе {{2}}",
                 new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
                 new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName),
                 new EntityReference("Order", second.OrderId, second.OrderNumber));
