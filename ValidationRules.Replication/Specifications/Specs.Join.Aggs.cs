@@ -38,6 +38,24 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 }
 
                 /// <summary>
+                /// Возвращает выражение для сопоставления основных и сопутствующих позиций.
+                /// Выражение учитывает все типы сравнения объектов привязки.
+                /// Но не учитывает "области видимости" позиций.
+                /// </summary>
+                public static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> AvailablePrincipalPositionDefaultIfEmpty(IQueryable<Dto<OrderPosition>> principals)
+                {
+                    Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
+                        associated => principals.Where(principal => MatchedPeriod<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
+                                                .Where(principal => associated.Position.BindingType == NoDependency ||
+                                                                    associated.Position.BindingType == Match && MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
+                                                                    associated.Position.BindingType == Different && !MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
+                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
+                                                                    principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId)
+                                                .DefaultIfEmpty();
+                    return (Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                }
+
+                /// <summary>
                 /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
                 /// </summary>
                 public static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> WithMatchedBindingObject(IQueryable<Dto<OrderPosition>> principals)
@@ -48,6 +66,21 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                 .Where(principal => MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
+                    return (Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                }
+
+                /// <summary>
+                /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
+                /// </summary>
+                public static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> WithMatchedBindingObjectDefaultIfEmpty(IQueryable<Dto<OrderPosition>> principals)
+                {
+                    Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
+                        associated => principals.Where(principal => MatchedPeriod<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
+                                                .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
+                                                .Where(principal => MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
+                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
+                                                                    principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId)
+                                                .DefaultIfEmpty();
                     return (Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
@@ -95,7 +128,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// <summary>
                 /// Возвращает выражение для пересечения влияющих друг на друга позиций (сопутствующих или запрещённых)
                 /// </summary>
-                public static Expression<Func<Dto<OrderPosition>, Dto<T>, bool>> MatchedPeriod<T>()
+                private static Expression<Func<Dto<OrderPosition>, Dto<T>, bool>> MatchedPeriod<T>()
                 {
                     return (principal, dto) => principal.FirmId == dto.FirmId &&
                                                principal.Start == dto.Start &&
@@ -108,7 +141,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// https://github.com/2gis/nuclear-river/blob/feature/validation-rules/docs/ru/validation-rules/compare-linking-objects.md
                 /// Выражение достаточно не тривиальное и используется многократно, поэтому и создан <see cref="ExpandMethodCallVisitor"/>
                 /// </summary>
-                public static Expression<Func<OrderPosition, T, bool>> MatchedBindingObjects<T>()
+                private static Expression<Func<OrderPosition, T, bool>> MatchedBindingObjects<T>()
                     where T: IBindingObject
                 {
                     return (position, binding) => (binding.HasNoBinding == position.HasNoBinding) &&

@@ -54,7 +54,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Dto<OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var notSatisfiedPositions =
-                associatedPositions.SelectMany(Specs.Join.Aggs.AvailablePrincipalPosition(orderPositions.Where(x => x.Scope == 0).DefaultIfEmpty()), (associated, principal) => new { associated, has = principal != null })
+                associatedPositions.SelectMany(Specs.Join.Aggs.AvailablePrincipalPositionDefaultIfEmpty(orderPositions.Where(x => x.Scope == 0)), (associated, principal) => new { associated, has = principal != null })
                                    .GroupBy(x => new
                                        {
                                            x.associated.Start,

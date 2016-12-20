@@ -72,7 +72,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Dto<OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var unsatisfiedPositions =
-                associatedPositions.SelectMany(Specs.Join.Aggs.WithMatchedBindingObject(orderPositions.DefaultIfEmpty()), (associated, principal) => new { associated, principal })
+                associatedPositions.SelectMany(Specs.Join.Aggs.WithMatchedBindingObjectDefaultIfEmpty(orderPositions), (associated, principal) => new { associated, principal })
                                    .GroupBy(x => new
                                    {
                                        // можно включать все поля, какие захотим иметь в выборке, кроме двух: PrincipalPositionId, Source
