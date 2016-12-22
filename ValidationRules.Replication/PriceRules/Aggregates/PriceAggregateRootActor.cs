@@ -88,9 +88,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                                            join p in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsControlledByAmount && x.CategoryCode == groups.Key.CategoryCode).OrderBy(x => x.Id) on pp.PositionId
                                                equals p.Id
                                            select p.Name).First(), // Этот кусок кода достаточно точно отражает текущее поведение в erm, решение лучше - создать справочник и слушать поток flowNomenclatures.NomenclatureCategory
-                       Max = groups.Min(x => x.MaxAdvertisementAmount) ?? int.MaxValue,
+                           Max = groups.Min(x => x.MaxAdvertisementAmount) ?? int.MaxValue,
                            Min = groups.Max(x => x.MinAdvertisementAmount) ?? 0,
-                           MissingMinimalRestriction = groups.Any(x => x.MinAdvertisementAmount == null)
+                           MissingMinimalRestriction = groups.Max(x => x.MinAdvertisementAmount) == null
                        };
 
             public FindSpecification<AdvertisementAmountRestriction> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
