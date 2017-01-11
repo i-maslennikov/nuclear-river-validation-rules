@@ -21,38 +21,38 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // Фирма 1
                     // Одобренный заказ с основной позицией
                     new Aggregates::Order { Id = 1, Number = "Order", FirmId = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
-                    new Aggregates::OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
+                    new Aggregates::Order.OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
 
                     // Заказ "на утверждении" с сопутствующей позицией
                     new Aggregates::Order { Id = 2, Number = "Order", FirmId = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(2), Scope = -1 },
-                    new Aggregates::OrderAssociatedPosition { OrderId = 2, CauseOrderPositionId = 3, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 1, BindingType = 3, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(2), Scope = -1 },
+                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 2, CauseOrderPositionId = 3, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 1, BindingType = 3, Category1Id = 1, Category3Id = 3 },
 
                     // Фирма 2
                     // Одобренный заказ с основной позицией
                     new Aggregates::Order { Id = 3, Number = "Order", FirmId = 2 },
-                    new Aggregates::OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPeriod { OrderId = 3, Start = MonthStart(2), Scope = 0 },
-                    new Aggregates::OrderPosition { OrderId = 3, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(2), Scope = 0 },
+                    new Aggregates::Order.OrderPosition { OrderId = 3, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
 
                     // Заказ "на оформлении" с сопутствующей позицией
                     new Aggregates::Order { Id = 4, Number = "Order", FirmId = 2 },
-                    new Aggregates::OrderPeriod { OrderId = 4, Start = MonthStart(2), Scope = 4 },
-                    new Aggregates::OrderAssociatedPosition { OrderId = 4, CauseOrderPositionId = 3, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 1, BindingType = 3, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(2), Scope = 4 },
+                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 4, CauseOrderPositionId = 3, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 1, BindingType = 3, Category1Id = 1, Category3Id = 3 },
 
                     // Фирма 3
                     // Заказ "на утверждении" с основной позицией
                     new Aggregates::Order { Id = 5, Number = "Order", FirmId = 3 },
-                    new Aggregates::OrderPeriod { OrderId = 5, Start = MonthStart(1), Scope = -1 },
-                    new Aggregates::OrderPeriod { OrderId = 5, Start = MonthStart(2), Scope = -1 },
-                    new Aggregates::OrderPosition { OrderId = 5, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 5, Start = MonthStart(1), Scope = -1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 5, Start = MonthStart(2), Scope = -1 },
+                    new Aggregates::Order.OrderPosition { OrderId = 5, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
 
                     // Заказ "на оформлении", с сопутствующей позицией
                     new Aggregates::Order { Id = 6, Number = "Order", FirmId = 3 },
-                    new Aggregates::OrderPeriod { OrderId = 6, Start = MonthStart(2), Scope = 6 },
-                    new Aggregates::OrderAssociatedPosition { OrderId = 6, CauseOrderPositionId = 3, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 1, BindingType = 3, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 6, Start = MonthStart(2), Scope = 6 },
+                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 6, CauseOrderPositionId = 3, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 1, BindingType = 3, Category1Id = 1, Category3Id = 3 },
 
                     new Aggregates::Position { Id = 1, Name = "Position" },
                     new Aggregates::Position { Id = 4, Name = "Position" },
@@ -62,7 +62,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Period { Start = MonthStart(3), End = MonthStart(4) },
                     new Aggregates::Period { Start = MonthStart(4), End = MonthStart(5) },
                     new Aggregates::Period { Start = MonthStart(5), End = MonthStart(6) },
-                    new Aggregates::PricePeriod { Start = MonthStart(1) })
+                    new Aggregates::Period.PricePeriod { Start = MonthStart(1) })
                 .Message(
                     new Messages::Version.ValidationResult
                         {

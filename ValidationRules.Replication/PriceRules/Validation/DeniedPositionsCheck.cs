@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        private static readonly Expression<Func<Dto<OrderDeniedPosition>, Dto<OrderPosition>, PrincipalDeniedDto>> PrincipalDeniedProjection =
+        private static readonly Expression<Func<Dto<Order.OrderDeniedPosition>, Dto<Order.OrderPosition>, PrincipalDeniedDto>> PrincipalDeniedProjection =
             (denied, principal) => new PrincipalDeniedDto
                 {
                     FirmId = denied.FirmId,
@@ -59,16 +59,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var orderPositions =
-                from position in query.For<OrderPosition>()
+                from position in query.For<Order.OrderPosition>()
                 join order in query.For<Order>() on position.OrderId equals order.Id
-                join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
-                select new Dto<OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
+                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
+                select new Dto<Order.OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var deniedPositions =
-                from position in query.For<OrderDeniedPosition>()
+                from position in query.For<Order.OrderDeniedPosition>()
                 join order in query.For<Order>() on position.OrderId equals order.Id
-                join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
-                select new Dto<OrderDeniedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
+                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
+                select new Dto<Order.OrderDeniedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var match = deniedPositions.Where(x => x.Position.BindingType == Match)
                                        .SelectMany(Specs.Join.Aggs.DeniedWithMatchedBindingObject(orderPositions), PrincipalDeniedProjection);

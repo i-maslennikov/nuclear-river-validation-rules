@@ -43,15 +43,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             // Но есть нюанс: можно одобрить заказ, а потом действующий прайс изменится. Эта ситуация должна вызывать не ошибку, а предупреждение.
             var orderPrices =
                 from order in query.For<Order>()
-                let orderStart = query.For<OrderPeriod>().Where(x => x.OrderId == order.Id).Min(x => x.Start)
-                let orderEnd = query.For<OrderPeriod>().SelectMany(x => query.For<Period>().Where(y => x.OrderId == order.Id && y.Start == x.Start && y.OrganizationUnitId == x.OrganizationUnitId)).Max(x => x.End)
-                from orderPeriod in query.For<OrderPeriod>().Where(x => x.OrderId == order.Id && x.Start == orderStart)
-                from pricePeriod in query.For<PricePeriod>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
+                let orderStart = query.For<Period.OrderPeriod>().Where(x => x.OrderId == order.Id).Min(x => x.Start)
+                let orderEnd = query.For<Period.OrderPeriod>().SelectMany(x => query.For<Period>().Where(y => x.OrderId == order.Id && y.Start == x.Start && y.OrganizationUnitId == x.OrganizationUnitId)).Max(x => x.End)
+                from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == order.Id && x.Start == orderStart)
+                from pricePeriod in query.For<Period.PricePeriod>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
                 from period in query.For<Period>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
                 select new { Order = order, ActualPriceId = pricePeriod.PriceId, Start = period.Start, End = orderEnd, ProjectId = period.ProjectId, Scope = orderPeriod.Scope };
 
             var notRelevantPositions =
-                from position in query.For<OrderPricePosition>()
+                from position in query.For<Order.OrderPricePosition>()
                 from actual in orderPrices.Where(x => x.Order.Id == position.OrderId && x.ActualPriceId != position.PriceId)
                 select new { Order = actual.Order, Position = position, Start = actual.Start, End = actual.End, ProjectId = actual.ProjectId, Scope = actual.Scope };
 

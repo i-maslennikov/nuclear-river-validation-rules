@@ -36,14 +36,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         {
             var orderPositions =
                 from order in query.For<Order>()
-                join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
-                join position in query.For<OrderPosition>() on order.Id equals position.OrderId
+                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
+                join position in query.For<Order.OrderPosition>() on order.Id equals position.OrderId
                 select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
 
             var associatedPositions =
                 from order in query.For<Order>()
-                join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
-                join position in query.For<OrderAssociatedPosition>() on order.Id equals position.OrderId
+                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
+                join position in query.For<Order.OrderAssociatedPosition>() on order.Id equals position.OrderId
                 select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
 
             var satisfiedPositions =

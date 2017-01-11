@@ -17,34 +17,34 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(MaximumAdvertisementAmount))
                 .Aggregate(
-                    new Aggregates::AdvertisementAmountRestriction { CategoryCode = 1, CategoryName = "Category", Max = 2 },
+                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 1, CategoryName = "Category", Max = 2 },
 
                     new Aggregates::Order { Id = 1, Number = "Order" },
-                    new Aggregates::AmountControlledPosition { OrderId = 1, CategoryCode = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
+                    new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
 
                     new Aggregates::Order { Id = 2, Number = "Order" },
-                    new Aggregates::AmountControlledPosition { OrderId = 2, CategoryCode = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(2), Scope = 0 },
+                    new Aggregates::Order.AmountControlledPosition { OrderId = 2, CategoryCode = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(2), Scope = 0 },
 
                     new Aggregates::Order { Id = 3, Number = "Order" },
-                    new Aggregates::AmountControlledPosition { OrderId = 3, CategoryCode = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = -1 },
+                    new Aggregates::Order.AmountControlledPosition { OrderId = 3, CategoryCode = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = -1 },
 
                     new Aggregates::Order { Id = 4, Number = "Order" },
-                    new Aggregates::AmountControlledPosition { OrderId = 4, CategoryCode = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 4, Start = MonthStart(1), Scope = 4 },
+                    new Aggregates::Order.AmountControlledPosition { OrderId = 4, CategoryCode = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(1), Scope = 4 },
 
                     new Aggregates::Order { Id = 5, Number = "Order" },
-                    new Aggregates::AmountControlledPosition { OrderId = 5, CategoryCode = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 5, Start = MonthStart(2), Scope = 5 },
+                    new Aggregates::Order.AmountControlledPosition { OrderId = 5, CategoryCode = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 5, Start = MonthStart(2), Scope = 5 },
 
                     new Aggregates::Period { Start = MonthStart(1), End = MonthStart(2) },
                     new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3) },
-                    new Aggregates::PricePeriod { Start = MonthStart(1) },
-                    new Aggregates::PricePeriod { Start = MonthStart(2) })
+                    new Aggregates::Period.PricePeriod { Start = MonthStart(1) },
+                    new Aggregates::Period.PricePeriod { Start = MonthStart(2) })
                 .Message(
                     new Messages::Version.ValidationResult
                         {

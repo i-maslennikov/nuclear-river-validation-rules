@@ -32,8 +32,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var sales =
-                from orderPosition in query.For<OrderPosition>().Where(x => x.ThemeId != null)
-                from orderPeriod in query.For<OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
+                from orderPosition in query.For<Order.OrderPosition>().Where(x => x.ThemeId != null)
+                from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
                 select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.ThemeId };
 
             var saleCounts =

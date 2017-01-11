@@ -21,59 +21,59 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // Фирма 1: "На утверждении" видит "Одобренный", но не наоборот
                     // заказ с основной позицией
                     new Aggregates::Order { Id = 1, Number = "Order", FirmId = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
-                    new Aggregates::OrderDeniedPosition { OrderId = 1, BindingType = 2, CauseOrderPositionId = 1, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Order.OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 1, BindingType = 2, CauseOrderPositionId = 1, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
 
                     // заказ с конфликтующей позицией
                     new Aggregates::Order { Id = 2, Number = "Order", FirmId = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(1), Scope = -1 },
-                    new Aggregates::OrderPosition { OrderId = 2, OrderPositionId = 2, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
-                    new Aggregates::OrderDeniedPosition { OrderId = 2, BindingType = 2, CauseOrderPositionId = 2, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(1), Scope = -1 },
+                    new Aggregates::Order.OrderPosition { OrderId = 2, OrderPositionId = 2, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 2, BindingType = 2, CauseOrderPositionId = 2, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
 
                     // Фирма 2: "На оформлении" видит "На утверждении", но не наоборот
                     // заказ с основной позицией
                     new Aggregates::Order { Id = 3, Number = "Order", FirmId = 2 },
-                    new Aggregates::OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = -1 },
-                    new Aggregates::OrderPosition { OrderId = 3, OrderPositionId = 3, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
-                    new Aggregates::OrderDeniedPosition { OrderId = 3, BindingType = 2, CauseOrderPositionId = 3, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = -1 },
+                    new Aggregates::Order.OrderPosition { OrderId = 3, OrderPositionId = 3, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 3, BindingType = 2, CauseOrderPositionId = 3, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
 
                     // "на утверждении" с конфликтующей позицией
                     new Aggregates::Order { Id = 4, Number = "Order", FirmId = 2 },
-                    new Aggregates::OrderPeriod { OrderId = 4, Start = MonthStart(1), Scope = 4 },
-                    new Aggregates::OrderPosition { OrderId = 4, OrderPositionId = 4, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
-                    new Aggregates::OrderDeniedPosition { OrderId = 4, BindingType = 2, CauseOrderPositionId = 4, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(1), Scope = 4 },
+                    new Aggregates::Order.OrderPosition { OrderId = 4, OrderPositionId = 4, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 4, BindingType = 2, CauseOrderPositionId = 4, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
 
                     // Фирма 3: "Одобренный" видит "Одобренный"
                     // заказ с основной позицией
                     new Aggregates::Order { Id = 5, Number = "Order", FirmId = 3 },
-                    new Aggregates::OrderPeriod { OrderId = 5, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPosition { OrderId = 5, OrderPositionId = 5, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
-                    new Aggregates::OrderDeniedPosition { OrderId = 5, BindingType = 2, CauseOrderPositionId = 5, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 5, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Order.OrderPosition { OrderId = 5, OrderPositionId = 5, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 5, BindingType = 2, CauseOrderPositionId = 5, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
 
                     // заказ с конфликтующей позицией
                     new Aggregates::Order { Id = 6, Number = "Order", FirmId = 3 },
-                    new Aggregates::OrderPeriod { OrderId = 6, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPosition { OrderId = 6, OrderPositionId = 6, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
-                    new Aggregates::OrderDeniedPosition { OrderId = 6, BindingType = 2, CauseOrderPositionId = 6, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 6, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Order.OrderPosition { OrderId = 6, OrderPositionId = 6, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 6, BindingType = 2, CauseOrderPositionId = 6, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
 
                     // Фирма 4: "На утверждении" видит "На утверждении"
                     // заказ с основной позицией
                     new Aggregates::Order { Id = 7, Number = "Order", FirmId = 4 },
-                    new Aggregates::OrderPeriod { OrderId = 7, Start = MonthStart(1), Scope = -1 },
-                    new Aggregates::OrderPosition { OrderId = 7, OrderPositionId = 7, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
-                    new Aggregates::OrderDeniedPosition { OrderId = 7, BindingType = 2, CauseOrderPositionId = 7, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 7, Start = MonthStart(1), Scope = -1 },
+                    new Aggregates::Order.OrderPosition { OrderId = 7, OrderPositionId = 7, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 7, BindingType = 2, CauseOrderPositionId = 7, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
 
                     // заказ с конфликтующей позицией
                     new Aggregates::Order { Id = 8, Number = "Order", FirmId = 4 },
-                    new Aggregates::OrderPeriod { OrderId = 8, Start = MonthStart(1), Scope = -1 },
-                    new Aggregates::OrderPosition { OrderId = 8, OrderPositionId = 8, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
-                    new Aggregates::OrderDeniedPosition { OrderId = 8, BindingType = 2, CauseOrderPositionId = 8, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 8, Start = MonthStart(1), Scope = -1 },
+                    new Aggregates::Order.OrderPosition { OrderId = 8, OrderPositionId = 8, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 8, BindingType = 2, CauseOrderPositionId = 8, CausePackagePositionId = 1, CauseItemPositionId = 1, DeniedPositionId = 1 },
 
                     new Aggregates::Position { Id = 1, Name = "Position" },
 
                     new Aggregates::Period { Start = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::PricePeriod { Start = MonthStart(1) })
+                    new Aggregates::Period.PricePeriod { Start = MonthStart(1) })
                 .Message(
                     new Messages::Version.ValidationResult
                         {

@@ -31,10 +31,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         {
             var result =
                 from order in query.For<Order>()
-                from begin in query.For<OrderPeriod>().OrderBy(x => x.Start).Where(x => x.OrderId == order.Id).Take(1)
-                from end in query.For<OrderPeriod>().OrderByDescending(x => x.Start).Where(x => x.OrderId == order.Id).Take(1)
+                from begin in query.For<Period.OrderPeriod>().OrderBy(x => x.Start).Where(x => x.OrderId == order.Id).Take(1)
+                from end in query.For<Period.OrderPeriod>().OrderByDescending(x => x.Start).Where(x => x.OrderId == order.Id).Take(1)
                 let period = query.For<Period>().FirstOrDefault(x => x.Start == end.Start && x.OrganizationUnitId == end.OrganizationUnitId)
-                let price = query.For<PricePeriod>().OrderBy(x => x.Start).FirstOrDefault(x => x.Start <= begin.Start && x.OrganizationUnitId == begin.OrganizationUnitId)
+                let price = query.For<Period.PricePeriod>().OrderBy(x => x.Start).FirstOrDefault(x => x.Start <= begin.Start && x.OrganizationUnitId == begin.OrganizationUnitId)
                 where price == null
                 select new Version.ValidationResult
                     {

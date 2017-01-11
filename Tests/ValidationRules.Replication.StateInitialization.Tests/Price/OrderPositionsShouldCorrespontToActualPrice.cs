@@ -17,16 +17,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     .Name(nameof(OrderPositionsShouldCorrespontToActualPrice))
                     .Aggregate(
                         new Aggregates::Order { Id = 1, Number = "InvalidOrder" },
-                        new Aggregates::OrderPeriod { OrderId = 1, Start = FirstDayJan },
-                        new Aggregates::OrderPeriod { OrderId = 1, Start = FirstDayFeb },
+                        new Aggregates::Period.OrderPeriod { OrderId = 1, Start = FirstDayJan },
+                        new Aggregates::Period.OrderPeriod { OrderId = 1, Start = FirstDayFeb },
 
                         new Aggregates::Order { Id = 2, Number = "ValidOrder" },
-                        new Aggregates::OrderPeriod { OrderId = 2, Start = FirstDayFeb },
+                        new Aggregates::Period.OrderPeriod { OrderId = 2, Start = FirstDayFeb },
 
                         new Aggregates::Period { Start = FirstDayJan, End = FirstDayFeb },
                         new Aggregates::Period { Start = FirstDayFeb, End = FirstDayMar },
 
-                        new Aggregates::PricePeriod { Start = FirstDayFeb },
+                        new Aggregates::Period.PricePeriod { Start = FirstDayFeb },
 
                         new Aggregates::Price())
                     .Message(
