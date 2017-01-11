@@ -103,8 +103,6 @@ create table PriceAggregates.OrderPosition(
     FirmAddressId bigint NULL,
 
     ThemeId bigint NULL,
-
-    Source nvarchar(16) NULL,
 )
 create index IX_OrderPosition_OrderId ON PriceAggregates.OrderPosition (OrderId)
 go
@@ -123,7 +121,7 @@ create table PriceAggregates.OrderDeniedPosition(
     Category1Id bigint NULL,
     FirmAddressId bigint NULL,
 
-    Source nvarchar(16) not null,
+    Source int not null,
 )
 create index IX_OrderDeniedPosition_OrderId_DeniedPositionId_BindingType
 on [PriceAggregates].[OrderDeniedPosition] ([OrderId],[DeniedPositionId],[BindingType])
@@ -144,7 +142,7 @@ create table PriceAggregates.OrderAssociatedPosition(
     Category1Id bigint NULL,
     FirmAddressId bigint NULL,
 
-	Source nvarchar(16) not null,
+	Source int not null,
 )
 create index IX_OrderAssociatedPosition_OrderId_PrincipalPositionId_BindingType
 on [PriceAggregates].[OrderAssociatedPosition] ([OrderId],[PrincipalPositionId],[BindingType])

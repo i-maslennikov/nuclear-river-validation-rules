@@ -264,7 +264,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             Category3Id = category.L3Id,
                             FirmAddressId = opa.FirmAddressId,
                             Category1Id = category.L1Id,
-                            Source = "opas",
+                            Source = Source.Opa,
                         };
 
                 var pkgs =
@@ -285,7 +285,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             Category3Id = category.L3Id,
                             FirmAddressId = opa.FirmAddressId,
                             Category1Id = category.L1Id,
-                            Source = "pkgs",
+                            Source = Source.Pkg,
                         };
 
                 var deniedByPrice =
@@ -306,7 +306,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             DeniedPositionId = denied.PositionDeniedId,
                             BindingType = denied.ObjectBindingType,
 
-                            Source = bingingObject.Source + " by price",
+                            Source = bingingObject.Source | Source.Price,
                         };
 
                 var deniedByRuleset =
@@ -327,7 +327,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         DeniedPositionId = denied.PrincipalPositionId,
                         BindingType = denied.ObjectBindingType,
 
-                        Source = bingingObject.Source + " by ruleset",
+                        Source = bingingObject.Source | Source.Ruleset,
                     };
 
                 return deniedByPrice.Union(deniedByRuleset);
@@ -379,7 +379,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         Category3Id = category.L3Id,
                         opa.FirmAddressId,
                         Category1Id = category.L1Id,
-                        Source = "opas",
+                        Source = Source.Opa,
                     };
 
                 var pkgs =
@@ -400,7 +400,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         Category3Id = category.L3Id,
                         opa.FirmAddressId,
                         Category1Id = category.L1Id,
-                        Source = "pkgs",
+                        Source = Source.Pkg,
                     };
 
                 var associatedByPrice =
@@ -421,7 +421,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         PrincipalPositionId = ap.PositionId,
                         BindingType = ap.ObjectBindingType,
 
-                        Source = bingingObject.Source + " by price",
+                        Source = bingingObject.Source | Source.Price,
                     };
 
                 var associatedByRuleset =
@@ -442,7 +442,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         PrincipalPositionId = associated.PrincipalPositionId,
                         BindingType = associated.ObjectBindingType,
 
-                        Source = bingingObject.Source + " by ruleset",
+                        Source = bingingObject.Source | Source.Ruleset,
                     };
 
                 return associatedByPrice.Union(associatedByRuleset);

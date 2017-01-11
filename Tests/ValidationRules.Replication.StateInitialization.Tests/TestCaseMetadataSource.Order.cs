@@ -151,7 +151,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::DeniedPosition { Id = 11, PriceId = 9, PositionId = 7, PositionDeniedId = 14 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
-                    new Aggregates::Order.OrderDeniedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 7, CauseItemPositionId = 7, DeniedPositionId = 14, HasNoBinding = true, Source = "opas by price" },
+                    new Aggregates::Order.OrderDeniedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 7, CauseItemPositionId = 7, DeniedPositionId = 14, HasNoBinding = true, Source = Aggregates::Source.Opa | Aggregates::Source.Price },
                     new Aggregates::Order.OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, OrderPositionName = "Position7", IsActive = true });
     }
 }
