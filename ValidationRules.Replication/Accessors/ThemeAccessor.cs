@@ -57,17 +57,12 @@ namespace NuClear.ValidationRules.Replication.Accessors
         {
             var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
 
-            var orderIds =
-                from opa in _query.For<OrderPositionAdvertisement>().Where(x => x.ThemeId != null && dataObjectIds.Contains(x.ThemeId.Value))
-                from op in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
-                select op.OrderId;
-
             var projectIds =
                 from themeOrgUnit in _query.For<ThemeOrganizationUnit>().Where(x => dataObjectIds.Contains(x.ThemeId))
                 from project in _query.For<Project>().Where(x => x.OrganizationUnitId == themeOrgUnit.OrganizationUnitId)
                 select project.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, { typeof(Project), projectIds.Distinct() } };
+            return new EventCollectionHelper { { typeof(Project), projectIds.Distinct() } };
         }
     }
 }

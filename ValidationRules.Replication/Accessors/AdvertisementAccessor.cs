@@ -62,7 +62,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 where advertisement.FirmId != null
                 select advertisement.FirmId.Value;
 
-            return new EventCollectionHelper { { typeof(Advertisement), dataObjectIds }, { typeof(Order), orderIds.Distinct() }, {typeof(Firm), firmIds.Distinct() } };
+            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, {typeof(Firm), firmIds.Distinct() } };
         }
     }
 }
