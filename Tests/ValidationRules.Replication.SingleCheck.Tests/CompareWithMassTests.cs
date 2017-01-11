@@ -29,6 +29,32 @@ namespace NuClear.ValidationRules.Replication.Tests
         private IEnumerable<MessageTypeCode> Rules
             => Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>();
 
+        private IEnumerable<long> Orders
+            => new[] { 997454684204286915, 802519954532144100, 992385830465141559 };
+
+        [TestCaseSource(nameof(Orders))]
+        public void TestOrder(long orderId)
+        {
+            using (var dc = new DataConnection("ReferenceSource").AddMappingSchema(Schema.Messages))
+            {
+                var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
+                var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
+
+                var results =
+                    from result in orderErrors.Where(x => x.OrderId == orderId)
+                    where !resolved.Any(x => x.MessageType == result.MessageType && x.OrderId == result.OrderId && x.VersionId > result.VersionId)
+                    select result;
+
+                var expected = results.ToArray();
+
+                using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", orderId), new TempTableStoreFactory("ReferenceSource"), new HashSetStoreFactory()))
+                {
+                    var actual = validator.Execute().Where(x => x.OrderId == orderId).ToArray();
+                    AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
+                }
+            }
+        }
+
         [TestCaseSource(nameof(Rules))]
         public void TestRule(MessageTypeCode rule)
         {
@@ -50,7 +76,7 @@ namespace NuClear.ValidationRules.Replication.Tests
 
                 foreach (var expected in expecteds)
                 {
-                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory(expected.Key), new NMemoryStoreFactory(), new HashSetStoreFactory()))
+                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", expected.Key), new TempTableStoreFactory("ReferenceSource"), new HashSetStoreFactory()))
                     {
                         var actual = validator.Execute().Where(x => x.OrderId == expected.Key && x.MessageType == (int)rule).ToArray();
                         AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));

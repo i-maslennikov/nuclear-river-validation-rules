@@ -83,9 +83,8 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8a2835995181975f, processorArchitecture=MSIL">
-      <HintPath>..\packages\NMemory.1.1.2-custom-signed\lib\net45\NMemory.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NMemory">
+      <HintPath>D:\dev\github\nmemory\Main\Source\NMemory\bin\Debug\NMemory.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />

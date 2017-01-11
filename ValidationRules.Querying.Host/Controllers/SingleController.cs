@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
                 return NotFound();
             }
 
-            using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory(request.OrderId), new NMemoryStoreFactory(), new HashSetStoreFactory()))
+            using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new NMemoryStoreFactory(), new HashSetStoreFactory()))
             {
                 var messages = validator.Execute().Where(x => x.OrderId == request.OrderId).ToArray();
                 var result = _factory.ComposeAll(messages, x => x.ForSingle);
@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         [Route(""), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request)
         {
-            using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory(request.OrderId), new NMemoryStoreFactory(), new HashSetStoreFactory()))
+            using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new NMemoryStoreFactory(), new HashSetStoreFactory()))
             {
                 var messages = validator.Execute().Where(x => x.OrderId == request.OrderId).ToArray();
                 var result = _factory.ComposeAll(messages, x => x.ForSingle);

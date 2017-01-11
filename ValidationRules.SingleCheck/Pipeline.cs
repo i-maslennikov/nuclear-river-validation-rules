@@ -75,17 +75,10 @@ namespace NuClear.ValidationRules.SingleCheck
 
                 public override void Process()
                 {
-                    var data = _accessor.GetSource().Execute();
-                    try
+                    var data = _accessor.GetSource().Execute(_accessor.GetType().Name);
+                    if (data.Any())
                     {
-                        if (data.Any())
-                        {
-                            _repository.AddRange(data);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        Debugger.Break();
+                        _repository.AddRange(data);
                     }
                 }
             }

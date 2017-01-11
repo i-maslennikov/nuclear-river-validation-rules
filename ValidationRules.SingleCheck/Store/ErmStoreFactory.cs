@@ -18,10 +18,12 @@ namespace NuClear.ValidationRules.SingleCheck.Store
         public static readonly Lazy<EqualityComparerFactory> EqualityComparerFactory =
             new Lazy<EqualityComparerFactory>(() => new EqualityComparerFactory(new LinqToDbPropertyProvider(Erm.Value)));
 
+        private readonly string _connectionStringName;
         private readonly long _orderId;
 
-        public ErmStoreFactory(long orderId)
+        public ErmStoreFactory(string connectionStringName, long orderId)
         {
+            _connectionStringName = connectionStringName;
             _orderId = orderId;
         }
 
@@ -36,7 +38,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             // Возможно, хоть и не факт, что это позволит сэкономить одну секунду. Вряд ли больше.
 
             using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.Snapshot }))
-            using (var connection = new DataConnection("Erm").AddMappingSchema(Erm.Value))
+            using (var connection = new DataConnection(_connectionStringName).AddMappingSchema(Erm.Value))
             {
                 var store = new HashSetStore(EqualityComparerFactory.Value);
                 ErmDataLoader.Load(_orderId, connection, store);

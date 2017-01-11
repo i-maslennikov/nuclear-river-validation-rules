@@ -188,9 +188,8 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=8a2835995181975f, processorArchitecture=MSIL">
-      <HintPath>..\packages\NMemory.1.1.2-custom-signed\lib\net45\NMemory.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NMemory">
+      <HintPath>D:\dev\github\nmemory\Main\Source\NMemory\bin\Debug\NMemory.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.669\lib\net35\protobuf-net.dll</HintPath>
@@ -204,12 +203,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
+    <Compile Include="Store\TempTableStoreFactory.cs" />
     <Compile Include="Store\ErmStoreFactory.cs" />
     <Compile Include="Store\HashSetStoreFactory.cs" />
     <Compile Include="Store\INMemoryTableRegistrar.cs" />
     <Compile Include="Store\IStoreFactory.cs" />
     <Compile Include="Store\NMemoryStoreFactory.cs" />
-    <Compile Include="Store\Linq2DbStore.cs" />
     <Compile Include="Store\ErmDataLoader.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Store\IStore.cs" />

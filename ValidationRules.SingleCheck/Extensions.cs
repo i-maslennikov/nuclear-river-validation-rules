@@ -8,22 +8,33 @@ namespace NuClear.ValidationRules.SingleCheck
 {
     public static class Extensions
     {
-        private static readonly IDictionary<Type, long> QueryDuration = new ConcurrentDictionary<Type, long>();
+        private static readonly IDictionary<string, long> QueryDuration = new ConcurrentDictionary<string, long>();
 
-        public static T[] Execute<T>(this IQueryable<T> queryable)
+        public static T[] Execute<T>(this IQueryable<T> queryable, string name = null)
         {
             var sw = Stopwatch.StartNew();
-            var arr = queryable.ToArray();
-            sw.Stop();
-
-            long time;
-            QueryDuration.TryGetValue(typeof(T), out time);
-            QueryDuration[typeof(T)] = time + sw.ElapsedMilliseconds;
-
-            return arr;
+            try
+            {
+                return queryable.ToArray();
+            }
+            finally
+            {
+                sw.Stop();
+                Append(Key<T>(name), sw.ElapsedMilliseconds);
+            }
         }
 
-        public static IReadOnlyCollection<KeyValuePair<Type, long>> Durations
+        private static void Append(string key, long duration)
+        {
+            long accumulated;
+            QueryDuration.TryGetValue(key, out accumulated);
+            QueryDuration[key] = accumulated + duration;
+        }
+
+        private static string Key<T>(string name)
+            => string.IsNullOrEmpty(name) ? typeof(T).FullName : $"{typeof(T).FullName}, {name}";
+
+        public static IReadOnlyCollection<KeyValuePair<string, long>> Durations
             => QueryDuration.OrderByDescending(x => x.Value).ToArray();
     }
 }
