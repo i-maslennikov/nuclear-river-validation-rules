@@ -48,6 +48,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<SalesModelCategoryRestriction> dataObjects)
             => Array.Empty<IEvent>();
 
+        // value object для Project, ничего пересчитывать не надо
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<SalesModelCategoryRestriction> dataObjects)
             => Array.Empty<IEvent>();
     }

@@ -51,6 +51,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<OrderPositionCostPerClick> dataObjects)
             => Array.Empty<IEvent>();
 
+        // value object для OrderPosition, ничего пересчитывать не надо
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<OrderPositionCostPerClick> dataObjects)
             => Array.Empty<IEvent>();
     }

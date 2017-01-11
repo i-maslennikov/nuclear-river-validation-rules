@@ -50,6 +50,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<UnlimitedOrder> dataObjects)
             => Array.Empty<IEvent>();
 
+        // value object для Order, ничего пересчитывать не надо
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<UnlimitedOrder> dataObjects)
             => Array.Empty<IEvent>();
     }
