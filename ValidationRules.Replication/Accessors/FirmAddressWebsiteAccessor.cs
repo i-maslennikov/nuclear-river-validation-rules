@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from firmAddress in _query.For<FirmAddress>().Where(x => firmAddressIds.Contains(x.Id))
                 select firmAddress.FirmId;
 
-            return new EventCollectionHelper { { typeof(Order), firmIds.Distinct() } };
+            return new EventCollectionHelper { { typeof(Firm), firmIds.Distinct() } };
         }
     }
 }
