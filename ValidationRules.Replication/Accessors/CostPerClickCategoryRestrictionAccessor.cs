@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<CostPerClickCategoryRestriction> dataObjects)
             => Array.Empty<IEvent>();
 
-        // value object для Project, ничего пересчитывать не надо
+        // value object РґР»СЏ Project, РЅРёС‡РµРіРѕ РїРµСЂРµСЃС‡РёС‚С‹РІР°С‚СЊ РЅРµ РЅР°РґРѕ
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<CostPerClickCategoryRestriction> dataObjects)
             => Array.Empty<IEvent>();
     }
