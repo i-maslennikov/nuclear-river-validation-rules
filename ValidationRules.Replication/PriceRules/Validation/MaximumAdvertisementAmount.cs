@@ -33,21 +33,21 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var restrictionGrid =
-                from restriction in query.For<AdvertisementAmountRestriction>()
-                from pp in query.For<PricePeriod>().Where(x => x.PriceId == restriction.PriceId)
+                from restriction in query.For<Price.AdvertisementAmountRestriction>()
+                from pp in query.For<Period.PricePeriod>().Where(x => x.PriceId == restriction.PriceId)
                 select new { pp.Start, pp.OrganizationUnitId, restriction.CategoryCode, restriction.Min, restriction.Max, restriction.CategoryName };
 
             var saleGrid =
-                from position in query.For<AmountControlledPosition>()
-                from op in query.For<OrderPeriod>().Where(x => x.OrderId == position.OrderId)
+                from position in query.For<Order.AmountControlledPosition>()
+                from op in query.For<Period.OrderPeriod>().Where(x => x.OrderId == position.OrderId)
                 group new { op.Start, op.OrganizationUnitId, position.CategoryCode, op.Scope }
                     by new { op.Start, op.OrganizationUnitId, position.CategoryCode, op.Scope }
                 into groups
                 select new { groups.Key, Count = groups.Count() };
 
             var violations =
-                from position in query.For<AmountControlledPosition>()
-                from op in query.For<OrderPeriod>().Where(x => x.OrderId == position.OrderId)
+                from position in query.For<Order.AmountControlledPosition>()
+                from op in query.For<Period.OrderPeriod>().Where(x => x.OrderId == position.OrderId)
                 from restriction in restrictionGrid.Where(x => x.Start == op.Start &&
                                                                x.OrganizationUnitId == op.OrganizationUnitId &&
                                                                x.CategoryCode == position.CategoryCode)

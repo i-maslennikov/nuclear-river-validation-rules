@@ -20,11 +20,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 3, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), EndDistributionPlan = MonthStart(2), WorkflowStep = 5 },
                     new Facts::Order { Id = 4, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), EndDistributionPlan = MonthStart(3), WorkflowStep = 4 })
                 .Aggregate(
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 1 },
-                    new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(1), Scope = -1 },
-                    new Aggregates::OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPeriod { OrderId = 4, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPeriod { OrderId = 4, Start = MonthStart(2), Scope = 4 });
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(1), Scope = -1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(2), Scope = 4 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PricePeriod
@@ -37,8 +37,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Price { Id = 2, BeginDate = DateTime.Parse("2011-02-01") },
                     new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-02-01"), ProjectId = 123 },
                     new Aggregates::Period { Start = DateTime.Parse("2011-02-01"), End = DateTime.MaxValue, ProjectId = 123 },
-                    new Aggregates::PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-01-01") },
-                    new Aggregates::PricePeriod { PriceId = 2, Start = DateTime.Parse("2011-02-01") })
+                    new Aggregates::Period.PricePeriod { PriceId = 1, Start = DateTime.Parse("2011-01-01") },
+                    new Aggregates::Period.PricePeriod { PriceId = 2, Start = DateTime.Parse("2011-02-01") })
                 .Fact(
                     new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2011-01-01") },
                     new Facts::Price { Id = 2, BeginDate = DateTime.Parse("2011-02-01") },

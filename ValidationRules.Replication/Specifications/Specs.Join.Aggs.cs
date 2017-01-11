@@ -25,77 +25,77 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// Выражение учитывает все типы сравнения объектов привязки.
                 /// Но не учитывает "области видимости" позиций.
                 /// </summary>
-                public static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> AvailablePrincipalPosition(IQueryable<Dto<OrderPosition>> principals)
+                public static Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> AvailablePrincipalPosition(IQueryable<Dto<Order.OrderPosition>> principals)
                 {
-                    Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
-                        associated => principals.Where(principal => MatchedPeriod<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
+                    Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
+                        associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
                                                 .Where(principal => associated.Position.BindingType == NoDependency ||
-                                                                    associated.Position.BindingType == Match && MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
-                                                                    associated.Position.BindingType == Different && !MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
+                                                                    associated.Position.BindingType == Match && MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
+                                                                    associated.Position.BindingType == Different && !MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                    return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
                 /// <summary>
                 /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
                 /// </summary>
-                public static Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> WithMatchedBindingObject(IQueryable<Dto<OrderPosition>> principals)
+                public static Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> WithMatchedBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
                 {
-                    Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
-                        associated => principals.Where(principal => MatchedPeriod<OrderAssociatedPosition>().Compile().Invoke(principal, associated))
+                    Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
+                        associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
                                                 .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                                .Where(principal => MatchedBindingObjects<OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
+                                                .Where(principal => MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<OrderAssociatedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                    return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
                 /// <summary>
                 /// Возвращает выражение выборки запрещённых позиций заказа по принципу совпадения обектов привязки.
                 /// </summary>
-                public static Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> DeniedWithMatchedBindingObject(IQueryable<Dto<OrderPosition>> principals)
+                public static Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> DeniedWithMatchedBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
                 {
-                    Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
-                        denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                    Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
+                        denied => principals.Where(principal => MatchedPeriod<Order.OrderDeniedPosition>().Compile().Invoke(principal, denied))
                                             .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
-                                            .Where(principal => MatchedBindingObjects<OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
+                                            .Where(principal => MatchedBindingObjects<Order.OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                    return (Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
                 /// <summary>
                 /// Возвращает выражение выборки запрещённых позиций заказа по принципу различия обектов привязки.
                 /// </summary>
-                public static Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> DeniedWithDifferentBindingObject(IQueryable<Dto<OrderPosition>> principals)
+                public static Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> DeniedWithDifferentBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
                 {
-                    Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
-                        denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                    Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
+                        denied => principals.Where(principal => MatchedPeriod<Order.OrderDeniedPosition>().Compile().Invoke(principal, denied))
                                             .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
-                                            .Where(principal => !MatchedBindingObjects<OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
+                                            .Where(principal => !MatchedBindingObjects<Order.OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                    return (Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
                 /// <summary>
                 /// Возвращает выражение выборки запрещённых позиций заказа без учёта обектов привязки.
                 /// </summary>
-                public static Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> DeniedWithoutConsideringBindingObject(IQueryable<Dto<OrderPosition>> principals)
+                public static Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> DeniedWithoutConsideringBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
                 {
-                    Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>> expression =
-                        denied => principals.Where(principal => MatchedPeriod<OrderDeniedPosition>().Compile().Invoke(principal, denied))
+                    Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
+                        denied => principals.Where(principal => MatchedPeriod<Order.OrderDeniedPosition>().Compile().Invoke(principal, denied))
                                             .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<OrderDeniedPosition>, IEnumerable<Dto<OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                    return (Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
                 /// <summary>
                 /// Возвращает выражение для пересечения влияющих друг на друга позиций (сопутствующих или запрещённых)
                 /// </summary>
-                public static Expression<Func<Dto<OrderPosition>, Dto<T>, bool>> MatchedPeriod<T>()
+                public static Expression<Func<Dto<Order.OrderPosition>, Dto<T>, bool>> MatchedPeriod<T>()
                 {
                     return (principal, dto) => principal.FirmId == dto.FirmId &&
                                                principal.Start == dto.Start &&
@@ -108,7 +108,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// https://github.com/2gis/nuclear-river/blob/feature/validation-rules/docs/ru/validation-rules/compare-linking-objects.md
                 /// Выражение достаточно не тривиальное и используется многократно, поэтому и создан <see cref="ExpandMethodCallVisitor"/>
                 /// </summary>
-                public static Expression<Func<OrderPosition, T, bool>> MatchedBindingObjects<T>()
+                public static Expression<Func<Order.OrderPosition, T, bool>> MatchedBindingObjects<T>()
                     where T: IBindingObject
                 {
                     return (position, binding) => (binding.HasNoBinding == position.HasNoBinding) &&

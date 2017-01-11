@@ -27,10 +27,10 @@ namespace NuClear.ValidationRules.Replication.Tests
             return Specs.Join.Aggs.WithMatchedBindingObject(new[] { principal }.AsQueryable()).Compile().Invoke(associated).Any();
         }
 
-        private static Dto<OrderPosition> CreateOrderPrincipalPosition(Parameter parameter)
-            => new Dto<OrderPosition>
+        private static Dto<Order.OrderPosition> CreateOrderPrincipalPosition(Parameter parameter)
+            => new Dto<Order.OrderPosition>
                 {
-                    Position = new OrderPosition
+                    Position = new Order.OrderPosition
                         {
                             HasNoBinding = parameter.HasNoBinding,
                             Category1Id = parameter.Category1Id,
@@ -39,10 +39,10 @@ namespace NuClear.ValidationRules.Replication.Tests
                         }
                 };
 
-        private static Dto<OrderAssociatedPosition> CreateOrderAssociatedPosition(Parameter parameter)
-            => new Dto<OrderAssociatedPosition>
+        private static Dto<Order.OrderAssociatedPosition> CreateOrderAssociatedPosition(Parameter parameter)
+            => new Dto<Order.OrderAssociatedPosition>
                 {
-                    Position = new OrderAssociatedPosition
+                    Position = new Order.OrderAssociatedPosition
                         {
                             CauseOrderPositionId = 1,
 

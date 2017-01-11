@@ -60,16 +60,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         {
             var orderPositions =
                 from order in query.For<Order>()
-                join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
-                join position in query.For<OrderPosition>() on order.Id equals position.OrderId
-                select new Dto<OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
+                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
+                join position in query.For<Order.OrderPosition>() on order.Id equals position.OrderId
+                select new Dto<Order.OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var associatedPositions =
                 from order in query.For<Order>()
-                join period in query.For<OrderPeriod>() on order.Id equals period.OrderId
-                join position in query.For<OrderAssociatedPosition>() on order.Id equals position.OrderId
+                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
+                join position in query.For<Order.OrderAssociatedPosition>() on order.Id equals position.OrderId
                 where position.BindingType == Match // небольшой косяк (который есть и в erm) - если сопутствующая удовлетворена мастер-позицией без учёта привязки, то эта проверка выдаст ошибку.
-                select new Dto<OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
+                select new Dto<Order.OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var unsatisfiedPositions =
                 associatedPositions.SelectMany(Specs.Join.Aggs.WithMatchedBindingObject(orderPositions.DefaultIfEmpty()), (associated, principal) => new { associated, principal })
