@@ -183,6 +183,7 @@
     <Compile Include="Identitites\Connections\AggregatesConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\MessagesConnectionStringIdentity.cs" />
+    <Compile Include="IndexHelper.cs" />
     <Compile Include="LinqToDbPropertyProvider.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
     <Compile Include="Model\AccountRules\Aggregates\AccountPeriod.cs" />
