@@ -1,4 +1,6 @@
-﻿namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
+﻿using System;
+
+namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
 {
     /// <summary>
     /// Импортированная из ERM сущность заказа
@@ -41,7 +43,7 @@
             public long? FirmAddressId { get; set; }
             public long? Category1Id { get; set; }
 
-            public string Source { get; set; }
+            public PositionSources Source { get; set; }
         }
 
         /// <summary>
@@ -64,7 +66,7 @@
             public long? FirmAddressId { get; set; }
             public long? Category1Id { get; set; }
 
-            public string Source { get; set; }
+            public PositionSources Source { get; set; }
         }
 
         /// <summary>
@@ -94,5 +96,17 @@
             public long OrderId { get; set; }
             public long CategoryCode { get; set; }
         }
+    }
+
+    [Flags]
+    public enum PositionSources
+    {
+        None = 0,
+
+        Opa = 1,
+        Pkg = 1 << 1,
+
+        Price = 1 << 2,
+        Ruleset = 1 << 3,
     }
 }
