@@ -27,8 +27,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::RulesetRule { RuleType = 1, DependentPositionId = 6, PrincipalPositionId = 8 },
                     new Facts::RulesetRule { RuleType = 1, DependentPositionId = 4, PrincipalPositionId = 10 })
                 .Aggregate(
-                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 6, PrincipalPositionId = 8, HasNoBinding = true, Source = Aggregates::Source.Opa | Aggregates::Source.Ruleset },
-                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 10, HasNoBinding = true, Source = Aggregates::Source.Pkg | Aggregates::Source.Ruleset });
+                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 6, PrincipalPositionId = 8, HasNoBinding = true, Source = Aggregates::PositionSources.Opa | Aggregates::PositionSources.Ruleset },
+                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 10, HasNoBinding = true, Source = Aggregates::PositionSources.Pkg | Aggregates::PositionSources.Ruleset });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement AssociatedPositionWithoutPrincipal

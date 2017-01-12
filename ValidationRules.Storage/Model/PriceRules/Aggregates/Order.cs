@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long? FirmAddressId { get; set; }
             public long? Category1Id { get; set; }
 
-            public Source Source { get; set; }
+            public PositionSources Source { get; set; }
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long? FirmAddressId { get; set; }
             public long? Category1Id { get; set; }
 
-            public Source Source { get; set; }
+            public PositionSources Source { get; set; }
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     }
 
     [Flags]
-    public enum Source
+    public enum PositionSources
     {
         None = 0,
 
