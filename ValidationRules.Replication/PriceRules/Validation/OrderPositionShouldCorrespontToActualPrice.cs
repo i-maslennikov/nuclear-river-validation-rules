@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var orderPeriodDtos =
-                from orderPeriod in query.For<OrderPeriod>()
+                from orderPeriod in query.For<Period.OrderPeriod>()
                 from period in query.For<Period>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
                 select new { orderPeriod.OrderId, period.Start, period.End }
                 into dto
@@ -58,13 +58,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var orderPrices =
                 from orderPeriodDto in orderPeriodDtos
                 from order in query.For<Order>().Where(x => x.Id == orderPeriodDto.OrderId)
-                from orderPeriod in query.For<OrderPeriod>().Where(x => x.OrderId == order.Id && x.Start == orderPeriodDto.Start)
-                from pricePeriod in query.For<PricePeriod>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
+                from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == order.Id && x.Start == orderPeriodDto.Start)
+                from pricePeriod in query.For<Period.PricePeriod>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
                 from period in query.For<Period>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
                 select new { Order = order, ActualPriceId = pricePeriod.PriceId, Start = period.Start, End = orderPeriodDto.End, ProjectId = period.ProjectId, Scope = orderPeriod.Scope };
 
             var notRelevantPositions =
-                from position in query.For<OrderPricePosition>()
+                from position in query.For<Order.OrderPricePosition>()
                 from actual in orderPrices.Where(x => x.Order.Id == position.OrderId && x.ActualPriceId != position.PriceId)
                 select new { Order = actual.Order, Position = position, Start = actual.Start, End = actual.End, ProjectId = actual.ProjectId, Scope = actual.Scope };
 

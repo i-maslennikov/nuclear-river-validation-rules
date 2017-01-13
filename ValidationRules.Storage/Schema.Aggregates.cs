@@ -95,32 +95,32 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<PriceAggregates::AssociatedPositionGroupOvercount>()
+            builder.Entity<PriceAggregates::Price.AssociatedPositionGroupOvercount>()
                   .HasSchemaName(PriceAggregatesSchema);
 
-            builder.Entity<PriceAggregates::AdvertisementAmountRestriction>()
+            builder.Entity<PriceAggregates::Price.AdvertisementAmountRestriction>()
                   .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::Order>()
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<PriceAggregates::OrderPeriod>()
+            builder.Entity<PriceAggregates::Period.OrderPeriod>()
                   .HasSchemaName(PriceAggregatesSchema);
 
-            builder.Entity<PriceAggregates::OrderPosition>()
+            builder.Entity<PriceAggregates::Order.OrderPosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
-            builder.Entity<PriceAggregates::OrderAssociatedPosition>()
+            builder.Entity<PriceAggregates::Order.OrderAssociatedPosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
-            builder.Entity<PriceAggregates::OrderDeniedPosition>()
+            builder.Entity<PriceAggregates::Order.OrderDeniedPosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
-            builder.Entity<PriceAggregates::OrderPricePosition>()
+            builder.Entity<PriceAggregates::Order.OrderPricePosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
-            builder.Entity<PriceAggregates::AmountControlledPosition>()
+            builder.Entity<PriceAggregates::Order.AmountControlledPosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::Period>()
@@ -129,7 +129,7 @@ namespace NuClear.ValidationRules.Storage
                   .HasPrimaryKey(x => x.End)
                   .HasPrimaryKey(x => x.ProjectId);
 
-            builder.Entity<PriceAggregates::PricePeriod>()
+            builder.Entity<PriceAggregates::Period.PricePeriod>()
                   .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::Position>()

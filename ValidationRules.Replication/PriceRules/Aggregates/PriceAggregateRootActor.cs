@@ -21,8 +21,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Price> bulkRepository,
-            IBulkRepository<AdvertisementAmountRestriction> advertisementAmountRestrictionBulkRepository,
-            IBulkRepository<AssociatedPositionGroupOvercount> associatedPositionGroupOvercountRepository)
+            IBulkRepository<Price.AdvertisementAmountRestriction> advertisementAmountRestrictionBulkRepository,
+            IBulkRepository<Price.AssociatedPositionGroupOvercount> associatedPositionGroupOvercountRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new PriceAccessor(query), bulkRepository,
@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class AdvertisementAmountRestrictionAccessor : DataChangesHandler<AdvertisementAmountRestriction>, IStorageBasedDataObjectAccessor<AdvertisementAmountRestriction>
+        public sealed class AdvertisementAmountRestrictionAccessor : DataChangesHandler<Price.AdvertisementAmountRestriction>, IStorageBasedDataObjectAccessor<Price.AdvertisementAmountRestriction>
         {
             private readonly IQuery _query;
 
@@ -76,12 +76,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.MinimumAdvertisementAmount
                     };
 
-            public IQueryable<AdvertisementAmountRestriction> GetSource()
+            public IQueryable<Price.AdvertisementAmountRestriction> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted)
                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsControlledByAmount) on pricePosition.PositionId equals position.Id
                    group new { pricePosition.MinAdvertisementAmount, pricePosition.MaxAdvertisementAmount } by new { pricePosition.PriceId, position.CategoryCode } into groups
                    from nomencalure in _query.For<Facts.NomenclatureCategory>().Where(x => x.Id == groups.Key.CategoryCode && x.PriceId == groups.Key.PriceId).DefaultIfEmpty()
-                   select new AdvertisementAmountRestriction
+                   select new Price.AdvertisementAmountRestriction
                        {
                            PriceId = groups.Key.PriceId,
                            CategoryCode = groups.Key.CategoryCode,
@@ -91,14 +91,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                            MissingMinimalRestriction = groups.Max(x => x.MinAdvertisementAmount) == null
                        };
 
-            public FindSpecification<AdvertisementAmountRestriction> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Price.AdvertisementAmountRestriction> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<AdvertisementAmountRestriction>(x => aggregateIds.Contains(x.PriceId));
+                return new FindSpecification<Price.AdvertisementAmountRestriction>(x => aggregateIds.Contains(x.PriceId));
             }
         }
 
-        public sealed class AssociatedPositionGroupOvercountAccessor : DataChangesHandler<AssociatedPositionGroupOvercount>, IStorageBasedDataObjectAccessor<AssociatedPositionGroupOvercount>
+        public sealed class AssociatedPositionGroupOvercountAccessor : DataChangesHandler<Price.AssociatedPositionGroupOvercount>, IStorageBasedDataObjectAccessor<Price.AssociatedPositionGroupOvercount>
         {
             // Предполагается, что когда начнём создавать события на втором этапе - события этого класса будут приводить к вызову одной соответствующей проверки
             private readonly IQuery _query;
@@ -114,12 +114,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.AssociatedPositionsGroupCount
                     };
 
-            public IQueryable<AssociatedPositionGroupOvercount> GetSource()
+            public IQueryable<Price.AssociatedPositionGroupOvercount> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted)
                    let count = _query.For<Facts::AssociatedPositionsGroup>().Count(x => x.PricePositionId == pricePosition.Id)
                    let name = _query.For<Facts::Position>().Where(x => !x.IsDeleted).Single(x => x.Id == pricePosition.PositionId).Name
                    where count > 1
-                   select new AssociatedPositionGroupOvercount
+                   select new Price.AssociatedPositionGroupOvercount
                    {
                        PriceId = pricePosition.PriceId,
                        PricePositionId = pricePosition.Id,
@@ -127,10 +127,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                        Count = count,
                    };
 
-            public FindSpecification<AssociatedPositionGroupOvercount> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Price.AssociatedPositionGroupOvercount> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<AssociatedPositionGroupOvercount>(x => aggregateIds.Contains(x.PriceId));
+                return new FindSpecification<Price.AssociatedPositionGroupOvercount>(x => aggregateIds.Contains(x.PriceId));
             }
         }
     }

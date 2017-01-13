@@ -27,8 +27,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::RulesetRule { RuleType = 1, DependentPositionId = 6, PrincipalPositionId = 8 },
                     new Facts::RulesetRule { RuleType = 1, DependentPositionId = 4, PrincipalPositionId = 10 })
                 .Aggregate(
-                    new Aggregates::OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 6, PrincipalPositionId = 8, HasNoBinding = true, Source = "opas by ruleset" },
-                    new Aggregates::OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 10, HasNoBinding = true, Source = "pkgs by ruleset" });
+                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 6, PrincipalPositionId = 8, HasNoBinding = true, Source = Aggregates::PositionSources.Opa | Aggregates::PositionSources.Ruleset },
+                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 10, HasNoBinding = true, Source = Aggregates::PositionSources.Pkg | Aggregates::PositionSources.Ruleset });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement AssociatedPositionWithoutPrincipal
@@ -38,17 +38,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     // Одобренный заказ с основной позицией на три месяца
                     new Aggregates::Order { Id = 1, Number = "Order", FirmId = 2 },
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
-                    new Aggregates::OrderPeriod { OrderId = 1, Start = MonthStart(3), Scope = 0 },
-                    new Aggregates::OrderPosition { OrderId = 1, ItemPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(3), Scope = 0 },
+                    new Aggregates::Order.OrderPosition { OrderId = 1, ItemPositionId = 1 },
 
                     // Заказ "на оформлении", с сопутствующей позицией, выходящей за период размещения основной
                     new Aggregates::Order { Id = 2, Number = "Order", FirmId = 2 },
-                    new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(2), Scope = 2 },
-                    new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(3), Scope = 2 },
-                    new Aggregates::OrderPeriod { OrderId = 2, Start = MonthStart(4), Scope = 2 },
-                    new Aggregates::OrderAssociatedPosition { OrderId = 2, CauseOrderPositionId = 3, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(2), Scope = 2 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(3), Scope = 2 },
+                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(4), Scope = 2 },
+                    new Aggregates::Order.OrderAssociatedPosition { OrderId = 2, CauseOrderPositionId = 3, CausePackagePositionId = 4, CauseItemPositionId = 4, PrincipalPositionId = 1 },
 
                     new Aggregates::Position { Id = 2, Name = "Position" },
                     new Aggregates::Position { Id = 4, Name = "Position" },

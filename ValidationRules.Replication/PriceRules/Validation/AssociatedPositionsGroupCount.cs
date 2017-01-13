@@ -28,9 +28,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from overcount in query.For<AssociatedPositionGroupOvercount>()
+            var ruleResults = from overcount in query.For<Price.AssociatedPositionGroupOvercount>()
                               join price in query.For<Price>() on overcount.PriceId equals price.Id
-                              join pp in query.For<PricePeriod>() on overcount.PriceId equals pp.PriceId
+                              join pp in query.For<Period.PricePeriod>() on overcount.PriceId equals pp.PriceId
                               join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                               join project in query.For<Project>() on period.ProjectId equals project.Id
                               select new Version.ValidationResult

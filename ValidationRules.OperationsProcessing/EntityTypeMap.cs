@@ -105,11 +105,11 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypePrice, Storage.Model.PriceRules.Aggregates.Price>()
                 .AddMapping<EntityTypePosition, Storage.Model.PriceRules.Aggregates.Position>()
                 .AddMapping<EntityTypePeriod, Storage.Model.PriceRules.Aggregates.Period>()
-                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.AdvertisementAmountRestriction))
-                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.OrderPeriod))
-                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.OrderPosition))
-                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.OrderPricePosition))
-                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.PricePeriod))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.Period.OrderPeriod))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.Period.PricePeriod))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.Price.AdvertisementAmountRestriction))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.Order.OrderPosition))
+                .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.Order.OrderPricePosition))
                 .AddAsPersistenceOnly(typeof(Storage.Model.PriceRules.Aggregates.Project));
 
         public static IEntityTypeMappingRegistry<ErmSubDomain> CreateErmContext()

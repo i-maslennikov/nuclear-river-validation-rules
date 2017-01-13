@@ -33,8 +33,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             // проверка проверяет соответствие только первого периода
-            var orderFirstPeriods = from orderPeriod1 in query.For<OrderPeriod>()
-                                    from orderPeriod2 in query.For<OrderPeriod>().Where(x => orderPeriod1.OrderId == x.OrderId && orderPeriod1.Start > x.Start).DefaultIfEmpty()
+            var orderFirstPeriods = from orderPeriod1 in query.For<Period.OrderPeriod>()
+                                    from orderPeriod2 in query.For<Period.OrderPeriod>().Where(x => orderPeriod1.OrderId == x.OrderId && orderPeriod1.Start > x.Start).DefaultIfEmpty()
                                     where orderPeriod2 == null
                                     select orderPeriod1;
 
@@ -54,7 +54,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var pricePositionIsNotActiveErrors =
                 from orderFirstPeriodDto in orderFirstPeriodDtos
-                join orderPricePosition in query.For<OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
+                join orderPricePosition in query.For<Order.OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
                 where !orderPricePosition.IsActive
                 select new Version.ValidationResult
                     {

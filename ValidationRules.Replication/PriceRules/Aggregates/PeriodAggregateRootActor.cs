@@ -22,8 +22,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Period> bulkRepository,
-            IBulkRepository<PricePeriod> pricePeriodBulkRepository,
-            IBulkRepository<OrderPeriod> orderPeriodBulkRepository)
+            IBulkRepository<Period.PricePeriod> pricePeriodBulkRepository,
+            IBulkRepository<Period.OrderPeriod> orderPeriodBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new PeriodAccessor(query), bulkRepository,
@@ -88,7 +88,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class PricePeriodAccessor : DataChangesHandler<PricePeriod>, IStorageBasedDataObjectAccessor<PricePeriod>
+        public sealed class PricePeriodAccessor : DataChangesHandler<Period.PricePeriod>, IStorageBasedDataObjectAccessor<Period.PricePeriod>
         {
             private readonly IQuery _query;
 
@@ -108,7 +108,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
                     };
 
-            public IQueryable<PricePeriod> GetSource()
+            public IQueryable<Period.PricePeriod> GetSource()
             {
                 var dates = _query.For<Facts::Order>()
                                   .Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
@@ -124,7 +124,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 var result =
                     from date in dates
                     from price in prices.Where(x => x.OrganizationUnitId == date.OrganizationUnitId && x.Begin <= date.Date && date.Date < x.End )
-                    select new PricePeriod
+                    select new Period.PricePeriod
                         {
                             OrganizationUnitId = date.OrganizationUnitId,
                             PriceId = price.Id,
@@ -134,14 +134,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 return result;
             }
 
-            public FindSpecification<PricePeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Period.PricePeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
                 return Specs.Find.Aggs.PricePeriods(aggregateIds);
             }
         }
 
-        public sealed class OrderPeriodAccessor : DataChangesHandler<OrderPeriod>, IStorageBasedDataObjectAccessor<OrderPeriod>
+        public sealed class OrderPeriodAccessor : DataChangesHandler<Period.OrderPeriod>, IStorageBasedDataObjectAccessor<Period.OrderPeriod>
         {
             private readonly IQuery _query;
 
@@ -169,7 +169,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
                     };
 
-            public IQueryable<OrderPeriod> GetSource()
+            public IQueryable<Period.OrderPeriod> GetSource()
             {
                 var dates = _query.For<Facts::Order>()
                                   .Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
@@ -180,7 +180,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 var result =
                     from order in _query.For<Facts::Order>()
                     from date in dates.Where(date => date.OrganizationUnitId == order.DestOrganizationUnitId && order.BeginDistribution <= date.Date && date.Date < order.EndDistributionPlan)
-                    select new OrderPeriod
+                    select new Period.OrderPeriod
                         {
                             OrderId = order.Id,
                             OrganizationUnitId = order.DestOrganizationUnitId,
@@ -191,7 +191,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 return result;
             }
 
-            public FindSpecification<OrderPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Period.OrderPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
                 return Specs.Find.Aggs.OrderPeriods(aggregateIds);

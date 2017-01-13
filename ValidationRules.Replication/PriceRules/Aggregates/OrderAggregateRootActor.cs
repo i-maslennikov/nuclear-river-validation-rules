@@ -20,11 +20,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
-            IBulkRepository<OrderPosition> orderPositionBulkRepository,
-            IBulkRepository<OrderPricePosition> orderPricePositionBulkRepository,
-            IBulkRepository<AmountControlledPosition> amountControlledPositionBulkRepository,
-            IBulkRepository<OrderDeniedPosition> orderDeniedPositionBulkRepository,
-            IBulkRepository<OrderAssociatedPosition> orderAssociatedPositionBulkRepository)
+            IBulkRepository<Order.OrderPosition> orderPositionBulkRepository,
+            IBulkRepository<Order.OrderPricePosition> orderPricePositionBulkRepository,
+            IBulkRepository<Order.AmountControlledPosition> amountControlledPositionBulkRepository,
+            IBulkRepository<Order.OrderDeniedPosition> orderDeniedPositionBulkRepository,
+            IBulkRepository<Order.OrderAssociatedPosition> orderAssociatedPositionBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
@@ -77,7 +77,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class OrderPositionAccessor : DataChangesHandler<OrderPosition>, IStorageBasedDataObjectAccessor<OrderPosition>
+        public sealed class OrderPositionAccessor : DataChangesHandler<Order.OrderPosition>, IStorageBasedDataObjectAccessor<Order.OrderPosition>
         {
             private readonly IQuery _query;
 
@@ -98,7 +98,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
                     };
 
-            public IQueryable<OrderPosition> GetSource()
+            public IQueryable<Order.OrderPosition> GetSource()
             {
                 var opas = from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
                            join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
@@ -106,7 +106,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted) on opa.PositionId equals position.Id
                            from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
-                           select new OrderPosition
+                           select new Order.OrderPosition
                            {
                                OrderId = orderPosition.OrderId,
                                OrderPositionId = orderPosition.Id,
@@ -128,7 +128,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
                            from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
-                           select new OrderPosition
+                           select new Order.OrderPosition
                            {
                                OrderId = orderPosition.OrderId,
                                OrderPositionId = orderPosition.Id,
@@ -147,14 +147,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 return pkgs.Union(opas);
             }
 
-            public FindSpecification<OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<OrderPosition>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.OrderPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class OrderPricePositionAccessor : DataChangesHandler<OrderPricePosition>, IStorageBasedDataObjectAccessor<OrderPricePosition>
+        public sealed class OrderPricePositionAccessor : DataChangesHandler<Order.OrderPricePosition>, IStorageBasedDataObjectAccessor<Order.OrderPricePosition>
         {
             private readonly IQuery _query;
 
@@ -170,13 +170,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
                     };
 
-            public IQueryable<OrderPricePosition> GetSource()
+            public IQueryable<Order.OrderPricePosition> GetSource()
                 =>
                     from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
                     from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
                     from position in _query.For<Facts::Position>().Where(x => x.Id == pricePosition.PositionId)
-                    select new OrderPricePosition
+                    select new Order.OrderPricePosition
                     {
                         OrderId = orderPosition.OrderId,
                         OrderPositionId = orderPosition.Id,
@@ -187,14 +187,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     };
 
 
-            public FindSpecification<OrderPricePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.OrderPricePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<OrderPricePosition>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.OrderPricePosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class AmountControlledPositionAccessor : DataChangesHandler<AmountControlledPosition>, IStorageBasedDataObjectAccessor<AmountControlledPosition>
+        public sealed class AmountControlledPositionAccessor : DataChangesHandler<Order.AmountControlledPosition>, IStorageBasedDataObjectAccessor<Order.AmountControlledPosition>
         {
             private readonly IQuery _query;
 
@@ -210,25 +210,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.MinimumAdvertisementAmount,
                     };
 
-            public IQueryable<AmountControlledPosition> GetSource()
+            public IQueryable<Order.AmountControlledPosition> GetSource()
                 => (from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                    join adv in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals adv.OrderPositionId
                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsControlledByAmount) on adv.PositionId equals position.Id
-                   select new AmountControlledPosition
+                   select new Order.AmountControlledPosition
                        {
                            OrderId = orderPosition.OrderId,
                            CategoryCode = position.CategoryCode,
                        }).Distinct();
 
-            public FindSpecification<AmountControlledPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.AmountControlledPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class OrderDeniedPositionAccessor : DataChangesHandler<OrderDeniedPosition>, IStorageBasedDataObjectAccessor<OrderDeniedPosition>
+        public sealed class OrderDeniedPositionAccessor : DataChangesHandler<Order.OrderDeniedPosition>, IStorageBasedDataObjectAccessor<Order.OrderDeniedPosition>
         {
             private const int RulesetRuleTypeDenied = 2;
 
@@ -245,7 +245,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.DeniedPositionsCheck
                     };
 
-            public IQueryable<OrderDeniedPosition> GetSource()
+            public IQueryable<Order.OrderDeniedPosition> GetSource()
             {
                 var opas =
                     from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
@@ -264,7 +264,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             Category3Id = category.L3Id,
                             FirmAddressId = opa.FirmAddressId,
                             Category1Id = category.L1Id,
-                            Source = "opas",
+                            Source = PositionSources.Opa,
                         };
 
                 var pkgs =
@@ -285,14 +285,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             Category3Id = category.L3Id,
                             FirmAddressId = opa.FirmAddressId,
                             Category1Id = category.L1Id,
-                            Source = "pkgs",
+                            Source = PositionSources.Pkg,
                         };
 
                 var deniedByPrice =
                     from bingingObject in opas.Union(pkgs)
                     join denied in _query.For<Facts::DeniedPosition>()
                         on new { bingingObject.PriceId, PositionId = bingingObject.CauseItemPositionId } equals new { denied.PriceId, denied.PositionId }
-                    select new OrderDeniedPosition
+                    select new Order.OrderDeniedPosition
                         {
                             OrderId = bingingObject.OrderId,
                             CauseOrderPositionId = bingingObject.CauseOrderPositionId,
@@ -306,14 +306,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             DeniedPositionId = denied.PositionDeniedId,
                             BindingType = denied.ObjectBindingType,
 
-                            Source = bingingObject.Source + " by price",
+                            Source = bingingObject.Source | PositionSources.Price,
                         };
 
                 var deniedByRuleset =
                     from bingingObject in opas.Union(pkgs)
                     join denied in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeDenied)
                         on bingingObject.CauseItemPositionId equals denied.DependentPositionId
-                    select new OrderDeniedPosition
+                    select new Order.OrderDeniedPosition
                     {
                         OrderId = bingingObject.OrderId,
                         CauseOrderPositionId = bingingObject.CauseOrderPositionId,
@@ -327,20 +327,20 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         DeniedPositionId = denied.PrincipalPositionId,
                         BindingType = denied.ObjectBindingType,
 
-                        Source = bingingObject.Source + " by ruleset",
+                        Source = bingingObject.Source | PositionSources.Ruleset,
                     };
 
                 return deniedByPrice.Union(deniedByRuleset);
             }
 
-            public FindSpecification<OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<OrderDeniedPosition>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.OrderDeniedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
-        public sealed class OrderAssociatedPositionAccessor : DataChangesHandler<OrderAssociatedPosition>, IStorageBasedDataObjectAccessor<OrderAssociatedPosition>
+        public sealed class OrderAssociatedPositionAccessor : DataChangesHandler<Order.OrderAssociatedPosition>, IStorageBasedDataObjectAccessor<Order.OrderAssociatedPosition>
         {
             private const int RulesetRuleTypeAssociated = 1;
 
@@ -360,7 +360,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
                     };
 
-            public IQueryable<OrderAssociatedPosition> GetSource()
+            public IQueryable<Order.OrderAssociatedPosition> GetSource()
             {
                 var opas =
                     from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
@@ -379,7 +379,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         Category3Id = category.L3Id,
                         opa.FirmAddressId,
                         Category1Id = category.L1Id,
-                        Source = "opas",
+                        Source = PositionSources.Opa,
                     };
 
                 var pkgs =
@@ -400,14 +400,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         Category3Id = category.L3Id,
                         opa.FirmAddressId,
                         Category1Id = category.L1Id,
-                        Source = "pkgs",
+                        Source = PositionSources.Pkg,
                     };
 
                 var associatedByPrice =
                     from bingingObject in opas.Union(pkgs)
                     join apg in _query.For<Facts::AssociatedPositionsGroup>() on bingingObject.PricePositionId equals apg.PricePositionId
                     join ap in _query.For<Facts::AssociatedPosition>() on apg.Id equals ap.AssociatedPositionsGroupId
-                    select new OrderAssociatedPosition
+                    select new Order.OrderAssociatedPosition
                     {
                         OrderId = bingingObject.OrderId,
                         CauseOrderPositionId = bingingObject.CauseOrderPositionId,
@@ -421,14 +421,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         PrincipalPositionId = ap.PositionId,
                         BindingType = ap.ObjectBindingType,
 
-                        Source = bingingObject.Source + " by price",
+                        Source = bingingObject.Source | PositionSources.Price,
                     };
 
                 var associatedByRuleset =
                     from bingingObject in opas.Union(pkgs)
                     join associated in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeAssociated)
                         on bingingObject.CauseItemPositionId equals associated.DependentPositionId
-                    select new OrderAssociatedPosition
+                    select new Order.OrderAssociatedPosition
                     {
                         OrderId = bingingObject.OrderId,
                         CauseOrderPositionId = bingingObject.CauseOrderPositionId,
@@ -442,16 +442,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         PrincipalPositionId = associated.PrincipalPositionId,
                         BindingType = associated.ObjectBindingType,
 
-                        Source = bingingObject.Source + " by ruleset",
+                        Source = bingingObject.Source | PositionSources.Ruleset,
                     };
 
                 return associatedByPrice.Union(associatedByRuleset);
             }
 
-            public FindSpecification<OrderAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.OrderAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<OrderAssociatedPosition>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.OrderAssociatedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }

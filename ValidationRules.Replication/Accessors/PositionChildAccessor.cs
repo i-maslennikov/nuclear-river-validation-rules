@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,6 +46,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PositionChild> dataObjects)
             => Array.Empty<IEvent>();
 
+        // value object для Position, ничего пересчитывать не надо
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<PositionChild> dataObjects)
             => Array.Empty<IEvent>();
     }
