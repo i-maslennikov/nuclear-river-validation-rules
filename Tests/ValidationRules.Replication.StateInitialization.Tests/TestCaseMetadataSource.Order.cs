@@ -136,7 +136,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
 
                     new Aggregates::Position { Id = 1, CategoryCode = 10 },
-                    new Aggregates::Price.AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10 });
+                    new Aggregates::Price.AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10, CategoryName = "empty" });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderWithDeniedPositions

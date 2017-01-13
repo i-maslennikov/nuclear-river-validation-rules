@@ -58,7 +58,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Period { Start = MonthStart(1), End = MonthStart(2) },
                     new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3) },
                     new Aggregates::Period { Start = MonthStart(3), End = MonthStart(4) },
-                    new Aggregates::Period { Start = MonthStart(4), End = MonthStart(5) })
+                    new Aggregates::Period { Start = MonthStart(4), End = MonthStart(5) },
+
+                    new Aggregates::Period.PricePeriod { Start = MonthStart(1) })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
