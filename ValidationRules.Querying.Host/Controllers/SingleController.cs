@@ -26,12 +26,6 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         [Route("{stateToken:guid}"), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
         {
-            long versionId;
-            if (!_repositiory.TryGetVersion(stateToken, out versionId))
-            {
-                return NotFound();
-            }
-
             using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new TempTableStoreFactory("Messages"), new HashSetStoreFactory()))
             {
                 var messages = validator.Execute().Where(x => x.OrderId == request.OrderId).ToArray();
