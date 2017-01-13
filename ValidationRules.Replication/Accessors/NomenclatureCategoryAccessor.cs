@@ -27,13 +27,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
             => from pricePosition in _query.For<Erm::PricePosition>().Where(x => x.IsActive && !x.IsDeleted)
                from position in _query.For<Erm::Position>().Where(x => !x.IsDeleted && x.IsControlledByAmount).Where(x => pricePosition.PositionId == x.Id)
                group position.Id by new { pricePosition.PriceId, position.CategoryCode } into groups
-               let name = _query.For<Erm::Position>().Single(x => x.Id == groups.Min()).Name
+               from namePosition in _query.For<Erm::Position>().Where(x => x.Id == groups.Min())
                select new NomenclatureCategory
-                   {
-                       Id = groups.Key.CategoryCode,
-                       PriceId = groups.Key.PriceId,
-                       Name = name,
-                   };
+               {
+                   Id = groups.Key.CategoryCode,
+                   PriceId = groups.Key.PriceId,
+                   Name = namePosition.Name,
+               };
 
         public FindSpecification<NomenclatureCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
