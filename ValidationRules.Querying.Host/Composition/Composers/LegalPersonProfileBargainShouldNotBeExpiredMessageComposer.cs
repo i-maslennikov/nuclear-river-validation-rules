@@ -1,4 +1,5 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -13,7 +14,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                "У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа",
+                Resources.ProfileBargainEndDateIsLessThanSignDate,
                 legalPersonProfileReference);
         }
     }

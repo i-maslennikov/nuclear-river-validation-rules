@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -18,13 +21,13 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             var status = new Dictionary<Advertisement.ReviewStatus, string>
                 {
-                    { Advertisement.ReviewStatus.Invalid, "содержит ошибки выверки"},
-                    { Advertisement.ReviewStatus.Draft, "находится в статусе 'Черновик'"},
+                    { Advertisement.ReviewStatus.Invalid, Resources.OrdersCheckAdvertisementElementWasInvalidated},
+                    { Advertisement.ReviewStatus.Draft, Resources.OrdersCheckAdvertisementElementIsDraft},
                 };
 
             return new MessageComposerResult(
                 orderReference,
-                $"В рекламном материале \"{{0}}\", который подлежит выверке, элемент \"{{1}}\" {status[advertisementElementStatus]}",
+                status[advertisementElementStatus],
                 advertisementReference,
                 advertisementElementReference);
         }

@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -16,15 +20,15 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                $"{MakePositionText(position)} {{0}} является сопутствующей, основная позиция не найдена",
+                string.Format(Resources.AssociatedPositionWithoutPrincipalTemplate, MakePositionText(position)),
                 new EntityReference("OrderPosition", position.OrderPositionId, position.OrderPositionName));
         }
 
-        private string MakePositionText(ResultExtensions.OrderPositionDto dto)
+        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
         {
             return dto.OrderPositionName != dto.PositionName
-                       ? $"Подпозиция {dto.PositionName} позиции"
-                       : $"Позиция";
+                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
+                       : Resources.RichDefaultPositionTypeTemplate;
         }
     }
 }

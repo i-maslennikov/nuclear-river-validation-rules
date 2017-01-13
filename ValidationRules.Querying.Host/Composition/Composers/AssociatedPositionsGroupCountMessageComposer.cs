@@ -1,4 +1,5 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -13,7 +14,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 price,
-                "В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой",
+                Resources.InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions,
                 pricePosition);
         }
     }

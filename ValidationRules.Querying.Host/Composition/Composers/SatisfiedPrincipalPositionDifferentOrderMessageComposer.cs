@@ -1,7 +1,10 @@
 ﻿using System.Linq;
 
 using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -16,22 +19,22 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             var master = orderPositions.First();
             var dependents = orderPositions.Skip(1).ToArray();
-            var placeholders = dependents.Select((x, i) => $"{MakePositionText(x)} {{{1 + i}}} Заказа {{{1 + dependents.Length + i}}}");
+            var placeholders = dependents.Select((x, i) => string.Format(Resources.ADPValidation_Template_Part, MakePositionText(x), 1 + i, 1 + dependents.Length + i));
 
             return new MessageComposerResult(
                 orderReference,
-                $"{MakePositionText(master)} {{0}} данного Заказа является основной для следующих позиций: {string.Join(", ", placeholders)}",
+                string.Format(Resources.ADPValidation_Template, MakePositionText(master), string.Join(", ", placeholders)),
                 new[] { new EntityReference("OrderPosition", master.OrderPositionId, master.OrderPositionName) }
                     .Concat(dependents.Select(x => new EntityReference("OrderPosition", x.OrderPositionId, x.OrderPositionName)))
                     .Concat(dependents.Select(x => new EntityReference("Order", x.OrderId, x.OrderNumber)))
                     .ToArray());
         }
 
-        private string MakePositionText(ResultExtensions.OrderPositionDto dto)
+        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
         {
             return dto.OrderPositionName != dto.PositionName
-                       ? $"Подпозиция {dto.PositionName} позиции"
-                       : $"Позиция";
+                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
+                       : Resources.RichDefaultPositionTypeTemplate;
         }
     }
 }

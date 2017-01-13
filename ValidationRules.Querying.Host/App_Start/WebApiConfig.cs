@@ -1,5 +1,7 @@
 ﻿using System.Web.Http;
 
+using NuClear.ValidationRules.Querying.Host.Properties;
+
 namespace NuClear.ValidationRules.Querying.Host
 {
     public static class WebApiConfig
@@ -11,6 +13,7 @@ namespace NuClear.ValidationRules.Querying.Host
             // Web API routes
             config.MapHttpAttributeRoutes();
             config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new Int64ToStringConverter());
+            config.MessageHandlers.Add(new LocalizationMessageHandler(typeof(Resources)));
         }
     }
 }

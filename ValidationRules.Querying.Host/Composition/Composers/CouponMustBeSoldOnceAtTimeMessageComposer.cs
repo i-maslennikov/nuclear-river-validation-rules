@@ -1,6 +1,9 @@
 ﻿using System.Linq;
 
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -18,7 +21,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                $"Купон на скидку {{0}} прикреплён к нескольким позициям: {string.Join(", ", referencePlaceholders)}",
+                string.Format(Resources.CouponIsBoundToMultiplePositionTemplate, string.Join(", ", referencePlaceholders)),
                 new [] { advertisementReference }.Concat(orderPositionReferences).ToArray());
         }
     }

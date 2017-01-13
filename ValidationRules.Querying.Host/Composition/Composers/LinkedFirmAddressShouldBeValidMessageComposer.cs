@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -18,15 +21,15 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             var firmAddressState = validationResult.ReadFirmAddressState();
             var format = new Dictionary<InvalidFirmAddressState, string>
                 {
-                    { InvalidFirmAddressState.Deleted, "скрыт навсегда" },
-                    { InvalidFirmAddressState.NotActive, "неактивен" },
-                    { InvalidFirmAddressState.ClosedForAscertainment, "скрыт до выяснения" },
-                    { InvalidFirmAddressState.NotBelongToFirm, "не принадлежит фирме заказа" }
+                    { InvalidFirmAddressState.Deleted, Resources.OrderPositionAddressDeleted },
+                    { InvalidFirmAddressState.NotActive, Resources.OrderPositionAddressNotActive },
+                    { InvalidFirmAddressState.ClosedForAscertainment, Resources.OrderPositionAddressHidden },
+                    { InvalidFirmAddressState.NotBelongToFirm, Resources.OrderPositionAddressNotBelongToFirm }
                 };
 
             return new MessageComposerResult(
                 orderReference,
-                $"В позиции {{0}} адрес фирмы {{1}} {format[firmAddressState]}",
+                format[firmAddressState],
                 orderPositionReference,
                 firmAddressReference);
         }

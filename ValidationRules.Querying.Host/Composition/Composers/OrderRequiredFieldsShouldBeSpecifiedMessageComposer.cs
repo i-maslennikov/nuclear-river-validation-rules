@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -17,32 +20,32 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             if (dto.LegalPerson)
             {
-                parameters.Add("Юр. лицо заказчика");
+                parameters.Add(Resources.LegalPerson);
             }
             if (dto.LegalPersonProfile)
             {
-                parameters.Add("Профиль юр. лица заказчика");
+                parameters.Add(Resources.LegalPersonProfile);
             }
             if (dto.BranchOfficeOrganizationUnit)
             {
-                parameters.Add("Юр. лицо исполнителя");
+                parameters.Add(Resources.BranchOfficeOrganizationUnit);
             }
             if (dto.Inspector)
             {
-                parameters.Add("Проверяющий");
+                parameters.Add(Resources.Inspector);
             }
             if (dto.ReleaseCountPlan)
             {
-                parameters.Add("План");
+                parameters.Add(Resources.PlanReleaseCount);
             }
             if (dto.Currency)
             {
-                parameters.Add("Валюта");
+                parameters.Add(Resources.Currency);
             }
 
             return new MessageComposerResult(
                 orderReference,
-                $"Необходимо заполнить все обязательные для заполнения поля: {string.Join(", ", parameters)}");
+                string.Format(Resources.OrderCheckOrderHasUnspecifiedFields, string.Join(", ", parameters)));
         }
     }
 }

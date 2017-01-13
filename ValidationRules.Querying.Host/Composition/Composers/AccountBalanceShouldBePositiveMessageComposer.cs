@@ -1,4 +1,5 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -11,8 +12,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             var orderReference = validationResult.ReadOrderReference();
             var dto = validationResult.ReadAccountBalanceMessage();
 
-            return new MessageComposerResult(orderReference,
-                $"Для оформления заказа недостаточно средств. Необходимо: {dto.Planned}. Имеется: {dto.Available}.");
+            return new MessageComposerResult(orderReference, string.Format(Resources.OrdersCheckOrderInsufficientFunds, dto.Planned, dto.Available));
         }
     }
 }

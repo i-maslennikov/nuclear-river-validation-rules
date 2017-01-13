@@ -1,4 +1,7 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -11,11 +14,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             var projectReference = validationResult.ReadProjectReference();
             var themeCount = validationResult.ReadProjectThemeCount();
 
-            var themeCountMessage = themeCount == 0 ? "не указана тематика по умолчанию" : "установлено более одной тематики по умолчанию";
+            var themeCountMessage = themeCount == 0 ? Resources.DefaultThemeIsNotSpecified : Resources.MoreThanOneDefaultTheme;
 
             return new MessageComposerResult(
                 projectReference,
-                $"Для подразделения {{0}} {themeCountMessage}",
+                themeCountMessage,
                 projectReference);
         }
     }
