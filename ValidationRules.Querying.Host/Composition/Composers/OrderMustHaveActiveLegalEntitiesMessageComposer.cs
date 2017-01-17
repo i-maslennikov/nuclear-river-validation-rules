@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -17,24 +20,24 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             if (dto.LegalPerson)
             {
-                parameters.Add("Юр. лицо заказчика");
+                parameters.Add(Resources.LegalPerson);
             }
             if (dto.LegalPersonProfile)
             {
-                parameters.Add("Профиль юр. лица заказчика");
+                parameters.Add(Resources.LegalPersonProfile);
             }
             if (dto.BranchOfficeOrganizationUnit)
             {
-                parameters.Add("Юр. лицо исполнителя");
+                parameters.Add(Resources.BranchOfficeOrganizationUnit);
             }
             if (dto.BranchOffice)
             {
-                parameters.Add("Юр. лицо организации");
+                parameters.Add(Resources.BranchOffice);
             }
 
             return new MessageComposerResult(
                 orderReference,
-                $"Заказ ссылается на неактивные объекты: {string.Join(", ", parameters)}");
+                string.Format(Resources.OrderReferencesInactiveEntities, string.Join(", ", parameters)));
         }
     }
 }

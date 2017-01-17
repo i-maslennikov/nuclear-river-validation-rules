@@ -1,4 +1,5 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -14,7 +15,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                "Для позиции {0} в рубрику {1} указан CPC меньше минимального",
+                Resources.CpcIsTooSmall,
                 orderPositionReference,
                 categoryReference);
         }

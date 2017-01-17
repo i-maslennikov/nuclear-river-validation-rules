@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -17,9 +18,9 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             var format = new Dictionary<InvalidFirmState, string>
                 {
-                    { InvalidFirmState.Deleted, "Фирма {0} удалена" },
-                    { InvalidFirmState.ClosedForever, "Фирма {0} скрыта навсегда" },
-                    { InvalidFirmState.ClosedForAscertainment, "Фирма {0} скрыта до выяснения" }
+                    { InvalidFirmState.Deleted, Resources.FirmIsDeleted },
+                    { InvalidFirmState.ClosedForever, Resources.FirmIsPermanentlyClosed },
+                    { InvalidFirmState.ClosedForAscertainment, Resources.OrderFirmHiddenForAscertainmentTemplate }
                 };
 
             return new MessageComposerResult(

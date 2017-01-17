@@ -1,4 +1,7 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
+
+
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -13,7 +16,13 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                $"Позиция {dto.Name} должна присутствовать в сборке в количестве от {dto.Min} до {dto.Max}. Фактическое количество позиций в месяц {dto.Month:d} - {dto.Count}");
+                                             string.Format(
+                                                           Resources.AdvertisementAmountShortErrorMessage,
+                                                           dto.Name,
+                                                           dto.Min,
+                                                           dto.Max,
+                                                           dto.Month,
+                                                           dto.Count));
         }
     }
 }

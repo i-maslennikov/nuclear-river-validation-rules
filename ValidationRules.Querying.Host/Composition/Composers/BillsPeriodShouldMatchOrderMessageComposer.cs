@@ -1,4 +1,5 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -10,7 +11,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         {
             var orderReference = validationResult.ReadOrderReference();
 
-            return new MessageComposerResult(orderReference, "Период размещения, указанный в заказе и в счете не совпадают");
+            return new MessageComposerResult(orderReference, Resources.OrderCheckOrderAndBillHaveDifferentPeriods);
         }
     }
 }

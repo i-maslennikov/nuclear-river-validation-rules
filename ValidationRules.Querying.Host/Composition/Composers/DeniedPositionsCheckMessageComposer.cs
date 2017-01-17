@@ -1,7 +1,10 @@
 ﻿using System.Linq;
 
 using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -18,17 +21,17 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                $"{MakePositionText(first)} {{0}} является запрещённой для: {MakePositionText(second)} {{1}}  в заказе {2}",
+                string.Format(Resources.ADPCheckModeSpecificOrder_MessageTemplate, MakePositionText(first), MakePositionText(second)),
                 new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
                 new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName),
                 new EntityReference("Order", second.OrderId, second.OrderNumber));
         }
 
-        private string MakePositionText(ResultExtensions.OrderPositionDto dto)
+        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
         {
             return dto.OrderPositionName != dto.PositionName
-                       ? $"Подпозиция {dto.PositionName} позиции"
-                       : $"Позиция";
+                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
+                       : Resources.RichDefaultPositionTypeTemplate;
         }
     }
 }
