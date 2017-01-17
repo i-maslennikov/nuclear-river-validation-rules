@@ -38,28 +38,28 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Firm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<Firm>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Firm> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Firm), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Firm), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Firm> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Firm), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Firm), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Firm> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Firm), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Firm), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Firm> dataObjects)
         {
-            var ids = dataObjects.Select(x => x.Id).ToArray();
+            var ids = dataObjects.Select(x => x.Id).ToList();
 
             var orderIds =
                 from order in _query.For<Order>().Where(x => ids.Contains(x.FirmId))
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds } };
+            return new EventCollectionHelper<Firm> { { typeof(Order), orderIds } };
         }
     }
 }

@@ -36,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<OrderScanFile> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<OrderScanFile>.Contains(x => x.OrderId, ids);
         }
 
@@ -53,7 +53,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         {
             var orderIds = dataObjects.Select(x => x.OrderId);
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
+            return new EventCollectionHelper<OrderScanFile> { { typeof(Order), orderIds } };
         }
     }
 }

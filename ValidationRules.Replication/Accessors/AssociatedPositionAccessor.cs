@@ -36,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<AssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<AssociatedPosition>.Contains(x => x.Id, ids);
         }
 
@@ -51,14 +51,14 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<AssociatedPosition> dataObjects)
         {
-            var ids = dataObjects.Select(x => x.Id).ToArray();
+            var ids = dataObjects.Select(x => x.Id).ToList();
 
             var orderIds = from associatedPosition in _query.For<AssociatedPosition>().Where(x => ids.Contains(x.Id))
                            from associatedPositionGroup in _query.For<AssociatedPositionsGroup>().Where(x => x.Id == associatedPosition.AssociatedPositionsGroupId)
                            from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == associatedPositionGroup.PricePositionId)
                            select orderPosition.OrderId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
+            return new EventCollectionHelper<AssociatedPosition> { { typeof(Order), orderIds } };
         }
     }
 }

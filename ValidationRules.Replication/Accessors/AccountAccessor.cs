@@ -36,29 +36,29 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Account> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<Account>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Account> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Account), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Account), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Account> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Account), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Account), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Account> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Account), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Account), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Account> dataObjects)
         {
-            var accountIds = dataObjects.Select(x => x.Id).ToArray();
+            var accountIds = dataObjects.Select(x => x.Id).ToList();
 
             var orderIds =
                 from account in _query.For<Account>().Where(x => accountIds.Contains(x.Id))
                 from order in _query.For<Order>().Where(x => x.LegalPersonId == account.LegalPersonId && x.BranchOfficeOrganizationUnitId == account.BranchOfficeOrganizationUnitId)
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
+            return new EventCollectionHelper<Account> { { typeof(Order), orderIds } };
         }
     }
 }

@@ -37,25 +37,25 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<AdvertisementElementTemplate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<AdvertisementElementTemplate>.Contains(x => x.Id, ids);
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToArray();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToList();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToArray();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToList();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToArray();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects)
         {
-            var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
+            var dataObjectIds = dataObjects.Select(x => x.Id).ToList();
 
             var advertisementIds =
                 from element in _query.For<AdvertisementElement>().Where(x => dataObjectIds.Contains(x.AdvertisementElementTemplateId))
                 select element.AdvertisementId;
 
-            return new EventCollectionHelper { { typeof(Advertisement), advertisementIds.Distinct() } };
+            return new EventCollectionHelper<AdvertisementElementTemplate> { { typeof(Advertisement), advertisementIds } };
         }
     }
 }

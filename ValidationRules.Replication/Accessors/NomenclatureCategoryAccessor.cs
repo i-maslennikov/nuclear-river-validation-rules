@@ -26,21 +26,22 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IQueryable<NomenclatureCategory> GetSource()
             => from pricePosition in _query.For<Erm::PricePosition>().Where(x => x.IsActive && !x.IsDeleted)
                from position in _query.For<Erm::Position>().Where(x => !x.IsDeleted && x.IsControlledByAmount).Where(x => pricePosition.PositionId == x.Id)
-               group position.Id by new { pricePosition.PriceId, position.CategoryCode } into groups
+               group position.Id by new { pricePosition.PriceId, position.CategoryCode }
+               into groups
                from namePosition in _query.For<Erm::Position>().Where(x => x.Id == groups.Min())
                select new NomenclatureCategory
-               {
-                   Id = groups.Key.CategoryCode,
-                   PriceId = groups.Key.PriceId,
-                   Name = namePosition.Name,
-               };
+                   {
+                       Id = groups.Key.CategoryCode,
+                       PriceId = groups.Key.PriceId,
+                       Name = namePosition.Name,
+                   };
 
         public FindSpecification<NomenclatureCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             // todo: Подумать о пересчёте, сейчас не идеально: изменения Position не приведёт к изменению имени. Должно ли? Пока пойдёт.
             // А ещё лучше - читать поток или как иначе общаться с мастер-системой.
             // Или как вариант, захардкодить - и пусть будет. Похоже, справочник менятся редко.
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<NomenclatureCategory>.Contains(x => x.PriceId, ids);
         }
 
@@ -53,11 +54,9 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<NomenclatureCategory> dataObjects)
             => Array.Empty<IEvent>();
 
+        // Ничего не пересчитываем.
+        // Достаточно сложно вычислить объём изменений, достаточно ненадёжно и влияет только на строковое имя в сообщении.
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<NomenclatureCategory> dataObjects)
-        {
-            // Ничего не пересчитываем.
-            // Достаточно сложно вычислить объём изменений, достаточно ненадёжно и влияет только на строковое имя в сообщении.
-            return Array.Empty<IEvent>();
-        }
+            => Array.Empty<IEvent>();
     }
 }

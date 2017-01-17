@@ -36,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<AdvertisementTemplate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<AdvertisementTemplate>.Contains(x => x.Id, ids);
         }
 
@@ -48,13 +48,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<AdvertisementTemplate> dataObjects)
         {
-            var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
+            var dataObjectIds = dataObjects.Select(x => x.Id).ToList();
 
             var advertisementIds = from advertisement in _query.For<Advertisement>().Where(x => dataObjectIds.Contains(x.AdvertisementTemplateId))
                                    select advertisement.Id;
 
             // позиция номенклатуры и шаблон РМ является константой для заказа, агрегат Order не пересчитываем
-            return new EventCollectionHelper { { typeof(Advertisement), advertisementIds } };
+            return new EventCollectionHelper<AdvertisementTemplate> { { typeof(Advertisement), advertisementIds } };
         }
     }
 }

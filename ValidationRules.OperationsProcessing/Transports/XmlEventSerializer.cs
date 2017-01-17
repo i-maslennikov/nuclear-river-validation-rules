@@ -69,24 +69,27 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
 
             if (IsEventOfType(@event, typeof(RelatedDataObjectOutdatedEvent<long>)))
             {
+                var dataObjectType = @event.Element(DataObjectType);
                 var relatedDataObjectType = @event.Element(RelatedDataObjectType);
                 var relatedDataObjectId = @event.Element(RelatedDataObjectId);
-                if (relatedDataObjectType != null && relatedDataObjectId != null)
+                if (dataObjectType != null && relatedDataObjectType != null && relatedDataObjectId != null)
                 {
-                    return new RelatedDataObjectOutdatedEvent<long>(ResolveDataObjectType(relatedDataObjectType.Value), (long)relatedDataObjectId);
+                    return new RelatedDataObjectOutdatedEvent<long>(ResolveDataObjectType(dataObjectType.Value), ResolveDataObjectType(relatedDataObjectType.Value), (long)relatedDataObjectId);
                 }
             }
 
             if (IsEventOfType(@event, typeof(RelatedDataObjectOutdatedEvent<PeriodKey>)))
             {
+                var dataObjectType = @event.Element(DataObjectType);
                 var relatedDataObjectType = @event.Element(RelatedDataObjectType);
                 var relatedDataObjectId = @event.Element(RelatedDataObjectId);
-                if (relatedDataObjectType != null && relatedDataObjectId != null)
+                if (dataObjectType != null && relatedDataObjectType != null && relatedDataObjectId != null)
                 {
                     var statisticsKey = relatedDataObjectId.Element(PeriodKey);
                     if (statisticsKey != null)
                     {
                         return new RelatedDataObjectOutdatedEvent<PeriodKey>(
+                            ResolveDataObjectType(dataObjectType.Value),
                             ResolveDataObjectType(relatedDataObjectType.Value),
                             new PeriodKey
                                 {
@@ -168,6 +171,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
             if (outdatedEvent != null)
             {
                 return CreateRecord(outdatedEvent,
+                                    new XElement(DataObjectType, outdatedEvent.DataObjectType.FullName),
                                     new XElement(RelatedDataObjectType, outdatedEvent.RelatedDataObjectType.FullName),
                                     new XElement(RelatedDataObjectId, outdatedEvent.RelatedDataObjectId));
             }
@@ -176,6 +180,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
             if (complexOutdatedEvent != null)
             {
                 return CreateRecord(complexOutdatedEvent,
+                                    new XElement(DataObjectType, complexOutdatedEvent.DataObjectType.FullName),
                                     new XElement(RelatedDataObjectType, complexOutdatedEvent.RelatedDataObjectType.FullName),
                                     new XElement(RelatedDataObjectId,
                                                  new XElement(PeriodKey,

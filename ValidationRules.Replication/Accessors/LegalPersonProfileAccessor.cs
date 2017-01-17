@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<LegalPersonProfile> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<LegalPersonProfile>.Contains(x => x.Id, ids);
         }
 
@@ -52,8 +52,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<LegalPersonProfile> dataObjects)
         {
-            var legalPersonProfileIds = dataObjects.Select(x => x.Id).ToArray();
-            var legalPersonIds = dataObjects.Select(x => x.LegalPersonId).Distinct().ToArray();
+            var legalPersonProfileIds = dataObjects.Select(x => x.Id).ToList();
+            var legalPersonIds = dataObjects.Select(x => x.LegalPersonId).Distinct().ToList();
 
             var orderIds =
                 from order in _query.For<Order>()
@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                       || order.LegalPersonId.HasValue && legalPersonIds.Contains(order.LegalPersonId.Value)
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds } };
+            return new EventCollectionHelper<LegalPersonProfile> { { typeof(Order), orderIds } };
         }
     }
 }

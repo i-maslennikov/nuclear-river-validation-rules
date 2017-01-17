@@ -119,6 +119,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                 return MapDataObjectToAggregate(deletedEvent.DataObjectType).Select(x => new DestroyAggregateCommand(x, deletedEvent.DataObjectId)).ToList();
             }
 
+            // TODO: нормально обрабатывать events
             var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
             if (outdatedEvent != null)
             {

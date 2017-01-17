@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<ThemeOrganizationUnit> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<ThemeOrganizationUnit>.Contains(x => x.Id, ids);
         }
 
@@ -47,13 +47,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<ThemeOrganizationUnit> dataObjects)
         {
-            var organizationUnitIds = dataObjects.Select(x => x.OrganizationUnitId).Distinct().ToArray();
+            var organizationUnitIds = dataObjects.Select(x => x.OrganizationUnitId).Distinct().ToList();
 
             var projectIds =
                 from project in _query.For<Project>().Where(x => organizationUnitIds.Contains(x.OrganizationUnitId))
                 select project.Id;
 
-            return new EventCollectionHelper { { typeof(Project), projectIds.Distinct() } };
+            return new EventCollectionHelper<ThemeOrganizationUnit> { { typeof(Project), projectIds } };
         }
     }
 }
