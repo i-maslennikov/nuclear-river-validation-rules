@@ -14,9 +14,9 @@ using NuClear.ValidationRules.Storage;
 namespace NuClear.ValidationRules.SingleCheck.Store
 {
     /// <summary>
-    /// Обеспечивает хранение во временных sql-таблицах
+    /// Обеспечивает хранение в постоянных sql-таблицах с откатом всех изменений по завершению проверки.
     /// </summary>
-    public sealed class TempTableStoreFactory : IStoreFactory
+    public sealed class Linq2DbTransactionStoreFactory : IStoreFactory
     {
         public static readonly Lazy<MappingSchema> MappingSchema =
             new Lazy<MappingSchema>(() => new MappingSchema(Schema.Facts, Schema.Aggregates));
@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
         private readonly TempTableStore _tempTableStore;
 
-        public TempTableStoreFactory(string connectionStringName)
+        public Linq2DbTransactionStoreFactory(string connectionStringName)
         {
             _tempTableStore = new TempTableStore(new DataConnection(connectionStringName).AddMappingSchema(MappingSchema.Value));
         }
@@ -41,30 +41,27 @@ namespace NuClear.ValidationRules.SingleCheck.Store
         {
             private bool _disposed;
             private readonly DataConnection _connection;
-            private readonly TempTableFactory _tempTableFactory;
 
             public TempTableStore(DataConnection connection)
             {
                 _disposed = false;
                 _connection = connection;
-                _tempTableFactory = new TempTableFactory(connection);
+                _connection.BeginTransaction();
             }
 
             void IStore.Add<T>(T entity)
             {
-                _tempTableFactory.EnsureTempTableExist<T>();
                 _connection.Insert(entity);
             }
 
             void IStore.AddRange<T>(IEnumerable<T> entities)
             {
-                _tempTableFactory.EnsureTempTableExist<T>();
-                _connection.BulkCopy(entities);
+                var x = entities.Distinct(EqualityComparerFactory.Value.CreateCompleteComparer<T>());
+                _connection.BulkCopy(x);
             }
 
             IQueryable<T> IQuery.For<T>()
             {
-                _tempTableFactory.EnsureTempTableExist<T>();
                 return _connection.GetTable<T>();
             }
 
@@ -95,31 +92,8 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
                 if (disposing)
                 {
+                    _connection.RollbackTransaction();
                     _connection?.Dispose();
-                }
-            }
-        }
-
-        private class TempTableFactory
-        {
-            private readonly IDictionary<Type, string> _tableNames;
-            private readonly DataConnection _connection;
-
-            public TempTableFactory(DataConnection connection)
-            {
-                _tableNames = new Dictionary<Type, string>();
-                _connection = connection;
-            }
-
-            public void EnsureTempTableExist<T>()
-            {
-                string name;
-                if (!_tableNames.TryGetValue(typeof(T), out name))
-                {
-                    name = "#" + Guid.NewGuid().ToString("N");
-                    _tableNames.Add(typeof(T), name);
-                    _connection.MappingSchema.GetFluentMappingBuilder().Entity<T>().HasTableName(name);
-                    _connection.CreateTable<T>();
                 }
             }
         }
