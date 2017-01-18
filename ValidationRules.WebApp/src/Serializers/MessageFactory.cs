@@ -11,12 +11,13 @@ namespace NuClear.ValidationRules.WebApp.Serializers
 {
     public sealed class MessageFactory
     {
-        private static readonly IDictionary<ValidationResult.Level, string> PanelClasses =
-            new Dictionary<ValidationResult.Level, string>
+        private static readonly IDictionary<Level, string> PanelClasses =
+            new Dictionary<Level, string>
                 {
-                    { ValidationResult.Level.Info, "panel-info" },
-                    { ValidationResult.Level.Warning, "panel-warning" },
-                    { ValidationResult.Level.Error, "panel-danger" }
+                    { Level.None, "" },
+                    { Level.Info, "panel-info" },
+                    { Level.Warning, "panel-warning" },
+                    { Level.Error, "panel-danger" }
                 };
 
         private readonly IDictionary<long, OrderDto> _orderPeriods;
@@ -35,7 +36,8 @@ namespace NuClear.ValidationRules.WebApp.Serializers
             => new Message
                 {
                     Rule = result.Rule,
-                    Level = PanelClasses[result.Result],
+                    Level = result.Result,
+                    Class = PanelClasses[result.Result],
                     MainReference = CreateLink(result.MainReference),
                     Text = string.Format(result.Template, result.References.Select(CreateLink).ToArray()),
                     PlainText = string.Format(result.Template, result.References.Select(x => x.Name).ToArray()),

@@ -8,7 +8,7 @@
 <div class="panel-group" id="collapse" role="tablist" aria-multiselectable="true">
     @foreach (var messageGroup in Model.ByRule())
     {
-        <div class="panel @messageGroup.Key.Level">
+        <div class="panel @messageGroup.Key.Class">
             <div class="panel-heading " role="tab" id="collapse-heading-one">
                 <div class="panel-title ">
                     <a role="button" data-toggle="collapse" href="#@messageGroup.Key.Rule" aria-expanded="false" aria-controls="@messageGroup.Key.Rule">
