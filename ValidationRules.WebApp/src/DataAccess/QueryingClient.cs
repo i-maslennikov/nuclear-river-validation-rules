@@ -15,6 +15,8 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
 {
     public class QueryingClient
     {
+        private static readonly HttpClient HttpClient = new HttpClient();
+
         private readonly QueryingHostSettings _settings;
 
         public QueryingClient(IOptions<QueryingHostSettings> settings)
@@ -25,7 +27,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
         public async Task<IReadOnlyCollection<ValidationResult>> Single(long orderId)
         {
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderId = orderId }), Encoding.UTF8, "application/json");
-            var response = await new HttpClient().PostAsync(_settings.Single, httpContent);
+            var response = await HttpClient.PostAsync(_settings.Single, httpContent);
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
@@ -36,7 +38,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderIds = orderIds, ReleaseDate = date, ProjectId = projectId }),
                                                 Encoding.UTF8,
                                                 "application/json");
-            var response = await new HttpClient().PostAsync(_settings.Manual, httpContent);
+            var response = await HttpClient.PostAsync(_settings.Manual, httpContent);
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
@@ -47,7 +49,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderIds = orderIds, ReleaseDate = date, ProjectId = projectId }),
                                                 Encoding.UTF8,
                                                 "application/json");
-            var response = await new HttpClient().PostAsync(_settings.Prerelease, httpContent);
+            var response = await HttpClient.PostAsync(_settings.Prerelease, httpContent);
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
@@ -58,7 +60,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderIds = orderIds, ReleaseDate = date, ProjectId = projectId }),
                                                 Encoding.UTF8,
                                                 "application/json");
-            var response = await new HttpClient().PostAsync(_settings.Release, httpContent);
+            var response = await HttpClient.PostAsync(_settings.Release, httpContent);
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
