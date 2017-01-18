@@ -7,5 +7,6 @@
         public string MainReference { get; set; }
         public string Level { get; set; }
         public string Period { get; set; }
+        public string PlainText { get; set; }
     }
 }

@@ -31,7 +31,6 @@ namespace NuClear.ValidationRules.WebApp
         {
             // Add framework services.
             services.AddSingleton<DataConnectionFactory>();
-            services.AddSingleton<LinkFactory>();
             services.AddScoped<OrderRepositiory>();
             services.AddScoped<UserRepositiory>();
             services.AddScoped<ProjectRepositiory>();

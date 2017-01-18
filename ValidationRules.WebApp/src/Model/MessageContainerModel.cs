@@ -9,6 +9,7 @@ namespace NuClear.ValidationRules.WebApp.Model
 
         public IDictionary<Key, Message[]> ByRule()
             => Results.GroupBy(x => new Key { Level = x.Level, Rule = x.Rule })
+                      .OrderBy(x => x.Key.Level)
                       .ToDictionary(x => x.Key, x => x.ToArray());
 
         public struct Key

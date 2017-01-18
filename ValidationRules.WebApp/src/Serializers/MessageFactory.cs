@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.Extensions.Options;
+
+using NuClear.ValidationRules.WebApp.Configuration;
 using NuClear.ValidationRules.WebApp.DataAccess;
 using NuClear.ValidationRules.WebApp.Model;
 
@@ -16,13 +19,13 @@ namespace NuClear.ValidationRules.WebApp.Serializers
                     { ValidationResult.Level.Error, "panel-danger" }
                 };
 
-        private readonly LinkFactory _linkFactory;
         private readonly IDictionary<long, OrderDto> _orderPeriods;
+        private readonly LinkFactorySettings _settings;
 
-        public MessageFactory(LinkFactory linkFactory, IDictionary<long, OrderDto> orderPeriods)
+        public MessageFactory(IOptions<LinkFactorySettings> settings, IDictionary<long, OrderDto> orderPeriods)
         {
-            _linkFactory = linkFactory;
             _orderPeriods = orderPeriods;
+            _settings = settings.Value;
         }
 
         public string CreatePlainTextMessage(ValidationResult result)
@@ -33,8 +36,9 @@ namespace NuClear.ValidationRules.WebApp.Serializers
                 {
                     Rule = result.Rule,
                     Level = PanelClasses[result.Result],
-                    MainReference = _linkFactory.CreateLink(result.MainReference),
-                    Text = string.Format(result.Template, result.References.Select(_linkFactory.CreateLink).ToArray()),
+                    MainReference = CreateLink(result.MainReference),
+                    Text = string.Format(result.Template, result.References.Select(CreateLink).ToArray()),
+                    PlainText = string.Format(result.Template, result.References.Select(x => x.Name).ToArray()),
                     Period = PeriodFor(result.MainReference)
                 };
 
@@ -48,5 +52,14 @@ namespace NuClear.ValidationRules.WebApp.Serializers
 
             return string.Empty;
         }
+
+        private string CreateLink(ValidationResult.EntityReference reference)
+            => CreateLink(reference.Type, reference.Id, reference.Name);
+
+        private string CreateLink(string entity, long entityId, string entityName)
+            => $"<a target=\"_blank\" href=\"{GetUrl(entity, entityId)}\">{entityName}</a>";
+
+        private string GetUrl(string entity, long entityId)
+            => _settings.ErmUrl + "\\" + "CreateOrUpdate" + "\\" + entity + "\\" + entityId;
     }
 }
