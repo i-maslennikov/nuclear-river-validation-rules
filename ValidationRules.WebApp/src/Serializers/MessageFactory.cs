@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 using Microsoft.Extensions.Options;
@@ -21,11 +22,13 @@ namespace NuClear.ValidationRules.WebApp.Serializers
                 };
 
         private readonly IDictionary<long, OrderDto> _orderPeriods;
+        private readonly CultureInfo _cultureInfo;
         private readonly LinkFactorySettings _settings;
 
-        public MessageFactory(IOptions<LinkFactorySettings> settings, IDictionary<long, OrderDto> orderPeriods)
+        public MessageFactory(IOptions<LinkFactorySettings> settings, IDictionary<long, OrderDto> orderPeriods, CultureInfo cultureInfo)
         {
             _orderPeriods = orderPeriods;
+            _cultureInfo = cultureInfo;
             _settings = settings.Value;
         }
 
@@ -49,7 +52,7 @@ namespace NuClear.ValidationRules.WebApp.Serializers
             OrderDto period;
             if (string.Equals(reference.Type, "Order") && _orderPeriods.TryGetValue(reference.Id, out period))
             {
-                return $"{period.Begin:Y} - {period.EndFact:Y}";
+                return string.Format(_cultureInfo, "{0:Y} - {1:Y}", period.Begin, period.EndFact);
             }
 
             return string.Empty;

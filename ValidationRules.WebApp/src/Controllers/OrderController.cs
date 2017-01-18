@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -48,9 +49,10 @@ namespace NuClear.ValidationRules.WebApp.Controllers
 
             var validationResults = await _queryingClient.Manual(orders.Keys.ToArray(), date, project);
 
-            var factory = new MessageFactory(_linkSettings, orders);
+            var feature = HttpContext.Features.Get<IRequestCultureFeature>();
+            var factory = new MessageFactory(_linkSettings, orders, feature.RequestCulture.Culture);
+            ViewBag.Message = string.Format(feature.RequestCulture.Culture, "Выведены результаты за {0:Y}", date);
 
-            ViewBag.Message = $"Выведены результаты за {date:Y}";
 
             return View(new MessageContainerModel
             {
@@ -76,9 +78,9 @@ namespace NuClear.ValidationRules.WebApp.Controllers
 
             var validationResults = await _queryingClient.Manual(orders.Keys.ToArray(), date, project);
 
-            ViewBag.Message = $"Выведены результаты за {date:Y}";
-
-            var factory = new MessageFactory(_linkSettings, orders);
+            var feature = HttpContext.Features.Get<IRequestCultureFeature>();
+            var factory = new MessageFactory(_linkSettings, orders, feature.RequestCulture.Culture);
+            ViewBag.Message = string.Format(feature.RequestCulture.Culture, "Выведены результаты за {0:Y}", date);
 
             if (rule.HasValue)
             {
@@ -100,7 +102,8 @@ namespace NuClear.ValidationRules.WebApp.Controllers
         {
             var validationResults = await _queryingClient.Single(id);
 
-            var factory = new MessageFactory(_linkSettings, new Dictionary<long,OrderDto>());
+            var feature = HttpContext.Features.Get<IRequestCultureFeature>();
+            var factory = new MessageFactory(_linkSettings, new Dictionary<long,OrderDto>(), feature.RequestCulture.Culture);
 
             return View(new MessageContainerModel
                 {
