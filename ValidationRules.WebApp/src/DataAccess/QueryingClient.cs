@@ -28,6 +28,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
         {
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { OrderId = orderId }), Encoding.UTF8, "application/json");
             var response = await HttpClient.PostAsync(_settings.Single, httpContent);
+            response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
@@ -39,6 +40,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
                                                 Encoding.UTF8,
                                                 "application/json");
             var response = await HttpClient.PostAsync(_settings.Manual, httpContent);
+            response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
@@ -50,6 +52,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
                                                 Encoding.UTF8,
                                                 "application/json");
             var response = await HttpClient.PostAsync(_settings.Prerelease, httpContent);
+            response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
@@ -61,6 +64,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
                                                 Encoding.UTF8,
                                                 "application/json");
             var response = await HttpClient.PostAsync(_settings.Release, httpContent);
+            response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<IReadOnlyCollection<ValidationResult>>(responseString);
             return result;
