@@ -45,7 +45,7 @@ namespace NuClear.ValidationRules.Replication
             using (Probe.Create("Aggregate", aggregateNameParts[2], aggregateNameParts[0]))
             {
                 var destroyCommands =
-                    aggregateCommands.OfType<DestroyAggregateCommand>()
+                    aggregateCommands.OfType<AggregateCommand.Destroy>()
                                      .SelectMany(next => new ICommand[]
                                                      {
                                                          new DeleteDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
@@ -55,7 +55,7 @@ namespace NuClear.ValidationRules.Replication
                 events = events.Union(_leafToRootActor.ExecuteCommands(destroyCommands));
 
                 var initializeCommands =
-                    aggregateCommands.OfType<InitializeAggregateCommand>()
+                    aggregateCommands.OfType<AggregateCommand.Initialize>()
                                      .SelectMany(next => new ICommand[]
                                                      {
                                                          new CreateDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication
                 events = events.Union(_rootToLeafActor.ExecuteCommands(initializeCommands));
 
                 var recalculateCommands =
-                    aggregateCommands.OfType<RecalculateAggregateCommand>()
+                    aggregateCommands.OfType<AggregateCommand.Recalculate>()
                                      .SelectMany(next => new ICommand[]
                                                      {
                                                          new SyncDataObjectCommand(next.AggregateRootType, next.AggregateRootId),

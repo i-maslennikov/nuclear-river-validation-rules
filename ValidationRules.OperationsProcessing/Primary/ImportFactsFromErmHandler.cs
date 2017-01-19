@@ -43,13 +43,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             {
                 using (Probe.Create("ETL1 Transforming"))
                 {
-                    var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                       .Cast<AggregatableMessage<ICommand>>()
-                                                       .ToArray();
+                    var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
-                    Handle(processingResultsMap.Keys.ToArray(), messages.SelectMany(message => message.Commands.OfType<ISyncDataObjectCommand>()).ToArray());
-                    Handle(messages.SelectMany(message => message.Commands.OfType<IncrementStateCommand>()).ToArray());
-                    Handle(messages.SelectMany(message => message.Commands.OfType<RecordDelayCommand>()).ToArray());
+                    Handle(commands.OfType<ISyncDataObjectCommand>().ToList());
+                    Handle(commands.OfType<IncrementStateCommand>().ToList());
+                    Handle(commands.OfType<RecordDelayCommand>().ToList());
 
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
@@ -85,7 +83,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             _eventLogger.Log(new IEvent[] { new FactsStateIncrementedEvent(states) });
         }
 
-        private void Handle(IReadOnlyCollection<Guid> bucketIds, IReadOnlyCollection<ISyncDataObjectCommand> commands)
+        private void Handle(IReadOnlyCollection<ISyncDataObjectCommand> commands)
         {
             if (!commands.Any())
             {
@@ -96,15 +94,18 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             var actors = _dataObjectsActorFactory.Create();
             foreach (var actor in actors)
             {
-                IReadOnlyCollection<IEvent> events;
+                var events = new HashSet<IEvent>();
 
                 var actorType = actor.GetType().GetFriendlyName();
                 using (Probe.Create($"ETL1 {actorType}"))
                 {
-                    events = actor.ExecuteCommands(commands);
+                    events.UnionWith(actor.ExecuteCommands(commands));
                 }
 
-                _eventLogger.Log(events);
+                if (events.Any())
+                {
+                    _eventLogger.Log(events);
+                }
             }
 
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);

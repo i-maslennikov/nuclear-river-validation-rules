@@ -4,7 +4,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.Commands
 {
-    public class RecalculateValidationRulePartiallyCommand : IRecalculateValidationRuleCommand
+    public sealed class RecalculateValidationRulePartiallyCommand : IRecalculateValidationRuleCommand
     {
         public RecalculateValidationRulePartiallyCommand(MessageTypeCode rule, IReadOnlyCollection<long> filter)
         {
