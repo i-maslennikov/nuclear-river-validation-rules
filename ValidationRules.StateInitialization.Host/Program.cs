@@ -46,9 +46,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             }
 
             var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), ConnectionStringSettings);
+            var copyTablesActor = new CopyTablesActor(new DataObjectTypesProviderFactory(), ConnectionStringSettings);
 
             var sw = Stopwatch.StartNew();
             bulkReplicationActor.ExecuteCommands(commands);
+            copyTablesActor.ExecuteCommands(commands);
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
 
