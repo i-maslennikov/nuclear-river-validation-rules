@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                               from firmWebSite in query.For<Firm.FirmWebsite>().Where(x => x.FirmId == order.FirmId)
                               from opa in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
                               from advertisementWebsite in query.For<Advertisement.AdvertisementWebsite>().Where(x => x.AdvertisementId == opa.AdvertisementId)
-                              where advertisementWebsite.Website.StartsWith(firmWebSite.Website) // рекламная ссылка начинается также как контактная
+                              where advertisementWebsite.Website.Contains(firmWebSite.Website) // рекламная ссылка начинается также как контактная
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
