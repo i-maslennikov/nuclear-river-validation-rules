@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
     /// <summary>
     /// Обеспечивает хранение в постоянных sql-таблицах с откатом всех изменений по завершению проверки.
     /// </summary>
-    public sealed class Linq2DbTransactionStoreFactory : IStoreFactory
+    public sealed class PersistentTableStoreFactory : IStoreFactory
     {
         public static readonly Lazy<MappingSchema> MappingSchema =
             new Lazy<MappingSchema>(() => new MappingSchema(Schema.Facts, Schema.Aggregates));
@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
         private readonly TempTableStore _tempTableStore;
 
-        public Linq2DbTransactionStoreFactory(string connectionStringName)
+        public PersistentTableStoreFactory(string connectionStringName)
         {
             _tempTableStore = new TempTableStore(new DataConnection(connectionStringName).AddMappingSchema(MappingSchema.Value));
         }
@@ -51,18 +51,21 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
             void IStore.Add<T>(T entity)
             {
-                _connection.Insert(entity);
+                var original = _connection.MappingSchema.GetAttribute<TableAttribute>(typeof(T));
+                _connection.Insert(entity, schemaName: "dbo", tableName: $"{original.Schema}_{original.Name ?? typeof(T).Name}");
             }
 
             void IStore.AddRange<T>(IEnumerable<T> entities)
             {
-                var x = entities.Distinct(EqualityComparerFactory.Value.CreateCompleteComparer<T>());
-                _connection.BulkCopy(x);
+                var original = _connection.MappingSchema.GetAttribute<TableAttribute>(typeof(T));
+                var table = _connection.GetTable<T>().SchemaName("dbo").TableName($"{original.Schema}_{original.Name ?? typeof(T).Name}");
+                table.BulkCopy(entities);
             }
 
             IQueryable<T> IQuery.For<T>()
             {
-                return _connection.GetTable<T>();
+                var original = _connection.MappingSchema.GetAttribute<TableAttribute>(typeof(T));
+                return _connection.GetTable<T>().SchemaName("dbo").TableName($"{original.Schema}_{original.Name ?? typeof(T).Name}");
             }
 
             IQueryable IQuery.For(Type objType)

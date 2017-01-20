@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.Tests
 
                 var expected = results.ToArray();
 
-                using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", orderId), new TempTableStoreFactory("ReferenceSource"), new HashSetStoreFactory()))
+                using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", orderId), new PersistentTableStoreFactory("Pipeline"), new HashSetStoreFactory()))
                 {
                     var actual = validator.Execute().Where(x => x.OrderId == orderId).ToArray();
                     AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
@@ -76,7 +76,7 @@ namespace NuClear.ValidationRules.Replication.Tests
 
                 foreach (var expected in expecteds)
                 {
-                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", expected.Key), new TempTableStoreFactory("ReferenceSource"), new HashSetStoreFactory()))
+                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", expected.Key), new PersistentTableStoreFactory("Pipeline"), new HashSetStoreFactory()))
                     {
                         var actual = validator.Execute().Where(x => x.OrderId == expected.Key && x.MessageType == (int)rule).ToArray();
                         AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
