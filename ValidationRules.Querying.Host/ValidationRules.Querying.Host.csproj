@@ -120,6 +120,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\LocalizationMessageHandler.cs" />
     <Compile Include="App_Start\Int64ToStringConverter.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -209,6 +210,11 @@
     <Compile Include="Composition\Composers\ThemePeriodMustContainOrderPeriodMessageComposer.cs" />
     <Compile Include="Composition\Composers\WhiteListAdvertisementMayPresentMessageComposer.cs" />
     <Compile Include="Composition\Composers\WhiteListAdvertisementMustPresentMessageComposer.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
@@ -224,6 +230,13 @@
       <Project>{e799a2ee-408f-467a-8b50-fc729e92d3f3}</Project>
       <Name>ValidationRules.Storage</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

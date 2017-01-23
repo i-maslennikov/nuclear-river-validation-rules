@@ -1,4 +1,5 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -15,7 +16,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                "В позиции {0} найдена рубрика {1}, не принадлежащая адресу {2}",
+                Resources.OrderPositionCategoryNotBelongsToAddress,
                 orderPositionReference,
                 categoryReference,
                 firmAddressReference);

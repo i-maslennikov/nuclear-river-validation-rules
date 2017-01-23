@@ -1,4 +1,7 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -14,7 +17,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                $"В рубрику {{0}} заказано слишком много объявлений: Заказано {dto.Count}, допустимо не более {dto.Max}",
+                string.Format(Resources.TooManyAdvertisementForCategory, dto.Count, dto.Max),
                 categoryReference);
         }
     }

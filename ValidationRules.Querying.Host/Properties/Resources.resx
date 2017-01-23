@@ -1,0 +1,370 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
+    <value>{0} {{0}} является запрещённой для: {1} {{1}} в заказе {{2}}</value>
+  </data>
+  <data name="ADPValidation_Template" xml:space="preserve">
+    <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1}</value>
+  </data>
+  <data name="ADPValidation_Template_Part" xml:space="preserve">
+    <value>{0} {{{1}}} Заказа {{{2}}}</value>
+    <comment>ключа нет в ERM</comment>
+  </data>
+  <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
+    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:d} - {4}</value>
+  </data>
+  <data name="AdvertisementChoosenForWhitelist" xml:space="preserve">
+    <value>Для фирмы {0} в белый список выбран рекламный материал {1}</value>
+  </data>
+  <data name="AdvertisementForWhitelistDoesNotSpecified" xml:space="preserve">
+    <value>Для фирмы {0} не указан рекламный материал в белый список</value>
+  </data>
+  <data name="AdvertisementIsLinkedWithEmptyAddressError" xml:space="preserve">
+    <value>Позиция {0} оформлена на пустой адрес {1}</value>
+  </data>
+  <data name="AdvertisementPeriodEndsBeforeReleasePeriodBegins" xml:space="preserve">
+    <value>Период размещения рекламного материала {0}, выбранного в позиции {1} должен захватывать 5 дней от текущего месяца размещения</value>
+  </data>
+  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
+    <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
+  </data>
+  <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
+    <value>{0} {{0}} является сопутствующей, основная позиция не найдена</value>
+  </data>
+  <data name="BargainSignedLaterThanOrder" xml:space="preserve">
+    <value>Договор не может иметь дату подписания позднее даты подписания заказа</value>
+  </data>
+  <data name="BranchOffice" xml:space="preserve">
+    <value>Юр. лицо организации</value>
+  </data>
+  <data name="BranchOfficeOrganizationUnit" xml:space="preserve">
+    <value>Юр. лицо исполнителя</value>
+  </data>
+  <data name="CategoryIsRestrictedForSpecifiedSalesModelError" xml:space="preserve">
+    <value>Позиция {0} не может быть продана в рубрику {1} проекта {2}</value>
+  </data>
+  <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
+    <value>{0} {{0}} содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} {{1}}</value>
+  </data>
+  <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
+    <value>Купон на скидку {{0}} прикреплён к нескольким позициям: {0}</value>
+  </data>
+  <data name="CpcIsMissing" xml:space="preserve">
+    <value>Для позиции {0} в рубрику {1} отсутствует CPC</value>
+  </data>
+  <data name="CpcIsTooSmall" xml:space="preserve">
+    <value>Для позиции {0} в рубрику {1} указан CPC меньше минимального</value>
+  </data>
+  <data name="CpcRestrictionIsMissing" xml:space="preserve">
+    <value>Для рубрики {0} в проекте {1} не указан минимальный CPC</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Валюта</value>
+  </data>
+  <data name="CurrentPriceNotFound" xml:space="preserve">
+    <value>Не найден действующий для заказа прайс-лист</value>
+    <comment>ключа нет в ERM</comment>
+  </data>
+  <data name="DeafaultThemeMustContainOnlySelfAds" xml:space="preserve">
+    <value>Установленная по умолчанию тематика {0} должна содержать только саморекламу</value>
+  </data>
+  <data name="DefaultThemeIsNotSpecified" xml:space="preserve">
+    <value>Для подразделения {0} не указана тематика по умолчанию</value>
+  </data>
+  <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
+    <value>Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}}, дублирующая контакт фирмы</value>
+  </data>
+  <data name="FirmIsDeleted" xml:space="preserve">
+    <value>Фирма {0} удалена</value>
+  </data>
+  <data name="FirmIsPermanentlyClosed" xml:space="preserve">
+    <value>Фирма {0} скрыта навсегда</value>
+  </data>
+  <data name="InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions" xml:space="preserve">
+    <value>В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой</value>
+  </data>
+  <data name="Inspector" xml:space="preserve">
+    <value>Проверяющий</value>
+  </data>
+  <data name="LegalPerson" xml:space="preserve">
+    <value>Юр. лицо заказчика</value>
+  </data>
+  <data name="LegalPersonProfile" xml:space="preserve">
+    <value>Профиль юр. лица заказчика</value>
+  </data>
+  <data name="LinkedObjectsMissedInPrincipals" xml:space="preserve">
+    <value>{0} {{0}} содержит объекты привязки, отсутствующие в основных позициях</value>
+  </data>
+  <data name="MoreThanOneDefaultTheme" xml:space="preserve">
+    <value>Для подразделения {0} установлено более одной тематики по умолчанию</value>
+  </data>
+  <data name="MustMakeLegalPersonProfile" xml:space="preserve">
+    <value>У юр. лица клиента отсутствует профиль</value>
+  </data>
+  <data name="OrderApproval_BillsSumDoesntMatchWhenProcessingOrderOnApproval" xml:space="preserve">
+    <value>Сумма по счетам не совпадает с планируемой суммой заказа</value>
+  </data>
+  <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
+    <value>В позиции {0} необходимо указать рекламные материалы для подпозиции {1}</value>
+  </data>
+  <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
+    <value>В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции {1}</value>
+  </data>
+  <data name="OrderCheckHasReleases" xml:space="preserve">
+    <value>Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа</value>
+  </data>
+  <data name="OrderCheckIncorrectBeginDistributionDate" xml:space="preserve">
+    <value>Указана некорректная дата начала размещения</value>
+  </data>
+  <data name="OrderCheckIncorrectEndDistributionDate" xml:space="preserve">
+    <value>Указана некорректная дата окончания размещения</value>
+  </data>
+  <data name="OrderCheckOrderAndBillHaveDifferentPeriods" xml:space="preserve">
+    <value>Период размещения, указанный в заказе и в счете не совпадают</value>
+  </data>
+  <data name="OrderCheckOrderHasNoBargainScans" xml:space="preserve">
+    <value>Отсутствует сканированная копия договора</value>
+  </data>
+  <data name="OrderCheckOrderHasNoPositions" xml:space="preserve">
+    <value>Заказ не содержит ни одной позиции</value>
+  </data>
+  <data name="OrderCheckOrderHasNoScans" xml:space="preserve">
+    <value>Отсутствует сканированная копия Бланка заказа</value>
+  </data>
+  <data name="OrderCheckOrderHasUnspecifiedFields" xml:space="preserve">
+    <value>Необходимо заполнить все обязательные для заполнения поля: {0}</value>
+  </data>
+  <data name="OrderCheckOrderPositionCorrespontToInactivePosition" xml:space="preserve">
+    <value>Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа</value>
+  </data>
+  <data name="OrderCheckOrderPositionDoesntCorrespontToActualPrice" xml:space="preserve">
+    <value>Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа</value>
+  </data>
+  <data name="OrderCheckPositionMustHaveAdvertisements" xml:space="preserve">
+    <value>В позиции {0} необходимо указать рекламные материалы</value>
+  </data>
+  <data name="OrderContainsDummyAdvertisementError" xml:space="preserve">
+    <value>Позиция {0} содержит заглушку рекламного материала</value>
+  </data>
+  <data name="OrderDealIsInactive" xml:space="preserve">
+    <value>Для заказа указана неактивная работа</value>
+  </data>
+  <data name="OrderFirmHiddenForAscertainmentTemplate" xml:space="preserve">
+    <value>Фирма {0} скрыта до выяснения</value>
+  </data>
+  <data name="OrderPositionAddressDeleted" xml:space="preserve">
+    <value>В позиции {0} адрес фирмы {1} скрыт навсегда</value>
+  </data>
+  <data name="OrderPositionAddressHidden" xml:space="preserve">
+    <value>В позиции {0} адрес фирмы {1} скрыт до выяснения</value>
+  </data>
+  <data name="OrderPositionAddressNotActive" xml:space="preserve">
+    <value>В позиции {0} адрес фирмы {1} неактивен</value>
+    <comment>ключа нет в ERM</comment>
+  </data>
+  <data name="OrderPositionAddressNotBelongToFirm" xml:space="preserve">
+    <value>В позиции {0} адрес фирмы {1} не принадлежит фирме заказа</value>
+    <comment>ключа нет в ERM</comment>
+  </data>
+  <data name="OrderPositionCategoryNotActive" xml:space="preserve">
+    <value>В позиции {0} найдена неактивная рубрика {1}</value>
+  </data>
+  <data name="OrderPositionCategoryNotBelongsToAddress" xml:space="preserve">
+    <value>В позиции {0} найдена рубрика {1}, не принадлежащая адресу {2}</value>
+  </data>
+  <data name="OrderPositionCategoryNotBelongsToFirm" xml:space="preserve">
+    <value>В позиции {0} найдена рубрика {1}, не принадлежащая фирме заказа</value>
+  </data>
+  <data name="OrderReferencesInactiveEntities" xml:space="preserve">
+    <value>Заказ ссылается на неактивные объекты: {0}</value>
+  </data>
+  <data name="OrdersCheckAdvertisementElementIsDraft" xml:space="preserve">
+    <value>В рекламном материале {0}, который подлежит выверке, элемент {1} находится в статусе 'Черновик'</value>
+  </data>
+  <data name="OrdersCheckAdvertisementElementWasInvalidated" xml:space="preserve">
+    <value>В рекламном материале {0}, который подлежит выверке, элемент {1} содержит ошибки выверки</value>
+  </data>
+  <data name="OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne" xml:space="preserve">
+    <value>Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы</value>
+  </data>
+  <data name="OrdersCheckNeedToCreateBills" xml:space="preserve">
+    <value>Для заказа необходимо сформировать счета</value>
+  </data>
+  <data name="OrdersCheckOrderHasLock" xml:space="preserve">
+    <value>Заказ имеет созданную блокировку на указанный период</value>
+  </data>
+  <data name="OrdersCheckOrderHasNoAccount" xml:space="preserve">
+    <value>Заказ не имеет привязки к лицевому счёту</value>
+  </data>
+  <data name="OrdersCheckOrderInsufficientFunds" xml:space="preserve">
+    <value>Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}.</value>
+  </data>
+  <data name="OrdersCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
+    <value>Рубрика {0} используется в позиции {1}, но не привязана к отделению организации города назначения заказа</value>
+  </data>
+  <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
+    <value>В рекламном материале {0} не заполнен обязательный элемент {1}</value>
+  </data>
+  <data name="PlanReleaseCount" xml:space="preserve">
+    <value>План</value>
+  </data>
+  <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
+    <value>В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск</value>
+  </data>
+  <data name="ProfileBargainEndDateIsLessThanSignDate" xml:space="preserve">
+    <value>У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа</value>
+  </data>
+  <data name="ProfileWarrantyEndDateIsLessThanSignDate" xml:space="preserve">
+    <value>У юр. лица клиента, в профиле {0} указана доверенность с датой окончания действия раньше даты подписания заказа</value>
+  </data>
+  <data name="RemovedAdvertisemendSpecifiedForPosition" xml:space="preserve">
+    <value>В позиции {0} выбран удалённый рекламный материал {1}</value>
+  </data>
+  <data name="RichChildPositionTypeTemplate" xml:space="preserve">
+    <value>Подпозиция {0} позиции</value>
+  </data>
+  <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
+    <value>Позиция</value>
+  </data>
+  <data name="SelfAdvertisementOrderValidationRuleMessage" xml:space="preserve">
+    <value>Позиция "Самореклама только для ПК" продана одновременно с рекламой в другую платформу</value>
+  </data>
+  <data name="ThemePeriodDoesNotOverlapOrderPeriod" xml:space="preserve">
+    <value>Заказ {0} не может иметь продаж в тематику {1}, поскольку тематика действует не весь период размещения заказа</value>
+  </data>
+  <data name="ThemeSalesExceedsLimit" xml:space="preserve">
+    <value>Слишком много продаж в тематику {{0}}. Продано {0} позиций вместо {1} возможных</value>
+  </data>
+  <data name="ThemeUsesInactiveCategory" xml:space="preserve">
+    <value>Тематика {0} использует удаленную рубрику {1}</value>
+  </data>
+  <data name="ThereIsNoAdvertisementForAdvantageousPurchasesCategory" xml:space="preserve">
+    <value>У фирмы {0}, с рубрикой "Выгодные покупки с 2ГИС", отсутствуют продажи по позициям "Самореклама только для ПК" или "Выгодные покупки с 2ГИС"</value>
+  </data>
+  <data name="ThereIsNoSpecifiedDealForOrder" xml:space="preserve">
+    <value>Для заказа не указана работа</value>
+  </data>
+  <data name="TooManyAdvertisementForCategory" xml:space="preserve">
+    <value>В рубрику {{0}} заказано слишком много объявлений: Заказано {0}, допустимо не более {1}</value>
+  </data>
+  <data name="TooManyCategorieForFirm" xml:space="preserve">
+    <value>Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}</value>
+  </data>
+</root>

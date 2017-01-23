@@ -1,4 +1,7 @@
-﻿using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -14,7 +17,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                $"Слишком много продаж в тематику {{0}}. Продано {dto.Count} позиций вместо {dto.Max} возможных",
+                string.Format(Resources.ThemeSalesExceedsLimit, dto.Count, dto.Max),
                 themeReference);
         }
     }

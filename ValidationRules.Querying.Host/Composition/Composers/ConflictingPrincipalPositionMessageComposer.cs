@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -19,16 +23,19 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                $"{MakePositionText(first)} {{0}} содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {MakePositionText(second)} {{1}}",
+                string.Format(
+                    Resources.ConflictingPrincipalPositionTemplate,
+                              MakePositionText(first),
+                              MakePositionText(second)),
                 new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
                 new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName));
         }
 
-        private string MakePositionText(ResultExtensions.OrderPositionDto dto)
+        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
         {
             return dto.OrderPositionName != dto.PositionName
-                       ? $"Подпозиция {dto.PositionName} позиции"
-                       : $"Позиция";
+                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
+                       : Resources.RichDefaultPositionTypeTemplate;
         }
     }
 }

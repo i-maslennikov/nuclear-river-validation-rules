@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -17,8 +18,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             var format = new Dictionary<ResultExtensions.DealState, string>
             {
-                { ResultExtensions.DealState.Missing, "Для заказа не указана работа" },
-                { ResultExtensions.DealState.Inactive, "Для заказа указана неактивная работа" }
+                { ResultExtensions.DealState.Missing, Resources.ThereIsNoSpecifiedDealForOrder },
+                { ResultExtensions.DealState.Inactive, Resources.OrderDealIsInactive }
             };
 
             return new MessageComposerResult(orderReference, format[dealState]);
