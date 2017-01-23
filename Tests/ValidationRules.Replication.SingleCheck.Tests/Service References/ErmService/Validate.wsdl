@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://2gis.ru/erm/api/ordervalidation/2013/03" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://2gis.ru/erm/api/ordervalidation/2013/03" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://2gis.ru/erm/api/ordervalidation/2013/03/Imports">
+      <xsd:import schemaLocation="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd0" namespace="http://2gis.ru/erm/api/ordervalidation/2013/03" />
+      <xsd:import schemaLocation="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/DoubleGis.Erm.BLCore.API.OrderValidation" />
+      <xsd:import schemaLocation="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/DoubleGis.Erm.BLCore.API.OrderValidation.Remote" />
+      <xsd:import schemaLocation="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd4" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd5" namespace="http://2gis.ru/erm/api/common/2013/09" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IOrderValidationApplicationRestService_ValidateSingleOrderRest_InputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateSingleOrderRest" />
+  </wsdl:message>
+  <wsdl:message name="IOrderValidationApplicationRestService_ValidateSingleOrderRest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateSingleOrderRestResponse" />
+  </wsdl:message>
+  <wsdl:message name="IOrderValidationApplicationRestService_ValidateSingleOrderStateTransferRest_InputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateSingleOrderStateTransferRest" />
+  </wsdl:message>
+  <wsdl:message name="IOrderValidationApplicationRestService_ValidateSingleOrderStateTransferRest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateSingleOrderStateTransferRestResponse" />
+  </wsdl:message>
+  <wsdl:message name="IOrderValidationApplicationService_ValidateSingleOrder_InputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateSingleOrder" />
+  </wsdl:message>
+  <wsdl:message name="IOrderValidationApplicationService_ValidateSingleOrder_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateSingleOrderResponse" />
+  </wsdl:message>
+  <wsdl:message name="IOrderValidationApplicationService_ValidateOrders_InputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateOrders" />
+  </wsdl:message>
+  <wsdl:message name="IOrderValidationApplicationService_ValidateOrders_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateOrdersResponse" />
+  </wsdl:message>
+  <wsdl:portType msc:usingSession="false" name="IOrderValidationApplicationRestService">
+    <wsdl:operation name="ValidateSingleOrderRest">
+      <wsdl:input wsaw:Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationRestService/ValidateSingleOrderRest" message="tns:IOrderValidationApplicationRestService_ValidateSingleOrderRest_InputMessage" />
+      <wsdl:output wsaw:Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationRestService/ValidateSingleOrderRestResponse" message="tns:IOrderValidationApplicationRestService_ValidateSingleOrderRest_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateSingleOrderStateTransferRest">
+      <wsdl:input wsaw:Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationRestService/ValidateSingleOrderStateTransferRest" message="tns:IOrderValidationApplicationRestService_ValidateSingleOrderStateTransferRest_InputMessage" />
+      <wsdl:output wsaw:Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationRestService/ValidateSingleOrderStateTransferRestResponse" message="tns:IOrderValidationApplicationRestService_ValidateSingleOrderStateTransferRest_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType msc:usingSession="false" name="IOrderValidationApplicationService">
+    <wsdl:operation name="ValidateSingleOrder">
+      <wsdl:input wsaw:Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService/ValidateSingleOrder" message="tns:IOrderValidationApplicationService_ValidateSingleOrder_InputMessage" />
+      <wsdl:output wsaw:Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService/ValidateSingleOrderResponse" message="tns:IOrderValidationApplicationService_ValidateSingleOrder_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateOrders">
+      <wsdl:input wsaw:Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService/ValidateOrders" message="tns:IOrderValidationApplicationService_ValidateOrders_InputMessage" />
+      <wsdl:output wsaw:Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService/ValidateOrdersResponse" message="tns:IOrderValidationApplicationService_ValidateOrders_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

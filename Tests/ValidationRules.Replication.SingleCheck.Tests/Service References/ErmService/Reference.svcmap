@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="80543287-a0e8-4eb5-bff8-cabe48779ef0" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>true</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="https://order-validation20.api.test.erm.2gis.ru/Validate.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="Validate.xsd" MetadataType="Schema" ID="04eeb160-1faf-49da-964d-44c414703897" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd3" />
+    <MetadataFile FileName="Validate.wsdl" MetadataType="Wsdl" ID="61106293-a03d-4bef-91d4-8bf04676c5ce" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="Validate1.xsd" MetadataType="Schema" ID="aff4bd29-1641-464c-8b2f-46734538591b" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd0" />
+    <MetadataFile FileName="OrderValidationApplicationService.wsdl" MetadataType="Wsdl" ID="d9f4f239-7e61-43f2-b368-b5ed251f6194" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?wsdl" />
+    <MetadataFile FileName="Validate.disco" MetadataType="Disco" ID="cae876c4-4cdc-4f08-8624-d2246addcec2" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?disco" />
+    <MetadataFile FileName="Validate2.xsd" MetadataType="Schema" ID="9ac3d911-d05c-4380-81bd-6cb027dfceef" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd5" />
+    <MetadataFile FileName="Validate3.xsd" MetadataType="Schema" ID="875b77a7-e391-4f51-9a46-92824ba46267" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd2" />
+    <MetadataFile FileName="Validate4.xsd" MetadataType="Schema" ID="6fe1f5c6-4b2d-4902-b4e0-4ac2ad2e758b" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd4" />
+    <MetadataFile FileName="Validate5.xsd" MetadataType="Schema" ID="f5d8c457-40b6-4642-b95e-9076ec2bff40" SourceId="1" SourceUrl="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

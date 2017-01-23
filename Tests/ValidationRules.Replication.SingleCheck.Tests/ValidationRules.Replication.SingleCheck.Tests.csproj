@@ -35,24 +35,75 @@
       <HintPath>..\..\packages\linq2db.1.0.7.5-alpha4\lib\net45\linq2db.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompareWithErmTests.cs" />
     <Compile Include="CompareWithMassTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RiverService\RiverService.cs" />
+    <Compile Include="RiverService\RiverToErmMappingExtensions.cs" />
+    <Compile Include="RiverService\RiverToErmResultAdapter.cs" />
+    <Compile Include="Service References\ErmService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\OrderValidationApplicationService.wsdl" />
+    <None Include="Service References\ErmService\Validate.wsdl" />
+    <None Include="Service References\ErmService\Validate.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\Validate1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\Validate2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\Validate3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\Validate4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\Validate5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateOrdersResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ValidationRules.SingleCheck\ValidationRules.SingleCheck.csproj">
@@ -63,6 +114,27 @@
       <Project>{e799a2ee-408f-467a-8b50-fc729e92d3f3}</Project>
       <Name>ValidationRules.Storage</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ErmService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ErmService\Validate.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ErmService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ErmService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ErmService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
