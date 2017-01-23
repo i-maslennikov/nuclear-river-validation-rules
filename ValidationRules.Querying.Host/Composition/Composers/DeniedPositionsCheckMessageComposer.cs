@@ -22,9 +22,9 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             return new MessageComposerResult(
                 orderReference,
                 string.Format(Resources.ADPCheckModeSpecificOrder_MessageTemplate, MakePositionText(first), MakePositionText(second)),
-                new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
                 new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName),
-                new EntityReference("Order", second.OrderId, second.OrderNumber));
+                new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
+                new EntityReference("Order", first.OrderId, first.OrderNumber));
         }
 
         private static string MakePositionText(ResultExtensions.OrderPositionDto dto)

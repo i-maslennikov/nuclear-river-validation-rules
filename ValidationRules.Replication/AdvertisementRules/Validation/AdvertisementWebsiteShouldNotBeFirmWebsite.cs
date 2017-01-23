@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                               new XAttribute("id", opa.OrderPositionId),
                                               new XAttribute("name", query.For<Position>().Single(x => x.Id == opa.PositionId).Name)),
                                           new XElement("message",
-                                              new XAttribute("website", firmWebSite.Website))
+                                              new XAttribute("website", advertisementWebsite.Website))
                                           )),
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,

@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class ReleaseInfoAccessor : IStorageBasedDataObjectAccessor<ReleaseInfo>, IDataChangesHandler<ReleaseInfo>
     {
-        private const int ReleaseStatusSuccess = 1;
+        private const int ReleaseStatusSuccess = 2;
         private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
 
         private readonly IQuery _query;
