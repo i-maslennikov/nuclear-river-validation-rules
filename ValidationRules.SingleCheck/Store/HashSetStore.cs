@@ -13,7 +13,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
     {
         private readonly IEqualityComparerFactory _equalityComparerFactory;
         private readonly IDictionary<Type, IEnumerable> _store;
-        private int _totalCount = 0;
 
         public HashSetStore(IEqualityComparerFactory equalityComparerFactory)
         {
@@ -42,7 +41,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             {
                 var table = GetTable<T>();
                 table.Add(entity);
-                _totalCount++;
             }
         }
 
@@ -54,7 +52,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                 if (entity != null)
                 {
                     table.Add(entity);
-                    _totalCount++;
                 }
             }
         }

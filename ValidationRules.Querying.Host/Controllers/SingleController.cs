@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Http;
 
 using NuClear.ValidationRules.Querying.Host.Composition;
-using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.SingleCheck;
 using NuClear.ValidationRules.SingleCheck.Store;
 
@@ -12,13 +11,11 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
     [RoutePrefix("api/Single")]
     public class SingleController : ApiController
     {
-        private readonly MessageRepositiory _repositiory;
         private readonly ValidationResultFactory _factory;
         private readonly PipelineFactory _pipelineFactory;
 
-        public SingleController(MessageRepositiory repositiory, ValidationResultFactory factory, PipelineFactory pipelineFactory)
+        public SingleController(ValidationResultFactory factory, PipelineFactory pipelineFactory)
         {
-            _repositiory = repositiory;
             _factory = factory;
             _pipelineFactory = pipelineFactory;
         }
