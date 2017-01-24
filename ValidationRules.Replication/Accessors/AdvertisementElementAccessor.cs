@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<AdvertisementElement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<AdvertisementElement>.Contains(x => x.Id, ids);
         }
 
@@ -52,13 +52,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<AdvertisementElement> dataObjects)
         {
-            var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
+            var dataObjectIds = dataObjects.Select(x => x.Id).ToList();
 
             var advertisementIds =
                 from element in _query.For<AdvertisementElement>().Where(x => dataObjectIds.Contains(x.Id))
                 select element.AdvertisementId;
 
-            return new EventCollectionHelper { { typeof(Advertisement), advertisementIds.Distinct() } };
+            return new EventCollectionHelper<AdvertisementElement> { { typeof(Advertisement), advertisementIds } };
         }
     }
 }

@@ -36,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<BargainScanFile> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<BargainScanFile>.Contains(x => x.Id, ids);
         }
 
@@ -51,13 +51,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<BargainScanFile> dataObjects)
         {
-            var bargainIds = dataObjects.Select(x => x.BargainId).ToArray();
+            var bargainIds = dataObjects.Select(x => x.BargainId).ToList();
 
             var orderIds =
                 from order in _query.For<Order>().Where(x => x.BargainId.HasValue && bargainIds.Contains(x.BargainId.Value))
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
+            return new EventCollectionHelper<BargainScanFile> { { typeof(Order), orderIds } };
         }
     }
 }

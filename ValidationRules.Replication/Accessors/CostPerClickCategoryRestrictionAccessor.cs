@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<CostPerClickCategoryRestriction> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<CostPerClickCategoryRestriction>.Contains(x => x.ProjectId, ids);
         }
 

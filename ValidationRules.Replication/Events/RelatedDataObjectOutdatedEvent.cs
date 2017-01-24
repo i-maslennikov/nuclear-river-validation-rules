@@ -4,53 +4,44 @@ using NuClear.Replication.Core;
 
 namespace NuClear.ValidationRules.Replication.Events
 {
-    public class RelatedDataObjectOutdatedEvent<TDataObjectId> : IEvent
+    public sealed class RelatedDataObjectOutdatedEvent<TDataObjectId> : IEvent
+        where TDataObjectId : struct
     {
-        public RelatedDataObjectOutdatedEvent(Type relatedDataObjectType, TDataObjectId relatedDataObjectId)
-        {
-            if (relatedDataObjectType == null)
-            {
-                throw new ArgumentNullException(nameof(relatedDataObjectId));
-            }
+        public Type DataObjectType { get; }
+        public Type RelatedDataObjectType { get; }
+        public TDataObjectId RelatedDataObjectId { get; }
 
+        public RelatedDataObjectOutdatedEvent(Type dataObjectType, Type relatedDataObjectType, TDataObjectId relatedDataObjectId)
+        {
+            DataObjectType = dataObjectType;
             RelatedDataObjectType = relatedDataObjectType;
             RelatedDataObjectId = relatedDataObjectId;
         }
 
-        public Type RelatedDataObjectType { get; }
-        public TDataObjectId RelatedDataObjectId { get; set; }
+        private bool Equals(RelatedDataObjectOutdatedEvent<TDataObjectId> other)
+        {
+            return DataObjectType == other.DataObjectType &&
+                   RelatedDataObjectType == other.RelatedDataObjectType &&
+                   RelatedDataObjectId.Equals(other.RelatedDataObjectId);
+        }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((RelatedDataObjectOutdatedEvent<TDataObjectId>)obj);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            var a = obj as RelatedDataObjectOutdatedEvent<TDataObjectId>;
+            return a != null && Equals(a);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((RelatedDataObjectType?.GetHashCode() ?? 0) * 397) ^ RelatedDataObjectId.GetHashCode();
+                var hashCode = DataObjectType.GetHashCode();
+                hashCode = (hashCode * 397) ^ RelatedDataObjectType.GetHashCode();
+                hashCode = (hashCode * 397) ^ RelatedDataObjectId.GetHashCode();
+                return hashCode;
             }
-        }
-
-        private bool Equals(RelatedDataObjectOutdatedEvent<TDataObjectId> other)
-        {
-            return RelatedDataObjectType == other.RelatedDataObjectType && Equals(RelatedDataObjectId, other.RelatedDataObjectId);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<ReleaseInfo> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<ReleaseInfo>.Contains(x => x.Id, ids);
         }
 
@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from project in _query.For<Project>().Where(project => organizationUnitIds.Contains(project.OrganizationUnitId))
                 select project.Id;
 
-            return new EventCollectionHelper { { typeof(Project), orderIds.Distinct() } };
+            return new EventCollectionHelper<ReleaseInfo> { { typeof(Project), orderIds } };
         }
     }
 }

@@ -40,29 +40,29 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Theme> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<Theme>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Theme> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Theme), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Theme), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Theme> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Theme), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Theme), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Theme> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Theme), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Theme), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Theme> dataObjects)
         {
-            var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
+            var dataObjectIds = dataObjects.Select(x => x.Id).ToList();
 
             var projectIds =
                 from themeOrgUnit in _query.For<ThemeOrganizationUnit>().Where(x => dataObjectIds.Contains(x.ThemeId))
                 from project in _query.For<Project>().Where(x => x.OrganizationUnitId == themeOrgUnit.OrganizationUnitId)
                 select project.Id;
 
-            return new EventCollectionHelper { { typeof(Project), projectIds.Distinct() } };
+            return new EventCollectionHelper<Theme> { { typeof(Project), projectIds } };
         }
     }
 }

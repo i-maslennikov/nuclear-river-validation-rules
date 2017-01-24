@@ -37,19 +37,19 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Advertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<Advertisement>.Contains(x => x.Id, ids);
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Advertisement), x.Id)).ToArray();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Advertisement), x.Id)).ToList();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Advertisement), x.Id)).ToArray();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Advertisement), x.Id)).ToList();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Advertisement), x.Id)).ToArray();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Advertisement), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Advertisement> dataObjects)
         {
-            var dataObjectIds = dataObjects.Select(x => x.Id).ToArray();
+            var dataObjectIds = dataObjects.Select(x => x.Id).ToList();
 
             var orderIds =
                 from opa in _query.For<OrderPositionAdvertisement>().Where(x => dataObjectIds.Contains((long)x.AdvertisementId))
@@ -62,7 +62,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 where advertisement.FirmId != null
                 select advertisement.FirmId.Value;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, {typeof(Firm), firmIds.Distinct() } };
+            return new EventCollectionHelper<Advertisement> { { typeof(Order), orderIds }, {typeof(Firm), firmIds } };
         }
     }
 }

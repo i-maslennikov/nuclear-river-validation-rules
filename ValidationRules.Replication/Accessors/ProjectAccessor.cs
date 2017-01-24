@@ -35,22 +35,22 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Project> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<Project>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Project> dataObjects)
-             => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Project), x.Id)).ToArray();
+             => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Project), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Project> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Project), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Project), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Project> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Project), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Project), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Project> dataObjects)
         {
-            var projectIds = dataObjects.Select(x => x.Id).ToArray();
+            var projectIds = dataObjects.Select(x => x.Id).ToList();
 
             var orderIds =
                 from project in _query.For<Project>().Where(x => projectIds.Contains(x.Id))
@@ -62,7 +62,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from firm in _query.For<Firm>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId)
                 select firm.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds }, { typeof(Firm), firmIds } };
+            return new EventCollectionHelper<Project> { { typeof(Order), orderIds }, { typeof(Firm), firmIds } };
         }
     }
 }

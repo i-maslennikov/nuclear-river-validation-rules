@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<ReleaseWithdrawal> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<ReleaseWithdrawal>.Contains(x => x.Id, ids);
         }
 
@@ -62,7 +62,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from orderPosition in _query.For<OrderPosition>().Where(x => orderPositionIds.Contains(x.Id))
                 select orderPosition.OrderId;
 
-            return new EventCollectionHelper { { typeof(Account), accountIds.Distinct() }, { typeof(Order), orderIds.Distinct() } };
+            return new EventCollectionHelper<ReleaseWithdrawal> { { typeof(Account), accountIds }, { typeof(Order), orderIds } };
         }
     }
 }

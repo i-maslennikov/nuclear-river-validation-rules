@@ -36,22 +36,22 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Price> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<Price>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Price> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Price), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Price), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Price> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Price), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Price), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Price> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Price), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Price), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Price> dataObjects)
         {
-            var ids = dataObjects.Select(x => x.Id).ToArray();
+            var ids = dataObjects.Select(x => x.Id).ToList();
 
             var periodIds =
                 from price in _query.For<Price>().Where(x => ids.Contains(x.Id))
@@ -60,7 +60,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
             // И какой тип я должен тут указать?
             // Тип outdated-сущности - это период. Нет периода в фактах, а агрегатный тип тут указывать некорректно.
-            return new EventCollectionHelper { { typeof(Order), periodIds } };
+            return new EventCollectionHelper<Price> { { typeof(Order), periodIds } };
         }
     }
 }

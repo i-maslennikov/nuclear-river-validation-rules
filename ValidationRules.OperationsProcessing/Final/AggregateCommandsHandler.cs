@@ -40,13 +40,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             {
                 using (Probe.Create("ETL2 Transforming"))
                 {
-                    var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                       .Cast<AggregatableMessage<ICommand>>()
-                                                       .ToArray();
+                    var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
-                    Handle(messages.SelectMany(x => x.Commands).OfType<IAggregateCommand>().ToArray());
-                    Handle(messages.SelectMany(message => message.Commands.OfType<IncrementStateCommand>()).ToArray());
-                    Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
+                    Handle(commands.OfType<IAggregateCommand>().ToList());
+                    Handle(commands.OfType<IncrementStateCommand>().ToList());
+                    Handle(commands.OfType<RecordDelayCommand>().ToList());
 
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
@@ -84,9 +82,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
 
         private void Handle(IReadOnlyCollection<IAggregateCommand> commands)
         {
+            if (!commands.Any())
+            {
+                return;
+            }
+
             var aggregateRootTypes = commands.Select(x => x.AggregateRootType).ToArray();
             var actors = _aggregateActorFactory.Create(aggregateRootTypes);
-            var events = new List<IEvent>();
+            var events = new HashSet<IEvent>();
 
             // TODO: Can agreggate actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
             foreach (var actor in actors)
@@ -94,12 +97,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                 var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
                 using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
                 {
-                    events.AddRange(actor.ExecuteCommands(commands));
+                    events.UnionWith(actor.ExecuteCommands(commands));
                     transaction.Complete();
                 }
             }
 
-            _eventLogger.Log(events);
+            if (events.Any())
+            {
+                _eventLogger.Log(events);
+            }
+
             _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(commands.Count);
         }
     }

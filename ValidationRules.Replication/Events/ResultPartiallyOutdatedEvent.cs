@@ -5,7 +5,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.Events
 {
-    public class ResultPartiallyOutdatedEvent : IEvent
+    public sealed class ResultPartiallyOutdatedEvent : IEvent
     {
         public ResultPartiallyOutdatedEvent(MessageTypeCode rule, IReadOnlyCollection<long> orderIds)
         {

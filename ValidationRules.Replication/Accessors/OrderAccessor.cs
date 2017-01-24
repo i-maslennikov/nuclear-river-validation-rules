@@ -24,8 +24,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         private const int OrderTypeCompensation = 9;
 
         private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
-
-        private readonly IQuery _query;
+private readonly IQuery _query;
 
         public OrderAccessor(IQuery query)
         {
@@ -65,22 +64,22 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<Order>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Order> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Order), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Order), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Order> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Order), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Order), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Order> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Order), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Order), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Order> dataObjects)
         {
-            var orderIds = dataObjects.Select(x => x.Id).ToArray();
+            var orderIds = dataObjects.Select(x => x.Id).ToList();
 
             var accountIds =
                 from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
@@ -99,7 +98,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 group order by order.DestOrganizationUnitId into orders
                 select new PeriodKey { OrganizationUnitId = orders.Key, Start = orders.Min(y => y.BeginDistribution), End = orders.Max(y => y.EndDistributionFact) };
 
-            return new EventCollectionHelper { { typeof(Account), accountIds.Distinct() }, { typeof(Firm), firmIds }, { typeof(Order), periodIds } };
+            return new EventCollectionHelper<Order> { { typeof(Account), accountIds }, { typeof(Firm), firmIds }, { typeof(Order), periodIds } };
         }
     }
 }

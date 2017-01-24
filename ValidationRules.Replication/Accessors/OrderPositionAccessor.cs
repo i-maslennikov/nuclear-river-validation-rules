@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<OrderPosition>.Contains(x => x.Id, ids);
         }
 
@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
                 select order.FirmId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() }, { typeof(Account), accountIds.Distinct() }, { typeof(Firm), firmIds.Distinct() } };
+            return new EventCollectionHelper<OrderPosition> { { typeof(Order), orderIds }, { typeof(Account), accountIds }, { typeof(Firm), firmIds } };
         }
     }
 }

@@ -8,32 +8,22 @@ using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.Replication
 {
-    internal sealed class EventCollectionHelper : IReadOnlyCollection<IEvent>
+    internal sealed class EventCollectionHelper<TDataObject> : IReadOnlyCollection<IEvent>
     {
-        private IEnumerable<IEvent> _events = Array.Empty<IEvent>();
-        private IReadOnlyCollection<IEvent> _readonlyCollection;
+        private static readonly Type DataObjectType = typeof(TDataObject);
 
-        public void Add<T>(Type type, IQueryable<T> queryable)
+        private readonly HashSet<IEvent> _hashSet = new HashSet<IEvent>();
+
+        public void Add<TDataObjectId>(Type relatedDataObjectType, IEnumerable<TDataObjectId> ids)
+            where TDataObjectId : struct
         {
-            Add(type, queryable.ToArray());
+            _hashSet.UnionWith(ids.Select(x => new RelatedDataObjectOutdatedEvent<TDataObjectId>(DataObjectType, relatedDataObjectType, x)));
         }
 
-        public void Add<T>(Type type, IEnumerable<T> queryable)
-        {
-            _events = _events.Concat(queryable.ToArray().Select(x => new RelatedDataObjectOutdatedEvent<T>(type, x)));
-            _readonlyCollection = null;
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private IReadOnlyCollection<IEvent> ReadonlyCollection
-            => _readonlyCollection ?? (_readonlyCollection = _events.ToArray());
+        public IEnumerator<IEvent> GetEnumerator() => _hashSet.GetEnumerator();
 
-        IEnumerator<IEvent> IEnumerable<IEvent>.GetEnumerator()
-            => ReadonlyCollection.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => ((IEnumerable)ReadonlyCollection).GetEnumerator();
-
-        int IReadOnlyCollection<IEvent>.Count
-            => ReadonlyCollection.Count;
+        public int Count => _hashSet.Count;
     }
 }

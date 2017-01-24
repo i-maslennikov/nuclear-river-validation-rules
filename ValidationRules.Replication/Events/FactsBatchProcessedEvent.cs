@@ -4,7 +4,7 @@ using NuClear.Replication.Core;
 
 namespace NuClear.ValidationRules.Replication.Events
 {
-    public class FactsBatchProcessedEvent : IEvent
+    public sealed class FactsBatchProcessedEvent : IEvent
     {
         public FactsBatchProcessedEvent(DateTime eventTime)
         {

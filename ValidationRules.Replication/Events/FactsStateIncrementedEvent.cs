@@ -5,7 +5,7 @@ using NuClear.Replication.Core;
 
 namespace NuClear.ValidationRules.Replication.Events
 {
-    public class FactsStateIncrementedEvent : IEvent
+    public sealed class FactsStateIncrementedEvent : IEvent
     {
         public FactsStateIncrementedEvent(IReadOnlyCollection<Guid> includedTokens)
         {

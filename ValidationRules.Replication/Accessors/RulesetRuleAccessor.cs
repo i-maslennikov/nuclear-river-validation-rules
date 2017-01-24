@@ -69,7 +69,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Order), orderIdsFromPricePostion.Union(orderIdsFromOpa) } };
+            return new EventCollectionHelper<RulesetRule> { { typeof(Order), orderIdsFromPricePostion.Concat(orderIdsFromOpa) } };
         }
     }
 }

@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<CategoryOrganizationUnit> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<CategoryOrganizationUnit>.Contains(x => x.Id, ids);
         }
 
@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from project in _query.For<Project>().Where(x => ids.Contains(x.OrganizationUnitId))
                 select project.Id;
 
-            return new EventCollectionHelper { { typeof(Project), projectIds.Distinct() } };
+            return new EventCollectionHelper<CategoryOrganizationUnit> { { typeof(Project), projectIds } };
         }
     }
 }

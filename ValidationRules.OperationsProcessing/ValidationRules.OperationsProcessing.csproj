@@ -188,7 +188,9 @@
     <Compile Include="Contexts\AggregateSubDomain.cs" />
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
-    <Compile Include="EntityTypeMap.cs" />
+    <Compile Include="EmptyOperationIdentityRegistry.cs" />
+    <Compile Include="EntityTypeMap.Aggregates.cs" />
+    <Compile Include="EntityTypeMap.Facts.cs" />
     <Compile Include="Final\AggregateCommandsAccumulator.cs" />
     <Compile Include="AfterFinal\MessageCommandsHandler.cs" />
     <Compile Include="Final\AggregateCommandsHandler.cs" />
@@ -238,9 +240,8 @@
     <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
     <Compile Include="Identities\Operations\PublishRulesetIdentity.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
-    <Compile Include="NoEntityTypeExplicitMapping.cs" />
-    <Compile Include="OperationRegistryMetadataSource.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
+    <Compile Include="ICommandFactory.cs" />
     <Compile Include="Primary\ImportFactsFromErmAccumulator.cs" />
     <Compile Include="Primary\ImportFactsFromErmHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -52,6 +52,7 @@ using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Metamodeling.Validators;
+using NuClear.Model.Common.Entities;
 using NuClear.Model.Common.Operations.Identity;
 using NuClear.OperationsLogging;
 using NuClear.OperationsLogging.API;
@@ -62,9 +63,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Replication.Core.Settings;
-using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Metadata;
-using NuClear.Replication.OperationsProcessing.Primary;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
@@ -108,8 +107,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                                  };
             var storageSettings = settingsContainer.AsSettings<ISqlStoreSettingsAspect>();
 
-            container.RegisterContexts()
-                     .AttachQueryableContainerExtension()
+            container.AttachQueryableContainerExtension()
                      .UseParameterResolvers(ParameterResolvers.Defaults)
                      .ConfigureMetadata()
                      .ConfigureSettingsAspects(settingsContainer)
@@ -152,7 +150,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
             // register matadata sources without massprocessor
             container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(PerformedOperationsMessageFlowsMetadataSource), Lifetime.Singleton);
-            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(OperationRegistryMetadataSource), Lifetime.Singleton);
 
             return container;
         }
@@ -192,9 +189,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
         private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
         {
-            container.RegisterType<IOperationIdentityRegistry>(Lifetime.Singleton, new InjectionFactory(x => x.Resolve<OperationIdentityRegistryFactory>().RegistryFor<ErmSubDomain>()))
-                    .RegisterType(typeof(IOperationRegistry<>), typeof(EmptyOperationRegistry<>), Lifetime.Singleton)
-                    .RegisterType<IEntityTypeExplicitMapping, NoEntityTypeExplicitMapping>(Lifetime.Singleton);
 
 #if DEBUG
             container.RegisterType<ITelemetryPublisher, DebugTelemetryPublisher>(Lifetime.Singleton);
@@ -203,7 +197,9 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 #endif
 
             // primary
-            container.RegisterTypeWithDependencies(typeof(CorporateBusOperationsReceiver), Lifetime.PerScope, null)
+            container.RegisterInstance(new EntityTypeMappingRegistryBuilder().Create<ErmSubDomain>(), Lifetime.Singleton)
+                     .RegisterType<IOperationIdentityRegistry, EmptyOperationIdentityRegistry>(Lifetime.Singleton)
+                     .RegisterTypeWithDependencies(typeof(CorporateBusOperationsReceiver), Lifetime.PerScope, null)
                      .RegisterTypeWithDependencies(typeof(ServiceBusMessageReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
@@ -355,13 +351,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 };
 
             return container.RegisterInstance<IConnectionStringIdentityResolver>(new ConnectionStringIdentityResolver(readConnectionStringNameMap, writeConnectionStringNameMap));
-        }
-
-        private static IUnityContainer RegisterContexts(this IUnityContainer container)
-        {
-            return container.RegisterInstance(EntityTypeMap.CreateErmContext())
-                            .RegisterInstance(EntityTypeMap.CreateFactsContext())
-                            .RegisterInstance(EntityTypeMap.CreateAggregateContext());
         }
 
         private static class Scope

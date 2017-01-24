@@ -46,22 +46,22 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<Position>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Position), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Position), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Position), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Position), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Position), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Position), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Position> dataObjects)
         {
-            var positionIds = dataObjects.Select(x => x.Id).ToArray();
+            var positionIds = dataObjects.Select(x => x.Id).ToList();
 
             var orderIdsFromOpa =
                 from pricePosition in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
@@ -82,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
             var priceIds = from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
                            select pricePosition.PriceId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds }, { typeof(Firm), firmIds.Distinct() }, { typeof(Price), priceIds.Distinct() } };
+            return new EventCollectionHelper<Position> { { typeof(Order), orderIds }, { typeof(Firm), firmIds }, { typeof(Price), priceIds } };
         }
     }
 }

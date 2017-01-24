@@ -4,7 +4,7 @@ using NuClear.Replication.Core;
 
 namespace NuClear.ValidationRules.Replication.Events
 {
-    public class DataObjectCreatedEvent : IEvent
+    public sealed class DataObjectCreatedEvent : IEvent
     {
         public DataObjectCreatedEvent(Type dataObjectType, long dataObjectId)
         {

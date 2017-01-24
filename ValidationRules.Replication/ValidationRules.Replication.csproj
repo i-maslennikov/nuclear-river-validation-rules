@@ -341,13 +341,11 @@
     <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
     <Compile Include="Commands\IncrementStateCommand.cs" />
     <Compile Include="Commands\CreateNewVersionCommand.cs" />
-    <Compile Include="Commands\DestroyAggregateCommand.cs" />
-    <Compile Include="Commands\InitializeAggregateCommand.cs" />
+    <Compile Include="Commands\AggregateCommand.cs" />
     <Compile Include="Commands\IValidationRuleCommand.cs" />
     <Compile Include="Commands\PeriodCommands.cs" />
     <Compile Include="Commands\CreateDataObjectCommand.cs" />
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
-    <Compile Include="Commands\RecalculateAggregateCommand.cs" />
     <Compile Include="Commands\RecordDelayCommand.cs" />
     <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
     <Compile Include="DataObjectTypesProvider.cs" />

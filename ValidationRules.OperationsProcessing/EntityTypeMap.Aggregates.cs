@@ -1,0 +1,235 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
+
+using AccountAggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
+using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
+using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
+using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
+using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+using ThemeAggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
+
+namespace NuClear.ValidationRules.OperationsProcessing
+{
+    internal static partial class EntityTypeMap
+    {
+        private static readonly Dictionary<Tuple<Type, Type>, IReadOnlyCollection<Type>> AggregateEventMapping =
+            new Dictionary<Tuple<Type, Type>, IList<Type>>()
+                // AccountAggregates
+                .Aggregate<AccountAggregates::Account>(
+                    x => x.Match<Facts::Account>()
+                          .DependOn<Facts::Order>()
+                          .DependOn<Facts::Lock>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::ReleaseWithdrawal>())
+                .Aggregate<AccountAggregates::Order>(
+                    x => x.Match<Facts::Order>()
+                          .DependOn<Facts::Account>()
+                          .DependOn<Facts::Lock>()
+                          .DependOn<Facts::Project>())
+
+                // AdvertisementAggregates
+                .Aggregate<AdvertisementAggregates::Advertisement>(
+                    x => x.Match<Facts::Advertisement>()
+                          .DependOn<Facts::AdvertisementElement>()
+                          .DependOn<Facts::AdvertisementElementTemplate>()
+                          .DependOn<Facts::AdvertisementTemplate>())
+                .Aggregate<AdvertisementAggregates::AdvertisementElementTemplate>(
+                    x => x.Match<Facts::AdvertisementElementTemplate>())
+                .Aggregate<AdvertisementAggregates::Firm>(
+                    x => x.Match<Facts::Firm>()
+                          .DependOn<Facts::Advertisement>()
+                          .DependOn<Facts::FirmAddress>()
+                          .DependOn<Facts::FirmAddressWebsite>()
+                          .DependOn<Facts::Order>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionAdvertisement>())
+                .Aggregate<AdvertisementAggregates::Order>(
+                    x => x.Match<Facts::Order>()
+                          .DependOn<Facts::Advertisement>()
+                          .DependOn<Facts::AdvertisementTemplate>()
+                          .DependOn<Facts::Firm>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionAdvertisement>()
+                          .DependOn<Facts::Position>()
+                          .DependOn<Facts::PricePosition>()
+                          .DependOn<Facts::Project>())
+                .Aggregate<AdvertisementAggregates::Position>(
+                    x => x.Match<Facts::Position>())
+
+                // ConsistencyAggregates
+                .Aggregate<ConsistencyAggregates::Order>(
+                    x => x.Match<Facts::Order>()
+                          .DependOn<Facts::Bargain>()
+                          .DependOn<Facts::BargainScanFile>()
+                          .DependOn<Facts::Bill>()
+                          .DependOn<Facts::BranchOffice>()
+                          .DependOn<Facts::BranchOfficeOrganizationUnit>()
+                          .DependOn<Facts::Category>()
+                          .DependOn<Facts::Deal>()
+                          .DependOn<Facts::Firm>()
+                          .DependOn<Facts::FirmAddress>()
+                          .DependOn<Facts::FirmAddressCategory>()
+                          .DependOn<Facts::LegalPerson>()
+                          .DependOn<Facts::LegalPersonProfile>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionAdvertisement>()
+                          .DependOn<Facts::OrderScanFile>()
+                          .DependOn<Facts::Position>()
+                          .DependOn<Facts::Project>()
+                          .DependOn<Facts::ReleaseWithdrawal>())
+
+                // FirmAggregates
+                .Aggregate<FirmAggregates::Firm>(
+                    x => x.Match<Facts::Firm>()
+                          .DependOn<Facts::FirmAddress>()
+                          .DependOn<Facts::FirmAddressCategory>()
+                          .DependOn<Facts::Order>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionAdvertisement>()
+                          .DependOn<Facts::Position>()
+                          .DependOn<Facts::Project>())
+                .Aggregate<FirmAggregates::Order>(
+                    x => x.Match<Facts::Order>()
+                          .DependOn<Facts::Firm>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionAdvertisement>()
+                          .DependOn<Facts::Position>()
+                          .DependOn<Facts::Project>())
+
+                // PriceAggregates
+                .Aggregate<PriceAggregates::Category>(
+                    x => x.Match<Facts::Category>())
+                .Aggregate<PriceAggregates::Order>(
+                    x => x.Match<Facts::Order>()
+                          .DependOn<Facts::AssociatedPosition>()
+                          .DependOn<Facts::AssociatedPositionsGroup>()
+                          .DependOn<Facts::Category>()
+                          .DependOn<Facts::DeniedPosition>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionAdvertisement>()
+                          .DependOn<Facts::Position>()
+                          .DependOn<Facts::PricePosition>()
+                          .DependOn<Facts::RulesetRule>())
+                .Aggregate<PriceAggregates::Position>(
+                    x => x.Match<Facts::Position>())
+                .Aggregate<PriceAggregates::Price>(
+                    x => x.Match<Facts::Price>()
+                          .DependOn<Facts::AssociatedPositionsGroup>()
+                          .DependOn<Facts::Position>()
+                          .DependOn<Facts::PricePosition>())
+                .Aggregate<PriceAggregates::Project>(
+                    x => x.Match<Facts::Project>())
+                .Aggregate<PriceAggregates::Theme>(
+                    x => x.Match<Facts::Theme>())
+
+                // ProjectAggregates
+                .Aggregate<ProjectAggregates::Category>(
+                    x => x.Match<Facts::Category>())
+                .Aggregate<ProjectAggregates::FirmAddress>(
+                    x => x.Match<Facts::FirmAddress>())
+                .Aggregate<ProjectAggregates::Order>(
+                    x => x.Match<Facts::Order>()
+                          .DependOn<Facts::Category>()
+                          .DependOn<Facts::FirmAddress>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionAdvertisement>()
+                          .DependOn<Facts::Position>()
+                          .DependOn<Facts::PricePosition>()
+                          .DependOn<Facts::Project>())
+                .Aggregate<ProjectAggregates::Position>(
+                    x => x.Match<Facts::Position>())
+                .Aggregate<ProjectAggregates::Project>(
+                    x => x.Match<Facts::Project>()
+                          .DependOn<Facts::CategoryOrganizationUnit>()
+                          .DependOn<Facts::ReleaseInfo>())
+
+                // ThemeAggregates
+                .Aggregate<ThemeAggregates::Category>(
+                    x => x.Match<Facts::Category>())
+                .Aggregate<ThemeAggregates::Order>(
+                    x => x.Match<Facts::Order>()
+                          .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionAdvertisement>()
+                          .DependOn<Facts::Project>())
+                .Aggregate<ThemeAggregates::Project>(
+                    x => x.Match<Facts::Project>()
+                          .DependOn<Facts::Theme>()
+                          .DependOn<Facts::ThemeOrganizationUnit>())
+                .Aggregate<ThemeAggregates::Theme>(
+                    x => x.Match<Facts::Theme>()
+                          .DependOn<Facts::Category>()
+                          .DependOn<Facts::ThemeCategory>())
+                .ToDictionary(x => x.Key, x => (IReadOnlyCollection<Type>)x.Value);
+
+        public static bool TryGetAggregateTypes(Type factType, out IReadOnlyCollection<Type> aggregateTypes)
+        {
+            var key = Tuple.Create(factType, factType);
+            return AggregateEventMapping.TryGetValue(key, out aggregateTypes);
+        }
+
+        public static bool TryGetRelatedAggregateTypes(Type factType, Type relatedFactType, out IReadOnlyCollection<Type> aggregateTypes)
+        {
+            var key = Tuple.Create(factType, relatedFactType);
+            return AggregateEventMapping.TryGetValue(key, out aggregateTypes);
+        }
+
+        private static Dictionary<Tuple<Type, Type>, IList<Type>> Aggregate<TAggregate>(
+            this Dictionary<Tuple<Type, Type>, IList<Type>> dictionary,
+            Action<FluentDictionaryBuilder> action)
+        {
+            var builder = new FluentDictionaryBuilder();
+            action.Invoke(builder);
+
+            dictionary.Append(Tuple.Create(builder.Matched, builder.Matched), typeof(TAggregate));
+            foreach (var depended in builder.Depended)
+            {
+                // Первым идёт тип, от которого зависит агрегат. Он же тип, accessor которого сгенерировал событие.
+                dictionary.Append(Tuple.Create(depended, builder.Matched), typeof(TAggregate));
+            }
+
+            return dictionary;
+        }
+
+        private static void Append<TKey, TValue>(this Dictionary<TKey, IList<TValue>> dictionary, TKey key, TValue value)
+        {
+            IList<TValue> list;
+            if (!dictionary.TryGetValue(key, out list))
+            {
+                list = new List<TValue>();
+                dictionary.Add(key, list);
+            }
+
+            list.Add(value);
+        }
+
+        private sealed class FluentDictionaryBuilder
+        {
+            public Type Matched { get; private set; } = null;
+
+            public IList<Type> Depended { get; } = new List<Type>();
+
+            public FluentDictionaryBuilder Match<T>()
+            {
+                if (Matched != null)
+                {
+                    throw new InvalidOperationException($"Matched has already been set");
+                }
+
+                Matched = typeof(T);
+                return this;
+            }
+
+            // todo: информацию DependOn должно быть легко вытащить из выражений, тогда не нужно будет её поддерживать вручную
+            public FluentDictionaryBuilder DependOn<T>()
+            {
+                Depended.Add(typeof(T));
+                return this;
+            }
+        }
+
+    }
+}

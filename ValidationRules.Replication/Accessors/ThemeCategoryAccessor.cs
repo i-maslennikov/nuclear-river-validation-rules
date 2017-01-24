@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<ThemeCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<ThemeCategory>.Contains(x => x.Id, ids);
         }
 
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         {
             var themeIds = dataObjects.Select(x => x.ThemeId);
 
-            return new EventCollectionHelper { { typeof(Theme), themeIds.Distinct() } };
+            return new EventCollectionHelper<ThemeCategory> { { typeof(Theme), themeIds } };
         }
     }
 }

@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<FirmAddressCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<FirmAddressCategory>.Contains(x => x.Id, ids);
         }
 
@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<FirmAddressCategory> dataObjects)
         {
-            var firmAddressIds = dataObjects.Select(x => x.FirmAddressId).ToArray();
+            var firmAddressIds = dataObjects.Select(x => x.FirmAddressId).ToList();
 
             var firmIds =
                 from firmAddress in _query.For<FirmAddress>().Where(x => firmAddressIds.Contains(x.Id))
@@ -75,7 +75,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from order in _query.For<Order>().Where(x => x.FirmId == firmAddress.FirmId)
                 select order.Id;
 
-            return new EventCollectionHelper { { typeof(Firm), firmIds.Distinct() }, { typeof(Order), orderIds } };
+            return new EventCollectionHelper<FirmAddressCategory> { { typeof(Firm), firmIds }, { typeof(Order), orderIds } };
         }
     }
 }

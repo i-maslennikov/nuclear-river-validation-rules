@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<DeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<DeniedPosition>.Contains(x => x.Id, ids);
         }
 
@@ -52,7 +52,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<DeniedPosition> dataObjects)
         {
-            var ids = dataObjects.Select(x => x.Id).ToArray();
+            var ids = dataObjects.Select(x => x.Id).ToList();
 
             // Умное решение - пересчитать все заказы, в order position которых указаны price position, связанные с изменённой denied.
             // И плюс к тому пересчитать все заказы, оформленные по прайс-листу изменённой denied position, в opa которого указны позиции изменных denied position.
@@ -63,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                            from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
                            select orderPosition.OrderId;
 
-            return new EventCollectionHelper { { typeof(Order), orderIds.Distinct() } };
+            return new EventCollectionHelper<DeniedPosition> { { typeof(Order), orderIds } };
         }
     }
 }

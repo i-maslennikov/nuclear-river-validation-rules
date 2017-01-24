@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<FirmAddressWebsite> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return SpecificationFactory<FirmAddressWebsite>.Contains(x => x.Id, ids);
         }
 
@@ -50,13 +50,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<FirmAddressWebsite> dataObjects)
         {
-            var firmAddressIds = dataObjects.Select(x => x.FirmAddressId).ToArray();
+            var firmAddressIds = dataObjects.Select(x => x.FirmAddressId).ToList();
 
             var firmIds =
                 from firmAddress in _query.For<FirmAddress>().Where(x => firmAddressIds.Contains(x.Id))
                 select firmAddress.FirmId;
 
-            return new EventCollectionHelper { { typeof(Firm), firmIds.Distinct() } };
+            return new EventCollectionHelper<FirmAddressWebsite> { { typeof(Firm), firmIds } };
         }
     }
 }

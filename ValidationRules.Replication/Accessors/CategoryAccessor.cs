@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IQueryable<Category> GetSource()
         {
             var x = CategoriesLevel1.Union(CategoriesLevel2).Union(CategoriesLevel3);
-            return x.ToArray().AsQueryable();
+            return x.ToList().AsQueryable();
         }
 
         private IQueryable<Category> CategoriesLevel3
@@ -70,22 +70,22 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public FindSpecification<Category> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToArray();
+            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
             return new FindSpecification<Category>(x => x.L1Id.HasValue && ids.Contains(x.L1Id.Value) || x.L2Id.HasValue && ids.Contains(x.L2Id.Value) || x.L3Id.HasValue && ids.Contains(x.L3Id.Value));
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Category> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Category), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Category), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Category> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Category), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Category), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Category> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Category), x.Id)).ToArray();
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Category), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Category> dataObjects)
         {
-            var categoryIds = dataObjects.Select(x => x.Id).ToArray();
+            var categoryIds = dataObjects.Select(x => x.Id).ToList();
 
             var orderIds =
                 from opa in _query.For<OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue && categoryIds.Contains(x.CategoryId.Value))
@@ -96,7 +96,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from themeCategory in _query.For<ThemeCategory>().Where(x => categoryIds.Contains(x.CategoryId))
                 select themeCategory.ThemeId;
 
-            return new EventCollectionHelper { { typeof(Theme), themeIds.Distinct() }, { typeof(Order), orderIds.Distinct() } };
+            return new EventCollectionHelper<Category> { { typeof(Theme), themeIds }, { typeof(Order), orderIds } };
         }
     }
 }
