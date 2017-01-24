@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} является запрещённой для: {1} {{1}}  в заказе {{2}}.
+        ///   Looks up a localized string similar to {0} {{0}} является запрещённой для: {1} {{1}} в заказе {{2}}.
         /// </summary>
         internal static string ADPCheckModeSpecificOrder_MessageTemplate {
             get {

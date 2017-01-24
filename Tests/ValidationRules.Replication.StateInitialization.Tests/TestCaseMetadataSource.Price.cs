@@ -15,6 +15,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                 .Name(nameof(Price))
                 .Fact(
+                    new Facts::Project(),
                     new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
                     // Position без ограничений
@@ -40,8 +41,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
                     // ограничения
-                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 102, PriceId = 1, Min = 1, Max = 2},
-                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 103, PriceId = 1, Max = 2147483647, MissingMinimalRestriction = true }, // null for max means "unlimited", null for min means error
+                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 102, PriceId = 1, Min = 1, Max = 2, CategoryName = "empty" },
+                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 103, PriceId = 1, Max = 2147483647, CategoryName = "empty", MissingMinimalRestriction = true }, // null for max means "unlimited", null for min means error
 
                     // сопутствующий хлам
                     new Aggregates::Period { Start = DateTime.Parse("2012-12-12"), End = DateTime.MaxValue },
@@ -56,6 +57,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                 .Name(nameof(PriceWithAssociatedPositionGroupOvercount))
                 .Fact(
+                    new Facts::Project(),
+
                     new Facts::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
 
                     // Position с ограничениями

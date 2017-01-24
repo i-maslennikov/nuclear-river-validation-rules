@@ -92,11 +92,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.4.0\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.5.0.1-copy-tables-acto0003\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.3.4.0\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.5.0.1-copy-tables-acto0003\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
@@ -183,6 +183,7 @@
     <Compile Include="Identitites\Connections\AggregatesConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\MessagesConnectionStringIdentity.cs" />
+    <Compile Include="IndexHelper.cs" />
     <Compile Include="LinqToDbPropertyProvider.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
     <Compile Include="Model\AccountRules\Aggregates\AccountPeriod.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Model\Facts\Order.cs" />
     <Compile Include="Model\Facts\Account.cs" />
     <Compile Include="Model\Facts\OrderPosition.cs" />
+    <Compile Include="Model\Facts\NomenclatureCategory.cs" />
     <Compile Include="Model\Facts\PositionChild.cs" />
     <Compile Include="Model\Facts\Project.cs" />
     <Compile Include="Model\Facts\ReleaseWithdrawal.cs" />

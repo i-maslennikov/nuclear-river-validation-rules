@@ -25,6 +25,7 @@ if object_id('Facts.FirmAddressWebsite') is not null drop table Facts.FirmAddres
 if object_id('Facts.LegalPerson') is not null drop table Facts.LegalPerson
 if object_id('Facts.LegalPersonProfile') is not null drop table Facts.LegalPersonProfile
 if object_id('Facts.Lock') is not null drop table Facts.Lock
+if object_id('Facts.NomenclatureCategory') is not null drop table Facts.NomenclatureCategory
 if object_id('Facts.[Order]') is not null drop table Facts.[Order]
 if object_id('Facts.OrderPosition') is not null drop table Facts.OrderPosition
 if object_id('Facts.OrderPositionAdvertisement') is not null drop table Facts.OrderPositionAdvertisement
@@ -74,7 +75,7 @@ create table Facts.AdvertisementElement (
     [Text] nvarchar(max) null,
     [BeginDate] datetime2(2) null,
     [EndDate] datetime2(2) null,
-	[Status] int not null,
+    [Status] int not null,
     constraint PK_AdvertisementElement primary key (Id)
 )
 go
@@ -158,13 +159,13 @@ go
 
 create table Facts.Category(
     Id bigint not null,
-    
+
     Name nvarchar(128) not null,
-	L1Id bigint null,
-	L2Id bigint null,
+    L1Id bigint null,
+    L2Id bigint null,
     L3Id bigint null,
     IsActiveNotDeleted bit not null,
-	constraint PK_Category primary key (Id)
+    constraint PK_Category primary key (Id)
 )
 go
 
@@ -206,7 +207,7 @@ create table Facts.Firm(
     Name nvarchar(250) not null,
     IsActive bit not null,
     IsDeleted bit not null,
-	IsClosedForAscertainment bit not null,
+    IsClosedForAscertainment bit not null,
     constraint PK_Firm primary key (Id)
 )
 go
@@ -215,12 +216,12 @@ GO
 
 create table Facts.FirmAddress(
     Id bigint not null,
-	FirmId bigint not null,
+    FirmId bigint not null,
     Name nvarchar(512) not null,
     IsLocatedOnTheMap bit not null,
     IsActive bit not null,
     IsDeleted bit not null,
-	IsClosedForAscertainment bit not null,
+    IsClosedForAscertainment bit not null,
 )
 go
 CREATE NONCLUSTERED INDEX IX_FirmAddress_Id ON [Facts].[FirmAddress] ([Id])
@@ -273,26 +274,34 @@ create table Facts.Lock(
 )
 go
 
+create table Facts.NomenclatureCategory(
+    Id bigint not null,
+    PriceId bigint not null,
+    Name nvarchar(256) not null,
+    constraint PK_NomenclatureCategory primary key (Id, PriceId)
+)
+go
+
 create table Facts.[Order](
     Id bigint not null,
-	FirmId bigint not null,
-	Number nvarchar(64) not null,
+    FirmId bigint not null,
+    Number nvarchar(64) not null,
     DestOrganizationUnitId bigint not null,
     BeginDistribution datetime2(2) not null,
-	EndDistributionPlan datetime2(2) not null,
+    EndDistributionPlan datetime2(2) not null,
     EndDistributionFact datetime2(2) not null,
-	SignupDate datetime2(2) not null,
+    SignupDate datetime2(2) not null,
     LegalPersonId bigint null,
     LegalPersonProfileId bigint null,
-	BranchOfficeOrganizationUnitId bigint null,
+    BranchOfficeOrganizationUnitId bigint null,
     InspectorId bigint null,
     CurrencyId bigint null,
     BargainId bigint null,
     DealId bigint null,
-	WorkflowStep int not null,
-	IsFreeOfCharge bit not null,
-	IsSelfAds bit not null,
-	ReleaseCountPlan int not null,
+    WorkflowStep int not null,
+    IsFreeOfCharge bit not null,
+    IsSelfAds bit not null,
+    ReleaseCountPlan int not null,
 
     constraint PK_Order primary key (Id)
 )
@@ -310,7 +319,7 @@ GO
 create table Facts.OrderPosition (
     Id bigint not null,
     OrderId bigint not null,
-	PricePositionId bigint not null,
+    PricePositionId bigint not null,
     constraint PK_OrderPosition primary key (Id)
 )
 go
@@ -322,9 +331,9 @@ create table Facts.OrderPositionAdvertisement (
     Id bigint not null,
     OrderPositionId bigint not null,
     PositionId bigint not null,
-	FirmAddressId bigint null,
-	CategoryId bigint null,
-	AdvertisementId bigint null,
+    FirmAddressId bigint null,
+    CategoryId bigint null,
+    AdvertisementId bigint null,
     ThemeId bigint null,
 
     constraint PK_OrderPositionAdvertisement primary key (Id)
@@ -354,25 +363,25 @@ CREATE INDEX IX_OrderScanFile_OrderId ON Facts.[OrderScanFile] ([OrderId]) INCLU
 
 create table Facts.Position(
     Id bigint not null,
-	Name nvarchar(256) not null,
-	AdvertisementTemplateId bigint null,
-	BindingObjectType int not null,
-	SalesModel int not null,
-	PositionsGroup int not null,
-	IsCompositionOptional bit not null,
-	IsControlledByAmount bit not null,
-	IsComposite bit not null,
+    Name nvarchar(256) not null,
+    AdvertisementTemplateId bigint null,
+    BindingObjectType int not null,
+    SalesModel int not null,
+    PositionsGroup int not null,
+    IsCompositionOptional bit not null,
+    IsControlledByAmount bit not null,
+    IsComposite bit not null,
     CategoryCode bigint not null,
     [Platform] int not null,
-	IsDeleted bit not null,
+    IsDeleted bit not null,
     constraint PK_Position primary key (Id)
 )
 create index IX_Position_IsComposite ON Facts.Position (IsComposite)
 go
 
 create table Facts.PositionChild(
-	MasterPositionId bigint null,
-	ChildPositionId bigint null,
+    MasterPositionId bigint null,
+    ChildPositionId bigint null,
 )
 go
 
@@ -390,7 +399,7 @@ create table Facts.PricePosition(
     PositionId bigint not null,
     MinAdvertisementAmount int null,
     MaxAdvertisementAmount int null,
-	IsActiveNotDeleted bit not null,
+    IsActiveNotDeleted bit not null,
     constraint PK_PricePosition primary key (Id)
 )
 create index IX_PricePosition_PriceId ON Facts.PricePosition (PriceId)

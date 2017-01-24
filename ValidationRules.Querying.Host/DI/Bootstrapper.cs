@@ -12,6 +12,7 @@ using NuClear.Tracing.Log4Net;
 using NuClear.Tracing.Log4Net.Config;
 using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.SingleCheck;
 
 namespace NuClear.ValidationRules.Querying.Host.DI
 {
@@ -22,7 +23,8 @@ namespace NuClear.ValidationRules.Querying.Host.DI
             return new UnityContainer()
                 .ConfigureTracer()
                 .ConfigureDataAccess()
-                .ConfigureSerializers();
+                .ConfigureSerializers()
+                .ConfigureSingleCheck();
         }
 
         private static IUnityContainer ConfigureTracer(
@@ -70,6 +72,13 @@ namespace NuClear.ValidationRules.Querying.Host.DI
 
             container.RegisterType(typeof(IReadOnlyCollection<IMessageComposer>),
                                    new InjectionFactory(c => serializerTypes.Select(t => c.Resolve(t)).Cast<IMessageComposer>().ToArray()));
+
+            return container;
+        }
+
+        private static IUnityContainer ConfigureSingleCheck(this IUnityContainer container)
+        {
+            container.RegisterType<PipelineFactory>();
 
             return container;
         }

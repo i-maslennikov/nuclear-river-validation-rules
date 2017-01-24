@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -78,16 +79,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public IQueryable<Price.AdvertisementAmountRestriction> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted)
                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsControlledByAmount) on pricePosition.PositionId equals position.Id
-                   group new { pricePosition.PriceId, position.CategoryCode, position.Name, pricePosition.MinAdvertisementAmount, pricePosition.MaxAdvertisementAmount }
-                       by new { pricePosition.PriceId, position.CategoryCode } into groups
+                   group new { pricePosition.MinAdvertisementAmount, pricePosition.MaxAdvertisementAmount } by new { pricePosition.PriceId, position.CategoryCode } into groups
+                   from nomencalure in _query.For<Facts.NomenclatureCategory>().Where(x => x.Id == groups.Key.CategoryCode && x.PriceId == groups.Key.PriceId).DefaultIfEmpty()
                    select new Price.AdvertisementAmountRestriction
                        {
                            PriceId = groups.Key.PriceId,
                            CategoryCode = groups.Key.CategoryCode,
-                           CategoryName = (from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.PriceId == groups.Key.PriceId)
-                                           join p in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsControlledByAmount && x.CategoryCode == groups.Key.CategoryCode).OrderBy(x => x.Id) on pp.PositionId
-                                               equals p.Id
-                                           select p.Name).First(), // Этот кусок кода достаточно точно отражает текущее поведение в erm, решение лучше - создать справочник и слушать поток flowNomenclatures.NomenclatureCategory
+                           CategoryName = nomencalure == null ? "empty" : nomencalure.Name,
                            Max = groups.Min(x => x.MaxAdvertisementAmount) ?? int.MaxValue,
                            Min = groups.Max(x => x.MinAdvertisementAmount) ?? 0,
                            MissingMinimalRestriction = groups.Max(x => x.MinAdvertisementAmount) == null

@@ -95,7 +95,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// <summary>
                 /// Возвращает выражение для пересечения влияющих друг на друга позиций (сопутствующих или запрещённых)
                 /// </summary>
-                public static Expression<Func<Dto<Order.OrderPosition>, Dto<T>, bool>> MatchedPeriod<T>()
+                private static Expression<Func<Dto<Order.OrderPosition>, Dto<T>, bool>> MatchedPeriod<T>()
                 {
                     return (principal, dto) => principal.FirmId == dto.FirmId &&
                                                principal.Start == dto.Start &&
@@ -108,7 +108,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// https://github.com/2gis/nuclear-river/blob/feature/validation-rules/docs/ru/validation-rules/compare-linking-objects.md
                 /// Выражение достаточно не тривиальное и используется многократно, поэтому и создан <see cref="ExpandMethodCallVisitor"/>
                 /// </summary>
-                public static Expression<Func<Order.OrderPosition, T, bool>> MatchedBindingObjects<T>()
+                private static Expression<Func<Order.OrderPosition, T, bool>> MatchedBindingObjects<T>()
                     where T: IBindingObject
                 {
                     return (position, binding) => (binding.HasNoBinding == position.HasNoBinding) &&

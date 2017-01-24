@@ -24,6 +24,7 @@ namespace NuClear.ValidationRules.Storage
 
         public static MappingSchema Aggregates
             => new MappingSchema(nameof(Aggregates), new SqlServerMappingSchema())
+                .RegisterDataTypes()
                 .GetFluentMappingBuilder()
                 .RegisterPriceAggregates()
                 .RegisterProjectAggregates()

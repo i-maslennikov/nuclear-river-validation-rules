@@ -118,7 +118,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     select new { order.FirmId, Begin = order.BeginDistribution, End = order.EndDistributionFact, Has = has, Scope = scope };
 
                 var periodsForFirmsWithCategory =
-                    from firm in firmsWithCategory
+                    from firm in firmsWithCategory.Distinct()
                     from period in periodsForAllOrders.Union(periodsForAllFirms).Where(x => x.FirmId == firm.Id)
                     select new Firm.AdvantageousPurchasePositionDistributionPeriod
                         {

@@ -254,7 +254,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    join firm in _query.For<Facts::Firm>() on order.FirmId equals firm.Id
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                   join advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted) on opa.AdvertisementId equals advertisement.Id
+                   join advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.FirmId.HasValue) on opa.AdvertisementId equals advertisement.Id
                    where advertisement.FirmId != order.FirmId // РМ не принадлежит фирме заказа
                    select new Order.AdvertisementMustBelongToFirm
                    {
@@ -390,7 +390,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     };
 
             public IQueryable<Order.OrderPositionAdvertisement> GetSource()
-                => from order in _query.For<Facts::Order>()
+                => (from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                    where opa.AdvertisementId != null
@@ -400,7 +400,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        OrderPositionId = orderPosition.Id,
                        PositionId = opa.PositionId,
                        AdvertisementId = opa.AdvertisementId.Value
-                   };
+                   }).Distinct();
 
             public FindSpecification<Order.OrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

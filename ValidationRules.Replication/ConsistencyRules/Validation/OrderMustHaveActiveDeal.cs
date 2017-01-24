@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
@@ -33,7 +32,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
             var ruleResults = from order in query.For<Order>()
                               from inactive in query.For<Order.InactiveReference>().Where(x => x.OrderId == order.Id).DefaultIfEmpty()
                               from missing in query.For<Order.MissingRequiredField>().Where(x => x.OrderId == order.Id).DefaultIfEmpty()
-                              where inactive.Deal || missing.Deal
+                              where inactive != null && inactive.Deal || missing != null && missing.Deal
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(
@@ -42,7 +41,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                   new XAttribute("id", order.Id),
                                                   new XAttribute("name", order.Number)),
                                               new XElement("message",
-                                                  new XAttribute("state", missing.Deal ? "missing" : "inactive")))),
+                                                  new XAttribute("state", missing != null && missing.Deal ? "missing" : inactive != null && inactive.Deal ? "inactive" : "unknown")))),
 
                                       PeriodStart = order.BeginDistribution,
                                       PeriodEnd = order.EndDistributionPlan,

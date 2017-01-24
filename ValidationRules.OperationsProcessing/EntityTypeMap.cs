@@ -79,6 +79,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .AddMapping<EntityTypeLegalPerson, Facts::LegalPerson>()
                 .AddMapping<EntityTypeLegalPersonProfile, Facts::LegalPersonProfile>()
                 .AddMapping<EntityTypeLock, Facts::Lock>()
+                .AddAsPersistenceOnly(typeof(Facts::NomenclatureCategory))
                 .AddMapping<EntityTypeOrder, Facts::Order>()
                 .AddMapping<EntityTypeOrderPosition, Facts::OrderPosition>()
                 .AddMapping<EntityTypeOrderPositionAdvertisement, Facts::OrderPositionAdvertisement>()

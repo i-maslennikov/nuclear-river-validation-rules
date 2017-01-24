@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             _composers = composers.ToDictionary(x => x.MessageType, x => x);
         }
 
-        public IReadOnlyCollection<ValidationResult> ComposeAll(IReadOnlyCollection<Version.ValidationResult> messages, Func<CombinedResult, Result> selector)
+        public IReadOnlyCollection<ValidationResult> ComposeAll(IEnumerable<Version.ValidationResult> messages, Func<CombinedResult, Result> selector)
             => messages.Select(x => Compose(x, selector)).ToArray();
 
         private ValidationResult Compose(Version.ValidationResult message, Func<CombinedResult, Result> selector)
@@ -49,9 +49,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             }
             catch (Exception ex)
             {
-                var x = new Exception("Ошибка при сериализации сообщения", ex);
-                x.Data.Add("xml", message.MessageParams);
-                throw x;
+                throw new Exception($"Ошибка при сериализации сообщения {message.MessageType}", ex);
             }
         }
     }

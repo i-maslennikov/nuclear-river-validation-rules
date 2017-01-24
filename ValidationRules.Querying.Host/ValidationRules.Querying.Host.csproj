@@ -89,6 +89,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -221,6 +222,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ValidationRules.SingleCheck\ValidationRules.SingleCheck.csproj">
+      <Project>{2aee5eb1-9f9f-49d3-8aa3-a9c9338aaf4b}</Project>
+      <Name>ValidationRules.SingleCheck</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValidationRules.Storage\ValidationRules.Storage.csproj">
       <Project>{e799a2ee-408f-467a-8b50-fc729e92d3f3}</Project>
       <Name>ValidationRules.Storage</Name>

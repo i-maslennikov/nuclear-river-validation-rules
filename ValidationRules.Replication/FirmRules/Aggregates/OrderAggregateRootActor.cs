@@ -189,11 +189,11 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     };
 
             public IQueryable<Order.CategoryPurchase> GetSource()
-                => from order in _query.For<Facts::Order>()
+                => (from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id).Where(x => x.CategoryId.HasValue)
-                   select new Order.CategoryPurchase { OrderId = order.Id, CategoryId = opa.CategoryId.Value };
-
+                   select new Order.CategoryPurchase { OrderId = order.Id, CategoryId = opa.CategoryId.Value })
+                   .Distinct();
 
             public FindSpecification<Order.CategoryPurchase> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
