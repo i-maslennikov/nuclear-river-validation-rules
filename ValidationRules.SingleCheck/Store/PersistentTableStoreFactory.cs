@@ -24,25 +24,25 @@ namespace NuClear.ValidationRules.SingleCheck.Store
         public static readonly Lazy<EqualityComparerFactory> EqualityComparerFactory =
             new Lazy<EqualityComparerFactory>(() => new EqualityComparerFactory(new LinqToDbPropertyProvider(MappingSchema.Value)));
 
-        private readonly TempTableStore _tempTableStore;
+        private readonly TableStore _tableStore;
 
         public PersistentTableStoreFactory(string connectionStringName)
         {
-            _tempTableStore = new TempTableStore(new DataConnection(connectionStringName).AddMappingSchema(MappingSchema.Value));
+            _tableStore = new TableStore(new DataConnection(connectionStringName).AddMappingSchema(MappingSchema.Value));
         }
 
         public IStore CreateStore()
-            => _tempTableStore;
+            => _tableStore;
 
         public IQuery CreateQuery()
-            => _tempTableStore;
+            => _tableStore;
 
-        private class TempTableStore : IStore, IQuery, IDisposable
+        private class TableStore : IStore, IQuery, IDisposable
         {
             private bool _disposed;
             private readonly DataConnection _connection;
 
-            public TempTableStore(DataConnection connection)
+            public TableStore(DataConnection connection)
             {
                 _disposed = false;
                 _connection = connection;

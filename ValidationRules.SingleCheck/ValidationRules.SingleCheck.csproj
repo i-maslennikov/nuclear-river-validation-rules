@@ -201,7 +201,6 @@
   <ItemGroup>
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
     <Compile Include="Store\PersistentTableStoreFactory.cs" />
-    <Compile Include="Store\TempTableStoreFactory.cs" />
     <Compile Include="Store\ErmStoreFactory.cs" />
     <Compile Include="Store\HashSetStoreFactory.cs" />
     <Compile Include="Store\IStoreFactory.cs" />
