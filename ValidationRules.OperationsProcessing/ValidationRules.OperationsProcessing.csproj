@@ -189,7 +189,8 @@
     <Compile Include="Contexts\ErmSubDomain.cs" />
     <Compile Include="Contexts\FactsSubDomain.cs" />
     <Compile Include="EmptyOperationIdentityRegistry.cs" />
-    <Compile Include="EntityTypeMap.cs" />
+    <Compile Include="EntityTypeMap.Aggregates.cs" />
+    <Compile Include="EntityTypeMap.Facts.cs" />
     <Compile Include="Events\ImportFactsFromErmEvent.cs" />
     <Compile Include="Final\AggregateCommandsAccumulator.cs" />
     <Compile Include="AfterFinal\MessageCommandsHandler.cs" />
