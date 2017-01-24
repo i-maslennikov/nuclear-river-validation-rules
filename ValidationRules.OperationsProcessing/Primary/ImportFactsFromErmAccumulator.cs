@@ -10,7 +10,6 @@ using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.Events;
 using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 using NuClear.ValidationRules.Replication.Commands;
 
@@ -77,6 +76,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                                select new SyncDataObjectCommand(factType, id);
 
                 return commands;
+            }
+        }
+
+        private sealed class ImportFactsFromErmEvent : IEvent
+        {
+            public TrackedUseCase TrackedUseCase { get; }
+
+            public ImportFactsFromErmEvent(TrackedUseCase trackedUseCase)
+            {
+                TrackedUseCase = trackedUseCase;
             }
         }
     }

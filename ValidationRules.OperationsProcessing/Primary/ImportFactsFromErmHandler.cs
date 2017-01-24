@@ -94,12 +94,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             var actors = _dataObjectsActorFactory.Create();
             foreach (var actor in actors)
             {
-                var events = new HashSet<IEvent>();
+                IReadOnlyCollection<IEvent> events;
 
                 var actorType = actor.GetType().GetFriendlyName();
                 using (Probe.Create($"ETL1 {actorType}"))
                 {
-                    events.UnionWith(actor.ExecuteCommands(commands));
+                    events = new HashSet<IEvent>(actor.ExecuteCommands(commands));
                 }
 
                 if (events.Any())
