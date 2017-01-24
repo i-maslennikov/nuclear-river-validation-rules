@@ -18,7 +18,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 {
     [Ignore]
     [TestFixture]
-    public sealed class CompareWithMassTests
+    public sealed class CompareSingleToMassTests
     {
         private const int OrderPerRule = 1;
 

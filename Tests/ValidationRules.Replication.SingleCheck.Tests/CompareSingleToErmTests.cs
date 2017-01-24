@@ -20,7 +20,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 {
     [Ignore]
     [TestFixture]
-    public sealed class CompareWithErmTests
+    public sealed class CompareSingleToErmTests
     {
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
         private readonly OrderValidationApplicationServiceClient _ermService = new OrderValidationApplicationServiceClient("Erm");

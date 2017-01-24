@@ -53,8 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompareWithErmTests.cs" />
-    <Compile Include="CompareWithMassTests.cs" />
+    <Compile Include="CompareSingleToErmTests.cs" />
+    <Compile Include="CompareSingleToMassTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RiverService\RiverService.cs" />
     <Compile Include="RiverService\RiverToErmMappingExtensions.cs" />
