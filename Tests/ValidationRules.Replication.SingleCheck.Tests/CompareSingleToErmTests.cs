@@ -55,7 +55,6 @@ namespace ValidationRules.Replication.SingleCheck.Tests
             }
         }
 
-        [TestCase]
         [TestCaseSource(nameof(Rules))]
         public void TestRules(long rule, long? orderId)
         {
@@ -80,13 +79,12 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
             if (diff.OnlyRiver.Any())
             {
-                Assert.Fail($"River messages:\n{string.Join(Environment.NewLine, diff.OnlyRiver)}\nErm messages: {string.Join(Environment.NewLine, diff.OnlyErm)}");
+                Assert.Fail($"River messages:\n{string.Join(Environment.NewLine, diff.OnlyRiver)}\nErm messages:\n{string.Join(Environment.NewLine, diff.OnlyErm)}");
             }
 
             Assert.Pass($"River: {riverTime.ElapsedMilliseconds}, Erm: {ermTime.ElapsedMilliseconds}");
         }
 
-        [TestCase]
         [TestCaseSource(nameof(Orders))]
         public void TestSingleCheck(long orderId)
         {
