@@ -225,6 +225,7 @@ create table Facts.FirmAddress(
 )
 go
 CREATE NONCLUSTERED INDEX IX_FirmAddress_Id ON [Facts].[FirmAddress] ([Id])
+CREATE INDEX [IX_FirmAddress_FirmId_IsActive_IsDeleted_IsClosedForAscertainment] ON [Facts].[FirmAddress] ([FirmId], [IsActive], [IsDeleted], [IsClosedForAscertainment]) INCLUDE (Id)
 GO
 
 create table Facts.FirmAddressCategory(
