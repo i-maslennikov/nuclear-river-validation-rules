@@ -38,24 +38,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 }
 
                 /// <summary>
-                /// Возвращает выражение для сопоставления основных и сопутствующих позиций.
-                /// Выражение учитывает все типы сравнения объектов привязки.
-                /// Но не учитывает "области видимости" позиций.
-                /// </summary>
-                public static Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> AvailablePrincipalPositionDefaultIfEmpty(IQueryable<Dto<Order.OrderPosition>> principals)
-                {
-                    Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
-                        associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
-                                                .Where(principal => associated.Position.BindingType == NoDependency ||
-                                                                    associated.Position.BindingType == Match && MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
-                                                                    associated.Position.BindingType == Different && !MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
-                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
-                                                                    principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId)
-                                                .DefaultIfEmpty();
-                    return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
-                }
-
-                /// <summary>
                 /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
                 /// </summary>
                 public static Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> WithMatchedBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
@@ -66,21 +48,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                 .Where(principal => MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
-                }
-
-                /// <summary>
-                /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
-                /// </summary>
-                public static Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> WithMatchedBindingObjectDefaultIfEmpty(IQueryable<Dto<Order.OrderPosition>> principals)
-                {
-                    Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
-                        associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
-                                                .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                                .Where(principal => MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
-                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
-                                                                    principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId)
-                                                .DefaultIfEmpty();
                     return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
