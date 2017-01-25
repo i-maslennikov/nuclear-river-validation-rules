@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> orderBulkRepository,
-            IBulkRepository<Lock> lockBulkRepository,
+            IBulkRepository<Order.Lock> lockBulkRepository,
             IBulkRepository<Order.DebtPermission> debtPermissionBulkRepository)
             : base(query, equalityComparerFactory)
         {
@@ -76,7 +76,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class LockAccessor : DataChangesHandler<Lock>, IStorageBasedDataObjectAccessor<Lock>
+        public sealed class LockAccessor : DataChangesHandler<Order.Lock>, IStorageBasedDataObjectAccessor<Order.Lock>
         {
             private readonly IQuery _query;
 
@@ -91,18 +91,18 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                         MessageTypeCode.LockShouldNotExist
                     };
 
-            public IQueryable<Lock> GetSource()
-                => _query.For<Facts::Lock>().Select(x => new Lock
+            public IQueryable<Order.Lock> GetSource()
+                => _query.For<Facts::Lock>().Select(x => new Order.Lock
                     {
                         OrderId = x.OrderId,
                         Start = x.Start,
                         End = x.Start.AddMonths(1)
                 });
 
-            public FindSpecification<Lock> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.Lock> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Lock>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.Lock>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

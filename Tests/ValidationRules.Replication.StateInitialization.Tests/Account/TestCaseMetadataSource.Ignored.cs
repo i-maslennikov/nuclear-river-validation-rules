@@ -51,8 +51,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::ReleaseWithdrawal())
             .Aggregate(
                 new Aggregates::Account(),
-                new Aggregates::AccountPeriod(),
-                new Aggregates::Lock(),
+                new Aggregates::Account.AccountPeriod(),
+                new Aggregates::Order.Lock(),
                 new Aggregates::Order())
             .Ignored();
     }

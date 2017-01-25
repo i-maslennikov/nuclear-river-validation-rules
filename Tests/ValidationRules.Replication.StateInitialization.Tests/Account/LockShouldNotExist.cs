@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Project())
                 .Aggregate(
                     new Aggregates::Order { Id = 1, Number = "InvalidOrder", BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, AccountId = 2 },
-                    new Aggregates::Lock { OrderId = 1, Start = FirstDayJan, End = FirstDayFeb },
+                    new Aggregates::Order.Lock { OrderId = 1, Start = FirstDayJan, End = FirstDayFeb },
                     new Aggregates::Account { Id = 2 })
                 .Message(
                     new Messages::Version.ValidationResult

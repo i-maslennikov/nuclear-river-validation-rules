@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                join @lock in query.For<Lock>() on order.Id equals @lock.OrderId
+                join @lock in query.For<Order.Lock>() on order.Id equals @lock.OrderId
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(

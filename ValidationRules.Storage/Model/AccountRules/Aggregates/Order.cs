@@ -12,7 +12,14 @@ namespace NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDate { get; set; }
 
-        public class DebtPermission
+        public sealed class Lock
+        {
+            public long OrderId { get; set; }
+            public DateTime Start { get; set; }
+            public DateTime End { get; set; }
+        }
+
+        public sealed class DebtPermission
         {
             public long OrderId { get; set; }
             public DateTime Start { get; set; }

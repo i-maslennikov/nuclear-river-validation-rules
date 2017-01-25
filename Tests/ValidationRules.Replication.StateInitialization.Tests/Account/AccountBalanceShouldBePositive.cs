@@ -44,8 +44,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order { Id = 2, Number = "Order2", AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
                     new Aggregates::Order.DebtPermission { OrderId = 2, Start = FirstDayFeb, End = FirstDayMar },
                     new Aggregates::Order { Id = 3, Number = "Order3", AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true},
-                    new Aggregates::AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 11, OwerallLockedAmount = 11, ReleaseAmount = 11, Start = FirstDayJan, End = FirstDayFeb },
-                    new Aggregates::AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 0, OwerallLockedAmount = 11, ReleaseAmount = 12, Start = FirstDayFeb, End = FirstDayMar })
+                    new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 11, OwerallLockedAmount = 11, ReleaseAmount = 11, Start = FirstDayJan, End = FirstDayFeb },
+                    new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 0, OwerallLockedAmount = 11, ReleaseAmount = 12, Start = FirstDayFeb, End = FirstDayMar })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
