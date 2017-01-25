@@ -16,6 +16,11 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
     public sealed class AccountAggregateRootActor : AggregateRootActor<Account>
     {
+        private const int OrderOnTermination = 4;
+        private const int OrderApproved = 5;
+
+        private static readonly int[] PayableStates = { OrderOnTermination, OrderApproved };
+
         public AccountAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
@@ -75,15 +80,22 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     join orderPosition in _query.For<Facts::OrderPosition>() on releaseWithdrawal.OrderPositionId equals orderPosition.Id
                     join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id
                     from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
+                    where !order.IsFreeOfCharge && PayableStates.Contains(order.WorkflowStep)
                     select new { AccountId = account.Id, releaseWithdrawal.Start, releaseWithdrawal.Amount, Type = 1 };
 
-                var lockPeriods =
+                var locks =
                     from @lock in _query.For<Facts::Lock>()
+                    join order in _query.For<Facts::Order>() on @lock.OrderId equals order.Id
+                    where !order.IsFreeOfCharge && PayableStates.Contains(order.WorkflowStep)
+                    select @lock;
+
+                var lockPeriods =
+                    from @lock in locks
                     join account in _query.For<Facts::Account>() on @lock.AccountId equals account.Id
                     select new { AccountId = account.Id, @lock.Start, @lock.Amount, Type = 3 };
 
                 var lockSums =
-                    from @lock in _query.For<Facts::Lock>().GroupBy(x => x.AccountId)
+                    from @lock in locks.GroupBy(x => x.AccountId)
                     select new { AccountId = @lock.Key, Sum = @lock.Select(x => x.Amount).Sum() };
 
                 var result =
