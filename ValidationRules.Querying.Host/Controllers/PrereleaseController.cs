@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Web.Http;
 
 using NuClear.ValidationRules.Querying.Host.Composition;

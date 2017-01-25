@@ -20,17 +20,6 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             _pipelineFactory = pipelineFactory;
         }
 
-        [Route("{stateToken:guid}"), HttpPost]
-        public IHttpActionResult Post([FromBody]ApiRequest request, [FromUri]Guid stateToken)
-        {
-            using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
-            {
-                var messages = validator.Execute().Where(x => x.OrderId == request.OrderId).ToArray();
-                var result = _factory.ComposeAll(messages, x => x.ForSingle);
-                return Ok(result);
-            }
-        }
-
         [Route(""), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request)
         {
