@@ -207,13 +207,13 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AccountAggregates::Order.DebtPermission>()
                   .HasSchemaName(AccountAggregatesSchema);
 
-            builder.Entity<AccountAggregates::Lock>()
+            builder.Entity<AccountAggregates::Order.Lock>()
                    .HasSchemaName(AccountAggregatesSchema);
 
             builder.Entity<AccountAggregates::Account>()
                    .HasSchemaName(AccountAggregatesSchema);
 
-            builder.Entity<AccountAggregates::AccountPeriod>()
+            builder.Entity<AccountAggregates::Account.AccountPeriod>()
                    .HasSchemaName(AccountAggregatesSchema);
 
             return builder;

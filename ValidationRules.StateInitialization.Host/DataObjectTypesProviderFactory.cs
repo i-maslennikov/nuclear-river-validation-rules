@@ -100,9 +100,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                             typeof(AccountAggregates::Order),
                             typeof(AccountAggregates::Order.DebtPermission),
-                            typeof(AccountAggregates::Lock),
+                            typeof(AccountAggregates::Order.Lock),
                             typeof(AccountAggregates::Account),
-                            typeof(AccountAggregates::AccountPeriod),
+                            typeof(AccountAggregates::Account.AccountPeriod),
 
                             typeof(AdvertisementAggregates::Order),
                             typeof(AdvertisementAggregates::Order.MissingAdvertisementReference),

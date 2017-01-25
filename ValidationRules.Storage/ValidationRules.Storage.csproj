@@ -186,8 +186,6 @@
     <Compile Include="IndexHelper.cs" />
     <Compile Include="LinqToDbPropertyProvider.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
-    <Compile Include="Model\AccountRules\Aggregates\AccountPeriod.cs" />
-    <Compile Include="Model\AccountRules\Aggregates\Lock.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Order.cs" />
     <Compile Include="Model\Facts\Lock.cs" />
     <Compile Include="Model\Facts\Order.cs" />

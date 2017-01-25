@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Account> accountBulkRepository,
-            IBulkRepository<AccountPeriod> accountPeriodBulkRepository)
+            IBulkRepository<Account.AccountPeriod> accountPeriodBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new AccountAccessor(query), accountBulkRepository,
@@ -53,7 +53,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             }
         }
 
-        public sealed class AccountPeriodAccessor : DataChangesHandler<AccountPeriod>, IStorageBasedDataObjectAccessor<AccountPeriod>
+        public sealed class AccountPeriodAccessor : DataChangesHandler<Account.AccountPeriod>, IStorageBasedDataObjectAccessor<Account.AccountPeriod>
         {
             private readonly IQuery _query;
 
@@ -68,7 +68,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                         MessageTypeCode.AccountBalanceShouldBePositive
                     };
 
-            public IQueryable<AccountPeriod> GetSource()
+            public IQueryable<Account.AccountPeriod> GetSource()
             {
                 var releaseWithdrawalPeriods =
                     from releaseWithdrawal in _query.For<Facts::ReleaseWithdrawal>()
@@ -90,7 +90,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     from item in releaseWithdrawalPeriods.Concat(lockPeriods).GroupBy(a => new { a.AccountId, a.Start })
                     join account in _query.For<Facts::Account>() on item.Key.AccountId equals account.Id
                     from sum in lockSums.Where(x => x.AccountId == item.Key.AccountId).DefaultIfEmpty()
-                    select new AccountPeriod
+                    select new Account.AccountPeriod
                         {
                             AccountId = item.Key.AccountId,
                             Start = item.Key.Start,
@@ -109,7 +109,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             /// https://github.com/linq2db/linq2db/issues/395
             /// </summary>
             /// <returns></returns>
-            public IQueryable<AccountPeriod> GetSourceDisabled()
+            public IQueryable<Account.AccountPeriod> GetSourceDisabled()
             {
                 var releaseWithdrawals =
                     from releaseWithdrawal in _query.For<Facts::ReleaseWithdrawal>()
@@ -131,7 +131,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     from item in releaseWithdrawals.Union(locks).Select(x => new { x.AccountId, x.Start, x.Lock, x.ReleaseWithdrawal }).GroupBy(a => new { a.AccountId, a.Start })
                     from account in _query.For<Facts::Account>().Where(x => x.Id == item.Key.AccountId)
                     from sum in lockSums.Where(x => x.AccountId == item.Key.AccountId).DefaultIfEmpty()
-                    select new AccountPeriod
+                    select new Account.AccountPeriod
                         {
                             AccountId = item.Key.AccountId,
                             Start = item.Key.Start,
@@ -145,10 +145,10 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 return result;
             }
 
-            public FindSpecification<AccountPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Account.AccountPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<AccountPeriod>(x => aggregateIds.Contains(x.AccountId));
+                return new FindSpecification<Account.AccountPeriod>(x => aggregateIds.Contains(x.AccountId));
             }
         }
     }
