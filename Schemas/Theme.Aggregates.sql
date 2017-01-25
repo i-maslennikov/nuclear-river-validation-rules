@@ -23,7 +23,7 @@ create table ThemeAggregates.Theme (
 
     IsDefault bit not null,
 
-	constraint PK_Theme primary key (Id)
+    constraint PK_Theme primary key (Id)
 )
 go
 create table ThemeAggregates.InvalidCategory (
@@ -43,7 +43,7 @@ create table ThemeAggregates.[Order] (
     ProjectId bigint not null,
 
     IsSelfAds bit not null,
-	constraint PK_Order primary key (Id)
+    constraint PK_Order primary key (Id)
 )
 go
 create table ThemeAggregates.OrderTheme (
@@ -57,7 +57,7 @@ create table ThemeAggregates.Project (
     Id bigint not null,
 
     Name nvarchar(64) not null,
-	constraint PK_Project primary key (Id)
+    constraint PK_Project primary key (Id)
 )
 go
 
@@ -74,6 +74,6 @@ create table ThemeAggregates.Category (
     Id bigint not null,
 
     Name nvarchar(128) not null,
-	constraint PK_Category primary key (Id)
+    constraint PK_Category primary key (Id)
 )
 go

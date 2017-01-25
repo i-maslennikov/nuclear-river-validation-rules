@@ -25,7 +25,7 @@ create table ProjectAggregates.FirmAddress(
     Id bigint not null,
     Name nvarchar(max) not null,
     IsLocatedOnTheMap bit not null,
-	constraint PK_FirmAddress primary key (Id)
+    constraint PK_FirmAddress primary key (Id)
 )
 go
 
@@ -36,7 +36,7 @@ create table ProjectAggregates.[Order](
     [Begin] datetime2(2) not null,
     [End] datetime2(2) not null,
     IsDraft bit not null,
-	constraint PK_Order primary key (Id)
+    constraint PK_Order primary key (Id)
 )
 go
 
@@ -71,14 +71,14 @@ go
 create table ProjectAggregates.Position(
     Id bigint not null,
     Name nvarchar(max) not null,
-	constraint PK_Position primary key (Id)
+    constraint PK_Position primary key (Id)
 )
 go
 
 create table ProjectAggregates.Project(
     Id bigint not null,
     Name nvarchar(max) not null,
-	constraint PK_Project primary key (Id)
+    constraint PK_Project primary key (Id)
 )
 go
 

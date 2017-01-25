@@ -40,7 +40,7 @@ create table AdvertisementAggregates.[Order] (
     FirmId bigint not null,
     RequireWhiteListAdvertisement bit not null,
     ProvideWhiteListAdvertisement bit not null,
-	constraint PK_Order primary key (Id)
+    constraint PK_Order primary key (Id)
 )
 go
 
@@ -120,7 +120,7 @@ create table AdvertisementAggregates.Advertisement (
     Name nvarchar(128) not null,
     FirmId bigint not null,
     IsSelectedToWhiteList bit not null,
-	constraint PK_Advertisement primary key (Id)
+    constraint PK_Advertisement primary key (Id)
 )
 go
 
@@ -173,7 +173,7 @@ create table AdvertisementAggregates.AdvertisementElementTemplate (
     Id bigint not null,
 
     Name nvarchar(128) not null,
-	constraint PK_AdvertisementElementTemplate primary key (Id)
+    constraint PK_AdvertisementElementTemplate primary key (Id)
 )
 go
 
@@ -183,7 +183,7 @@ go
 create table AdvertisementAggregates.Firm (
     Id bigint not null,
     Name nvarchar(250) not null,
-	constraint PK_Firm primary key (Id)
+    constraint PK_Firm primary key (Id)
 )
 go
 
@@ -208,6 +208,6 @@ create table AdvertisementAggregates.Position (
     Id bigint not null,
 
     Name nvarchar(256) not null,
-	constraint PK_Position primary key (Id)
+    constraint PK_Position primary key (Id)
 )
 go
