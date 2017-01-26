@@ -53,31 +53,36 @@ namespace NuClear.ValidationRules.Replication.Messages
             //  3. Версия без изменений не создаётся.
 
             var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().First().Id;
-            IReadOnlyCollection<Version.ValidationResult> currentVersionResults;
-            var versionResult = new List<Version.ValidationResult>();
+            var validationResults = new List<Version.ValidationResult>();
 
-            using (Probe.Create("Query Target"))
+            var ruleGroups = commands.OfType<IRecalculateValidationRuleCommand>().GroupBy(x => x.Rule).ToList();
+            if (ruleGroups.Count != 0)
             {
-                var query  =_query.For<Version.ValidationResult>().GetValidationResults(currentVersion);
-                currentVersionResults = query.ToList();
-            }
+                IReadOnlyCollection<Version.ValidationResult> targetValidationResults;
 
-            foreach (var ruleCommands in commands.OfType<IRecalculateValidationRuleCommand>().GroupBy(x => x.Rule))
-            {
-                using (Probe.Create($"Rule {ruleCommands.Key}"))
+                using (Probe.Create("Query Target"))
                 {
-                    var filter = CreateFilter(ruleCommands);
-                    var versionRuleResult = CalculateValidationRuleChanges(currentVersionResults, ruleCommands.Key, filter);
-                    versionResult.AddRange(versionRuleResult);
+                    var query = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion);
+                    targetValidationResults = query.ToList();
+                }
+
+                foreach (var ruleCommands in ruleGroups)
+                {
+                    using (Probe.Create($"Rule {ruleCommands.Key}"))
+                    {
+                        var filter = CreateFilter(ruleCommands);
+                        var validationRuleResult = CalculateValidationRuleChanges(targetValidationResults, ruleCommands.Key, filter);
+                        validationResults.AddRange(validationRuleResult);
+                    }
                 }
             }
 
             var ermStates = commands.OfType<CreateNewVersionCommand>().SelectMany(x => x.States).Select(x => new Version.ErmState { Token = x });
-            if (versionResult.Count > 0)
+            if (validationResults.Count > 0)
             {
                 using (Probe.Create("Create New Version"))
                 {
-                    CreateVersion(currentVersion + 1, ermStates, versionResult);
+                    CreateVersion(currentVersion + 1, ermStates, validationResults);
                 }
             }
             else
@@ -91,7 +96,7 @@ namespace NuClear.ValidationRules.Replication.Messages
             return Array.Empty<IEvent>();
         }
 
-        private Expression<Func<Version.ValidationResult, bool>> CreateFilter(IEnumerable<IRecalculateValidationRuleCommand> commands)
+        private static Expression<Func<Version.ValidationResult, bool>> CreateFilter(IEnumerable<IRecalculateValidationRuleCommand> commands)
         {
             var ids = Enumerable.Empty<long>();
             foreach (var command in commands)

@@ -42,12 +42,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             {
                 using (Probe.Create("ETL3 Transforming"))
                 {
-                    var messages = processingResultsMap.SelectMany(pair => pair.Value)
-                                                       .Cast<AggregatableMessage<ICommand>>()
-                                                       .ToArray();
+                    var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
-                    Handle(messages.SelectMany(x => x.Commands).OfType<IValidationRuleCommand>().ToArray());
-                    Handle(messages.SelectMany(x => x.Commands).OfType<RecordDelayCommand>().ToArray());
+                    Handle(commands.OfType<IValidationRuleCommand>().ToList());
+                    Handle(commands.OfType<RecordDelayCommand>().ToList());
 
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
