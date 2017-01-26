@@ -20,7 +20,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                 orderReference,
                 string.Format(Resources.FirmContactContainsSponsoredLinkError, website),
                 firmReference,
-                orderPositionReference);
+                orderPositionReference,
+                orderReference);
         }
     }
 }

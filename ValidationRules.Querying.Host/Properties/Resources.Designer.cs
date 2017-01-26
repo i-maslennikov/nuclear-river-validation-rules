@@ -88,7 +88,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:d} - {4}.
+        ///   Looks up a localized string similar to Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:MMMM} - {4}.
         /// </summary>
         internal static string AdvertisementAmountShortErrorMessage {
             get {
@@ -268,7 +268,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}}, дублирующая контакт фирмы.
+        ///   Looks up a localized string similar to Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}} в заказе {{2}}, дублирующая контакт фирмы.
         /// </summary>
         internal static string FirmContactContainsSponsoredLinkError {
             get {
@@ -583,7 +583,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В рекламном материале {0}, который подлежит выверке, элемент {1} находится в статусе &apos;Черновик&apos;.
+        ///   Looks up a localized string similar to В рекламном материале &quot;{0}&quot;, который подлежит выверке, элемент &quot;{1}&quot; находится в статусе &apos;Черновик&apos;.
         /// </summary>
         internal static string OrdersCheckAdvertisementElementIsDraft {
             get {
@@ -592,7 +592,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В рекламном материале {0}, который подлежит выверке, элемент {1} содержит ошибки выверки.
+        ///   Looks up a localized string similar to В рекламном материале &quot;{0}&quot;, который подлежит выверке, элемент &quot;{1}&quot; содержит ошибки выверки.
         /// </summary>
         internal static string OrdersCheckAdvertisementElementWasInvalidated {
             get {
@@ -709,7 +709,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Подпозиция {0} позиции.
+        ///   Looks up a localized string similar to Подпозиция &quot;{0}&quot; позиции.
         /// </summary>
         internal static string RichChildPositionTypeTemplate {
             get {
@@ -790,7 +790,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}.
+        ///   Looks up a localized string similar to Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}..
         /// </summary>
         internal static string TooManyCategorieForFirm {
             get {

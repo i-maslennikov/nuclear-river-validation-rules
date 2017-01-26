@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://2gis.ru/erm/api/ordervalidation/2013/03" elementFormDefault="qualified" targetNamespace="http://2gis.ru/erm/api/ordervalidation/2013/03" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/DoubleGis.Erm.BLCore.API.OrderValidation" />
+  <xs:import schemaLocation="https://order-validation20.api.test.erm.2gis.ru/Validate.svc?xsd=xsd5" namespace="http://2gis.ru/erm/api/common/2013/09" />
+  <xs:element name="ValidateSingleOrderRest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="orderId" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValidateSingleOrderRestResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/DoubleGis.Erm.BLCore.API.OrderValidation" minOccurs="0" name="ValidateSingleOrderRestResult" nillable="true" type="q1:ValidationResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValidateSingleOrderStateTransferRest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="orderId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="newOrderState" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValidateSingleOrderStateTransferRestResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/DoubleGis.Erm.BLCore.API.OrderValidation" minOccurs="0" name="ValidateSingleOrderStateTransferRestResult" nillable="true" type="q2:ValidationResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValidateSingleOrder">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="orderId" type="xs:long" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValidateSingleOrderResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/DoubleGis.Erm.BLCore.API.OrderValidation" minOccurs="0" name="ValidateSingleOrderResult" nillable="true" type="q3:ValidationResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValidateOrders">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/DoubleGis.Erm.BLCore.API.OrderValidation" minOccurs="0" name="validationType" type="q4:ValidationType" />
+        <xs:element minOccurs="0" name="organizationUnitId" type="xs:long" />
+        <xs:element xmlns:q5="http://2gis.ru/erm/api/common/2013/09" minOccurs="0" name="period" type="q5:TimePeriod" />
+        <xs:element minOccurs="0" name="ownerCode" nillable="true" type="xs:long" />
+        <xs:element minOccurs="0" name="includeOwnerDescendants" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValidateOrdersResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/DoubleGis.Erm.BLCore.API.OrderValidation" minOccurs="0" name="ValidateOrdersResult" nillable="true" type="q6:ValidationResult" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -128,7 +128,7 @@
     <comment>ключа нет в ERM</comment>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
-    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:d} - {4}</value>
+    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:MMMM} - {4}</value>
   </data>
   <data name="AdvertisementChoosenForWhitelist" xml:space="preserve">
     <value>Для фирмы {0} в белый список выбран рекламный материал {1}</value>
@@ -189,7 +189,7 @@
     <value>Для подразделения {0} не указана тематика по умолчанию</value>
   </data>
   <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}}, дублирующая контакт фирмы</value>
+    <value>Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}} в заказе {{2}}, дублирующая контакт фирмы</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
     <value>Фирма {0} удалена</value>
@@ -296,10 +296,10 @@
     <value>Заказ ссылается на неактивные объекты: {0}</value>
   </data>
   <data name="OrdersCheckAdvertisementElementIsDraft" xml:space="preserve">
-    <value>В рекламном материале {0}, который подлежит выверке, элемент {1} находится в статусе 'Черновик'</value>
+    <value>В рекламном материале "{0}", который подлежит выверке, элемент "{1}" находится в статусе 'Черновик'</value>
   </data>
   <data name="OrdersCheckAdvertisementElementWasInvalidated" xml:space="preserve">
-    <value>В рекламном материале {0}, который подлежит выверке, элемент {1} содержит ошибки выверки</value>
+    <value>В рекламном материале "{0}", который подлежит выверке, элемент "{1}" содержит ошибки выверки</value>
   </data>
   <data name="OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne" xml:space="preserve">
     <value>Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы</value>
@@ -338,7 +338,7 @@
     <value>В позиции {0} выбран удалённый рекламный материал {1}</value>
   </data>
   <data name="RichChildPositionTypeTemplate" xml:space="preserve">
-    <value>Подпозиция {0} позиции</value>
+    <value>Подпозиция "{0}" позиции</value>
   </data>
   <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
     <value>Позиция</value>
@@ -365,6 +365,6 @@
     <value>В рубрику {{0}} заказано слишком много объявлений: Заказано {0}, допустимо не более {1}</value>
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
-    <value>Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}</value>
+    <value>Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}.</value>
   </data>
 </root>

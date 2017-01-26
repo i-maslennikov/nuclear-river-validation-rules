@@ -14,11 +14,11 @@ using NUnit.Framework;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication.Tests
+namespace ValidationRules.Replication.SingleCheck.Tests
 {
     [Ignore]
     [TestFixture]
-    public sealed class CompareWithMassTests
+    public sealed class CompareSingleToMassTests
     {
         private const int OrderPerRule = 1;
 
