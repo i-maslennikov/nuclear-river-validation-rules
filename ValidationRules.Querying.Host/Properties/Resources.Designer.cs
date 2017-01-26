@@ -583,7 +583,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В рекламном материале {0}, который подлежит выверке, элемент {1} находится в статусе &apos;Черновик&apos;.
+        ///   Looks up a localized string similar to В рекламном материале &quot;{0}&quot;, который подлежит выверке, элемент &quot;{1}&quot; находится в статусе &apos;Черновик&apos;.
         /// </summary>
         internal static string OrdersCheckAdvertisementElementIsDraft {
             get {
@@ -592,7 +592,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В рекламном материале {0}, который подлежит выверке, элемент {1} содержит ошибки выверки.
+        ///   Looks up a localized string similar to В рекламном материале &quot;{0}&quot;, который подлежит выверке, элемент &quot;{1}&quot; содержит ошибки выверки.
         /// </summary>
         internal static string OrdersCheckAdvertisementElementWasInvalidated {
             get {

@@ -296,10 +296,10 @@
     <value>Заказ ссылается на неактивные объекты: {0}</value>
   </data>
   <data name="OrdersCheckAdvertisementElementIsDraft" xml:space="preserve">
-    <value>В рекламном материале {0}, который подлежит выверке, элемент {1} находится в статусе 'Черновик'</value>
+    <value>В рекламном материале "{0}", который подлежит выверке, элемент "{1}" находится в статусе 'Черновик'</value>
   </data>
   <data name="OrdersCheckAdvertisementElementWasInvalidated" xml:space="preserve">
-    <value>В рекламном материале {0}, который подлежит выверке, элемент {1} содержит ошибки выверки</value>
+    <value>В рекламном материале "{0}", который подлежит выверке, элемент "{1}" содержит ошибки выверки</value>
   </data>
   <data name="OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne" xml:space="preserve">
     <value>Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы</value>
