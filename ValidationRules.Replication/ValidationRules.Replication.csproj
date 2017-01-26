@@ -346,13 +346,13 @@
     <Compile Include="Commands\PeriodCommands.cs" />
     <Compile Include="Commands\CreateDataObjectCommand.cs" />
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
-    <Compile Include="Commands\RecordDelayCommand.cs" />
+    <Compile Include="Commands\LogDelayCommand.cs" />
     <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
     <Compile Include="DataObjectTypesProvider.cs" />
     <Compile Include="EntityTypeIds.cs" />
-    <Compile Include="Events\AggregatesBatchProcessedEvent.cs" />
+    <Compile Include="Events\AggregatesDelayLoggedEvent.cs" />
     <Compile Include="Events\AggregatesStateIncrementedEvent.cs" />
-    <Compile Include="Events\FactsBatchProcessedEvent.cs" />
+    <Compile Include="Events\FactsDelayLoggedEvent.cs" />
     <Compile Include="Events\DataObjectCreatedEvent.cs" />
     <Compile Include="Events\DataObjectDeletedEvent.cs" />
     <Compile Include="Events\DataObjectUpdatedEvent.cs" />

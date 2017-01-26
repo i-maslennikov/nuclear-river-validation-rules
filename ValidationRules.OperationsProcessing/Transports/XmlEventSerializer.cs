@@ -113,16 +113,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                 return new AggregatesStateIncrementedEvent(states.ToArray());
             }
 
-            if (IsEventOfType(@event, typeof(FactsBatchProcessedEvent)))
+            if (IsEventOfType(@event, typeof(FactsDelayLoggedEvent)))
             {
                 var time = @event.Element(EventHappendTime);
-                return new FactsBatchProcessedEvent((DateTime)time);
+                return new FactsDelayLoggedEvent((DateTime)time);
             }
 
-            if (IsEventOfType(@event, typeof(AggregatesBatchProcessedEvent)))
+            if (IsEventOfType(@event, typeof(AggregatesDelayLoggedEvent)))
             {
                 var time = @event.Element(EventHappendTime);
-                return new AggregatesBatchProcessedEvent((DateTime)time);
+                return new AggregatesDelayLoggedEvent((DateTime)time);
             }
 
             if (IsEventOfType(@event, typeof(ResultPartiallyOutdatedEvent)))
@@ -203,16 +203,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                                     aggregatesStateIncrementedEvent.IncludedTokens.Select(guid => new XElement(State, guid.ToString())).ToArray());
             }
 
-            var factsBatchProcessedEvent = @event as FactsBatchProcessedEvent;
-            if (factsBatchProcessedEvent != null)
+            var factsDelayLoggedEvent = @event as FactsDelayLoggedEvent;
+            if (factsDelayLoggedEvent != null)
             {
-                return CreateRecord(factsBatchProcessedEvent, new[] { new XElement(EventHappendTime, factsBatchProcessedEvent.EventTime) });
+                return CreateRecord(factsDelayLoggedEvent, new XElement(EventHappendTime, factsDelayLoggedEvent.EventTime));
             }
 
-            var aggregateBatchProcessedEvent = @event as AggregatesBatchProcessedEvent;
-            if (aggregateBatchProcessedEvent != null)
+            var aggregatesDelayLoggedEvent = @event as AggregatesDelayLoggedEvent;
+            if (aggregatesDelayLoggedEvent != null)
             {
-                return CreateRecord(aggregateBatchProcessedEvent, new[] { new XElement(EventHappendTime, aggregateBatchProcessedEvent.EventTime) });
+                return CreateRecord(aggregatesDelayLoggedEvent, new XElement(EventHappendTime, aggregatesDelayLoggedEvent.EventTime));
             }
 
             var resultOutdatedEvent = @event as ResultOutdatedEvent;

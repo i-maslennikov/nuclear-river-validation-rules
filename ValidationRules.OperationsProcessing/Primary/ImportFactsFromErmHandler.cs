@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
 
                     Handle(commands.OfType<ISyncDataObjectCommand>().ToList());
                     Handle(commands.OfType<IncrementStateCommand>().ToList());
-                    Handle(commands.OfType<RecordDelayCommand>().ToList());
+                    Handle(commands.OfType<LogDelayCommand>().ToList());
 
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<RecordDelayCommand> commands)
+        private void Handle(IReadOnlyCollection<LogDelayCommand> commands)
         {
             if (!commands.Any())
             {
@@ -68,7 +68,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
 
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
-            _eventLogger.Log(new IEvent[] { new FactsBatchProcessedEvent(DateTime.UtcNow) });
+            _eventLogger.Log(new IEvent[] { new FactsDelayLoggedEvent(DateTime.UtcNow) });
             _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)delta.TotalMilliseconds);
         }
 

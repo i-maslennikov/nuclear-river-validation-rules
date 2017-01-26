@@ -45,7 +45,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
                     Handle(commands.OfType<IValidationRuleCommand>().ToList());
-                    Handle(commands.OfType<RecordDelayCommand>().ToList());
+                    Handle(commands.OfType<LogDelayCommand>().ToList());
 
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
@@ -57,7 +57,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             }
         }
 
-        private void Handle(IReadOnlyCollection<RecordDelayCommand> commands)
+        private void Handle(IReadOnlyCollection<LogDelayCommand> commands)
         {
             if (!commands.Any())
             {

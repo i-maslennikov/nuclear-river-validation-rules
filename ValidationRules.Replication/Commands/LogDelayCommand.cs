@@ -4,9 +4,9 @@ using NuClear.Replication.Core;
 
 namespace NuClear.ValidationRules.Replication.Commands
 {
-    public sealed class RecordDelayCommand : ICommand
+    public sealed class LogDelayCommand : ICommand
     {
-        public RecordDelayCommand(DateTime eventTime)
+        public LogDelayCommand(DateTime eventTime)
         {
             EventTime = eventTime;
         }

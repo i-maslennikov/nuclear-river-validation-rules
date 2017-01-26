@@ -39,10 +39,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                     return new[] { new CreateNewVersionCommand(stateIncrementedEvent.IncludedTokens) };
                 }
 
-                var batchProcessedEvent = @event as AggregatesBatchProcessedEvent;
-                if (batchProcessedEvent != null)
+                var aggregatesDelayLoggedEvent = @event as AggregatesDelayLoggedEvent;
+                if (aggregatesDelayLoggedEvent != null)
                 {
-                    return new[] { new RecordDelayCommand(batchProcessedEvent.EventTime) };
+                    return new[] { new LogDelayCommand(aggregatesDelayLoggedEvent.EventTime) };
                 }
 
                 var resultOutdatedEvent = @event as ResultOutdatedEvent;
