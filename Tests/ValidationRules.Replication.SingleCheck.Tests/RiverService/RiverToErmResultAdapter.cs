@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -49,11 +50,12 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
         private static string FormatDescriptionMass(EntityReference entityReference)
             => entityReference.Name;
 
+        private static readonly HashSet<int> FirmRules = new HashSet<int> { 39, 48, 49, };
         private static ErmOrderValidationMessage[] Format(RiverValidationResult[] results, Func<EntityReference, string> descriptionFormatter)
             => results.Select(x =>
                                   new ErmOrderValidationMessage
                                   {
-                                      TargetEntityId = x.MainReference.Id,
+                                      TargetEntityId = FirmRules.Contains(x.Rule) ? x.References.Single(r => r.Type == "Firm").Id : x.MainReference.Id,
                                       RuleCode = x.Rule,
                                       MessageText = FormatMessage(x, descriptionFormatter)
                                   }).ToArray();
