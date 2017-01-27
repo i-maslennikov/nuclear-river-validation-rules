@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             var commands = _commandFactory.CreateCommands(new ImportFactsFromErmEvent(trackedUseCase)).ToList();
 
             commands.Add(new IncrementStateCommand(new[] { trackedUseCase.Id }));
-            commands.Add(new RecordDelayCommand(trackedUseCase.Context.Finished.UtcDateTime));
+            commands.Add(new LogDelayCommand(trackedUseCase.Context.Finished.UtcDateTime));
 
             _telemetryPublisher.Publish<ErmEnqueuedOperationCountIdentity>(commands.Count);
 

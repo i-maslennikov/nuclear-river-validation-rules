@@ -74,10 +74,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                     return new[] { new IncrementStateCommand(stateIncrementedEvent.IncludedTokens) };
                 }
 
-                var batchProcessedEvent = @event as FactsBatchProcessedEvent;
-                if (batchProcessedEvent != null)
+                var factsDelayLoggedEvent = @event as FactsDelayLoggedEvent;
+                if (factsDelayLoggedEvent != null)
                 {
-                    return new[] { new RecordDelayCommand(batchProcessedEvent.EventTime) };
+                    return new[] { new LogDelayCommand(factsDelayLoggedEvent.EventTime) };
                 }
 
                 throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));

@@ -63,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
             }
 
             public bool ShouldEventBeLogged(TEvent @event)
-                => !(@event is AggregatesStateIncrementedEvent || @event is AggregatesBatchProcessedEvent || @event is ResultOutdatedEvent || @event is ResultPartiallyOutdatedEvent);
+                => !(@event is AggregatesStateIncrementedEvent || @event is AggregatesDelayLoggedEvent || @event is ResultOutdatedEvent || @event is ResultPartiallyOutdatedEvent);
 
             public void ReportMessageLoggedCount(long count)
                 => _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(count);
@@ -80,7 +80,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
             }
 
             public bool ShouldEventBeLogged(TEvent @event)
-                => @event is AggregatesStateIncrementedEvent || @event is AggregatesBatchProcessedEvent || @event is ResultOutdatedEvent || @event is ResultPartiallyOutdatedEvent;
+                => @event is AggregatesStateIncrementedEvent || @event is AggregatesDelayLoggedEvent || @event is ResultOutdatedEvent || @event is ResultPartiallyOutdatedEvent;
 
             public void ReportMessageLoggedCount(long count)
                 => _telemetryPublisher.Publish<MessageEnqueuedOperationCountIdentity>(count);
