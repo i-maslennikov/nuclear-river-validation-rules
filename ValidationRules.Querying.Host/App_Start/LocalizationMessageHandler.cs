@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace NuClear.ValidationRules.Querying.Host
 {
@@ -21,7 +22,7 @@ namespace NuClear.ValidationRules.Querying.Host
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var cultureInfo = GetCultureInfoFromAcceptLanguageHeader(request);
+            var cultureInfo = GetCultureInfoFromUrl(request) ?? GetCultureInfoFromAcceptLanguageHeader(request);
             if (cultureInfo != null)
             {
                 Thread.CurrentThread.CurrentCulture = cultureInfo;
@@ -53,6 +54,15 @@ namespace NuClear.ValidationRules.Querying.Host
             }
 
             return null;
+        }
+
+        private CultureInfo GetCultureInfoFromUrl(HttpRequestMessage request)
+        {
+            var queryArguments = HttpUtility.ParseQueryString(request.RequestUri.Query);
+            var cultureName = queryArguments.Get("culture");
+            return string.IsNullOrEmpty(cultureName)
+                       ? null
+                       : CultureInfo.GetCultureInfo(cultureName);
         }
     }
 }
