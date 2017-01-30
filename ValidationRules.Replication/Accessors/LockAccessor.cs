@@ -23,17 +23,19 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<Lock> GetSource() => _query
-            .For<Erm::Lock>()
-            .Where(x => x.IsActive && !x.IsDeleted)
-            .Select(x => new Lock
+        public IQueryable<Lock> GetSource() =>
+            from @lock in _query.For<Erm::Lock>()
+            from order in _query.For<Erm::Order>().Where(x => x.Id == @lock.OrderId) // тип заказа после создания блокировки не меняется, поэтому join допустим
+            where @lock.IsActive && !@lock.IsDeleted
+            select new Lock
                 {
-                    Id = x.Id,
-                    OrderId = x.OrderId,
-                    AccountId = x.AccountId,
-                    Amount = x.PlannedAmount,
-                    Start = x.PeriodStartDate,
-                });
+                    Id = @lock.Id,
+                    OrderId = @lock.OrderId,
+                    AccountId = @lock.AccountId,
+                    Amount = @lock.PlannedAmount,
+                    Start = @lock.PeriodStartDate,
+                    IsOrderFreeOfCharge = Erm::Order.FreeOfChargeTypes.Contains(order.OrderType)
+                };
 
         public FindSpecification<Lock> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

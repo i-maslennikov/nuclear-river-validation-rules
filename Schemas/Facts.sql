@@ -268,6 +268,7 @@ GO
 create table Facts.Lock(
     Id bigint not null,
     OrderId bigint not null,
+    IsOrderFreeOfCharge bit not null,
     AccountId bigint not null,
     [Start] datetime2(2) not null,
     Amount decimal(19,4) not null,

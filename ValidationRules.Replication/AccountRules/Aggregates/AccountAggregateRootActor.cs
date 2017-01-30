@@ -83,11 +83,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     where !order.IsFreeOfCharge && PayableStates.Contains(order.WorkflowStep)
                     select new { AccountId = account.Id, releaseWithdrawal.Start, releaseWithdrawal.Amount, Type = 1 };
 
-                var locks =
-                    from @lock in _query.For<Facts::Lock>()
-                    join order in _query.For<Facts::Order>() on @lock.OrderId equals order.Id
-                    where !order.IsFreeOfCharge && PayableStates.Contains(order.WorkflowStep)
-                    select @lock;
+                var locks = _query.For<Facts::Lock>().Where(x => !x.IsOrderFreeOfCharge);
 
                 var lockPeriods =
                     from @lock in locks
