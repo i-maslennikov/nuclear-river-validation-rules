@@ -444,8 +444,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                 .Name(nameof(ReleaseInfoFacts))
                 .Erm(
-                    new Erm::ReleaseInfo { Id = 1, OrganizationUnitId = 2, PeriodEndDate = LastSecondApr, IsActive = true, IsDeleted = false, IsBeta =  false, Status = 1})
+                    new Erm::ReleaseInfo { Id = 1, OrganizationUnitId = 2, PeriodEndDate = LastSecondApr, IsActive = true, IsDeleted = false, IsBeta = false, Status = 1 },
+                    new Erm::ReleaseInfo { Id = 2, OrganizationUnitId = 2, PeriodEndDate = LastSecondApr, IsActive = true, IsDeleted = false, IsBeta = false, Status = 2 })
                 .Fact(
-                    new ReleaseInfo { Id = 1, OrganizationUnitId = 2, PeriodEndDate = FirstDayMay });
+                    new ReleaseInfo { Id = 2, OrganizationUnitId = 2, PeriodEndDate = FirstDayMay });
     }
 }
