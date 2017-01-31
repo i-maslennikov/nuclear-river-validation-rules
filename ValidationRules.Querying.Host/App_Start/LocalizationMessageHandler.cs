@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http;
 
 namespace NuClear.ValidationRules.Querying.Host
 {
@@ -60,9 +62,13 @@ namespace NuClear.ValidationRules.Querying.Host
         {
             var queryArguments = HttpUtility.ParseQueryString(request.RequestUri.Query);
             var cultureName = queryArguments.Get("culture");
-            return string.IsNullOrEmpty(cultureName)
-                       ? null
-                       : CultureInfo.GetCultureInfo(cultureName);
+            CultureInfo cultureInfo = null;
+            if (!string.IsNullOrEmpty(cultureName) && !AllCultures.TryGetValue(cultureName, out cultureInfo))
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = $"Culture '{cultureName}' not exist" });
+            }
+
+            return cultureInfo;
         }
     }
 }
