@@ -4,6 +4,12 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
 {
     public sealed class Order
     {
+        public const int OrderTypeSelfAds = 2;
+        public const int OrderTypeSocialAds = 7;
+        public const int OrderTypeCompensation = 9;
+
+        public static readonly int[] FreeOfChargeTypes = { OrderTypeSelfAds, OrderTypeSocialAds, OrderTypeCompensation };
+
         public long Id { get; set; }
         public long FirmId { get; set; }
         public long DestOrganizationUnitId { get; set; }
