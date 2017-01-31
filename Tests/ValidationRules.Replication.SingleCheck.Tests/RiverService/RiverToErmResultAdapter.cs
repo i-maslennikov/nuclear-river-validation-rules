@@ -62,24 +62,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
 
         private static string FormatMessage(RiverValidationResult result, Func<EntityReference, string> descriptionFormatter)
         {
-            var template = FormatTemplate(result.Template);
-
-            return string.Format(CultureInfo.InvariantCulture, template, result.References.Select(descriptionFormatter).ToArray());
-        }
-
-        private static string FormatTemplate(string template)
-        {
-            switch (template)
-            {
-                case "В позиции {0} адрес фирмы {1} неактивен":
-                    return "В позиции {0} найден неактивный адрес {1}";
-
-                case "В позиции {0} адрес фирмы {1} не принадлежит фирме заказа":
-                    return "В позиции {0} найден адрес {1}, не принадлежащий фирме заказа";
-
-                default:
-                    return template;
-            }
+            return string.Format(CultureInfo.InvariantCulture, result.Template, result.References.Select(descriptionFormatter).ToArray());
         }
     }
 }
