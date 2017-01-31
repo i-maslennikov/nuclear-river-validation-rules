@@ -148,17 +148,33 @@ function Parse-EnvironmentMetadata ($Properties) {
 }
 
 $AllSchemas = @{
-	'Facts' = @{ ConnectionStringKey = 'Facts'; SqlFiles = @('Schemas\DropOldFacts.sql', 'Schemas\Facts.sql') }
 
-	'Price.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Price.Aggregates.sql') }
-	'Account.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Account.Aggregates.sql') }
-	'Consistency.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Consistency.Aggregates.sql') }
-	'Firm.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Firm.Aggregates.sql') }
-	'Advertisement.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Advertisement.Aggregates.sql') }
-	'Project.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Project.Aggregates.sql') }
-	'Theme.Aggregates' = @{ ConnectionStringKey = 'Aggregates'; SqlFiles = @('Schemas\Theme.Aggregates.sql') }
+	'Facts' = @{
+		ConnectionStringKey = 'Facts'
+		SqlFiles = @(
+			'Schemas\DropOldFacts.sql'
+			'Schemas\Facts.sql'
+		)
+	}
 
-	'Messages' = @{ ConnectionStringKey = 'Messages'; SqlFiles = @('Schemas\Messages.sql') }
+	'Aggregates' = @{
+		ConnectionStringKey = 'Aggregates'
+		SqlFiles = @(
+			'Schemas\DropOldAggregates.sql'
+			'Schemas\Price.Aggregates.sql'
+			'Schemas\Account.Aggregates.sql'
+			'Schemas\Consistency.Aggregates.sql'
+			'Schemas\Firm.Aggregates.sql'
+			'Schemas\Advertisement.Aggregates.sql'
+			'Schemas\Project.Aggregates.sql'
+			'Schemas\Theme.Aggregates.sql'
+		)
+	}
+
+	'Messages' = @{
+		ConnectionStringKey = 'Messages'
+		SqlFiles = @('Schemas\Messages.sql')
+	}
 }
 
 $AllEntryPoints = @(

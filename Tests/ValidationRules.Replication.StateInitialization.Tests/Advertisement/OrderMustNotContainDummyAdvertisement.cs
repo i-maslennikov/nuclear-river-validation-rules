@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderMustNotContainDummyAdvertisementPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
@@ -26,18 +26,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Advertisement { Id = 6, AdvertisementTemplateId = 7 },
                     new Facts::AdvertisementTemplate { Id = 7, DummyAdvertisementId = 6 }, // Id заглушки совпадает с Id РМ
 
-                    new Facts::Position { Id = 5, Name = "Position5" }
+                    new Facts::Position { Id = 5 }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-                    new Aggregates::Order.AdvertisementIsDummy { OrderId = 1, OrderPositionId = 4, PositionId = 5 },
-
-                    new Aggregates::Position { Id = 5, Name = "Position5" }
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+                    new Aggregates::Order.AdvertisementIsDummy { OrderId = 1, OrderPositionId = 4, PositionId = 5 }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" /><opa><orderPosition id = \"4\" /><position id = \"5\" /></opa></root>"),
                         MessageType = (int)MessageTypeCode.OrderMustNotContainDummyAdvertisement,
                         Result = 250,
                         PeriodStart = FirstDayJan,
@@ -52,7 +50,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderMustNotContainDummyAdvertisementNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
@@ -60,12 +58,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Facts::AdvertisementTemplate { Id = 7, DummyAdvertisementId = 7 },
 
-                    new Facts::Position { Id = 5, Name = "Position5" }
+                    new Facts::Position { Id = 5 }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-
-                    new Aggregates::Position { Id = 5, Name = "Position5" }
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb }
                 )
                 .Message(
                 );

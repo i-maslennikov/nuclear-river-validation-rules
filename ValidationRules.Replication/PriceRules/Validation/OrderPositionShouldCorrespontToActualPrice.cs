@@ -74,11 +74,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                     {
                         MessageParams = new XDocument(new XElement("root",
                             new XElement("order",
-                                new XAttribute("id", position.Order.Id),
-                                new XAttribute("name", position.Order.Number)),
+                                new XAttribute("id", position.Order.Id)),
                             new XElement("orderPosition",
                                 new XAttribute("id", position.Position.OrderPositionId),
-                                new XAttribute("name", position.Position.OrderPositionName)))),
+                                new XElement("position", new XAttribute("id", position.Position.PositionId)))
+                        )),
 
                         PeriodStart = position.Start,
                         PeriodEnd = position.End,

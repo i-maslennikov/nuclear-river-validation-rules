@@ -9,7 +9,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     {
         public long Id { get; set; }
         public long FirmId { get; set; }
-        public string Number { get; set; }
 
         /// <summary>
         /// Связь заказа с номенклатурной позицией, импортируется из ERM.OrderPosition + ERM.OrderPositionAdv
@@ -76,7 +75,7 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
         {
             public long OrderId { get; set; }
             public long OrderPositionId { get; set; }
-            public string OrderPositionName { get; set; }
+            public long PositionId { get; set; }
             public long PriceId { get; set; }
             public bool IsActive { get; set; }
         }

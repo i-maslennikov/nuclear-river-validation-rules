@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
@@ -38,7 +37,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                 .Count(x => x.AdvertisementId == period.AdvertisementId && x.Begin < period.End && period.Begin < x.End && Scope.CanSee(period.Scope, x.Scope)) > 1
                 let order = query.For<Order>().Single(x => x.Id == period.OrderId)
                 let advertisement = query.For<Advertisement>().Single(x => x.Id == period.AdvertisementId)
-                let position = query.For<Position>().Single(x => x.Id == intersectingPeriod.PositionId)
                 select new
                     {
                         Key = new
@@ -46,18 +44,15 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                 order.ProjectId,
 
                                 period.OrderId,
-                                OrderNumber = order.Number,
                                 period.AdvertisementId,
-                                AdvertisementName = advertisement.Name,
                                 period.Begin,
                                 period.End,
                             },
 
                         Value = new
                             {
-                                intersectingPeriod.PositionId,
                                 intersectingPeriod.OrderPositionId,
-                                OrderPositionName = position.Name,
+                                intersectingPeriod.PositionId,
                             },
                     };
 
@@ -70,14 +65,13 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                               MessageParams = new XDocument(
                                                   new XElement("root",
                                                       new XElement("advertisement",
-                                                          new XAttribute("id", coupon.Key.AdvertisementId),
-                                                          new XAttribute("name", coupon.Key.AdvertisementName)),
+                                                          new XAttribute("id", coupon.Key.AdvertisementId)),
                                                       new XElement("order",
-                                                          new XAttribute("id", coupon.Key.OrderId),
-                                                          new XAttribute("name", coupon.Key.OrderNumber)),
-                                                      coupon.Distinct().Select(x => new XElement("orderPosition",
-                                                          new XAttribute("id", x.Value.OrderPositionId),
-                                                          new XAttribute("name", x.Value.OrderPositionName))))),
+                                                          new XAttribute("id", coupon.Key.OrderId)),
+                                                      coupon.Distinct().Select(x => new XElement("opa",
+                                                                                    new XElement("orderPosition", new XAttribute("id", x.Value.OrderPositionId)),
+                                                                                    new XElement("position",new XAttribute("id", x.Value.PositionId))))
+                                                      )),
 
                                               PeriodStart = coupon.Key.Begin,
                                               PeriodEnd = coupon.Key.End,

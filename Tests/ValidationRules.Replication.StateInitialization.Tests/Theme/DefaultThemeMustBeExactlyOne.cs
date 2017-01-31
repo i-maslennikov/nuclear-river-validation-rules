@@ -18,15 +18,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(DefaultThemeMustBeExactlyOne_NoDefaultTheme))
                 .Fact(
-                    new Facts::Project { Id = 1, OrganizationUnitId = 2, Name = "Project1" }
+                    new Facts::Project { Id = 1, OrganizationUnitId = 2 }
                 )
                 .Aggregate(
-                    new Aggregates::Project { Id = 1, Name = "Project1" }
+                    new Aggregates::Project { Id = 1 }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><project id = \"1\" name=\"Project1\" /><message themeCount=\"0\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><project id = \"1\" /><message themeCount=\"0\" /></root>"),
                         MessageType = (int)MessageTypeCode.DefaultThemeMustBeExactlyOne,
                         Result = 252,
                         PeriodStart = DateTime.MinValue,
@@ -41,21 +41,21 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(DefaultThemeMustBeExactlyOne_OneDefaultTheme))
                 .Fact(
-                    new Facts::Project {Id = 1, OrganizationUnitId = 2, Name = "Project1" },
+                    new Facts::Project {Id = 1, OrganizationUnitId = 2 },
                     new Facts::ThemeOrganizationUnit { ThemeId = 3, OrganizationUnitId = 2 },
 
-                    new Facts::Theme { Id = 3, Name = "Theme3", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
+                    new Facts::Theme { Id = 3, BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
                 )
                 .Aggregate(
-                    new Aggregates::Project { Id = 1, Name = "Project1" },
+                    new Aggregates::Project { Id = 1 },
                     new Aggregates::Project.ProjectDefaultTheme { ProjectId = 1, ThemeId = 3, Start = FirstDayJan, End = FirstDayFeb },
 
-                    new Aggregates::Theme { Id = 3, Name = "Theme3", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
+                    new Aggregates::Theme { Id = 3, BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><project id = \"1\" name=\"Project1\" /><message themeCount=\"0\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><project id = \"1\" /><message themeCount=\"0\" /></root>"),
                         MessageType = (int)MessageTypeCode.DefaultThemeMustBeExactlyOne,
                         Result = 252,
                         PeriodStart = DateTime.MinValue,
@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><project id = \"1\" name=\"Project1\" /><message themeCount=\"0\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><project id = \"1\" /><message themeCount=\"0\" /></root>"),
                         MessageType = (int)MessageTypeCode.DefaultThemeMustBeExactlyOne,
                         Result = 252,
                         PeriodStart = FirstDayFeb,
@@ -79,25 +79,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(DefaultThemeMustBeExactlyOne_TwoDefaultTheme))
                 .Fact(
-                    new Facts::Project { Id = 1, OrganizationUnitId = 2, Name = "Project1" },
+                    new Facts::Project { Id = 1, OrganizationUnitId = 2 },
                     new Facts::ThemeOrganizationUnit { Id = 1, ThemeId = 3, OrganizationUnitId = 2 },
                     new Facts::ThemeOrganizationUnit { Id = 2, ThemeId = 4, OrganizationUnitId = 2 },
 
-                    new Facts::Theme { Id = 3, Name = "Theme3", BeginDistribution = FirstDayJan, EndDistribution = FirstDayMar, IsDefault = true },
-                    new Facts::Theme { Id = 4, Name = "Theme4", BeginDistribution = FirstDayFeb, EndDistribution = FirstDayMar, IsDefault = true }
+                    new Facts::Theme { Id = 3, BeginDistribution = FirstDayJan, EndDistribution = FirstDayMar, IsDefault = true },
+                    new Facts::Theme { Id = 4, BeginDistribution = FirstDayFeb, EndDistribution = FirstDayMar, IsDefault = true }
                 )
                 .Aggregate(
-                    new Aggregates::Project { Id = 1, Name = "Project1" },
+                    new Aggregates::Project { Id = 1 },
                     new Aggregates::Project.ProjectDefaultTheme { ProjectId = 1, ThemeId = 3, Start = FirstDayJan, End = FirstDayMar },
                     new Aggregates::Project.ProjectDefaultTheme { ProjectId = 1, ThemeId = 4, Start = FirstDayFeb, End = FirstDayMar },
 
-                    new Aggregates::Theme { Id = 3, Name = "Theme3", BeginDistribution = FirstDayJan, EndDistribution = FirstDayMar, IsDefault = true },
-                    new Aggregates::Theme { Id = 4, Name = "Theme4", BeginDistribution = FirstDayFeb, EndDistribution = FirstDayMar, IsDefault = true }
+                    new Aggregates::Theme { Id = 3, BeginDistribution = FirstDayJan, EndDistribution = FirstDayMar, IsDefault = true },
+                    new Aggregates::Theme { Id = 4, BeginDistribution = FirstDayFeb, EndDistribution = FirstDayMar, IsDefault = true }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><project id = \"1\" name=\"Project1\" /><message themeCount=\"0\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><project id = \"1\" /><message themeCount=\"0\" /></root>"),
                         MessageType = (int)MessageTypeCode.DefaultThemeMustBeExactlyOne,
                         Result = 252,
                         PeriodStart = DateTime.MinValue,
@@ -106,7 +106,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><project id = \"1\" name=\"Project1\" /><message themeCount=\"2\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><project id = \"1\" /><message themeCount=\"2\" /></root>"),
                         MessageType = (int)MessageTypeCode.DefaultThemeMustBeExactlyOne,
                         Result = 252,
                         PeriodStart = FirstDayFeb,
@@ -115,7 +115,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><project id = \"1\" name=\"Project1\" /><message themeCount=\"0\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><project id = \"1\" /><message themeCount=\"0\" /></root>"),
                         MessageType = (int)MessageTypeCode.DefaultThemeMustBeExactlyOne,
                         Result = 252,
                         PeriodStart = FirstDayMar,

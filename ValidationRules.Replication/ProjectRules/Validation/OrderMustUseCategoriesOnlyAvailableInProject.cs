@@ -35,8 +35,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
             var ruleResults =
                 from order in query.For<Order>()
                 from opa in query.For<Order.CategoryAdvertisement>().Where(x => x.OrderId == order.Id)
-                from position in query.For<Position>().Where(x => x.Id == opa.PositionId)
-                from category in query.For<Category>().Where(x => x.Id == opa.CategoryId)
                 let categoryBindedToProject = query.For<Project.Category>().Any(x => x.ProjectId == order.ProjectId && x.CategoryId == opa.CategoryId)
                 where !categoryBindedToProject
                 select new Version.ValidationResult
@@ -44,14 +42,12 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                         MessageParams = new XDocument(
                             new XElement("root",
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", opa.OrderPositionId),
-                                    new XAttribute("name", position.Name)),
+                                    new XAttribute("id", order.Id)),
+                                new XElement("opa",
+                                    new XElement("orderPosition", new XAttribute("id", opa.OrderPositionId)),
+                                    new XElement("position", new XAttribute("id", opa.PositionId))),
                                 new XElement("category",
-                                    new XAttribute("id", category.Id),
-                                    new XAttribute("name", category.Name)))),
+                                    new XAttribute("id", opa.CategoryId)))),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

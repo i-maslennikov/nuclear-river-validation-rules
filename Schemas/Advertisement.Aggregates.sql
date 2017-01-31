@@ -18,20 +18,15 @@ if object_id('AdvertisementAggregates.ElementNotPassedReview') is not null drop 
 if object_id('AdvertisementAggregates.ElementPeriod') is not null drop table AdvertisementAggregates.ElementPeriod
 if object_id('AdvertisementAggregates.Coupon') is not null drop table AdvertisementAggregates.Coupon
 
-if object_id('AdvertisementAggregates.AdvertisementElementTemplate') is not null drop table AdvertisementAggregates.AdvertisementElementTemplate
-
 if object_id('AdvertisementAggregates.Firm') is not null drop table AdvertisementAggregates.Firm
 if object_id('AdvertisementAggregates.FirmWebsite') is not null drop table AdvertisementAggregates.FirmWebsite
 if object_id('AdvertisementAggregates.WhiteListDistributionPeriod') is not null drop table AdvertisementAggregates.WhiteListDistributionPeriod
-
-if object_id('AdvertisementAggregates.Position') is not null drop table AdvertisementAggregates.Position
 go
 
 -- Order aggregate
 
 create table AdvertisementAggregates.[Order] (
     Id bigint not null,
-    Number nvarchar(64) not null,
 
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDatePlan datetime2(2) not null,
@@ -71,7 +66,6 @@ create table AdvertisementAggregates.AdvertisementDeleted (
     PositionId bigint not null,
 
     AdvertisementId bigint not null,
-    AdvertisementName nvarchar(128) not null,
 )
 go
 
@@ -117,7 +111,6 @@ go
 
 create table AdvertisementAggregates.Advertisement (
     Id bigint not null,
-    Name nvarchar(128) not null,
     FirmId bigint not null,
     IsSelectedToWhiteList bit not null,
     constraint PK_Advertisement primary key (Id)
@@ -134,8 +127,7 @@ create table AdvertisementAggregates.RequiredElementMissing (
     AdvertisementId bigint not null,
 
     AdvertisementElementId bigint not null,
-
-    AdvertisementElementTemplateId bigint not null,
+    AdvertisementElementTemplateId bigint not null
 )
 go
 
@@ -167,22 +159,10 @@ create table AdvertisementAggregates.ElementPeriod (
 )
 go
 
--- AdvertisementElementTemplate aggregate
-
-create table AdvertisementAggregates.AdvertisementElementTemplate (
-    Id bigint not null,
-
-    Name nvarchar(128) not null,
-    constraint PK_AdvertisementElementTemplate primary key (Id)
-)
-go
-
-
 -- Firm aggregate
 
 create table AdvertisementAggregates.Firm (
     Id bigint not null,
-    Name nvarchar(250) not null,
     constraint PK_Firm primary key (Id)
 )
 go
@@ -199,15 +179,5 @@ create table AdvertisementAggregates.WhiteListDistributionPeriod (
     [End] datetime2(2) not null,
     AdvertisementId bigint null,
     ProvidedByOrderId bigint null,
-)
-go
-
--- Position aggregate
-
-create table AdvertisementAggregates.Position (
-    Id bigint not null,
-
-    Name nvarchar(256) not null,
-    constraint PK_Position primary key (Id)
 )
 go

@@ -10,7 +10,7 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Для заказов, РМ которых являются заглушками<sup>3</sup>, должна выводиться ошибка
+    /// Для заказов, РМ которых являются заглушками, должна выводиться ошибка
     /// "Позиция {0} содержит заглушку рекламного материала"
     /// 
     /// Source: DummyAdvertisementOrderValidationRule/OrderContainsDummyAdvertisementError
@@ -34,11 +34,11 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                   {
                                       MessageParams = new XDocument(new XElement("root",
                                           new XElement("order",
-                                              new XAttribute("id", order.Id),
-                                              new XAttribute("name", order.Number)),
-                                          new XElement("orderPosition",
-                                              new XAttribute("id", fail.OrderPositionId),
-                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)))),
+                                              new XAttribute("id", order.Id)),
+                                          new XElement("opa",
+                                              new XElement("orderPosition", new XAttribute("id", fail.OrderPositionId)),
+                                              new XElement("position",new XAttribute("id", fail.PositionId)))
+                                          )),
 
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,

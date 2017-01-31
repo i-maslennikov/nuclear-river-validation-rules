@@ -45,7 +45,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                   select new
                                   {
                                       OrderId = order.Id,
-                                      OrderNumber = order.Number,
 
                                       period.ProjectId,
                                       period.Start,
@@ -60,11 +59,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                     {
                         MessageParams = new XDocument(new XElement("root",
                             new XElement("order",
-                                new XAttribute("id", orderFirstPeriodDto.OrderId),
-                                new XAttribute("name", orderFirstPeriodDto.OrderNumber)),
+                                new XAttribute("id", orderFirstPeriodDto.OrderId)),
                             new XElement("orderPosition",
                                 new XAttribute("id", orderPricePosition.OrderPositionId),
-                                new XAttribute("name", orderPricePosition.OrderPositionName)))),
+                                new XElement("position", new XAttribute("id", orderPricePosition.PositionId)))
+                        )),
 
                         PeriodStart = orderFirstPeriodDto.Start,
                         PeriodEnd = orderFirstPeriodDto.End,

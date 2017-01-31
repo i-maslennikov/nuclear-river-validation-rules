@@ -93,10 +93,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Price),
                             typeof(PriceAggregates::Price.AdvertisementAmountRestriction),
                             typeof(PriceAggregates::Price.AssociatedPositionGroupOvercount),
-                            typeof(PriceAggregates::Project),
                             typeof(PriceAggregates::Period.PricePeriod),
-                            typeof(PriceAggregates::Theme),
-                            typeof(PriceAggregates::Category),
 
                             typeof(AccountAggregates::Order),
                             typeof(AccountAggregates::Order.DebtPermission),
@@ -117,11 +114,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AdvertisementAggregates::Advertisement.RequiredElementMissing),
                             typeof(AdvertisementAggregates::Advertisement.ElementNotPassedReview),
                             typeof(AdvertisementAggregates::Advertisement.Coupon),
-                            typeof(AdvertisementAggregates::AdvertisementElementTemplate),
                             typeof(AdvertisementAggregates::Firm),
                             typeof(AdvertisementAggregates::Firm.FirmWebsite),
                             typeof(AdvertisementAggregates::Firm.WhiteListDistributionPeriod),
-                            typeof(AdvertisementAggregates::Position),
 
                             typeof(ConsistencyAggregates::Order),
                             typeof(ConsistencyAggregates::Order.BargainSignedLaterThanOrder),
@@ -151,13 +146,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
                             typeof(FirmAggregates::Order.SelfAdvertisementPosition),
 
-                            typeof(ProjectAggregates::Category),
                             typeof(ProjectAggregates::FirmAddress),
                             typeof(ProjectAggregates::Order),
                             typeof(ProjectAggregates::Order.AddressAdvertisement),
                             typeof(ProjectAggregates::Order.CategoryAdvertisement),
                             typeof(ProjectAggregates::Order.CostPerClickAdvertisement),
-                            typeof(ProjectAggregates::Position),
                             typeof(ProjectAggregates::Project),
                             typeof(ProjectAggregates::Project.Category),
                             typeof(ProjectAggregates::Project.CostPerClickRestriction),
@@ -170,7 +163,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ThemeAggregates::Order.OrderTheme),
                             typeof(ThemeAggregates::Project),
                             typeof(ThemeAggregates::Project.ProjectDefaultTheme),
-                            typeof(ThemeAggregates::Category),
                         });
             }
 

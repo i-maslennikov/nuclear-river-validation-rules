@@ -13,7 +13,6 @@ create table FirmAggregates.[Order](
     Id bigint not null,
     ProjectId bigint not null,
     FirmId bigint not null,
-    Number nvarchar(64) not null,
     [Begin] datetime2(2) not null,
     [End] datetime2(2) not null,
     Scope bigint not null,
@@ -23,7 +22,6 @@ go
 
 create table FirmAggregates.Firm(
     Id bigint not null,
-    Name nvarchar(250) not null,
     ProjectId bigint not null,
     constraint PK_Firm primary key (Id)
 )

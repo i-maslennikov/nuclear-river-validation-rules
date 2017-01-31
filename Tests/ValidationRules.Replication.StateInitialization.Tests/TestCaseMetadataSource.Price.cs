@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     )
                 .Aggregate(
                     new Aggregates::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
-                    new Aggregates::Price.AssociatedPositionGroupOvercount { PriceId = 1, Count = 2, PricePositionId = 10 },
+                    new Aggregates::Price.AssociatedPositionGroupOvercount { PriceId = 1, Count = 2, PricePositionId = 10, PositionId = 3 },
 
                     new Aggregates::Position { Id = 3, CategoryCode = 1 },
                     new Aggregates::Period.PricePeriod { PriceId = 1, Start = DateTime.Parse("2012-12-12") },

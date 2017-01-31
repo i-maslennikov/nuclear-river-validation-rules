@@ -30,7 +30,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 Id = x.Id,
                 FirmId = x.FirmId,
                 AdvertisementTemplateId = x.AdvertisementTemplateId,
-                Name = x.Name,
                 IsSelectedToWhiteList = x.IsSelectedToWhiteList,
                 IsDeleted = x.IsDeleted
             });

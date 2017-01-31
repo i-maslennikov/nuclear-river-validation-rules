@@ -16,11 +16,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                     .Name(nameof(OrderPositionsShouldCorrespontToActualPrice))
                     .Aggregate(
-                        new Aggregates::Order { Id = 1, Number = "InvalidOrder" },
+                        new Aggregates::Order { Id = 1 },
                         new Aggregates::Period.OrderPeriod { OrderId = 1, Start = FirstDayJan },
                         new Aggregates::Period.OrderPeriod { OrderId = 1, Start = FirstDayFeb },
 
-                        new Aggregates::Order { Id = 2, Number = "ValidOrder" },
+                        new Aggregates::Order { Id = 2 },
                         new Aggregates::Period.OrderPeriod { OrderId = 2, Start = FirstDayFeb },
 
                         new Aggregates::Period { Start = FirstDayJan, End = FirstDayFeb },
@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     .Message(
                         new Messages::Version.ValidationResult
                             {
-                                MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"InvalidOrder\" /></root>"),
+                                MessageParams = XDocument.Parse("<root><order id = \"1\" /></root>"),
                                 MessageType = (int)MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
                                 Result = 3,
                                 PeriodStart = FirstDayJan,

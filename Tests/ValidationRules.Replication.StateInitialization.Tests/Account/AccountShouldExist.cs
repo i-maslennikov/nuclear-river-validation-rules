@@ -17,14 +17,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(AccountShouldExistNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "InvalidOrder", LegalPersonId = 2, BranchOfficeOrganizationUnitId = 3, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
+                    new Facts::Order { Id = 1, LegalPersonId = 2, BranchOfficeOrganizationUnitId = 3, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "InvalidOrder", AccountId = null, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar })
+                    new Aggregates::Order { Id = 1, AccountId = null, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"InvalidOrder\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><order id=\"1\" /></root>"),
                             MessageType = (int)MessageTypeCode.AccountShouldExist,
                             Result = 240,
                             PeriodStart = FirstDayJan,
@@ -38,11 +38,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(AccountShouldExistPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "ValidOrder", LegalPersonId = 2, BranchOfficeOrganizationUnitId = 3, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
+                    new Facts::Order { Id = 1, LegalPersonId = 2, BranchOfficeOrganizationUnitId = 3, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
                     new Facts::Account { Id = 4, LegalPersonId = 2, BranchOfficeOrganizationUnitId = 3 },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "ValidOrder", AccountId = 4, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar })
+                    new Aggregates::Order { Id = 1, AccountId = 4, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar })
                 .Message();
     }
 }

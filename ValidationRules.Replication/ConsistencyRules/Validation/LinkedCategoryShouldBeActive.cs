@@ -36,14 +36,13 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                       MessageParams = new XDocument(
                                           new XElement("root",
                                               new XElement("category",
-                                                  new XAttribute("id", category.CategoryId),
-                                                  new XAttribute("name", category.CategoryName)),
+                                                  new XAttribute("id", category.CategoryId)),
                                               new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("name", order.Number)),
-                                              new XElement("orderPosition",
-                                                  new XAttribute("id", category.OrderPositionId),
-                                                  new XAttribute("name", category.OrderPositionName)))),
+                                                  new XAttribute("id", order.Id)),
+                                              new XElement("opa",
+                                                new XElement("orderPosition", new XAttribute("id", category.OrderPositionId)),
+                                                new XElement("position", new XAttribute("id", category.PositionId)))
+                                      )),
 
                                       PeriodStart = order.BeginDistribution,
                                       PeriodEnd = order.EndDistributionPlan,

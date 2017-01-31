@@ -195,9 +195,7 @@
     <Compile Include="Model\Facts\PositionChild.cs" />
     <Compile Include="Model\Facts\Project.cs" />
     <Compile Include="Model\Facts\ReleaseWithdrawal.cs" />
-    <Compile Include="Model\AdvertisementRules\Aggregates\AdvertisementElementTemplate.cs" />
     <Compile Include="Model\AdvertisementRules\Aggregates\Advertisement.cs" />
-    <Compile Include="Model\AdvertisementRules\Aggregates\Position.cs" />
     <Compile Include="Model\AdvertisementRules\Aggregates\Firm.cs" />
     <Compile Include="Model\AdvertisementRules\Aggregates\Order.cs" />
     <Compile Include="Model\Facts\Advertisement.cs" />
@@ -257,14 +255,11 @@
     <Compile Include="Model\Messages\CombinedResult.cs" />
     <Compile Include="Model\Messages\MessageTypeCode.cs" />
     <Compile Include="Model\Messages\Result.cs" />
-    <Compile Include="Model\ProjectRules\Aggregates\Category.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\FirmAddress.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Order.cs" />
-    <Compile Include="Model\ProjectRules\Aggregates\Position.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Project.cs" />
     <Compile Include="Model\Facts\CategoryOrganizationUnit.cs" />
     <Compile Include="Model\Facts\CostPerClickCategoryRestriction.cs" />
-    <Compile Include="Model\PriceRules\Aggregates\Category.cs" />
     <Compile Include="Model\PriceRules\Aggregates\IBindingObject.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Order.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Period.cs" />
@@ -283,8 +278,6 @@
     <Compile Include="Model\Erm\Project.cs" />
     <Compile Include="Model\Erm\Ruleset.cs" />
     <Compile Include="Model\Erm\RulesetRule.cs" />
-    <Compile Include="Model\PriceRules\Aggregates\Project.cs" />
-    <Compile Include="Model\PriceRules\Aggregates\Theme.cs" />
     <Compile Include="Model\Facts\AssociatedPosition.cs" />
     <Compile Include="Model\Facts\AssociatedPositionsGroup.cs" />
     <Compile Include="Model\Facts\DeniedPosition.cs" />
@@ -294,7 +287,6 @@
     <Compile Include="Model\Facts\OrderPositionCostPerClick.cs" />
     <Compile Include="Model\Facts\ReleaseInfo.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
-    <Compile Include="Model\ThemeRules\Aggregates\Category.cs" />
     <Compile Include="Model\ThemeRules\Aggregates\Order.cs" />
     <Compile Include="Model\ThemeRules\Aggregates\Project.cs" />
     <Compile Include="Model\ThemeRules\Aggregates\Theme.cs" />

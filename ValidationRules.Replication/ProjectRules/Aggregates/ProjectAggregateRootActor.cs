@@ -54,8 +54,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                     };
 
             public IQueryable<Project> GetSource()
-                => from category in _query.For<Facts::Project>()
-                   select new Project { Id = category.Id, Name = category.Name };
+                => from x in _query.For<Facts::Project>()
+                   select new Project { Id = x.Id };
 
             public FindSpecification<Project> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -117,7 +117,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                    let nextRestriction = _query.For<Facts::CostPerClickCategoryRestriction>().Where(x => x.ProjectId == project.Id && x.CategoryId == restriction.CategoryId && x.Begin > restriction.Begin).Min(x => (DateTime?)x.Begin)
                    select new Project.CostPerClickRestriction
                    {
-                       ProjectId = restriction.ProjectId,
+                       ProjectId = project.Id,
                        CategoryId = restriction.CategoryId,
                        Minimum = restriction.MinCostPerClick,
                        Begin = restriction.Begin,
@@ -152,7 +152,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                    let nextRestriction = _query.For<Facts::SalesModelCategoryRestriction>().Where(x => x.ProjectId == project.Id && x.CategoryId == restriction.CategoryId && x.Begin > restriction.Begin).Min(x => (DateTime?)x.Begin)
                    select new Project.SalesModelRestriction
                    {
-                       ProjectId = restriction.ProjectId,
+                       ProjectId = project.Id,
                        CategoryId = restriction.CategoryId,
                        SalesModel = restriction.SalesModel,
                        Begin = restriction.Begin,

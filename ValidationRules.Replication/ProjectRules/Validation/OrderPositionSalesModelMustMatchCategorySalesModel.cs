@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
@@ -39,17 +38,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                         MessageParams = new XDocument(
                             new XElement("root",
                                 new XElement("category",
-                                    new XAttribute("id", adv.CategoryId),
-                                    new XAttribute("name", query.For<Category>().Single(x => x.Id == adv.CategoryId).Name)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", adv.OrderPositionId),
-                                    new XAttribute("name", query.For<Position>().Single(x => x.Id == adv.PositionId).Name)),
+                                    new XAttribute("id", adv.CategoryId)),
+                                new XElement("opa",
+                                    new XElement("orderPosition", new XAttribute("id", adv.OrderPositionId)),
+                                    new XElement("position", new XAttribute("id", adv.PositionId))),
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
+                                    new XAttribute("id", order.Id)),
                                 new XElement("project",
-                                    new XAttribute("id", order.ProjectId),
-                                    new XAttribute("name", query.For<Project>().Single(x => x.Id == order.ProjectId).Name)))),
+                                    new XAttribute("id", order.ProjectId)))),
 
                         PeriodStart = order.Begin > restriction.Begin ? order.Begin : restriction.Begin,
                         PeriodEnd = order.End < restriction.End ? order.End : restriction.End,

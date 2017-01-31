@@ -56,11 +56,9 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                                   {
                                       MessageParams = new XDocument(new XElement("root",
                                           new XElement("theme",
-                                              new XAttribute("id", invalidMaxPeriod.ThemeId),
-                                              new XAttribute("name", query.For<Theme>().Single(x => x.Id == invalidMaxPeriod.ThemeId).Name)),
+                                              new XAttribute("id", invalidMaxPeriod.ThemeId)),
                                           new XElement("category",
-                                              new XAttribute("id", invalidMaxPeriod.CategoryId),
-                                              new XAttribute("name", query.For<Category>().Single(x => x.Id == invalidMaxPeriod.CategoryId).Name)))),
+                                              new XAttribute("id", invalidMaxPeriod.CategoryId)))),
 
                                       PeriodStart = invalidMaxPeriod.BeginDistributionDate,
                                       PeriodEnd = invalidMaxPeriod.EndDistributionDateFact,

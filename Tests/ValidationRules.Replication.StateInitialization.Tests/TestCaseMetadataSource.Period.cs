@@ -36,7 +36,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Price { Id = 2, BeginDate = DateTime.Parse("2011-02-01") },
                     new Facts::Project { Id = 123 })
                 .Aggregate(
-                    new Aggregates::Project { Id = 123 },
                     new Aggregates::Price { Id = 1, BeginDate = DateTime.Parse("2011-01-01") },
                     new Aggregates::Price { Id = 2, BeginDate = DateTime.Parse("2011-02-01") },
                     new Aggregates::Period { Start = DateTime.Parse("2011-01-01"), End = DateTime.Parse("2011-02-01"), ProjectId = 123 },

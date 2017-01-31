@@ -33,13 +33,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                               join pp in query.For<Period.PricePeriod>() on restriction.PriceId equals pp.PriceId
                               join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                               join op in query.For<Period.OrderPeriod>() on new { pp.Start, pp.OrganizationUnitId } equals new { op.Start, op.OrganizationUnitId }
-                              join project in query.For<Project>() on period.ProjectId equals project.Id
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
                                           new XElement("project",
-                                              new XAttribute("id", project.Id),
-                                              new XAttribute("name", project.Name)),
+                                              new XAttribute("id", period.ProjectId)),
                                           new XElement("pricePosition",
                                               new XAttribute("name", restriction.CategoryName)))),
 

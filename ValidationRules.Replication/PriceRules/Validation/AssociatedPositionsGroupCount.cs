@@ -29,26 +29,21 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from overcount in query.For<Price.AssociatedPositionGroupOvercount>()
-                              join price in query.For<Price>() on overcount.PriceId equals price.Id
                               join pp in query.For<Period.PricePeriod>() on overcount.PriceId equals pp.PriceId
                               join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                              join project in query.For<Project>() on period.ProjectId equals project.Id
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(new XElement("root",
-                                          new XElement("price",
-                                              new XAttribute("id", price.Id),
-                                              new XAttribute("beginDate", price.BeginDate)),
                                           new XElement("project",
-                                              new XAttribute("id", project.Id),
-                                              new XAttribute("name", project.Name)),
+                                            new XAttribute("id", period.ProjectId)),
                                           new XElement("pricePosition",
                                               new XAttribute("id", overcount.PricePositionId),
-                                              new XAttribute("name", overcount.PricePositionName)))),
+                                              new XElement("position", new XAttribute("id", overcount.PositionId)))
+                                      )),
 
                                       PeriodStart = period.Start,
                                       PeriodEnd = period.End,
-                                      ProjectId = project.Id,
+                                      ProjectId = period.ProjectId,
 
                                       Result = RuleResult,
                                   };

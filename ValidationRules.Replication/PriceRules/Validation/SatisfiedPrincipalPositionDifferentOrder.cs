@@ -80,25 +80,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                {
                                    MessageParams =
                                        new XDocument(new XElement("root",
-                                           new XElement("firm",
-                                               new XAttribute("id", warning.principal.FirmId)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", warning.principal.Position.OrderId),
-                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.principal.Position.OrderId).Number),
-                                               new XAttribute("orderPositionId", warning.principal.Position.OrderPositionId),
-                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.principal.Position.PackagePositionId).Name),
-                                               new XAttribute("positionId", warning.principal.Position.ItemPositionId),
-                                               new XAttribute("positionName", query.For<Position>().Single(x => x.Id == warning.principal.Position.ItemPositionId).Name)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", warning.associated.Position.OrderId),
-                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.associated.Position.OrderId).Number),
-                                               new XAttribute("orderPositionId", warning.associated.Position.CauseOrderPositionId),
-                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.associated.Position.CausePackagePositionId).Name),
-                                               new XAttribute("positionId", warning.associated.Position.CauseItemPositionId),
-                                               new XAttribute("positionName", query.For<Position>().Single(x => x.Id == warning.associated.Position.CauseItemPositionId).Name)),
-                                           new XElement("order",
-                                               new XAttribute("id", warning.principal.Position.OrderId),
-                                               new XAttribute("name", query.For<Order>().Single(x => x.Id == warning.principal.Position.OrderId).Number)))),
+
+                                            // principal
+                                            new XElement("order", new XAttribute("id", warning.principal.Position.OrderId)),
+                                            new XElement("orderPosition",
+                                                new XAttribute("id", warning.principal.Position.OrderPositionId),
+                                                new XElement("position", new XAttribute("id", warning.principal.Position.PackagePositionId))),
+                                            new XElement("opa",
+                                                new XElement("orderPosition", new XAttribute("id", warning.principal.Position.OrderPositionId)),
+                                                new XElement("position", new XAttribute("id", warning.principal.Position.ItemPositionId))),
+
+                                            // dependent
+                                            new XElement("order", new XAttribute("id", warning.associated.Position.OrderId)),
+                                            new XElement("orderPosition",
+                                                new XAttribute("id", warning.associated.Position.CauseOrderPositionId),
+                                                new XElement("position", new XAttribute("id", warning.associated.Position.CausePackagePositionId))),
+                                            new XElement("opa",
+                                                new XElement("orderPosition", new XAttribute("id", warning.associated.Position.CauseOrderPositionId)),
+                                                new XElement("position", new XAttribute("id", warning.associated.Position.CauseItemPositionId)))
+                                    )),
 
                                    PeriodStart = period.Start,
                                    PeriodEnd = period.End,

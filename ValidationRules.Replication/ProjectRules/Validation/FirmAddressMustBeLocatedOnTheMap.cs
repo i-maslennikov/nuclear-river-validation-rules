@@ -33,21 +33,19 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 from order in query.For<Order>()
                 from advertisement in query.For<Order.AddressAdvertisement>().Where(x => x.OrderId == order.Id && x.MustBeLocatedOnTheMap)
                 from firmAddress in query.For<FirmAddress>().Where(x => x.Id == advertisement.AddressId)
-                from position in query.For<Position>().Where(x => x.Id == advertisement.PositionId)
                 where !firmAddress.IsLocatedOnTheMap
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(
                             new XElement("root",
                                 new XElement("firmAddress",
-                                    new XAttribute("id", firmAddress.Id),
-                                    new XAttribute("name", firmAddress.Name)),
+                                    new XAttribute("id", firmAddress.Id)),
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", advertisement.OrderPositionId),
-                                    new XAttribute("name", position.Name)))),
+                                    new XAttribute("id", order.Id)),
+                                new XElement("opa",
+                                    new XElement("orderPosition", new XAttribute("id", advertisement.OrderPositionId)),
+                                    new XElement("position", new XAttribute("id", advertisement.PositionId)))
+                                )),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

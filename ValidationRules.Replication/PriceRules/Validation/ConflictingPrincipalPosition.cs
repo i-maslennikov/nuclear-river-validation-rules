@@ -72,52 +72,37 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 join period in query.For<Period>() on new { pair.associated.Start, pair.associated.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                 select new
                     {
-                        FirmId = pair.associated.FirmId,
                         Start = period.Start,
                         End = period.End,
                         ProjectId = period.ProjectId,
                         OrderPrincipalPosition = pair.principal.Position,
                         OrderAssociatedPosition = pair.associated.Position,
-
-                        OrderAssociatedPositionNames = new
-                        {
-                            OrderNumber = query.For<Order>().Single(x => x.Id == pair.associated.Position.OrderId).Number,
-                            OrderPositionName = query.For<Position>().Single(x => x.Id == pair.associated.Position.CausePackagePositionId).Name,
-                            ItemPositionName = query.For<Position>().Single(x => x.Id == pair.associated.Position.CauseItemPositionId).Name,
-                        },
-
-                        OrderPrincipalPositionNames = new
-                        {
-                            OrderNumber = query.For<Order>().Single(x => x.Id == pair.principal.Position.OrderId).Number,
-                            OrderPositionName = query.For<Position>().Single(x => x.Id == pair.principal.Position.PackagePositionId).Name,
-                            ItemPositionName = query.For<Position>().Single(x => x.Id == pair.principal.Position.ItemPositionId).Name,
-                        },
                     };
 
             var messages = from conflict in conflictingPositions
                            select new Version.ValidationResult
                                {
-                                   MessageParams =
-                                       new XDocument(new XElement("root",
-                                           new XElement("firm",
-                                               new XAttribute("id", conflict.FirmId)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", conflict.OrderAssociatedPosition.OrderId),
-                                               new XAttribute("orderNumber", conflict.OrderAssociatedPositionNames.OrderNumber),
-                                               new XAttribute("orderPositionId", conflict.OrderAssociatedPosition.CauseOrderPositionId),
-                                               new XAttribute("orderPositionName", conflict.OrderAssociatedPositionNames.OrderPositionName),
-                                               new XAttribute("positionId", conflict.OrderAssociatedPosition.CauseItemPositionId),
-                                               new XAttribute("positionName", conflict.OrderAssociatedPositionNames.ItemPositionName)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", conflict.OrderPrincipalPosition.OrderId),
-                                               new XAttribute("orderNumber", conflict.OrderPrincipalPositionNames.OrderNumber),
-                                               new XAttribute("orderPositionId", conflict.OrderPrincipalPosition.OrderPositionId),
-                                               new XAttribute("orderPositionName", conflict.OrderPrincipalPositionNames.OrderPositionName),
-                                               new XAttribute("positionId", conflict.OrderPrincipalPosition.ItemPositionId),
-                                               new XAttribute("positionName", conflict.OrderPrincipalPositionNames.ItemPositionName)),
+                                   MessageParams = new XDocument(new XElement("root",
+
+                                           // dependent
                                            new XElement("order",
-                                               new XAttribute("id", conflict.OrderAssociatedPosition.OrderId),
-                                               new XAttribute("name", conflict.OrderAssociatedPositionNames.OrderNumber)))),
+                                               new XAttribute("id", conflict.OrderAssociatedPosition.OrderId)),
+                                           new XElement("orderPosition",
+                                               new XAttribute("id", conflict.OrderAssociatedPosition.CauseOrderPositionId),
+                                               new XElement("position", new XAttribute("id", conflict.OrderAssociatedPosition.CausePackagePositionId))),
+                                           new XElement("opa",
+                                               new XElement("orderPosition", new XAttribute("id", conflict.OrderAssociatedPosition.CauseOrderPositionId)),
+                                               new XElement("position", new XAttribute("id", conflict.OrderAssociatedPosition.CauseItemPositionId))),
+
+                                            // principal
+                                            new XElement("order", new XAttribute("id", conflict.OrderPrincipalPosition.OrderId)),
+                                            new XElement("orderPosition",
+                                                new XAttribute("id", conflict.OrderPrincipalPosition.OrderPositionId),
+                                                new XElement("position", new XAttribute("id", conflict.OrderPrincipalPosition.PackagePositionId))),
+                                            new XElement("opa",
+                                                new XElement("orderPosition", new XAttribute("id", conflict.OrderPrincipalPosition.OrderPositionId)),
+                                                new XElement("position", new XAttribute("id", conflict.OrderPrincipalPosition.ItemPositionId)))
+                                   )),
 
                                    PeriodStart = conflict.Start,
                                    PeriodEnd = conflict.End,

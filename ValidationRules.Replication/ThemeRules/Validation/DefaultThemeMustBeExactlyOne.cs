@@ -53,8 +53,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                                       MessageParams = new XDocument(
                                           new XElement("root",
                                               new XElement("project",
-                                                  new XAttribute("id", projectPeriod.ProjectId),
-                                                  new XAttribute("name", query.For<Project>().Single(x => x.Id == projectPeriod.ProjectId).Name)),
+                                                  new XAttribute("id", projectPeriod.ProjectId)),
                                               new XElement("message",
                                                   new XAttribute("themeCount", themeCount)))),
 

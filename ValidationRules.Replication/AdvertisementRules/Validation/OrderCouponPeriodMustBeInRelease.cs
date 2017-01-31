@@ -56,20 +56,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                 from period in leftPeriods.Union(rightPeriods)
                 from order in query.For<Order>().Where(x => x.Id == period.OrderId)
                 from advertisement in query.For<Advertisement>().Where(x => x.Id == period.AdvertisementId)
-                from position in query.For<Position>().Where(x => x.Id == period.PositionId)
                 select new Version.ValidationResult
                     {
                         MessageParams = new XDocument(
                             new XElement("root",
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", period.OrderPositionId),
-                                    new XAttribute("name", position.Name)),
+                                    new XAttribute("id", order.Id)),
+                                new XElement("opa",
+                                    new XElement("orderPosition", new XAttribute("id", period.OrderPositionId)),
+                                    new XElement("position",new XAttribute("id", period.PositionId))),
                                 new XElement("advertisement",
-                                    new XAttribute("id", advertisement.Id),
-                                    new XAttribute("name", advertisement.Name))
+                                    new XAttribute("id", advertisement.Id))
                             )),
 
                         PeriodStart = period.Start,

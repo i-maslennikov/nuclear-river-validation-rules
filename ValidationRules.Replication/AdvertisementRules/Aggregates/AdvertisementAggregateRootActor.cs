@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
@@ -62,7 +61,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    select new Advertisement
                    {
                        Id = advertisement.Id,
-                       Name = advertisement.Name,
                        FirmId = advertisement.FirmId.Value,
                        IsSelectedToWhiteList = advertisement.IsSelectedToWhiteList,
                    };
@@ -138,7 +136,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        AdvertisementId = advertisement.Id,
 
                        AdvertisementElementId = element.Id,
-                       AdvertisementElementTemplateId = elementTemplate.Id,
+                       AdvertisementElementTemplateId = element.AdvertisementElementTemplateId
                    };
 
             public FindSpecification<Advertisement.RequiredElementMissing> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -180,7 +178,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        AdvertisementId = advertisement.Id,
 
                        AdvertisementElementId = element.Id,
-                       AdvertisementElementTemplateId = elementTemplate.Id,
+                       AdvertisementElementTemplateId = element.AdvertisementElementTemplateId,
 
                        Status = element.Status == StatusInvalid ? Advertisement.ReviewStatus.Invalid :
                                                     element.Status == StatusDraft ? Advertisement.ReviewStatus.Draft :

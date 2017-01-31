@@ -20,31 +20,29 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(AdvertisementElementMustPassReviewPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 0, AdvertisementTemplateId = 9, IsDeleted = false },
+                    new Facts::Advertisement { Id = 6, FirmId = 0, AdvertisementTemplateId = 9, IsDeleted = false },
                     new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
 
                     new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, IsEmpty = true, Status = StatusInvalid }, // ЭРМ не выверен
-                    new Facts::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8", NeedsValidation = true } // ЭРМ должен быть выверен
+                    new Facts::AdvertisementElementTemplate { Id = 8, NeedsValidation = true } // ЭРМ должен быть выверен
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
-                    new Aggregates::Advertisement.ElementNotPassedReview { AdvertisementId = 6, AdvertisementElementId = 7, AdvertisementElementTemplateId = 8, Status = Aggregates::Advertisement.ReviewStatus.Invalid },
-
-                    new Aggregates::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8" }
+                    new Aggregates::Advertisement { Id = 6, },
+                    new Aggregates::Advertisement.ElementNotPassedReview { AdvertisementId = 6, AdvertisementElementId = 7, AdvertisementElementTemplateId = 8, Status = Aggregates::Advertisement.ReviewStatus.Invalid }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><advertisement id = \"6\" name=\"Advertisement6\" /><advertisementElement id = \"7\" name=\"AdvertisementElementTemplate8\" /><message advertisementElementStatus=\"1\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" /><advertisement id = \"6\" /><advertisementElement id = \"7\"><advertisementElementTemplate id = \"8\" /></advertisementElement><message advertisementElementStatus=\"1\" /></root>"),
                         MessageType = (int)MessageTypeCode.AdvertisementElementMustPassReview,
                         Result = 254,
                         PeriodStart = FirstDayJan,
@@ -59,25 +57,23 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(AdvertisementElementMustPassReviewNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
-                    new Facts::OrderPosition { Id = 4, OrderId = 1, },
+                    new Facts::OrderPosition { Id = 4, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 0, AdvertisementTemplateId = 9, IsDeleted = false },
+                    new Facts::Advertisement { Id = 6, FirmId = 0, AdvertisementTemplateId = 9, IsDeleted = false },
                     new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
 
                     new Facts::AdvertisementElement { Id = 7, AdvertisementId = 6, AdvertisementElementTemplateId = 8, IsEmpty = true, Status = StatusValid }, // ЭРМ выверен
-                    new Facts::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8", NeedsValidation = true } // ЭРМ должен быть выверен
+                    new Facts::AdvertisementElementTemplate { Id = 8, NeedsValidation = true } // ЭРМ должен быть выверен
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
-
-                    new Aggregates::AdvertisementElementTemplate { Id = 8, Name = "AdvertisementElementTemplate8" }
+                    new Aggregates::Advertisement { Id = 6 }
                 )
                 .Message(
                 );

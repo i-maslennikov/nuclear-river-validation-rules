@@ -17,26 +17,24 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderPositionAdvertisementMustHaveAdvertisementPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
                     new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = true },
-                    new Facts::Position { Id = 5, AdvertisementTemplateId = 6, Name = "Position5"},
+                    new Facts::Position { Id = 5, AdvertisementTemplateId = 6 },
                     new Facts::AdvertisementTemplate { Id = 6, IsAdvertisementRequired = true },
 
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = null }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-                    new Aggregates::Order.MissingAdvertisementReference { OrderId = 1, OrderPositionId = 4, CompositePositionId = 5, PositionId = 5},
-
-                    new Aggregates::Position { Id = 5, Name = "Position5" }
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+                    new Aggregates::Order.MissingAdvertisementReference { OrderId = 1, OrderPositionId = 4, CompositePositionId = 5, PositionId = 5}
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><orderPosition id = \"4\" name=\"Position5\" /><position id = \"5\" name=\"Position5\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" /><orderPosition id = \"4\"><position id = \"5\" /></orderPosition><opa><orderPosition id = \"4\" /><position id = \"5\" /></opa></root>"),
                         MessageType = (int)MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
                         Result = 254,
                         PeriodStart = FirstDayJan,
@@ -51,21 +49,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderPositionAdvertisementMustHaveAdvertisementPricePositionNotActive))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
                     // price position not active
                     new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = false},
-                    new Facts::Position { Id = 5, AdvertisementTemplateId = 6, Name = "Position5" },
+                    new Facts::Position { Id = 5, AdvertisementTemplateId = 6 },
                     new Facts::AdvertisementTemplate { Id = 6, IsAdvertisementRequired = true },
 
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = null }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-
-                    new Aggregates::Position { Id = 5, Name = "Position5" }
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb }
                 )
                 .Message();
 
@@ -75,19 +71,18 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(RequiredAdvertisementMissingNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
                     new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = true },
-                    new Facts::Position { Id = 5, AdvertisementTemplateId = 6, Name = "Position5" },
+                    new Facts::Position { Id = 5, AdvertisementTemplateId = 6 },
                     new Facts::AdvertisementTemplate { Id = 6, IsAdvertisementRequired = true },
 
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 13 }
                 )
                 .Aggregate(
-                    new Aggregates::Position { Id = 5, Name = "Position5" },
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb }
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb }
                 )
                 .Message(
                 );

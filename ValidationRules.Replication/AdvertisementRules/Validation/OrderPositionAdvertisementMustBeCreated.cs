@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// 
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveLinkingObject
     ///
-    /// * Ошибки по проверкам OrderPositionAdvertisementMustBeCreated и OrderPositionAdvertisementMustHaveAdvertisement 
+    /// * Ошибки по проверкам OrderPositionAdvertisementMustBeCreated и OrderPositionAdvertisementMustHaveAdvertisement
     /// визуально для пользователя не различаются. Можно объединить и оставить универсальное сообщение.
     /// </summary>
     public sealed class OrderPositionAdvertisementMustBeCreated : ValidationResultAccessorBase
@@ -35,14 +35,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                   {
                                       MessageParams = new XDocument(new XElement("root",
                                           new XElement("order",
-                                              new XAttribute("id", order.Id),
-                                              new XAttribute("name", order.Number)),
+                                              new XAttribute("id", order.Id)),
                                           new XElement("orderPosition",
                                               new XAttribute("id", fail.OrderPositionId),
-                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.CompositePositionId).Name)),
-                                          new XElement("position",
-                                              new XAttribute("id", fail.PositionId),
-                                              new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)))),
+                                              new XElement("position", new XAttribute("id", fail.CompositePositionId))),
+                                          new XElement("opa",
+                                              new XElement("orderPosition",new XAttribute("id", fail.OrderPositionId)),
+                                              new XElement("position", new XAttribute("id", fail.PositionId)))
+                                          )),
 
                                       PeriodStart = order.BeginDistributionDate,
                                       PeriodEnd = order.EndDistributionDatePlan,

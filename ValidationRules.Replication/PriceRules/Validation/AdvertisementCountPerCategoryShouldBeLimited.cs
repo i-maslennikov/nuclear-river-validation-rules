@@ -64,7 +64,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from oversale in oversales.Distinct()
                 join period in query.For<Period>() on new { oversale.Start, oversale.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                 join order in query.For<Order>() on oversale.OrderId equals order.Id
-                join category in query.For<Category>() on oversale.Category3Id ?? oversale.Category1Id equals category.Id
                 select new Version.ValidationResult
                     {
                         MessageParams =
@@ -73,11 +72,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                     new XAttribute("max", MaxPositionsPerCategory),
                                     new XAttribute("count", oversale.Count)),
                                 new XElement("category",
-                                    new XAttribute("id", category.Id),
-                                    new XAttribute("name", category.Name)),
+                                    new XAttribute("id", oversale.Category3Id ?? oversale.Category1Id)),
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                                    new XAttribute("id", order.Id)))),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,

@@ -33,8 +33,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from order in query.For<Order>()
                 from start in query.For<Period.OrderPeriod>().Where(x => x.OrderId == order.Id)
                 from end in query.For<Period.OrderPeriod>().Where(x => x.OrderId == order.Id).SelectMany(x => query.For<Period>().Where(y => y.Start == x.Start && y.OrganizationUnitId == x.OrganizationUnitId))
-                group new { start.Start, end.End } by new { order.Id, order.Number, start.OrganizationUnitId } into groups
-                select new { groups.Key.Id, groups.Key.Number, groups.Key.OrganizationUnitId, Start = groups.Min(x => x.Start), End = groups.Max(x => x.End) };
+                group new { start.Start, end.End } by new { order.Id, start.OrganizationUnitId } into groups
+                select new { groups.Key.Id, groups.Key.OrganizationUnitId, Start = groups.Min(x => x.Start), End = groups.Max(x => x.End) };
 
             var result =
                 from order in orders
@@ -43,8 +43,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                     {
                         MessageParams = new XDocument(new XElement("root",
                             new XElement("order",
-                                new XAttribute("id", order.Id),
-                                new XAttribute("name", order.Number)))),
+                                new XAttribute("id", order.Id)))),
 
                         PeriodStart = order.Start,
                         PeriodEnd = order.End,

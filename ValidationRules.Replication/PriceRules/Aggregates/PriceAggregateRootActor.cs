@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -117,13 +116,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public IQueryable<Price.AssociatedPositionGroupOvercount> GetSource()
                 => from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted)
                    let count = _query.For<Facts::AssociatedPositionsGroup>().Count(x => x.PricePositionId == pricePosition.Id)
-                   let name = _query.For<Facts::Position>().Where(x => !x.IsDeleted).Single(x => x.Id == pricePosition.PositionId).Name
                    where count > 1
                    select new Price.AssociatedPositionGroupOvercount
                    {
                        PriceId = pricePosition.PriceId,
                        PricePositionId = pricePosition.Id,
-                       PricePositionName = name,
+                       PositionId = pricePosition.PositionId,
                        Count = count,
                    };
 

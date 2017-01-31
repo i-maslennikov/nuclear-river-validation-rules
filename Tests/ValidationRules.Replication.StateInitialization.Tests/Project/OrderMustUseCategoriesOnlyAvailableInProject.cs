@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 
@@ -18,22 +17,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderMustUseCategoriesOnlyAvailableInProjectPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3) },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3) },
                     new Facts::OrderPosition { Id = 1, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 1, CategoryId = 12, PositionId = 4 },
-                    new Facts::Position { Id = 4, Name = "Position" },
-                    new Facts::Category { Id = 12, Name = "Category", IsActiveNotDeleted = true },
+                    new Facts::Position { Id = 4 },
+                    new Facts::Category { Id = 12, IsActiveNotDeleted = true },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) },
-                    new Aggregates::Order.CategoryAdvertisement { OrderId = 1, OrderPositionId = 1, PositionId = 4, CategoryId = 12 },
-                    new Aggregates::Position { Id = 4, Name = "Position" },
-                    new Aggregates::Category { Id = 12, Name = "Category" })
+                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order.CategoryAdvertisement { OrderId = 1, OrderPositionId = 1, PositionId = 4, CategoryId = 12 })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse(
-                                "<root><order id=\"1\" name=\"Order\" /><orderPosition id=\"1\" name=\"Position\" /><category id=\"12\" name=\"Category\" /></root>"),
+                            MessageParams = XDocument.Parse("<root><order id=\"1\" /><opa><orderPosition id=\"1\" /><position id=\"4\" /></opa><category id=\"12\" /></root>"),
                             MessageType = (int)MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
                             Result = 243,
                             PeriodStart = MonthStart(1),
@@ -47,16 +43,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderMustUseCategoriesOnlyAvailableInProjectCategoryNotActive))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3) },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3) },
                     new Facts::OrderPosition { Id = 1, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 1, CategoryId = 12, PositionId = 4 },
-                    new Facts::Position { Id = 4, Name = "Position" },
+                    new Facts::Position { Id = 4 },
                     // category not active
-                    new Facts::Category { Id = 12, Name = "Category", IsActiveNotDeleted = false },
+                    new Facts::Category { Id = 12, IsActiveNotDeleted = false },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) },
-                    new Aggregates::Position { Id = 4, Name = "Position" })
+                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(3) })
                 .Message();
 
         // ReSharper disable once UnusedMember.Local
@@ -65,18 +60,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderMustUseCategoriesOnlyAvailableInProjectNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3) },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3) },
                     new Facts::OrderPosition { Id = 1, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 1, CategoryId = 12, PositionId = 4 },
-                    new Facts::Position { Id = 4, Name = "Position" },
-                    new Facts::Category { Id = 12, Name = "Category", IsActiveNotDeleted = true },
+                    new Facts::Position { Id = 4 },
+                    new Facts::Category { Id = 12, IsActiveNotDeleted = true },
                     new Facts::Project(),
                     new Facts::CategoryOrganizationUnit { CategoryId = 12 })
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(3) },
                     new Aggregates::Order.CategoryAdvertisement { OrderId = 1, OrderPositionId = 1, PositionId = 4, CategoryId = 12 },
-                    new Aggregates::Position { Id = 4, Name = "Position" },
-                    new Aggregates::Category { Id = 12, Name = "Category" },
                     new Aggregates::Project.Category { CategoryId = 12 })
                 .Message();
     }

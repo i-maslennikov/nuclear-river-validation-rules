@@ -52,8 +52,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                                 new XElement("account",
                                     new XAttribute("id", accountPeriod.AccountId)),
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                                    new XAttribute("id", order.Id)))),
 
                         PeriodStart = accountPeriod.Start,
                         PeriodEnd = accountPeriod.End,

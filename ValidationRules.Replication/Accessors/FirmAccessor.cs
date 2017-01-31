@@ -29,7 +29,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             {
                 Id = x.Id,
                 OrganizationUnitId = x.OrganizationUnitId,
-                Name = x.Name,
 
                 IsActive = x.IsActive,
                 IsDeleted = x.IsDeleted,

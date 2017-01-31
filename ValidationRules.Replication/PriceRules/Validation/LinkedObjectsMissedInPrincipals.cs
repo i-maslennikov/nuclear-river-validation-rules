@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 
-using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
@@ -79,9 +76,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                        Start = x.associated.Start,
                                        Category1Id = x.associated.Position.Category1Id,
                                        Category3Id = x.associated.Position.Category3Id,
-                                       CauseItemPositionId = x.associated.Position.CauseItemPositionId,
                                        CauseOrderPositionId = x.associated.Position.CauseOrderPositionId,
                                        CausePackagePositionId = x.associated.Position.CausePackagePositionId,
+                                       CauseItemPositionId = x.associated.Position.CauseItemPositionId,
                                        FirmAddressId = x.associated.Position.FirmAddressId,
                                        FirmId = x.associated.FirmId,
                                        OrganizationUnitId = x.associated.OrganizationUnitId,
@@ -94,9 +91,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
                                        ProjectId = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).ProjectId,
                                        End = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).End,
-                                       OrderNumber = query.For<Order>().Single(x => x.Id == grouping.Key.OrderId).Number,
-                                       OrderPositionName = query.For<Position>().Single(x => x.Id == grouping.Key.CausePackagePositionId).Name,
-                                       ItemPositionName = query.For<Position>().Single(x => x.Id == grouping.Key.CauseItemPositionId).Name,
                                    });
 
             var messages = from unsatisfied in unsatisfiedPositions
@@ -104,18 +98,17 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                {
                                    MessageParams =
                                        new XDocument(new XElement("root",
-                                           new XElement("firm",
-                                               new XAttribute("id", unsatisfied.Key.FirmId)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", unsatisfied.Key.OrderId),
-                                               new XAttribute("orderNumber", unsatisfied.OrderNumber),
-                                               new XAttribute("orderPositionId", unsatisfied.Key.CauseOrderPositionId),
-                                               new XAttribute("orderPositionName", unsatisfied.OrderPositionName),
-                                               new XAttribute("positionId", unsatisfied.Key.CauseItemPositionId),
-                                               new XAttribute("positionName", unsatisfied.ItemPositionName)),
-                                           new XElement("order",
-                                               new XAttribute("id", unsatisfied.Key.OrderId),
-                                               new XAttribute("name", unsatisfied.OrderNumber)))),
+                                            new XElement("firm",
+                                                new XAttribute("id", unsatisfied.Key.FirmId)),
+                                            new XElement("orderPosition",
+                                                new XAttribute("id", unsatisfied.Key.CauseOrderPositionId),
+                                                new XElement("position", new XAttribute("id", unsatisfied.Key.CausePackagePositionId))),
+                                            new XElement("opa",
+                                                new XElement("orderPosition", new XAttribute("id", unsatisfied.Key.CauseOrderPositionId)),
+                                                new XElement("position", new XAttribute("id", unsatisfied.Key.CauseItemPositionId))),
+                                            new XElement("order",
+                                                new XAttribute("id", unsatisfied.Key.OrderId))
+                                   )),
 
                                    PeriodStart = unsatisfied.Key.Start,
                                    PeriodEnd = unsatisfied.End,

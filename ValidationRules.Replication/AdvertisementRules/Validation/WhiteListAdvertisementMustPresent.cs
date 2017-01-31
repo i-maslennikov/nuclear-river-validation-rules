@@ -42,11 +42,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                         MessageParams = new XDocument(
                             new XElement("root",
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
+                                    new XAttribute("id", order.Id)),
                                 new XElement("firm",
-                                    new XAttribute("id", order.FirmId),
-                                    new XAttribute("name", query.For<Firm>().Single(x => x.Id == order.FirmId).Name)))),
+                                    new XAttribute("id", order.FirmId)))),
 
                         PeriodStart = period.Start > order.BeginDistributionDate ? period.Start : order.BeginDistributionDate,
                         PeriodEnd = period.End < order.EndDistributionDatePlan ? period.End : order.EndDistributionDatePlan,

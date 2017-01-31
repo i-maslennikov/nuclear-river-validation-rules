@@ -58,7 +58,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                    select new Order
                        {
                            Id = order.Id,
-                           Number = order.Number,
                            FirmId = order.FirmId,
                            ProjectId = project.Id,
                            Begin = order.BeginDistribution,
@@ -96,8 +95,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     };
 
             public IQueryable<Order.NotApplicapleForDesktopPosition> GetSource()
-                => (from orderPosition in _query.For<Facts::OrderPosition>()
-                    from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
+                => (from order in _query.For<Facts::Order>()
+                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                     from position in _query.For<Facts::Position>()
                         .Where(x => !x.IsDeleted)
@@ -129,8 +128,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     };
 
             public IQueryable<Order.SelfAdvertisementPosition> GetSource()
-                => (from orderPosition in _query.For<Facts::OrderPosition>()
-                    from order in _query.For<Facts::Order>().Where(x => x.Id == orderPosition.OrderId)
+                => (from order in _query.For<Facts::Order>()
+                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                     from position in _query.For<Facts::Position>()
                         .Where(x => !x.IsDeleted)

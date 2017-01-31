@@ -5,7 +5,6 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
     public sealed class Advertisement
     {
         public long Id { get; set; }
-        public string Name { get; set; }
         public long FirmId { get; set; }
         public bool IsSelectedToWhiteList { get; set; }
 

@@ -35,7 +35,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             {
                 Id = order.Id,
                 FirmId = order.FirmId,
-                Number = order.Number,
 
                 BeginDistribution = order.BeginDistributionDate,
                 EndDistributionPlan = order.EndDistributionDatePlan + OneSecond,

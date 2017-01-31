@@ -35,11 +35,9 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                       MessageParams = new XDocument(
                                           new XElement("root",
                                               new XElement("legalPersonProfile",
-                                                  new XAttribute("id", expired.LegalPersonProfileId),
-                                                  new XAttribute("name", expired.LegalPersonProfileName)),
+                                                  new XAttribute("id", expired.LegalPersonProfileId)),
                                               new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("name", order.Number)))),
+                                                  new XAttribute("id", order.Id)))),
 
                                       PeriodStart = order.BeginDistribution,
                                       PeriodEnd = order.EndDistributionPlan,

@@ -111,9 +111,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
             .Name(nameof(SampleTest2))
             .Aggregate(
-                new Aggregates::Order { Id = 1, Number = "123", BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondJan, EndDistributionFact = LastSecondMar },
+                new Aggregates::Order { Id = 1, BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondJan, EndDistributionFact = LastSecondMar },
                 new Aggregates::Order.HasNoAnyPosition {OrderId = 1})
             .Message(
-                new Messages::Version.ValidationResult { MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"123\" /></root>"), MessageType = 25, Result = 243, PeriodStart = FirstDayJan, PeriodEnd = LastSecondJan, OrderId = 1 });
+                new Messages::Version.ValidationResult { MessageParams = XDocument.Parse("<root><order id=\"1\" /></root>"), MessageType = 25, Result = 243, PeriodStart = FirstDayJan, PeriodEnd = LastSecondJan, OrderId = 1 });
     }
 }

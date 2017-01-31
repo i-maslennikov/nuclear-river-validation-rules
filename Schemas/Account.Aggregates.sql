@@ -12,7 +12,6 @@ create table AccountAggregates.[Order](
     DestProjectId bigint not null,
     AccountId bigint null,
     IsFreeOfCharge bit not null,
-    Number nvarchar(64) not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDate datetime2(2) not null,
     constraint PK_Order primary key (Id)

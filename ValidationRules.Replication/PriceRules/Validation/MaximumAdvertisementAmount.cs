@@ -74,8 +74,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                     new XAttribute("name", violation.CategoryName),
                                     new XAttribute("month", violation.Start)),
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                                    new XAttribute("id", order.Id)))),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,

@@ -29,7 +29,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             {
                 Id = x.Id,
                 FirmId = x.FirmId,
-                Name = x.Address,
 
                 IsLocatedOnTheMap = x.IsLocatedOnTheMap,
 

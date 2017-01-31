@@ -32,7 +32,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             .Select(x => new Theme
             {
                 Id = x.Id,
-                Name = x.Name,
                 BeginDistribution = x.BeginDistribution,
                 EndDistribution = x.EndDistribution + OneSecond,
                 IsDefault = x.IsDefault,

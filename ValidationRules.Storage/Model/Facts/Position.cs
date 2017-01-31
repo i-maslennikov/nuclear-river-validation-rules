@@ -3,7 +3,6 @@
     public sealed class Position
     {
         public long Id { get; set; }
-        public string Name { get; set; }
 
         public long? AdvertisementTemplateId { get; set; }
         public long BindingObjectType { get; set; }

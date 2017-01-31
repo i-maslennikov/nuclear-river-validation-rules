@@ -45,8 +45,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                         MessageParams =
                             new XDocument(new XElement("root",
                                 new XElement("firm",
-                                    new XAttribute("id", firm.Id),
-                                    new XAttribute("name", firm.Name)))),
+                                    new XAttribute("id", firm.Id)))),
 
                         PeriodStart = begin.Date,
                         PeriodEnd = end.Date,

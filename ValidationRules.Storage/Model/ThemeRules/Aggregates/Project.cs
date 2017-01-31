@@ -5,8 +5,6 @@ namespace NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates
     public sealed class Project
     {
         public long Id { get; set; }
-        public string Name { get; set; }
-
         public sealed class ProjectDefaultTheme
         {
             public long ProjectId { get; set; }

@@ -41,14 +41,13 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                       MessageParams = new XDocument(
                                           new XElement("root",
                                               new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("name", order.Number)),
+                                                  new XAttribute("id", order.Id)),
                                               new XElement("advertisement",
-                                                  new XAttribute("id", advertisement.Id),
-                                                  new XAttribute("name", advertisement.Name)),
+                                                  new XAttribute("id", advertisement.Id)),
                                               new XElement("advertisementElement",
                                                   new XAttribute("id", fail.AdvertisementElementId),
-                                                  new XAttribute("name", query.For<AdvertisementElementTemplate>().Single(x => x.Id == fail.AdvertisementElementTemplateId).Name)),
+                                                  new XElement("advertisementElementTemplate",
+                                                  new XAttribute("id", fail.AdvertisementElementTemplateId))),
                                               new XElement("message",
                                                   new XAttribute("advertisementElementStatus", (int)fail.Status))
                                               )),

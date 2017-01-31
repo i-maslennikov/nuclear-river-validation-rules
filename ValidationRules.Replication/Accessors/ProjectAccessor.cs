@@ -30,7 +30,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 {
                     Id = x.Id,
                     OrganizationUnitId = x.OrganizationUnitId.Value,
-                    Name = x.DisplayName,
                 });
 
         public FindSpecification<Project> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

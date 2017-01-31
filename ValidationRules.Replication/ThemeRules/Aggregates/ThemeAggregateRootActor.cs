@@ -49,7 +49,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                    select new Theme
                    {
                        Id = theme.Id,
-                       Name = theme.Name,
                        BeginDistribution = theme.BeginDistribution,
                        EndDistribution = theme.EndDistribution,
                        IsDefault = theme.IsDefault,

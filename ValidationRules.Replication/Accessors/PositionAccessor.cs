@@ -28,7 +28,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             .Select(x => new Position
             {
                 Id = x.Id,
-                Name = x.Name,
 
                 AdvertisementTemplateId = x.AdvertisementTemplateId,
                 BindingObjectType = x.BindingObjectTypeEnum,

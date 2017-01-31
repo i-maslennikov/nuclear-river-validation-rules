@@ -48,15 +48,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderMustHaveActiveLegalEntitiesMessage))
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order.InactiveReference { OrderId = 1, BranchOffice = true, BranchOfficeOrganizationUnit = true, LegalPerson = false, LegalPersonProfile = false },
 
-                    new Aggregates::Order { Id = 2, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Aggregates::Order { Id = 2, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order.InactiveReference { OrderId = 2, BranchOffice = false, BranchOfficeOrganizationUnit = false, LegalPerson = true, LegalPersonProfile = true })
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"Order\" /><message><branchOfficeOrganizationUnit /><branchOffice /></message></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"1\" /><message><branchOfficeOrganizationUnit /><branchOffice /></message></root>"),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveLegalEntities,
                         Result = 3,
                         PeriodStart = MonthStart(1),
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"2\" name=\"Order\" /><message><legalPerson /><legalPersonProfile /></message></root>"),
+                        MessageParams = XDocument.Parse("<root><order id=\"2\" /><message><legalPerson /><legalPersonProfile /></message></root>"),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveLegalEntities,
                         Result = 3,
                         PeriodStart = MonthStart(1),

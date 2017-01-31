@@ -17,24 +17,24 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(DefaultThemeMustHaveOnlySelfAdsPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb, IsSelfAds = false },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb, IsSelfAds = false },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, ThemeId = 5 },
 
-                    new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
+                    new Facts::Theme { Id = 5, BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
                     new Aggregates::Order.OrderTheme { OrderId = 1, ThemeId = 5 },
 
-                    new Aggregates::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
+                    new Aggregates::Theme { Id = 5, BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = true }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" name=\"Order1\" /><theme id = \"5\" name=\"Theme5\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><order id = \"1\" /><theme id = \"5\" /></root>"),
                         MessageType = (int)MessageTypeCode.DefaultThemeMustHaveOnlySelfAds,
                         Result = 255,
                         PeriodStart = FirstDayJan,
@@ -49,19 +49,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(DefaultThemeMustHaveOnlySelfAdsNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb, IsSelfAds = false },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb, IsSelfAds = false },
                     new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, ThemeId = 5 },
 
-                    new Facts::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = false }
+                    new Facts::Theme { Id = 5, BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = false }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDateFact = FirstDayFeb, IsSelfAds = false },
                     new Aggregates::Order.OrderTheme { OrderId = 1, ThemeId = 5 },
 
-                    new Aggregates::Theme { Id = 5, Name = "Theme5", BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = false }
+                    new Aggregates::Theme { Id = 5, BeginDistribution = FirstDayJan, EndDistribution = FirstDayFeb, IsDefault = false }
                 )
                 .Message(
                 );

@@ -60,11 +60,9 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                                     new XAttribute("count", count),
                                     new XAttribute("allowed", MaxCategoriesAlowedForFirm)),
                                 new XElement("firm",
-                                    new XAttribute("id", firmPeriod.FirmId),
-                                    new XAttribute("name", query.For<Firm>().Single(x => x.Id == firmPeriod.FirmId).Name)),
+                                    new XAttribute("id", firmPeriod.FirmId)),
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                                    new XAttribute("id", order.Id)))),
 
                         PeriodStart = firmPeriod.Begin,
                         PeriodEnd = firmPeriod.End,

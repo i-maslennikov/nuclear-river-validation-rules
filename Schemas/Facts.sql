@@ -59,7 +59,6 @@ create table Facts.Advertisement (
     Id bigint not null,
     FirmId bigint null,
     AdvertisementTemplateId bigint not null,
-    Name nvarchar(128) not null,
     IsSelectedToWhiteList bit not null,
     IsDeleted bit not null,
     constraint PK_Advertisement primary key (Id)
@@ -85,7 +84,6 @@ CREATE INDEX IX_AdvertisementElement_AdvertisementElementTemplateId_Status ON Fa
 
 create table Facts.AdvertisementElementTemplate (
     Id bigint not null,
-    Name nvarchar(128) not null,
     IsRequired bit not null,
     NeedsValidation bit not null,
     IsAdvertisementLink bit not null,
@@ -160,7 +158,6 @@ go
 create table Facts.Category(
     Id bigint not null,
 
-    Name nvarchar(128) not null,
     L1Id bigint null,
     L2Id bigint null,
     L3Id bigint null,
@@ -204,20 +201,18 @@ go
 create table Facts.Firm(
     Id bigint not null,
     OrganizationUnitId bigint not null,
-    Name nvarchar(250) not null,
     IsActive bit not null,
     IsDeleted bit not null,
     IsClosedForAscertainment bit not null,
     constraint PK_Firm primary key (Id)
 )
 go
-CREATE NONCLUSTERED INDEX IX_Firm_Id ON [Facts].[Firm] ([Id]) INCLUDE ([IsClosedForAscertainment],[IsActive],[IsDeleted],[Name])
+CREATE NONCLUSTERED INDEX IX_Firm_Id ON [Facts].[Firm] ([Id]) INCLUDE ([IsClosedForAscertainment],[IsActive],[IsDeleted])
 GO
 
 create table Facts.FirmAddress(
     Id bigint not null,
     FirmId bigint not null,
-    Name nvarchar(512) not null,
     IsLocatedOnTheMap bit not null,
     IsActive bit not null,
     IsDeleted bit not null,
@@ -258,7 +253,6 @@ create table Facts.LegalPersonProfile (
     LegalPersonId bigint not null,
     BargainEndDate datetime2(2) null,
     WarrantyEndDate datetime2(2) null,
-    Name nvarchar(256) not null,
     constraint PK_LegalPersonProfile primary key (Id)
 )
 go
@@ -287,7 +281,6 @@ go
 create table Facts.[Order](
     Id bigint not null,
     FirmId bigint not null,
-    Number nvarchar(64) not null,
     DestOrganizationUnitId bigint not null,
     BeginDistribution datetime2(2) not null,
     EndDistributionPlan datetime2(2) not null,
@@ -308,7 +301,7 @@ create table Facts.[Order](
     constraint PK_Order primary key (Id)
 )
 go
-CREATE INDEX IX_Order_DestOrganizationUnitId ON [Facts].[Order] ([DestOrganizationUnitId]) INCLUDE ([Id],[FirmId], [BeginDistribution],[EndDistributionFact],[EndDistributionPlan],[Number],[WorkflowStep])
+CREATE INDEX IX_Order_DestOrganizationUnitId ON [Facts].[Order] ([DestOrganizationUnitId]) INCLUDE ([Id],[FirmId], [BeginDistribution],[EndDistributionFact],[EndDistributionPlan],[WorkflowStep])
 GO
 CREATE INDEX IX_Order_LegalPersonId_SignupDate ON [Facts].[Order] ([LegalPersonId],[SignupDate]) INCLUDE ([Id])
 GO
@@ -365,7 +358,6 @@ CREATE INDEX IX_OrderScanFile_OrderId ON Facts.[OrderScanFile] ([OrderId]) INCLU
 
 create table Facts.Position(
     Id bigint not null,
-    Name nvarchar(256) not null,
     AdvertisementTemplateId bigint null,
     BindingObjectType int not null,
     SalesModel int not null,
@@ -411,7 +403,6 @@ go
 create table Facts.Project(
     Id bigint not null,
     OrganizationUnitId bigint not null,
-    Name nvarchar(64) not null,
 )
 go
 
@@ -453,7 +444,6 @@ go
 create table Facts.Theme (
     Id bigint not null,
 
-    Name nvarchar(64) not null,
     BeginDistribution datetime2(2) not null,
     EndDistribution datetime2(2) not null,
     IsDefault bit not null,

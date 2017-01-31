@@ -32,7 +32,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                     LegalPersonId = x.LegalPersonId,
                     BargainEndDate = x.BargainEndDate,
                     WarrantyEndDate = x.WarrantyEndDate,
-                    Name = x.Name,
                 });
 
         public FindSpecification<LegalPersonProfile> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

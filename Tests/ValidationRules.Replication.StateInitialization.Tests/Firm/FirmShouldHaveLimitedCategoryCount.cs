@@ -32,9 +32,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmShouldHaveLimitedCategoryCountWhenNonIntersectingPeriods))
                 .Aggregate(
-                    new Aggregates::Firm { Id = 1, Name = "Firm" },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "ValidOrder", Begin = FirstDayFeb, End = FirstDayApr, ProjectId = 1 })
+                    new Aggregates::Firm { Id = 1, },
+                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayFeb, End = FirstDayApr, ProjectId = 1 })
                 .Aggregate(
                     Enumerable.Range(1, 30).Select(i => new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = i }).ToArray()
                     )
@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"30\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" name=\"InvalidOrder\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><message count=\"30\" allowed=\"20\" /><firm id=\"1\" /><order id=\"1\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayJan,
@@ -58,9 +58,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmShouldHaveLimitedCategoryCountIntersectingPeriods))
                 .Aggregate(
-                    new Aggregates::Firm { Id = 1, Name = "Firm" },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = FirstDayApr, ProjectId = 1 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayFeb, End = FirstDayMay, ProjectId = 1 })
+                    new Aggregates::Firm { Id = 1 },
+                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = FirstDayJan, End = FirstDayApr, ProjectId = 1 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayFeb, End = FirstDayMay, ProjectId = 1 })
                 .Aggregate(
                     Enumerable.Range(1, 15).Select(i => new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = i }).ToArray()
                     )
@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" name=\"InvalidOrder\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" /><order id=\"1\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,
@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"2\" name=\"InvalidOrder\" /></root>"),
+                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" /><order id=\"2\" /></root>"),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,

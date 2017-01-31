@@ -39,11 +39,9 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                               new XElement("message",
                                                   new XAttribute("invalidFirmState", (int)firm.State)),
                                               new XElement("firm",
-                                                  new XAttribute("id", firm.FirmId),
-                                                  new XAttribute("name", firm.FirmName)),
+                                                  new XAttribute("id", firm.FirmId)),
                                               new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("name", order.Number)))),
+                                                  new XAttribute("id", order.Id)))),
 
                                       PeriodStart = order.BeginDistribution,
                                       PeriodEnd = order.EndDistributionPlan,

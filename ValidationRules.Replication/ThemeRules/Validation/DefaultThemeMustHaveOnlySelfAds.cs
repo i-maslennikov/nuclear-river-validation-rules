@@ -40,11 +40,9 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                         MessageParams = new XDocument(
                             new XElement("root",
                                 new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
+                                    new XAttribute("id", order.Id)),
                                 new XElement("theme",
-                                    new XAttribute("id", theme.Id),
-                                    new XAttribute("name", theme.Name)))),
+                                    new XAttribute("id", theme.Id)))),
 
                         PeriodStart = order.BeginDistributionDate,
                         PeriodEnd = order.EndDistributionDateFact,

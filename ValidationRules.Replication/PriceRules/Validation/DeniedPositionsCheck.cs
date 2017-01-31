@@ -82,45 +82,29 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var messages =
                 from conflict in match.Union(differ).Union(noMatter)
                 join period in query.For<Period>() on new { conflict.Start, conflict.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                let names = new
-                    {
-                        DeniedPosition = new
-                            {
-                                OrderNumber = query.For<Order>().Single(x => x.Id == conflict.DeniedOrderId).Number,
-                                OrderPositionName = query.For<Position>().Single(x => x.Id == conflict.DeniedCausePackagePositionId).Name,
-                                ItemPositionName = query.For<Position>().Single(x => x.Id == conflict.DeniedCauseItemPositionId).Name,
-                            },
-
-                        OrderPosition = new
-                            {
-                                OrderNumber = query.For<Order>().Single(x => x.Id == conflict.PrincipalOrderId).Number,
-                                OrderPositionName = query.For<Position>().Single(x => x.Id == conflict.PrincipalPackagePositionId).Name,
-                                ItemPositionName = query.For<Position>().Single(x => x.Id == conflict.PrincipalItemPositionId).Name,
-                            },
-                    }
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new XDocument(new XElement("root",
-                                new XElement("firm",
-                                    new XAttribute("id", conflict.FirmId)),
-                                new XElement("position",
-                                    new XAttribute("orderId", conflict.DeniedOrderId),
-                                    new XAttribute("orderNumber", names.DeniedPosition.OrderNumber),
-                                    new XAttribute("orderPositionId", conflict.DeniedCauseOrderPositionId),
-                                    new XAttribute("orderPositionName", names.DeniedPosition.OrderPositionName),
-                                    new XAttribute("positionId", conflict.DeniedCauseItemPositionId),
-                                    new XAttribute("positionName", names.DeniedPosition.ItemPositionName)),
-                                new XElement("position",
-                                    new XAttribute("orderId", conflict.PrincipalOrderId),
-                                    new XAttribute("orderNumber", names.OrderPosition.OrderNumber),
-                                    new XAttribute("orderPositionId", conflict.PrincipalOrderPositionId),
-                                    new XAttribute("orderPositionName", names.OrderPosition.OrderPositionName),
-                                    new XAttribute("positionId", conflict.PrincipalItemPositionId),
-                                    new XAttribute("positionName", names.OrderPosition.ItemPositionName)),
-                                new XElement("order",
-                                    new XAttribute("id", conflict.DeniedOrderId),
-                                    new XAttribute("name", names.DeniedPosition.OrderNumber)))),
+
+                                    // dependent
+                                    new XElement("order", new XAttribute("id", conflict.DeniedOrderId)),
+                                    new XElement("orderPosition",
+                                        new XAttribute("id", conflict.DeniedCauseOrderPositionId),
+                                        new XElement("position", new XAttribute("id", conflict.DeniedCausePackagePositionId))),
+                                    new XElement("opa",
+                                        new XElement("orderPosition", new XAttribute("id", conflict.DeniedCauseOrderPositionId)),
+                                        new XElement("position", new XAttribute("id", conflict.DeniedCauseItemPositionId))),
+
+                                    // principal
+                                    new XElement("order", new XAttribute("id", conflict.PrincipalOrderId)),
+                                    new XElement("orderPosition",
+                                        new XAttribute("id", conflict.PrincipalOrderPositionId),
+                                        new XElement("position", new XAttribute("id", conflict.PrincipalPackagePositionId))),
+                                    new XElement("opa",
+                                        new XElement("orderPosition", new XAttribute("id", conflict.PrincipalOrderPositionId)),
+                                        new XElement("position", new XAttribute("id", conflict.PrincipalItemPositionId)))
+                        )),
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         OrderId = conflict.DeniedOrderId,

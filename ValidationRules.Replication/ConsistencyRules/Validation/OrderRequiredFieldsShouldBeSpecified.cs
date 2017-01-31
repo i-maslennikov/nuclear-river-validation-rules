@@ -44,8 +44,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                   missing.LegalPersonProfile ? new XElement("legalPersonProfile") : null,
                                                   missing.ReleaseCountPlan ? new XElement("releaseCountPlan") : null),
                                               new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("name", order.Number)))),
+                                                  new XAttribute("id", order.Id)))),
 
                                       PeriodStart = order.BeginDistribution,
                                       PeriodEnd = order.EndDistributionPlan,
