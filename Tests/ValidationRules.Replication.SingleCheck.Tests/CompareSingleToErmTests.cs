@@ -23,7 +23,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
     public sealed class CompareSingleToErmTests
     {
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
-        private readonly OrderValidationApplicationServiceClient _ermService = new OrderValidationApplicationServiceClient("Erm");
+        private readonly ErmToRiverResultAdapter _ermService = new ErmToRiverResultAdapter("Erm");
 
         public IReadOnlyCollection<long> Orders
             => new[] { 992385830465141559 };
@@ -109,7 +109,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
                             .ToDictionary(x => x.Key, x => x.OrderBy(y => y).ToArray());
 
         private IDictionary<int, string[]> InvokeErm(long orderId)
-            => _ermService.ValidateSingleOrder(new ValidateSingleOrderRequest(orderId)).ValidateSingleOrderResult.Messages
+            => _ermService.ValidateSingle(orderId).Messages
                           .GroupBy(x => x.RuleCode, x => x.MessageText.Replace(" ,", ",").TrimEnd('.'))
                           .ToDictionary(x => x.Key, x => x.OrderBy(y => y).ToArray());
 

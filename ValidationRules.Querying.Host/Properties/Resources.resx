@@ -276,11 +276,11 @@
     <value>В позиции {0} адрес фирмы {1} скрыт до выяснения</value>
   </data>
   <data name="OrderPositionAddressNotActive" xml:space="preserve">
-    <value>В позиции {0} адрес фирмы {1} неактивен</value>
+    <value>В позиции {0} найден неактивный адрес {1}</value>
     <comment>ключа нет в ERM</comment>
   </data>
   <data name="OrderPositionAddressNotBelongToFirm" xml:space="preserve">
-    <value>В позиции {0} адрес фирмы {1} не принадлежит фирме заказа</value>
+    <value>В позиции {0} найден адрес {1}, не принадлежащий фирме заказа</value>
     <comment>ключа нет в ERM</comment>
   </data>
   <data name="OrderPositionCategoryNotActive" xml:space="preserve">

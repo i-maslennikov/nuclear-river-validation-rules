@@ -61,6 +61,8 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
                                   }).ToArray();
 
         private static string FormatMessage(RiverValidationResult result, Func<EntityReference, string> descriptionFormatter)
-            => string.Format(CultureInfo.InvariantCulture, result.Template, result.References.Select(descriptionFormatter).ToArray());
+        {
+            return string.Format(CultureInfo.InvariantCulture, result.Template, result.References.Select(descriptionFormatter).ToArray());
+        }
     }
 }

@@ -529,7 +529,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} адрес фирмы {1} неактивен.
+        ///   Looks up a localized string similar to В позиции {0} найден неактивный адрес {1}.
         /// </summary>
         internal static string OrderPositionAddressNotActive {
             get {
@@ -538,7 +538,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} адрес фирмы {1} не принадлежит фирме заказа.
+        ///   Looks up a localized string similar to В позиции {0} найден адрес {1}, не принадлежащий фирме заказа.
         /// </summary>
         internal static string OrderPositionAddressNotBelongToFirm {
             get {

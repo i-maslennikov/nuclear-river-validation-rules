@@ -12,7 +12,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     /// <summary>
     /// Для заказов, с привязками к не отмеченным на карте адресам, должна выводиться ошибка.
     /// "Позиция {0} оформлена на пустой адрес {1}"
-    /// -> В позиции {0} найден адрес {1}, не привязанный к карте
     /// 
     /// Source: IsAdvertisementLinkedWithLocatedOnTheMapAddressOrderValidationRule
     /// * Проверка очень похожа на LinkedFirmAddressShouldBeValid, но запускается в ручном массовом. А в целом очень хочется их объединить.
