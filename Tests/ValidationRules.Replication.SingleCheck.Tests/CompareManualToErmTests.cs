@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 using LinqToDB.Data;
 using LinqToDB.Mapping;
@@ -22,7 +21,6 @@ namespace ValidationRules.Replication.SingleCheck.Tests
     {
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
         private readonly OrderValidationApplicationServiceClient _ermService = new OrderValidationApplicationServiceClient("Erm");
-        private Regex digits = new Regex(@"(\d),(\d)");
 
         public IReadOnlyCollection<TestCaseData> Releases
         {
@@ -85,7 +83,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
             return _riverService.ValidateMassManual(orderIds, projectId, releaseDate)
                                 .Messages
-                                .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => Tuple.Create(x.TargetEntityId, digits.Replace(x.MessageText, "$1.$2")))
+                                .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => Tuple.Create(x.TargetEntityId, x.MessageText))
                                 .ToDictionary(x => x.Key, x => x.ToArray());
         }
 
