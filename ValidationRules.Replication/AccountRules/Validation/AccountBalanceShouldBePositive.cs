@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
             var nonFreeOfChargeOrders = query.For<Order>().Where(x => !x.IsFreeOfCharge);
 
             var ruleResults =
-                from accountPeriod in query.For<Account.AccountPeriod>()
+                from accountPeriod in query.For<Account.AccountPeriod>().Where(x => x.ReleaseAmount > 0)
                 join order in nonFreeOfChargeOrders on accountPeriod.AccountId equals order.AccountId
                 where order.BeginDistributionDate < accountPeriod.End && accountPeriod.Start < order.EndDistributionDate
                 where accountPeriod.Balance - accountPeriod.ReleaseAmount - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) <= -Epsilon
