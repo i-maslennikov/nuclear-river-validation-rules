@@ -58,19 +58,19 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
     public interface IRiverRestService
     {
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "/api/Single?culture=en-US", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "POST", UriTemplate = "/api/Single?culture=ru-RU", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         RiverValidationResult[] Single(RiverSingleCheckRequest request);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "/api/Manual?culture=en-US", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "POST", UriTemplate = "/api/Manual?culture=ru-RU", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         RiverValidationResult[] Manual(RiverMassCheckRequest request);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "/api/Prerelease?culture=en-US", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "POST", UriTemplate = "/api/Prerelease?culture=ru-RU", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         RiverValidationResult[] Prerelease(RiverMassCheckRequest request);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "/api/Release?culture=en-US", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "POST", UriTemplate = "/api/Release?culture=ru-RU", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         RiverValidationResult[] Release(RiverMassCheckRequest request);
     }
 

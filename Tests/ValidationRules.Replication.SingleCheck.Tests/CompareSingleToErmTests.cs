@@ -25,9 +25,6 @@ namespace ValidationRules.Replication.SingleCheck.Tests
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
         private readonly ErmToRiverResultAdapter _ermService = new ErmToRiverResultAdapter("Erm");
 
-        public IReadOnlyCollection<long> Orders
-            => new[] { 992385830465141559 };
-
         public IReadOnlyCollection<TestCaseData> Rules
         {
             get
@@ -56,7 +53,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
         }
 
         [TestCaseSource(nameof(Rules))]
-        public void TestRules(long rule, long? orderId)
+        public void TestRule(long rule, long? orderId)
         {
             if (!orderId.HasValue)
             {
@@ -85,8 +82,11 @@ namespace ValidationRules.Replication.SingleCheck.Tests
             Assert.Pass($"River: {riverTime.ElapsedMilliseconds}, Erm: {ermTime.ElapsedMilliseconds}");
         }
 
+        public IReadOnlyCollection<long> Orders
+            => new[] { 958512648357950896 };
+
         [TestCaseSource(nameof(Orders))]
-        public void TestSingleCheck(long orderId)
+        public void TestOrder(long orderId)
         {
             var riverResult = InvokeRiver(orderId);
             var ermResult = InvokeErm(orderId);

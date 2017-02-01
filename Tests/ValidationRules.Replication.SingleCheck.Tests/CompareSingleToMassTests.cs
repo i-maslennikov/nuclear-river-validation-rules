@@ -24,13 +24,10 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
         private static readonly XNodeEqualityComparer Comparer = new XNodeEqualityComparer();
 
-        private PipelineFactory PipelineFactory = new PipelineFactory();
+        private readonly PipelineFactory PipelineFactory = new PipelineFactory();
 
         private IEnumerable<MessageTypeCode> Rules
             => Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>();
-
-        private IEnumerable<long> Orders
-            => new[] { 997454684204286915, 802519954532144100, 992385830465141559 };
 
         [TestCaseSource(nameof(Orders))]
         public void TestOrder(long orderId)
@@ -54,6 +51,9 @@ namespace ValidationRules.Replication.SingleCheck.Tests
                 }
             }
         }
+
+        private IEnumerable<long> Orders
+            => new[] { 997454684204286915, 802519954532144100, 992385830465141559 };
 
         [TestCaseSource(nameof(Rules))]
         public void TestRule(MessageTypeCode rule)
