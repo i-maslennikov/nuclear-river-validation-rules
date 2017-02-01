@@ -146,7 +146,7 @@
     <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} {{0}} является сопутствующей, основная позиция не найдена</value>
+    <value>{0} "{{0}}" является сопутствующей, основная позиция не найдена.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
     <value>Договор не может иметь дату подписания позднее даты подписания заказа</value>

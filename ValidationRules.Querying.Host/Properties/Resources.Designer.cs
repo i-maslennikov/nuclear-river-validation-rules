@@ -142,7 +142,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} является сопутствующей, основная позиция не найдена.
+        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; является сопутствующей, основная позиция не найдена..
         /// </summary>
         internal static string AssociatedPositionWithoutPrincipalTemplate {
             get {
