@@ -69,16 +69,17 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 
         public IReadOnlyCollection<IActor> Create(IReadOnlyCollection<Type> aggregateRootTypes)
         {
-            var actors = new List<IActor>();
-            foreach (var aggregateRootType in AggregateRootActors.Keys)
+            var actors = aggregateRootTypes.Select(x =>
             {
-                if (aggregateRootTypes.Contains(aggregateRootType))
+                Type aggregateRootActorType;
+                if (!AggregateRootActors.TryGetValue(x, out aggregateRootActorType))
                 {
-                    var aggregateRootActorType = AggregateRootActors[aggregateRootType];
-                    var aggregateRootActor = (IAggregateRootActor)_unityContainer.Resolve(aggregateRootActorType);
-                    actors.Add(new AggregateActor(aggregateRootActor));
+                    throw new ArgumentException($"Can't find aggregate actor for type {x.GetFriendlyName()}");
                 }
-            }
+
+                var aggregateRootActor = (IAggregateRootActor)_unityContainer.Resolve(aggregateRootActorType);
+                return _unityContainer.Resolve<AggregateActor>(new DependencyOverride<IAggregateRootActor>(aggregateRootActor));
+            }).ToList();
 
             return actors;
         }

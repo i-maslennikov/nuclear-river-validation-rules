@@ -8,9 +8,8 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
-
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.Accessors
 {
@@ -31,9 +30,9 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         private IQueryable<Category> CategoriesLevel3
-            => from c3 in _query.For<Erm::Category>().Where(x => x.Level == 3)
-               from c2 in _query.For<Erm::Category>().Where(x => x.Level == 2 && x.Id == c3.ParentId)
-               from c1 in _query.For<Erm::Category>().Where(x => x.Level == 1 && x.Id == c2.ParentId)
+            => from c3 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 3)
+               from c2 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 2 && x.Id == c3.ParentId)
+               from c1 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 1 && x.Id == c2.ParentId)
                select new Category
                 {
                     Id = c3.Id,
@@ -44,8 +43,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
                };
 
         private IQueryable<Category> CategoriesLevel2
-            => from c2 in _query.For<Erm::Category>().Where(x => x.Level == 2)
-               from c1 in _query.For<Erm::Category>().Where(x => x.Level == 1 && x.Id == c2.ParentId)
+            => from c2 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 2)
+               from c1 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 1 && x.Id == c2.ParentId)
                select new Category
                 {
                     Id = c2.Id,
@@ -56,7 +55,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                };
 
         private IQueryable<Category> CategoriesLevel1
-            => from c1 in _query.For<Erm::Category>().Where(x => x.Level == 1)
+            => from c1 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 1)
                select new Category
                 {
                     Id = c1.Id,

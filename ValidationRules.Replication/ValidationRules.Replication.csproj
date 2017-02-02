@@ -219,6 +219,7 @@
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
+    <Compile Include="SyncEntityNameActor.cs" />
     <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
     <Compile Include="DataChangesHandler.cs" />
     <Compile Include="AggregateRootActor.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
     <Compile Include="Settings\IArchiveVersionsSettings.cs" />
+    <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Scope.cs" />
     <Compile Include="ThemeRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\ProjectAggregateRootActor.cs" />

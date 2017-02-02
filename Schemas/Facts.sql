@@ -1,6 +1,8 @@
 ﻿if not exists (select * from sys.schemas where name = 'Facts') exec('create schema Facts')
 go
 
+if object_id('Facts.EntityName') is not null drop table Facts.EntityName
+
 if object_id('Facts.Account') is not null drop table Facts.Account
 if object_id('Facts.Advertisement') is not null drop table Facts.Advertisement
 if object_id('Facts.AdvertisementElement') is not null drop table Facts.AdvertisementElement
@@ -46,6 +48,13 @@ if object_id('Facts.ThemeOrganizationUnit') is not null drop table Facts.ThemeOr
 if object_id('Facts.UnlimitedOrder') is not null drop table Facts.UnlimitedOrder
 
 go
+
+create table Facts.EntityName(
+    Id bigint not null,
+    TypeId int not null,
+    [Name] nvarchar(512) not null,
+    constraint PK_EntityName primary key (Id, TypeId)
+)
 
 create table Facts.Account(
     Id bigint not null,

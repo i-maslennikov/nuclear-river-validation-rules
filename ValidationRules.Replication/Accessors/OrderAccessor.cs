@@ -9,6 +9,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
@@ -17,9 +18,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class OrderAccessor : IStorageBasedDataObjectAccessor<Order>, IDataChangesHandler<Order>
     {
-        private const int OrderStateArchive = 6;
-        private const int OrderStateRejected = 3;
-
         private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
         private readonly IQuery _query;
 
@@ -29,8 +27,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IQueryable<Order> GetSource() => _query
-            .For<Erm::Order>()
-            .Where(x => x.IsActive && !x.IsDeleted && x.WorkflowStepId != OrderStateArchive && x.WorkflowStepId != OrderStateRejected)
+            .For(Specs.Find.Erm.Order)
             .Select(order => new Order
             {
                 Id = order.Id,

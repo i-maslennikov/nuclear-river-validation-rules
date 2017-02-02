@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
-using NuClear.Model.Common;
 using NuClear.OperationsTracking.API.UseCases;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
@@ -54,26 +53,28 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
                 var importFactsFromErmEvent = @event as ImportFactsFromErmEvent;
-                if (importFactsFromErmEvent == null)
+                if (importFactsFromErmEvent != null)
                 {
-                    return Enumerable.Empty<ICommand>();
+                    var changes = importFactsFromErmEvent.TrackedUseCase.Operations.SelectMany(x => x.AffectedEntities.Changes);
+                    return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys));
                 }
 
-                var changes = importFactsFromErmEvent.TrackedUseCase.Operations.SelectMany(x => x.AffectedEntities.Changes);
-                return changes.SelectMany(x => SyncDataObjectCommand(x.Key, x.Value.Keys));
+                throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
             }
 
-            private static IEnumerable<ICommand> SyncDataObjectCommand(IIdentity entityType, IEnumerable<long> ids)
+            private static IEnumerable<ICommand> CommandsForEntityType(int entityTypeId, IEnumerable<long> ids)
             {
-                IReadOnlyCollection<Type> factTypes;
-                if (!EntityTypeMap.TryGetFactTypes(entityType.Id, out factTypes))
-                {
-                    return Enumerable.Empty<ICommand>();
-                }
+                var commands = Enumerable.Empty<ICommand>();
 
-                var commands = from factType in factTypes
-                               from id in ids
-                               select new SyncDataObjectCommand(factType, id);
+                IReadOnlyCollection<Type> factTypes;
+                if (EntityTypeMap.TryGetFactTypes(entityTypeId, out factTypes))
+                {
+                    var syncDataObjectCommands = from factType in factTypes
+                                                 from id in ids
+                                                 select new SyncDataObjectCommand(factType, id);
+
+                    commands = commands.Concat(syncDataObjectCommands);
+                }
 
                 return commands;
             }

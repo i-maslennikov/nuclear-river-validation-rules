@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Commands;
@@ -28,7 +27,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is FactsConnectionStringIdentity)
             {
                 return new CommandRegardlessDataObjectTypesProvider(
-                    new List<Type>
+                    new []
                         {
                             typeof(Facts::Account),
                             typeof(Facts::Advertisement),
@@ -47,6 +46,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(Facts::CostPerClickCategoryRestriction),
                             typeof(Facts::Deal),
                             typeof(Facts::DeniedPosition),
+                            typeof(Facts::EntityName),
                             typeof(Facts::Firm),
                             typeof(Facts::FirmAddress),
                             typeof(Facts::FirmAddressCategory),
@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
             {
                 return new CommandRegardlessDataObjectTypesProvider(
-                    new List<Type>
+                    new []
                         {
                             typeof(PriceAggregates::Order),
                             typeof(PriceAggregates::Period.OrderPeriod),
@@ -169,7 +169,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is MessagesConnectionStringIdentity)
             {
                 return new CommandRegardlessDataObjectTypesProvider(
-                    new List<Type>
+                    new []
                         {
                             typeof(Messages::Version),
                             typeof(Messages::Version.ValidationResult),

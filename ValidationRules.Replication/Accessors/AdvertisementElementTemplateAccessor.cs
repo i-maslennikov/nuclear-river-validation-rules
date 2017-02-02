@@ -8,9 +8,8 @@ using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
-
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.Accessors
 {
@@ -24,8 +23,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IQueryable<AdvertisementElementTemplate> GetSource() => _query
-            .For<Erm::AdvertisementElementTemplate>()
-            .Where(x => !x.IsDeleted)
+            .For(Specs.Find.Erm.AdvertisementElementTemplate)
             .Select(x => new AdvertisementElementTemplate
             {
                 Id = x.Id,

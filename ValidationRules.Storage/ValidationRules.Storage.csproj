@@ -187,6 +187,7 @@
     <Compile Include="LinqToDbPropertyProvider.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Order.cs" />
+    <Compile Include="Model\Facts\EntityName.cs" />
     <Compile Include="Model\Facts\Lock.cs" />
     <Compile Include="Model\Facts\Order.cs" />
     <Compile Include="Model\Facts\Account.cs" />
