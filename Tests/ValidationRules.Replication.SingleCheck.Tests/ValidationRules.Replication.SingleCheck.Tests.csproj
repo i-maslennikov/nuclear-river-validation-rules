@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompareReleaseToErmTests.cs" />
     <Compile Include="CompareManualToErmTests.cs" />
     <Compile Include="CompareSingleToErmTests.cs" />
     <Compile Include="CompareSingleToMassTests.cs" />

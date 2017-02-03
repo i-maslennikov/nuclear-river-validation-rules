@@ -32,14 +32,14 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
 
         public ErmValidationResult ValidateMassPrerelease(long[] orderIds, long projectId, DateTime releaseDate)
         {
-            var response = _riverClient.Manual(new RiverMassCheckRequest { OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate });
+            var response = _riverClient.Prerelease(new RiverMassCheckRequest { OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate });
             var messages = Format(response, FormatDescriptionMass);
             return new ErmValidationResult { OrderCount = orderIds.Length, Messages = messages };
         }
 
         public ErmValidationResult ValidateMassRelease(long[] orderIds, long projectId, DateTime releaseDate)
         {
-            var response = _riverClient.Manual(new RiverMassCheckRequest { OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate });
+            var response = _riverClient.Release(new RiverMassCheckRequest { OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate });
             var messages = Format(response, FormatDescriptionMass);
             return new ErmValidationResult { OrderCount = orderIds.Length, Messages = messages };
         }

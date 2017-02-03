@@ -146,7 +146,7 @@
     <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} {{0}} является сопутствующей, основная позиция не найдена</value>
+    <value>{0} "{{0}}" является сопутствующей, основная позиция не найдена.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
     <value>Договор не может иметь дату подписания позднее даты подписания заказа</value>
@@ -252,10 +252,10 @@
     <value>Необходимо заполнить все обязательные для заполнения поля: {0}</value>
   </data>
   <data name="OrderCheckOrderPositionCorrespontToInactivePosition" xml:space="preserve">
-    <value>Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа</value>
+    <value>Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа.</value>
   </data>
   <data name="OrderCheckOrderPositionDoesntCorrespontToActualPrice" xml:space="preserve">
-    <value>Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа</value>
+    <value>Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа.</value>
   </data>
   <data name="OrderCheckPositionMustHaveAdvertisements" xml:space="preserve">
     <value>В позиции {0} необходимо указать рекламные материалы</value>

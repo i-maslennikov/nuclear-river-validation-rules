@@ -17,7 +17,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 {
     [Ignore]
     [TestFixture]
-    public sealed class CompareManualToErmTests
+    public sealed class CompareReleaseToErmTests
     {
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
         private readonly OrderValidationApplicationServiceClient _ermService = new OrderValidationApplicationServiceClient("Erm");
@@ -83,7 +83,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
                 projectId = dc.GetTable<Project>().Where(x => x.IsActive && x.OrganizationUnitId == organizationUnitId).Select(x => x.Id).Single();
             }
 
-            return _riverService.ValidateMassManual(orderIds, projectId, releaseDate)
+            return _riverService.ValidateMassRelease(orderIds, projectId, releaseDate)
                                 .Messages
                                 .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => Tuple.Create(x.TargetEntityId, x.MessageText))
                                 .ToDictionary(x => x.Key, x => x.ToArray());
@@ -91,7 +91,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
         private IDictionary<int, Tuple<long, string>[]> InvokeErm(long organizationUnitId, DateTime releaseDate)
         {
-            var request = new ValidateOrdersRequest(ValidationType.ManualReportWithAccountsCheck,
+            var request = new ValidateOrdersRequest(ValidationType.PreReleaseFinal,
                                                     organizationUnitId,
                                                     new TimePeriod { Start = releaseDate, End = releaseDate.AddMonths(1).AddSeconds(-1) },
                                                     null,
