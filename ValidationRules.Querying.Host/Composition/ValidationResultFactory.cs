@@ -19,18 +19,23 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         }
 
         public IReadOnlyCollection<ValidationResult> ComposeAll(IEnumerable<Version.ValidationResult> messages, Func<CombinedResult, Result> selector)
-            => messages.Select(x => Compose(x, selector)).ToArray();
+            => messages.Select(x => Compose(x, selector)).Where(x => x != null).ToArray();
 
         private ValidationResult Compose(Version.ValidationResult message, Func<CombinedResult, Result> selector)
         {
             var x = Compose(message);
+            var result = selector.Invoke(CombinedResult.FromInt32(message.Result));
+            if (result == Result.None)
+            {
+                return null;
+            }
 
             return new ValidationResult
             {
                 MainReference = x.MainReference,
                 Template = x.Template,
                 References = x.References,
-                Result = selector.Invoke(CombinedResult.FromInt32(message.Result)),
+                Result = result,
                 Rule = message.MessageType,
             };
         }
