@@ -334,12 +334,14 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                  from orderPosition in query.GetTable<OrderPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.OrderId == interferringOrder.Id)
                  from opa in query.GetTable<OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                  from position in query.GetTable<Position>().Where(x => (x.IsControlledByAmount || x.CategoryCode == TargetCategoryCode) && x.Id == opa.PositionId && categoryCodes.Contains(x.CategoryCode))
-                 select new { interferringOrder, orderPosition, opa, position };
+                 from pricePosition in query.GetTable<PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
+                 select new { interferringOrder, orderPosition, opa, position, pricePosition };
 
             store.AddRange(orders.Select(x => x.interferringOrder).Execute());
             store.AddRange(orders.Select(x => x.orderPosition).Execute());
             store.AddRange(orders.Select(x => x.opa).Execute());
             store.AddRange(orders.Select(x => x.position).Execute());
+            store.AddRange(orders.Select(x => x.pricePosition).Execute()); // Нужны для PriceCOntext.Order.OrderPostion
 
             // Для вычисления названий NomeclatureCategory
             var positions =
