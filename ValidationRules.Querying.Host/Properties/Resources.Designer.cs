@@ -457,7 +457,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа.
+        ///   Looks up a localized string similar to Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа..
         /// </summary>
         internal static string OrderCheckOrderPositionCorrespontToInactivePosition {
             get {
@@ -466,7 +466,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа.
+        ///   Looks up a localized string similar to Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа..
         /// </summary>
         internal static string OrderCheckOrderPositionDoesntCorrespontToActualPrice {
             get {
