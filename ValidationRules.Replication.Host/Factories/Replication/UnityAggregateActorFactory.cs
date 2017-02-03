@@ -36,25 +36,27 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
         private static readonly IReadOnlyDictionary<Type, Type> AggregateRootActors =
             new Dictionary<Type, Type>
                 {
-                    { typeof(PriceAggregates::Price), typeof(PriceActors::PriceAggregateRootActor) },
-                    { typeof(PriceAggregates::Project), typeof(PriceActors::ProjectAggregateRootActor) },
-                    { typeof(PriceAggregates::Order), typeof(PriceActors::OrderAggregateRootActor) },
-                    { typeof(PriceAggregates::Period), typeof(PriceActors::PeriodAggregateRootActor) },
-                    { typeof(PriceAggregates::Position), typeof(PriceActors::PositionAggregateRootActor) },
-
                     { typeof(AccountAggregates::Order), typeof(AccountActors::OrderAggregateRootActor) },
                     { typeof(AccountAggregates::Account), typeof(AccountActors::AccountAggregateRootActor) },
-
-                    { typeof(ConsistencyAggregates::Order), typeof(ConsistencyActors::OrderAggregateRootActor) },
-
-                    { typeof(FirmAggregates::Order), typeof(FirmActors::OrderAggregateRootActor) },
-                    { typeof(FirmAggregates::Firm), typeof(FirmActors::FirmAggregateRootActor) },
 
                     { typeof(AdvertisementAggregates::Advertisement), typeof(AdvertisementActors::AdvertisementAggregateRootActor) },
                     { typeof(AdvertisementAggregates::AdvertisementElementTemplate), typeof(AdvertisementActors::AdvertisementElementTemplateAggregateRootActor) },
                     { typeof(AdvertisementAggregates::Firm), typeof(AdvertisementActors::FirmAggregateRootActor) },
                     { typeof(AdvertisementAggregates::Order), typeof(AdvertisementActors::OrderAggregateRootActor) },
                     { typeof(AdvertisementAggregates::Position), typeof(AdvertisementActors::PositionAggregateRootActor) },
+
+                    { typeof(ConsistencyAggregates::Order), typeof(ConsistencyActors::OrderAggregateRootActor) },
+
+                    { typeof(FirmAggregates::Firm), typeof(FirmActors::FirmAggregateRootActor) },
+                    { typeof(FirmAggregates::Order), typeof(FirmActors::OrderAggregateRootActor) },
+
+                    { typeof(PriceAggregates::Category), typeof(PriceActors::CategoryAggregateRootActor) },
+                    { typeof(PriceAggregates::Order), typeof(PriceActors::OrderAggregateRootActor) },
+                    { typeof(PriceAggregates::Period), typeof(PriceActors::PeriodAggregateRootActor) },
+                    { typeof(PriceAggregates::Position), typeof(PriceActors::PositionAggregateRootActor) },
+                    { typeof(PriceAggregates::Price), typeof(PriceActors::PriceAggregateRootActor) },
+                    { typeof(PriceAggregates::Project), typeof(PriceActors::ProjectAggregateRootActor) },
+                    { typeof(PriceAggregates::Theme), typeof(PriceActors::ThemeAggregateRootActor) },
 
                     { typeof(ProjectAggregates::Category), typeof(ProjectActors::CategoryAggregateRootActor) },
                     { typeof(ProjectAggregates::FirmAddress), typeof(ProjectActors::FirmAddressAggregateRootActor) },
@@ -64,8 +66,8 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 
                     { typeof(ThemeAggregates::Category), typeof(ThemeActors::CategoryAggregateRootActor) },
                     { typeof(ThemeAggregates::Order), typeof(ThemeActors::OrderAggregateRootActor) },
-                    { typeof(ThemeAggregates::Theme), typeof(ThemeActors::ThemeAggregateRootActor) },
                     { typeof(ThemeAggregates::Project), typeof(ThemeActors::ProjectAggregateRootActor) },
+                    { typeof(ThemeAggregates::Theme), typeof(ThemeActors::ThemeAggregateRootActor) },
                 };
 
         public UnityAggregateActorFactory(IUnityContainer unityContainer)
