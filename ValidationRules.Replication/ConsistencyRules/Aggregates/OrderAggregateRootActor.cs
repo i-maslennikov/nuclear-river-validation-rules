@@ -545,11 +545,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.InvalidBillsTotal> GetSource()
                 => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == WorkflowStepOnRegistration)
-                   let billTotal = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Sum(x => x.PayablePlan)
+                   let billTotal = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Sum(x => (decimal?)x.PayablePlan)
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
                                      select rw.Amount).Sum()
-                   where billTotal != orderTotal
+                   where billTotal.HasValue && billTotal != orderTotal
                    select new Order.InvalidBillsTotal
                    {
                        OrderId = order.Id,
