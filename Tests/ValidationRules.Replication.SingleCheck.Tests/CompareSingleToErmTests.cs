@@ -76,10 +76,16 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
             var onlyRiver = riverResult.Except(ermResult).ToArray();
             var onlyErm = ermResult.Except(riverResult).ToArray();
+            var common = ermResult.Intersect(riverResult).ToArray();
 
             if (onlyRiver.Any() || onlyErm.Any())
             {
-                Assert.Fail($"River messages:\n{string.Join(Environment.NewLine, onlyRiver)}\nErm messages:\n{string.Join(Environment.NewLine, onlyErm)}");
+                Assert.Fail($"River messages ({onlyRiver.Length} of {riverResult.Length}):\n" +
+                            $"{string.Join(Environment.NewLine, onlyRiver)}\n" +
+                            $"Erm messages ({onlyErm.Length} of {ermResult.Length}):\n" +
+                            $"{string.Join(Environment.NewLine, onlyErm)}\n" +
+                            $"Common ({common.Length}):\n" +
+                            $"{string.Join(Environment.NewLine, common)}");
             }
 
             Assert.Pass($"River: {riverTime.ElapsedMilliseconds}, Erm: {ermTime.ElapsedMilliseconds}");
