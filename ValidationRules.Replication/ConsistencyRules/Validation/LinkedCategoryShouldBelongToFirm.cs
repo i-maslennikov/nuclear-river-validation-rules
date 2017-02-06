@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
     /// </summary>
     public sealed class LinkedCategoryShouldBelongToFirm : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
+        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.None)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
