@@ -50,19 +50,37 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
         private static string FormatDescriptionMass(EntityReference entityReference)
             => entityReference.Name;
 
-        private static readonly HashSet<int> FirmRules = new HashSet<int> { 39, 48, 49, };
         private static ErmOrderValidationMessage[] Format(RiverValidationResult[] results, Func<EntityReference, string> descriptionFormatter)
             => results.Select(x =>
                                   new ErmOrderValidationMessage
                                   {
-                                      TargetEntityId = FirmRules.Contains(x.Rule) ? x.References.Single(r => r.Type == "Firm").Id : x.MainReference.Id,
+                                      TargetEntityId = AdaptTargetEntityId(x),
                                       RuleCode = x.Rule,
-                                      MessageText = FormatMessage(x, descriptionFormatter)
+                                      MessageText = AdaptMessage(x, descriptionFormatter)
                                   }).ToArray();
 
-        private static string FormatMessage(RiverValidationResult result, Func<EntityReference, string> descriptionFormatter)
+        private static long AdaptTargetEntityId(RiverValidationResult result)
         {
-            return string.Format(CultureInfo.InvariantCulture, result.Template, result.References.Select(descriptionFormatter).ToArray());
+            switch (result.Rule)
+            {
+                case 39:
+                case 48:
+                case 49:
+                    return result.References.Single(r => r.Type == "Firm").Id;
+                default:
+                    return result.MainReference.Id;
+            }
+        }
+
+        private static string AdaptMessage(RiverValidationResult result, Func<EntityReference, string> descriptionFormatter)
+        {
+            switch (result.Rule)
+            {
+                case 20:
+                    return string.Format(CultureInfo.InvariantCulture, result.Template, result.References.Select(x => x.Name).ToArray());
+                default:
+                    return string.Format(CultureInfo.InvariantCulture, result.Template, result.References.Select(descriptionFormatter).ToArray());
+            }
         }
     }
 }
