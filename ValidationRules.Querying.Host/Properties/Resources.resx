@@ -118,7 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} {{0}} является запрещённой для: {1} {{1}} в заказе {{2}}</value>
+    <value>{0} {{0}} является запрещённой для: {1} {{1}}</value>
+  </data>
+  <data name="OrderDescriptionTemplate" xml:space="preserve">
+    <value> в заказе {{2}}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
     <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1}</value>
