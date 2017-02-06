@@ -49,7 +49,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
                     foreach (var rule in rules)
                     {
-                        var error = results.FirstOrDefault(x => rule.Value.Contains(x.MessageType) && x.OrderId.HasValue);
+                        var error = results.OrderBy(x => x.OrderId).FirstOrDefault(x => rule.Value.Contains(x.MessageType) && x.OrderId.HasValue);
                         result.Add(new TestCaseData(rule.Key, new Int32Collection(rule.Value), error?.OrderId));
                     }
                 }
