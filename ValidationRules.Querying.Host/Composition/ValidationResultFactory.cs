@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -72,12 +73,19 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             return _distinctors.TryGetValue(messageType, out distinctor) ? distinctor : Default;
         }
 
-        class DefaultDistinctor : IDistinctor
+        private sealed class DefaultDistinctor : IDistinctor, IEqualityComparer<Version.ValidationResult>
         {
             public MessageTypeCode MessageType => 0;
 
             public IEnumerable<Version.ValidationResult> Distinct(IEnumerable<Version.ValidationResult> results)
-                => results;
+                => results.GroupBy(x => new { x.OrderId, x.ProjectId })
+                          .SelectMany(x => x.Distinct(this));
+
+            bool IEqualityComparer<Version.ValidationResult>.Equals(Version.ValidationResult x, Version.ValidationResult y)
+                => XNode.EqualityComparer.Equals(x.MessageParams, y.MessageParams);
+
+            int IEqualityComparer<Version.ValidationResult>.GetHashCode(Version.ValidationResult obj)
+                => XNode.EqualityComparer.GetHashCode(obj.MessageParams);
         }
     }
 }
