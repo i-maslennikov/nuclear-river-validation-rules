@@ -15,16 +15,34 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         public MessageComposerResult Compose(Version.ValidationResult validationResult)
         {
             var orderReference = validationResult.ReadOrderReference();
-            var positions = validationResult.ReadOrderPositions().OrderBy(x => x.OrderPositionId);
-            var first = positions.First();
-            var second = positions.Last();
+            var positions = validationResult.ReadOrderPositions();
+            var differentOrders = positions.Any(x => x.OrderId != orderReference.Id);
 
-            return new MessageComposerResult(
-                orderReference,
-                string.Format(Resources.ADPCheckModeSpecificOrder_MessageTemplate, MakePositionText(first), MakePositionText(second)),
-                new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName),
-                new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
-                new EntityReference("Order", first.OrderId, first.OrderNumber));
+            if (differentOrders)
+            {
+                var first = positions.First();
+                var second = positions.Last();
+
+                return new MessageComposerResult(
+                    orderReference,
+                    string.Format(Resources.ADPCheckModeSpecificOrder_MessageTemplate + Resources.OrderDescriptionTemplate, MakePositionText(first), MakePositionText(second)),
+                    new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
+                    new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName),
+                    new EntityReference("Order", second.OrderId, second.OrderNumber));
+            }
+            else
+            {
+                // todo: сортировки в требованиях нет, она только для соответствия erm.
+                positions = positions.OrderBy(x => x.OrderPositionId).ToArray();
+                var first = positions.First();
+                var second = positions.Last();
+
+                return new MessageComposerResult(
+                    orderReference,
+                    string.Format(Resources.ADPCheckModeSpecificOrder_MessageTemplate, MakePositionText(first), MakePositionText(second)),
+                    new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
+                    new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName));
+            }
         }
 
         private static string MakePositionText(ResultExtensions.OrderPositionDto dto)

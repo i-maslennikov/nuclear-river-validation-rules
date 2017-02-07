@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} является запрещённой для: {1} {{1}} в заказе {{2}}.
+        ///   Looks up a localized string similar to {0} {{0}} является запрещённой для: {1} {{1}}.
         /// </summary>
         internal static string ADPCheckModeSpecificOrder_MessageTemplate {
             get {
@@ -142,7 +142,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; является сопутствующей, основная позиция не найдена..
+        ///   Looks up a localized string similar to {0} {{0}} является сопутствующей, основная позиция не найдена..
         /// </summary>
         internal static string AssociatedPositionWithoutPrincipalTemplate {
             get {
@@ -268,7 +268,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}} в заказе {{2}}, дублирующая контакт фирмы.
+        ///   Looks up a localized string similar to Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}} в заказе {{2}} , дублирующая контакт фирмы.
         /// </summary>
         internal static string FirmContactContainsSponsoredLinkError {
             get {
@@ -498,6 +498,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrderDealIsInactive {
             get {
                 return ResourceManager.GetString("OrderDealIsInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  в заказе {{2}}.
+        /// </summary>
+        internal static string OrderDescriptionTemplate {
+            get {
+                return ResourceManager.GetString("OrderDescriptionTemplate", resourceCulture);
             }
         }
         

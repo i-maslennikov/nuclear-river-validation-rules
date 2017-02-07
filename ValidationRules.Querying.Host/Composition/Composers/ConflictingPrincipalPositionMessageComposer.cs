@@ -17,18 +17,38 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         {
             var orderReference = validationResult.ReadOrderReference();
             var positions = validationResult.ReadOrderPositions();
+            var differentOrders = positions.Any(x => x.OrderId != orderReference.Id);
 
-            var first = positions.First();
-            var second = positions.Last();
+            if (differentOrders)
+            {
+                var first = positions.First();
+                var second = positions.Last();
 
-            return new MessageComposerResult(
-                orderReference,
-                string.Format(
-                    Resources.ConflictingPrincipalPositionTemplate,
-                              MakePositionText(first),
-                              MakePositionText(second)),
-                new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
-                new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName));
+                return new MessageComposerResult(
+                    orderReference,
+                    string.Format(
+                        Resources.ConflictingPrincipalPositionTemplate + Resources.OrderDescriptionTemplate,
+                        MakePositionText(first),
+                        MakePositionText(second)),
+                    new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
+                    new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName));
+            }
+            else
+            {
+                // todo: сортировки в требованиях нет, она только для соответствия erm.
+                positions = positions.OrderBy(x => x.OrderPositionId).ToArray();
+                var first = positions.First();
+                var second = positions.Last();
+
+                return new MessageComposerResult(
+                    orderReference,
+                    string.Format(
+                        Resources.ConflictingPrincipalPositionTemplate,
+                        MakePositionText(first),
+                        MakePositionText(second)),
+                    new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
+                    new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName));
+            }
         }
 
         private static string MakePositionText(ResultExtensions.OrderPositionDto dto)

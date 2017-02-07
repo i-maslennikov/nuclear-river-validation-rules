@@ -268,16 +268,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             public IQueryable<Order.InvalidCategory> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id && x.CategoryId.HasValue && x.FirmAddressId.HasValue)
+                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id && x.CategoryId.HasValue)
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
-                   let categoryBelongToFirmAddress = _query.For<Facts::FirmAddress>()
+                   let categoryBelongToFirm = _query.For<Facts::FirmAddress>()
                                                            .Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
                                                            .Where(x => x.FirmId == order.FirmId)
                                                            .SelectMany(fa => _query.For<Facts::FirmAddressCategory>().Where(cfa => cfa.FirmAddressId == fa.Id))
                                                            .Any(x => x.CategoryId == opa.CategoryId)
                    let state = !category.IsActiveNotDeleted ? InvalidCategoryState.Inactive
-                                   : !categoryBelongToFirmAddress ? InvalidCategoryState.NotBelongToFirm
+                                   : !categoryBelongToFirm ? InvalidCategoryState.NotBelongToFirm
                                    : InvalidCategoryState.NotSet
                    where state != InvalidCategoryState.NotSet
                    select new Order.InvalidCategory
@@ -545,11 +545,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.InvalidBillsTotal> GetSource()
                 => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == WorkflowStepOnRegistration)
-                   let billTotal = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Sum(x => x.PayablePlan)
+                   let billTotal = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Sum(x => (decimal?)x.PayablePlan)
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
                                      select rw.Amount).Sum()
-                   where billTotal != orderTotal
+                   where billTotal.HasValue && billTotal != orderTotal
                    select new Order.InvalidBillsTotal
                    {
                        OrderId = order.Id,

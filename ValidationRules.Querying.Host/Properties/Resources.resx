@@ -118,7 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} {{0}} является запрещённой для: {1} {{1}} в заказе {{2}}</value>
+    <value>{0} {{0}} является запрещённой для: {1} {{1}}</value>
+  </data>
+  <data name="OrderDescriptionTemplate" xml:space="preserve">
+    <value> в заказе {{2}}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
     <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1}</value>
@@ -146,7 +149,7 @@
     <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" является сопутствующей, основная позиция не найдена.</value>
+    <value>{0} {{0}} является сопутствующей, основная позиция не найдена.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
     <value>Договор не может иметь дату подписания позднее даты подписания заказа</value>
@@ -189,7 +192,7 @@
     <value>Для подразделения {0} не указана тематика по умолчанию</value>
   </data>
   <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}} в заказе {{2}}, дублирующая контакт фирмы</value>
+    <value>Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}} в заказе {{2}} , дублирующая контакт фирмы</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
     <value>Фирма {0} удалена</value>
