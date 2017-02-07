@@ -22,6 +22,8 @@ namespace ValidationRules.Replication.SingleCheck.Tests
     [TestFixture]
     public sealed class CompareSingleToErmTests
     {
+        private const int OrdersPerRule = 20;
+
         private static readonly Expression<Func<Version.ValidationResult, bool>> IsApplicableForSingleCheck = x => (x.Result & 0x3) > 0;
 
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
@@ -49,8 +51,22 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
                     foreach (var rule in rules)
                     {
-                        var error = results.OrderBy(x => x.OrderId).FirstOrDefault(x => rule.Value.Contains(x.MessageType) && x.OrderId.HasValue);
-                        result.Add(new TestCaseData(rule.Key, new Int32Collection(rule.Value), error?.OrderId));
+                        var orderIds = results.OrderBy(x => x.OrderId)
+                                              .Where(x => rule.Value.Contains(x.MessageType) && x.OrderId.HasValue)
+                                              .Select(x => x.OrderId.Value)
+                                              .Distinct()
+                                              .Take(OrdersPerRule)
+                                              .ToArray();
+
+                        if (!orderIds.Any())
+                        {
+                            result.Add(new TestCaseData(rule.Key, new Int32Collection(rule.Value), null));
+                        }
+
+                        foreach (var orderId in orderIds)
+                        {
+                            result.Add(new TestCaseData(rule.Key, new Int32Collection(rule.Value), orderId));
+                        }
                     }
                 }
 
