@@ -1,11 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -13,48 +12,46 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.ConflictingPrincipalPosition;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var positions = validationResult.ReadOrderPositions();
-            var differentOrders = positions.Any(x => x.OrderId != orderReference.Id);
+            var dependentOrder = references.GetMany("order").First();
+            var principalOrder = references.GetMany("order").Last();
 
-            if (differentOrders)
+            var orderPositions = references.GetMany("orderPosition").ToList();
+            var dependentOrderPosition = orderPositions[0];
+            var dependentPosition = orderPositions[1];
+            var principalOrderPosition = orderPositions[2];
+            var principalPosition = orderPositions[3];
+
+            if (dependentOrder.Id != principalOrder.Id)
             {
-                var first = positions.First();
-                var second = positions.Last();
-
                 return new MessageComposerResult(
-                    orderReference,
+                    dependentOrder,
                     string.Format(
                         Resources.ConflictingPrincipalPositionTemplate + Resources.OrderDescriptionTemplate,
-                        MakePositionText(first),
-                        MakePositionText(second)),
-                    new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
-                    new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName));
+                        MakePositionText(dependentOrderPosition, dependentPosition),
+                        MakePositionText(principalOrderPosition, principalPosition)),
+                    dependentOrderPosition,
+                    principalOrderPosition,
+                    principalOrder);
             }
             else
             {
-                // todo: сортировки в требованиях нет, она только для соответствия erm.
-                positions = positions.OrderBy(x => x.OrderPositionId).ToArray();
-                var first = positions.First();
-                var second = positions.Last();
-
                 return new MessageComposerResult(
-                    orderReference,
+                    dependentOrder,
                     string.Format(
                         Resources.ConflictingPrincipalPositionTemplate,
-                        MakePositionText(first),
-                        MakePositionText(second)),
-                    new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName),
-                    new EntityReference("OrderPosition", second.OrderPositionId, second.OrderPositionName));
+                        MakePositionText(dependentOrderPosition, dependentPosition),
+                        MakePositionText(principalOrderPosition, principalPosition)),
+                    dependentOrderPosition,
+                    principalOrderPosition);
             }
         }
 
-        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
+        private static string MakePositionText(EntityReference orderPosition, EntityReference position)
         {
-            return dto.OrderPositionName != dto.PositionName
-                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
+            return orderPosition.Name != position.Name
+                       ? string.Format(Resources.RichChildPositionTypeTemplate, position.Name)
                        : Resources.RichDefaultPositionTypeTemplate;
         }
     }

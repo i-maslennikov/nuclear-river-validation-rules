@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -10,22 +12,22 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.LinkedFirmShouldBeValid;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        private static readonly Dictionary<InvalidFirmState, string> Formats = new Dictionary<InvalidFirmState, string>
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var firmReference = validationResult.ReadFirmReference();
-            var firmState = validationResult.ReadFirmState();
+            { InvalidFirmState.Deleted, Resources.FirmIsDeleted },
+            { InvalidFirmState.ClosedForever, Resources.FirmIsPermanentlyClosed },
+            { InvalidFirmState.ClosedForAscertainment, Resources.OrderFirmHiddenForAscertainmentTemplate }
+        };
 
-            var format = new Dictionary<InvalidFirmState, string>
-                {
-                    { InvalidFirmState.Deleted, Resources.FirmIsDeleted },
-                    { InvalidFirmState.ClosedForever, Resources.FirmIsPermanentlyClosed },
-                    { InvalidFirmState.ClosedForAscertainment, Resources.OrderFirmHiddenForAscertainmentTemplate }
-                };
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
+        {
+            var orderReference = references.Get("order");
+            var firmReference = references.Get("firm");
+            var firmState = message.ReadFirmState();
 
             return new MessageComposerResult(
                 orderReference,
-                format[firmState],
+                Formats[firmState],
                 firmReference);
         }
     }

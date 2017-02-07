@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
         IQueryable IQuery.For(Type objType)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         IQueryable<T> IQuery.For<T>()
@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
         IQueryable<T> IQuery.For<T>(FindSpecification<T> findSpecification)
         {
-            throw new NotImplementedException();
+            return GetTable<T>().AsQueryable().Where(findSpecification);
         }
 
         void IStore.Add<T>(T entity)

@@ -343,7 +343,6 @@
     <Compile Include="Commands\LogDelayCommand.cs" />
     <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
     <Compile Include="DataObjectTypesProvider.cs" />
-    <Compile Include="EntityTypeIds.cs" />
     <Compile Include="Events\AggregatesDelayLoggedEvent.cs" />
     <Compile Include="Events\AggregatesStateIncrementedEvent.cs" />
     <Compile Include="Events\FactsDelayLoggedEvent.cs" />

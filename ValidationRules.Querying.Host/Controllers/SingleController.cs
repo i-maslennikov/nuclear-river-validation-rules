@@ -1,10 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Http;
 
 using NuClear.ValidationRules.Querying.Host.Composition;
+using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.SingleCheck;
 using NuClear.ValidationRules.SingleCheck.Store;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
@@ -25,8 +26,14 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         {
             using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
             {
-                var messages = validator.Execute().Where(x => x.OrderId == request.OrderId).ToArray();
-                var result = _factory.ComposeAll(messages, x => x.ForSingle);
+                var sqlBitwiseFilter = ResultType.Single.ToSqlBitwiseFilter();
+
+                var query = validator.Execute()
+                    .Where(x => x.OrderId == request.OrderId)
+                    .Where(x => (x.Result & sqlBitwiseFilter) != 0);
+
+                var messages = query.ToMessages(ResultType.Single).ToList();
+                var result = _factory.GetValidationResult(messages);
                 return Ok(result);
             }
         }

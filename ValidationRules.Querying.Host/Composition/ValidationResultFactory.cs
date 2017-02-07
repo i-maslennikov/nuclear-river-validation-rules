@@ -2,55 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition
 {
     public class ValidationResultFactory
     {
+        private readonly EntityReferenceParser _entityReferenceParser;
         private readonly Dictionary<MessageTypeCode, IMessageComposer> _composers;
 
-        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers)
+        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers, EntityReferenceParser entityReferenceParser)
         {
+            _entityReferenceParser = entityReferenceParser;
             _composers = composers.ToDictionary(x => x.MessageType, x => x);
         }
 
-        public IReadOnlyCollection<ValidationResult> ComposeAll(IEnumerable<Version.ValidationResult> messages, Func<CombinedResult, Result> selector)
-            => messages.Select(x => Compose(x, selector)).Where(x => x != null).ToArray();
-
-        private ValidationResult Compose(Version.ValidationResult message, Func<CombinedResult, Result> selector)
+        public IReadOnlyCollection<ValidationResult> GetValidationResult(IReadOnlyCollection<Message> messages)
         {
-            var x = Compose(message);
-            var result = selector.Invoke(CombinedResult.FromInt32(message.Result));
-            if (result == Result.None)
-            {
-                return null;
-            }
-
-            return new ValidationResult
-            {
-                MainReference = x.MainReference,
-                Template = x.Template,
-                References = x.References,
-                Result = result,
-                Rule = message.MessageType,
-            };
+            var messagesWithReferences = _entityReferenceParser.ParseEntityReferences(messages);
+            var result = messagesWithReferences.Select(x => Compose(x.Message, x.References)).ToList();
+            return result;
         }
 
-        private MessageComposerResult Compose(Version.ValidationResult message)
+        private ValidationResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            IMessageComposer composer;
-            if (!_composers.TryGetValue((MessageTypeCode)message.MessageType, out composer))
-            {
-                throw new ArgumentException($"Не найден сериализатор '{message.MessageType}'", nameof(message));
-            }
-
             try
             {
-                return composer.Compose(message);
+                IMessageComposer composer;
+                if (!_composers.TryGetValue(message.MessageType, out composer))
+                {
+                    throw new ArgumentException($"Не найден сериализатор '{message.MessageType}'", nameof(message));
+                }
+
+                var composerResult = composer.Compose(message, references);
+
+                return new ValidationResult
+                {
+                    MainReference = composerResult.MainReference,
+                    References = composerResult.References,
+                    Template = composerResult.Template,
+                    Result = message.Result,
+                    Rule = message.MessageType,
+                };
             }
             catch (Exception ex)
             {

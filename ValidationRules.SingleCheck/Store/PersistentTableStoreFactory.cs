@@ -70,12 +70,12 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
             IQueryable IQuery.For(Type objType)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
 
             IQueryable<T> IQuery.For<T>(FindSpecification<T> findSpecification)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
 
             public void Dispose()

@@ -11,6 +11,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication
@@ -323,21 +324,13 @@ namespace NuClear.ValidationRules.Replication
             var ids = commands.Cast<SyncDataObjectCommand>()
                               .Where(c => c.DataObjectType == type)
                               .Distinct()
-                              .Select(c => new EntityNameKey
+                              .Select(c => new EntityName.EntityNameKey
                               {
                                   Id = c.DataObjectId,
                                   TypeId = typeId
                               }).ToList();
 
-            return SpecificationFactory<EntityName>.Contains(x => new EntityNameKey { Id = x.Id, TypeId = x.TypeId }, ids);
+            return SpecificationFactory<EntityName>.Contains(x => new EntityName.EntityNameKey { Id = x.Id, TypeId = x.TypeId }, ids);
         }
-
-        // ReSharper disable UnusedAutoPropertyAccessor.Local
-        private struct EntityNameKey
-        {
-            public long Id { get; set; }
-            public int TypeId { get; set; }
-        }
-        // ReSharper restore UnusedAutoPropertyAccessor.Local
     }
 }

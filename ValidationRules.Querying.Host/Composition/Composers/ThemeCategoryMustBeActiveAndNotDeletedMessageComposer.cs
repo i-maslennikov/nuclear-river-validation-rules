@@ -1,4 +1,8 @@
-﻿using NuClear.ValidationRules.Querying.Host.Properties;
+﻿using System.Collections.Generic;
+
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
@@ -7,10 +11,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            var themeReference = validationResult.ReadThemeReference();
-            var categoryReference = validationResult.ReadCategoryReference();
+            var themeReference = references.Get("theme");
+            var categoryReference = references.Get("category");
 
             return new MessageComposerResult(
                 themeReference,

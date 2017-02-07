@@ -1,4 +1,8 @@
-﻿using NuClear.ValidationRules.Querying.Host.Properties;
+﻿using System.Collections.Generic;
+
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
@@ -7,10 +11,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.LegalPersonProfileWarrantyShouldNotBeExpired;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var legalPersonProfileReference = validationResult.ReadLegalPersonProfileReference();
+            var orderReference = references.Get("order");
+            var legalPersonProfileReference = references.Get("legalPersonProfile");
 
             return new MessageComposerResult(
                 orderReference,

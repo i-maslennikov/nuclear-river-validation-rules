@@ -1,4 +1,8 @@
-﻿using NuClear.ValidationRules.Querying.Host.Properties;
+﻿using System.Collections.Generic;
+
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
@@ -7,13 +11,13 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            var price = validationResult.ReadPriceReference();
-            var pricePosition = validationResult.ReadPricePositionReference();
+            var project = references.Get("project");
+            var pricePosition = references.Get("pricePosition");
 
             return new MessageComposerResult(
-                price,
+                project,
                 Resources.PricePositionHasNoMinAdvertisementAmount,
                 pricePosition);
         }

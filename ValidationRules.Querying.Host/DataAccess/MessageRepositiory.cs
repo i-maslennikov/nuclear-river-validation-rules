@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
+using NuClear.ValidationRules.Storage.Model.Messages;
+
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
     public class MessageRepositiory
     {
+        private const string ConfigurationString = "Messages";
+
         private readonly DataConnectionFactory _factory;
 
         public MessageRepositiory(DataConnectionFactory factory)
@@ -18,7 +22,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         public bool TryGetVersion(Guid state, out long versionId)
         {
-            using (var connection = _factory.CreateDataConnection())
+            using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
                 var stateReached = connection.GetTable<Version.ErmState>().SingleOrDefault(x => x.Token == state);
                 versionId = stateReached?.VersionId ?? 0;
@@ -28,25 +32,26 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         public long GetLatestVersion()
         {
-            using (var connection = _factory.CreateDataConnection())
+            using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
                 return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
             }
         }
 
-        public IReadOnlyCollection<Version.ValidationResult> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, int resultMask)
+        public IReadOnlyCollection<Message> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ResultType resultType)
         {
             var dateFilter = CreateDateFilter(start, end);
 
-            using (var connection = _factory.CreateDataConnection())
+            using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
                 var validationResults = GetValidationResult(connection.GetTable<Version.ValidationResult>().Where(x => x.VersionId <= versionId));
 
                 var resultsByOrder = validationResults.Where(dateFilter).Where(CreateOrderFilter(orderIds));
                 var resultsByProject = validationResults.Where(dateFilter).Where(CreateProjectFilter(projectId));
 
-                var query = resultsByOrder.Concat(resultsByProject).Where(x => (x.Result & resultMask) != 0);
-                return query.ToArray();
+                var query = resultsByOrder.Concat(resultsByProject).Where(x => (x.Result & resultType.ToSqlBitwiseFilter()) != 0);
+
+                return query.ToMessages(resultType).ToList();
             }
         }
 
@@ -60,6 +65,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                                            x.MessageType == vr.MessageType &&
                                            x.MessageParams == vr.MessageParams &&
                                            x.PeriodStart == vr.PeriodStart &&
+                                           x.PeriodEnd == vr.PeriodEnd &&
                                            x.ProjectId == vr.ProjectId &&
                                            x.OrderId == vr.OrderId &&
                                            x.Result == vr.Result)

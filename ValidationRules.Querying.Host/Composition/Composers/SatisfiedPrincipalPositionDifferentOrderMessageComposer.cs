@@ -1,10 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
+using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -12,28 +12,32 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var orderPositions = validationResult.ReadOrderPositions();
+            var principalOrder = references.GetMany("order").First();
+            var dependentOrder = references.GetMany("order").Last();
 
-            var master = orderPositions.First();
-            var dependents = orderPositions.Skip(1).ToArray();
-            var placeholders = dependents.Select((x, i) => string.Format(Resources.ADPValidation_Template_Part, MakePositionText(x), 1 + i, 1 + dependents.Length + i));
+            var orderPositions = references.GetMany("orderPosition").ToList();
+            var principalOrderPosition = orderPositions[0];
+            var principalPosition = orderPositions[1];
+            var dependentOrderPosition = orderPositions[2];
+            var dependentPosition = orderPositions[3];
 
             return new MessageComposerResult(
-                orderReference,
-                string.Format(Resources.ADPValidation_Template, MakePositionText(master), string.Join(", ", placeholders)),
-                new[] { new EntityReference("OrderPosition", master.OrderPositionId, master.OrderPositionName) }
-                    .Concat(dependents.Select(x => new EntityReference("OrderPosition", x.OrderPositionId, x.OrderPositionName)))
-                    .Concat(dependents.Select(x => new EntityReference("Order", x.OrderId, x.OrderNumber)))
-                    .ToArray());
+                principalOrder,
+                string.Format(
+                    Resources.ADPValidation_Template,
+                    MakePositionText(principalOrderPosition, principalPosition),
+                    MakePositionText(dependentOrderPosition, dependentPosition)),
+                principalOrderPosition,
+                dependentOrderPosition,
+                dependentOrder);
         }
 
-        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
+        private static string MakePositionText(EntityReference orderPosition, EntityReference position)
         {
-            return dto.OrderPositionName != dto.PositionName
-                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
+            return orderPosition.Name != position.Name
+                       ? string.Format(Resources.RichChildPositionTypeTemplate, position.Name)
                        : Resources.RichDefaultPositionTypeTemplate;
         }
     }

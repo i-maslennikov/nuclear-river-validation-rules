@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -11,11 +12,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.CouponMustBeSoldOnceAtTime;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var advertisementReference = validationResult.ReadAdvertisementReference();
-            var orderPositionReferences = validationResult.ReadOrderPositionReferences();
+            var orderReference = references.Get("order");
+            var advertisementReference = references.Get("advertisement");
+            var orderPositionReferences = references.GetMany("orderPosition").ToList();
 
             var referencePlaceholders = orderPositionReferences.Select((x, i) => "{" + (i + 1) + "}");
 

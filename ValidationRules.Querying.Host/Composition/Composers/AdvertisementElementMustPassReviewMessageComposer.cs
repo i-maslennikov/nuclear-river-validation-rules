@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -12,22 +12,22 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.AdvertisementElementMustPassReview;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        private static readonly Dictionary<Advertisement.ReviewStatus, string> Formats = new Dictionary<Advertisement.ReviewStatus, string>
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var advertisementReference = validationResult.ReadAdvertisementReference();
-            var advertisementElementReference = validationResult.ReadAdvertisementElementReference();
-            var advertisementElementStatus = validationResult.ReadAdvertisementElementStatus();
+            { Advertisement.ReviewStatus.Invalid, Resources.OrdersCheckAdvertisementElementWasInvalidated},
+            { Advertisement.ReviewStatus.Draft, Resources.OrdersCheckAdvertisementElementIsDraft},
+        };
 
-            var status = new Dictionary<Advertisement.ReviewStatus, string>
-                {
-                    { Advertisement.ReviewStatus.Invalid, Resources.OrdersCheckAdvertisementElementWasInvalidated},
-                    { Advertisement.ReviewStatus.Draft, Resources.OrdersCheckAdvertisementElementIsDraft},
-                };
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
+        {
+            var orderReference = references.Get("order");
+            var advertisementReference = references.Get("advertisement");
+            var advertisementElementReference = references.Get("advertisementElement");
+            var advertisementElementStatus = message.ReadAdvertisementElementStatus();
 
             return new MessageComposerResult(
                 orderReference,
-                status[advertisementElementStatus],
+                Formats[advertisementElementStatus],
                 advertisementReference,
                 advertisementElementReference);
         }

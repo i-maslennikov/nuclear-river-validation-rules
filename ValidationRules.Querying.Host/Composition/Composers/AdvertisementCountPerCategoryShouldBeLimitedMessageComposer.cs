@@ -1,7 +1,9 @@
-﻿using NuClear.ValidationRules.Querying.Host.Properties;
-using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using System.Collections.Generic;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -9,11 +11,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var categoryReference = validationResult.ReadCategoryReference();
-            var dto = validationResult.ReadOversalesMessage();
+            var orderReference = references.Get("order");
+            var categoryReference = references.Get("category");
+            var dto = message.ReadOversalesMessage();
 
             return new MessageComposerResult(
                 orderReference,

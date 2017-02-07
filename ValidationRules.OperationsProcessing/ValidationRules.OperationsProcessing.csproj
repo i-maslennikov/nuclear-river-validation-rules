@@ -220,7 +220,6 @@
     <Compile Include="Identities\EntityTypes\EntityTypeLock.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrder.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderFile.cs" />
-    <Compile Include="Identities\EntityTypes\EntityTypePeriod.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPosition.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeOrderPositionAdvertisement.cs" />
     <Compile Include="Identities\EntityTypes\EntityTypeAdvertisementTemplate.cs" />

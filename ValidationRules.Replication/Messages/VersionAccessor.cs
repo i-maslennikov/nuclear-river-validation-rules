@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.Messages
 
         public FindSpecification<Version> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

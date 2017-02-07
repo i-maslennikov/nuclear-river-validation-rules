@@ -1,5 +1,6 @@
 ﻿using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.Replication;
+using NuClear.ValidationRules.Storage;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes
 {

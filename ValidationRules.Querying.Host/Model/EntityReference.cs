@@ -1,8 +1,8 @@
 namespace NuClear.ValidationRules.Querying.Host.Model
 {
-    public class EntityReference
+    public sealed class EntityReference
     {
-        public EntityReference(string type, long id, string name)
+       public EntityReference(string type, long id, string name)
         {
             Type = type;
             Id = id;

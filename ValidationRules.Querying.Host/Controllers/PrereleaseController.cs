@@ -29,8 +29,8 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
                 return NotFound();
             }
 
-            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), CombinedResult.PrereleaseMask);
-            var result = _factory.ComposeAll(messages, x => x.ForPrerelease);
+            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), ResultType.Prerelease);
+            var result = _factory.GetValidationResult(messages);
             return Ok(result);
         }
 

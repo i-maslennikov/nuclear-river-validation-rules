@@ -1,4 +1,8 @@
-﻿using NuClear.ValidationRules.Querying.Host.Properties;
+﻿using System.Collections.Generic;
+
+using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Model;
+using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
@@ -7,11 +11,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.WhiteListAdvertisementMayPresent;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var firmReference = validationResult.ReadFirmReference();
-            var advertisementReference = validationResult.ReadAdvertisementReference();
+            var orderReference = references.Get("order");
+            var firmReference = references.Get("firm");
+            var advertisementReference = references.Get("advertisement");
 
             return new MessageComposerResult(
                 orderReference,
