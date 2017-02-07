@@ -11,15 +11,19 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 {
     public class ValidationResultFactory
     {
-        private readonly Dictionary<MessageTypeCode, IMessageComposer> _composers;
+        private static readonly IDistinctor Default = new DefaultDistinctor();
 
-        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers)
+        private readonly IReadOnlyDictionary<MessageTypeCode, IMessageComposer> _composers;
+        private readonly IReadOnlyDictionary<MessageTypeCode, IDistinctor> _distinctors;
+
+        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers, IReadOnlyCollection<IDistinctor> distinctors)
         {
             _composers = composers.ToDictionary(x => x.MessageType, x => x);
+            _distinctors = distinctors.ToDictionary(x => x.MessageType, x => x);
         }
 
         public IReadOnlyCollection<ValidationResult> ComposeAll(IEnumerable<Version.ValidationResult> messages, Func<CombinedResult, Result> selector)
-            => messages.Select(x => Compose(x, selector)).Where(x => x != null).ToArray();
+            => MakeDistinct(messages).Select(x => Compose(x, selector)).Where(x => x != null).ToArray();
 
         private ValidationResult Compose(Version.ValidationResult message, Func<CombinedResult, Result> selector)
         {
@@ -56,6 +60,24 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             {
                 throw new Exception($"Ошибка при сериализации сообщения {message.MessageType}", ex);
             }
+        }
+
+        private IEnumerable<Version.ValidationResult> MakeDistinct(IEnumerable<Version.ValidationResult> messages)
+            => messages.GroupBy(x => (MessageTypeCode)x.MessageType)
+                       .SelectMany(x => DistinctorForMessageType(x.Key).Distinct(x));
+
+        private IDistinctor DistinctorForMessageType(MessageTypeCode messageType)
+        {
+            IDistinctor distinctor;
+            return _distinctors.TryGetValue(messageType, out distinctor) ? distinctor : Default;
+        }
+
+        class DefaultDistinctor : IDistinctor
+        {
+            public MessageTypeCode MessageType => 0;
+
+            public IEnumerable<Version.ValidationResult> Distinct(IEnumerable<Version.ValidationResult> results)
+                => results;
         }
     }
 }
