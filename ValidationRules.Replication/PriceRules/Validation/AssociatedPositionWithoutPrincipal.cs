@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -39,64 +40,39 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from order in query.For<Order>()
                 join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<Order.OrderPosition>() on order.Id equals position.OrderId
-                select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
+                select new Dto<Order.OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var associatedPositions =
                 from order in query.For<Order>()
                 join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<Order.OrderAssociatedPosition>() on order.Id equals position.OrderId
-                select new { order.FirmId, period.Start, period.OrganizationUnitId, period.Scope, position };
+                select new Dto<Order.OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
-            var satisfiedPositions =
-                from orderPosition in orderPositions
-                join associatedPosition in associatedPositions on
-                    new { orderPosition.FirmId, orderPosition.Start, orderPosition.OrganizationUnitId, orderPosition.position.ItemPositionId } equals
-                    new { associatedPosition.FirmId, associatedPosition.Start, associatedPosition.OrganizationUnitId, ItemPositionId = associatedPosition.position.PrincipalPositionId }
-                where Scope.CanSee(associatedPosition.Scope, orderPosition.Scope)
-                select new
-                    {
-                        associatedPosition.Start,
-                        associatedPosition.position.CauseOrderPositionId,
-                        associatedPosition.position.CauseItemPositionId,
-                    };
-
-            var notSatisfiedPositions =
-                from position in associatedPositions
-                from satisfied in satisfiedPositions.Where(x => x.CauseOrderPositionId == position.position.CauseOrderPositionId &&
-                                                                x.CauseItemPositionId == position.position.CauseItemPositionId &&
-                                                                x.Start == position.Start).DefaultIfEmpty()
-                where satisfied == null
-                select new
-                    {
-                        position.FirmId,
-                        position.position.OrderId,
-                        position.position.CauseOrderPositionId,
-                        position.position.CausePackagePositionId,
-                        position.position.CauseItemPositionId,
-
-                        position.Start,
-                        position.OrganizationUnitId,
-                    };
+            var unsatisfiedPositions =
+                associatedPositions.SelectMany(Specs.Join.Aggs.RegardlessBindingObject(orderPositions.DefaultIfEmpty()), Specs.Join.Aggs.RegardlessBindingObject())
+                                   .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.CausePosition.OrderId, x.CausePosition.PackagePositionId, x.CausePosition.ItemPositionId, x.CausePosition.OrderPositionId })
+                                   .Where(group => group.Max(x => x.Match) == Match.NoPosition)
+                                   .Select(group => group.Key);
 
             var messages =
-                from conflict in notSatisfiedPositions.Distinct()
-                join period in query.For<Period>() on new { conflict.Start, conflict.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                from unsatisfied in unsatisfiedPositions
+                from period in query.For<Period>().Where(x => x.Start == unsatisfied.Start && x.OrganizationUnitId == unsatisfied.OrganizationUnitId)
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrderPosition>(conflict.CauseOrderPositionId,
-                                        new Reference<EntityTypeOrder>(conflict.OrderId),
-                                        new Reference<EntityTypePosition>(conflict.CausePackagePositionId),
-                                        new Reference<EntityTypePosition>(conflict.CauseItemPositionId)))
+                                    new Reference<EntityTypeOrderPosition>(unsatisfied.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(unsatisfied.OrderId),
+                                        new Reference<EntityTypePosition>(unsatisfied.PackagePositionId),
+                                        new Reference<EntityTypePosition>(unsatisfied.ItemPositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = period.Start,
-                        PeriodEnd = period.End,
-                        OrderId = conflict.OrderId,
+                    PeriodStart = period.Start,
+                    PeriodEnd = period.End,
+                    OrderId = unsatisfied.OrderId,
 
-                        Result = RuleResult,
-                    };
+                    Result = RuleResult,
+                };
 
             return messages;
         }
