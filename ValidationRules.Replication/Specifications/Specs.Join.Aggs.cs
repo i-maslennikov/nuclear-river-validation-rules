@@ -20,9 +20,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 const int BindingObjectMatch = 1;
                 const int Different = 3;
 
-                /// <summary>
-                /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
-                /// </summary>
                 public static Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> RegardlessBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
                 {
                     Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
@@ -70,20 +67,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                 .Where(principal => associated.Position.BindingType == NoDependency ||
                                                                     associated.Position.BindingType == BindingObjectMatch && MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
                                                                     associated.Position.BindingType == Different && !MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
-                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
-                                                                    principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
-                }
-
-                /// <summary>
-                /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
-                /// </summary>
-                public static Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> WithMatchedBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
-                {
-                    Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
-                        associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
-                                                .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                                .Where(principal => MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
                     return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);

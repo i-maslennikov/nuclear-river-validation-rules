@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Replication.Tests
             var principal = CreateOrderPrincipalPosition(left);
             var associated = CreateOrderAssociatedPosition(right);
 
-            return Specs.Join.Aggs.WithMatchedBindingObject(new[] { principal }.AsQueryable()).Compile().Invoke(associated).Any();
+            return Specs.Join.Aggs.RegardlessBindingObject().Compile().Invoke(associated, principal).Match == Match.MatchedBindingObject;
         }
 
         private static Dto<Order.OrderPosition> CreateOrderPrincipalPosition(Parameter parameter)

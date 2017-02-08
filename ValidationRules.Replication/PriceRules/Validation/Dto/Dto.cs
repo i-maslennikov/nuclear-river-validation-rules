@@ -21,6 +21,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation.Dto
         public TPosition2 RelatedPosition { get; set; }
     }
 
+    /// <summary>
+    /// Перечисление, качество совпадения возрастает, поэтому может быть сравнено алгебраически
+    /// 0 - вообще нет соответствующей позиции
+    /// 1 - позиция есть, но с другим объектом привязки
+    /// 2 - есть позиция с совпадающим объектом привязки
+    /// </summary>
     public enum Match
     {
         NoPosition = 0,
