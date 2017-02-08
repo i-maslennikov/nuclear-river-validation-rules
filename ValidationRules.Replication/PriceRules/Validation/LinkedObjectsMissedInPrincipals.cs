@@ -42,7 +42,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     // todo: переименовать PrincipalPositionMustHaveSameBindingObject
     public sealed class LinkedObjectsMissedInPrincipals : ValidationResultAccessorBase
     {
-        private const int Match = 1;
+        private const int BindingTypeMatch = 1;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenSingleForApprove(Result.Error)
@@ -66,33 +66,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from order in query.For<Order>()
                 join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
                 join position in query.For<Order.OrderAssociatedPosition>() on order.Id equals position.OrderId
-                where position.BindingType == Match // небольшой косяк (который есть и в erm) - если сопутствующая удовлетворена мастер-позицией без учёта привязки, то эта проверка выдаст ошибку.
+                where position.BindingType == BindingTypeMatch // небольшой косяк (который есть и в erm) - если сопутствующая удовлетворена мастер-позицией (другой) без учёта привязки, то эта проверка выдаст ошибку, т.е получается как бы эмуляция двух групп основных позиций.
                 select new Dto<Order.OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
             var unsatisfiedPositions =
-                associatedPositions.SelectMany(Specs.Join.Aggs.WithMatchedBindingObject(orderPositions.DefaultIfEmpty()), (associated, principal) => new { associated, principal })
-                                   .GroupBy(x => new
-                                   {
-                                       // можно включать все поля, какие захотим иметь в выборке, кроме двух: PrincipalPositionId, Source
-                                       Start = x.associated.Start,
-                                       Category1Id = x.associated.Position.Category1Id,
-                                       Category3Id = x.associated.Position.Category3Id,
-                                       CauseOrderPositionId = x.associated.Position.CauseOrderPositionId,
-                                       CausePackagePositionId = x.associated.Position.CausePackagePositionId,
-                                       CauseItemPositionId = x.associated.Position.CauseItemPositionId,
-                                       FirmAddressId = x.associated.Position.FirmAddressId,
-                                       FirmId = x.associated.FirmId,
-                                       OrganizationUnitId = x.associated.OrganizationUnitId,
-                                       OrderId = (long?)x.associated.Position.OrderId,
-                                   })
-                                   .Where(x => x.All(y => y.principal == null))
-                                   .Select(grouping => new
-                                   {
-                                       grouping.Key,
-
-                                       ProjectId = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).ProjectId,
-                                       End = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).End,
-                                   });
+                associatedPositions.SelectMany(Specs.Join.Aggs.RegardlessBindingObject(orderPositions.DefaultIfEmpty()), Specs.Join.Aggs.RegardlessBindingObject())
+                                   .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.CausePosition.OrderId, x.CausePosition.PackagePositionId, x.CausePosition.ItemPositionId, x.CausePosition.OrderPositionId })
+                                   .Where(group => group.Max(x => x.Match) == Match.DifferentBindingObject)
+                                   .Select(group => group.Key);
 
             var messages =
                 from unsatisfied in unsatisfiedPositions
@@ -100,15 +81,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrderPosition>(unsatisfied.Key.CauseOrderPositionId,
-                                        new Reference<EntityTypeOrder>(unsatisfied.Key.OrderId.Value),
-                                        new Reference<EntityTypePosition>(unsatisfied.Key.CausePackagePositionId),
-                                        new Reference<EntityTypePosition>(unsatisfied.Key.CauseItemPositionId)))
+                                    new Reference<EntityTypeOrderPosition>(unsatisfied.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(unsatisfied.OrderId),
+                                        new Reference<EntityTypePosition>(unsatisfied.PackagePositionId),
+                                        new Reference<EntityTypePosition>(unsatisfied.ItemPositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = unsatisfied.Key.Start,
-                        PeriodEnd = unsatisfied.End,
-                        OrderId = unsatisfied.Key.OrderId,
+                        PeriodStart = unsatisfied.Start,
+                        PeriodEnd = query.For<Period>().Single(x => x.Start == unsatisfied.Start && x.OrganizationUnitId == unsatisfied.OrganizationUnitId).End,
+                        OrderId = unsatisfied.OrderId,
                         ProjectId = null,
 
                         Result = RuleResult,

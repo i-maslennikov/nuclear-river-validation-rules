@@ -17,8 +17,47 @@ namespace NuClear.ValidationRules.Replication.Specifications
             public static class Aggs
             {
                 const int NoDependency = 2;
-                const int Match = 1;
+                const int BindingObjectMatch = 1;
                 const int Different = 3;
+
+                /// <summary>
+                /// Возвращает выражение выборки основных позиций заказа по принципу совпадения обектов привязки.
+                /// </summary>
+                public static Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> RegardlessBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
+                {
+                    Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
+                        associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
+                                                .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
+                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
+                                                                    principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
+                    return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
+                }
+
+                public static Expression<Func<Dto<Order.OrderAssociatedPosition>, Dto<Order.OrderPosition>, Dto<Order.OrderPosition, Order.OrderPosition>>> RegardlessBindingObject()
+                {
+                    Expression<Func<Dto<Order.OrderAssociatedPosition>, Dto<Order.OrderPosition>, Dto<Order.OrderPosition, Order.OrderPosition>>> expression =
+                        (associated, principal) => new Dto<Order.OrderPosition, Order.OrderPosition>
+                            {
+                                FirmId = associated.FirmId,
+                                OrganizationUnitId = associated.OrganizationUnitId,
+                                Start = associated.Start,
+                                Match = principal == null ? Match.NoPosition : MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ? Match.MatchedBindingObject : Match.DifferentBindingObject,
+                                CausePosition = new Order.OrderPosition
+                                    {
+                                        OrderId = associated.Position.OrderId,
+                                        OrderPositionId = associated.Position.CauseOrderPositionId,
+                                        PackagePositionId = associated.Position.CausePackagePositionId,
+                                        ItemPositionId = associated.Position.CauseItemPositionId,
+
+                                        HasNoBinding = associated.Position.HasNoBinding,
+                                        Category1Id = associated.Position.Category1Id,
+                                        Category3Id = associated.Position.Category3Id,
+                                        FirmAddressId = associated.Position.FirmAddressId,
+                                    },
+                                RelatedPosition = principal.Position,
+                            };
+                    return (Expression<Func<Dto<Order.OrderAssociatedPosition>, Dto<Order.OrderPosition>, Dto<Order.OrderPosition, Order.OrderPosition>>>)new ExpandMethodCallVisitor().Visit(expression);
+                }
 
                 /// <summary>
                 /// Возвращает выражение для сопоставления основных и сопутствующих позиций.
@@ -30,7 +69,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
                         associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
                                                 .Where(principal => associated.Position.BindingType == NoDependency ||
-                                                                    associated.Position.BindingType == Match && MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
+                                                                    associated.Position.BindingType == BindingObjectMatch && MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
                                                                     associated.Position.BindingType == Different && !MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
