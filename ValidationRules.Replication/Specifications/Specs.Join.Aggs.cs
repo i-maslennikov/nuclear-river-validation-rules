@@ -28,8 +28,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
                         associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
                                                 .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
-                                                                    principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
+                                                .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId);
                     return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
