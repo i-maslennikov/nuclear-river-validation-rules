@@ -69,6 +69,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 where position.BindingType == BindingTypeMatch // небольшой косяк (который есть и в erm) - если сопутствующая удовлетворена мастер-позицией (другой) без учёта привязки, то эта проверка выдаст ошибку, т.е получается как бы эмуляция двух групп основных позиций.
                 select new Dto<Order.OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
 
+            // Есть DefaultIfEmpty или нет - с точки зрения логики без разницы, но left join работает быстрее 0_0
             var unsatisfiedPositions =
                 associatedPositions.SelectMany(Specs.Join.Aggs.RegardlessBindingObject(orderPositions.DefaultIfEmpty()), Specs.Join.Aggs.RegardlessBindingObject())
                                    .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.CausePosition.OrderId, x.CausePosition.PackagePositionId, x.CausePosition.ItemPositionId, x.CausePosition.OrderPositionId })
@@ -77,6 +78,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var messages =
                 from unsatisfied in unsatisfiedPositions
+                from period in query.For<Period>().Where(x => x.Start == unsatisfied.Start && x.OrganizationUnitId == unsatisfied.OrganizationUnitId)
                 select new Version.ValidationResult
                     {
                         MessageParams =
@@ -88,7 +90,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                 .ToXDocument(),
 
                         PeriodStart = unsatisfied.Start,
-                        PeriodEnd = query.For<Period>().Single(x => x.Start == unsatisfied.Start && x.OrganizationUnitId == unsatisfied.OrganizationUnitId).End,
+                        PeriodEnd = period.End,
                         OrderId = unsatisfied.OrderId,
                         ProjectId = null,
 
