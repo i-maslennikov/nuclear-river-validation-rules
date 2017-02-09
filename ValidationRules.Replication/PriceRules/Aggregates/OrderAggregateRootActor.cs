@@ -383,7 +383,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                     join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
                     join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
+                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted) on pricePosition.PositionId equals position.Id
                     from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                     select new
                     {
@@ -400,7 +400,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     };
 
                 var associatedByPrice =
-                    from bingingObject in opas.Union(pkgs)
+                    from bingingObject in pkgs//opas.Union()
                     join apg in _query.For<Facts::AssociatedPositionsGroup>() on bingingObject.PricePositionId equals apg.PricePositionId
                     join ap in _query.For<Facts::AssociatedPosition>() on apg.Id equals ap.AssociatedPositionsGroupId
                     select new Order.OrderAssociatedPosition
