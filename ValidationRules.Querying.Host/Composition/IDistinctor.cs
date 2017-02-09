@@ -1,0 +1,12 @@
+﻿using System.Collections.Generic;
+
+using NuClear.ValidationRules.Storage.Model.Messages;
+
+namespace NuClear.ValidationRules.Querying.Host.Composition
+{
+    public interface IDistinctor
+    {
+        MessageTypeCode MessageType { get; }
+        IEnumerable<Version.ValidationResult> Distinct(IEnumerable<Version.ValidationResult> results);
+    }
+}

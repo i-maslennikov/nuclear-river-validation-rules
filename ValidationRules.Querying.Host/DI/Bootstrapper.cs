@@ -23,7 +23,8 @@ namespace NuClear.ValidationRules.Querying.Host.DI
             return new UnityContainer()
                 .ConfigureTracer()
                 .ConfigureDataAccess()
-                .ConfigureSerializers()
+                .ConfigureComposers()
+                .ConfigureDistinctors()
                 .ConfigureSingleCheck();
         }
 
@@ -63,7 +64,7 @@ namespace NuClear.ValidationRules.Querying.Host.DI
                 .RegisterType<MessageRepositiory>(new PerResolveLifetimeManager());
         }
 
-        private static IUnityContainer ConfigureSerializers(this IUnityContainer container)
+        private static IUnityContainer ConfigureComposers(this IUnityContainer container)
         {
             var interfaceType = typeof(IMessageComposer);
             var serializerTypes = interfaceType.Assembly.GetTypes()
@@ -72,6 +73,19 @@ namespace NuClear.ValidationRules.Querying.Host.DI
 
             container.RegisterType(typeof(IReadOnlyCollection<IMessageComposer>),
                                    new InjectionFactory(c => serializerTypes.Select(t => c.Resolve(t)).Cast<IMessageComposer>().ToArray()));
+
+            return container;
+        }
+
+        private static IUnityContainer ConfigureDistinctors(this IUnityContainer container)
+        {
+            var interfaceType = typeof(IDistinctor);
+            var serializerTypes = interfaceType.Assembly.GetTypes()
+                                               .Where(x => interfaceType.IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
+                                               .ToArray();
+
+            container.RegisterType(typeof(IReadOnlyCollection<IDistinctor>),
+                                   new InjectionFactory(c => serializerTypes.Select(t => c.Resolve(t)).Cast<IDistinctor>().ToArray()));
 
             return container;
         }

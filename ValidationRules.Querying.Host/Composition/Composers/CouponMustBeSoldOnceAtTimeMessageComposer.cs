@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             return new MessageComposerResult(
                 orderReference,
                 string.Format(Resources.CouponIsBoundToMultiplePositionTemplate, string.Join(", ", referencePlaceholders)),
-                new [] { advertisementReference }.Concat(orderPositionReferences).ToArray());
+                new [] { advertisementReference }.Concat(orderPositionReferences.OrderBy(x => x.Id)).ToArray()); // todo: сортировки нет в требованиях, сделана для соответствия erm
         }
     }
 }
