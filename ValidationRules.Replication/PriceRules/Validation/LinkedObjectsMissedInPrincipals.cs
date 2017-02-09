@@ -72,7 +72,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             // Есть DefaultIfEmpty или нет - с точки зрения логики без разницы, но left join работает быстрее 0_0
             var unsatisfiedPositions =
                 associatedPositions.SelectMany(Specs.Join.Aggs.RegardlessBindingObject(orderPositions.DefaultIfEmpty()), Specs.Join.Aggs.RegardlessBindingObject())
-                                   .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.CausePosition.OrderId, x.CausePosition.PackagePositionId, x.CausePosition.ItemPositionId, x.CausePosition.OrderPositionId })
+                                   .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.CausePosition.OrderId, x.CausePosition.PackagePositionId, x.CausePosition.ItemPositionId, x.CausePosition.OrderPositionId, x.CausePosition.FirmAddressId, x.CausePosition.Category1Id, x.CausePosition.Category3Id })
                                    .Where(group => group.Max(x => x.Match) == Match.DifferentBindingObject)
                                    .Select(group => group.Key);
 
