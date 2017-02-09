@@ -3,7 +3,6 @@
     public interface IBindingObject
     {
         bool HasNoBinding { get; }
-        long BindingType { get; }
         long? Category1Id { get; }
         long? Category3Id { get; }
         long? FirmAddressId { get; }

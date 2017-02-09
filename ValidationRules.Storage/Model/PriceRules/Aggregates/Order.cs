@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
         /// <summary>
         /// Связь заказа с номенклатурной позицией, импортируется из ERM.OrderPosition + ERM.OrderPositionAdv
         /// </summary>
-        public sealed class OrderPosition
+        public sealed class OrderPosition : IBindingObject
         {
             public long OrderId { get; set; }
             public long OrderPositionId { get; set; }

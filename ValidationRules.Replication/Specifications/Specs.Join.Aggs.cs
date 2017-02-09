@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                 FirmId = associated.FirmId,
                                 OrganizationUnitId = associated.OrganizationUnitId,
                                 Start = associated.Start,
-                                Match = principal == null ? Match.NoPosition : MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ? Match.MatchedBindingObject : Match.DifferentBindingObject,
+                                Match = principal == null ? Match.NoPosition : MatchedBindingObjects().Compile().Invoke(principal.Position, associated.Position) ? Match.MatchedBindingObject : Match.DifferentBindingObject,
                                 CausePosition = new Order.OrderPosition
                                     {
                                         OrderId = associated.Position.OrderId,
@@ -65,8 +65,8 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
                         associated => principals.Where(principal => MatchedPeriod<Order.OrderAssociatedPosition>().Compile().Invoke(principal, associated))
                                                 .Where(principal => associated.Position.BindingType == NoDependency ||
-                                                                    associated.Position.BindingType == BindingObjectMatch && MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position) ||
-                                                                    associated.Position.BindingType == Different && !MatchedBindingObjects<Order.OrderAssociatedPosition>().Compile().Invoke(principal.Position, associated.Position))
+                                                                    associated.Position.BindingType == BindingObjectMatch && MatchedBindingObjects().Compile().Invoke(principal.Position, associated.Position) ||
+                                                                    associated.Position.BindingType == Different && !MatchedBindingObjects().Compile().Invoke(principal.Position, associated.Position))
                                                 .Where(principal => principal.Position.ItemPositionId == associated.Position.PrincipalPositionId &&
                                                                     principal.Position.OrderPositionId != associated.Position.CauseOrderPositionId);
                     return (Expression<Func<Dto<Order.OrderAssociatedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
@@ -80,7 +80,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
                         denied => principals.Where(principal => MatchedPeriod<Order.OrderDeniedPosition>().Compile().Invoke(principal, denied))
                                             .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
-                                            .Where(principal => MatchedBindingObjects<Order.OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
+                                            .Where(principal => MatchedBindingObjects().Compile().Invoke(principal.Position, denied.Position))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
                     return (Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
@@ -94,7 +94,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
                         denied => principals.Where(principal => MatchedPeriod<Order.OrderDeniedPosition>().Compile().Invoke(principal, denied))
                                             .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
-                                            .Where(principal => !MatchedBindingObjects<Order.OrderDeniedPosition>().Compile().Invoke(principal.Position, denied.Position))
+                                            .Where(principal => !MatchedBindingObjects().Compile().Invoke(principal.Position, denied.Position))
                                             .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
                                                                 principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
                     return (Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
@@ -129,16 +129,17 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// https://github.com/2gis/nuclear-river/blob/feature/validation-rules/docs/ru/validation-rules/compare-linking-objects.md
                 /// Выражение достаточно не тривиальное и используется многократно, поэтому и создан <see cref="ExpandMethodCallVisitor"/>
                 /// </summary>
-                private static Expression<Func<Order.OrderPosition, T, bool>> MatchedBindingObjects<T>()
-                    where T: IBindingObject
+                public static Expression<Func<IBindingObject, IBindingObject, bool>> MatchedBindingObjects()
                 {
                     return (position, binding) => (binding.HasNoBinding == position.HasNoBinding) &&
-                                                  ((binding.Category1Id == position.Category1Id) &&
-                                                   (binding.Category3Id == position.Category3Id || binding.Category3Id == null || position.Category3Id == null) &&
-                                                   (binding.FirmAddressId == position.FirmAddressId || binding.FirmAddressId == null || position.FirmAddressId == null) ||
-                                                   (binding.Category1Id == position.Category1Id || binding.Category1Id == null || position.Category1Id == null) &&
-                                                   (binding.Category3Id == null || position.Category3Id == null) &&
-                                                   (binding.FirmAddressId == position.FirmAddressId));
+                                                  ((position.Category3Id != null &&
+                                                    position.Category3Id == binding.Category3Id &&
+                                                    (position.FirmAddressId == null || binding.FirmAddressId == null)) ||
+                                                   ((position.Category1Id == null ||
+                                                     binding.Category1Id == null ||
+                                                     position.Category3Id == binding.Category3Id ||
+                                                     position.Category1Id == binding.Category1Id && position.Category3Id == null && binding.Category3Id == null) &&
+                                                    position.FirmAddressId == binding.FirmAddressId));
                 }
 
                 /// <summary>
