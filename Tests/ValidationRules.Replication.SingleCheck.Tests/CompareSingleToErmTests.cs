@@ -116,15 +116,33 @@ namespace ValidationRules.Replication.SingleCheck.Tests
             var riverResult = InvokeRiver(orderId);
             var ermResult = InvokeErm(orderId);
 
-            var diff = riverResult
-                .Keys
-                .Union(ermResult.Keys)
-                .Select(x => new { Key = x, River = TryGet(riverResult, x), Erm = TryGet(ermResult, x) })
-                .Select(x => new { Key = x.Key, OnlyRiver = x.River.Except(x.Erm).ToArray(), OnlyErm = x.Erm.Except(x.River).ToArray() })
-                .ToArray();
+            var fails = new Dictionary<int, string>();
+            foreach (var key in riverResult.Keys.Union(ermResult.Keys))
+            {
+                var rr = TryGet(riverResult, key);
+                var er = TryGet(ermResult, key);
 
-            Assert.True(diff.All(x => !x.OnlyErm.Any()), "only erm message exist");
-            Assert.True(diff.All(x => !x.OnlyRiver.Any()), "only river message exist");
+                var onlyRiver = rr.Except(er).ToArray();
+                var onlyErm = er.Except(rr).ToArray();
+                var common = er.Intersect(rr).ToArray();
+
+                if (onlyRiver.Any() || onlyErm.Any())
+                {
+                    fails.Add(
+                        key,
+                        $"River messages ({onlyRiver.Length} of {rr.Length}):\n" +
+                        $"{string.Join(Environment.NewLine, onlyRiver)}\n\n" +
+                        $"Erm messages ({onlyErm.Length} of {er.Length}):\n" +
+                        $"{string.Join(Environment.NewLine, onlyErm)}\n\n" +
+                        $"Common ({common.Length}):\n" +
+                        $"{string.Join(Environment.NewLine, common)}\n");
+                }
+            }
+
+            if (fails.Any())
+            {
+                Assert.Fail(string.Join("\n=========\n", fails.Select(x => $"{x.Key}\n{x.Value}")));
+            }
         }
 
         private IDictionary<int, string[]> InvokeRiver(long orderId, int[] rules = null)
