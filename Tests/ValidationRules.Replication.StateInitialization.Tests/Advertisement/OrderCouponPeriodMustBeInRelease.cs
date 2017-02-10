@@ -23,9 +23,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Aggregates::Position { Id = 5, Name = "Position5" },
                     new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
-                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 8, DaysTotal = 5, DaysFromMonthBeginToCouponEnd = 5, DaysFromCouponBeginToMonthEnd = 5, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 8, DaysTotal = 5, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
                     new Aggregates::Advertisement { Id = 7, Name = "Advertisement7" },
-                    new Aggregates::Advertisement.Coupon { AdvertisementId = 7, AdvertisementElementId = 9, DaysTotal = 5, DaysFromMonthBeginToCouponEnd = 5, DaysFromCouponBeginToMonthEnd = 5, BeginMonth = FirstDayMar, EndMonth = FirstDayApr }
+                    new Aggregates::Advertisement.Coupon { AdvertisementId = 7, AdvertisementElementId = 9, DaysTotal = 5, BeginMonth = FirstDayMar, EndMonth = FirstDayApr }
                 )
                 .Message(
                     new Messages::Version.ValidationResult

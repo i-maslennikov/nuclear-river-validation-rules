@@ -151,8 +151,6 @@ create table AdvertisementAggregates.Coupon (
     AdvertisementId bigint not null,
     AdvertisementElementId bigint not null,
     DaysTotal int not null,
-    DaysFromMonthBeginToCouponEnd int not null,
-    DaysFromCouponBeginToMonthEnd int not null,
 
     BeginMonth datetime2(2) not null,
     EndMonth datetime2(2) not null,

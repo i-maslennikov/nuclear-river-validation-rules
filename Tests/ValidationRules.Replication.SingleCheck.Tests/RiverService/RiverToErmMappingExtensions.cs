@@ -74,7 +74,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
                             { MessageTypeCode.CouponMustBeSoldOnceAtTime, 35 },
-                            { MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays, 2 },
+                            { MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays, 2 },
                             { MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite, 27 },
                             { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder, 29 },
                             { MessageTypeCode.OrderCouponPeriodMustBeInRelease, 2 },

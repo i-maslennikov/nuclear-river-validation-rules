@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                         MessageTypeCode.AdvertisementMustBelongToFirm,
                         MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
                         MessageTypeCode.CouponMustBeSoldOnceAtTime,
-                        MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
+                        MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays,
                         MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         MessageTypeCode.OrderMustHaveAdvertisement,
                         MessageTypeCode.WhiteListAdvertisementMayPresent,
@@ -196,6 +196,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
         public sealed class CouponAccessor : DataChangesHandler<Advertisement.Coupon>, IStorageBasedDataObjectAccessor<Advertisement.Coupon>
         {
+            public static DateTime BeginMonth(DateTime x) => new DateTime(x.AddDays(4).Year, x.AddDays(4).Month, 1);
+            public static DateTime EndMonth(DateTime x) => new DateTime(x.AddDays(DateTime.DaysInMonth(x.Year, x.Month) - 4).Year, x.AddDays(DateTime.DaysInMonth(x.Year, x.Month) - 4).Month, 1);
+
             private readonly IQuery _query;
 
             public CouponAccessor(IQuery query) : base(CreateInvalidator())
@@ -206,7 +209,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
-                        MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
+                        MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays,
                         MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                     };
 
@@ -221,8 +224,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                            AdvertisementId = advertisement.Id,
                            AdvertisementElementId = element.Id,
                            DaysTotal = (int)(endDate - beginDate).TotalDays + 1,
-                           BeginMonth = new DateTime(beginDate.AddDays(5).Year, beginDate.AddDays(5).Month, 1),
-                           EndMonth = new DateTime(endDate.AddDays(-5).Year, endDate.AddDays(-5).Month, 1),
+                           BeginMonth = BeginMonth(beginDate),
+                           EndMonth = EndMonth(endDate),
                        };
 
             public FindSpecification<Advertisement.Coupon> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
