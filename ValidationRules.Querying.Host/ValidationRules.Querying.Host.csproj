@@ -195,7 +195,7 @@
     <Compile Include="Composition\Composers\OrderEndDistrubutionShouldBeLastSecondOfMonthMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustNotContainDummyAdvertisementMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderCouponPeriodInReleaseMustNotBeLessFiveDaysMessageComposer.cs" />
+    <Compile Include="Composition\Composers\OrderCouponPeriodMustNotBeLessFiveDaysMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustBeCreatedMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCorrespontToInactivePositionMessageComposer.cs" />

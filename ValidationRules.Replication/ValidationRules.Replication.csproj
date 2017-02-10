@@ -210,7 +210,7 @@
     <Compile Include="Accessors\PositionAccessor.cs" />
     <Compile Include="Accessors\AdvertisementTemplateAccessor.cs" />
     <Compile Include="AdvertisementRules\Validation\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
-    <Compile Include="AdvertisementRules\Validation\OrderCouponPeriodInReleaseMustNotBeLessFiveDays.cs" />
+    <Compile Include="AdvertisementRules\Validation\OrderCouponPeriodMustNotBeLessFiveDays.cs" />
     <Compile Include="AdvertisementRules\Validation\CouponMustBeSoldOnceAtTime.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\WhiteListAdvertisementMayPresent.cs" />

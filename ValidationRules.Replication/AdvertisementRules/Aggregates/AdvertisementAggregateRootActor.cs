@@ -217,16 +217,13 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    let beginDate = element.BeginDate.Value
                    let endDate = element.EndDate.Value
                    select new Advertisement.Coupon
-                   {
-                        AdvertisementId = advertisement.Id,
-                        AdvertisementElementId = element.Id,
-                        DaysTotal = (int)(endDate - beginDate).TotalDays + 1,
-                        DaysFromMonthBeginToCouponEnd = endDate.Day,
-                        DaysFromCouponBeginToMonthEnd = DateTime.DaysInMonth(beginDate.Year, beginDate.Month) - beginDate.Day + 1,
-
-                        BeginMonth = beginDate.Day == 1 ? beginDate : new DateTime(beginDate.Year, beginDate.Month, 1),
-                        EndMonth = endDate.Day == 1 ? endDate : new DateTime(endDate.AddMonths(1).Year, endDate.AddMonths(1).Month, 1),
-                   };
+                       {
+                           AdvertisementId = advertisement.Id,
+                           AdvertisementElementId = element.Id,
+                           DaysTotal = (int)(endDate - beginDate).TotalDays + 1,
+                           BeginMonth = new DateTime(beginDate.AddDays(5).Year, beginDate.AddDays(5).Month, 1),
+                           EndMonth = new DateTime(endDate.AddDays(-5).Year, endDate.AddDays(-5).Month, 1),
+                       };
 
             public FindSpecification<Advertisement.Coupon> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
