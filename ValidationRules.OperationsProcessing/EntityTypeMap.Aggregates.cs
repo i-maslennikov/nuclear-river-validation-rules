@@ -27,6 +27,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::ReleaseWithdrawal>())
                 .Aggregate<AccountAggregates::Order>(
                     x => x.Match<Facts::Order>()
+                          .DependOn<Facts::UnlimitedOrder>()
                           .DependOn<Facts::Account>()
                           .DependOn<Facts::Lock>()
                           .DependOn<Facts::Project>())
@@ -55,6 +56,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::OrderPosition>()
                           .DependOn<Facts::OrderPositionAdvertisement>()
                           .DependOn<Facts::Position>()
+                          .DependOn<Facts::PositionChild>()
                           .DependOn<Facts::PricePosition>()
                           .DependOn<Facts::Project>())
                 .Aggregate<AdvertisementAggregates::Position>(
@@ -120,7 +122,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                     x => x.Match<Facts::Price>()
                           .DependOn<Facts::AssociatedPositionsGroup>()
                           .DependOn<Facts::Position>()
-                          .DependOn<Facts::PricePosition>())
+                          .DependOn<Facts::PricePosition>()
+                          .DependOn<Facts::NomenclatureCategory>())
                 .Aggregate<PriceAggregates::Project>(
                     x => x.Match<Facts::Project>())
                 .Aggregate<PriceAggregates::Theme>(
@@ -136,6 +139,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::Category>()
                           .DependOn<Facts::FirmAddress>()
                           .DependOn<Facts::OrderPosition>()
+                          .DependOn<Facts::OrderPositionCostPerClick>()
                           .DependOn<Facts::OrderPositionAdvertisement>()
                           .DependOn<Facts::Position>()
                           .DependOn<Facts::PricePosition>()
@@ -144,6 +148,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                     x => x.Match<Facts::Position>())
                 .Aggregate<ProjectAggregates::Project>(
                     x => x.Match<Facts::Project>()
+                          .DependOn<Facts::CostPerClickCategoryRestriction>()
+                          .DependOn<Facts::SalesModelCategoryRestriction>()
                           .DependOn<Facts::CategoryOrganizationUnit>()
                           .DependOn<Facts::ReleaseInfo>())
 

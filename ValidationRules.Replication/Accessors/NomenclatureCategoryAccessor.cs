@@ -54,9 +54,11 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<NomenclatureCategory> dataObjects)
             => Array.Empty<IEvent>();
 
-        // Ничего не пересчитываем.
-        // Достаточно сложно вычислить объём изменений, достаточно ненадёжно и влияет только на строковое имя в сообщении.
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<NomenclatureCategory> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var priceIds = dataObjects.Select(x => x.PriceId);
+
+            return new EventCollectionHelper<NomenclatureCategory> { { typeof(Price), priceIds } };
+        }
     }
 }

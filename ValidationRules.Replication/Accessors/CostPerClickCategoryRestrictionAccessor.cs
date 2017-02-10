@@ -48,8 +48,11 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<CostPerClickCategoryRestriction> dataObjects)
             => Array.Empty<IEvent>();
 
-        // value object для Project, ничего пересчитывать не надо
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<CostPerClickCategoryRestriction> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var projectId = dataObjects.Select(x => x.ProjectId);
+
+            return new EventCollectionHelper<CostPerClickCategoryRestriction> { { typeof(Project), projectId } };
+        }
     }
 }
