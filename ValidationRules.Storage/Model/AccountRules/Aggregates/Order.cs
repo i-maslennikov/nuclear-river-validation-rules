@@ -5,7 +5,6 @@ namespace NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates
     public sealed class Order
     {
         public long Id { get; set; }
-        public long DestProjectId { get; set; }
         public long? AccountId { get; set; }
         public bool IsFreeOfCharge { get; set; }
         public string Number { get; set; }
