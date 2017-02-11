@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
-using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers

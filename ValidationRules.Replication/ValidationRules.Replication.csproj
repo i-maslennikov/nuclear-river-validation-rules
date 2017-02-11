@@ -306,7 +306,7 @@
     <Compile Include="ConsistencyRules\Validation\LegalPersonProfileWarrantyShouldNotBeExpired.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderEndDistrubutionShouldBeLastSecondOfMonth.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderBeginDistrubutionShouldBeFirstDayOfMonth.cs" />
-    <Compile Include="ConsistencyRules\Validation\LinkedFirmShouldBeValid.cs" />
+    <Compile Include="FirmRules\Validation\LinkedFirmShouldBeValid.cs" />
     <Compile Include="PriceRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\ThemeAggregateRootActor.cs" />

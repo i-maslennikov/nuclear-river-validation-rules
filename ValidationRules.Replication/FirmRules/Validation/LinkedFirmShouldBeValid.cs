@@ -2,12 +2,12 @@
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
-using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
+namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
     /// Для заказов, к которым привязана неактуальная фирма, должна выводиться ошибка.
@@ -45,8 +45,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                   new XAttribute("id", order.Id),
                                                   new XAttribute("name", order.Number)))),
 
-                                      PeriodStart = order.BeginDistribution,
-                                      PeriodEnd = order.EndDistributionPlan,
+                                      PeriodStart = order.Begin,
+                                      PeriodEnd = order.End,
                                       OrderId = order.Id,
 
                                       Result = RuleResult,

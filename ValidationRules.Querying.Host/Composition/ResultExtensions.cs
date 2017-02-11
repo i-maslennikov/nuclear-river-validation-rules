@@ -5,6 +5,7 @@ using System.Linq;
 using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 

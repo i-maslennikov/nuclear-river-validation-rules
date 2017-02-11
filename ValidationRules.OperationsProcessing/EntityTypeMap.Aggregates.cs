@@ -70,7 +70,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::BranchOfficeOrganizationUnit>()
                           .DependOn<Facts::Category>()
                           .DependOn<Facts::Deal>()
-                          .DependOn<Facts::Firm>()
                           .DependOn<Facts::FirmAddress>()
                           .DependOn<Facts::FirmAddressCategory>()
                           .DependOn<Facts::LegalPerson>()
