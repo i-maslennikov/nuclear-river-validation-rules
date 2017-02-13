@@ -42,14 +42,6 @@ create table ConsistencyAggregates.InactiveReference(
 )
 go
 
-create table ConsistencyAggregates.InvalidFirm(
-    OrderId bigint not null,
-    FirmId bigint not null,
-    FirmName nvarchar(250) not null,
-    [State] int not null,
-)
-go
-
 create table ConsistencyAggregates.InvalidFirmAddress(
     OrderId bigint not null,
     FirmAddressId bigint not null,
