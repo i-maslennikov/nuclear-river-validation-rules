@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
                                                                     .WhenMass(Result.Warning)
-                                                                    .WhenMassPrerelease(Result.Error)
+                                                                    .WhenMassPrerelease(Result.Warning)
                                                                     .WhenMassRelease(Result.Error);
 
         public OrderMustNotContainDummyAdvertisement(IQuery query) : base(query, MessageTypeCode.OrderMustNotContainDummyAdvertisement)

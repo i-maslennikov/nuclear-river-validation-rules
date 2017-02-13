@@ -46,8 +46,16 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<PositionChild> dataObjects)
             => Array.Empty<IEvent>();
 
-        // value object для Position, ничего пересчитывать не надо
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<PositionChild> dataObjects)
-            => Array.Empty<IEvent>();
+        {
+            var positionIds = dataObjects.Select(x => x.MasterPositionId).ToList();
+
+            var orderIdsFromPricePosition =
+                  from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
+                  from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
+                  select orderPosition.OrderId;
+
+            return new EventCollectionHelper<PositionChild> { { typeof(Order), orderIdsFromPricePosition } };
+        }
     }
 }

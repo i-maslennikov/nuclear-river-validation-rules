@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Model;
@@ -8,15 +9,19 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition
 {
-    public class ValidationResultFactory
+    public sealed class ValidationResultFactory
     {
-        private readonly EntityReferenceParser _entityReferenceParser;
-        private readonly Dictionary<MessageTypeCode, IMessageComposer> _composers;
+        private static readonly IDistinctor Default = new DefaultDistinctor();
 
-        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers, EntityReferenceParser entityReferenceParser)
+        private readonly IReadOnlyDictionary<MessageTypeCode, IMessageComposer> _composers;
+        private readonly IReadOnlyDictionary<MessageTypeCode, IDistinctor> _distinctors;
+        private readonly EntityReferenceParser _entityReferenceParser;
+
+        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers, IReadOnlyCollection<IDistinctor> distinctors, EntityReferenceParser entityReferenceParser)
         {
             _entityReferenceParser = entityReferenceParser;
             _composers = composers.ToDictionary(x => x.MessageType, x => x);
+            _distinctors = distinctors.ToDictionary(x => x.MessageType, x => x);
         }
 
         public IReadOnlyCollection<ValidationResult> GetValidationResult(IReadOnlyCollection<Message> messages)
@@ -51,6 +56,31 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             {
                 throw new Exception($"Ошибка при сериализации сообщения {message.MessageType}", ex);
             }
+        }
+
+        private IEnumerable<Message> MakeDistinct(IEnumerable<Message> messages)
+            => messages.GroupBy(x => x.MessageType)
+                       .SelectMany(x => DistinctorForMessageType(x.Key).Distinct(x));
+
+        private IDistinctor DistinctorForMessageType(MessageTypeCode messageType)
+        {
+            IDistinctor distinctor;
+            return _distinctors.TryGetValue(messageType, out distinctor) ? distinctor : Default;
+        }
+
+        private sealed class DefaultDistinctor : IDistinctor, IEqualityComparer<Message>
+        {
+            public MessageTypeCode MessageType => 0;
+
+            public IEnumerable<Message> Distinct(IEnumerable<Message> messages)
+                => messages.GroupBy(x => new { x.OrderId, x.ProjectId })
+                          .SelectMany(x => x.Distinct(this));
+
+            bool IEqualityComparer<Message>.Equals(Message x, Message y)
+                => XNode.EqualityComparer.Equals(x.Xml, y.Xml);
+
+            int IEqualityComparer<Message>.GetHashCode(Message obj)
+                => XNode.EqualityComparer.GetHashCode(obj.Xml);
         }
     }
 }

@@ -12,6 +12,9 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         public XDocument Xml { get; set; }
 
         public Result Result { get; set; }
+
+        public long? OrderId { get; set; }
+        public long? ProjectId { get; set; }
     }
 
     public static class MessageExtensions
@@ -22,7 +25,10 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             {
                 MessageType = (MessageTypeCode)x.MessageType,
                 Xml = x.MessageParams,
-                Result = x.Result.ToResult(resultType)
+                Result = x.Result.ToResult(resultType),
+
+                OrderId = x.OrderId,
+                ProjectId = x.ProjectId,
             });
         }
     }
