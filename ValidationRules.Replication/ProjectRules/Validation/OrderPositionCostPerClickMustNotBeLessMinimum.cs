@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -35,15 +35,13 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 from restrictionViolated in query.For<Project.CostPerClickRestriction>().Where(x => x.ProjectId == order.ProjectId && x.CategoryId == bid.CategoryId && x.Minimum > bid.Bid && x.Begin < order.End && order.Begin < x.End)
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("category",
-                                    new XAttribute("id", bid.CategoryId)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", bid.OrderPositionId),
-                                    new XElement("position", new XAttribute("id", bid.PositionId))),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeCategory>(bid.CategoryId),
+                                    new Reference<EntityTypeOrderPosition>(bid.OrderPositionId,
+                                        new Reference<EntityTypePosition>(bid.PositionId)),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin > restrictionViolated.Begin ? order.Begin : restrictionViolated.Begin,
                         PeriodEnd = order.End < restrictionViolated.End ? order.End : restrictionViolated.End,

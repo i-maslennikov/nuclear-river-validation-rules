@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -33,29 +34,27 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              from firmAddress in query.For<Order.InvalidFirmAddress>().Where(x => x.OrderId == order.Id)
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("message",
-                                                  new XAttribute("invalidFirmAddressState", (int)firmAddress.State)),
-                                              new XElement("firmAddress",
-                                                  new XAttribute("id", firmAddress.FirmAddressId)),
-                                              new XElement("order",
-                                                  new XAttribute("id", order.Id)),
-                                              new XElement("opa",
-                                                  new XElement("orderPosition", new XAttribute("id", firmAddress.OrderPositionId)),
-                                                  new XElement("position", new XAttribute("id", firmAddress.PositionId)))
-                                              )),
+            var ruleResults =
+                from order in query.For<Order>()
+                from firmAddress in query.For<Order.InvalidFirmAddress>().Where(x => x.OrderId == order.Id)
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)firmAddress.State } },
+                                    new Reference<EntityTypeFirmAddress>(firmAddress.FirmAddressId),
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(firmAddress.OrderPositionId),
+                                        new Reference<EntityTypePosition>(firmAddress.PositionId)))
+                                .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistribution,
-                                      PeriodEnd = order.EndDistributionPlan,
-                                      OrderId = order.Id,
+                        PeriodStart = order.BeginDistribution,
+                        PeriodEnd = order.EndDistributionPlan,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

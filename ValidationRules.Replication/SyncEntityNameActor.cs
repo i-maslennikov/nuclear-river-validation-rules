@@ -90,7 +90,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.Advertisement,
+                    EntityType = EntityTypeIds.Advertisement,
                     Name = x.Name
                 });
 
@@ -115,7 +115,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                     {
                         Id = x.Id,
-                        TypeId = EntityTypeIds.AdvertisementElementTemplate,
+                        EntityType = EntityTypeIds.AdvertisementElementTemplate,
                         Name = x.Name,
                     });
 
@@ -139,7 +139,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.Category,
+                    EntityType = EntityTypeIds.Category,
                     Name = x.Name
                 });
 
@@ -163,7 +163,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.Firm,
+                    EntityType = EntityTypeIds.Firm,
                     Name = x.Name
                 });
 
@@ -187,7 +187,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.FirmAddress,
+                    EntityType = EntityTypeIds.FirmAddress,
                     Name = x.Address
                 });
 
@@ -211,7 +211,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.LegalPersonProfile,
+                    EntityType = EntityTypeIds.LegalPersonProfile,
                     Name = x.Name
                 });
 
@@ -236,7 +236,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.Order,
+                    EntityType = EntityTypeIds.Order,
                     Name = x.Number
                 });
 
@@ -260,7 +260,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.Position,
+                    EntityType = EntityTypeIds.Position,
                     Name = x.Name
                 });
 
@@ -284,7 +284,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.Project,
+                    EntityType = EntityTypeIds.Project,
                     Name = x.DisplayName
                 });
 
@@ -308,7 +308,7 @@ namespace NuClear.ValidationRules.Replication
                 .Select(x => new EntityName
                 {
                     Id = x.Id,
-                    TypeId = EntityTypeIds.Theme,
+                    EntityType = EntityTypeIds.Theme,
                     Name = x.Name
                 });
 
@@ -324,13 +324,9 @@ namespace NuClear.ValidationRules.Replication
             var ids = commands.Cast<SyncDataObjectCommand>()
                               .Where(c => c.DataObjectType == type)
                               .Distinct()
-                              .Select(c => new EntityName.EntityNameKey
-                              {
-                                  Id = c.DataObjectId,
-                                  TypeId = typeId
-                              }).ToList();
+                              .Select(c => new { Id = c.DataObjectId, EntityType = typeId }).ToList();
 
-            return SpecificationFactory<EntityName>.Contains(x => new EntityName.EntityNameKey { Id = x.Id, TypeId = x.TypeId }, ids);
+            return SpecificationFactory<EntityName>.Contains(x => new { x.Id, x.EntityType }, ids);
         }
     }
 }

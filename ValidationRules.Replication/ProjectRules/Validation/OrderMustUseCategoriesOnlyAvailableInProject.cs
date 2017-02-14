@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -39,15 +39,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 where !categoryBindedToProject
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)),
-                                new XElement("opa",
-                                    new XElement("orderPosition", new XAttribute("id", opa.OrderPositionId)),
-                                    new XElement("position", new XAttribute("id", opa.PositionId))),
-                                new XElement("category",
-                                    new XAttribute("id", opa.CategoryId)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(opa.OrderPositionId),
+                                        new Reference<EntityTypePosition>(opa.PositionId)),
+                                    new Reference<EntityTypeCategory>(opa.CategoryId))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

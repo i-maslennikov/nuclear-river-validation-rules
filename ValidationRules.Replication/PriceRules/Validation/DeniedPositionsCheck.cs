@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -85,26 +85,18 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(conflict.DeniedCauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.DeniedOrderId),
+                                        new Reference<EntityTypePosition>(conflict.DeniedCausePackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.DeniedCauseItemPositionId)),
 
-                                    // dependent
-                                    new XElement("order", new XAttribute("id", conflict.DeniedOrderId)),
-                                    new XElement("orderPosition",
-                                        new XAttribute("id", conflict.DeniedCauseOrderPositionId),
-                                        new XElement("position", new XAttribute("id", conflict.DeniedCausePackagePositionId))),
-                                    new XElement("opa",
-                                        new XElement("orderPosition", new XAttribute("id", conflict.DeniedCauseOrderPositionId)),
-                                        new XElement("position", new XAttribute("id", conflict.DeniedCauseItemPositionId))),
+                                    new Reference<EntityTypeOrderPosition>(conflict.PrincipalOrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.PrincipalOrderId),
+                                        new Reference<EntityTypePosition>(conflict.PrincipalPackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.PrincipalItemPositionId)))
+                                .ToXDocument(),
 
-                                    // principal
-                                    new XElement("order", new XAttribute("id", conflict.PrincipalOrderId)),
-                                    new XElement("orderPosition",
-                                        new XAttribute("id", conflict.PrincipalOrderPositionId),
-                                        new XElement("position", new XAttribute("id", conflict.PrincipalPackagePositionId))),
-                                    new XElement("opa",
-                                        new XElement("orderPosition", new XAttribute("id", conflict.PrincipalOrderPositionId)),
-                                        new XElement("position", new XAttribute("id", conflict.PrincipalItemPositionId)))
-                        )),
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         OrderId = conflict.DeniedOrderId,

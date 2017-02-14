@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -58,27 +58,30 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 
             // Вычисления в памяти, поскольку linq2db сам в памяти группировки не умеет
             var data = couponOverlapPeriods.ToArray();
-            var ruleResults = data.GroupBy(x => x.Key)
-                                  .Select(coupon =>
-                                      new Version.ValidationResult
-                                          {
-                                              MessageParams = new XDocument(
-                                                  new XElement("root",
-                                                      new XElement("advertisement",
-                                                          new XAttribute("id", coupon.Key.AdvertisementId)),
-                                                      new XElement("order",
-                                                          new XAttribute("id", coupon.Key.OrderId)),
-                                                      coupon.Distinct().Select(x => new XElement("opa",
-                                                                                    new XElement("orderPosition", new XAttribute("id", x.Value.OrderPositionId)),
-                                                                                    new XElement("position",new XAttribute("id", x.Value.PositionId))))
-                                                      )),
+            var ruleResults =
+                data.GroupBy(x => x.Key)
+                    .Select(coupon =>
+                                new Version.ValidationResult
+                                    {
+                                        MessageParams =
+                                            new MessageParams(
+                                                    new Reference[]
+                                                            {
+                                                                new Reference<EntityTypeAdvertisement>(coupon.Key.AdvertisementId),
+                                                                new Reference<EntityTypeOrder>(coupon.Key.OrderId),
+                                                            }.Concat(
+                                                                 coupon.Distinct()
+                                                                       .Select(x => new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                                                                   new Reference<EntityTypeOrderPosition>(x.Value.OrderPositionId),
+                                                                                   new Reference<EntityTypePosition>(x.Value.PositionId)))).ToArray())
+                                                .ToXDocument(),
 
-                                              PeriodStart = coupon.Key.Begin,
-                                              PeriodEnd = coupon.Key.End,
-                                              OrderId = coupon.Key.OrderId,
+                                        PeriodStart = coupon.Key.Begin,
+                                        PeriodEnd = coupon.Key.End,
+                                        OrderId = coupon.Key.OrderId,
 
-                                              Result = RuleResult,
-                                          });
+                                        Result = RuleResult,
+                                    });
 
             return ruleResults.AsQueryable();
         }

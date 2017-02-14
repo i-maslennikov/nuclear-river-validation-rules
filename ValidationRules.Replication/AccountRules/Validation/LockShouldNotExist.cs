@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -34,10 +35,10 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                 join @lock in query.For<Order.Lock>() on order.Id equals @lock.OrderId
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = @lock.Start,
                         PeriodEnd = @lock.End,

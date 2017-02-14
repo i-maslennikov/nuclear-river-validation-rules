@@ -42,6 +42,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="2GIS.NuClear.Model.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Tracing.API.1.0.5\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
       <Private>True</Private>
@@ -137,13 +141,14 @@
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
     <Compile Include="Composition\IDistinctor.cs" />
+    <Compile Include="Composition\NameResolvingService.cs" />
+    <Compile Include="Composition\ResolvedNameContainer.cs" />
     <Compile Include="Controllers\SingleController.cs" />
     <Compile Include="Controllers\ReleaseController.cs" />
     <Compile Include="Controllers\PrereleaseController.cs" />
     <Compile Include="Controllers\ManualController.cs" />
     <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="DataAccess\DataConnectionFactory.cs" />
-    <Compile Include="Composition\EntityReferenceParser.cs" />
     <Compile Include="DataAccess\Message.cs" />
     <Compile Include="DataAccess\MessageRepositiory.cs" />
     <Compile Include="DI\Bootstrapper.cs" />
@@ -152,7 +157,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Model\EntityReference.cs" />
+    <Compile Include="Model\NamedReference.cs" />
     <Compile Include="Model\EntityReferenceExtensions.cs" />
     <Compile Include="Model\ValidationResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

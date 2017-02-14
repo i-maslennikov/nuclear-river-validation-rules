@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -58,16 +58,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                 from advertisement in query.For<Advertisement>().Where(x => x.Id == period.AdvertisementId)
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)),
-                                new XElement("opa",
-                                    new XElement("orderPosition", new XAttribute("id", period.OrderPositionId)),
-                                    new XElement("position",new XAttribute("id", period.PositionId))),
-                                new XElement("advertisement",
-                                    new XAttribute("id", advertisement.Id))
-                            )),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(period.OrderPositionId),
+                                        new Reference<EntityTypePosition>(period.PositionId)),
+                                    new Reference<EntityTypeAdvertisement>(advertisement.Id))
+                                .ToXDocument(),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,

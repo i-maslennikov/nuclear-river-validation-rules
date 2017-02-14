@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -36,16 +36,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 where !firmAddress.IsLocatedOnTheMap
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("firmAddress",
-                                    new XAttribute("id", firmAddress.Id)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)),
-                                new XElement("opa",
-                                    new XElement("orderPosition", new XAttribute("id", advertisement.OrderPositionId)),
-                                    new XElement("position", new XAttribute("id", advertisement.PositionId)))
-                                )),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeFirmAddress>(firmAddress.Id),
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(advertisement.OrderPositionId),
+                                        new Reference<EntityTypePosition>(advertisement.PositionId)))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

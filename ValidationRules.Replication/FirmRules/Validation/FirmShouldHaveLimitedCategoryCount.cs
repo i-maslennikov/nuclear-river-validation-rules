@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -55,14 +56,11 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
-                                new XElement("message",
-                                    new XAttribute("count", count),
-                                    new XAttribute("allowed", MaxCategoriesAlowedForFirm)),
-                                new XElement("firm",
-                                    new XAttribute("id", firmPeriod.FirmId)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)))),
+                            new MessageParams(
+                                    new Dictionary<string, object> { { "count", count }, { "allowed", MaxCategoriesAlowedForFirm } },
+                                    new Reference<EntityTypeFirm>(firmPeriod.FirmId),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = firmPeriod.Begin,
                         PeriodEnd = firmPeriod.End,

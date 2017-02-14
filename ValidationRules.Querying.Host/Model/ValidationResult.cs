@@ -8,8 +8,8 @@ namespace NuClear.ValidationRules.Querying.Host.Model
     {
         public MessageTypeCode Rule { get; set; }
         public string Template { get; set; }
-        public IReadOnlyCollection<EntityReference> References { get; set; }
-        public EntityReference MainReference { get; set; }
+        public IReadOnlyCollection<NamedReference> References { get; set; }
+        public NamedReference MainReference { get; set; }
         public Result Result { get; set; }
     }
 }

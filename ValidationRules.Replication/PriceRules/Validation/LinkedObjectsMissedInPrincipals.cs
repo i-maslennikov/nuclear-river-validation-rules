@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -93,30 +93,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                        End = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).End,
                                    });
 
-            var messages = from unsatisfied in unsatisfiedPositions
-                           select new Version.ValidationResult
-                               {
-                                   MessageParams =
-                                       new XDocument(new XElement("root",
-                                            new XElement("firm",
-                                                new XAttribute("id", unsatisfied.Key.FirmId)),
-                                            new XElement("orderPosition",
-                                                new XAttribute("id", unsatisfied.Key.CauseOrderPositionId),
-                                                new XElement("position", new XAttribute("id", unsatisfied.Key.CausePackagePositionId))),
-                                            new XElement("opa",
-                                                new XElement("orderPosition", new XAttribute("id", unsatisfied.Key.CauseOrderPositionId)),
-                                                new XElement("position", new XAttribute("id", unsatisfied.Key.CauseItemPositionId))),
-                                            new XElement("order",
-                                                new XAttribute("id", unsatisfied.Key.OrderId))
-                                   )),
+            var messages =
+                from unsatisfied in unsatisfiedPositions
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(unsatisfied.Key.CauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(unsatisfied.Key.OrderId.Value),
+                                        new Reference<EntityTypePosition>(unsatisfied.Key.CausePackagePositionId),
+                                        new Reference<EntityTypePosition>(unsatisfied.Key.CauseItemPositionId)))
+                                .ToXDocument(),
 
-                                   PeriodStart = unsatisfied.Key.Start,
-                                   PeriodEnd = unsatisfied.End,
-                                   OrderId = unsatisfied.Key.OrderId,
-                                   ProjectId = null,
+                        PeriodStart = unsatisfied.Key.Start,
+                        PeriodEnd = unsatisfied.End,
+                        OrderId = unsatisfied.Key.OrderId,
+                        ProjectId = null,
 
-                                   Result = RuleResult,
-                               };
+                        Result = RuleResult,
+                    };
 
             return messages;
         }

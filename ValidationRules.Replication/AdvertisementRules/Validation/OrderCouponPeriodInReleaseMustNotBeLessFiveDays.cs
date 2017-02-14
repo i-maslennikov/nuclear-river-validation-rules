@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -31,31 +31,31 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              from opa in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
-                              from advertisement in query.For<Advertisement>().Where(x => x.Id == opa.AdvertisementId)
-                              from elementOffset in query.For<Advertisement.Coupon>().Where(x => x.AdvertisementId == advertisement.Id)
-                              where elementOffset.DaysTotal < MaxOffsetInDays ||
-                                    elementOffset.DaysFromMonthBeginToCouponEnd < MaxOffsetInDays ||
-                                    elementOffset.DaysFromCouponBeginToMonthEnd < MaxOffsetInDays
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(new XElement("root",
-                                          new XElement("order",
-                                              new XAttribute("id", order.Id)),
-                                          new XElement("opa",
-                                              new XElement("orderPosition", new XAttribute("id", opa.OrderPositionId)),
-                                              new XElement("position",new XAttribute("id", opa.PositionId))),
-                                          new XElement("advertisement",
-                                              new XAttribute("id", advertisement.Id))
-                                          )),
+            var ruleResults =
+                from order in query.For<Order>()
+                from opa in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
+                from advertisement in query.For<Advertisement>().Where(x => x.Id == opa.AdvertisementId)
+                from elementOffset in query.For<Advertisement.Coupon>().Where(x => x.AdvertisementId == advertisement.Id)
+                where elementOffset.DaysTotal < MaxOffsetInDays ||
+                      elementOffset.DaysFromMonthBeginToCouponEnd < MaxOffsetInDays ||
+                      elementOffset.DaysFromCouponBeginToMonthEnd < MaxOffsetInDays
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(opa.OrderPositionId),
+                                        new Reference<EntityTypePosition>(opa.PositionId)),
+                                    new Reference<EntityTypeAdvertisement>(advertisement.Id))
+                                .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistributionDate,
-                                      PeriodEnd = order.EndDistributionDatePlan,
-                                      OrderId = order.Id,
+                        PeriodStart = order.BeginDistributionDate,
+                        PeriodEnd = order.EndDistributionDatePlan,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

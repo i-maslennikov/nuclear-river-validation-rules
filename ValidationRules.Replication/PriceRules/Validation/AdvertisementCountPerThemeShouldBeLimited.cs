@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -57,14 +58,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
-                                new XElement("message",
-                                    new XAttribute("max", MaxPositionsPerTheme),
-                                    new XAttribute("count", oversale.Count)),
-                                new XElement("theme",
-                                    new XAttribute("id", oversale.ThemeId)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)))),
+                            new MessageParams(
+                                    new Dictionary<string, object> { { "max", MaxPositionsPerTheme }, { "count", oversale.Count } },
+                                    new Reference<EntityTypeTheme>(oversale.ThemeId.Value),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
@@ -11,12 +11,12 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid;
 
-        public MessageComposerResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = references.Get("order");
-            var orderPositionReference = references.Get("orderPosition");
-            var categoryReference = references.Get("category");
-            var firmAddressReference = references.Get("firmAddress");
+            var orderReference = references.Get<EntityTypeOrder>();
+            var orderPositionReference = references.Get<EntityTypeOrderPosition>();
+            var categoryReference = references.Get<EntityTypeCategory>();
+            var firmAddressReference = references.Get<EntityTypeFirmAddress>();
 
             return new MessageComposerResult(
                 orderReference,

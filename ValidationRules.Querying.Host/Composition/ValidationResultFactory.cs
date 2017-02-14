@@ -15,23 +15,23 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
         private readonly IReadOnlyDictionary<MessageTypeCode, IMessageComposer> _composers;
         private readonly IReadOnlyDictionary<MessageTypeCode, IDistinctor> _distinctors;
-        private readonly EntityReferenceParser _entityReferenceParser;
+        private readonly NameResolvingService _nameResolvingService;
 
-        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers, IReadOnlyCollection<IDistinctor> distinctors, EntityReferenceParser entityReferenceParser)
+        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers, IReadOnlyCollection<IDistinctor> distinctors, NameResolvingService nameResolvingService)
         {
-            _entityReferenceParser = entityReferenceParser;
+            _nameResolvingService = nameResolvingService;
             _composers = composers.ToDictionary(x => x.MessageType, x => x);
             _distinctors = distinctors.ToDictionary(x => x.MessageType, x => x);
         }
 
         public IReadOnlyCollection<ValidationResult> GetValidationResult(IReadOnlyCollection<Message> messages)
         {
-            var messagesWithReferences = _entityReferenceParser.ParseEntityReferences(messages);
-            var result = messagesWithReferences.Select(x => Compose(x.Message, x.References)).ToList();
+            var resolvedNames = _nameResolvingService.Resolve(messages);
+            var result = messages.Select(x => Compose(x, resolvedNames)).ToList();
             return result;
         }
 
-        private ValidationResult Compose(Message message, IReadOnlyCollection<EntityReference> references)
+        private ValidationResult Compose(Message message, ResolvedNameContainer resolvedNames)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                     throw new ArgumentException($"Не найден сериализатор '{message.MessageType}'", nameof(message));
                 }
 
-                var composerResult = composer.Compose(message, references);
+                var composerResult = composer.Compose(message.References.Select(resolvedNames.For).ToArray(), message.Extra);
 
                 return new ValidationResult
                 {
@@ -74,13 +74,14 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
             public IEnumerable<Message> Distinct(IEnumerable<Message> messages)
                 => messages.GroupBy(x => new { x.OrderId, x.ProjectId })
-                          .SelectMany(x => x.Distinct(this));
+                           .SelectMany(x => x.Distinct(this));
 
             bool IEqualityComparer<Message>.Equals(Message x, Message y)
-                => XNode.EqualityComparer.Equals(x.Xml, y.Xml);
+                => x.References.Count == y.References.Count
+                   && x.References.Zip(y.References, (l, r) => ReferenceComparer.Instance.Equals(l, r)).All(equal => equal);
 
             int IEqualityComparer<Message>.GetHashCode(Message obj)
-                => XNode.EqualityComparer.GetHashCode(obj.Xml);
+                => obj.References.Aggregate(0, (accum, reference) => (accum * 367) ^ ReferenceComparer.Instance.GetHashCode(reference));
         }
     }
 }

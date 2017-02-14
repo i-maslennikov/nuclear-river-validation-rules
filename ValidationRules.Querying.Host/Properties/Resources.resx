@@ -126,10 +126,6 @@
   <data name="ADPValidation_Template" xml:space="preserve">
     <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1}</value>
   </data>
-  <data name="ADPValidation_Template_Part" xml:space="preserve">
-    <value>{0} {{{1}}} Заказа {{{2}}}</value>
-    <comment>ключа нет в ERM</comment>
-  </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:MMMM} - {4}</value>
   </data>

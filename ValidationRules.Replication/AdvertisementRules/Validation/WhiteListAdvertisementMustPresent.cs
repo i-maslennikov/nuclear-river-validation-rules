@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -39,12 +39,11 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                 where !order.ProvideWhiteListAdvertisement
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)),
-                                new XElement("firm",
-                                    new XAttribute("id", order.FirmId)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeFirm>(order.FirmId))
+                                .ToXDocument(),
 
                         PeriodStart = period.Start > order.BeginDistributionDate ? period.Start : order.BeginDistributionDate,
                         PeriodEnd = period.End < order.EndDistributionDatePlan ? period.End : order.EndDistributionDatePlan,

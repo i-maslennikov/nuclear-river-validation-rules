@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
@@ -32,37 +33,39 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var dates = query.For<Project.ProjectDefaultTheme>().Select(x => new { x.ProjectId, Date = x.Start })
-                     .Union(query.For<Project.ProjectDefaultTheme>().Select(x => new {x.ProjectId, Date = x.End }))
+            var dates =
+                query.For<Project.ProjectDefaultTheme>().Select(x => new { x.ProjectId, Date = x.Start })
+                     .Union(query.For<Project.ProjectDefaultTheme>().Select(x => new { x.ProjectId, Date = x.End }))
                      .Union(query.For<Project>().Select(x => new { ProjectId = x.Id, Date = DateTime.MinValue })); // Фиктивное начало для каждого проекта, даже если в нём нет ни одной тематики по умолчанию
 
-            var projectPeriods = from date in dates
-                                 from nextDate in dates.Where(x => x.ProjectId == date.ProjectId && x.Date > date.Date).OrderBy(x => x.Date).Take(1).DefaultIfEmpty()
-                                 select new
-                                     {
-                                         Start = date.Date,
-                                         End = nextDate != null ? nextDate.Date : DateTime.MaxValue,
-                                         date.ProjectId
-                                     };
+            var projectPeriods =
+                from date in dates
+                from nextDate in dates.Where(x => x.ProjectId == date.ProjectId && x.Date > date.Date).OrderBy(x => x.Date).Take(1).DefaultIfEmpty()
+                select new
+                    {
+                        Start = date.Date,
+                        End = nextDate != null ? nextDate.Date : DateTime.MaxValue,
+                        date.ProjectId
+                    };
 
-            var ruleResults = from projectPeriod in projectPeriods
-                              let themeCount = query.For<Project.ProjectDefaultTheme>().Count(x => x.ProjectId == projectPeriod.ProjectId && x.Start < projectPeriod.End && x.End > projectPeriod.Start)
-                              where themeCount != 1
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("project",
-                                                  new XAttribute("id", projectPeriod.ProjectId)),
-                                              new XElement("message",
-                                                  new XAttribute("themeCount", themeCount)))),
+            var ruleResults =
+                from projectPeriod in projectPeriods
+                let themeCount = query.For<Project.ProjectDefaultTheme>().Count(x => x.ProjectId == projectPeriod.ProjectId && x.Start < projectPeriod.End && x.End > projectPeriod.Start)
+                where themeCount != 1
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Dictionary<string, object> { { "themeCount", themeCount } },
+                                    new Reference<EntityTypeProject>(projectPeriod.ProjectId))
+                                .ToXDocument(),
 
-                                      PeriodStart = projectPeriod.Start,
-                                      PeriodEnd = projectPeriod.End,
-                                      ProjectId = projectPeriod.ProjectId,
+                        PeriodStart = projectPeriod.Start,
+                        PeriodEnd = projectPeriod.End,
+                        ProjectId = projectPeriod.ProjectId,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

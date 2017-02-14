@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -35,17 +35,15 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 where restriction.SalesModel != adv.SalesModel
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("category",
-                                    new XAttribute("id", adv.CategoryId)),
-                                new XElement("opa",
-                                    new XElement("orderPosition", new XAttribute("id", adv.OrderPositionId)),
-                                    new XElement("position", new XAttribute("id", adv.PositionId))),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id)),
-                                new XElement("project",
-                                    new XAttribute("id", order.ProjectId)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeCategory>(adv.CategoryId),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(adv.OrderPositionId),
+                                        new Reference<EntityTypePosition>(adv.PositionId)),
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeProject>(order.ProjectId))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin > restriction.Begin ? order.Begin : restriction.Begin,
                         PeriodEnd = order.End < restriction.End ? order.End : restriction.End,

@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -83,18 +83,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
-                                new XElement("firm",
-                                    new XAttribute("id", conflict.FirmId)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", conflict.CauseOrderPositionId),
-                                    new XElement("position",new XAttribute("id", conflict.CausePackagePositionId))),
-                                new XElement("opa",
-                                    new XElement("orderPosition", new XAttribute("id", conflict.CauseOrderPositionId)),
-                                    new XElement("position", new XAttribute("id", conflict.CauseItemPositionId))),
-                                new XElement("order",
-                                    new XAttribute("id", conflict.OrderId))
-                        )),
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(conflict.CauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.OrderId),
+                                        new Reference<EntityTypePosition>(conflict.CausePackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.CauseItemPositionId)))
+                                .ToXDocument(),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,

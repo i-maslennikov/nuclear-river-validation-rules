@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -28,25 +28,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from overcount in query.For<Price.AssociatedPositionGroupOvercount>()
-                              join pp in query.For<Period.PricePeriod>() on overcount.PriceId equals pp.PriceId
-                              join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(new XElement("root",
-                                          new XElement("project",
-                                            new XAttribute("id", period.ProjectId)),
-                                          new XElement("pricePosition",
-                                              new XAttribute("id", overcount.PricePositionId),
-                                              new XElement("position", new XAttribute("id", overcount.PositionId)))
-                                      )),
+            var ruleResults =
+                from overcount in query.For<Price.AssociatedPositionGroupOvercount>()
+                join pp in query.For<Period.PricePeriod>() on overcount.PriceId equals pp.PriceId
+                join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeProject>(period.ProjectId),
+                                    new Reference<EntityTypePricePosition>(overcount.PricePositionId,
+                                        new Reference<EntityTypePosition>(overcount.PositionId)))
+                                .ToXDocument(),
 
-                                      PeriodStart = period.Start,
-                                      PeriodEnd = period.End,
-                                      ProjectId = period.ProjectId,
+                        PeriodStart = period.Start,
+                        PeriodEnd = period.End,
+                        ProjectId = period.ProjectId,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

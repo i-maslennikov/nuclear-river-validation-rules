@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
-using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 

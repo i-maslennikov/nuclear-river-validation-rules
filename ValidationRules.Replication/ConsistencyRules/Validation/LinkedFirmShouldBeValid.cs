@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -30,25 +31,24 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              from firm in query.For<Order.InvalidFirm>().Where(x => x.OrderId == order.Id)
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("message",
-                                                  new XAttribute("invalidFirmState", (int)firm.State)),
-                                              new XElement("firm",
-                                                  new XAttribute("id", firm.FirmId)),
-                                              new XElement("order",
-                                                  new XAttribute("id", order.Id)))),
+            var ruleResults =
+                from order in query.For<Order>()
+                from firm in query.For<Order.InvalidFirm>().Where(x => x.OrderId == order.Id)
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Dictionary<string, object> { { "invalidFirmState", (int)firm.State } },
+                                    new Reference<EntityTypeFirm>(firm.FirmId),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistribution,
-                                      PeriodEnd = order.EndDistributionPlan,
-                                      OrderId = order.Id,
+                        PeriodStart = order.BeginDistribution,
+                        PeriodEnd = order.EndDistributionPlan,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -79,37 +79,29 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         OrderAssociatedPosition = pair.associated.Position,
                     };
 
-            var messages = from conflict in conflictingPositions
-                           select new Version.ValidationResult
-                               {
-                                   MessageParams = new XDocument(new XElement("root",
+            var messages =
+                from conflict in conflictingPositions
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(conflict.OrderAssociatedPosition.CauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.OrderAssociatedPosition.OrderId),
+                                        new Reference<EntityTypePosition>(conflict.OrderAssociatedPosition.CausePackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.OrderAssociatedPosition.CauseItemPositionId)),
 
-                                           // dependent
-                                           new XElement("order",
-                                               new XAttribute("id", conflict.OrderAssociatedPosition.OrderId)),
-                                           new XElement("orderPosition",
-                                               new XAttribute("id", conflict.OrderAssociatedPosition.CauseOrderPositionId),
-                                               new XElement("position", new XAttribute("id", conflict.OrderAssociatedPosition.CausePackagePositionId))),
-                                           new XElement("opa",
-                                               new XElement("orderPosition", new XAttribute("id", conflict.OrderAssociatedPosition.CauseOrderPositionId)),
-                                               new XElement("position", new XAttribute("id", conflict.OrderAssociatedPosition.CauseItemPositionId))),
+                                    new Reference<EntityTypeOrderPosition>(conflict.OrderPrincipalPosition.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.OrderPrincipalPosition.OrderId),
+                                        new Reference<EntityTypePosition>(conflict.OrderPrincipalPosition.PackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.OrderPrincipalPosition.ItemPositionId)))
+                                .ToXDocument(),
 
-                                            // principal
-                                            new XElement("order", new XAttribute("id", conflict.OrderPrincipalPosition.OrderId)),
-                                            new XElement("orderPosition",
-                                                new XAttribute("id", conflict.OrderPrincipalPosition.OrderPositionId),
-                                                new XElement("position", new XAttribute("id", conflict.OrderPrincipalPosition.PackagePositionId))),
-                                            new XElement("opa",
-                                                new XElement("orderPosition", new XAttribute("id", conflict.OrderPrincipalPosition.OrderPositionId)),
-                                                new XElement("position", new XAttribute("id", conflict.OrderPrincipalPosition.ItemPositionId)))
-                                   )),
+                        PeriodStart = conflict.Start,
+                        PeriodEnd = conflict.End,
+                        OrderId = conflict.OrderAssociatedPosition.OrderId,
 
-                                   PeriodStart = conflict.Start,
-                                   PeriodEnd = conflict.End,
-                                   OrderId = conflict.OrderAssociatedPosition.OrderId,
-
-                                   Result = RuleResult,
-                               };
+                        Result = RuleResult,
+                    };
 
             return messages;
         }

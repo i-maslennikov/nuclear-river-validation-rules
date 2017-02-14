@@ -1,8 +1,8 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -29,27 +29,30 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              from inactive in query.For<Order.InactiveReference>().Where(x => x.OrderId == order.Id)
-                              where inactive.BranchOffice || inactive.BranchOfficeOrganizationUnit || inactive.LegalPerson || inactive.LegalPersonProfile
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("order",
-                                                  new XAttribute("id", order.Id)),
-                                              new XElement("message",
-                                                  inactive.BranchOfficeOrganizationUnit ? new XElement("branchOfficeOrganizationUnit") : null,
-                                                  inactive.BranchOffice ? new XElement("branchOffice") : null,
-                                                  inactive.LegalPerson ? new XElement("legalPerson") : null,
-                                                  inactive.LegalPersonProfile ? new XElement("legalPersonProfile") : null))),
+            var ruleResults =
+                from order in query.For<Order>()
+                from inactive in query.For<Order.InactiveReference>().Where(x => x.OrderId == order.Id)
+                where inactive.BranchOffice || inactive.BranchOfficeOrganizationUnit || inactive.LegalPerson || inactive.LegalPersonProfile
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Dictionary<string, object>
+                                        {
+                                                { "branchOfficeOrganizationUnit", inactive.BranchOfficeOrganizationUnit },
+                                                { "branchOffice", inactive.BranchOffice },
+                                                { "legalPerson", inactive.LegalPerson },
+                                                { "legalPersonProfile", inactive.LegalPersonProfile },
+                                        },
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistribution,
-                                      PeriodEnd = order.EndDistributionPlan,
-                                      OrderId = order.Id,
+                        PeriodStart = order.BeginDistribution,
+                        PeriodEnd = order.EndDistributionPlan,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }
