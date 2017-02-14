@@ -22,10 +22,31 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             if (reference.EntityType == EntityTypeOrderPosition.Instance.Id)
             {
+                // Ссылки на op включают в себя заказ и одну или две номенклатурных позиций.
                 var order = Get<EntityTypeOrder>(reference).First();
                 var packagePosition = Get<EntityTypePosition>(reference).First();
                 var itemPosition = Get<EntityTypePosition>(reference).Last();
                 return new OrderPositionNamedReference(reference.Id, For(packagePosition), For(itemPosition), For(order));
+            }
+
+            if (reference.EntityType == EntityTypeOrderPositionAdvertisement.Instance.Id)
+            {
+                // Сслыки на opa - всегда представляются в виде ссылок на op, только имя подставляется дочерней позиции.
+                var orderPosition = Get<EntityTypeOrderPosition>(reference).First();
+                var itemPosition = Get<EntityTypePosition>(reference).First();
+                return new NamedReference(EntityTypeOrderPosition.Instance, orderPosition.Id, For(itemPosition).Name);
+            }
+
+            if (reference.EntityType == EntityTypeAdvertisementElement.Instance.Id)
+            {
+                var template = Get<EntityTypeAdvertisementElementTemplate>(reference).First();
+                return new NamedReference(EntityTypeAdvertisementElement.Instance, reference.Id, For(template).Name);
+            }
+
+            if (reference.EntityType == EntityTypePricePosition.Instance.Id)
+            {
+                var position = Get<EntityTypePosition>(reference).First();
+                return new NamedReference(EntityTypePricePosition.Instance, reference.Id, For(position).Name);
             }
 
             NamedReference name;
