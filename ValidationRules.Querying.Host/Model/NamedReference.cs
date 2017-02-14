@@ -20,16 +20,22 @@ namespace NuClear.ValidationRules.Querying.Host.Model
 
     public class OrderPositionNamedReference : NamedReference
     {
-        public OrderPositionNamedReference(long id, string positionName, string itemPositionName, NamedReference order)
-            : base(EntityTypeOrderPosition.Instance, id, positionName)
+        public OrderPositionNamedReference(long id, NamedReference packagePosition, NamedReference itemPosition, NamedReference order)
+            : base(EntityTypeOrderPosition.Instance, id, packagePosition.Name)
         {
             Order = order;
-            PositionPrefix = string.Equals(itemPositionName, positionName)
-                ? Resources.RichDefaultPositionTypeTemplate
-                : string.Format(Resources.RichChildPositionTypeTemplate, itemPositionName);
+            PackagePosition = packagePosition;
+            ItemPosition = itemPosition;
         }
 
         public NamedReference Order { get; }
-        public string PositionPrefix { get; }
+
+        public string PositionPrefix
+            => PackagePosition.Id == ItemPosition.Id
+                ? Resources.RichDefaultPositionTypeTemplate
+                : string.Format(Resources.RichChildPositionTypeTemplate, ItemPosition.Name);
+
+        private NamedReference PackagePosition { get; }
+        private NamedReference ItemPosition { get; }
     }
 }

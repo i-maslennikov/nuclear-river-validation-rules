@@ -39,8 +39,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                             new MessageParams(
                                     new Reference<EntityTypeCategory>(bid.CategoryId),
                                     new Reference<EntityTypeOrderPosition>(bid.OrderPositionId,
-                                        new Reference<EntityTypePosition>(bid.PositionId)),
-                                    new Reference<EntityTypeOrder>(order.Id))
+                                        new Reference<EntityTypeOrder>(order.Id),
+                                        new Reference<EntityTypePosition>(bid.PositionId)))
                                 .ToXDocument(),
 
                         PeriodStart = order.Begin > restrictionViolated.Begin ? order.Begin : restrictionViolated.Begin,

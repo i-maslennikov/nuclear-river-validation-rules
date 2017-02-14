@@ -22,8 +22,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             if (reference.EntityType == EntityTypeOrderPosition.Instance.Id)
             {
+                var order = Get<EntityTypeOrder>(reference).First();
                 var packagePosition = Get<EntityTypePosition>(reference).First();
-                return new NamedReference(EntityTypeOrderPosition.Instance, reference.Id, For(packagePosition).Name);
+                var itemPosition = Get<EntityTypePosition>(reference).Last();
+                return new OrderPositionNamedReference(reference.Id, For(packagePosition), For(itemPosition), For(order));
             }
 
             NamedReference name;

@@ -36,8 +36,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrder>(order.Id),
                                     new Reference<EntityTypeOrderPosition>(fail.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(order.Id),
                                         new Reference<EntityTypePosition>(fail.CompositePositionId)),
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                         new Reference<EntityTypeOrderPosition>(fail.OrderPositionId),
