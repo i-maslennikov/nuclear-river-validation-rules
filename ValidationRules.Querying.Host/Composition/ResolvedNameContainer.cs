@@ -15,7 +15,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
         public ResolvedNameContainer(IReadOnlyDictionary<Reference, string> names, IReadOnlyDictionary<int, IEntityType> knownEntityTypes)
         {
-            _names = names.ToDictionary(x => x.Key, x => new NamedReference(knownEntityTypes[x.Key.EntityType], x.Key.Id, x.Value));
+            _names = names.ToDictionary(x => x.Key, x => new NamedReference(knownEntityTypes[x.Key.EntityType], x.Key.Id, x.Value), ReferenceComparer.Instance);
         }
 
         public NamedReference For(Reference reference)

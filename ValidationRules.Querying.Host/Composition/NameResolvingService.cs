@@ -21,7 +21,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
         public ResolvedNameContainer Resolve(IReadOnlyCollection<Message> messages)
         {
-            var references = messages.SelectMany(x => x.References).Concat(messages.SelectMany(x => x.References).SelectMany(x => x.Children)).Distinct(ReferenceComparer.Instance);
+            var references = messages
+                .SelectMany(x => x.References)
+                .Concat(messages.SelectMany(x => x.References).SelectMany(x => x.Children))
+                .Distinct(ReferenceComparer.Instance);
+
             return new ResolvedNameContainer(Resolve(references), _knownEntityTypes);
         }
 
@@ -31,8 +35,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
             using (var connection = _factory.CreateDataConnection("Facts"))
             {
-                var query = connection.GetTable<EntityName>();
-                return query
+                return connection
+                    .GetTable<EntityName>()
                     .Where(x => searchKeys.Contains(new { x.Id, x.EntityType }))
                     .ToDictionary(x => new Reference(x.EntityType, x.Id), x => x.Name);
             }
