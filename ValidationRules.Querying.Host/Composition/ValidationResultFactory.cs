@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Model;
@@ -27,7 +26,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         public IReadOnlyCollection<ValidationResult> GetValidationResult(IReadOnlyCollection<Message> messages)
         {
             var resolvedNames = _nameResolvingService.Resolve(messages);
-            var result = messages.Select(x => Compose(x, resolvedNames)).ToList();
+            var result = MakeDistinct(messages).Select(x => Compose(x, resolvedNames)).ToList();
             return result;
         }
 
