@@ -60,7 +60,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = new MessageParams(
-                                new Dictionary<string, object> { { "state", "missing" } },
+                                new Dictionary<string, object> { { "state", (int)Aggregates::DealState.Missing } },
                                 new Reference<EntityTypeOrder>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveDeal,
                         Result = 175,
@@ -71,14 +71,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = new MessageParams(
-                                new Dictionary<string, object> { { "state", "inactive" } },
+                                new Dictionary<string, object> { { "state", (int)Aggregates::DealState.Inactive } },
                                 new Reference<EntityTypeOrder>(2)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveDeal,
                         Result = 175,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(2),
                         OrderId = 2,
-                    });
+                    }).RunOnlyThis();
 
         private static Aggregates::Order.MissingRequiredField CreateOrderMissingRequiredField(long orderId,
                                                                                       bool branchOfficeOrganizationUnit = true,
