@@ -145,6 +145,9 @@
   <data name="AdvertisementPeriodEndsBeforeReleasePeriodBegins" xml:space="preserve">
     <value>Период размещения рекламного материала {0}, выбранного в позиции {1} должен захватывать 5 дней от текущего месяца размещения</value>
   </data>
+  <data name="AdvertisementPeriodError" xml:space="preserve">
+    <value>Период не может быть менее пяти дней.</value>
+  </data>
   <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
     <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>

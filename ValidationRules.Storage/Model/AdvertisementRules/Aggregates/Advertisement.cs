@@ -47,10 +47,19 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long AdvertisementElementId { get; set; }
 
             public int DaysTotal { get; set; }
-            public int DaysFromMonthBeginToCouponEnd { get; set; }
-            public int DaysFromCouponBeginToMonthEnd { get; set; }
 
+            /// <summary>
+            /// Нормализованный (округлённый) период размещения купона.
+            /// Начало размещения округляется до следющего месяца, если начало менее, чем за пять дней до следующего месяца.
+            /// Например, для начала: 2017-01-31 -> 2017-02-01
+            /// </summary>
             public DateTime BeginMonth { get; set; }
+
+            /// <summary>
+            /// Нормализованный (округлённый) период размещения купона.
+            /// Окончание размещения округляется до начала месяца, если окончание менее, чем через пять дней от начала месяца.
+            /// Например, для начала: 2017-01-03 -> 2017-01-01
+            /// </summary>
             public DateTime EndMonth { get; set; }
         }
     }

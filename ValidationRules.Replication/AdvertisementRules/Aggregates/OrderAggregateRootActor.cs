@@ -57,7 +57,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                         MessageTypeCode.AdvertisementMustBelongToFirm,
                         MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
                         MessageTypeCode.CouponMustBeSoldOnceAtTime,
-                        MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
+                        MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays,
                         MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         MessageTypeCode.OrderMustHaveAdvertisement,
                         MessageTypeCode.OrderMustNotContainDummyAdvertisement,
@@ -384,7 +384,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementElementMustPassReview,
                         MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
-                        MessageTypeCode.OrderCouponPeriodInReleaseMustNotBeLessFiveDays,
+                        MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays,
                         MessageTypeCode.OrderCouponPeriodMustBeInRelease,
                         MessageTypeCode.OrderMustHaveAdvertisement,
                     };

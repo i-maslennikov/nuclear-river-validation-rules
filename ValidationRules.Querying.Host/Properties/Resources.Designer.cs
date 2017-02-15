@@ -133,6 +133,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Период не может быть менее пяти дней..
+        /// </summary>
+        internal static string AdvertisementPeriodError {
+            get {
+                return ResourceManager.GetString("AdvertisementPeriodError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}.
         /// </summary>
         internal static string AdvertisementSpecifiedForPositionDoesNotBelongToFirm {
