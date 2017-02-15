@@ -1,6 +1,9 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -18,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(DefaultThemeMustHaveOnlySelfAdsPositive))
                 .Fact(
                     new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb, IsSelfAds = false },
-                    new Facts::Project {Id = 3, OrganizationUnitId = 2},
+                    new Facts::Project { Id = 3, OrganizationUnitId = 2 },
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, ThemeId = 5 },
@@ -33,14 +36,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 )
                 .Message(
                     new Messages::Version.ValidationResult
-                    {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" /><theme id = \"5\" /></root>"),
-                        MessageType = (int)MessageTypeCode.DefaultThemeMustHaveOnlySelfAds,
-                        Result = 255,
-                        PeriodStart = FirstDayJan,
-                        PeriodEnd = FirstDayFeb,
-                        OrderId = 1,
-                    }
+                        {
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeOrder>(1),
+                                new Reference<EntityTypeTheme>(5)).ToXDocument(),
+                            MessageType = (int)MessageTypeCode.DefaultThemeMustHaveOnlySelfAds,
+                            Result = 255,
+                            PeriodStart = FirstDayJan,
+                            PeriodEnd = FirstDayFeb,
+                            OrderId = 1,
+                        }
                 );
 
         // ReSharper disable once UnusedMember.Local

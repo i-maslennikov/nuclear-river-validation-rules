@@ -1,6 +1,6 @@
-﻿using System.Xml.Linq;
-
-using NuClear.DataTest.Metamodel.Dsl;
+﻿using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -54,11 +54,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.CategoryAdvertisement { OrderId = 3, OrderPositionId = 3, PositionId = 4, CategoryId = 12, SalesModel = 12 },
                     new Aggregates::Order.CostPerClickAdvertisement { OrderId = 3, OrderPositionId = 3, PositionId = 4, CategoryId = 12 },
 
-                    new Aggregates::Project.Category {CategoryId = 12})
+                    new Aggregates::Project.Category { CategoryId = 12 })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><category id=\"12\" /><opa><orderPosition id=\"1\"/><position id=\"4\" /></opa><order id=\"1\" /></root>"),
+                            MessageParams =
+                                new MessageParams(
+                                    new Reference<EntityTypeCategory>(12),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(1),
+                                        new Reference<EntityTypePosition>(4)),
+                                    new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
                             Result = 255,
                             PeriodStart = MonthStart(1),

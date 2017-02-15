@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -74,8 +75,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse(
-                                "<root><category id=\"12\" /><opa><orderPosition id=\"1\" /><position id=\"1\" /></opa><order id=\"1\" /><project id=\"0\" /></root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeCategory>(12),
+                                        new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                            new Reference<EntityTypeOrderPosition>(1),
+                                            new Reference<EntityTypePosition>(1)),
+                                        new Reference<EntityTypeOrder>(1),
+                                        new Reference<EntityTypeProject>(0))
+                                    .ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -84,8 +92,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse(
-                                "<root><category id=\"12\" /><opa><orderPosition id=\"4\" /><position id=\"4\" /></opa><order id=\"4\" /><project id=\"0\" /></root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeCategory>(12),
+                                        new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                            new Reference<EntityTypeOrderPosition>(4),
+                                            new Reference<EntityTypePosition>(4)),
+                                        new Reference<EntityTypeOrder>(4),
+                                        new Reference<EntityTypeProject>(0))
+                                    .ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
                             Result = 255,
                             PeriodStart = MonthStart(4),

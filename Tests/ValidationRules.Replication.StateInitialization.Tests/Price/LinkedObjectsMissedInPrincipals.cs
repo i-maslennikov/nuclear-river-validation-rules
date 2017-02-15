@@ -1,6 +1,6 @@
-﻿using System.Xml.Linq;
-
-using NuClear.DataTest.Metamodel.Dsl;
+﻿using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -36,12 +36,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<firm id=\"1\" />" +
-                                                            "<orderPosition id=\"3\"><position id=\"4\" /></orderPosition>" +
-                                                            "<opa><orderPosition id=\"3\" /><position id=\"4\" /></opa>" +
-                                                            "<order id=\"2\" />" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(3,
+                                            new Reference<EntityTypeOrder>(2),
+                                            new Reference<EntityTypePosition>(4),
+                                            new Reference<EntityTypePosition>(4)))
+                                    .ToXDocument(),
+
                             MessageType = (int)MessageTypeCode.LinkedObjectsMissedInPrincipals,
                             Result = 255,
                             PeriodStart = MonthStart(1),

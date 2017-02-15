@@ -1,6 +1,6 @@
-﻿using System.Xml.Linq;
-
-using NuClear.DataTest.Metamodel.Dsl;
+﻿using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -35,7 +35,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" /><orderPosition id = \"4\"><position id = \"5\" /></orderPosition><opa><orderPosition id = \"4\" /><position id = \"6\" /></opa></root>"),
+                        MessageParams = new MessageParams(
+                                new Reference<EntityTypeOrderPosition>(4,
+                                    new Reference<EntityTypeOrder>(1),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(6))).ToXDocument(),
                         MessageType = (int)MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
                         Result = 255,
                         PeriodStart = FirstDayJan,

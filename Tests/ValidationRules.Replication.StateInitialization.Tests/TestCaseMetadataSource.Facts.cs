@@ -152,16 +152,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(FirmFacts))
-            .Erm(
-                new Erm::Firm { Id = 1, IsActive = true, IsDeleted = false, ClosedForAscertainment = false },
-                new Erm::Firm { Id = 2, IsActive = false, IsDeleted = true, ClosedForAscertainment = false },
-                new Erm::Firm { Id = 3, IsActive = false, IsDeleted = false, ClosedForAscertainment = true })
-            .Fact(
-                new Firm { Id = 1, IsActive = true, IsDeleted = false, IsClosedForAscertainment = false },
-                new Firm { Id = 2, IsActive = false, IsDeleted = true, IsClosedForAscertainment = false },
-                new Firm { Id = 3, IsActive = false, IsDeleted = false, IsClosedForAscertainment = true });
+            => ArrangeMetadataElement.Config
+                .Name(nameof(FirmFacts))
+                .Erm(
+                    new Erm::Firm { Id = 1, IsActive = true, IsDeleted = false, ClosedForAscertainment = false, Name = "one" },
+                    new Erm::Firm { Id = 2, IsActive = false, IsDeleted = true, ClosedForAscertainment = false, Name = "two" },
+                    new Erm::Firm { Id = 3, IsActive = false, IsDeleted = false, ClosedForAscertainment = true, Name = "three" })
+                .Fact(
+                    new Firm { Id = 1, IsActive = true, IsDeleted = false, IsClosedForAscertainment = false },
+                    new Firm { Id = 2, IsActive = false, IsDeleted = true, IsClosedForAscertainment = false },
+                    new Firm { Id = 3, IsActive = false, IsDeleted = false, IsClosedForAscertainment = true },
+                    new EntityName { EntityType = 146, Id = 1, Name = "one" },
+                    new EntityName { EntityType = 146, Id = 2, Name = "two" },
+                    new EntityName { EntityType = 146, Id = 3, Name = "three" });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmAddressFacts

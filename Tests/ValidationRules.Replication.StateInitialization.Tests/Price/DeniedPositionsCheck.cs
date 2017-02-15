@@ -1,6 +1,8 @@
 ﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -77,10 +79,18 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"2\"/><orderPosition id=\"2\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"2\"/><position id=\"1\"/></opa>" +
-                                                            "<order id=\"1\"/><orderPosition id=\"1\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"1\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(2,
+                                            new Reference<EntityTypeOrder>(2),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)),
+
+                                        new Reference<EntityTypeOrderPosition>(1,
+                                            new Reference<EntityTypeOrder>(1),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -89,10 +99,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"4\"/><orderPosition id=\"4\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"4\"/><position id=\"1\"/></opa>" +
-                                                            "<order id=\"3\"/><orderPosition id=\"3\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"3\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(4,
+                                            new Reference<EntityTypeOrder>(4),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)),
+
+                                        new Reference<EntityTypeOrderPosition>(3,
+                                            new Reference<EntityTypeOrder>(3),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
+
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -101,10 +120,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"6\"/><orderPosition id=\"6\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"6\"/><position id=\"1\"/></opa>" +
-                                                            "<order id=\"5\"/><orderPosition id=\"5\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"5\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(6,
+                                            new Reference<EntityTypeOrder>(6),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)),
+
+                                        new Reference<EntityTypeOrderPosition>(5,
+                                            new Reference<EntityTypeOrder>(5),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
+
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -113,10 +141,18 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"5\"/><orderPosition id=\"5\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"5\"/><position id=\"1\"/></opa>" +
-                                                            "<order id=\"6\"/><orderPosition id=\"6\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"6\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(5,
+                                            new Reference<EntityTypeOrder>(5),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)),
+
+                                        new Reference<EntityTypeOrderPosition>(6,
+                                            new Reference<EntityTypeOrder>(6),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -125,10 +161,18 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"8\"/><orderPosition id=\"8\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"8\"/><position id=\"1\"/></opa>" +
-                                                            "<order id=\"7\"/><orderPosition id=\"7\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"7\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(8,
+                                            new Reference<EntityTypeOrder>(8),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)),
+
+                                        new Reference<EntityTypeOrderPosition>(7,
+                                            new Reference<EntityTypeOrder>(7),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -137,10 +181,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"7\"/><orderPosition id=\"7\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"7\"/><position id=\"1\"/></opa>" +
-                                                            "<order id=\"8\"/><orderPosition id=\"8\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"8\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(7,
+                                            new Reference<EntityTypeOrder>(7),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)),
+
+                                        new Reference<EntityTypeOrderPosition>(8,
+                                            new Reference<EntityTypeOrder>(8),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
+
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
                             Result = 255,
                             PeriodStart = MonthStart(1),

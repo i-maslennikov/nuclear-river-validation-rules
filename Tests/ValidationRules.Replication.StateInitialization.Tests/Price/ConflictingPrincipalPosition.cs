@@ -1,6 +1,8 @@
 ﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -66,10 +68,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"2\"/><orderPosition id=\"3\"><position id=\"4\" /></orderPosition><opa><orderPosition id=\"3\"/><position id=\"4\"/></opa>" +
-                                                            "<order id=\"1\"/><orderPosition id=\"1\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"1\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(3,
+                                            new Reference<EntityTypeOrder>(2),
+                                            new Reference<EntityTypePosition>(4),
+                                            new Reference<EntityTypePosition>(4)),
+
+                                        new Reference<EntityTypeOrderPosition>(1,
+                                            new Reference<EntityTypeOrder>(1),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
+
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
                             Result = 255,
                             PeriodStart = MonthStart(2),
@@ -78,10 +89,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"4\"/><orderPosition id=\"3\"><position id=\"4\" /></orderPosition><opa><orderPosition id=\"3\"/><position id=\"4\"/></opa>" +
-                                                            "<order id=\"3\"/><orderPosition id=\"1\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"1\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(3,
+                                            new Reference<EntityTypeOrder>(4),
+                                            new Reference<EntityTypePosition>(4),
+                                            new Reference<EntityTypePosition>(4)),
+
+                                        new Reference<EntityTypeOrderPosition>(1,
+                                            new Reference<EntityTypeOrder>(3),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
+
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
                             Result = 255,
                             PeriodStart = MonthStart(2),
@@ -90,10 +110,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<order id=\"6\"/><orderPosition id=\"3\"><position id=\"4\" /></orderPosition><opa><orderPosition id=\"3\"/><position id=\"4\"/></opa>" +
-                                                            "<order id=\"5\"/><orderPosition id=\"1\"><position id=\"1\" /></orderPosition><opa><orderPosition id=\"1\"/><position id=\"1\"/></opa>" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrderPosition>(3,
+                                            new Reference<EntityTypeOrder>(6),
+                                            new Reference<EntityTypePosition>(4),
+                                            new Reference<EntityTypePosition>(4)),
+
+                                        new Reference<EntityTypeOrderPosition>(1,
+                                            new Reference<EntityTypeOrder>(5),
+                                            new Reference<EntityTypePosition>(1),
+                                            new Reference<EntityTypePosition>(1)))
+                                    .ToXDocument(),
+
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
                             Result = 255,
                             PeriodStart = MonthStart(2),

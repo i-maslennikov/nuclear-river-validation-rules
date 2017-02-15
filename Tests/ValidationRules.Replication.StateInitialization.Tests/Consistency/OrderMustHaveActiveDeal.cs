@@ -1,6 +1,9 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -56,7 +59,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"1\" /><message state=\"missing\" /></root>"),
+                        MessageParams = new MessageParams(
+                                new Dictionary<string, object> { { "state", "missing" } },
+                                new Reference<EntityTypeOrder>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveDeal,
                         Result = 175,
                         PeriodStart = MonthStart(1),
@@ -65,7 +70,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"2\" /><message state=\"inactive\" /></root>"),
+                        MessageParams = new MessageParams(
+                                new Dictionary<string, object> { { "state", "inactive" } },
+                                new Reference<EntityTypeOrder>(2)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.OrderMustHaveActiveDeal,
                         Result = 175,
                         PeriodStart = MonthStart(1),

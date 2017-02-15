@@ -1,6 +1,9 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
@@ -45,11 +48,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Period.PricePeriod { Start = MonthStart(2) })
                 .Message(
                     new Messages::Version.ValidationResult
-                        {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message min=\"5\" max=\"9\" count=\"2\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"1\" />" +
-                                                            "</root>"),
+                    {
+                        MessageParams =
+                                new MessageParams(
+                                    new Dictionary<string, object> { { "min", 5 }, { "max", 9 }, { "count", 2 }, { "name", "Category" }, { "month", MonthStart(1) } },
+                                    new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
                             PeriodStart = MonthStart(1),
@@ -57,11 +60,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             OrderId = 1,
                         },
                     new Messages::Version.ValidationResult
-                        {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message min=\"5\" max=\"9\" count=\"2\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"2\" />" +
-                                                            "</root>"),
+                    {
+                        MessageParams =
+                                new MessageParams(
+                                    new Dictionary<string, object> { { "min", 5 }, { "max", 9 }, { "count", 2 }, { "name", "Category" }, { "month", MonthStart(1) } },
+                                    new Reference<EntityTypeOrder>(2)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
                             PeriodStart = MonthStart(1),
@@ -69,11 +72,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             OrderId = 2,
                         },
                     new Messages::Version.ValidationResult
-                        {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message min=\"5\" max=\"9\" count=\"3\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"3\" />" +
-                                                            "</root>"),
+                    {
+                        MessageParams =
+                                new MessageParams(
+                                    new Dictionary<string, object> { { "min", 5 }, { "max", 9 }, { "count", 3 }, { "name", "Category" }, { "month", MonthStart(1) } },
+                                    new Reference<EntityTypeOrder>(3)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
                             PeriodStart = MonthStart(1),
@@ -81,11 +84,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             OrderId = 3,
                         },
                     new Messages::Version.ValidationResult
-                        {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message min=\"5\" max=\"9\" count=\"4\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"4\" />" +
-                                                            "</root>"),
+                    {
+                        MessageParams =
+                                new MessageParams(
+                                    new Dictionary<string, object> { { "min", 5 }, { "max", 9 }, { "count", 4 }, { "name", "Category" }, { "month", MonthStart(1) } },
+                                    new Reference<EntityTypeOrder>(4)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
                             PeriodStart = MonthStart(1),
@@ -93,11 +96,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             OrderId = 4,
                         },
                     new Messages::Version.ValidationResult
-                        {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message min=\"5\" max=\"9\" count=\"1\" name=\"Category\" month=\"2012-02-01T00:00:00\" />" +
-                                                            "<order id=\"5\" />" +
-                                                            "</root>"),
+                    {
+                        MessageParams =
+                                new MessageParams(
+                                    new Dictionary<string, object> { { "min", 5 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "month", MonthStart(2) } },
+                                    new Reference<EntityTypeOrder>(5)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.MinimumAdvertisementAmount,
                             Result = 242,
                             PeriodStart = MonthStart(2),

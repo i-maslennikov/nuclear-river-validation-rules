@@ -1,6 +1,8 @@
 ﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -81,18 +83,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<advertisement id = \"6\" />" +
-                                                            "<order id = \"1\" />" +
-                                                            "<opa>" +
-                                                            "<orderPosition id = \"4\" />" +
-                                                            "<position id = \"5\" />" +
-                                                            "</opa>" +
-                                                            "<opa>" +
-                                                            "<orderPosition id = \"5\" />" +
-                                                            "<position id = \"5\" />" +
-                                                            "</opa>" +
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrder>(1),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(5),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -124,21 +123,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<advertisement id = \"6\" />" +
-                                                            "<order id = \"1\" />" +
-
-                                                            "<opa>" +
-                                                            "<orderPosition id = \"4\" />" +
-                                                            "<position id = \"5\" />" +
-                                                            "</opa>" +
-
-                                                            "<opa>" +
-                                                            "<orderPosition id = \"6\" />" +
-                                                            "<position id = \"5\" />" +
-                                                            "</opa>" +
-
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrder>(1),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(6),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -147,21 +140,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<advertisement id = \"6\" />" +
-                                                            "<order id = \"2\" />" +
-
-                                                            "<opa>" +
-                                                            "<orderPosition id = \"5\" />" +
-                                                            "<position id = \"5\" />" +
-                                                            "</opa>" +
-
-                                                            "<opa>" +
-                                                            "<orderPosition id = \"6\" />" +
-                                                            "<position id = \"5\" />" +
-                                                            "</opa>" +
-
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrder>(2),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(5),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(6),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -192,20 +179,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<advertisement id = \"6\" />" +
-                                                            "<order id = \"1\" />" +
-
-                                                            "<opa>" +
-                                                            "<orderPosition id = \"4\" />" +
-                                                            "<position id = \"5\" />" +
-                                                            "</opa>" +
-
-                                                            "<opa>" +
-                                                            "<orderPosition id = \"5\" />" +
-                                                            "<position id = \"5\" />" +
-                                                            "</opa>" +
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrder>(1),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(5),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             Result = 255,
                             PeriodStart = MonthStart(2),

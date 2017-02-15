@@ -1,6 +1,8 @@
 ﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -38,7 +40,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><theme id = \"5\" /><category id = \"6\" /></root>"),
+                        MessageParams = new MessageParams(
+                                new Reference<EntityTypeTheme>(5),
+                                new Reference<EntityTypeCategory>(6)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted,
                         Result = 252,
                         PeriodStart = FirstDayJan,
@@ -78,14 +82,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 )
                 .Message(
                     new Messages::Version.ValidationResult
-                    {
-                        MessageParams = XDocument.Parse("<root><theme id = \"5\" /><category id = \"6\" /></root>"),
-                        MessageType = (int)MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted,
-                        Result = 252,
-                        PeriodStart = FirstDayJan,
-                        PeriodEnd = FirstDayApr,
-                        ProjectId = 3,
-                    }
+                        {
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeTheme>(5),
+                                new Reference<EntityTypeCategory>(6)).ToXDocument(),
+                            MessageType = (int)MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted,
+                            Result = 252,
+                            PeriodStart = FirstDayJan,
+                            PeriodEnd = FirstDayApr,
+                            ProjectId = 3,
+                        }
                 );
 
         // ReSharper disable once UnusedMember.Local

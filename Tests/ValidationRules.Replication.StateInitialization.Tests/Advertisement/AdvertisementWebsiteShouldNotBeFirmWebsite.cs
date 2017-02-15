@@ -1,6 +1,8 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -48,7 +50,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id = \"1\" /><firm id=\"1\" /><opa><orderPosition id=\"4\" /><position id=\"5\" /></opa><message website=\"http://localhost/path\" /></root>"),
+                        MessageParams = new MessageParams(
+                                new Dictionary<string, object> { {"website", "http://localhost/path"} },
+                                new Reference<EntityTypeOrder>(1),
+                                new Reference<EntityTypeFirm>(1),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                         MessageType = (int)MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
                         Result = 2,
                         PeriodStart = FirstDayJan,

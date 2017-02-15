@@ -1,6 +1,8 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -49,11 +51,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message available=\"0.0000\" planned=\"12.0000\" />" +
-                                                            "<account id=\"1\" />" +
-                                                            "<order id=\"1\" />" +
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Dictionary<string, object> { { "available", 0.0000m }, { "planned", 12.0000m } },
+                                new Reference<EntityTypeAccount>(1),
+                                new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
                             Result = 204,
                             PeriodStart = FirstDayFeb,

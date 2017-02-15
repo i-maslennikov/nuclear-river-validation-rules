@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -37,18 +38,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse(
-                                "<root><category id=\"12\" /><project id=\"0\" /><order id=\"1\" /></root>"),
+                            MessageParams =
+                                new MessageParams(
+                                    new Reference<EntityTypeCategory>(12),
+                                    new Reference<EntityTypeProject>(0),
+                                    new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
                             Result = 255,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,
                         },
-                        new Messages::Version.ValidationResult
+                    new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse(
-                                "<root><category id=\"13\" /><orderPosition id=\"1\"><position id=\"4\"/></orderPosition><order id=\"1\" /></root>"),
+                            MessageParams =
+                                new MessageParams(
+                                    new Reference<EntityTypeCategory>(13),
+                                    new Reference<EntityTypeOrderPosition>(1,
+                                        new Reference<EntityTypeOrder>(1),
+                                        new Reference<EntityTypePosition>(4))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
                             Result = 255,
                             PeriodStart = MonthStart(1),

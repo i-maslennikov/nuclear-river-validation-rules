@@ -1,6 +1,9 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -37,7 +40,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><firm id = \"1\" /><order id = \"2\" /></root>"),
+                            MessageParams = new MessageParams(
+                                    new Reference<EntityTypeFirm>(1),
+                                    new Reference<EntityTypeOrder>(2)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
                             Result = 255,
                             PeriodStart = FirstDayJan,

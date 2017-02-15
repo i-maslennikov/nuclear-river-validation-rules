@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -72,7 +73,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // Фирма №1
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><firm id=\"1\" /></root>"),
+                            MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
                             Result = 252,
                             PeriodStart = DateTime.MinValue,
@@ -81,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><firm id=\"1\" /></root>"),
+                            MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
                             Result = 252,
                             PeriodStart = MonthStart(2),
@@ -90,7 +91,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><firm id=\"1\" /></root>"),
+                            MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
                             Result = 252,
                             PeriodStart = MonthStart(3),
@@ -99,7 +100,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><firm id=\"1\" /><order id=\"1\" /></root>"),
+                            MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1), new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
                             Result = 2,
                             PeriodStart = MonthStart(2),

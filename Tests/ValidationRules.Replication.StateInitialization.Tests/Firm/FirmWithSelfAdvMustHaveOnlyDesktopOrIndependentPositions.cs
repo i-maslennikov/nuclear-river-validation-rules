@@ -1,6 +1,9 @@
 ﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.Utils.Xml;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -68,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // Обе позиции в одном заказе - есть ошибка
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"1\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -79,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах, с пересечением по времени размещения - есть ошибка в обоих заказах
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"2\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(2)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -88,7 +91,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"3\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(3)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(2),
@@ -99,7 +102,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"6\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(6)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -110,7 +113,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"9\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(9)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),

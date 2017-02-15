@@ -1,6 +1,8 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
@@ -56,7 +58,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><message max=\"2\" count=\"3\" /><category id=\"3\" /><order id=\"3\" /></root>"),
+                            MessageParams = new MessageParams(
+                                new Dictionary<string, object> { { "max", 2 }, { "count", 3 } },
+                                new Reference<EntityTypeCategory>(3),
+                                new Reference<EntityTypeOrder>(3)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                             Result = 254,
                             PeriodStart = MonthStart(3),
@@ -65,7 +70,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><message max=\"2\" count=\"3\" /><category id=\"3\" /><order id=\"4\" /></root>"),
+                            MessageParams = new MessageParams(
+                                new Dictionary<string, object> { { "max", 2 }, { "count", 3 } },
+                                new Reference<EntityTypeCategory>(3),
+                                new Reference<EntityTypeOrder>(4)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                             Result = 254,
                             PeriodStart = MonthStart(4),
