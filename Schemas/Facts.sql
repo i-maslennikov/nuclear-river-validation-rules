@@ -53,7 +53,7 @@ create table Facts.EntityName(
     Id bigint not null,
     EntityType int not null,
     [Name] nvarchar(512) not null,
-    constraint PK_EntityName primary key (Id, TypeId)
+    constraint PK_EntityName primary key (Id, EntityType)
 )
 
 create table Facts.Account(
