@@ -197,7 +197,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public sealed class CouponAccessor : DataChangesHandler<Advertisement.Coupon>, IStorageBasedDataObjectAccessor<Advertisement.Coupon>
         {
             public static DateTime BeginMonth(DateTime x) => new DateTime(x.AddDays(4).Year, x.AddDays(4).Month, 1);
-            public static DateTime EndMonth(DateTime x) => new DateTime(x.AddDays(DateTime.DaysInMonth(x.Year, x.Month) - 4).Year, x.AddDays(DateTime.DaysInMonth(x.Year, x.Month) - 4).Month, 1);
+            public static DateTime EndMonth(DateTime x) => new DateTime(x.AddDays(-4).Year, x.AddDays(-4).Month, 1).AddMonths(1);
 
             private readonly IQuery _query;
 

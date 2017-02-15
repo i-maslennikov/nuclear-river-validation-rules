@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.Tests
 
         private static DateTime Case(int day, int month)
         {
-            return new DateTime(1, month, day);
+            return new DateTime(10, month, day);
         }
     }
 
