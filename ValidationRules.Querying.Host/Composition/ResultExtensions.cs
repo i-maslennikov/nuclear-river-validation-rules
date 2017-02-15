@@ -98,10 +98,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
         public static DealState ReadDealState(this IReadOnlyDictionary<string, string> message)
         {
-            return (DealState)Enum.Parse(typeof(DealState), message["state"], true);
+            return (DealState)int.Parse(message["state"]);
         }
-
-        public enum DealState { Missing, Inactive }
 
         public sealed class CategoryCountDto
         {

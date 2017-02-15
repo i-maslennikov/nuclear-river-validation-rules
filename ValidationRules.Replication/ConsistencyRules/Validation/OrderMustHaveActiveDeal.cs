@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Dictionary<string, object> { { "state", missing != null && missing.Deal ? "missing" : inactive != null && inactive.Deal ? "inactive" : "unknown" } },
+                                    new Dictionary<string, object> { { "state", missing != null && missing.Deal ? (int)DealState.Missing : inactive != null && inactive.Deal ? (int)DealState.Inactive : (int)DealState.NotSet } },
                                     new Reference<EntityTypeOrder>(order.Id))
                                 .ToXDocument(),
 

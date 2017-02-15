@@ -32,6 +32,13 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         NotBelongToFirm
     }
 
+    public enum DealState
+    {
+        NotSet = 0,
+        Missing,
+        Inactive
+    }
+
     public sealed class Order
     {
         public long Id { get; set; }
