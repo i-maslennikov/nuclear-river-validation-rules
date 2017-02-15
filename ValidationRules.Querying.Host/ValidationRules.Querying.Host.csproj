@@ -157,8 +157,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Model\NamedReference.cs" />
-    <Compile Include="Model\EntityReferenceExtensions.cs" />
+    <Compile Include="Composition\NamedReference.cs" />
+    <Compile Include="Composition\NamedReferenceExtensions.cs" />
     <Compile Include="Model\ValidationResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Composition\ResultExtensions.cs" />

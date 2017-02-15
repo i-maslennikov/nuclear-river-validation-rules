@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -14,10 +15,16 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
         private readonly IReadOnlyDictionary<MessageTypeCode, IMessageComposer> _composers;
         private readonly IReadOnlyDictionary<MessageTypeCode, IDistinctor> _distinctors;
+        private readonly IReadOnlyDictionary<int, string> _knownEntityTypes;
         private readonly NameResolvingService _nameResolvingService;
 
-        public ValidationResultFactory(IReadOnlyCollection<IMessageComposer> composers, IReadOnlyCollection<IDistinctor> distinctors, NameResolvingService nameResolvingService)
+        public ValidationResultFactory(
+            IReadOnlyCollection<IMessageComposer> composers,
+            IReadOnlyCollection<IDistinctor> distinctors,
+            IReadOnlyCollection<IEntityType> knownEntityTypes,
+            NameResolvingService nameResolvingService)
         {
+            _knownEntityTypes = knownEntityTypes.ToDictionary(x => x.Id, x => x.Description);
             _nameResolvingService = nameResolvingService;
             _composers = composers.ToDictionary(x => x.MessageType, x => x);
             _distinctors = distinctors.ToDictionary(x => x.MessageType, x => x);
@@ -44,8 +51,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
                 return new ValidationResult
                 {
-                    MainReference = composerResult.MainReference,
-                    References = composerResult.References,
+                    MainReference = ConvertReference(composerResult.MainReference),
+                    References = composerResult.References.Select(ConvertReference).ToList(),
                     Template = composerResult.Template,
                     Result = message.Result,
                     Rule = message.MessageType,
@@ -56,6 +63,9 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                 throw new Exception($"Ошибка при сериализации сообщения {message.MessageType}", ex);
             }
         }
+
+        private ValidationResult.Reference ConvertReference(NamedReference reference)
+            => new ValidationResult.Reference { Id = reference.Reference.Id, Name = reference.Name, Type = _knownEntityTypes[reference.Reference.EntityType] };
 
         private IEnumerable<Message> MakeDistinct(IEnumerable<Message> messages)
             => messages.GroupBy(x => x.MessageType)

@@ -1,27 +1,24 @@
-using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.Querying.Host.Properties;
-using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
-namespace NuClear.ValidationRules.Querying.Host.Model
+namespace NuClear.ValidationRules.Querying.Host.Composition
 {
     public class NamedReference
     {
-       public NamedReference(IEntityType type, long id, string name)
+        public NamedReference(Reference reference, string name)
         {
-            Type = type.Description;
-            Id = id;
+            Reference = reference;
             Name = name;
         }
 
-        public string Type { get; }
+        public Reference Reference { get; set; }
         public string Name { get; }
-        public long Id { get; }
     }
 
     public class OrderPositionNamedReference : NamedReference
     {
-        public OrderPositionNamedReference(long id, NamedReference packagePosition, NamedReference itemPosition, NamedReference order)
-            : base(EntityTypeOrderPosition.Instance, id, packagePosition.Name)
+        public OrderPositionNamedReference(Reference orderPosition, NamedReference packagePosition, NamedReference itemPosition, NamedReference order)
+            : base(orderPosition, packagePosition.Name)
         {
             Order = order;
             PackagePosition = packagePosition;
@@ -31,7 +28,7 @@ namespace NuClear.ValidationRules.Querying.Host.Model
         public NamedReference Order { get; }
 
         public string PositionPrefix
-            => PackagePosition.Id == ItemPosition.Id
+            => PackagePosition.Reference.Id == ItemPosition.Reference.Id
                 ? Resources.RichDefaultPositionTypeTemplate
                 : string.Format(Resources.RichChildPositionTypeTemplate, ItemPosition.Name);
 

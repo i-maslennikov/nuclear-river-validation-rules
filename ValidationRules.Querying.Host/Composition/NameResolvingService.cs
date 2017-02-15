@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -11,12 +10,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
     public class NameResolvingService
     {
         private readonly DataConnectionFactory _factory;
-        private readonly IReadOnlyDictionary<int, IEntityType> _knownEntityTypes;
 
-        public NameResolvingService(DataConnectionFactory factory, IReadOnlyCollection<IEntityType> knownEntityTypes)
+        public NameResolvingService(DataConnectionFactory factory)
         {
             _factory = factory;
-            _knownEntityTypes = knownEntityTypes.ToDictionary(x => x.Id, x => x);
         }
 
         public ResolvedNameContainer Resolve(IReadOnlyCollection<Message> messages)
@@ -26,7 +23,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                 .Concat(messages.SelectMany(x => x.References).SelectMany(x => x.Children))
                 .Distinct(ReferenceComparer.Instance);
 
-            return new ResolvedNameContainer(Resolve(references), _knownEntityTypes);
+            return new ResolvedNameContainer(Resolve(references));
         }
 
         private IReadOnlyDictionary<Reference, string> Resolve(IEnumerable<Reference> references)

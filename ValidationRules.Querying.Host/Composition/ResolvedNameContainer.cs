@@ -3,7 +3,6 @@ using System.Linq;
 
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
-using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -13,9 +12,9 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
     {
         private readonly IReadOnlyDictionary<Reference, NamedReference> _names;
 
-        public ResolvedNameContainer(IReadOnlyDictionary<Reference, string> names, IReadOnlyDictionary<int, IEntityType> knownEntityTypes)
+        public ResolvedNameContainer(IReadOnlyDictionary<Reference, string> names)
         {
-            _names = names.ToDictionary(x => x.Key, x => new NamedReference(knownEntityTypes[x.Key.EntityType], x.Key.Id, x.Value), ReferenceComparer.Instance);
+            _names = names.ToDictionary(x => x.Key, x => new NamedReference(x.Key, x.Value), ReferenceComparer.Instance);
         }
 
         public NamedReference For(Reference reference)
@@ -26,7 +25,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                 var order = Get<EntityTypeOrder>(reference).First();
                 var packagePosition = Get<EntityTypePosition>(reference).First();
                 var itemPosition = Get<EntityTypePosition>(reference).Last();
-                return new OrderPositionNamedReference(reference.Id, For(packagePosition), For(itemPosition), For(order));
+                return new OrderPositionNamedReference(reference, For(packagePosition), For(itemPosition), For(order));
             }
 
             if (reference.EntityType == EntityTypeOrderPositionAdvertisement.Instance.Id)
@@ -34,23 +33,23 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                 // Сслыки на opa - всегда представляются в виде ссылок на op, только имя подставляется дочерней позиции.
                 var orderPosition = Get<EntityTypeOrderPosition>(reference).First();
                 var itemPosition = Get<EntityTypePosition>(reference).First();
-                return new NamedReference(EntityTypeOrderPosition.Instance, orderPosition.Id, For(itemPosition).Name);
+                return new NamedReference(orderPosition, For(itemPosition).Name);
             }
 
             if (reference.EntityType == EntityTypeAdvertisementElement.Instance.Id)
             {
                 var template = Get<EntityTypeAdvertisementElementTemplate>(reference).First();
-                return new NamedReference(EntityTypeAdvertisementElement.Instance, reference.Id, For(template).Name);
+                return new NamedReference(reference, For(template).Name);
             }
 
             if (reference.EntityType == EntityTypePricePosition.Instance.Id)
             {
                 var position = Get<EntityTypePosition>(reference).First();
-                return new NamedReference(EntityTypePricePosition.Instance, reference.Id, For(position).Name);
+                return new NamedReference(reference, For(position).Name);
             }
 
             NamedReference name;
-            return _names.TryGetValue(reference, out name) ? name : new NamedReference(null, 0, "Not resolved");
+            return _names.TryGetValue(reference, out name) ? name : new NamedReference(reference, "Not resolved");
         }
 
         private static IEnumerable<Reference> Get<TEntityType>(Reference messageParams)
