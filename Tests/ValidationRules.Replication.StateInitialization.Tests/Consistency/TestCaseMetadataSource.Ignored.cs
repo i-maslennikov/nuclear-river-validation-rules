@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.InvalidBillsPeriod(),
                 new Aggregates::Order.InvalidBillsTotal(),
                 new Aggregates::Order.InvalidCategory(),
-                new Aggregates::Order.InvalidCategoryFirmAddress(),
+                new Aggregates::Order.CategoryNotBelongsToAddress(),
                 new Aggregates::Order.InvalidEndDistributionDate(),
                 new Aggregates::Order.InvalidFirm(),
                 new Aggregates::Order.InvalidFirmAddress(),

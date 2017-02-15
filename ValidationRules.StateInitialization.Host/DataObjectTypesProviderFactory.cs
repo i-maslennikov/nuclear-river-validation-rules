@@ -128,7 +128,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ConsistencyAggregates::Order.InvalidFirm),
                             typeof(ConsistencyAggregates::Order.InvalidFirmAddress),
                             typeof(ConsistencyAggregates::Order.InvalidCategory),
-                            typeof(ConsistencyAggregates::Order.InvalidCategoryFirmAddress),
+                            typeof(ConsistencyAggregates::Order.CategoryNotBelongsToAddress),
                             typeof(ConsistencyAggregates::Order.HasNoAnyLegalPersonProfile),
                             typeof(ConsistencyAggregates::Order.HasNoAnyPosition),
                             typeof(ConsistencyAggregates::Order.InactiveReference),
