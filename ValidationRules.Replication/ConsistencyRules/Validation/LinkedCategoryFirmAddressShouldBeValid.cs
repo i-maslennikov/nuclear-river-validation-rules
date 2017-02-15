@@ -29,13 +29,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var ruleResults = from order in query.For<Order>()
-                              from categoryFirmAddress in query.For<Order.InvalidCategoryFirmAddress>().Where(x => x.OrderId == order.Id)
+                              from categoryFirmAddress in query.For<Order.CategoryNotBelongsToAddress>().Where(x => x.OrderId == order.Id)
                               select new Version.ValidationResult
                                   {
                                       MessageParams = new XDocument(
                                           new XElement("root",
-                                              new XElement("message",
-                                                  new XAttribute("state", categoryFirmAddress.State)),
                                               new XElement("firmAddress",
                                                   new XAttribute("id", categoryFirmAddress.FirmAddressId),
                                                   new XAttribute("name", categoryFirmAddress.FirmAddressName)),

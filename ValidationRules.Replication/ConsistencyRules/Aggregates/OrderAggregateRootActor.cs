@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.InvalidCategory> invalidCategoryRepository,
-            IBulkRepository<Order.InvalidCategoryFirmAddress> invalidCategoryFirmAddressRepository,
+            IBulkRepository<Order.CategoryNotBelongsToAddress> categoryNotBelongsToAddress,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
             IBulkRepository<Order.InvalidFirmAddress> orderInvalidFirmAddressRepository,
             IBulkRepository<Order.BargainSignedLaterThanOrder> orderBargainSignedLaterThanOrderRepository,
@@ -45,7 +45,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
                 HasValueObject(new InvalidCategoryAccessor(query), invalidCategoryRepository),
-                HasValueObject(new InvalidCategoryFirmAddressAccessor(query), invalidCategoryFirmAddressRepository),
+                HasValueObject(new CategoryNotBelongsToAddressAccessor(query), categoryNotBelongsToAddress),
                 HasValueObject(new InvalidFirmAccessor(query), orderInvalidFirmRepository),
                 HasValueObject(new InvalidFirmAddressAccessor(query), orderInvalidFirmAddressRepository),
                 HasValueObject(new OrderBargainSignedLaterThanOrderAccessor(query), orderBargainSignedLaterThanOrderRepository),
@@ -205,11 +205,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class InvalidCategoryFirmAddressAccessor : DataChangesHandler<Order.InvalidCategoryFirmAddress>, IStorageBasedDataObjectAccessor<Order.InvalidCategoryFirmAddress>
+        public sealed class CategoryNotBelongsToAddressAccessor : DataChangesHandler<Order.CategoryNotBelongsToAddress>, IStorageBasedDataObjectAccessor<Order.CategoryNotBelongsToAddress>
         {
             private readonly IQuery _query;
 
-            public InvalidCategoryFirmAddressAccessor(IQuery query) : base(CreateInvalidator())
+            public CategoryNotBelongsToAddressAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
@@ -220,7 +220,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                         MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid,
                     };
 
-            public IQueryable<Order.InvalidCategoryFirmAddress> GetSource()
+            public IQueryable<Order.CategoryNotBelongsToAddress> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id && x.CategoryId.HasValue && x.FirmAddressId.HasValue)
@@ -229,7 +229,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                    from cfa in _query.For<Facts::FirmAddressCategory>().Where(x => x.FirmAddressId == opa.FirmAddressId && x.CategoryId == opa.CategoryId).DefaultIfEmpty()
                    where cfa == null
-                   select new Order.InvalidCategoryFirmAddress
+                   select new Order.CategoryNotBelongsToAddress
                    {
                        OrderId = order.Id,
                        FirmAddressId = address.Id,
@@ -238,13 +238,12 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                        CategoryName = category.Name,
                        OrderPositionId = orderPosition.Id,
                        OrderPositionName = position.Name,
-                       State = InvalidCategoryFirmAddressState.CategoryNotBelongsToAddress,
                    };
 
-            public FindSpecification<Order.InvalidCategoryFirmAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.CategoryNotBelongsToAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.InvalidCategoryFirmAddress>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.CategoryNotBelongsToAddress>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

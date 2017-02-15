@@ -19,12 +19,6 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         NotBelongToFirm
     }
 
-    public enum InvalidCategoryFirmAddressState
-    {
-        NotSet = 0,
-        CategoryNotBelongsToAddress
-    }
-
     public enum InvalidCategoryState
     {
         NotSet = 0,
@@ -69,7 +63,7 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public InvalidFirmAddressState State { get; set; }
         }
 
-        public class InvalidCategoryFirmAddress
+        public class CategoryNotBelongsToAddress
         {
             public long OrderId { get; set; }
             public long FirmAddressId { get; set; }
@@ -78,7 +72,6 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public string CategoryName { get; set; }
             public long OrderPositionId { get; set; }
             public string OrderPositionName { get; set; }
-            public InvalidCategoryFirmAddressState State { get; set; }
         }
 
         public class InvalidCategory

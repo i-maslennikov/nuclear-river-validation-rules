@@ -5,7 +5,7 @@ if object_id('ConsistencyAggregates.InactiveReference') is not null drop table C
 if object_id('ConsistencyAggregates.InvalidFirm') is not null drop table ConsistencyAggregates.InvalidFirm
 if object_id('ConsistencyAggregates.InvalidFirmAddress') is not null drop table ConsistencyAggregates.InvalidFirmAddress
 if object_id('ConsistencyAggregates.InvalidCategory') is not null drop table ConsistencyAggregates.InvalidCategory
-if object_id('ConsistencyAggregates.InvalidCategoryFirmAddress') is not null drop table ConsistencyAggregates.InvalidCategoryFirmAddress
+if object_id('ConsistencyAggregates.CategoryNotBelongsToAddress') is not null drop table ConsistencyAggregates.CategoryNotBelongsToAddress
 if object_id('ConsistencyAggregates.InvalidBeginDistributionDate') is not null drop table ConsistencyAggregates.InvalidBeginDistributionDate
 if object_id('ConsistencyAggregates.InvalidEndDistributionDate') is not null drop table ConsistencyAggregates.InvalidEndDistributionDate
 if object_id('ConsistencyAggregates.LegalPersonProfileBargainExpired') is not null drop table ConsistencyAggregates.LegalPersonProfileBargainExpired
@@ -19,6 +19,9 @@ if object_id('ConsistencyAggregates.MissingBills') is not null drop table Consis
 if object_id('ConsistencyAggregates.InvalidBillsTotal') is not null drop table ConsistencyAggregates.InvalidBillsTotal
 if object_id('ConsistencyAggregates.InvalidBillsPeriod') is not null drop table ConsistencyAggregates.InvalidBillsPeriod
 if object_id('ConsistencyAggregates.MissingRequiredField') is not null drop table ConsistencyAggregates.MissingRequiredField
+
+-- todo: move to 'drop old aggregates'
+if object_id('ConsistencyAggregates.InvalidCategoryFirmAddress') is not null drop table ConsistencyAggregates.InvalidCategoryFirmAddress
 go
 
 create table ConsistencyAggregates.[Order](
@@ -71,7 +74,7 @@ create table ConsistencyAggregates.InvalidCategory(
 )
 go
 
-create table ConsistencyAggregates.InvalidCategoryFirmAddress(
+create table ConsistencyAggregates.CategoryNotBelongsToAddress(
     OrderId bigint not null,
     FirmAddressId bigint not null,
     FirmAddressName nvarchar(512) not null,
@@ -79,7 +82,6 @@ create table ConsistencyAggregates.InvalidCategoryFirmAddress(
     CategoryName nvarchar(128) not null,
     OrderPositionId bigint not null,
     OrderPositionName nvarchar(256) not null,
-    [State] int not null,
 )
 go
 

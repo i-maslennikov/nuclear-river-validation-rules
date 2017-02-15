@@ -285,7 +285,7 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ConsistencyAggregates::Order.InvalidFirmAddress>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
-            builder.Entity<ConsistencyAggregates::Order.InvalidCategoryFirmAddress>()
+            builder.Entity<ConsistencyAggregates::Order.CategoryNotBelongsToAddress>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
             builder.Entity<ConsistencyAggregates::Order.InvalidCategory>()
