@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
@@ -13,8 +14,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             return new AccountBalanceMessageDto
                 {
-                    Available = decimal.Parse(message["available"]),
-                    Planned = decimal.Parse(message["planned"]),
+                    Available = decimal.Parse(message["available"], CultureInfo.InvariantCulture),
+                    Planned = decimal.Parse(message["planned"], CultureInfo.InvariantCulture),
                 };
         }
 
@@ -22,11 +23,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             return new AdvertisementCountDto
             {
-                Min = int.Parse(message["min"]),
-                Max = int.Parse(message["max"]),
-                Count = int.Parse(message["count"]),
+                Min = int.Parse(message["min"], CultureInfo.InvariantCulture),
+                Max = int.Parse(message["max"], CultureInfo.InvariantCulture),
+                Count = int.Parse(message["count"], CultureInfo.InvariantCulture),
                 Name = message["name"],
-                Month = DateTime.Parse(message["month"]),
+                Month = DateTime.Parse(message["month"], CultureInfo.InvariantCulture),
             };
         }
 
@@ -34,33 +35,33 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             return new OversalesDto
                 {
-                    Max = int.Parse(message["max"]),
-                    Count = int.Parse(message["count"]),
+                    Max = int.Parse(message["max"], CultureInfo.InvariantCulture),
+                    Count = int.Parse(message["count"], CultureInfo.InvariantCulture),
                 };
         }
 
         public static InvalidFirmAddressState ReadFirmAddressState(this IReadOnlyDictionary<string, string> message)
         {
-            return (InvalidFirmAddressState)int.Parse(message["invalidFirmAddressState"]);
+            return (InvalidFirmAddressState)int.Parse(message["invalidFirmAddressState"], CultureInfo.InvariantCulture);
         }
 
         public static CategoryCountDto ReadCategoryCount(this IReadOnlyDictionary<string, string> message)
         {
             return new CategoryCountDto
             {
-                Actual = int.Parse(message["count"]),
-                Allowed = int.Parse(message["allowed"]),
+                Actual = int.Parse(message["count"], CultureInfo.InvariantCulture),
+                Allowed = int.Parse(message["allowed"], CultureInfo.InvariantCulture),
             };
         }
 
         public static InvalidFirmState ReadFirmState(this IReadOnlyDictionary<string, string> message)
         {
-            return (InvalidFirmState)int.Parse(message["invalidFirmState"]);
+            return (InvalidFirmState)int.Parse(message["invalidFirmState"], CultureInfo.InvariantCulture);
         }
 
         public static Advertisement.ReviewStatus ReadAdvertisementElementStatus(this IReadOnlyDictionary<string, string> message)
         {
-            return (Advertisement.ReviewStatus)int.Parse(message["advertisementElementStatus"]);
+            return (Advertisement.ReviewStatus)int.Parse(message["advertisementElementStatus"], CultureInfo.InvariantCulture);
         }
 
         public static OrderRequiredFieldsDto ReadOrderRequiredFieldsMessage(this IReadOnlyDictionary<string, string> message)
@@ -89,7 +90,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
         public static int ReadProjectThemeCount(this IReadOnlyDictionary<string, string> message)
         {
-            return int.Parse(message["themeCount"]);
+            return int.Parse(message["themeCount"], CultureInfo.InvariantCulture);
         }
 
         public static string ReadWebsite(this IReadOnlyDictionary<string, string> message)
