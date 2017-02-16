@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -82,45 +82,21 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var messages =
                 from conflict in match.Union(differ).Union(noMatter)
                 join period in query.For<Period>() on new { conflict.Start, conflict.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                let names = new
-                    {
-                        DeniedPosition = new
-                            {
-                                OrderNumber = query.For<Order>().Single(x => x.Id == conflict.DeniedOrderId).Number,
-                                OrderPositionName = query.For<Position>().Single(x => x.Id == conflict.DeniedCausePackagePositionId).Name,
-                                ItemPositionName = query.For<Position>().Single(x => x.Id == conflict.DeniedCauseItemPositionId).Name,
-                            },
-
-                        OrderPosition = new
-                            {
-                                OrderNumber = query.For<Order>().Single(x => x.Id == conflict.PrincipalOrderId).Number,
-                                OrderPositionName = query.For<Position>().Single(x => x.Id == conflict.PrincipalPackagePositionId).Name,
-                                ItemPositionName = query.For<Position>().Single(x => x.Id == conflict.PrincipalItemPositionId).Name,
-                            },
-                    }
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
-                                new XElement("firm",
-                                    new XAttribute("id", conflict.FirmId)),
-                                new XElement("position",
-                                    new XAttribute("orderId", conflict.DeniedOrderId),
-                                    new XAttribute("orderNumber", names.DeniedPosition.OrderNumber),
-                                    new XAttribute("orderPositionId", conflict.DeniedCauseOrderPositionId),
-                                    new XAttribute("orderPositionName", names.DeniedPosition.OrderPositionName),
-                                    new XAttribute("positionId", conflict.DeniedCauseItemPositionId),
-                                    new XAttribute("positionName", names.DeniedPosition.ItemPositionName)),
-                                new XElement("position",
-                                    new XAttribute("orderId", conflict.PrincipalOrderId),
-                                    new XAttribute("orderNumber", names.OrderPosition.OrderNumber),
-                                    new XAttribute("orderPositionId", conflict.PrincipalOrderPositionId),
-                                    new XAttribute("orderPositionName", names.OrderPosition.OrderPositionName),
-                                    new XAttribute("positionId", conflict.PrincipalItemPositionId),
-                                    new XAttribute("positionName", names.OrderPosition.ItemPositionName)),
-                                new XElement("order",
-                                    new XAttribute("id", conflict.DeniedOrderId),
-                                    new XAttribute("name", names.DeniedPosition.OrderNumber)))),
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(conflict.DeniedCauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.DeniedOrderId),
+                                        new Reference<EntityTypePosition>(conflict.DeniedCausePackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.DeniedCauseItemPositionId)),
+
+                                    new Reference<EntityTypeOrderPosition>(conflict.PrincipalOrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.PrincipalOrderId),
+                                        new Reference<EntityTypePosition>(conflict.PrincipalPackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.PrincipalItemPositionId)))
+                                .ToXDocument(),
+
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         OrderId = conflict.DeniedOrderId,

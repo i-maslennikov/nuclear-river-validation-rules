@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -7,9 +8,8 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
-
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.Accessors
 {
@@ -30,13 +30,12 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         private IQueryable<Category> CategoriesLevel3
-            => from c3 in _query.For<Erm::Category>().Where(x => x.Level == 3)
-               from c2 in _query.For<Erm::Category>().Where(x => x.Level == 2 && x.Id == c3.ParentId)
-               from c1 in _query.For<Erm::Category>().Where(x => x.Level == 1 && x.Id == c2.ParentId)
+            => from c3 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 3)
+               from c2 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 2 && x.Id == c3.ParentId)
+               from c1 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 1 && x.Id == c2.ParentId)
                select new Category
                 {
                     Id = c3.Id,
-                    Name = c3.Name,
                     L3Id = c3.Id,
                     L2Id = c2.Id,
                     L1Id = c1.Id,
@@ -44,12 +43,11 @@ namespace NuClear.ValidationRules.Replication.Accessors
                };
 
         private IQueryable<Category> CategoriesLevel2
-            => from c2 in _query.For<Erm::Category>().Where(x => x.Level == 2)
-               from c1 in _query.For<Erm::Category>().Where(x => x.Level == 1 && x.Id == c2.ParentId)
+            => from c2 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 2)
+               from c1 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 1 && x.Id == c2.ParentId)
                select new Category
                 {
                     Id = c2.Id,
-                    Name = c2.Name,
                     L3Id = null,
                     L2Id = c2.Id,
                     L1Id = c1.Id,
@@ -57,11 +55,10 @@ namespace NuClear.ValidationRules.Replication.Accessors
                };
 
         private IQueryable<Category> CategoriesLevel1
-            => from c1 in _query.For<Erm::Category>().Where(x => x.Level == 1)
+            => from c1 in _query.For(Specs.Find.Erm.Category).Where(x => x.Level == 1)
                select new Category
                 {
                     Id = c1.Id,
-                    Name = c1.Name,
                     L3Id = null,
                     L2Id = null,
                     L1Id = c1.Id,
@@ -74,14 +71,11 @@ namespace NuClear.ValidationRules.Replication.Accessors
             return new FindSpecification<Category>(x => x.L1Id.HasValue && ids.Contains(x.L1Id.Value) || x.L2Id.HasValue && ids.Contains(x.L2Id.Value) || x.L3Id.HasValue && ids.Contains(x.L3Id.Value));
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Category> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Category), x.Id)).ToList();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Category> dataObjects) => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Category> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Category), x.Id)).ToList();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Category> dataObjects) => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Category> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Category), x.Id)).ToList();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Category> dataObjects) => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Category> dataObjects)
         {

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -38,7 +37,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                                 .Count(x => x.AdvertisementId == period.AdvertisementId && x.Begin < period.End && period.Begin < x.End && Scope.CanSee(period.Scope, x.Scope)) > 1
                 let order = query.For<Order>().Single(x => x.Id == period.OrderId)
                 let advertisement = query.For<Advertisement>().Single(x => x.Id == period.AdvertisementId)
-                let position = query.For<Position>().Single(x => x.Id == intersectingPeriod.PositionId)
                 select new
                     {
                         Key = new
@@ -46,45 +44,44 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                 order.ProjectId,
 
                                 period.OrderId,
-                                OrderNumber = order.Number,
                                 period.AdvertisementId,
-                                AdvertisementName = advertisement.Name,
                                 period.Begin,
                                 period.End,
                             },
 
                         Value = new
                             {
-                                intersectingPeriod.PositionId,
                                 intersectingPeriod.OrderPositionId,
-                                OrderPositionName = position.Name,
+                                intersectingPeriod.PositionId,
                             },
                     };
 
             // Вычисления в памяти, поскольку linq2db сам в памяти группировки не умеет
             var data = couponOverlapPeriods.ToArray();
-            var ruleResults = data.GroupBy(x => x.Key)
-                                  .Select(coupon =>
-                                      new Version.ValidationResult
-                                          {
-                                              MessageParams = new XDocument(
-                                                  new XElement("root",
-                                                      new XElement("advertisement",
-                                                          new XAttribute("id", coupon.Key.AdvertisementId),
-                                                          new XAttribute("name", coupon.Key.AdvertisementName)),
-                                                      new XElement("order",
-                                                          new XAttribute("id", coupon.Key.OrderId),
-                                                          new XAttribute("name", coupon.Key.OrderNumber)),
-                                                      coupon.Distinct().Select(x => new XElement("orderPosition",
-                                                          new XAttribute("id", x.Value.OrderPositionId),
-                                                          new XAttribute("name", x.Value.OrderPositionName))))),
+            var ruleResults =
+                data.GroupBy(x => x.Key)
+                    .Select(coupon =>
+                                new Version.ValidationResult
+                                    {
+                                        MessageParams =
+                                            new MessageParams(
+                                                    new Reference[]
+                                                            {
+                                                                new Reference<EntityTypeAdvertisement>(coupon.Key.AdvertisementId),
+                                                                new Reference<EntityTypeOrder>(coupon.Key.OrderId),
+                                                            }.Concat(
+                                                                 coupon.Distinct()
+                                                                       .Select(x => new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                                                                   new Reference<EntityTypeOrderPosition>(x.Value.OrderPositionId),
+                                                                                   new Reference<EntityTypePosition>(x.Value.PositionId)))).ToArray())
+                                                .ToXDocument(),
 
-                                              PeriodStart = coupon.Key.Begin,
-                                              PeriodEnd = coupon.Key.End,
-                                              OrderId = coupon.Key.OrderId,
+                                        PeriodStart = coupon.Key.Begin,
+                                        PeriodEnd = coupon.Key.End,
+                                        OrderId = coupon.Key.OrderId,
 
-                                              Result = RuleResult,
-                                          });
+                                        Result = RuleResult,
+                                    });
 
             return ruleResults.AsQueryable();
         }

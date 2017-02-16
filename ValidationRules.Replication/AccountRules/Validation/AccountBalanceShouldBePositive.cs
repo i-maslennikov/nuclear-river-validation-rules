@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -43,16 +44,16 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                 where !query.For<Order.DebtPermission>().Any(x => x.OrderId == order.Id && x.Start <= accountPeriod.Start && accountPeriod.End <= x.End)
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("message",
-                                    new XAttribute("available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount)),
-                                    new XAttribute("planned", accountPeriod.ReleaseAmount)),
-                                new XElement("account",
-                                    new XAttribute("id", accountPeriod.AccountId)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Dictionary<string, object>
+                                        {
+                                                { "available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) },
+                                                { "planned", accountPeriod.ReleaseAmount }
+                                        },
+                                    new Reference<EntityTypeAccount>(accountPeriod.AccountId),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = accountPeriod.Start,
                         PeriodEnd = accountPeriod.End,

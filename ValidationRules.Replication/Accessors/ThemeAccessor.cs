@@ -9,9 +9,8 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
-
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.Accessors
 {
@@ -27,12 +26,10 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IQueryable<Theme> GetSource() => _query
-            .For<Erm::Theme>()
-            .Where(x => x.IsActive && !x.IsDeleted)
+            .For(Specs.Find.Erm.Theme)
             .Select(x => new Theme
             {
                 Id = x.Id,
-                Name = x.Name,
                 BeginDistribution = x.BeginDistribution,
                 EndDistribution = x.EndDistribution + OneSecond,
                 IsDefault = x.IsDefault,

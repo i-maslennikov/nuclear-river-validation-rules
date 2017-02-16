@@ -9,6 +9,5 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     {
         public long Id { get; set; }
         public long CategoryCode { get; set; }
-        public string Name { get; set; }
     }
 }

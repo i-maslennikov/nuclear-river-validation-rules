@@ -5,7 +5,7 @@ if object_id('ConsistencyAggregates.InactiveReference') is not null drop table C
 if object_id('ConsistencyAggregates.InvalidFirm') is not null drop table ConsistencyAggregates.InvalidFirm
 if object_id('ConsistencyAggregates.InvalidFirmAddress') is not null drop table ConsistencyAggregates.InvalidFirmAddress
 if object_id('ConsistencyAggregates.InvalidCategory') is not null drop table ConsistencyAggregates.InvalidCategory
-if object_id('ConsistencyAggregates.InvalidCategoryFirmAddress') is not null drop table ConsistencyAggregates.InvalidCategoryFirmAddress
+if object_id('ConsistencyAggregates.CategoryNotBelongsToAddress') is not null drop table ConsistencyAggregates.CategoryNotBelongsToAddress
 if object_id('ConsistencyAggregates.InvalidBeginDistributionDate') is not null drop table ConsistencyAggregates.InvalidBeginDistributionDate
 if object_id('ConsistencyAggregates.InvalidEndDistributionDate') is not null drop table ConsistencyAggregates.InvalidEndDistributionDate
 if object_id('ConsistencyAggregates.LegalPersonProfileBargainExpired') is not null drop table ConsistencyAggregates.LegalPersonProfileBargainExpired
@@ -19,12 +19,12 @@ if object_id('ConsistencyAggregates.MissingBills') is not null drop table Consis
 if object_id('ConsistencyAggregates.InvalidBillsTotal') is not null drop table ConsistencyAggregates.InvalidBillsTotal
 if object_id('ConsistencyAggregates.InvalidBillsPeriod') is not null drop table ConsistencyAggregates.InvalidBillsPeriod
 if object_id('ConsistencyAggregates.MissingRequiredField') is not null drop table ConsistencyAggregates.MissingRequiredField
+
 go
 
 create table ConsistencyAggregates.[Order](
     Id bigint not null,
     ProjectId bigint not null,
-    Number nvarchar(64) not null,
     BeginDistribution datetime2(2) not null,
     EndDistributionFact datetime2(2) not null,
     EndDistributionPlan datetime2(2) not null,
@@ -45,9 +45,8 @@ go
 create table ConsistencyAggregates.InvalidFirmAddress(
     OrderId bigint not null,
     FirmAddressId bigint not null,
-    FirmAddressName nvarchar(512) not null,
     OrderPositionId bigint not null,
-    OrderPositionName nvarchar(256) not null,
+    PositionId bigint not null,
     [State] int not null,
 )
 go
@@ -55,23 +54,19 @@ go
 create table ConsistencyAggregates.InvalidCategory(
     OrderId bigint not null,
     CategoryId bigint not null,
-    CategoryName nvarchar(128) not null,
     OrderPositionId bigint not null,
-    OrderPositionName nvarchar(256) not null,
+    PositionId bigint not null,
     [State] int not null,
     MayNotBelongToFirm bit not null,
 )
 go
 
-create table ConsistencyAggregates.InvalidCategoryFirmAddress(
+create table ConsistencyAggregates.CategoryNotBelongsToAddress(
     OrderId bigint not null,
     FirmAddressId bigint not null,
-    FirmAddressName nvarchar(512) not null,
     CategoryId bigint not null,
-    CategoryName nvarchar(128) not null,
     OrderPositionId bigint not null,
-    OrderPositionName nvarchar(256) not null,
-    [State] int not null,
+    PositionId bigint not null,
 )
 go
 
@@ -88,14 +83,12 @@ go
 create table ConsistencyAggregates.LegalPersonProfileBargainExpired(
     OrderId bigint not null,
     LegalPersonProfileId bigint not null,
-    LegalPersonProfileName nvarchar(256) not null,
 )
 go
 
 create table ConsistencyAggregates.LegalPersonProfileWarrantyExpired(
     OrderId bigint not null,
     LegalPersonProfileId bigint not null,
-    LegalPersonProfileName nvarchar(256) not null,
 )
 go
 
@@ -154,5 +147,5 @@ go
 
 CREATE NONCLUSTERED INDEX IX_Order_Id
 ON [ConsistencyAggregates].[Order] ([Id])
-INCLUDE ([ProjectId],[Number],[BeginDistribution],[EndDistributionPlan])
+INCLUDE ([ProjectId],[BeginDistribution],[EndDistributionPlan])
 GO

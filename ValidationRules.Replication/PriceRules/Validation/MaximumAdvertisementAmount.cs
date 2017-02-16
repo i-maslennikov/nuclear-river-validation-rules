@@ -1,11 +1,12 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
@@ -66,16 +67,17 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
-                                new XElement("message",
-                                    new XAttribute("min", violation.Min),
-                                    new XAttribute("max", violation.Max),
-                                    new XAttribute("count", violation.Count),
-                                    new XAttribute("name", violation.CategoryName),
-                                    new XAttribute("month", violation.Start)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                            new MessageParams(
+                                    new Dictionary<string, object>
+                                        {
+                                                { "min", violation.Min },
+                                                { "max", violation.Max },
+                                                { "count", violation.Count },
+                                                { "name", violation.CategoryName },
+                                                { "month", violation.Start },
+                                        },
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,

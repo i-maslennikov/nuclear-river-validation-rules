@@ -5,7 +5,6 @@ namespace NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates
     public sealed class Project
     {
         public long Id { get; set; }
-        public string Name { get; set; }
 
         public class Category
         {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -35,23 +35,18 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
             var ruleResults =
                 from order in query.For<Order>()
                 from opa in query.For<Order.CategoryAdvertisement>().Where(x => x.OrderId == order.Id)
-                from position in query.For<Position>().Where(x => x.Id == opa.PositionId)
-                from category in query.For<Category>().Where(x => x.Id == opa.CategoryId)
                 let categoryBindedToProject = query.For<Project.Category>().Any(x => x.ProjectId == order.ProjectId && x.CategoryId == opa.CategoryId)
                 where !categoryBindedToProject
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", opa.OrderPositionId),
-                                    new XAttribute("name", position.Name)),
-                                new XElement("category",
-                                    new XAttribute("id", category.Id),
-                                    new XAttribute("name", category.Name)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(opa.OrderPositionId),
+                                        new Reference<EntityTypePosition>(opa.PositionId)),
+                                    new Reference<EntityTypeCategory>(opa.CategoryId))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -7,10 +8,8 @@ using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
-
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.Accessors
 {
@@ -24,12 +23,10 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IQueryable<AdvertisementElementTemplate> GetSource() => _query
-            .For<Erm::AdvertisementElementTemplate>()
-            .Where(x => !x.IsDeleted)
+            .For(Specs.Find.Erm.AdvertisementElementTemplate)
             .Select(x => new AdvertisementElementTemplate
             {
                 Id = x.Id,
-                Name = x.Name,
                 IsRequired = x.IsRequired,
                 NeedsValidation = x.NeedsValidation,
                 IsAdvertisementLink = x.IsAdvertisementLink,
@@ -41,11 +38,11 @@ namespace NuClear.ValidationRules.Replication.Accessors
             return SpecificationFactory<AdvertisementElementTemplate>.Contains(x => x.Id, ids);
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToList();
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToList();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(AdvertisementElementTemplate), x.Id)).ToList();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects) => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<AdvertisementElementTemplate> dataObjects)
         {

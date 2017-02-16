@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition
@@ -7,6 +8,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
     public interface IDistinctor
     {
         MessageTypeCode MessageType { get; }
-        IEnumerable<Version.ValidationResult> Distinct(IEnumerable<Version.ValidationResult> results);
+        IEnumerable<Message> Distinct(IEnumerable<Message> messages);
     }
 }

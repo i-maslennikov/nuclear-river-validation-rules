@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
@@ -26,27 +26,26 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              from orderTheme in query.For<Order.OrderTheme>().Where(x => x.OrderId == order.Id)
-                              from theme in query.For<Theme>().Where(x => x.Id == orderTheme.ThemeId)
-                              where theme.BeginDistribution > order.BeginDistributionDate || // тематика начинает размещаться позже заказа
-                                    order.EndDistributionDateFact > theme.EndDistribution // тематика оканчивает размещаться раньше заказа
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(new XElement("root",
-                                          new XElement("order",
-                                              new XAttribute("id", order.Id),
-                                              new XAttribute("name", order.Number)),
-                                          new XElement("theme",
-                                              new XAttribute("id", theme.Id),
-                                              new XAttribute("name", theme.Name)))),
+            var ruleResults =
+                from order in query.For<Order>()
+                from orderTheme in query.For<Order.OrderTheme>().Where(x => x.OrderId == order.Id)
+                from theme in query.For<Theme>().Where(x => x.Id == orderTheme.ThemeId)
+                where theme.BeginDistribution > order.BeginDistributionDate || // тематика начинает размещаться позже заказа
+                      order.EndDistributionDateFact > theme.EndDistribution // тематика оканчивает размещаться раньше заказа
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeTheme>(theme.Id))
+                                .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistributionDate,
-                                      PeriodEnd = order.EndDistributionDateFact,
-                                      OrderId = order.Id,
+                        PeriodStart = order.BeginDistributionDate,
+                        PeriodEnd = order.EndDistributionDateFact,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -12,24 +11,25 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.LinkedFirmAddressShouldBeValid;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        private static readonly Dictionary<InvalidFirmAddressState, string> Formats = new Dictionary<InvalidFirmAddressState, string>
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var orderPositionReference = validationResult.ReadOrderPositionReference();
-            var firmAddressReference = validationResult.ReadFirmAddressReference();
+            { InvalidFirmAddressState.Deleted, Resources.OrderPositionAddressDeleted },
+            { InvalidFirmAddressState.NotActive, Resources.OrderPositionAddressNotActive },
+            { InvalidFirmAddressState.ClosedForAscertainment, Resources.OrderPositionAddressHidden },
+            { InvalidFirmAddressState.NotBelongToFirm, Resources.OrderPositionAddressNotBelongToFirm }
+        };
 
-            var firmAddressState = validationResult.ReadFirmAddressState();
-            var format = new Dictionary<InvalidFirmAddressState, string>
-                {
-                    { InvalidFirmAddressState.Deleted, Resources.OrderPositionAddressDeleted },
-                    { InvalidFirmAddressState.NotActive, Resources.OrderPositionAddressNotActive },
-                    { InvalidFirmAddressState.ClosedForAscertainment, Resources.OrderPositionAddressHidden },
-                    { InvalidFirmAddressState.NotBelongToFirm, Resources.OrderPositionAddressNotBelongToFirm }
-                };
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
+        {
+            var orderReference = references.Get<EntityTypeOrder>();
+            var orderPositionReference = references.Get<EntityTypeOrderPosition>();
+            var firmAddressReference = references.Get<EntityTypeFirmAddress>();
+
+            var firmAddressState = extra.ReadFirmAddressState();
 
             return new MessageComposerResult(
                 orderReference,
-                format[firmAddressState],
+                Formats[firmAddressState],
                 orderPositionReference,
                 firmAddressReference);
         }

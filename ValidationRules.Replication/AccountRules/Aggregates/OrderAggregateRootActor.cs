@@ -58,7 +58,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                            Id = order.Id,
                            AccountId = account.Id,
                            IsFreeOfCharge = order.IsFreeOfCharge,
-                           Number = order.Number,
                            BeginDistributionDate = order.BeginDistribution,
                            EndDistributionDate = order.EndDistributionFact,
                        };

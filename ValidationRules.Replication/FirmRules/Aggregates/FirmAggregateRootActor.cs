@@ -54,7 +54,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                        {
                            Id = firm.Id,
                            ProjectId = project.Id,
-                           Name = firm.Name,
                        };
 
             public FindSpecification<Firm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

@@ -13,6 +13,7 @@ using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
 
@@ -21,17 +22,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
     public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
     {
         private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
+        private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
         public ImportFactsFromErmHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
+            SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
+            _syncEntityNameActor = syncEntityNameActor;
             _eventLogger = eventLogger;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -107,6 +111,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                     _eventLogger.Log(events);
                 }
             }
+
+            _syncEntityNameActor.ExecuteCommands(commands);
 
             _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);
         }

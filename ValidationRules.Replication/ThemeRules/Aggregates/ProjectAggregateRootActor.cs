@@ -47,7 +47,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                    select new Project
                    {
                        Id = project.Id,
-                       Name = project.Name,
                    };
 
             public FindSpecification<Project> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

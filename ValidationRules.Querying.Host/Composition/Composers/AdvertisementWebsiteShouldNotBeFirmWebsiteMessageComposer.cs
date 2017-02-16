@@ -1,7 +1,8 @@
-﻿using NuClear.ValidationRules.Querying.Host.Properties;
-using NuClear.ValidationRules.Storage.Model.Messages;
+﻿using System.Collections.Generic;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
+using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -9,12 +10,12 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var firmReference = validationResult.ReadFirmReference();
-            var orderPositionReference = validationResult.ReadOrderPositionReference();
-            var website = validationResult.ReadWebsite();
+            var orderReference = references.Get<EntityTypeOrder>();
+            var firmReference = references.Get<EntityTypeFirm>();
+            var orderPositionReference = references.Get<EntityTypeOrderPosition>();
+            var website = extra.ReadWebsite();
 
             return new MessageComposerResult(
                 orderReference,

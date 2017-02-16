@@ -6,8 +6,6 @@ namespace NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates
     {
         public long Id { get; set; }
 
-        public string Number { get; set; }
-
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDateFact { get; set; }
 

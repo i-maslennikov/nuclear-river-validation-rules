@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -64,20 +65,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from oversale in oversales.Distinct()
                 join period in query.For<Period>() on new { oversale.Start, oversale.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                 join order in query.For<Order>() on oversale.OrderId equals order.Id
-                join category in query.For<Category>() on oversale.Category3Id ?? oversale.Category1Id equals category.Id
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
-                                new XElement("message",
-                                    new XAttribute("max", MaxPositionsPerCategory),
-                                    new XAttribute("count", oversale.Count)),
-                                new XElement("category",
-                                    new XAttribute("id", category.Id),
-                                    new XAttribute("name", category.Name)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                            new MessageParams(
+                                    new Dictionary<string, object> { { "max", MaxPositionsPerCategory }, { "count", oversale.Count } },
+                                    new Reference<EntityTypeCategory>((oversale.Category3Id ?? oversale.Category1Id).Value),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,

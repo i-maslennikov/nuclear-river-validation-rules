@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -83,19 +83,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
-                                new XElement("firm",
-                                    new XAttribute("id", conflict.FirmId)),
-                                new XElement("position",
-                                    new XAttribute("orderId", conflict.OrderId),
-                                    new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == conflict.OrderId).Number),
-                                    new XAttribute("orderPositionId", conflict.CauseOrderPositionId),
-                                    new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == conflict.CausePackagePositionId).Name),
-                                    new XAttribute("positionId", conflict.CauseItemPositionId),
-                                    new XAttribute("positionName", query.For<Position>().Single(x => x.Id == conflict.CauseItemPositionId).Name)),
-                                new XElement("order",
-                                    new XAttribute("id", conflict.OrderId),
-                                    new XAttribute("name", query.For<Order>().Single(x => x.Id == conflict.OrderId).Number)))),
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(conflict.CauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.OrderId),
+                                        new Reference<EntityTypePosition>(conflict.CausePackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.CauseItemPositionId)))
+                                .ToXDocument(),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,

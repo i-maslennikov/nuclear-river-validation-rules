@@ -1,7 +1,6 @@
-﻿using System;
-using System.Xml.Linq;
-
-using NuClear.DataTest.Metamodel.Dsl;
+﻿using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -18,17 +17,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderMustNotIncludeReleasedPeriodPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3), WorkflowStep = 1 },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3), WorkflowStep = 1 },
                     new Facts::ReleaseInfo { PeriodEndDate = MonthStart(2) },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(3), IsDraft = true },
+                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(3), IsDraft = true },
                     new Aggregates::Project.NextRelease { Date = MonthStart(2) })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse(
-                                "<root><order id=\"1\" name=\"Order\" /></root>"),
+                            MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
                             Result = 3,
                             PeriodStart = MonthStart(1),
@@ -42,13 +40,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderMustNotIncludeReleasedPeriodNegative))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(2), EndDistributionPlan = MonthStart(3), WorkflowStep = 1 },
-                    new Facts::Order { Id = 2, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3), WorkflowStep = 5 },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(2), EndDistributionPlan = MonthStart(3), WorkflowStep = 1 },
+                    new Facts::Order { Id = 2, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(3), WorkflowStep = 5 },
                     new Facts::ReleaseInfo { PeriodEndDate = MonthStart(2) },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(2), End = MonthStart(3), IsDraft = true },
-                    new Aggregates::Order { Id = 2, Number = "Order", Begin = MonthStart(1), End = MonthStart(3), IsDraft = false },
+                    new Aggregates::Order { Id = 1, Begin = MonthStart(2), End = MonthStart(3), IsDraft = true },
+                    new Aggregates::Order { Id = 2, Begin = MonthStart(1), End = MonthStart(3), IsDraft = false },
                     new Aggregates::Project.NextRelease { Date = MonthStart(2) })
                 .Message();
     }

@@ -87,8 +87,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                 return;
             }
 
-            var aggregateRootTypes = commands.Select(x => x.AggregateRootType).ToArray();
-            var actors = _aggregateActorFactory.Create(aggregateRootTypes);
+            var actors = _aggregateActorFactory.Create(new HashSet<Type>(commands.Select(x => x.AggregateRootType)));
+
             var events = new HashSet<IEvent>();
 
             // TODO: Can agreggate actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76

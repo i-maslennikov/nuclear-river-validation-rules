@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.InvalidCategory> invalidCategoryRepository,
-            IBulkRepository<Order.InvalidCategoryFirmAddress> invalidCategoryFirmAddressRepository,
+            IBulkRepository<Order.CategoryNotBelongsToAddress> categoryNotBelongsToAddress,
             IBulkRepository<Order.InvalidFirmAddress> orderInvalidFirmAddressRepository,
             IBulkRepository<Order.BargainSignedLaterThanOrder> orderBargainSignedLaterThanOrderRepository,
             IBulkRepository<Order.HasNoAnyLegalPersonProfile> orderHasNoAnyLegalPersonProfileRepository,
@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
                 HasValueObject(new InvalidCategoryAccessor(query), invalidCategoryRepository),
-                HasValueObject(new InvalidCategoryFirmAddressAccessor(query), invalidCategoryFirmAddressRepository),
+                HasValueObject(new CategoryNotBelongsToAddressAccessor(query), categoryNotBelongsToAddress),
                 HasValueObject(new InvalidFirmAddressAccessor(query), orderInvalidFirmAddressRepository),
                 HasValueObject(new OrderBargainSignedLaterThanOrderAccessor(query), orderBargainSignedLaterThanOrderRepository),
                 HasValueObject(new OrderHasNoAnyLegalPersonProfileAccessor(query), orderHasNoAnyLegalPersonProfileRepository),
@@ -106,7 +106,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                            BeginDistribution = order.BeginDistribution,
                            EndDistributionFact = order.EndDistributionFact,
                            EndDistributionPlan = order.EndDistributionPlan,
-                           Number = order.Number,
                    };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -139,7 +138,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId)
                    let state = address.FirmId != order.FirmId ? InvalidFirmAddressState.NotBelongToFirm
                                 : address.IsDeleted ? InvalidFirmAddressState.Deleted
@@ -151,9 +149,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                        {
                            OrderId = order.Id,
                            FirmAddressId = address.Id,
-                           FirmAddressName = address.Name,
                            OrderPositionId = orderPosition.Id,
-                           OrderPositionName = position.Name,
+                           PositionId = opa.PositionId,
                            State = state,
                        };
 
@@ -164,11 +161,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class InvalidCategoryFirmAddressAccessor : DataChangesHandler<Order.InvalidCategoryFirmAddress>, IStorageBasedDataObjectAccessor<Order.InvalidCategoryFirmAddress>
+        public sealed class CategoryNotBelongsToAddressAccessor : DataChangesHandler<Order.CategoryNotBelongsToAddress>, IStorageBasedDataObjectAccessor<Order.CategoryNotBelongsToAddress>
         {
             private readonly IQuery _query;
 
-            public InvalidCategoryFirmAddressAccessor(IQuery query) : base(CreateInvalidator())
+            public CategoryNotBelongsToAddressAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
@@ -179,31 +176,27 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                         MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid,
                     };
 
-            public IQueryable<Order.InvalidCategoryFirmAddress> GetSource()
+            public IQueryable<Order.CategoryNotBelongsToAddress> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id && x.CategoryId.HasValue && x.FirmAddressId.HasValue)
-                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
+                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
+                   where opa.CategoryId != null
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId && x.IsActive && !x.IsClosedForAscertainment && !x.IsDeleted)
-                   from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
-                   from cfa in _query.For<Facts::FirmAddressCategory>().Where(x => x.FirmAddressId == opa.FirmAddressId && x.CategoryId == opa.CategoryId).DefaultIfEmpty()
+                   from cfa in _query.For<Facts::FirmAddressCategory>().Where(x => x.FirmAddressId == address.Id && x.CategoryId == opa.CategoryId.Value).DefaultIfEmpty()
                    where cfa == null
-                   select new Order.InvalidCategoryFirmAddress
+                   select new Order.CategoryNotBelongsToAddress
                    {
                        OrderId = order.Id,
                        FirmAddressId = address.Id,
-                       FirmAddressName = address.Name,
-                       CategoryId = category.Id,
-                       CategoryName = category.Name,
+                       CategoryId = opa.CategoryId.Value,
                        OrderPositionId = orderPosition.Id,
-                       OrderPositionName = position.Name,
-                       State = InvalidCategoryFirmAddressState.CategoryNotBelongsToAddress,
+                       PositionId = opa.PositionId,
                    };
 
-            public FindSpecification<Order.InvalidCategoryFirmAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.CategoryNotBelongsToAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.InvalidCategoryFirmAddress>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.CategoryNotBelongsToAddress>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
@@ -243,9 +236,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                        {
                            OrderId = order.Id,
                            CategoryId = category.Id,
-                           CategoryName = category.Name,
                            OrderPositionId = orderPosition.Id,
-                           OrderPositionName = position.Name,
+                           PositionId = opa.PositionId,
                            MayNotBelongToFirm = position.BindingObjectType == BindingObjectTypeCategoryMultipleAsterix,
                            State = state,
                        };
@@ -544,7 +536,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    {
                        OrderId = order.Id,
                        LegalPersonProfileId = profile.Id,
-                       LegalPersonProfileName = profile.Name,
                    };
 
             public FindSpecification<Order.LegalPersonProfileBargainExpired> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -577,7 +568,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    {
                        OrderId = order.Id,
                        LegalPersonProfileId = profile.Id,
-                       LegalPersonProfileName = profile.Name,
                    };
 
             public FindSpecification<Order.LegalPersonProfileWarrantyExpired> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

@@ -6,7 +6,6 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
     {
         public long Id { get; set; }
         public long FirmId { get; set; }
-        public string Number { get; set; }
 
         public long DestOrganizationUnitId { get; set; }
 

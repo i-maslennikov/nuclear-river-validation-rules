@@ -1,6 +1,9 @@
 ﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.Utils.Xml;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -37,38 +40,38 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessage))
                 .Aggregate(
                     // Обе позиции в одном заказе - есть ошибка
-                    new Aggregates::Order { Id = 1, Number = "Order", FirmId = 1, Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = MonthStart(1), End = MonthStart(3) },
                     new Aggregates::Order.SelfAdvertisementPosition { OrderId = 1 },
                     new Aggregates::Order.NotApplicapleForDesktopPosition { OrderId = 1 },
 
                     // В разных заказах, с пересечением по времени размещения - есть ошибка в обоих заказах
-                    new Aggregates::Order { Id = 2, Number = "Order", FirmId = 2, Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order { Id = 2, FirmId = 2, Begin = MonthStart(1), End = MonthStart(3) },
                     new Aggregates::Order.SelfAdvertisementPosition { OrderId = 2 },
-                    new Aggregates::Order { Id = 3, Number = "Order", FirmId = 2, Begin = MonthStart(2), End = MonthStart(4) },
+                    new Aggregates::Order { Id = 3, FirmId = 2, Begin = MonthStart(2), End = MonthStart(4) },
                     new Aggregates::Order.NotApplicapleForDesktopPosition { OrderId = 3 },
 
                     // В разных заказах, без пересечения по времени размещения - нет ошибки
-                    new Aggregates::Order { Id = 4, Number = "Order", FirmId = 4, Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order { Id = 4, FirmId = 4, Begin = MonthStart(1), End = MonthStart(3) },
                     new Aggregates::Order.SelfAdvertisementPosition { OrderId = 4 },
-                    new Aggregates::Order { Id = 5, Number = "Order", FirmId = 4, Begin = MonthStart(3), End = MonthStart(5) },
+                    new Aggregates::Order { Id = 5, FirmId = 4, Begin = MonthStart(3), End = MonthStart(5) },
                     new Aggregates::Order.NotApplicapleForDesktopPosition { OrderId = 5 },
 
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
-                    new Aggregates::Order { Id = 6, Number = "Order", FirmId = 6, Begin = MonthStart(1), End = MonthStart(3), Scope = 6},
+                    new Aggregates::Order { Id = 6, FirmId = 6, Begin = MonthStart(1), End = MonthStart(3), Scope = 6},
                     new Aggregates::Order.SelfAdvertisementPosition { OrderId = 6 },
-                    new Aggregates::Order { Id = 7, Number = "Order", FirmId = 6, Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order { Id = 7, FirmId = 6, Begin = MonthStart(1), End = MonthStart(3) },
                     new Aggregates::Order.NotApplicapleForDesktopPosition { OrderId = 7 },
 
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
-                    new Aggregates::Order { Id = 8, Number = "Order", FirmId = 8, Begin = MonthStart(1), End = MonthStart(3) },
+                    new Aggregates::Order { Id = 8, FirmId = 8, Begin = MonthStart(1), End = MonthStart(3) },
                     new Aggregates::Order.SelfAdvertisementPosition { OrderId = 8 },
-                    new Aggregates::Order { Id = 9, Number = "Order", FirmId = 8, Begin = MonthStart(1), End = MonthStart(3), Scope = 9 },
+                    new Aggregates::Order { Id = 9, FirmId = 8, Begin = MonthStart(1), End = MonthStart(3), Scope = 9 },
                     new Aggregates::Order.NotApplicapleForDesktopPosition { OrderId = 9 })
                 .Message(
                     // Обе позиции в одном заказе - есть ошибка
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"Order\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -79,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах, с пересечением по времени размещения - есть ошибка в обоих заказах
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"2\" name=\"Order\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(2)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -88,7 +91,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"3\" name=\"Order\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(3)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(2),
@@ -99,7 +102,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"6\" name=\"Order\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(6)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),
@@ -110,7 +113,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // В разных заказах в разных состояниях, с пересечением по времени размещения - есть ошибка, только в локальном
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"9\" name=\"Order\" /></root>"),
+                        MessageParams = new MessageParams(new Reference<EntityTypeOrder>(9)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         Result = 255,
                         PeriodStart = MonthStart(1),

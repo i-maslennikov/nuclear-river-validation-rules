@@ -40,31 +40,23 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(AccountAggregates::Account), typeof(AccountActors::AccountAggregateRootActor) },
 
                     { typeof(AdvertisementAggregates::Advertisement), typeof(AdvertisementActors::AdvertisementAggregateRootActor) },
-                    { typeof(AdvertisementAggregates::AdvertisementElementTemplate), typeof(AdvertisementActors::AdvertisementElementTemplateAggregateRootActor) },
                     { typeof(AdvertisementAggregates::Firm), typeof(AdvertisementActors::FirmAggregateRootActor) },
                     { typeof(AdvertisementAggregates::Order), typeof(AdvertisementActors::OrderAggregateRootActor) },
-                    { typeof(AdvertisementAggregates::Position), typeof(AdvertisementActors::PositionAggregateRootActor) },
 
                     { typeof(ConsistencyAggregates::Order), typeof(ConsistencyActors::OrderAggregateRootActor) },
 
                     { typeof(FirmAggregates::Firm), typeof(FirmActors::FirmAggregateRootActor) },
                     { typeof(FirmAggregates::Order), typeof(FirmActors::OrderAggregateRootActor) },
 
-                    { typeof(PriceAggregates::Category), typeof(PriceActors::CategoryAggregateRootActor) },
                     { typeof(PriceAggregates::Order), typeof(PriceActors::OrderAggregateRootActor) },
                     { typeof(PriceAggregates::Period), typeof(PriceActors::PeriodAggregateRootActor) },
                     { typeof(PriceAggregates::Position), typeof(PriceActors::PositionAggregateRootActor) },
                     { typeof(PriceAggregates::Price), typeof(PriceActors::PriceAggregateRootActor) },
-                    { typeof(PriceAggregates::Project), typeof(PriceActors::ProjectAggregateRootActor) },
-                    { typeof(PriceAggregates::Theme), typeof(PriceActors::ThemeAggregateRootActor) },
 
-                    { typeof(ProjectAggregates::Category), typeof(ProjectActors::CategoryAggregateRootActor) },
                     { typeof(ProjectAggregates::FirmAddress), typeof(ProjectActors::FirmAddressAggregateRootActor) },
                     { typeof(ProjectAggregates::Order), typeof(ProjectActors::OrderAggregateRootActor) },
-                    { typeof(ProjectAggregates::Position), typeof(ProjectActors::PositionAggregateRootActor) },
                     { typeof(ProjectAggregates::Project), typeof(ProjectActors::ProjectAggregateRootActor) },
 
-                    { typeof(ThemeAggregates::Category), typeof(ThemeActors::CategoryAggregateRootActor) },
                     { typeof(ThemeAggregates::Order), typeof(ThemeActors::OrderAggregateRootActor) },
                     { typeof(ThemeAggregates::Project), typeof(ThemeActors::ProjectAggregateRootActor) },
                     { typeof(ThemeAggregates::Theme), typeof(ThemeActors::ThemeAggregateRootActor) },
@@ -76,19 +68,18 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
         }
 
         public IReadOnlyCollection<IActor> Create(IReadOnlyCollection<Type> aggregateRootTypes)
+            => aggregateRootTypes.Select(CreateActorForAggregateRoot).ToList();
+
+        private AggregateActor CreateActorForAggregateRoot(Type aggregateRootType)
         {
-            var actors = new List<IActor>();
-            foreach (var aggregateRootType in AggregateRootActors.Keys)
+            Type aggregateRootActorType;
+            if (!AggregateRootActors.TryGetValue(aggregateRootType, out aggregateRootActorType))
             {
-                if (aggregateRootTypes.Contains(aggregateRootType))
-                {
-                    var aggregateRootActorType = AggregateRootActors[aggregateRootType];
-                    var aggregateRootActor = (IAggregateRootActor)_unityContainer.Resolve(aggregateRootActorType);
-                    actors.Add(new AggregateActor(aggregateRootActor));
-                }
+                throw new ArgumentException($"Can't find aggregate actor for type {aggregateRootType.GetFriendlyName()}");
             }
 
-            return actors;
+            var aggregateRootActor = (IAggregateRootActor)_unityContainer.Resolve(aggregateRootActorType);
+            return _unityContainer.Resolve<AggregateActor>(new DependencyOverride<IAggregateRootActor>(aggregateRootActor));
         }
     }
 }

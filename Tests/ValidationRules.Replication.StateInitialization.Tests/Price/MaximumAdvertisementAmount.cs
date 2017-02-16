@@ -1,6 +1,8 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.Generic;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
@@ -19,25 +21,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 1, CategoryName = "Category", Max = 2 },
 
-                    new Aggregates::Order { Id = 1, Number = "Order" },
+                    new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 1 },
                     new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
                     new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
 
-                    new Aggregates::Order { Id = 2, Number = "Order" },
+                    new Aggregates::Order { Id = 2 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 2, CategoryCode = 1 },
                     new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(1), Scope = 0 },
                     new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(2), Scope = 0 },
 
-                    new Aggregates::Order { Id = 3, Number = "Order" },
+                    new Aggregates::Order { Id = 3 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 3, CategoryCode = 1 },
                     new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(1), Scope = -1 },
 
-                    new Aggregates::Order { Id = 4, Number = "Order" },
+                    new Aggregates::Order { Id = 4 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 4, CategoryCode = 1 },
                     new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(1), Scope = 4 },
 
-                    new Aggregates::Order { Id = 5, Number = "Order" },
+                    new Aggregates::Order { Id = 5 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 5, CategoryCode = 1 },
                     new Aggregates::Period.OrderPeriod { OrderId = 5, Start = MonthStart(2), Scope = 5 },
 
@@ -48,10 +50,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message min=\"0\" max=\"2\" count=\"3\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"3\" name=\"Order\" />" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                    new Dictionary<string, object> { { "min", 0 }, { "max", 2 }, { "count", 3 }, { "name", "Category" }, { "month", MonthStart(1) } },
+                                    new Reference<EntityTypeOrder>(3)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.MaximumAdvertisementAmount,
                             Result = 243,
                             PeriodStart = MonthStart(1),
@@ -60,10 +62,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message min=\"0\" max=\"2\" count=\"4\" name=\"Category\" month=\"2012-01-01T00:00:00\" />" +
-                                                            "<order id=\"4\" name=\"Order\" />" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                    new Dictionary<string, object> { { "min", 0 }, { "max", 2 }, { "count", 4 }, { "name", "Category" }, { "month", MonthStart(1) } },
+                                    new Reference<EntityTypeOrder>(4)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.MaximumAdvertisementAmount,
                             Result = 243,
                             PeriodStart = MonthStart(1),
@@ -72,10 +74,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<message min=\"0\" max=\"2\" count=\"3\" name=\"Category\" month=\"2012-02-01T00:00:00\" />" +
-                                                            "<order id=\"5\" name=\"Order\" />" +
-                                                            "</root>"),
+                            MessageParams =
+                                new MessageParams(
+                                    new Dictionary<string, object> { { "min", 0 }, { "max", 2 }, { "count", 3 }, { "name", "Category" }, { "month", MonthStart(2) } },
+                                    new Reference<EntityTypeOrder>(5)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.MaximumAdvertisementAmount,
                             Result = 243,
                             PeriodStart = MonthStart(2),

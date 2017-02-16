@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.InvalidBillsPeriod(),
                 new Aggregates::Order.InvalidBillsTotal(),
                 new Aggregates::Order.InvalidCategory(),
-                new Aggregates::Order.InvalidCategoryFirmAddress(),
+                new Aggregates::Order.CategoryNotBelongsToAddress(),
                 new Aggregates::Order.InvalidEndDistributionDate(),
                 new Aggregates::Order.InvalidFirmAddress(),
                 new Aggregates::Order.LegalPersonProfileBargainExpired(),
@@ -89,30 +89,5 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.MissingOrderScan(),
                 new Aggregates::Order.MissingRequiredField())
             .Ignored();
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement SampleTest1
-            => ArrangeMetadataElement.Config
-            .Name(nameof(SampleTest1))
-            .Fact(
-                new Facts::Order { ReleaseCountPlan = 0, BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondJan, EndDistributionFact = LastSecondMar },
-                new Facts::Project { })
-            .Aggregate(
-                new Aggregates::Order { BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondJan, EndDistributionFact = LastSecondMar },
-                new Aggregates::Order.HasNoAnyPosition(),
-                new Aggregates::Order.HasNoAnyLegalPersonProfile(),
-                new Aggregates::Order.InvalidEndDistributionDate(),
-                new Aggregates::Order.MissingOrderScan(),
-                new Aggregates::Order.MissingRequiredField {BranchOfficeOrganizationUnit = true, Currency = true, Inspector = true, LegalPerson = true, LegalPersonProfile = true, ReleaseCountPlan = true, Deal = true });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement SampleTest2
-            => ArrangeMetadataElement.Config
-            .Name(nameof(SampleTest2))
-            .Aggregate(
-                new Aggregates::Order { Id = 1, Number = "123", BeginDistribution = FirstDayJan, EndDistributionPlan = LastSecondJan, EndDistributionFact = LastSecondMar },
-                new Aggregates::Order.HasNoAnyPosition {OrderId = 1})
-            .Message(
-                new Messages::Version.ValidationResult { MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"123\" /></root>"), MessageType = 25, Result = 243, PeriodStart = FirstDayJan, PeriodEnd = LastSecondJan, OrderId = 1 });
     }
 }

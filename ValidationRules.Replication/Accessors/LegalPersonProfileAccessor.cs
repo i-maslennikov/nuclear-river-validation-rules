@@ -8,9 +8,8 @@ using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
-
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.Replication.Accessors
 {
@@ -24,15 +23,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IQueryable<LegalPersonProfile> GetSource() => _query
-            .For<Erm::LegalPersonProfile>()
-            .Where(x => x.IsActive && !x.IsDeleted)
+            .For(Specs.Find.Erm.LegalPersonProfile)
             .Select(x => new LegalPersonProfile
                 {
                     Id = x.Id,
                     LegalPersonId = x.LegalPersonId,
                     BargainEndDate = x.BargainEndDate,
                     WarrantyEndDate = x.WarrantyEndDate,
-                    Name = x.Name,
                 });
 
         public FindSpecification<LegalPersonProfile> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

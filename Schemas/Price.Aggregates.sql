@@ -19,32 +19,6 @@ if object_id('PriceAggregates.AdvertisementAmountRestriction') is not null drop 
 if object_id('PriceAggregates.Price') is not null drop table PriceAggregates.Price
 if object_id('PriceAggregates.AssociatedPositionGroupOvercount') is not null drop table PriceAggregates.AssociatedPositionGroupOvercount
 
-if object_id('PriceAggregates.Project') is not null drop table PriceAggregates.Project
-if object_id('PriceAggregates.Category') is not null drop table PriceAggregates.Category
-if object_id('PriceAggregates.Theme') is not null drop table PriceAggregates.Theme
-
-go
-
--- справочник
-create table PriceAggregates.Project(
-    Id bigint NOT NULL,
-    Name nvarchar(64) NOT NULL,
-    constraint PK_Project primary key (Id)
-)
-go
-
-create table PriceAggregates.Theme(
-    Id bigint NOT NULL,
-    Name nvarchar(64) NOT NULL,
-    constraint PK_Theme primary key (Id)
-)
-go
-
-create table PriceAggregates.Category(
-    Id bigint not null,
-    Name nvarchar(128) not null,
-    constraint PK_Category primary key (Id)
-)
 go
 
 -- price aggregate
@@ -59,7 +33,7 @@ go
 create table PriceAggregates.AssociatedPositionGroupOvercount(
     PriceId bigint NOT NULL,
     PricePositionId bigint NOT NULL,
-    PricePositionName nvarchar(max) NOT NULL,
+    PositionId bigint NOT NULL,
     [Count] int NOT NULL,
 )
 go
@@ -79,7 +53,6 @@ go
 create table PriceAggregates.[Order](
     Id bigint NOT NULL,
     FirmId bigint NOT NULL,
-    Number nvarchar(64) NOT NULL,
     constraint PK_Order primary key (Id)
 )
 create index IX_Order_FirmId ON PriceAggregates.[Order] ([FirmId]) include (Id)
@@ -155,7 +128,7 @@ go
 create table PriceAggregates.OrderPricePosition(
     OrderId bigint NOT NULL,
 	OrderPositionId bigint NOT NULL,
-	OrderPositionName nvarchar(256) NOT NULL,
+    PositionId bigint NOT NULL,
 	PriceId bigint NOT NULL,
 	IsActive bit NOT NULL
 )
@@ -197,7 +170,6 @@ go
 create table PriceAggregates.Position(
     Id bigint NOT NULL,
     CategoryCode bigint NOT NULL,
-    Name nvarchar(256) NOT NULL,
     constraint PK_Position primary key (Id)
 )
 go

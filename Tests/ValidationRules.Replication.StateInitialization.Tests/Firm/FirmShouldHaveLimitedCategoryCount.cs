@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -32,9 +35,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmShouldHaveLimitedCategoryCountWhenNonIntersectingPeriods))
                 .Aggregate(
-                    new Aggregates::Firm { Id = 1, Name = "Firm" },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "ValidOrder", Begin = FirstDayFeb, End = FirstDayApr, ProjectId = 1 })
+                    new Aggregates::Firm { Id = 1, },
+                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayFeb, End = FirstDayApr, ProjectId = 1 })
                 .Aggregate(
                     Enumerable.Range(1, 30).Select(i => new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = i }).ToArray()
                     )
@@ -44,7 +47,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"30\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" name=\"InvalidOrder\" /></root>"),
+                        MessageParams = new MessageParams(
+                                    new Dictionary<string, object> { { "count", 30 }, { "allowed", 20 } },
+                                    new Reference<EntityTypeFirm>(1),
+                                    new Reference<EntityTypeOrder>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayJan,
@@ -58,9 +64,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmShouldHaveLimitedCategoryCountIntersectingPeriods))
                 .Aggregate(
-                    new Aggregates::Firm { Id = 1, Name = "Firm" },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayJan, End = FirstDayApr, ProjectId = 1 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Number = "InvalidOrder", Begin = FirstDayFeb, End = FirstDayMay, ProjectId = 1 })
+                    new Aggregates::Firm { Id = 1 },
+                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = FirstDayJan, End = FirstDayApr, ProjectId = 1 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayFeb, End = FirstDayMay, ProjectId = 1 })
                 .Aggregate(
                     Enumerable.Range(1, 15).Select(i => new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = i }).ToArray()
                     )
@@ -70,7 +76,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"1\" name=\"InvalidOrder\" /></root>"),
+                        MessageParams = new MessageParams(
+                                    new Dictionary<string, object> { { "count", 27 }, { "allowed", 20 } },
+                                    new Reference<EntityTypeFirm>(1),
+                                    new Reference<EntityTypeOrder>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,
@@ -79,7 +88,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     },
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><message count=\"27\" allowed=\"20\" /><firm id=\"1\" name=\"Firm\" /><order id=\"2\" name=\"InvalidOrder\" /></root>"),
+                        MessageParams = new MessageParams(
+                                    new Dictionary<string, object> { { "count", 27 }, { "allowed", 20 } },
+                                    new Reference<EntityTypeFirm>(1),
+                                    new Reference<EntityTypeOrder>(2)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,

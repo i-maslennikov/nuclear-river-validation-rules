@@ -8,17 +8,17 @@ namespace NuClear.ValidationRules.OperationsProcessing
     {
         public TOperationIdentity GetIdentity<TOperationIdentity>() where TOperationIdentity : IOperationIdentity
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public IOperationIdentity GetIdentity(Type identityType)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public IOperationIdentity GetIdentity(int operationId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool TryGetIdentity(int operationId, out IOperationIdentity identity)

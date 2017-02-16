@@ -1,4 +1,7 @@
-﻿using LinqToDB.Data;
+﻿using System;
+using System.Collections.Generic;
+
+using LinqToDB.Data;
 using LinqToDB.Mapping;
 
 using NuClear.ValidationRules.Storage;
@@ -7,13 +10,22 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
     public class DataConnectionFactory
     {
-        private const string ConfigurationString = "Messages";
-        private readonly MappingSchema _schema = Schema.Messages;
-
-        public DataConnection CreateDataConnection()
+        private static readonly Dictionary<string, MappingSchema> Schemas = new Dictionary<string, MappingSchema>
         {
-            var connection = new DataConnection(ConfigurationString);
-            connection.AddMappingSchema(_schema);
+            { "Facts", Schema.Facts },
+            { "Messages", Schema.Messages},
+        };
+
+        public DataConnection CreateDataConnection(string configurationString)
+        {
+            MappingSchema schema;
+            if (!Schemas.TryGetValue(configurationString, out schema))
+            {
+                throw new ArgumentException(nameof(configurationString));
+            }
+
+            var connection = new DataConnection(configurationString);
+            connection.AddMappingSchema(schema);
             //connection.BeginTransaction(System.Data.IsolationLevel.Snapshot);
             return connection;
         }

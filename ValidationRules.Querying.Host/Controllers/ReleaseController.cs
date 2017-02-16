@@ -29,8 +29,8 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
                 return NotFound();
             }
 
-            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), CombinedResult.ReleaseMask);
-            var result = _factory.ComposeAll(messages, x => x.ForRelease);
+            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), ResultType.Release);
+            var result = _factory.GetValidationResult(messages);
             return Ok(result);
         }
 
@@ -38,8 +38,8 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         public IHttpActionResult Post([FromBody]ApiRequest request)
         {
             var versionId = _repositiory.GetLatestVersion();
-            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), CombinedResult.ReleaseMask);
-            var result = _factory.ComposeAll(messages, x => x.ForRelease);
+            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), ResultType.Release);
+            var result = _factory.GetValidationResult(messages);
             return Ok(result);
         }
 

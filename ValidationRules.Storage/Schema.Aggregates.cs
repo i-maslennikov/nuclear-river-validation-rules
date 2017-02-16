@@ -54,10 +54,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ThemeAggregates::Project.ProjectDefaultTheme>()
                    .HasSchemaName(ThemeAggregatesSchema);
 
-            builder.Entity<ThemeAggregates::Category>()
-                   .HasSchemaName(ThemeAggregatesSchema)
-                   .HasPrimaryKey(x => x.Id);
-
             return builder;
         }
 
@@ -139,27 +135,11 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<PriceAggregates::Project>()
-                  .HasSchemaName(PriceAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-
-            builder.Entity<PriceAggregates::Theme>()
-                  .HasSchemaName(PriceAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-
-            builder.Entity<PriceAggregates::Category>()
-                  .HasSchemaName(PriceAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-
             return builder;
         }
 
         private static FluentMappingBuilder RegisterProjectAggregates(this FluentMappingBuilder builder)
         {
-            builder.Entity<ProjectAggregates::Category>()
-                   .HasSchemaName(ProjectAggregatesSchema)
-                   .HasPrimaryKey(x => x.Id);
-
             builder.Entity<ProjectAggregates::FirmAddress>()
                    .HasSchemaName(ProjectAggregatesSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -176,10 +156,6 @@ namespace NuClear.ValidationRules.Storage
 
             builder.Entity<ProjectAggregates::Order.CostPerClickAdvertisement>()
                    .HasSchemaName(ProjectAggregatesSchema);
-
-            builder.Entity<ProjectAggregates::Position>()
-                   .HasSchemaName(ProjectAggregatesSchema)
-                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<ProjectAggregates::Project>()
                    .HasSchemaName(ProjectAggregatesSchema)
@@ -254,10 +230,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Advertisement.Coupon>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
 
-            builder.Entity<AdvertisementAggregates::AdvertisementElementTemplate>()
-                  .HasSchemaName(AdvertisementAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-
             builder.Entity<AdvertisementAggregates::Firm>()
                   .HasSchemaName(AdvertisementAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
@@ -265,10 +237,6 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Firm.WhiteListDistributionPeriod>()
                   .HasSchemaName(AdvertisementAggregatesSchema);
-
-            builder.Entity<AdvertisementAggregates::Position>()
-                  .HasSchemaName(AdvertisementAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
 
             return builder;
         }
@@ -285,7 +253,7 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ConsistencyAggregates::Order.InvalidFirmAddress>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
-            builder.Entity<ConsistencyAggregates::Order.InvalidCategoryFirmAddress>()
+            builder.Entity<ConsistencyAggregates::Order.CategoryNotBelongsToAddress>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
             builder.Entity<ConsistencyAggregates::Order.InvalidCategory>()

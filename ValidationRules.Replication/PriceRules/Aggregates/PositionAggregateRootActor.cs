@@ -52,7 +52,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 {
                     Id = position.Id,
                     CategoryCode = position.CategoryCode,
-                    Name = position.Name
                 });
 
         public FindSpecification<Position> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

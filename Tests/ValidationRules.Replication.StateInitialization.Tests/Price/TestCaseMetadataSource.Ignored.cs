@@ -60,7 +60,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Price.AdvertisementAmountRestriction(),
                 new Aggregates::Order.AmountControlledPosition(),
                 new Aggregates::Price.AssociatedPositionGroupOvercount(),
-                new Aggregates::Category(),
                 new Aggregates::Order(),
                 new Aggregates::Order.OrderAssociatedPosition(),
                 new Aggregates::Order.OrderDeniedPosition(),
@@ -70,9 +69,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Period(),
                 new Aggregates::Position(),
                 new Aggregates::Price(),
-                new Aggregates::Period.PricePeriod(),
-                new Aggregates::Project(),
-                new Aggregates::Theme())
+                new Aggregates::Period.PricePeriod())
             .Ignored();
     }
 }

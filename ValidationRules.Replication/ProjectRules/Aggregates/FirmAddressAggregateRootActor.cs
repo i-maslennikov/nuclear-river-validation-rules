@@ -45,7 +45,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                    select new FirmAddress
                    {
                        Id = address.Id,
-                       Name = address.Name,
                        IsLocatedOnTheMap = address.IsLocatedOnTheMap,
                    };
 

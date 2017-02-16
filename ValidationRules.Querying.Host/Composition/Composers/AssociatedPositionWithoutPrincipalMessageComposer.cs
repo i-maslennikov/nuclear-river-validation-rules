@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Collections.Generic;
 
-using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -13,22 +10,14 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.AssociatedPositionWithoutPrincipal;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var position = validationResult.ReadOrderPositions().First();
+            var orderPosition = (OrderPositionNamedReference)references.Get<EntityTypeOrderPosition>();
 
             return new MessageComposerResult(
-                orderReference,
-                string.Format(Resources.AssociatedPositionWithoutPrincipalTemplate, MakePositionText(position)),
-                new EntityReference("OrderPosition", position.OrderPositionId, position.OrderPositionName));
-        }
-
-        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
-        {
-            return dto.OrderPositionName != dto.PositionName
-                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
-                       : Resources.RichDefaultPositionTypeTemplate;
+                orderPosition.Order,
+                string.Format(Resources.AssociatedPositionWithoutPrincipalTemplate, orderPosition.PositionPrefix),
+                orderPosition);
         }
     }
 }
