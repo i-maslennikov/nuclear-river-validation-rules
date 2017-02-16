@@ -11,4 +11,6 @@ if object_id('AdvertisementAggregates.AdvertisementElementTemplate') is not null
 if object_id('AdvertisementAggregates.Position') is not null drop table AdvertisementAggregates.Position
 
 if object_id('ConsistencyAggregates.InvalidCategoryFirmAddress') is not null drop table ConsistencyAggregates.InvalidCategoryFirmAddress
+
+if object_id('ConsistencyAggregates.InvalidFirm') is not null drop table ConsistencyAggregates.InvalidFirm
 go
