@@ -71,6 +71,10 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<DeniedPosition>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
+            builder.Entity<EntityName>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.Id)
+                   .HasPrimaryKey(x => x.EntityType);
             builder.Entity<Firm>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);

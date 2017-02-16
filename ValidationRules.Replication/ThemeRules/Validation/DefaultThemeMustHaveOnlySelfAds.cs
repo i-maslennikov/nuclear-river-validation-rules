@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 
@@ -37,14 +37,11 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                 where theme.IsDefault // тематика по умолчанию
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
-                                new XElement("theme",
-                                    new XAttribute("id", theme.Id),
-                                    new XAttribute("name", theme.Name)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeTheme>(theme.Id))
+                                .ToXDocument(),
 
                         PeriodStart = order.BeginDistributionDate,
                         PeriodEnd = order.EndDistributionDateFact,

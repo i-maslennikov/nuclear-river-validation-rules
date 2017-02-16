@@ -195,8 +195,6 @@
     <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositive.cs" />
     <Compile Include="AccountRules\Validation\LockShouldNotExist.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExist.cs" />
-    <Compile Include="AdvertisementRules\Aggregates\AdvertisementElementTemplateAggregateRootActor.cs" />
-    <Compile Include="AdvertisementRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="AdvertisementRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="AdvertisementRules\Aggregates\AdvertisementAggregateRootActor.cs" />
     <Compile Include="AdvertisementRules\Aggregates\OrderAggregateRootActor.cs" />
@@ -221,6 +219,7 @@
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
+    <Compile Include="SyncEntityNameActor.cs" />
     <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
     <Compile Include="DataChangesHandler.cs" />
     <Compile Include="AggregateRootActor.cs" />
@@ -257,8 +256,6 @@
     <Compile Include="Messages\ValidationResultEqualityComparer.cs" />
     <Compile Include="Messages\VersionAccessor.cs" />
     <Compile Include="ProjectRules\Aggregates\ProjectAggregateRootActor.cs" />
-    <Compile Include="ProjectRules\Aggregates\PositionAggregateRootActor.cs" />
-    <Compile Include="ProjectRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="ProjectRules\Aggregates\FirmAddressAggregateRootActor.cs" />
     <Compile Include="ProjectRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="Accessors\CategoryOrganizationUnitAccessor.cs" />
@@ -274,8 +271,8 @@
     <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
     <Compile Include="Settings\IArchiveVersionsSettings.cs" />
+    <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Scope.cs" />
-    <Compile Include="ThemeRules\Aggregates\CategoryAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\ThemeAggregateRootActor.cs" />
@@ -307,9 +304,6 @@
     <Compile Include="ConsistencyRules\Validation\OrderEndDistrubutionShouldBeLastSecondOfMonth.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderBeginDistrubutionShouldBeFirstDayOfMonth.cs" />
     <Compile Include="ConsistencyRules\Validation\LinkedFirmShouldBeValid.cs" />
-    <Compile Include="PriceRules\Aggregates\CategoryAggregateRootActor.cs" />
-    <Compile Include="PriceRules\Aggregates\ProjectAggregateRootActor.cs" />
-    <Compile Include="PriceRules\Aggregates\ThemeAggregateRootActor.cs" />
     <Compile Include="Accessors\PriceAccessor.cs" />
     <Compile Include="Accessors\RulesetRuleAccessor.cs" />
     <Compile Include="Accessors\DeniedPositionAccessor.cs" />
@@ -349,7 +343,6 @@
     <Compile Include="Commands\LogDelayCommand.cs" />
     <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
     <Compile Include="DataObjectTypesProvider.cs" />
-    <Compile Include="EntityTypeIds.cs" />
     <Compile Include="Events\AggregatesDelayLoggedEvent.cs" />
     <Compile Include="Events\AggregatesStateIncrementedEvent.cs" />
     <Compile Include="Events\FactsDelayLoggedEvent.cs" />

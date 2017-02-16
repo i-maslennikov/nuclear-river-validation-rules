@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Commands;
@@ -28,7 +27,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is FactsConnectionStringIdentity)
             {
                 return new CommandRegardlessDataObjectTypesProvider(
-                    new List<Type>
+                    new []
                         {
                             typeof(Facts::Account),
                             typeof(Facts::Advertisement),
@@ -47,6 +46,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(Facts::CostPerClickCategoryRestriction),
                             typeof(Facts::Deal),
                             typeof(Facts::DeniedPosition),
+                            typeof(Facts::EntityName),
                             typeof(Facts::Firm),
                             typeof(Facts::FirmAddress),
                             typeof(Facts::FirmAddressCategory),
@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
             {
                 return new CommandRegardlessDataObjectTypesProvider(
-                    new List<Type>
+                    new []
                         {
                             typeof(PriceAggregates::Order),
                             typeof(PriceAggregates::Period.OrderPeriod),
@@ -93,10 +93,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Price),
                             typeof(PriceAggregates::Price.AdvertisementAmountRestriction),
                             typeof(PriceAggregates::Price.AssociatedPositionGroupOvercount),
-                            typeof(PriceAggregates::Project),
                             typeof(PriceAggregates::Period.PricePeriod),
-                            typeof(PriceAggregates::Theme),
-                            typeof(PriceAggregates::Category),
 
                             typeof(AccountAggregates::Order),
                             typeof(AccountAggregates::Order.DebtPermission),
@@ -117,11 +114,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(AdvertisementAggregates::Advertisement.RequiredElementMissing),
                             typeof(AdvertisementAggregates::Advertisement.ElementNotPassedReview),
                             typeof(AdvertisementAggregates::Advertisement.Coupon),
-                            typeof(AdvertisementAggregates::AdvertisementElementTemplate),
                             typeof(AdvertisementAggregates::Firm),
                             typeof(AdvertisementAggregates::Firm.FirmWebsite),
                             typeof(AdvertisementAggregates::Firm.WhiteListDistributionPeriod),
-                            typeof(AdvertisementAggregates::Position),
 
                             typeof(ConsistencyAggregates::Order),
                             typeof(ConsistencyAggregates::Order.BargainSignedLaterThanOrder),
@@ -151,13 +146,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
                             typeof(FirmAggregates::Order.SelfAdvertisementPosition),
 
-                            typeof(ProjectAggregates::Category),
                             typeof(ProjectAggregates::FirmAddress),
                             typeof(ProjectAggregates::Order),
                             typeof(ProjectAggregates::Order.AddressAdvertisement),
                             typeof(ProjectAggregates::Order.CategoryAdvertisement),
                             typeof(ProjectAggregates::Order.CostPerClickAdvertisement),
-                            typeof(ProjectAggregates::Position),
                             typeof(ProjectAggregates::Project),
                             typeof(ProjectAggregates::Project.Category),
                             typeof(ProjectAggregates::Project.CostPerClickRestriction),
@@ -170,14 +163,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(ThemeAggregates::Order.OrderTheme),
                             typeof(ThemeAggregates::Project),
                             typeof(ThemeAggregates::Project.ProjectDefaultTheme),
-                            typeof(ThemeAggregates::Category),
                         });
             }
 
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is MessagesConnectionStringIdentity)
             {
                 return new CommandRegardlessDataObjectTypesProvider(
-                    new List<Type>
+                    new []
                         {
                             typeof(Messages::Version),
                             typeof(Messages::Version.ValidationResult),

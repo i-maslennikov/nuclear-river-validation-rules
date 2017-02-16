@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -31,23 +31,17 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
             var ruleResults =
                 from project in query.For<Project>()
                 from order in query.For<Order>().Where(x => x.ProjectId == project.Id)
-                from position in query.For<Order.CostPerClickAdvertisement>().Where(x => x.OrderId == order.Id)
-                from category in query.For<Category>().Where(x => x.Id == position.CategoryId)
-                let restrictionExist = query.For<Project.CostPerClickRestriction>().Any(x => x.ProjectId == order.ProjectId && x.CategoryId == position.CategoryId)
+                from bid in query.For<Order.CostPerClickAdvertisement>().Where(x => x.OrderId == order.Id)
+                let restrictionExist = query.For<Project.CostPerClickRestriction>().Any(x => x.ProjectId == order.ProjectId && x.CategoryId == bid.CategoryId)
                 where !restrictionExist
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("category",
-                                    new XAttribute("id", category.Id),
-                                    new XAttribute("name", category.Name)),
-                                new XElement("project",
-                                    new XAttribute("id", project.Id),
-                                    new XAttribute("name", project.Name)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeCategory>(bid.CategoryId),
+                                    new Reference<EntityTypeProject>(order.ProjectId),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

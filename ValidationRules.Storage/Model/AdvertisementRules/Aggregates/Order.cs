@@ -5,8 +5,6 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
     public sealed class Order
     {
         public long Id { get; set; }
-        public string Number { get; set; }
-
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDatePlan { get; set; }
         public DateTime EndDistributionDateFact { get; set; }
@@ -43,7 +41,6 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long PositionId { get; set; }
 
             public long AdvertisementId { get; set; }
-            public string AdvertisementName { get; set; }
         }
 
         public sealed class AdvertisementMustBelongToFirm

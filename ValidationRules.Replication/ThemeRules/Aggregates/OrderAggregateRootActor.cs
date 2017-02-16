@@ -50,7 +50,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                    select new Order
                    {
                        Id = order.Id,
-                       Number = order.Number,
                        BeginDistributionDate = order.BeginDistribution,
                        EndDistributionDateFact = order.EndDistributionFact,
                        ProjectId = project.Id,

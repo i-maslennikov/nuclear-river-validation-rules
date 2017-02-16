@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -11,18 +11,18 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.CouponMustBeSoldOnceAtTime;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var advertisementReference = validationResult.ReadAdvertisementReference();
-            var orderPositionReferences = validationResult.ReadOrderPositionReferences();
+            var orderReference = references.Get<EntityTypeOrder>();
+            var advertisementReference = references.Get<EntityTypeAdvertisement>();
+            var orderPositionReferences = references.GetMany<EntityTypeOrderPosition>();
 
             var referencePlaceholders = orderPositionReferences.Select((x, i) => "{" + (i + 1) + "}");
 
             return new MessageComposerResult(
                 orderReference,
                 string.Format(Resources.CouponIsBoundToMultiplePositionTemplate, string.Join(", ", referencePlaceholders)),
-                new [] { advertisementReference }.Concat(orderPositionReferences.OrderBy(x => x.Id)).ToArray()); // todo: сортировки нет в требованиях, сделана для соответствия erm
+                new [] { advertisementReference }.Concat(orderPositionReferences.OrderBy(x => x.Reference.Id)).ToArray()); // todo: сортировки нет в требованиях, сделана для соответствия erm
         }
     }
 }

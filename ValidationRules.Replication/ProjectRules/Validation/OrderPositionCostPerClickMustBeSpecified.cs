@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -37,17 +36,14 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 where !query.For<Order.CostPerClickAdvertisement>().Any(x => x.OrderPositionId == adv.OrderPositionId && x.CategoryId == adv.CategoryId)
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("category",
-                                    new XAttribute("id", adv.CategoryId),
-                                    new XAttribute("name", query.For<Category>().Single(x => x.Id == adv.CategoryId).Name)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", adv.OrderPositionId),
-                                    new XAttribute("name", query.For<Position>().Single(x => x.Id == adv.PositionId).Name)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeCategory>(adv.CategoryId),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(adv.OrderPositionId),
+                                        new Reference<EntityTypePosition>(adv.PositionId)),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

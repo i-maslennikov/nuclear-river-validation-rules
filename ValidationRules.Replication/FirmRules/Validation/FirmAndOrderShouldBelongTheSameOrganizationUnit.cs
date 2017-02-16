@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -35,13 +35,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new XDocument(new XElement("root",
-                                new XElement("firm",
-                                    new XAttribute("id", firm.Id),
-                                    new XAttribute("name", firm.Name)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                            new MessageParams(
+                                    new Reference<EntityTypeFirm>(firm.Id),
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

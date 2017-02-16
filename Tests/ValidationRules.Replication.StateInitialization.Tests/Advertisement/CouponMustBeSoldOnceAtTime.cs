@@ -1,6 +1,8 @@
 ﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -52,17 +54,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(CouponMustBeSoldOnceAtTime_SingleOrder_NoError))
                 .Aggregate(
                     // Купон размещается в одном заказе в каждый момент времени - ошибок нет
-                    new Aggregates::Order { Id = 1, Number = "Order1" },
+                    new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6, Begin = MonthStart(1), End = MonthStart(2) },
 
-                    new Aggregates::Order { Id = 2, Number = "Order2" },
+                    new Aggregates::Order { Id = 2 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 2, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6, Begin = MonthStart(2), End = MonthStart(3) },
 
-                    new Aggregates::Order { Id = 3, Number = "Order3" },
+                    new Aggregates::Order { Id = 3 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 3, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6, Begin = MonthStart(3), End = MonthStart(4) },
 
-                    new Aggregates::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 7 },
-                    new Aggregates::Position { Id = 5, Name = "Position5" }
+                    new Aggregates::Advertisement { Id = 6, FirmId = 7 }
                 )
                 .Message();
 
@@ -73,22 +74,24 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(CouponMustBeSoldOnceAtTime_SingleOrder))
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order1" },
+                    new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6, Begin = MonthStart(1), End = MonthStart(2) },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 1, OrderPositionId = 5, PositionId = 5, AdvertisementId = 6, Begin = MonthStart(1), End = MonthStart(2) },
 
-                    new Aggregates::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 7 },
-                    new Aggregates::Position { Id = 5, Name = "Position5" }
+                    new Aggregates::Advertisement { Id = 6, FirmId = 7 }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<advertisement id = \"6\" name=\"Advertisement6\" />" +
-                                                            "<order id = \"1\" name=\"Order1\" />" +
-                                                            "<orderPosition id = \"4\" name=\"Position5\" />" +
-                                                            "<orderPosition id = \"5\" name=\"Position5\" />" +
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrder>(1),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(5),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -104,29 +107,31 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(CouponMustBeSoldOnceAtTime_ParallelOrdersOnRegistration))
                 .Aggregate(
                     // Заказ "на оформлении"
-                    new Aggregates::Order { Id = 1, Number = "Order1" },
+                    new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6, Scope = 1, Begin = MonthStart(1), End = MonthStart(2) },
 
                     // Заказ "на оформлении"
-                    new Aggregates::Order { Id = 2, Number = "Order2" },
+                    new Aggregates::Order { Id = 2 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 2, OrderPositionId = 5, PositionId = 5, AdvertisementId = 6, Scope = 2, Begin = MonthStart(1), End = MonthStart(2) },
 
                     // Заказ "одобрен"
-                    new Aggregates::Order { Id = 3, Number = "Order3" },
+                    new Aggregates::Order { Id = 3 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 3, OrderPositionId = 6, PositionId = 5, AdvertisementId = 6, Scope = 0, Begin = MonthStart(1), End = MonthStart(2) },
 
-                    new Aggregates::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 7 },
-                    new Aggregates::Position { Id = 5, Name = "Position5" }
+                    new Aggregates::Advertisement { Id = 6, FirmId = 7 }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<advertisement id = \"6\" name=\"Advertisement6\" />" +
-                                                            "<order id = \"1\" name=\"Order1\" />" +
-                                                            "<orderPosition id = \"4\" name=\"Position5\" />" +
-                                                            "<orderPosition id = \"6\" name=\"Position5\" />" +
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrder>(1),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(6),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -135,12 +140,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         },
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<advertisement id = \"6\" name=\"Advertisement6\" />" +
-                                                            "<order id = \"2\" name=\"Order2\" />" +
-                                                            "<orderPosition id = \"5\" name=\"Position5\" />" +
-                                                            "<orderPosition id = \"6\" name=\"Position5\" />" +
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrder>(2),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(5),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(6),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -158,26 +166,28 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(CouponMustBeSoldOnceAtTime_ParallelOrdersOnTermination))
                 .Aggregate(
                     // Заказ "на расторжении"
-                    new Aggregates::Order { Id = 1, Number = "Order1" },
+                    new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6, Scope = 0, Begin = MonthStart(1), End = MonthStart(2) },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6, Scope = 1, Begin = MonthStart(2), End = MonthStart(3) },
 
                     // Заказ "одобрен"
-                    new Aggregates::Order { Id = 2, Number = "Order2" },
+                    new Aggregates::Order { Id = 2 },
                     new Aggregates::Order.CouponDistributionPeriod { OrderId = 2, OrderPositionId = 5, PositionId = 5, AdvertisementId = 6, Scope = 0, Begin = MonthStart(2), End = MonthStart(3) },
 
-                    new Aggregates::Advertisement { Id = 6, Name = "Advertisement6", FirmId = 7 },
-                    new Aggregates::Position { Id = 5, Name = "Position5" }
+                    new Aggregates::Advertisement { Id = 6, FirmId = 7 }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root>" +
-                                                            "<advertisement id = \"6\" name=\"Advertisement6\" />" +
-                                                            "<order id = \"1\" name=\"Order1\" />" +
-                                                            "<orderPosition id = \"4\" name=\"Position5\" />" +
-                                                            "<orderPosition id = \"5\" name=\"Position5\" />" +
-                                                            "</root>"),
+                            MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrder>(1),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(5)),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(5),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             Result = 255,
                             PeriodStart = MonthStart(2),

@@ -6,6 +6,7 @@ using System.Web.Http.ExceptionHandling;
 
 using Microsoft.Practices.Unity;
 
+using NuClear.Model.Common.Entities;
 using NuClear.Tracing.API;
 using NuClear.Tracing.Environment;
 using NuClear.Tracing.Log4Net;
@@ -13,6 +14,7 @@ using NuClear.Tracing.Log4Net.Config;
 using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.SingleCheck;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 
 namespace NuClear.ValidationRules.Querying.Host.DI
 {
@@ -25,6 +27,7 @@ namespace NuClear.ValidationRules.Querying.Host.DI
                 .ConfigureDataAccess()
                 .ConfigureComposers()
                 .ConfigureDistinctors()
+                .ConfigureNameResolvingService()
                 .ConfigureSingleCheck();
         }
 
@@ -86,6 +89,20 @@ namespace NuClear.ValidationRules.Querying.Host.DI
 
             container.RegisterType(typeof(IReadOnlyCollection<IDistinctor>),
                                    new InjectionFactory(c => serializerTypes.Select(t => c.Resolve(t)).Cast<IDistinctor>().ToArray()));
+
+            return container;
+        }
+
+        private static IUnityContainer ConfigureNameResolvingService(this IUnityContainer container)
+        {
+            var interfaceType = typeof(IEntityType);
+            var type = typeof(EntityTypeOrder);
+            var entityTypes = type.Assembly.GetTypes()
+                                  .Where(x => interfaceType.IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
+                                  .ToArray();
+
+            container.RegisterType(typeof(IReadOnlyCollection<IEntityType>),
+                                   new InjectionFactory(c => entityTypes.Select(t => c.Resolve(t)).Cast<IEntityType>().ToArray()));
 
             return container;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
-using NuClear.ValidationRules.OperationsProcessing.Identities.EntityTypes;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
@@ -11,7 +11,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
 {
     internal static partial class EntityTypeMap
     {
-        private static readonly Dictionary<long, IReadOnlyCollection<Type>> FactsTypeMap = new Dictionary<long, IReadOnlyCollection<Type>>()
+        private static readonly Dictionary<int, IReadOnlyCollection<Type>> FactsTypeMap = new Dictionary<int, IReadOnlyCollection<Type>>()
             .AddMapping<EntityTypeAccount>(typeof(Facts::Account))
             .AddMapping<EntityTypeAdvertisement>(typeof(Facts::Advertisement))
             .AddMapping<EntityTypeAdvertisementElement>(typeof(Facts::AdvertisementElement))
@@ -57,12 +57,12 @@ namespace NuClear.ValidationRules.OperationsProcessing
             .AddMapping<EntityTypeThemeCategory>(typeof(Facts::ThemeCategory))
             .AddMapping<EntityTypeThemeOrganizationUnit>(typeof(Facts::ThemeOrganizationUnit));
 
-        public static bool TryGetFactTypes(long entityTypeId, out IReadOnlyCollection<Type> factTypes)
+        public static bool TryGetFactTypes(int entityTypeId, out IReadOnlyCollection<Type> factTypes)
         {
             return FactsTypeMap.TryGetValue(entityTypeId, out factTypes);
         }
 
-        private static Dictionary<long, IReadOnlyCollection<Type>> AddMapping<TEntityType>(this Dictionary<long, IReadOnlyCollection<Type>> dictionary, params Type[] types)
+        private static Dictionary<int, IReadOnlyCollection<Type>> AddMapping<TEntityType>(this Dictionary<int, IReadOnlyCollection<Type>> dictionary, params Type[] types)
             where TEntityType : IdentityBase<TEntityType>, IEntityType, new()
         {
             dictionary.Add(IdentityBase<TEntityType>.Instance.Id, types);

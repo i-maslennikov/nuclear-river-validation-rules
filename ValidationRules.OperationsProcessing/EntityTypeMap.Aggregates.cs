@@ -38,8 +38,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::AdvertisementElement>()
                           .DependOn<Facts::AdvertisementElementTemplate>()
                           .DependOn<Facts::AdvertisementTemplate>())
-                .Aggregate<AdvertisementAggregates::AdvertisementElementTemplate>(
-                    x => x.Match<Facts::AdvertisementElementTemplate>())
                 .Aggregate<AdvertisementAggregates::Firm>(
                     x => x.Match<Facts::Firm>()
                           .DependOn<Facts::Advertisement>()
@@ -59,8 +57,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::PositionChild>()
                           .DependOn<Facts::PricePosition>()
                           .DependOn<Facts::Project>())
-                .Aggregate<AdvertisementAggregates::Position>(
-                    x => x.Match<Facts::Position>())
 
                 // ConsistencyAggregates
                 .Aggregate<ConsistencyAggregates::Order>(
@@ -103,8 +99,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::Project>())
 
                 // PriceAggregates
-                .Aggregate<PriceAggregates::Category>(
-                    x => x.Match<Facts::Category>())
                 .Aggregate<PriceAggregates::Order>(
                     x => x.Match<Facts::Order>()
                           .DependOn<Facts::AssociatedPosition>()
@@ -124,14 +118,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::Position>()
                           .DependOn<Facts::PricePosition>()
                           .DependOn<Facts::NomenclatureCategory>())
-                .Aggregate<PriceAggregates::Project>(
-                    x => x.Match<Facts::Project>())
-                .Aggregate<PriceAggregates::Theme>(
-                    x => x.Match<Facts::Theme>())
 
                 // ProjectAggregates
-                .Aggregate<ProjectAggregates::Category>(
-                    x => x.Match<Facts::Category>())
                 .Aggregate<ProjectAggregates::FirmAddress>(
                     x => x.Match<Facts::FirmAddress>())
                 .Aggregate<ProjectAggregates::Order>(
@@ -144,8 +132,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::Position>()
                           .DependOn<Facts::PricePosition>()
                           .DependOn<Facts::Project>())
-                .Aggregate<ProjectAggregates::Position>(
-                    x => x.Match<Facts::Position>())
                 .Aggregate<ProjectAggregates::Project>(
                     x => x.Match<Facts::Project>()
                           .DependOn<Facts::CostPerClickCategoryRestriction>()
@@ -154,8 +140,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::ReleaseInfo>())
 
                 // ThemeAggregates
-                .Aggregate<ThemeAggregates::Category>(
-                    x => x.Match<Facts::Category>())
                 .Aggregate<ThemeAggregates::Order>(
                     x => x.Match<Facts::Order>()
                           .DependOn<Facts::OrderPosition>()

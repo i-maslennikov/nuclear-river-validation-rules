@@ -1,4 +1,7 @@
-﻿using NuClear.ValidationRules.Querying.Host.Properties;
+﻿using System.Collections.Generic;
+
+using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
@@ -7,13 +10,13 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.AssociatedPositionsGroupCount;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var price = validationResult.ReadPriceReference();
-            var pricePosition = validationResult.ReadPricePositionReference();
+            var project = references.Get<EntityTypeProject>();
+            var pricePosition = references.Get<EntityTypePricePosition>();
 
             return new MessageComposerResult(
-                price,
+                project,
                 Resources.InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions,
                 pricePosition);
         }

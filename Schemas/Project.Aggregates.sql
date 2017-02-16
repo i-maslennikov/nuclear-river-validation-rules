@@ -1,12 +1,10 @@
 ﻿if not exists (select * from sys.schemas where name = 'ProjectAggregates') exec('create schema ProjectAggregates')
 
-if object_id('ProjectAggregates.Category') is not null drop table ProjectAggregates.Category
 if object_id('ProjectAggregates.FirmAddress') is not null drop table ProjectAggregates.FirmAddress
 if object_id('ProjectAggregates.[Order]') is not null drop table ProjectAggregates.[Order]
 if object_id('ProjectAggregates.AddressAdvertisement') is not null drop table ProjectAggregates.AddressAdvertisement
 if object_id('ProjectAggregates.CategoryAdvertisement') is not null drop table ProjectAggregates.CategoryAdvertisement
 if object_id('ProjectAggregates.CostPerClickAdvertisement') is not null drop table ProjectAggregates.CostPerClickAdvertisement
-if object_id('ProjectAggregates.Position') is not null drop table ProjectAggregates.Position
 if object_id('ProjectAggregates.Project') is not null drop table ProjectAggregates.Project
 if object_id('ProjectAggregates.ProjectCategory') is not null drop table ProjectAggregates.ProjectCategory
 if object_id('ProjectAggregates.CostPerClickRestriction') is not null drop table ProjectAggregates.CostPerClickRestriction
@@ -14,16 +12,8 @@ if object_id('ProjectAggregates.SalesModelRestriction') is not null drop table P
 if object_id('ProjectAggregates.NextRelease') is not null drop table ProjectAggregates.NextRelease
 go
 
-create table ProjectAggregates.Category(
-    Id bigint not null,
-    Name nvarchar(max) not null,
-	constraint PK_Category primary key (Id)
-)
-go
-
 create table ProjectAggregates.FirmAddress(
     Id bigint not null,
-    Name nvarchar(max) not null,
     IsLocatedOnTheMap bit not null,
     constraint PK_FirmAddress primary key (Id)
 )
@@ -32,7 +22,6 @@ go
 create table ProjectAggregates.[Order](
     Id bigint not null,
     ProjectId bigint not null,
-    Number nvarchar(max) not null,
     [Begin] datetime2(2) not null,
     [End] datetime2(2) not null,
     IsDraft bit not null,
@@ -68,16 +57,8 @@ create table ProjectAggregates.CostPerClickAdvertisement(
 )
 go
 
-create table ProjectAggregates.Position(
-    Id bigint not null,
-    Name nvarchar(max) not null,
-    constraint PK_Position primary key (Id)
-)
-go
-
 create table ProjectAggregates.Project(
     Id bigint not null,
-    Name nvarchar(max) not null,
     constraint PK_Project primary key (Id)
 )
 go

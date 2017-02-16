@@ -10,6 +10,11 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
 
         public static readonly int[] FreeOfChargeTypes = { OrderTypeSelfAds, OrderTypeSocialAds, OrderTypeCompensation };
 
+        private const int OrderStateArchive = 6;
+        private const int OrderStateRejected = 3;
+
+        public static readonly int[] FilteredStates = { OrderStateArchive, OrderStateRejected };
+
         public long Id { get; set; }
         public long FirmId { get; set; }
         public long DestOrganizationUnitId { get; set; }

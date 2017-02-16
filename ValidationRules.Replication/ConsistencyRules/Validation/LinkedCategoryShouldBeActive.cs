@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -28,29 +28,27 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              from category in query.For<Order.InvalidCategory>().Where(x => x.OrderId == order.Id)
-                              where category.State == InvalidCategoryState.Inactive
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("category",
-                                                  new XAttribute("id", category.CategoryId),
-                                                  new XAttribute("name", category.CategoryName)),
-                                              new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("name", order.Number)),
-                                              new XElement("orderPosition",
-                                                  new XAttribute("id", category.OrderPositionId),
-                                                  new XAttribute("name", category.OrderPositionName)))),
+            var ruleResults =
+                from order in query.For<Order>()
+                from category in query.For<Order.InvalidCategory>().Where(x => x.OrderId == order.Id)
+                where category.State == InvalidCategoryState.Inactive
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeCategory>(category.CategoryId),
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(category.OrderPositionId),
+                                        new Reference<EntityTypePosition>(category.PositionId)))
+                                .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistribution,
-                                      PeriodEnd = order.EndDistributionPlan,
-                                      OrderId = order.Id,
+                        PeriodStart = order.BeginDistribution,
+                        PeriodEnd = order.EndDistributionPlan,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

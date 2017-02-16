@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -33,21 +33,17 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 from order in query.For<Order>()
                 from advertisement in query.For<Order.AddressAdvertisement>().Where(x => x.OrderId == order.Id && x.MustBeLocatedOnTheMap)
                 from firmAddress in query.For<FirmAddress>().Where(x => x.Id == advertisement.AddressId)
-                from position in query.For<Position>().Where(x => x.Id == advertisement.PositionId)
                 where !firmAddress.IsLocatedOnTheMap
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("firmAddress",
-                                    new XAttribute("id", firmAddress.Id),
-                                    new XAttribute("name", firmAddress.Name)),
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)),
-                                new XElement("orderPosition",
-                                    new XAttribute("id", advertisement.OrderPositionId),
-                                    new XAttribute("name", position.Name)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeFirmAddress>(firmAddress.Id),
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(advertisement.OrderPositionId),
+                                        new Reference<EntityTypePosition>(advertisement.PositionId)))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

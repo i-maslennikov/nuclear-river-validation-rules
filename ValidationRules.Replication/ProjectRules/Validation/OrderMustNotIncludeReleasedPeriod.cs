@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
@@ -34,11 +34,10 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 where project.Date > order.Begin
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,

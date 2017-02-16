@@ -1,6 +1,6 @@
-using System.Xml.Linq;
-
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -17,32 +17,33 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderCouponPeriodMustNotBeLessFiveDaysPositive))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, Number = "Order1", BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
+                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb },
                     new Facts::Project {Id = 3, OrganizationUnitId = 2},
 
                     new Facts::OrderPosition { Id = 4, OrderId = 1, },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Facts::Position { Id = 5, Name = "Position5" },
-                    new Facts::Advertisement { Id = 6, Name = "Advertisement6", AdvertisementTemplateId = 7, FirmId = 0 },
+                    new Facts::Position { Id = 5 },
+                    new Facts::Advertisement { Id = 6, AdvertisementTemplateId = 7, FirmId = 0 },
                     new Facts::AdvertisementTemplate { Id = 7 },
 
                     new Facts::AdvertisementElement { Id = 8, AdvertisementId = 6, BeginDate = FirstDayJan.AddDays(10), EndDate = FirstDayJan.AddDays(10) },
                     new Facts::AdvertisementElement { Id = 9, AdvertisementId = 6, BeginDate = FirstDayJan, EndDate = FirstDayJan.AddDays(5) }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, Number = "Order1", BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId =  4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Aggregates::Position { Id = 5, Name = "Position5" },
-                    new Aggregates::Advertisement { Id = 6, Name = "Advertisement6" },
+                    new Aggregates::Advertisement { Id = 6 },
                     new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 8, DaysTotal = 1, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb },
                     new Aggregates::Advertisement.Coupon { AdvertisementId = 6, AdvertisementElementId = 9, DaysTotal = 6, BeginMonth = FirstDayJan, EndMonth = FirstDayFeb }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
                     {
-                        MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"Order1\" /></root>"),
+                        MessageParams = new MessageParams(
+                                            new Reference<EntityTypeOrder>(1))
+                                        .ToXDocument(),
                         MessageType = (int)MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays,
                         Result = 2,
                         PeriodStart = FirstDayJan,

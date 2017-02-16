@@ -53,7 +53,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    select new Firm
                    {
                        Id = firm.Id,
-                       Name = firm.Name,
                    };
 
             public FindSpecification<Firm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

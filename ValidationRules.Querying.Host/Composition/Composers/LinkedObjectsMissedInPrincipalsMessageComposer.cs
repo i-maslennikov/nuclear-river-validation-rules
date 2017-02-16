@@ -1,10 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 
-using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -12,24 +10,15 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.LinkedObjectsMissedInPrincipals;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var orderPositions = validationResult.ReadOrderPositions();
-
-            var first = orderPositions.First();
+            var orderReference = references.Get<EntityTypeOrder>();
+            var orderPositionReference = (OrderPositionNamedReference)references.Get<EntityTypeOrderPosition>();
 
             return new MessageComposerResult(
                 orderReference,
-                string.Format(Resources.LinkedObjectsMissedInPrincipals, MakePositionText(first)),
-                new EntityReference("OrderPosition", first.OrderPositionId, first.OrderPositionName));
-        }
-
-        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
-        {
-            return dto.OrderPositionName != dto.PositionName
-                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
-                       : Resources.RichDefaultPositionTypeTemplate;
+                string.Format(Resources.LinkedObjectsMissedInPrincipals, orderPositionReference.PositionPrefix),
+                orderPositionReference);
         }
     }
 }

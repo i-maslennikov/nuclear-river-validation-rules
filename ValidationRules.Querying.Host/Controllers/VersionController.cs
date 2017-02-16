@@ -14,13 +14,13 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".version.txt");
             if (!File.Exists(path))
             {
-                return null;
+                return Ok();
             }
 
             var lines = File.ReadLines(path).Take(2).ToArray();
             if (lines.Length < 2)
             {
-                return null;
+                return Ok();
             }
 
             var versionLine = lines[1];

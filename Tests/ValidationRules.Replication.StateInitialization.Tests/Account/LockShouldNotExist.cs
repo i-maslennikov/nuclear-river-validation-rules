@@ -1,6 +1,9 @@
 ﻿using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.Model.Common.Entities;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -17,18 +20,18 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(LockShouldNotExist))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "InvalidOrder", BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, WorkflowStep = 4 },
+                    new Facts::Order { Id = 1, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, WorkflowStep = 4 },
                     new Facts::Account { Id = 2, LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1 },
                     new Facts::Lock { OrderId = 1, Start = FirstDayJan },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "InvalidOrder", BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, AccountId = 2 },
+                    new Aggregates::Order { Id = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, AccountId = 2 },
                     new Aggregates::Order.Lock { OrderId = 1, Start = FirstDayJan, End = FirstDayFeb },
                     new Aggregates::Account { Id = 2 })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse("<root><order id=\"1\" name=\"InvalidOrder\" /></root>"),
+                            MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.LockShouldNotExist,
                             Result = 240,
                             PeriodStart = FirstDayJan,

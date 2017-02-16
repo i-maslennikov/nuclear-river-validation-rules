@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -72,13 +72,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from position in notRelevantPositions
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(new XElement("root",
-                            new XElement("order",
-                                new XAttribute("id", position.Order.Id),
-                                new XAttribute("name", position.Order.Number)),
-                            new XElement("orderPosition",
-                                new XAttribute("id", position.Position.OrderPositionId),
-                                new XAttribute("name", position.Position.OrderPositionName)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(position.Position.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(position.Order.Id),
+                                        new Reference<EntityTypePosition>(position.Position.PositionId)))
+                                .ToXDocument(),
 
                         PeriodStart = position.Start,
                         PeriodEnd = position.End,

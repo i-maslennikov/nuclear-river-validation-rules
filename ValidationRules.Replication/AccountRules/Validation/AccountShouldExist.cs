@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -36,11 +37,10 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                 where !order.AccountId.HasValue
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(
-                            new XElement("root",
-                                new XElement("order",
-                                    new XAttribute("id", order.Id),
-                                    new XAttribute("name", order.Number)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id))
+                                .ToXDocument(),
 
                         PeriodStart = order.BeginDistributionDate,
                         PeriodEnd = order.EndDistributionDate,

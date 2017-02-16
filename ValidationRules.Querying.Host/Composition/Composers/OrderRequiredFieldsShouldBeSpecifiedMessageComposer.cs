@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -11,10 +10,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.OrderRequiredFieldsShouldBeSpecified;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var dto = validationResult.ReadOrderRequiredFieldsMessage();
+            var orderReference = references.Get<EntityTypeOrder>();
+            var dto = extra.ReadOrderRequiredFieldsMessage();
 
             var parameters = new List<string>();
 

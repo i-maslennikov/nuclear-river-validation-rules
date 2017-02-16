@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -33,24 +33,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             // проверка проверяет соответствие только первого периода
-            var orderFirstPeriods = from orderPeriod1 in query.For<Period.OrderPeriod>()
-                                    from orderPeriod2 in query.For<Period.OrderPeriod>().Where(x => orderPeriod1.OrderId == x.OrderId && orderPeriod1.Start > x.Start).DefaultIfEmpty()
-                                    where orderPeriod2 == null
-                                    select orderPeriod1;
+            var orderFirstPeriods =
+                from orderPeriod1 in query.For<Period.OrderPeriod>()
+                from orderPeriod2 in query.For<Period.OrderPeriod>().Where(x => orderPeriod1.OrderId == x.OrderId && orderPeriod1.Start > x.Start).DefaultIfEmpty()
+                where orderPeriod2 == null
+                select orderPeriod1;
 
-            var orderFirstPeriodDtos = from orderFirstPeriod in orderFirstPeriods
-                                  join order in query.For<Order>() on orderFirstPeriod.OrderId equals order.Id
-                                  join period in query.For<Period>()
-                                  on new { orderFirstPeriod.OrganizationUnitId, orderFirstPeriod.Start } equals new { period.OrganizationUnitId, period.Start }
-                                  select new
-                                  {
-                                      OrderId = order.Id,
-                                      OrderNumber = order.Number,
+            var orderFirstPeriodDtos =
+                from orderFirstPeriod in orderFirstPeriods
+                join order in query.For<Order>() on orderFirstPeriod.OrderId equals order.Id
+                join period in query.For<Period>()
+                on new { orderFirstPeriod.OrganizationUnitId, orderFirstPeriod.Start } equals new { period.OrganizationUnitId, period.Start }
+                select new
+                    {
+                        OrderId = order.Id,
 
-                                      period.ProjectId,
-                                      period.Start,
-                                      period.End,
-                                  };
+                        period.ProjectId,
+                        period.Start,
+                        period.End,
+                    };
 
             var pricePositionIsNotActiveErrors =
                 from orderFirstPeriodDto in orderFirstPeriodDtos
@@ -58,13 +59,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 where !orderPricePosition.IsActive
                 select new Version.ValidationResult
                     {
-                        MessageParams = new XDocument(new XElement("root",
-                            new XElement("order",
-                                new XAttribute("id", orderFirstPeriodDto.OrderId),
-                                new XAttribute("name", orderFirstPeriodDto.OrderNumber)),
-                            new XElement("orderPosition",
-                                new XAttribute("id", orderPricePosition.OrderPositionId),
-                                new XAttribute("name", orderPricePosition.OrderPositionName)))),
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(orderPricePosition.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(orderFirstPeriodDto.OrderId),
+                                        new Reference<EntityTypePosition>(orderPricePosition.PositionId)))
+                                .ToXDocument(),
 
                         PeriodStart = orderFirstPeriodDto.Start,
                         PeriodEnd = orderFirstPeriodDto.End,

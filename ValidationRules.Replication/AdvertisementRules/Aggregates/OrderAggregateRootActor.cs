@@ -82,7 +82,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    select new Order
                        {
                            Id = order.Id,
-                           Number = order.Number,
 
                            BeginDistributionDate = order.BeginDistribution,
                            EndDistributionDatePlan = order.EndDistributionPlan,
@@ -220,7 +219,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        OrderPositionId = op.Id,
                        PositionId = opa.PositionId,
                        AdvertisementId = advertisement.Id,
-                       AdvertisementName = advertisement.Name,
                    };
 
             public FindSpecification<Order.AdvertisementDeleted> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -251,7 +249,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Order.AdvertisementMustBelongToFirm> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   join firm in _query.For<Facts::Firm>() on order.FirmId equals firm.Id
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
                    join advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.FirmId.HasValue) on opa.AdvertisementId equals advertisement.Id
@@ -262,7 +259,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        OrderPositionId = op.Id,
                        PositionId = opa.PositionId,
                        AdvertisementId = advertisement.Id,
-                       FirmId = firm.Id,
+                       FirmId = order.FirmId,
                    };
 
             public FindSpecification<Order.AdvertisementMustBelongToFirm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

@@ -8,7 +8,6 @@ namespace NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates
         public long DestProjectId { get; set; }
         public long? AccountId { get; set; }
         public bool IsFreeOfCharge { get; set; }
-        public string Number { get; set; }
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDate { get; set; }
 

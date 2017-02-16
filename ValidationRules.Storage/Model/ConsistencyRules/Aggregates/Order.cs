@@ -26,11 +26,17 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         NotBelongToFirm
     }
 
+    public enum DealState
+    {
+        NotSet = 0,
+        Missing,
+        Inactive
+    }
+
     public sealed class Order
     {
         public long Id { get; set; }
         public long ProjectId { get; set; }
-        public string Number { get; set; }
         public DateTime BeginDistribution { get; set; }
         public DateTime EndDistributionFact { get; set; }
         public DateTime EndDistributionPlan { get; set; }
@@ -49,7 +55,6 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         {
             public long OrderId { get; set; }
             public long FirmId { get; set; }
-            public string FirmName { get; set; }
             public InvalidFirmState State { get; set; }
         }
 
@@ -57,9 +62,8 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         {
             public long OrderId { get; set; }
             public long FirmAddressId { get; set; }
-            public string FirmAddressName { get; set; }
             public long OrderPositionId { get; set; }
-            public string OrderPositionName { get; set; }
+            public long PositionId { get; set; }
             public InvalidFirmAddressState State { get; set; }
         }
 
@@ -67,20 +71,17 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         {
             public long OrderId { get; set; }
             public long FirmAddressId { get; set; }
-            public string FirmAddressName { get; set; }
             public long CategoryId { get; set; }
-            public string CategoryName { get; set; }
             public long OrderPositionId { get; set; }
-            public string OrderPositionName { get; set; }
+            public long PositionId { get; set; }
         }
 
         public class InvalidCategory
         {
             public long OrderId { get; set; }
             public long CategoryId { get; set; }
-            public string CategoryName { get; set; }
             public long OrderPositionId { get; set; }
-            public string OrderPositionName { get; set; }
+            public long PositionId { get; set; }
             public InvalidCategoryState State { get; set; }
             public bool MayNotBelongToFirm { get; set; }
         }
@@ -99,14 +100,12 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         {
             public long OrderId { get; set; }
             public long LegalPersonProfileId { get; set; }
-            public string LegalPersonProfileName { get; set; }
         }
 
         public class LegalPersonProfileWarrantyExpired
         {
             public long OrderId { get; set; }
             public long LegalPersonProfileId { get; set; }
-            public string LegalPersonProfileName { get; set; }
         }
 
         public class BargainSignedLaterThanOrder

@@ -1,10 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 
-using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
@@ -12,29 +9,20 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder;
 
-        public MessageComposerResult Compose(Version.ValidationResult validationResult)
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = validationResult.ReadOrderReference();
-            var orderPositions = validationResult.ReadOrderPositions();
-
-            var master = orderPositions.First();
-            var dependents = orderPositions.Skip(1).ToArray();
-            var placeholders = dependents.Select((x, i) => string.Format(Resources.ADPValidation_Template_Part, MakePositionText(x), 1 + i, 1 + dependents.Length + i));
+            var principal = (OrderPositionNamedReference)references[0];
+            var dependent = (OrderPositionNamedReference)references[1];
 
             return new MessageComposerResult(
-                orderReference,
-                string.Format(Resources.ADPValidation_Template, MakePositionText(master), string.Join(", ", placeholders)),
-                new[] { new EntityReference("OrderPosition", master.OrderPositionId, master.OrderPositionName) }
-                    .Concat(dependents.Select(x => new EntityReference("OrderPosition", x.OrderPositionId, x.OrderPositionName)))
-                    .Concat(dependents.Select(x => new EntityReference("Order", x.OrderId, x.OrderNumber)))
-                    .ToArray());
-        }
-
-        private static string MakePositionText(ResultExtensions.OrderPositionDto dto)
-        {
-            return dto.OrderPositionName != dto.PositionName
-                       ? string.Format(Resources.RichChildPositionTypeTemplate, dto.PositionName)
-                       : Resources.RichDefaultPositionTypeTemplate;
+                principal.Order,
+                string.Format(
+                    Resources.ADPValidation_Template,
+                    principal.PositionPrefix,
+                    dependent.PositionPrefix),
+                principal,
+                dependent,
+                dependent.Order);
         }
     }
 }

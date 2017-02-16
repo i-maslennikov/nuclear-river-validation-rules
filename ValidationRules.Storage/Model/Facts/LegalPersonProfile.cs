@@ -8,6 +8,5 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public long LegalPersonId { get; set; }
         public DateTime? BargainEndDate { get; set; }
         public DateTime? WarrantyEndDate { get; set; }
-        public string Name { get; set; }
     }
 }

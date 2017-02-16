@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Linq;
 
-using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -79,9 +76,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                        Start = x.associated.Start,
                                        Category1Id = x.associated.Position.Category1Id,
                                        Category3Id = x.associated.Position.Category3Id,
-                                       CauseItemPositionId = x.associated.Position.CauseItemPositionId,
                                        CauseOrderPositionId = x.associated.Position.CauseOrderPositionId,
                                        CausePackagePositionId = x.associated.Position.CausePackagePositionId,
+                                       CauseItemPositionId = x.associated.Position.CauseItemPositionId,
                                        FirmAddressId = x.associated.Position.FirmAddressId,
                                        FirmId = x.associated.FirmId,
                                        OrganizationUnitId = x.associated.OrganizationUnitId,
@@ -94,36 +91,27 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
                                        ProjectId = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).ProjectId,
                                        End = query.For<Period>().Single(x => x.Start == grouping.Key.Start && x.OrganizationUnitId == grouping.Key.OrganizationUnitId).End,
-                                       OrderNumber = query.For<Order>().Single(x => x.Id == grouping.Key.OrderId).Number,
-                                       OrderPositionName = query.For<Position>().Single(x => x.Id == grouping.Key.CausePackagePositionId).Name,
-                                       ItemPositionName = query.For<Position>().Single(x => x.Id == grouping.Key.CauseItemPositionId).Name,
                                    });
 
-            var messages = from unsatisfied in unsatisfiedPositions
-                           select new Version.ValidationResult
-                               {
-                                   MessageParams =
-                                       new XDocument(new XElement("root",
-                                           new XElement("firm",
-                                               new XAttribute("id", unsatisfied.Key.FirmId)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", unsatisfied.Key.OrderId),
-                                               new XAttribute("orderNumber", unsatisfied.OrderNumber),
-                                               new XAttribute("orderPositionId", unsatisfied.Key.CauseOrderPositionId),
-                                               new XAttribute("orderPositionName", unsatisfied.OrderPositionName),
-                                               new XAttribute("positionId", unsatisfied.Key.CauseItemPositionId),
-                                               new XAttribute("positionName", unsatisfied.ItemPositionName)),
-                                           new XElement("order",
-                                               new XAttribute("id", unsatisfied.Key.OrderId),
-                                               new XAttribute("name", unsatisfied.OrderNumber)))),
+            var messages =
+                from unsatisfied in unsatisfiedPositions
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(unsatisfied.Key.CauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(unsatisfied.Key.OrderId.Value),
+                                        new Reference<EntityTypePosition>(unsatisfied.Key.CausePackagePositionId),
+                                        new Reference<EntityTypePosition>(unsatisfied.Key.CauseItemPositionId)))
+                                .ToXDocument(),
 
-                                   PeriodStart = unsatisfied.Key.Start,
-                                   PeriodEnd = unsatisfied.End,
-                                   OrderId = unsatisfied.Key.OrderId,
-                                   ProjectId = null,
+                        PeriodStart = unsatisfied.Key.Start,
+                        PeriodEnd = unsatisfied.End,
+                        OrderId = unsatisfied.Key.OrderId,
+                        ProjectId = null,
 
-                                   Result = RuleResult,
-                               };
+                        Result = RuleResult,
+                    };
 
             return messages;
         }

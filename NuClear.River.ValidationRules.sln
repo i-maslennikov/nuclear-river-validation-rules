@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26127.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1C7C6AC-4AAC-45E4-94AC-DEC47A72F447}"
 	ProjectSection(SolutionItems) = preProject
@@ -40,6 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{2798
 		Schemas\Account.Aggregates.sql = Schemas\Account.Aggregates.sql
 		Schemas\Advertisement.Aggregates.sql = Schemas\Advertisement.Aggregates.sql
 		Schemas\Consistency.Aggregates.sql = Schemas\Consistency.Aggregates.sql
+		Schemas\DropOldAggregates.sql = Schemas\DropOldAggregates.sql
 		Schemas\DropOldFacts.sql = Schemas\DropOldFacts.sql
 		Schemas\Facts.sql = Schemas\Facts.sql
 		Schemas\Firm.Aggregates.sql = Schemas\Firm.Aggregates.sql

@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Replication
         {
             if (typeof(ISyncDataObjectCommand).IsAssignableFrom(typeof(TCommand)))
             {
-                return new List<Type>
+                return new []
                     {
                             typeof(Account),
                             typeof(Advertisement),

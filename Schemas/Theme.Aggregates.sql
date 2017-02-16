@@ -10,14 +10,12 @@ if object_id('ThemeAggregates.OrderTheme') is not null drop table ThemeAggregate
 if object_id('ThemeAggregates.Project') is not null drop table ThemeAggregates.Project
 if object_id('ThemeAggregates.ProjectDefaultTheme') is not null drop table ThemeAggregates.ProjectDefaultTheme
 
-if object_id('ThemeAggregates.Category') is not null drop table ThemeAggregates.Category
 go
 
 -- Theme aggregate
 create table ThemeAggregates.Theme (
     Id bigint not null,
 
-    Name nvarchar(64) not null,
     BeginDistribution datetime2(2) not null,
     EndDistribution datetime2(2) not null,
 
@@ -36,7 +34,6 @@ go
 create table ThemeAggregates.[Order] (
     Id bigint not null,
 
-    Number nvarchar(64) not null,
     BeginDistributionDate datetime2(2) not null,
     EndDistributionDateFact datetime2(2) not null,
 
@@ -56,7 +53,6 @@ go
 create table ThemeAggregates.Project (
     Id bigint not null,
 
-    Name nvarchar(64) not null,
     constraint PK_Project primary key (Id)
 )
 go
@@ -69,11 +65,4 @@ create table ThemeAggregates.ProjectDefaultTheme (
 )
 go
 
--- Category aggregate
-create table ThemeAggregates.Category (
-    Id bigint not null,
-
-    Name nvarchar(128) not null,
-    constraint PK_Category primary key (Id)
-)
 go

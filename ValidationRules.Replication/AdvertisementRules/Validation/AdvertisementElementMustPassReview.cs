@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -32,33 +33,28 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              from advertisementId in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id).Select(x => x.AdvertisementId).Distinct()
-                              from advertisement in query.For<Advertisement>().Where(x => x.Id == advertisementId)
-                              from fail in query.For<Advertisement.ElementNotPassedReview>().Where(x => x.AdvertisementId == advertisement.Id)
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("name", order.Number)),
-                                              new XElement("advertisement",
-                                                  new XAttribute("id", advertisement.Id),
-                                                  new XAttribute("name", advertisement.Name)),
-                                              new XElement("advertisementElement",
-                                                  new XAttribute("id", fail.AdvertisementElementId),
-                                                  new XAttribute("name", query.For<AdvertisementElementTemplate>().Single(x => x.Id == fail.AdvertisementElementTemplateId).Name)),
-                                              new XElement("message",
-                                                  new XAttribute("advertisementElementStatus", (int)fail.Status))
-                                              )),
+            var ruleResults =
+                from order in query.For<Order>()
+                from advertisementId in query.For<Order.OrderPositionAdvertisement>().Where(x => x.OrderId == order.Id).Select(x => x.AdvertisementId).Distinct()
+                from advertisement in query.For<Advertisement>().Where(x => x.Id == advertisementId)
+                from fail in query.For<Advertisement.ElementNotPassedReview>().Where(x => x.AdvertisementId == advertisement.Id)
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Dictionary<string, object> { { "advertisementElementStatus", (int)fail.Status } },
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeAdvertisement>(advertisement.Id),
+                                    new Reference<EntityTypeAdvertisementElement>(fail.AdvertisementElementId,
+                                        new Reference<EntityTypeAdvertisementElementTemplate>(fail.AdvertisementElementTemplateId)))
+                                .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistributionDate,
-                                      PeriodEnd = order.EndDistributionDatePlan,
-                                      OrderId = order.Id,
+                        PeriodStart = order.BeginDistributionDate,
+                        PeriodEnd = order.EndDistributionDatePlan,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

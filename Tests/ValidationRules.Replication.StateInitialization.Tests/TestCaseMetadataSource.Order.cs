@@ -33,11 +33,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1, FirmAddressId = 111 },
 
                 new Aggregates::Position { Id = 21 },
-                new Aggregates::Order.OrderPricePosition { OrderPositionId = 1, IsActive = true },
-
-                new Aggregates::Category { Id = 1 },
-                new Aggregates::Category { Id = 2 },
-                new Aggregates::Category { Id = 3 });
+                new Aggregates::Order.OrderPricePosition { OrderPositionId = 1, PositionId = 21, IsActive = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PackageOrderPositionTest
@@ -77,11 +73,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Position { Id = 23 },
                 new Aggregates::Position { Id = 24 },
                 new Aggregates::Position { Id = 25 },
-                new Aggregates::Order.OrderPricePosition { OrderPositionId = 1, IsActive = true },
-
-                new Aggregates::Category { Id = 3 },
-                new Aggregates::Category { Id = 2 },
-                new Aggregates::Category { Id = 1 });
+                new Aggregates::Order.OrderPricePosition { OrderPositionId = 1, PositionId = 21, IsActive = true });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderPriceTest
@@ -92,7 +84,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::Order { Id = 1 },
                 new Facts::OrderPosition { Id = 10, OrderId = 1, PricePositionId = 10 },
                 new Facts::PricePosition { Id = 10, PriceId = 2, PositionId = 10, IsActiveNotDeleted = true },
-                new Facts::Position {Id = 10, Name = "Position10" },
+                new Facts::Position {Id = 10 },
 
                 // 1 order, 2 price positions
                 new Facts::Order { Id = 2 },
@@ -100,24 +92,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Facts::OrderPosition { Id = 21, OrderId = 2, PricePositionId = 21 },
                 new Facts::PricePosition { Id = 20, PriceId = 3, PositionId = 20, IsActiveNotDeleted = true },
                 new Facts::PricePosition { Id = 21, PriceId = 3, PositionId = 20, IsActiveNotDeleted = true },
-                new Facts::Position {Id = 20, Name = "Position20" },
-
-                // 1 order, 1 price position, no position
-                new Facts::Order { Id = 3 },
-                new Facts::OrderPosition { Id = 30, OrderId = 3, PricePositionId = 30 },
-                new Facts::PricePosition { Id = 30, PriceId = 2, PositionId = 30, IsActiveNotDeleted = true }
+                new Facts::Position {Id = 20, }
                 )
             .Aggregate(
                 // 1 order, 1 price position
-                new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 10, PriceId = 2, OrderPositionName = "Position10", IsActive = true },
+                new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 10, PositionId = 10, PriceId = 2, IsActive = true },
                 new Aggregates::Order { Id = 1 },
 
                 // 1 order, 2 price positions
-                new Aggregates::Order.OrderPricePosition { OrderId = 2, OrderPositionId = 20, PriceId = 3, OrderPositionName = "Position20", IsActive = true },
-                new Aggregates::Order.OrderPricePosition { OrderId = 2, OrderPositionId = 21, PriceId = 3, OrderPositionName = "Position20", IsActive = true },
-                new Aggregates::Order { Id = 2 },
-
-                new Aggregates::Order { Id = 3 });
+                new Aggregates::Order.OrderPricePosition { OrderId = 2, OrderPositionId = 20, PositionId = 20, PriceId = 3, IsActive = true },
+                new Aggregates::Order.OrderPricePosition { OrderId = 2, OrderPositionId = 21, PositionId = 20, PriceId = 3, IsActive = true },
+                new Aggregates::Order { Id = 2 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderWithAmountControlledPosition
@@ -132,7 +117,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 10 },
-                    new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 1, PriceId = 1, IsActive = true },
+                    new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 1, PositionId = 1, PriceId = 1, IsActive = true },
                     new Aggregates::Order.OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
 
                     new Aggregates::Position { Id = 1, CategoryCode = 10 },
@@ -147,11 +132,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 2, OrderId = 1, PricePositionId = 4 },
                     new Facts::OrderPositionAdvertisement { Id = 5, OrderPositionId = 2, PositionId = 7 },
                     new Facts::PricePosition { Id = 4, PriceId = 9, PositionId = 7, IsActiveNotDeleted = true },
-                    new Facts::Position { Id = 7, Name = "Position7" },
+                    new Facts::Position { Id = 7 },
                     new Facts::DeniedPosition { Id = 11, PriceId = 9, PositionId = 7, PositionDeniedId = 14 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.OrderDeniedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 7, CauseItemPositionId = 7, DeniedPositionId = 14, HasNoBinding = true, Source = Aggregates::PositionSources.Opa | Aggregates::PositionSources.Price },
-                    new Aggregates::Order.OrderPricePosition {OrderId = 1, OrderPositionId = 2, PriceId = 9, OrderPositionName = "Position7", IsActive = true });
+                    new Aggregates::Order.OrderPricePosition {OrderId = 1, OrderPositionId = 2, PositionId = 7, PriceId = 9, IsActive = true });
     }
 }

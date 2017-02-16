@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -74,38 +74,30 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                               y.CauseOrderPositionId == x.associated.Position.CauseOrderPositionId &&
                                                                               y.CauseItemPositionId == x.associated.Position.CauseItemPositionId));
 
-            var messages = from warning in satisfiedOnlyByHiddenPositions
-                           join period in query.For<Period>() on new { warning.principal.Start, warning.principal.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                           select new Version.ValidationResult
-                               {
-                                   MessageParams =
-                                       new XDocument(new XElement("root",
-                                           new XElement("firm",
-                                               new XAttribute("id", warning.principal.FirmId)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", warning.principal.Position.OrderId),
-                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.principal.Position.OrderId).Number),
-                                               new XAttribute("orderPositionId", warning.principal.Position.OrderPositionId),
-                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.principal.Position.PackagePositionId).Name),
-                                               new XAttribute("positionId", warning.principal.Position.ItemPositionId),
-                                               new XAttribute("positionName", query.For<Position>().Single(x => x.Id == warning.principal.Position.ItemPositionId).Name)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", warning.associated.Position.OrderId),
-                                               new XAttribute("orderNumber", query.For<Order>().Single(x => x.Id == warning.associated.Position.OrderId).Number),
-                                               new XAttribute("orderPositionId", warning.associated.Position.CauseOrderPositionId),
-                                               new XAttribute("orderPositionName", query.For<Position>().Single(x => x.Id == warning.associated.Position.CausePackagePositionId).Name),
-                                               new XAttribute("positionId", warning.associated.Position.CauseItemPositionId),
-                                               new XAttribute("positionName", query.For<Position>().Single(x => x.Id == warning.associated.Position.CauseItemPositionId).Name)),
-                                           new XElement("order",
-                                               new XAttribute("id", warning.principal.Position.OrderId),
-                                               new XAttribute("name", query.For<Order>().Single(x => x.Id == warning.principal.Position.OrderId).Number)))),
+            var messages =
+                from warning in satisfiedOnlyByHiddenPositions
+                join period in query.For<Period>() on new { warning.principal.Start, warning.principal.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(warning.principal.Position.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(warning.principal.Position.OrderId),
+                                        new Reference<EntityTypePosition>(warning.principal.Position.PackagePositionId),
+                                        new Reference<EntityTypePosition>(warning.principal.Position.ItemPositionId)),
 
-                                   PeriodStart = period.Start,
-                                   PeriodEnd = period.End,
-                                   OrderId = warning.principal.Position.OrderId,
+                                    new Reference<EntityTypeOrderPosition>(warning.associated.Position.CauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(warning.associated.Position.OrderId),
+                                        new Reference<EntityTypePosition>(warning.associated.Position.CausePackagePositionId),
+                                        new Reference<EntityTypePosition>(warning.associated.Position.CauseItemPositionId)))
+                                .ToXDocument(),
 
-                                   Result = RuleResult,
-                               };
+                        PeriodStart = period.Start,
+                        PeriodEnd = period.End,
+                        OrderId = warning.principal.Position.OrderId,
+
+                        Result = RuleResult,
+                    };
 
             return messages;
         }

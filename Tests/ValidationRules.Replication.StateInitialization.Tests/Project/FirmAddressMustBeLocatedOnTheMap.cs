@@ -1,6 +1,6 @@
-﻿using System.Xml.Linq;
-
-using NuClear.DataTest.Metamodel.Dsl;
+﻿using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -17,22 +17,27 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmAddressMustBeLocatedOnTheMap))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
-                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address", IsActive = true },
-                    new Facts::Position { Id = 4, Name = "Position" },
+                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, IsActive = true },
+                    new Facts::Position { Id = 4 },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(2) },
+                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(2) },
                     new Aggregates::Order.AddressAdvertisement { OrderId = 1, AddressId = 2, MustBeLocatedOnTheMap = true, OrderPositionId = 3, PositionId = 4 },
-                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address" },
-                    new Aggregates::Position { Id = 4, Name = "Position" })
+                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = XDocument.Parse(
-                                "<root><firmAddress id=\"2\" name=\"Address\" /><order id=\"1\" name=\"Order\" /><orderPosition id=\"3\" name=\"Position\" /></root>"),
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeFirmAddress>(2),
+                                        new Reference<EntityTypeOrder>(1),
+                                        new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                            new Reference<EntityTypeOrderPosition>(3),
+                                            new Reference<EntityTypePosition>(4)))
+                                    .ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
                             Result = 255,
                             PeriodStart = MonthStart(1),
@@ -46,17 +51,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmAddressMustBeLocatedOnTheMapFirmAddressNotActive))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
                     // firm address not active
-                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address", IsActive = false },
-                    new Facts::Position { Id = 4, Name = "Position" },
+                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, IsActive = false },
+                    new Facts::Position { Id = 4 },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address" },
-                    new Aggregates::Position { Id = 4, Name = "Position" })
+                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(2) },
+                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false })
                 .Message();
 
         /// <summary>
@@ -68,17 +72,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmAddressMustBeLocatedOnTheMapSpecialCategoryCode))
                 .Fact(
-                    new Facts::Order { Id = 1, Number = "Order", BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
-                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address", IsActive = true },
-                    new Facts::Position { Id = 4, Name = "Position", CategoryCode = 11 },
+                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, IsActive = true },
+                    new Facts::Position { Id = 4, CategoryCode = 11 },
                     new Facts::Project())
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, Number = "Order", Begin = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::Order.AddressAdvertisement { OrderId = 1, AddressId = 2, MustBeLocatedOnTheMap = false, OrderPositionId = 3, PositionId = 4 },
-                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false, Name = "Address" },
-                    new Aggregates::Position { Id = 4, Name = "Position" })
+                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(2) },
+                    new Aggregates::Order.AddressAdvertisement { OrderId = 1, AddressId = 2, MustBeLocatedOnTheMap = false, OrderPositionId = 3, PositionId = 4},
+                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false })
                 .Message();
     }
 }

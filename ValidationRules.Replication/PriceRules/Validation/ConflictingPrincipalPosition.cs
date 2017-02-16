@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
@@ -72,59 +72,36 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 join period in query.For<Period>() on new { pair.associated.Start, pair.associated.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                 select new
                     {
-                        FirmId = pair.associated.FirmId,
                         Start = period.Start,
                         End = period.End,
                         ProjectId = period.ProjectId,
                         OrderPrincipalPosition = pair.principal.Position,
                         OrderAssociatedPosition = pair.associated.Position,
-
-                        OrderAssociatedPositionNames = new
-                        {
-                            OrderNumber = query.For<Order>().Single(x => x.Id == pair.associated.Position.OrderId).Number,
-                            OrderPositionName = query.For<Position>().Single(x => x.Id == pair.associated.Position.CausePackagePositionId).Name,
-                            ItemPositionName = query.For<Position>().Single(x => x.Id == pair.associated.Position.CauseItemPositionId).Name,
-                        },
-
-                        OrderPrincipalPositionNames = new
-                        {
-                            OrderNumber = query.For<Order>().Single(x => x.Id == pair.principal.Position.OrderId).Number,
-                            OrderPositionName = query.For<Position>().Single(x => x.Id == pair.principal.Position.PackagePositionId).Name,
-                            ItemPositionName = query.For<Position>().Single(x => x.Id == pair.principal.Position.ItemPositionId).Name,
-                        },
                     };
 
-            var messages = from conflict in conflictingPositions
-                           select new Version.ValidationResult
-                               {
-                                   MessageParams =
-                                       new XDocument(new XElement("root",
-                                           new XElement("firm",
-                                               new XAttribute("id", conflict.FirmId)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", conflict.OrderAssociatedPosition.OrderId),
-                                               new XAttribute("orderNumber", conflict.OrderAssociatedPositionNames.OrderNumber),
-                                               new XAttribute("orderPositionId", conflict.OrderAssociatedPosition.CauseOrderPositionId),
-                                               new XAttribute("orderPositionName", conflict.OrderAssociatedPositionNames.OrderPositionName),
-                                               new XAttribute("positionId", conflict.OrderAssociatedPosition.CauseItemPositionId),
-                                               new XAttribute("positionName", conflict.OrderAssociatedPositionNames.ItemPositionName)),
-                                           new XElement("position",
-                                               new XAttribute("orderId", conflict.OrderPrincipalPosition.OrderId),
-                                               new XAttribute("orderNumber", conflict.OrderPrincipalPositionNames.OrderNumber),
-                                               new XAttribute("orderPositionId", conflict.OrderPrincipalPosition.OrderPositionId),
-                                               new XAttribute("orderPositionName", conflict.OrderPrincipalPositionNames.OrderPositionName),
-                                               new XAttribute("positionId", conflict.OrderPrincipalPosition.ItemPositionId),
-                                               new XAttribute("positionName", conflict.OrderPrincipalPositionNames.ItemPositionName)),
-                                           new XElement("order",
-                                               new XAttribute("id", conflict.OrderAssociatedPosition.OrderId),
-                                               new XAttribute("name", conflict.OrderAssociatedPositionNames.OrderNumber)))),
+            var messages =
+                from conflict in conflictingPositions
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrderPosition>(conflict.OrderAssociatedPosition.CauseOrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.OrderAssociatedPosition.OrderId),
+                                        new Reference<EntityTypePosition>(conflict.OrderAssociatedPosition.CausePackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.OrderAssociatedPosition.CauseItemPositionId)),
 
-                                   PeriodStart = conflict.Start,
-                                   PeriodEnd = conflict.End,
-                                   OrderId = conflict.OrderAssociatedPosition.OrderId,
+                                    new Reference<EntityTypeOrderPosition>(conflict.OrderPrincipalPosition.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(conflict.OrderPrincipalPosition.OrderId),
+                                        new Reference<EntityTypePosition>(conflict.OrderPrincipalPosition.PackagePositionId),
+                                        new Reference<EntityTypePosition>(conflict.OrderPrincipalPosition.ItemPositionId)))
+                                .ToXDocument(),
 
-                                   Result = RuleResult,
-                               };
+                        PeriodStart = conflict.Start,
+                        PeriodEnd = conflict.End,
+                        OrderId = conflict.OrderAssociatedPosition.OrderId,
+
+                        Result = RuleResult,
+                    };
 
             return messages;
         }

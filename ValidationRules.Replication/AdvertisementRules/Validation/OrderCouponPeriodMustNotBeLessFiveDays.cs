@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -37,18 +37,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                               where elementOffset.DaysTotal < MaxOffsetInDays
                               select new Version.ValidationResult
                                   {
-                                      MessageParams = new XDocument(new XElement("root",
-                                          new XElement("order",
-                                              new XAttribute("id", order.Id),
-                                              new XAttribute("name", order.Number))
-                                          )),
+                                  MessageParams =
+                                    new MessageParams(
+                                            new Reference<EntityTypeOrder>(order.Id))
+                                        .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistributionDate,
-                                      PeriodEnd = order.EndDistributionDatePlan,
-                                      OrderId = order.Id,
+                                  PeriodStart = order.BeginDistributionDate,
+                        PeriodEnd = order.EndDistributionDatePlan,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }

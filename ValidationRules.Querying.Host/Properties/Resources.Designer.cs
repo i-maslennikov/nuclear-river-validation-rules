@@ -79,15 +79,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{{1}}} Заказа {{{2}}}.
-        /// </summary>
-        internal static string ADPValidation_Template_Part {
-            get {
-                return ResourceManager.GetString("ADPValidation_Template_Part", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:MMMM} - {4}.
         /// </summary>
         internal static string AdvertisementAmountShortErrorMessage {

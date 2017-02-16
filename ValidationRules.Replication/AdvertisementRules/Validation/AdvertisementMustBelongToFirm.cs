@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -28,31 +28,27 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults = from order in query.For<Order>()
-                              join fail in query.For<Order.AdvertisementMustBelongToFirm>() on order.Id equals fail.OrderId
-                              select new Version.ValidationResult
-                                  {
-                                      MessageParams = new XDocument(
-                                          new XElement("root",
-                                              new XElement("order",
-                                                  new XAttribute("id", order.Id),
-                                                  new XAttribute("name", order.Number)),
-                                              new XElement("orderPosition",
-                                                  new XAttribute("id", fail.OrderPositionId),
-                                                  new XAttribute("name", query.For<Position>().Single(x => x.Id == fail.PositionId).Name)),
-                                              new XElement("advertisement",
-                                                  new XAttribute("id", fail.AdvertisementId),
-                                                  new XAttribute("name", query.For<Advertisement>().Single(x => x.Id == fail.AdvertisementId).Name)),
-                                              new XElement("firm",
-                                                  new XAttribute("id", fail.FirmId),
-                                                  new XAttribute("name", query.For<Firm>().Single(x => x.Id == fail.FirmId).Name)))),
+            var ruleResults =
+                from order in query.For<Order>()
+                join fail in query.For<Order.AdvertisementMustBelongToFirm>() on order.Id equals fail.OrderId
+                select new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeOrder>(order.Id),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(fail.OrderPositionId),
+                                        new Reference<EntityTypePosition>(fail.PositionId)),
+                                    new Reference<EntityTypeAdvertisement>(fail.AdvertisementId),
+                                    new Reference<EntityTypeFirm>(fail.FirmId))
+                                .ToXDocument(),
 
-                                      PeriodStart = order.BeginDistributionDate,
-                                      PeriodEnd = order.EndDistributionDatePlan,
-                                      OrderId = order.Id,
+                        PeriodStart = order.BeginDistributionDate,
+                        PeriodEnd = order.EndDistributionDatePlan,
+                        OrderId = order.Id,
 
-                                      Result = RuleResult,
-                                  };
+                        Result = RuleResult,
+                    };
 
             return ruleResults;
         }
