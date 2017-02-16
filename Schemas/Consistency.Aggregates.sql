@@ -2,7 +2,6 @@
 
 if object_id('ConsistencyAggregates.Order') is not null drop table ConsistencyAggregates.[Order]
 if object_id('ConsistencyAggregates.InactiveReference') is not null drop table ConsistencyAggregates.InactiveReference
-if object_id('ConsistencyAggregates.InvalidFirm') is not null drop table ConsistencyAggregates.InvalidFirm
 if object_id('ConsistencyAggregates.InvalidFirmAddress') is not null drop table ConsistencyAggregates.InvalidFirmAddress
 if object_id('ConsistencyAggregates.InvalidCategory') is not null drop table ConsistencyAggregates.InvalidCategory
 if object_id('ConsistencyAggregates.CategoryNotBelongsToAddress') is not null drop table ConsistencyAggregates.CategoryNotBelongsToAddress
@@ -39,13 +38,6 @@ create table ConsistencyAggregates.InactiveReference(
     LegalPersonProfile bit not null,
     BranchOfficeOrganizationUnit bit not null,
     BranchOffice bit not null,
-)
-go
-
-create table ConsistencyAggregates.InvalidFirm(
-    OrderId bigint not null,
-    FirmId bigint not null,
-    [State] int not null,
 )
 go
 

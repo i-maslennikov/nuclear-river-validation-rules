@@ -52,12 +52,10 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
                    where order.WorkflowStep == OrderOnTermination || order.WorkflowStep == OrderApproved
-                   join destProject in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals destProject.OrganizationUnitId
                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId).DefaultIfEmpty()
                    select new Order
                        {
                            Id = order.Id,
-                           DestProjectId = destProject.Id,
                            AccountId = account.Id,
                            IsFreeOfCharge = order.IsFreeOfCharge,
                            BeginDistributionDate = order.BeginDistribution,

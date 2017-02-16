@@ -1,6 +1,7 @@
 ﻿if not exists (select * from sys.schemas where name = 'FirmAggregates') exec('create schema FirmAggregates')
 
 if object_id('FirmAggregates.Order') is not null drop table FirmAggregates.[Order]
+if object_id('FirmAggregates.InvalidFirm') is not null drop table FirmAggregates.InvalidFirm
 if object_id('FirmAggregates.Firm') is not null drop table FirmAggregates.Firm
 if object_id('FirmAggregates.AdvantageousPurchasePositionDistributionPeriod') is not null drop table FirmAggregates.AdvantageousPurchasePositionDistributionPeriod
 if object_id('FirmAggregates.FirmOrganiationUnitMismatch') is not null drop table FirmAggregates.FirmOrganiationUnitMismatch
@@ -17,6 +18,13 @@ create table FirmAggregates.[Order](
     [End] datetime2(2) not null,
     Scope bigint not null,
     constraint PK_Order primary key (Id)
+)
+go
+
+create table FirmAggregates.InvalidFirm(
+    OrderId bigint not null,
+    FirmId bigint not null,
+    [State] int not null,
 )
 go
 

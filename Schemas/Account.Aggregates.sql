@@ -9,7 +9,6 @@ go
 
 create table AccountAggregates.[Order](
     Id bigint not null,
-    DestProjectId bigint not null,
     AccountId bigint null,
     IsFreeOfCharge bit not null,
     BeginDistributionDate datetime2(2) not null,

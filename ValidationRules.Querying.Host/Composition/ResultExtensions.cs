@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
+using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition
 {

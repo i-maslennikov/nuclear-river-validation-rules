@@ -29,8 +29,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                     x => x.Match<Facts::Order>()
                           .DependOn<Facts::UnlimitedOrder>()
                           .DependOn<Facts::Account>()
-                          .DependOn<Facts::Lock>()
-                          .DependOn<Facts::Project>())
+                          .DependOn<Facts::Lock>())
 
                 // AdvertisementAggregates
                 .Aggregate<AdvertisementAggregates::Advertisement>(
@@ -68,7 +67,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::BranchOfficeOrganizationUnit>()
                           .DependOn<Facts::Category>()
                           .DependOn<Facts::Deal>()
-                          .DependOn<Facts::Firm>()
                           .DependOn<Facts::FirmAddress>()
                           .DependOn<Facts::FirmAddressCategory>()
                           .DependOn<Facts::LegalPerson>()

@@ -2,6 +2,14 @@
 
 namespace NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates
 {
+    public enum InvalidFirmState
+    {
+        NotSet = 0,
+        Deleted,
+        ClosedForever,
+        ClosedForAscertainment
+    }
+
     public sealed class Order
     {
         public long Id { get; set; }
@@ -30,6 +38,13 @@ namespace NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates
         {
             public long OrderId { get; set; }
             public long CategoryId { get; set; }
+        }
+
+        public class InvalidFirm
+        {
+            public long OrderId { get; set; }
+            public long FirmId { get; set; }
+            public InvalidFirmState State { get; set; }
         }
     }
 }

@@ -73,13 +73,16 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<FirmAggregates::Order.CategoryPurchase>()
                    .HasSchemaName(FirmAggregatesSchema);
 
+            builder.Entity<FirmAggregates::Order.FirmOrganiationUnitMismatch>()
+                   .HasSchemaName(FirmAggregatesSchema);
+
+            builder.Entity<FirmAggregates::Order.InvalidFirm>()
+                  .HasSchemaName(FirmAggregatesSchema);
+
             builder.Entity<FirmAggregates::Order.NotApplicapleForDesktopPosition>()
                    .HasSchemaName(FirmAggregatesSchema);
 
             builder.Entity<FirmAggregates::Order.SelfAdvertisementPosition>()
-                   .HasSchemaName(FirmAggregatesSchema);
-
-            builder.Entity<FirmAggregates::Order.FirmOrganiationUnitMismatch>()
                    .HasSchemaName(FirmAggregatesSchema);
 
             return builder;
@@ -245,9 +248,6 @@ namespace NuClear.ValidationRules.Storage
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<ConsistencyAggregates::Order.BargainSignedLaterThanOrder>()
-                  .HasSchemaName(ConsistencyAggregatesSchema);
-
-            builder.Entity<ConsistencyAggregates::Order.InvalidFirm>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
             builder.Entity<ConsistencyAggregates::Order.InvalidFirmAddress>()

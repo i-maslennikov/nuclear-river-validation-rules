@@ -2,14 +2,6 @@
 
 namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
 {
-    public enum InvalidFirmState
-    {
-        NotSet = 0,
-        Deleted,
-        ClosedForever,
-        ClosedForAscertainment
-    }
-
     public enum InvalidFirmAddressState
     {
         NotSet = 0,
@@ -49,13 +41,6 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public bool LegalPersonProfile { get; set; }
             public bool BranchOfficeOrganizationUnit { get; set; }
             public bool BranchOffice { get; set; }
-        }
-
-        public class InvalidFirm
-        {
-            public long OrderId { get; set; }
-            public long FirmId { get; set; }
-            public InvalidFirmState State { get; set; }
         }
 
         public class InvalidFirmAddress

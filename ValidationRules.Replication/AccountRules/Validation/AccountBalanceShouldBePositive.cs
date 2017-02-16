@@ -34,7 +34,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            // Ошибка выводится в городе назначения и городе источнике.
             var nonFreeOfChargeOrders = query.For<Order>().Where(x => !x.IsFreeOfCharge);
 
             var ruleResults =

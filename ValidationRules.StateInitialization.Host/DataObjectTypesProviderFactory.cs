@@ -120,7 +120,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                             typeof(ConsistencyAggregates::Order),
                             typeof(ConsistencyAggregates::Order.BargainSignedLaterThanOrder),
-                            typeof(ConsistencyAggregates::Order.InvalidFirm),
                             typeof(ConsistencyAggregates::Order.InvalidFirmAddress),
                             typeof(ConsistencyAggregates::Order.InvalidCategory),
                             typeof(ConsistencyAggregates::Order.CategoryNotBelongsToAddress),
@@ -143,6 +142,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(FirmAggregates::Order),
                             typeof(FirmAggregates::Order.CategoryPurchase),
                             typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
+                            typeof(FirmAggregates::Order.InvalidFirm),
                             typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
                             typeof(FirmAggregates::Order.SelfAdvertisementPosition),
 

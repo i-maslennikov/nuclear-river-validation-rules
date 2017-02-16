@@ -303,7 +303,7 @@
     <Compile Include="ConsistencyRules\Validation\LegalPersonProfileWarrantyShouldNotBeExpired.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderEndDistrubutionShouldBeLastSecondOfMonth.cs" />
     <Compile Include="ConsistencyRules\Validation\OrderBeginDistrubutionShouldBeFirstDayOfMonth.cs" />
-    <Compile Include="ConsistencyRules\Validation\LinkedFirmShouldBeValid.cs" />
+    <Compile Include="FirmRules\Validation\LinkedFirmShouldBeValid.cs" />
     <Compile Include="Accessors\PriceAccessor.cs" />
     <Compile Include="Accessors\RulesetRuleAccessor.cs" />
     <Compile Include="Accessors\DeniedPositionAccessor.cs" />

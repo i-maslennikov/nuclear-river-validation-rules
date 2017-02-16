@@ -22,6 +22,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.FirmOrganiationUnitMismatch> invalidFirmRepository,
+            IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
             IBulkRepository<Order.CategoryPurchase> categoryPurchaseRepository,
             IBulkRepository<Order.NotApplicapleForDesktopPosition> notApplicapleForDesktopPositionRepository,
             IBulkRepository<Order.SelfAdvertisementPosition> selfAdvertisementPositionRepository)
@@ -29,6 +30,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
                 HasValueObject(new OrderFirmOrganiationUnitMismatchAccessor(query), invalidFirmRepository),
+                HasValueObject(new OrderInvalidFirmAccessor(query), orderInvalidFirmRepository),
                 HasValueObject(new NotApplicapleForDesktopPositionAccessor(query), notApplicapleForDesktopPositionRepository),
                 HasValueObject(new SelfAdvertisementPositionAccessor(query), selfAdvertisementPositionRepository),
                 HasValueObject(new OrderCategoryPurchaseAccessor(query), categoryPurchaseRepository));
@@ -50,6 +52,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                         MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
+                        MessageTypeCode.LinkedFirmShouldBeValid,
                     };
 
             public IQueryable<Order> GetSource()
@@ -169,6 +172,43 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.FirmOrganiationUnitMismatch>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class OrderInvalidFirmAccessor : DataChangesHandler<Order.InvalidFirm>, IStorageBasedDataObjectAccessor<Order.InvalidFirm>
+        {
+            private readonly IQuery _query;
+
+            public OrderInvalidFirmAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.LinkedFirmShouldBeValid,
+                    };
+
+            public IQueryable<Order.InvalidFirm> GetSource()
+                => from order in _query.For<Facts::Order>()
+                   from firm in _query.For<Facts::Firm>().Where(x => x.Id == order.FirmId)
+                   let state = firm.IsDeleted ? InvalidFirmState.Deleted
+                                   : !firm.IsActive ? InvalidFirmState.ClosedForever
+                                   : firm.IsClosedForAscertainment ? InvalidFirmState.ClosedForAscertainment
+                                   : InvalidFirmState.NotSet
+                   where state != InvalidFirmState.NotSet // todo: интересно было бы глянуть на сгенерированный sql
+                   select new Order.InvalidFirm
+                   {
+                       FirmId = firm.Id,
+                       OrderId = order.Id,
+                       State = state,
+                   };
+
+            public FindSpecification<Order.InvalidFirm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.InvalidFirm>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
