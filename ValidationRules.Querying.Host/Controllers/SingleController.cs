@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         {
             using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
             {
-                var sqlBitwiseFilter = ResultType.Single.ToSqlBitwiseFilter();
+                var sqlBitwiseFilter = ResultType.Single.ToBitMask();
 
                 var query = validator.Execute()
                     .Where(x => x.OrderId == request.OrderId)

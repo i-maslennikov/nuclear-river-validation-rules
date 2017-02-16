@@ -19,7 +19,7 @@
     {
         private const int ResultMask = 0x03;
 
-        public static int ToSqlBitwiseFilter(this ResultType resultType) => ResultMask << (int)resultType;
+        public static int ToBitMask(this ResultType resultType) => ResultMask << (int)resultType;
 
         public static Result ToResult(this int sqlResult, ResultType resultType) => (Result)((sqlResult >> (int)resultType) & ResultMask);
     }

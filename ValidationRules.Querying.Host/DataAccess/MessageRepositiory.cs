@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                 var resultsByOrder = validationResults.Where(dateFilter).Where(CreateOrderFilter(orderIds));
                 var resultsByProject = validationResults.Where(dateFilter).Where(CreateProjectFilter(projectId));
 
-                var query = resultsByOrder.Concat(resultsByProject).Where(x => (x.Result & resultType.ToSqlBitwiseFilter()) != 0);
+                var query = resultsByOrder.Concat(resultsByProject).Where(x => (x.Result & resultType.ToBitMask()) != 0);
 
                 return query.ToMessages(resultType).ToList();
             }
