@@ -68,20 +68,18 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
         }
 
         public IReadOnlyCollection<IActor> Create(IReadOnlyCollection<Type> aggregateRootTypes)
+            => aggregateRootTypes.Select(CreateActorForAggregateRoot).ToList();
+
+        private AggregateActor CreateActorForAggregateRoot(Type aggregateRootType)
         {
-            var actors = aggregateRootTypes.Select(x =>
+            Type aggregateRootActorType;
+            if (!AggregateRootActors.TryGetValue(aggregateRootType, out aggregateRootActorType))
             {
-                Type aggregateRootActorType;
-                if (!AggregateRootActors.TryGetValue(x, out aggregateRootActorType))
-                {
-                    throw new ArgumentException($"Can't find aggregate actor for type {x.GetFriendlyName()}");
-                }
+                throw new ArgumentException($"Can't find aggregate actor for type {aggregateRootType.GetFriendlyName()}");
+            }
 
-                var aggregateRootActor = (IAggregateRootActor)_unityContainer.Resolve(aggregateRootActorType);
-                return _unityContainer.Resolve<AggregateActor>(new DependencyOverride<IAggregateRootActor>(aggregateRootActor));
-            }).ToList();
-
-            return actors;
+            var aggregateRootActor = (IAggregateRootActor)_unityContainer.Resolve(aggregateRootActorType);
+            return _unityContainer.Resolve<AggregateActor>(new DependencyOverride<IAggregateRootActor>(aggregateRootActor));
         }
     }
 }
