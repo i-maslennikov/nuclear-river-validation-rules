@@ -87,10 +87,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
             bool IEqualityComparer<Message>.Equals(Message x, Message y)
                 => x.References.Count == y.References.Count
-                   && x.References.Zip(y.References, (l, r) => ReferenceComparer.Instance.Equals(l, r)).All(equal => equal);
+                   && x.References.Zip(y.References, (l, r) => Reference.Comparer.Equals(l, r)).All(equal => equal);
 
             int IEqualityComparer<Message>.GetHashCode(Message obj)
-                => obj.References.Aggregate(0, (accum, reference) => (accum * 367) ^ ReferenceComparer.Instance.GetHashCode(reference));
+                => obj.References.Aggregate(0, (accum, reference) => (accum * 367) ^ Reference.Comparer.GetHashCode(reference));
         }
     }
 }

@@ -296,7 +296,6 @@
     <Compile Include="Model\Messages\MessageParams.cs" />
     <Compile Include="Model\Messages\MessageParamsExtensions.cs" />
     <Compile Include="Model\Messages\MessageTypeCode.cs" />
-    <Compile Include="Model\Messages\ReferenceComparer.cs" />
     <Compile Include="Model\Messages\Result.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\FirmAddress.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Order.cs" />

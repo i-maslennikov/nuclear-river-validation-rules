@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             var references = messages
                 .SelectMany(x => x.References)
                 .Concat(messages.SelectMany(x => x.References).SelectMany(x => x.Children))
-                .Distinct(ReferenceComparer.Instance);
+                .Distinct(Reference.Comparer);
 
             return new ResolvedNameContainer(Resolve(references));
         }
