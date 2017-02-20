@@ -14,7 +14,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         {
             var orderReference = references.Get<EntityTypeOrder>();
             var firmReference = references.Get<EntityTypeFirm>();
-            var orderPositionReference = references.Get<EntityTypeOrderPosition>();
+            var orderPositionReference = references.Get<EntityTypeOrderPositionAdvertisement>();
             var website = extra.ReadWebsite();
 
             return new MessageComposerResult(
