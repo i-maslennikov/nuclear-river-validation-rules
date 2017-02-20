@@ -57,12 +57,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                    select new Order
                        {
                            Id = order.Id,
                            FirmId = order.FirmId,
-                           ProjectId = project.Id,
                            Begin = order.BeginDistribution,
                            End = order.EndDistributionFact,
                            Scope = Scope.Compute(order.WorkflowStep, order.Id),

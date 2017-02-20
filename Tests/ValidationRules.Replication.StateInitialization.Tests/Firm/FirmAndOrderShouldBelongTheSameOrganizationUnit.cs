@@ -32,11 +32,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                 .Aggregate(
                     new Aggregates::Firm { Id = 1, ProjectId = 2 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayJan, End = FirstDayFeb },
                     new Aggregates::Order.FirmOrganiationUnitMismatch { OrderId = 2 },
 
                     new Aggregates::Firm { Id = 2, ProjectId = 2 },
-                    new Aggregates::Order { Id = 3, FirmId = 2, Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 })
+                    new Aggregates::Order { Id = 3, FirmId = 2, Begin = FirstDayJan, End = FirstDayFeb })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
