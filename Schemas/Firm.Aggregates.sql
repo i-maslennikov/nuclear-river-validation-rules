@@ -12,7 +12,6 @@ go
 
 create table FirmAggregates.[Order](
     Id bigint not null,
-    ProjectId bigint not null,
     FirmId bigint not null,
     [Begin] datetime2(2) not null,
     [End] datetime2(2) not null,
