@@ -21,12 +21,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmShouldHaveLimitedCategoryCount))
                 .Fact(
-                    new Facts::Project { Id = 3, OrganizationUnitId = 2 },
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, WorkflowStep = 5 },
+                    new Facts::Order { Id = 1, WorkflowStep = 5 },
                     new Facts::OrderPosition { Id = 4, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, CategoryId = 5 })
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3 },
+                    new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = 5 });
 
         // ReSharper disable once UnusedMember.Local
@@ -36,8 +35,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(FirmShouldHaveLimitedCategoryCountWhenNonIntersectingPeriods))
                 .Aggregate(
                     new Aggregates::Firm { Id = 1, },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = FirstDayJan, End = FirstDayFeb, ProjectId = 1 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayFeb, End = FirstDayApr, ProjectId = 1 })
+                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = FirstDayJan, End = FirstDayFeb },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayFeb, End = FirstDayApr })
                 .Aggregate(
                     Enumerable.Range(1, 30).Select(i => new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = i }).ToArray()
                     )
@@ -65,8 +64,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(FirmShouldHaveLimitedCategoryCountIntersectingPeriods))
                 .Aggregate(
                     new Aggregates::Firm { Id = 1 },
-                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = FirstDayJan, End = FirstDayApr, ProjectId = 1 },
-                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayFeb, End = FirstDayMay, ProjectId = 1 })
+                    new Aggregates::Order { Id = 1, FirmId = 1, Begin = FirstDayJan, End = FirstDayApr },
+                    new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayFeb, End = FirstDayMay })
                 .Aggregate(
                     Enumerable.Range(1, 15).Select(i => new Aggregates::Order.CategoryPurchase { OrderId = 1, CategoryId = i }).ToArray()
                     )

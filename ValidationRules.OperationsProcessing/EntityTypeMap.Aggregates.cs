@@ -93,8 +93,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::Firm>()
                           .DependOn<Facts::OrderPosition>()
                           .DependOn<Facts::OrderPositionAdvertisement>()
-                          .DependOn<Facts::Position>()
-                          .DependOn<Facts::Project>())
+                          .DependOn<Facts::Position>())
 
                 // PriceAggregates
                 .Aggregate<PriceAggregates::Order>(
