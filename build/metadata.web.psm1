@@ -14,7 +14,7 @@ $DomainNames = @{
 	'Ukraine' = 'ua'
 	'Kazakhstan' = 'kz'
 	'Kyrgyzstan' = 'kg'
-	'Italy' = 'it'}
+}
 
 function Get-TargetHostsMetadata ($Context) {
 
@@ -99,7 +99,46 @@ function Get-IisAppPathMetadata ($Context) {
 
 function Get-IisAppPoolMetadata ($Context) {
 	
-	return @{ 'AppPoolName' = 'ErmAppPool' }
+	switch ($Context.EnvType) {
+		{ @('Production', 'Load') -contains $_ } {
+			switch($Context.Country){
+				'Russia' {
+					$appPoolName = "$($Context.EntryPoint) ($($Context.EnvironmentName))"
+				}
+				default {
+					$appPoolName = "ERM ($($Context.EnvironmentName))"
+				}
+			}
+		}
+		default {
+			$appPoolName = "ERM ($($Context.EnvironmentName))"
+		}
+	}
+	
+	return @{ 'AppPoolName' = $appPoolName }
+}
+
+function Get-IisAppOfflineMetadata ($Context) {
+
+	switch ($Context.EnvType) {
+		{ @('Production', 'Load') -contains $_ } {
+			$takeOffline = $true
+		}
+		default {
+			$takeOffline = $false
+		}
+	}
+	
+	return @{ 'TakeOffline' = $takeOffline }
+}
+
+function Get-IisMetadata ($Context) {
+	$metadata = @{}
+	$metadata += Get-IisAppPathMetadata $Context
+	$metadata += Get-IisAppPoolMetadata $Context
+	$metadata += Get-IisAppOfflineMetadata $Context
+	
+	return $metadata
 }
 
 function Get-WebMetadata ($Context) {
@@ -107,10 +146,10 @@ function Get-WebMetadata ($Context) {
 	$metadata = @{}
 	$metadata += Get-ValidateWebsiteMetadata $Context
 	$metadata += Get-TargetHostsMetadata $Context
-	$metadata += Get-IisAppPathMetadata $Context
-	$metadata += Get-IisAppPoolMetadata $Context
+	$metadata += Get-IisMetadata $Context
+
 	$metadata += Get-TransformMetadata $Context
-	
+
 	$metadata += @{
 		'EntrypointType' = 'Web'
 	}
