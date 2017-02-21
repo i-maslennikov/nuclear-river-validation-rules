@@ -14,7 +14,6 @@ $DBSuffixes = @{
 	'Ukraine' = 'UA'
 	'Kazakhstan' = 'KZ'
 	'Kyrgyzstan' = 'KG'
-	'Italy' = 'IT'
 }
 
 function Get-DBHostMetadata($Context){
@@ -34,6 +33,9 @@ function Get-DBHostMetadata($Context){
 		'Production' {
 			$dbHost = 'uk-sql20\erm'
 		}
+		'Load' {
+			$dbHost = 'uk-test-sql01\MSSQL2016'
+		}
 	}
 
 	return @{ 'DBHost' = $dbHost }
@@ -52,6 +54,9 @@ function Get-XdtMetadata($Context){
 				'Test' {
 					$xdt += @("Templates\ConvertUseCases.Test.config")
 				}
+				'Load' {
+					$xdt += @("ConvertUseCases.Load.config")
+				}
 				default {
 					$xdt += @("ConvertUseCases.config")
 				}
@@ -68,6 +73,9 @@ function Get-XdtMetadata($Context){
 				}
 				'Production' {
 					$xdt += @("Erm.Production.config")
+				}
+				'Load' {
+					$xdt += @("Erm.Load.config")
 				}
 				default {
 					$xdt += @("Erm.config")

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26127.0
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1C7C6AC-4AAC-45E4-94AC-DEC47A72F447}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,8 +13,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environments", "Environments", "{8F3C0046-1F47-4C8E-8B03-D35E96686C6F}"
 	ProjectSection(SolutionItems) = preProject
 		Environments\ConvertUseCases.config = Environments\ConvertUseCases.config
+		Environments\ConvertUseCases.Load.config = Environments\ConvertUseCases.Load.config
 		Environments\ConvertUseCases.Production.config = Environments\ConvertUseCases.Production.config
 		Environments\Erm.config = Environments\Erm.config
+		Environments\Erm.Load.config = Environments\Erm.Load.config
 		Environments\Erm.Production.config = Environments\Erm.Production.config
 		Environments\quartz.Production.config = Environments\quartz.Production.config
 		Environments\quartz.Production.Russia.config = Environments\quartz.Production.Russia.config
