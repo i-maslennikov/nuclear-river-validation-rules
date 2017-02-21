@@ -12,12 +12,12 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = references.Get<EntityTypeOrder>();
+            var projectReference = references.Get<EntityTypeProject>();
             var themeReference = references.Get<EntityTypeTheme>();
             var dto = extra.ReadOversalesMessage();
 
             return new MessageComposerResult(
-                orderReference,
+                projectReference,
                 string.Format(Resources.ThemeSalesExceedsLimit, dto.Count, dto.Max),
                 themeReference);
         }

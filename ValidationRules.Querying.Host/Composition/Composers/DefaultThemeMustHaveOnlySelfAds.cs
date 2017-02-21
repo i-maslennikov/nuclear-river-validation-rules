@@ -12,11 +12,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = references.Get<EntityTypeOrder>();
             var themeReference = references.Get<EntityTypeTheme>();
 
             return new MessageComposerResult(
-                orderReference,
+                themeReference,
                 Resources.DeafaultThemeMustContainOnlySelfAds,
                 themeReference);
         }
