@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+using System.Globalization;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +10,6 @@ using Microsoft.Extensions.Logging;
 
 using NuClear.ValidationRules.WebApp.Configuration;
 using NuClear.ValidationRules.WebApp.DataAccess;
-using NuClear.ValidationRules.WebApp.Serializers;
 
 namespace NuClear.ValidationRules.WebApp
 {
@@ -31,7 +33,6 @@ namespace NuClear.ValidationRules.WebApp
         {
             // Add framework services.
             services.AddSingleton<DataConnectionFactory>();
-            services.AddSingleton<LinkFactory>();
             services.AddScoped<OrderRepositiory>();
             services.AddScoped<UserRepositiory>();
             services.AddScoped<ProjectRepositiory>();
@@ -48,7 +49,14 @@ namespace NuClear.ValidationRules.WebApp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory.AddDebug(LogLevel.Trace);
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+                                           {
+                                               DefaultRequestCulture = new RequestCulture("ru-RU"),
+                                               SupportedCultures = new List<CultureInfo> { new CultureInfo("ru-RU") },
+                                               SupportedUICultures = new List<CultureInfo> { new CultureInfo("ru-RU") },
+                                           });
 
             app.UseDeveloperExceptionPage();
             if (env.IsDevelopment())
@@ -61,8 +69,6 @@ namespace NuClear.ValidationRules.WebApp
             //}
 
             app.UseStaticFiles();
-
-            app.UseRequestLocalization(new RequestLocalizationOptions {DefaultRequestCulture = new RequestCulture("ru")});
 
             app.UseMvc(routes =>
             {

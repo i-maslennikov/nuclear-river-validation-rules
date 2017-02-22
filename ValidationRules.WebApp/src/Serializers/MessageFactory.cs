@@ -1,6 +1,10 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
+using Microsoft.Extensions.Options;
+
+using NuClear.ValidationRules.WebApp.Configuration;
 using NuClear.ValidationRules.WebApp.DataAccess;
 using NuClear.ValidationRules.WebApp.Model;
 
@@ -8,21 +12,24 @@ namespace NuClear.ValidationRules.WebApp.Serializers
 {
     public sealed class MessageFactory
     {
-        private static readonly IDictionary<ValidationResult.Level, string> PanelClasses =
-            new Dictionary<ValidationResult.Level, string>
+        private static readonly IDictionary<Level, string> PanelClasses =
+            new Dictionary<Level, string>
                 {
-                    { ValidationResult.Level.Info, "panel-info" },
-                    { ValidationResult.Level.Warning, "panel-warning" },
-                    { ValidationResult.Level.Error, "panel-danger" }
+                    { Level.None, "" },
+                    { Level.Info, "panel-info" },
+                    { Level.Warning, "panel-warning" },
+                    { Level.Error, "panel-danger" }
                 };
 
-        private readonly LinkFactory _linkFactory;
         private readonly IDictionary<long, OrderDto> _orderPeriods;
+        private readonly CultureInfo _cultureInfo;
+        private readonly LinkFactorySettings _settings;
 
-        public MessageFactory(LinkFactory linkFactory, IDictionary<long, OrderDto> orderPeriods)
+        public MessageFactory(IOptions<LinkFactorySettings> settings, IDictionary<long, OrderDto> orderPeriods, CultureInfo cultureInfo)
         {
-            _linkFactory = linkFactory;
             _orderPeriods = orderPeriods;
+            _cultureInfo = cultureInfo;
+            _settings = settings.Value;
         }
 
         public string CreatePlainTextMessage(ValidationResult result)
@@ -32,9 +39,11 @@ namespace NuClear.ValidationRules.WebApp.Serializers
             => new Message
                 {
                     Rule = result.Rule,
-                    Level = PanelClasses[result.Result],
-                    MainReference = _linkFactory.CreateLink(result.MainReference),
-                    Text = string.Format(result.Template, result.References.Select(_linkFactory.CreateLink).ToArray()),
+                    Level = result.Result,
+                    Class = PanelClasses[result.Result],
+                    MainReference = CreateLink(result.MainReference),
+                    Text = string.Format(result.Template, result.References.Select(CreateLink).ToArray()),
+                    PlainText = string.Format(result.Template, result.References.Select(x => x.Name).ToArray()),
                     Period = PeriodFor(result.MainReference)
                 };
 
@@ -43,10 +52,19 @@ namespace NuClear.ValidationRules.WebApp.Serializers
             OrderDto period;
             if (string.Equals(reference.Type, "Order") && _orderPeriods.TryGetValue(reference.Id, out period))
             {
-                return $"{period.Begin:Y} - {period.EndFact:Y}";
+                return string.Format(_cultureInfo, "{0:Y} - {1:Y}", period.Begin, period.EndFact);
             }
 
             return string.Empty;
         }
+
+        private string CreateLink(ValidationResult.EntityReference reference)
+            => CreateLink(reference.Type, reference.Id, reference.Name);
+
+        private string CreateLink(string entity, long entityId, string entityName)
+            => $"<a target=\"_blank\" href=\"{GetUrl(entity, entityId)}\">{entityName}</a>";
+
+        private string GetUrl(string entity, long entityId)
+            => _settings.ErmUrl + "\\" + "CreateOrUpdate" + "\\" + entity + "\\" + entityId;
     }
 }

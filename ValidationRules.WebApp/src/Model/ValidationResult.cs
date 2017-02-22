@@ -16,13 +16,13 @@ namespace NuClear.ValidationRules.WebApp.Model
             public string Name { get; set; }
             public long Id { get; set; }
         }
+    }
 
-        public enum Level
-        {
-            None = 0,
-            Info = 1,
-            Warning = 2,
-            Error = 3,
-        }
+    public enum Level
+    {
+        None = 0,
+        Info = 1,
+        Warning = 2,
+        Error = 3,
     }
 }
