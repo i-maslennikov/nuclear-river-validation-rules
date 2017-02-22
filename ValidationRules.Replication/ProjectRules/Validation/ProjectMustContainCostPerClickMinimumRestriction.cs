@@ -39,8 +39,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                         MessageParams =
                             new MessageParams(
                                     new Reference<EntityTypeCategory>(bid.CategoryId),
-                                    new Reference<EntityTypeProject>(order.ProjectId),
-                                    new Reference<EntityTypeOrder>(order.Id))
+                                    new Reference<EntityTypeProject>(order.ProjectId))
                                 .ToXDocument(),
 
                         PeriodStart = order.Begin,

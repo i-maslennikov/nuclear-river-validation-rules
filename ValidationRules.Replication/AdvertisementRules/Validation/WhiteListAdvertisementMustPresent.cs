@@ -41,7 +41,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrder>(order.Id),
                                     new Reference<EntityTypeFirm>(order.FirmId))
                                 .ToXDocument(),
 

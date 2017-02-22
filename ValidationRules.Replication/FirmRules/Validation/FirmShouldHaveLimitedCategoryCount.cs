@@ -58,8 +58,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "count", count }, { "allowed", MaxCategoriesAlowedForFirm } },
-                                    new Reference<EntityTypeFirm>(firmPeriod.FirmId),
-                                    new Reference<EntityTypeOrder>(order.Id))
+                                    new Reference<EntityTypeFirm>(firmPeriod.FirmId))
                                 .ToXDocument(),
 
                         PeriodStart = firmPeriod.Begin,

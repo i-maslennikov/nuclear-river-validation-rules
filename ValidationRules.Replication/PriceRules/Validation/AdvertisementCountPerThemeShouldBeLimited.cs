@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                             new MessageParams(
                                     new Dictionary<string, object> { { "max", MaxPositionsPerTheme }, { "count", oversale.Count } },
                                     new Reference<EntityTypeTheme>(oversale.ThemeId.Value),
-                                    new Reference<EntityTypeOrder>(order.Id))
+                                    new Reference<EntityTypeProject>(period.ProjectId))
                                 .ToXDocument(),
 
                         PeriodStart = period.Start,
