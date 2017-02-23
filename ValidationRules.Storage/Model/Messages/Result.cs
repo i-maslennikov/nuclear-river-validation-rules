@@ -7,12 +7,16 @@
         Warning = 2,
         Error = 3,
     }
+
     public enum ResultType
     {
         Single = 0,
         Manual = 2,
         Prerelease = 4,
         Release = 6,
+        ManualWithAccount = 8,
+        SingleForCancel = 10,
+        SingleForApprove = 12,
     }
 
     public static class ResultExtensions

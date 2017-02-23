@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
     {
         // В erm эта проверка не вызывается при ручной проверке, только при сборке (в том числе бете)
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
-                                                                    .WhenMass(Result.Error)
+                                                                    .WhenMassWithAccount(Result.Error)
                                                                     .WhenMassPrerelease(Result.None)
                                                                     .WhenMassRelease(Result.Error);
 

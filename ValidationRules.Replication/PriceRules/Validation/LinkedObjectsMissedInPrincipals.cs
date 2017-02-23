@@ -45,6 +45,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         private const int Match = 1;
 
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
+                                                                    .WhenSingleForApprove(Result.Error)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);

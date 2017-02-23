@@ -143,6 +143,8 @@
     <Compile Include="Composition\IDistinctor.cs" />
     <Compile Include="Composition\NameResolvingService.cs" />
     <Compile Include="Composition\ResolvedNameContainer.cs" />
+    <Compile Include="Controllers\SingleForCancelController.cs" />
+    <Compile Include="Controllers\SingleForApproveController.cs" />
     <Compile Include="Controllers\SingleController.cs" />
     <Compile Include="Controllers\ReleaseController.cs" />
     <Compile Include="Controllers\PrereleaseController.cs" />
