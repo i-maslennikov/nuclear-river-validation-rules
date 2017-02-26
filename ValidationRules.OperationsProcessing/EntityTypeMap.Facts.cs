@@ -39,7 +39,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
             .AddMapping<EntityTypeOrder>(typeof(Facts::Order),
                                          typeof(Facts::UnlimitedOrder))
             .AddMapping<EntityTypeOrderPosition>(typeof(Facts::OrderPosition),
-                                                 typeof(Facts::OrderPositionCostPerClick))
+                                                 typeof(Facts::OrderPositionCostPerClick),
+                                                 typeof(Facts::ReleaseWithdrawal))
             .AddMapping<EntityTypeOrderPositionAdvertisement>(typeof(Facts::OrderPositionAdvertisement))
             .AddMapping<EntityTypeOrderFile>(typeof(Facts::OrderScanFile))
             .AddMapping<EntityTypePosition>(typeof(Facts::Position),
@@ -51,7 +52,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                            typeof(Facts::CostPerClickCategoryRestriction),
                                            typeof(Facts::SalesModelCategoryRestriction))
             .AddMapping<EntityTypeReleaseInfo>(typeof(Facts::ReleaseInfo))
-            .AddMapping<EntityTypeReleaseWithdrawal>(typeof(Facts::ReleaseWithdrawal))
             .AddMapping<EntityTypeRuleset>(typeof(Facts::RulesetRule))
             .AddMapping<EntityTypeTheme>(typeof(Facts::Theme))
             .AddMapping<EntityTypeThemeCategory>(typeof(Facts::ThemeCategory))

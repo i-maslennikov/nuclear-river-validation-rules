@@ -26,17 +26,16 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IQueryable<ReleaseWithdrawal> GetSource() => _query
             .For<Erm::ReleaseWithdrawal>()
             .Select(x => new ReleaseWithdrawal
-            {
-                Id = x.Id,
-                OrderPositionId = x.OrderPositionId,
-                Amount = x.AmountToWithdraw,
-                Start = x.ReleaseBeginDate,
-            });
+                {
+                    OrderPositionId = x.OrderPositionId,
+                    Amount = x.AmountToWithdraw,
+                    Start = x.ReleaseBeginDate,
+                });
 
         public FindSpecification<ReleaseWithdrawal> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
-            return SpecificationFactory<ReleaseWithdrawal>.Contains(x => x.Id, ids);
+            return SpecificationFactory<ReleaseWithdrawal>.Contains(x => x.OrderPositionId, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<ReleaseWithdrawal> dataObjects)

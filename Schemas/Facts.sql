@@ -423,11 +423,10 @@ create table Facts.ReleaseInfo(
 go
 
 create table Facts.ReleaseWithdrawal(
-    Id bigint not null,
     OrderPositionId bigint not null,
     [Start] datetime2(2) not null,
     Amount decimal(19,4) not null,
-    constraint PK_ReleaseWithdrawal primary key (Id)
+    constraint PK_ReleaseWithdrawal primary key (OrderPositionId, [Start])
 )
 go
 CREATE NONCLUSTERED INDEX IX_ReleaseWithdrawal_OrderPositionId ON [Facts].[ReleaseWithdrawal] ([OrderPositionId]) INCLUDE ([Amount])

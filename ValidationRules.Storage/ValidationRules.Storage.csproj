@@ -217,7 +217,6 @@
     <Compile Include="Identitites\EntityTypes\EntityTypePricePosition.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeProject.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeReleaseInfo.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeReleaseWithdrawal.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeRuleset.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeTheme.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeThemeCategory.cs" />
