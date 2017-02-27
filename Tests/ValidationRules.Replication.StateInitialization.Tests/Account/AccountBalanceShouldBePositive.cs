@@ -29,8 +29,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Facts::Order { Id = 2, BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
                     new Facts::OrderPosition { Id = 3, OrderId = 2 },
-                    new Facts::ReleaseWithdrawal { OrderPositionId = 2, Amount = 1, Start = FirstDayJan },
-                    new Facts::ReleaseWithdrawal { OrderPositionId = 2, Amount = 2, Start = FirstDayFeb },
+                    new Facts::ReleaseWithdrawal { OrderPositionId = 3, Amount = 1, Start = FirstDayJan },
+                    new Facts::ReleaseWithdrawal { OrderPositionId = 3, Amount = 2, Start = FirstDayFeb },
                     new Facts::Lock { Id = 2, OrderId = 2, AccountId = 1, Start = FirstDayJan, Amount = 1 },
                     new Facts::UnlimitedOrder { OrderId = 2, PeriodStart = FirstDayFeb, PeriodEnd = FirstDayMar },
 
