@@ -38,7 +38,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                new Reference<EntityTypeOrder>(1),
                                 new Reference<EntityTypeTheme>(5)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.DefaultThemeMustHaveOnlySelfAds,
                             Result = 255,
