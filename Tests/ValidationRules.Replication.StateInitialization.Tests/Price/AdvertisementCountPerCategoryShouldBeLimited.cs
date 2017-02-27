@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageParams = new MessageParams(
                                 new Dictionary<string, object> { { "max", 2 }, { "count", 3 } },
                                 new Reference<EntityTypeCategory>(3),
-                                new Reference<EntityTypeOrder>(3)).ToXDocument(),
+                                new Reference<EntityTypeProject>(0)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                             Result = 254,
                             PeriodStart = MonthStart(3),
@@ -73,7 +73,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageParams = new MessageParams(
                                 new Dictionary<string, object> { { "max", 2 }, { "count", 3 } },
                                 new Reference<EntityTypeCategory>(3),
-                                new Reference<EntityTypeOrder>(4)).ToXDocument(),
+                                new Reference<EntityTypeProject>(0)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                             Result = 254,
                             PeriodStart = MonthStart(4),

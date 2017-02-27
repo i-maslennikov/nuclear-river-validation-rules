@@ -48,8 +48,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         MessageParams = new MessageParams(
                                     new Dictionary<string, object> { { "count", 30 }, { "allowed", 20 } },
-                                    new Reference<EntityTypeFirm>(1),
-                                    new Reference<EntityTypeOrder>(1)).ToXDocument(),
+                                    new Reference<EntityTypeFirm>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayJan,
@@ -77,8 +76,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         MessageParams = new MessageParams(
                                     new Dictionary<string, object> { { "count", 27 }, { "allowed", 20 } },
-                                    new Reference<EntityTypeFirm>(1),
-                                    new Reference<EntityTypeOrder>(1)).ToXDocument(),
+                                    new Reference<EntityTypeFirm>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,
@@ -89,8 +87,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         MessageParams = new MessageParams(
                                     new Dictionary<string, object> { { "count", 27 }, { "allowed", 20 } },
-                                    new Reference<EntityTypeFirm>(1),
-                                    new Reference<EntityTypeOrder>(2)).ToXDocument(),
+                                    new Reference<EntityTypeFirm>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         Result = 42,
                         PeriodStart = FirstDayFeb,
