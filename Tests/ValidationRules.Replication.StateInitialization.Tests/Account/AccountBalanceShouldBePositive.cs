@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new Reference<EntityTypeAccount>(1),
                                 new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
-                            Result = 204,
+                            Result = 960,
                             PeriodStart = FirstDayFeb,
                             PeriodEnd = FirstDayMar,
                             OrderId = 1,

@@ -92,7 +92,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                             new Reference<EntityTypePosition>(1)))
                                     .ToXDocument(),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 2,
@@ -113,7 +113,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 4,
@@ -134,7 +134,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 6,
@@ -154,7 +154,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                             new Reference<EntityTypePosition>(1)))
                                     .ToXDocument(),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 5,
@@ -174,7 +174,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                             new Reference<EntityTypePosition>(1)))
                                     .ToXDocument(),
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 8,
@@ -195,7 +195,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.DeniedPositionsCheck,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 7,

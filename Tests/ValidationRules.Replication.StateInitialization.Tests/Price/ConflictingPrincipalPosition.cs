@@ -82,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 2,
@@ -103,7 +103,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 4,
@@ -124,7 +124,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.ConflictingPrincipalPosition,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 6,

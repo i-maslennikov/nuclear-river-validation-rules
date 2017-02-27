@@ -45,7 +45,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.LinkedObjectsMissedInPrincipals,
-                            Result = 255,
+                            Result = 13311,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 2,

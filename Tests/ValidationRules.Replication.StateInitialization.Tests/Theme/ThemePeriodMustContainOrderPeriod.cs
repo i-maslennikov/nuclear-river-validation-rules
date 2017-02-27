@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new Reference<EntityTypeOrder>(1),
                                 new Reference<EntityTypeTheme>(5)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.ThemePeriodMustContainOrderPeriod,
-                        Result = 255,
+                        Result = 1023,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
                         OrderId = 1,
