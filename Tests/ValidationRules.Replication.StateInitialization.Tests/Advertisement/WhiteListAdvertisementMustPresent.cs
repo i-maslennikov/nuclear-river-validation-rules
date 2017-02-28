@@ -42,7 +42,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = new MessageParams(
-                                new Reference<EntityTypeOrder>(1),
                                 new Reference<EntityTypeFirm>(7)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.WhiteListAdvertisementMustPresent,
                         Result = 234,
@@ -80,7 +79,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                     {
                         MessageParams = new MessageParams(
-                                new Reference<EntityTypeOrder>(1),
                                 new Reference<EntityTypeFirm>(7),
                                 new Reference<EntityTypeAdvertisement>(6)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.WhiteListAdvertisementMayPresent,
@@ -110,7 +108,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                    new Reference<EntityTypeOrder>(1),
                                     new Reference<EntityTypeFirm>(0),
                                     new Reference<EntityTypeAdvertisement>(0)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.WhiteListAdvertisementMayPresent,
@@ -122,7 +119,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                        new Reference<EntityTypeOrder>(1),
                                         new Reference<EntityTypeFirm>(0)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.WhiteListAdvertisementMustPresent,
                             Result = 234,
