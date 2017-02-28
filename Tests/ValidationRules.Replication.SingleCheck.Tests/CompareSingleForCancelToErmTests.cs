@@ -20,11 +20,11 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace ValidationRules.Replication.SingleCheck.Tests
 {
     [TestFixture]
-    public sealed class CompareSingleToErmTests
+    public sealed class CompareSingleForCancelToErmTests
     {
-        private const int OrdersPerRule = 20;
+        private const int OrdersPerRule = 30;
 
-        private static readonly Expression<Func<Version.ValidationResult, bool>> IsApplicableForSingleCheck = x => (x.Result & 0x3) > 0;
+        private static readonly Expression<Func<Version.ValidationResult, bool>> IsApplicableForSingleCheck = x => (x.Result & (0x3 << 10)) > 0;
 
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
         private readonly ErmToRiverResultAdapter _ermService = new ErmToRiverResultAdapter("Erm");
@@ -146,13 +146,13 @@ namespace ValidationRules.Replication.SingleCheck.Tests
         }
 
         private IDictionary<int, string[]> InvokeRiver(long orderId, int[] rules = null)
-            => _riverService.ValidateSingle(orderId).Messages
+            => _riverService.ValidateSingleForCancel(orderId).Messages
                             .Where(x => rules == null || rules.Contains(x.RuleCode))
                             .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => x.MessageText.TrimEnd('.'))
                             .ToDictionary(x => x.Key, x => x.OrderBy(y => y).ToArray());
 
         private IDictionary<int, string[]> InvokeErm(long orderId, int? rule = null)
-            => _ermService.ValidateSingle(orderId)
+            => _ermService.ValidateSingleForCancel(orderId)
                           .Where(x => rule == null || x.RuleCode == rule)
                           .GroupBy(x => x.RuleCode, x => x.MessageText.TrimEnd('.'))
                           .ToDictionary(x => x.Key, x => x.OrderBy(y => y).ToArray());
