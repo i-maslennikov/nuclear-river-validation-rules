@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                             new Reference<EntityTypePosition>(4)))
                                     .ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
-                            Result = 255,
+                            Result = 1023,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 1,

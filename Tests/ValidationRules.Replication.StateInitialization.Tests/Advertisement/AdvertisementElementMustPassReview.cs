@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new Reference<EntityTypeAdvertisementElement>(7,
                                     new Reference<EntityTypeAdvertisementElementTemplate>(8))).ToXDocument(),
                         MessageType = (int)MessageTypeCode.AdvertisementElementMustPassReview,
-                        Result = 254,
+                        Result = 1022,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
                         OrderId = 1,

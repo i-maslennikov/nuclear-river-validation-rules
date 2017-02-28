@@ -18,6 +18,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     public sealed class AssociatedPositionsGroupCount : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
+                                                                    .WhenSingleForApprove(Result.Error)
                                                                     .WhenMass(Result.Warning)
                                                                     .WhenMassPrerelease(Result.Warning)
                                                                     .WhenMassRelease(Result.Warning);

@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                         new Reference<EntityTypeOrder>(1),
                                         new Reference<EntityTypePosition>(4))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
-                            Result = 255,
+                            Result = 1023,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,

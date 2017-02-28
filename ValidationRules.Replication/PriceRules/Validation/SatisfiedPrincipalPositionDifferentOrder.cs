@@ -29,10 +29,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class SatisfiedPrincipalPositionDifferentOrder : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
-                                                                    .WhenMass(Result.Warning)
-                                                                    .WhenMassPrerelease(Result.Warning)
-                                                                    .WhenMassRelease(Result.Warning);
+        private static readonly int RuleResult = new ResultBuilder().WhenSingleForCancel(Result.Warning);
 
         public SatisfiedPrincipalPositionDifferentOrder(IQuery query) : base(query, MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder)
         {

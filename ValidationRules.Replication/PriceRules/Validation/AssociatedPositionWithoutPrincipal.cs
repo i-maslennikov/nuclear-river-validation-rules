@@ -24,6 +24,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     public sealed class AssociatedPositionWithoutPrincipal : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
+                                                                    .WhenSingleForApprove(Result.Error)
                                                                     .WhenMass(Result.Error)
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);

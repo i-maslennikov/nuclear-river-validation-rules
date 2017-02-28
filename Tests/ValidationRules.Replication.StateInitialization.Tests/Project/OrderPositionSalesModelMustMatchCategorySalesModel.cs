@@ -85,7 +85,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                         new Reference<EntityTypeProject>(0))
                                     .ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
-                            Result = 255,
+                            Result = 1023,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,
@@ -102,7 +102,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                         new Reference<EntityTypeProject>(0))
                                     .ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
-                            Result = 255,
+                            Result = 1023,
                             PeriodStart = MonthStart(4),
                             PeriodEnd = MonthStart(8),
                             OrderId = 4,
