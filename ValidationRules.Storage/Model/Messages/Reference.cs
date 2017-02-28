@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
@@ -11,13 +12,13 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
         public static IEqualityComparer<Reference> Comparer = new ReferenceComparer();
 
         public Reference(int entityTypeId, long id)
-            : this(entityTypeId, id, Array.Empty<Reference>())
+            : this(entityTypeId, id, null)
         {
         }
 
         public Reference(int entityTypeId, long id, params Reference[] children)
         {
-            Children = children;
+            Children = children ?? Array.Empty<Reference>();
             EntityType = entityTypeId;
             Id = id;
         }
@@ -29,7 +30,7 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
         private class ReferenceComparer : IEqualityComparer<Reference>
         {
             public bool Equals(Reference x, Reference y)
-                => x.EntityType == y.EntityType && x.Id == y.Id;
+                => x.EntityType == y.EntityType && x.Id == y.Id && x.Children.Count == y.Children.Count && x.Children.Zip(y.Children, (l, r) => Equals(l, r)).All(equal => equal);
 
             public int GetHashCode(Reference obj)
                 => obj.Id.GetHashCode() ^ obj.EntityType;
