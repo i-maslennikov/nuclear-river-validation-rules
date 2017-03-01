@@ -22,18 +22,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
         private readonly ValidationRuleActor _validationRuleActor;
-        private readonly ArchiveVersionsActor _archiveVersionsActor;
 
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer,
             ValidationRuleActor validationRuleActor,
-            ArchiveVersionsActor archiveVersionsActor)
+            ArchiveVersionsService archiveVersionsService)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
             _validationRuleActor = validationRuleActor;
-            _archiveVersionsActor = archiveVersionsActor;
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -83,10 +81,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
                 using (Probe.Create("ValidationRuleActor"))
                 {
                     _validationRuleActor.ExecuteCommands(commands);
-                }
-                using (Probe.Create("ArchiveVersionsActor"))
-                {
-                    _archiveVersionsActor.ExecuteCommands(commands);
                 }
 
                 scope.Complete();
