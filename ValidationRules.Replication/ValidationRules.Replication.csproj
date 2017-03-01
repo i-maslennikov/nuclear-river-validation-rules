@@ -251,7 +251,7 @@
     <Compile Include="FirmRules\Validation\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
     <Compile Include="FirmRules\Validation\FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder.cs" />
     <Compile Include="FirmRules\Validation\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
-    <Compile Include="Messages\ArchiveVersionsActor.cs" />
+    <Compile Include="Messages\ArchiveVersionsService.cs" />
     <Compile Include="Messages\ErmStatesQueryableExtensions.cs" />
     <Compile Include="Messages\ValidationResultEqualityComparer.cs" />
     <Compile Include="Messages\VersionAccessor.cs" />

@@ -336,6 +336,7 @@
     <Compile Include="Factories\ServiceBusSettingsFactory.cs" />
     <Compile Include="Factories\UnityEventLoggingStrategyProvider.cs" />
     <Compile Include="Jobs\DebugTestJob.cs" />
+    <Compile Include="Jobs\ArchivingJob.cs" />
     <Compile Include="Jobs\ProcessingJob.cs" />
     <Compile Include="Jobs\ReportingJob.cs" />
     <Compile Include="Program.cs" />

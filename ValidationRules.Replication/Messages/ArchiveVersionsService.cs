@@ -1,35 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.Replication.Core;
-using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
-using NuClear.ValidationRules.Replication.Settings;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.Messages
 {
-    public sealed class ArchiveVersionsActor : IActor
+    public sealed class ArchiveVersionsService
     {
-        private readonly IArchiveVersionsSettings _settings;
         private readonly IQuery _query;
         private readonly IBulkRepository<Version> _versionDeleteRepository;
         private readonly IBulkRepository<Version.ValidationResult> _validationResultRepository;
         private readonly IBulkRepository<Version.ErmStateBulkDelete> _ermStateDeleteRepository;
         private readonly IBulkRepository<Version.ValidationResultBulkDelete> _validationResultDeleteRepository;
 
-        public ArchiveVersionsActor(
-            IArchiveVersionsSettings settings,
+        public ArchiveVersionsService(
             IQuery query,
             IBulkRepository<Version> versionDeleteRepository,
             IBulkRepository<Version.ValidationResult> validationResultRepository,
             IBulkRepository<Version.ErmStateBulkDelete> ermStateDeleteRepository,
             IBulkRepository<Version.ValidationResultBulkDelete> validationResultDeleteRepository)
         {
-            _settings = settings;
             _query = query;
             _versionDeleteRepository = versionDeleteRepository;
             _validationResultRepository = validationResultRepository;
@@ -37,10 +30,8 @@ namespace NuClear.ValidationRules.Replication.Messages
             _validationResultDeleteRepository = validationResultDeleteRepository;
         }
 
-        public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
+        public void Execute(DateTime archiveDate)
         {
-            var archiveDate = DateTime.UtcNow - _settings.ArchiveVersionsInterval;
-
             var versions = _query.For<Version>().Where(x => x.Date < archiveDate).OrderByDescending(x => x.Id).ToList();
             if (versions.Count > 1)
             {
@@ -53,8 +44,6 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                 _validationResultRepository.Create(keepValidationResults);
             }
-
-            return Array.Empty<IEvent>();
         }
     }
 }
