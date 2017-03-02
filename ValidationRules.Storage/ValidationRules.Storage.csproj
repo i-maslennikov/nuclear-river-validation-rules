@@ -229,6 +229,7 @@
     <Compile Include="Model\Facts\Lock.cs" />
     <Compile Include="Model\Facts\Order.cs" />
     <Compile Include="Model\Facts\Account.cs" />
+    <Compile Include="Model\Facts\OrderItem.cs" />
     <Compile Include="Model\Facts\OrderPosition.cs" />
     <Compile Include="Model\Facts\NomenclatureCategory.cs" />
     <Compile Include="Model\Facts\PositionChild.cs" />

@@ -56,6 +56,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(Facts::Lock),
                             typeof(Facts::NomenclatureCategory),
                             typeof(Facts::Order),
+                            typeof(Facts::OrderItem),
                             typeof(Facts::OrderPosition),
                             typeof(Facts::OrderPositionAdvertisement),
                             typeof(Facts::OrderPositionCostPerClick),

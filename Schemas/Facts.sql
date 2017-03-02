@@ -319,6 +319,16 @@ CREATE INDEX IX_Order_BargainId_SignupDate ON [Facts].[Order] ([BargainId],[Sign
 
 GO
 
+create table Facts.OrderItem (
+    OrderId bigint not null,
+    OrderPositionId bigint not null,
+    PricePositionId bigint null,
+    ItemPositionId bigint not null,
+    PackagePositionId bigint not null,
+    FirmAddressId bigint null,
+    CategoryId bigint null
+)
+go
 
 create table Facts.OrderPosition (
     Id bigint not null,

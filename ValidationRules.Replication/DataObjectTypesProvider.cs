@@ -42,6 +42,7 @@ namespace NuClear.ValidationRules.Replication
                             typeof(Lock),
                             typeof(NomenclatureCategory),
                             typeof(Order),
+                            typeof(OrderItem),
                             typeof(OrderPosition),
                             typeof(OrderPositionAdvertisement),
                             typeof(OrderPositionCostPerClick),
