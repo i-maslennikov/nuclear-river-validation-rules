@@ -8,6 +8,7 @@ using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
@@ -26,36 +27,38 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IQueryable<OrderItem> GetSource()
         {
             var opas =
-                from orderPosition in _query.For<Erm::OrderPosition>()
+                from order in _query.For<Erm::Order>().Where(Specs.Find.Erm.Order)
+                from orderPosition in _query.For<Erm::OrderPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.OrderId == order.Id)
                 from pricePosition in _query.For<Erm::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
                 from opa in _query.For<Erm::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                 select new OrderItem
-                {
-                    OrderId = orderPosition.OrderId,
-                    OrderPositionId = orderPosition.Id,
-                    PricePositionId = null,
-                    PackagePositionId = pricePosition.PositionId,
-                    ItemPositionId = opa.PositionId,
+                    {
+                        OrderId = orderPosition.OrderId,
+                        OrderPositionId = orderPosition.Id,
+                        PricePositionId = null,
+                        PackagePositionId = pricePosition.PositionId,
+                        ItemPositionId = opa.PositionId,
 
-                    FirmAddressId = opa.FirmAddressId,
-                    CategoryId = opa.CategoryId,
-                };
+                        FirmAddressId = opa.FirmAddressId,
+                        CategoryId = opa.CategoryId,
+                    };
 
             var pkgs =
-                from orderPosition in _query.For<Erm::OrderPosition>()
+                from order in _query.For<Erm::Order>().Where(Specs.Find.Erm.Order)
+                from orderPosition in _query.For<Erm::OrderPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.OrderId == order.Id)
                 from pricePosition in _query.For<Erm::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
                 from opa in _query.For<Erm::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                 select new OrderItem
-                {
-                    OrderId = orderPosition.OrderId,
-                    OrderPositionId = orderPosition.Id,
-                    PricePositionId = orderPosition.PricePositionId,
-                    PackagePositionId = pricePosition.PositionId,
-                    ItemPositionId = pricePosition.PositionId,
+                    {
+                        OrderId = orderPosition.OrderId,
+                        OrderPositionId = orderPosition.Id,
+                        PricePositionId = orderPosition.PricePositionId,
+                        PackagePositionId = pricePosition.PositionId,
+                        ItemPositionId = pricePosition.PositionId,
 
-                    FirmAddressId = opa.FirmAddressId,
-                    CategoryId = opa.CategoryId,
-                };
+                        FirmAddressId = opa.FirmAddressId,
+                        CategoryId = opa.CategoryId,
+                    };
 
             return opas.Union(pkgs);
         }
