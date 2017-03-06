@@ -100,6 +100,16 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceAggregates::Price.AdvertisementAmountRestriction>()
                   .HasSchemaName(PriceAggregatesSchema);
 
+            builder.Entity<PriceAggregates::Firm>()
+                  .HasSchemaName(PriceAggregatesSchema)
+                  .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<PriceAggregates::Firm.FirmPosition>()
+                  .HasSchemaName(PriceAggregatesSchema);
+
+            builder.Entity<PriceAggregates::Firm.FirmAssociatedPosition>()
+                  .HasSchemaName(PriceAggregatesSchema);
+
             builder.Entity<PriceAggregates::Order>()
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);

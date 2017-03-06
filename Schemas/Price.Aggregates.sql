@@ -19,6 +19,10 @@ if object_id('PriceAggregates.AdvertisementAmountRestriction') is not null drop 
 if object_id('PriceAggregates.Price') is not null drop table PriceAggregates.Price
 if object_id('PriceAggregates.AssociatedPositionGroupOvercount') is not null drop table PriceAggregates.AssociatedPositionGroupOvercount
 
+if object_id('PriceAggregates.Firm') is not null drop table PriceAggregates.Firm
+if object_id('PriceAggregates.FirmPosition') is not null drop table PriceAggregates.FirmPosition
+if object_id('PriceAggregates.FirmAssociatedPosition') is not null drop table PriceAggregates.FirmAssociatedPosition
+
 go
 
 -- price aggregate
@@ -125,6 +129,25 @@ create index IX_OrderAssociatedPosition_CauseOrderPositionId_CauseItemPositionId
 on [PriceAggregates].[OrderAssociatedPosition] ([CauseOrderPositionId],[CauseItemPositionId],[BindingType])
 go
 
+create table PriceAggregates.OrderAssociatedPosition2(
+    AssociatedOrderId bigint NOT NULL,
+    AssociatedOrderPositionId bigint NOT NULL,
+    AssociatedPackagePositionId bigint NOT NULL,
+    AssociatedItemPositionId bigint NOT NULL,
+
+    [Begin] datetime2(2) NOT NULL,
+    [End] datetime2(2) NOT NULL,
+
+    PrincipalOrderId bigint NOT NULL,
+    PrincipalOrderPositionId bigint NOT NULL,
+    PrincipalPackagePositionId bigint NOT NULL,
+    PrincipalItemPositionId bigint NOT NULL,
+
+    BindingType int NOT NULL,
+    Match bit NOT NULL,
+)
+go
+
 create table PriceAggregates.OrderPricePosition(
     OrderId bigint NOT NULL,
 	OrderPositionId bigint NOT NULL,
@@ -188,3 +211,39 @@ CREATE NONCLUSTERED INDEX IX_OrderPeriod_Scope
 ON [PriceAggregates].[OrderPeriod] ([Scope])
 INCLUDE ([OrderId],[OrganizationUnitId],[Start])
 GO
+
+
+-- firm aggregate
+create table PriceAggregates.Firm(
+    Id bigint NOT NULL,
+    constraint PK_Firm primary key (Id)
+)
+go
+
+create table PriceAggregates.FirmPosition(
+    FirmId bigint not null,
+    OrderId bigint not null,
+    OrderPositionId bigint not null,
+    PackagePositionId bigint not null,
+    ItemPositionId bigint not null,
+    HasNoBinding bit not null,
+    Category1Id bigint null,
+    Category3Id bigint null,
+    FirmAddressId bigint null,
+    Scope bigint not null,
+    [Begin] datetime2(2) not null,
+    [End] datetime2(2) not null,
+)
+go
+
+create table PriceAggregates.FirmAssociatedPosition(
+    FirmId bigint not null,
+    OrderId bigint not null,
+    OrderPositionId bigint not null,
+    PackagePositionId bigint not null,
+    ItemPositionId bigint not null,
+    PrincipalPositionId bigint not null,
+    BindingType int not null,
+    [Source] int not null,
+)
+go

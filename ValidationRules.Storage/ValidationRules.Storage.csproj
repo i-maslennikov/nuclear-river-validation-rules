@@ -297,6 +297,7 @@
     <Compile Include="Model\Messages\MessageParamsExtensions.cs" />
     <Compile Include="Model\Messages\MessageTypeCode.cs" />
     <Compile Include="Model\Messages\Result.cs" />
+    <Compile Include="Model\PriceRules\Aggregates\Firm.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\FirmAddress.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Order.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Project.cs" />

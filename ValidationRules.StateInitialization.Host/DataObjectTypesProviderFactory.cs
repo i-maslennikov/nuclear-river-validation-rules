@@ -82,19 +82,22 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 return new CommandRegardlessDataObjectTypesProvider(
                     new []
                         {
+                            typeof(PriceAggregates::Firm),
+                            typeof(PriceAggregates::Firm.FirmPosition),
+                            typeof(PriceAggregates::Firm.FirmAssociatedPosition),
                             typeof(PriceAggregates::Order),
-                            typeof(PriceAggregates::Period.OrderPeriod),
                             typeof(PriceAggregates::Order.OrderPosition),
                             typeof(PriceAggregates::Order.OrderAssociatedPosition),
                             typeof(PriceAggregates::Order.OrderDeniedPosition),
                             typeof(PriceAggregates::Order.OrderPricePosition),
                             typeof(PriceAggregates::Order.AmountControlledPosition),
                             typeof(PriceAggregates::Period),
+                            typeof(PriceAggregates::Period.OrderPeriod),
+                            typeof(PriceAggregates::Period.PricePeriod),
                             typeof(PriceAggregates::Position),
                             typeof(PriceAggregates::Price),
                             typeof(PriceAggregates::Price.AdvertisementAmountRestriction),
                             typeof(PriceAggregates::Price.AssociatedPositionGroupOvercount),
-                            typeof(PriceAggregates::Period.PricePeriod),
 
                             typeof(AccountAggregates::Order),
                             typeof(AccountAggregates::Order.DebtPermission),
