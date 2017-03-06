@@ -40,29 +40,29 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from associated in query.For<Firm.FirmPosition>()
                 from requirement in query.For<Firm.FirmAssociatedPosition>().Where(x => x.OrderPositionId == associated.OrderPositionId && x.ItemPositionId == associated.ItemPositionId)
                 let principals = query.For<Firm.FirmPosition>()
-                                       .Where(x => x.FirmId == associated.FirmId && x.ItemPositionId == requirement.PrincipalPositionId)
-                                       .Where(x => x.Begin == associated.Begin)
-                                       .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                       .Where(principal => requirement.BindingType == 2 ||
-                                                           (principal.HasNoBinding == associated.HasNoBinding) &&
-                                                           ((associated.Category3Id != null &&
-                                                             associated.Category3Id == principal.Category3Id &&
-                                                             (associated.FirmAddressId == null || principal.FirmAddressId == null)) ||
-                                                            ((associated.Category1Id == null ||
-                                                              principal.Category1Id == null ||
-                                                              associated.Category3Id == principal.Category3Id ||
-                                                              associated.Category1Id == principal.Category1Id && associated.Category3Id == null && principal.Category3Id == null) &&
-                                                             associated.FirmAddressId == principal.FirmAddressId))
-                                                  ? requirement.BindingType == 1
-                                                  : requirement.BindingType == 3)
+                                      .Where(x => x.FirmId == associated.FirmId && x.ItemPositionId == requirement.PrincipalPositionId)
+                                      .Where(x => x.Begin == associated.Begin)
+                                      .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
+                                      .Where(principal => requirement.BindingType == 2 ||
+                                                          ((principal.HasNoBinding == associated.HasNoBinding) &&
+                                                          ((associated.Category3Id != null &&
+                                                            associated.Category3Id == principal.Category3Id &&
+                                                            (associated.FirmAddressId == null || principal.FirmAddressId == null)) ||
+                                                           ((associated.Category1Id == null ||
+                                                             principal.Category1Id == null ||
+                                                             associated.Category3Id == principal.Category3Id ||
+                                                             associated.Category1Id == principal.Category1Id && associated.Category3Id == null && principal.Category3Id == null) &&
+                                                            associated.FirmAddressId == principal.FirmAddressId))
+                                                 ? requirement.BindingType == 1
+                                                 : requirement.BindingType == 3))
                 where principals.Any() && principals.All(x => x.OrderId != associated.OrderId) && principals.Select(x => x.OrderId).Distinct().Count() == 1
                 select new { associated, principal = principals.First() };
 
             var messages =
                 from warning in warnings
                 select new Version.ValidationResult
-                {
-                    MessageParams =
+                    {
+                        MessageParams =
                             new MessageParams(
                                     new Reference<EntityTypeOrderPosition>(warning.principal.OrderPositionId,
                                         new Reference<EntityTypeOrder>(warning.principal.OrderId),
@@ -75,12 +75,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                         new Reference<EntityTypePosition>(warning.associated.ItemPositionId)))
                                 .ToXDocument(),
 
-                    PeriodStart = warning.principal.Begin,
-                    PeriodEnd = warning.principal.End,
-                    OrderId = warning.principal.OrderId,
+                        PeriodStart = warning.principal.Begin,
+                        PeriodEnd = warning.principal.End,
+                        OrderId = warning.principal.OrderId,
 
-                    Result = RuleResult,
-                };
+                        Result = RuleResult,
+                    };
 
             return messages;
         }
