@@ -129,25 +129,6 @@ create index IX_OrderAssociatedPosition_CauseOrderPositionId_CauseItemPositionId
 on [PriceAggregates].[OrderAssociatedPosition] ([CauseOrderPositionId],[CauseItemPositionId],[BindingType])
 go
 
-create table PriceAggregates.OrderAssociatedPosition2(
-    AssociatedOrderId bigint NOT NULL,
-    AssociatedOrderPositionId bigint NOT NULL,
-    AssociatedPackagePositionId bigint NOT NULL,
-    AssociatedItemPositionId bigint NOT NULL,
-
-    [Begin] datetime2(2) NOT NULL,
-    [End] datetime2(2) NOT NULL,
-
-    PrincipalOrderId bigint NOT NULL,
-    PrincipalOrderPositionId bigint NOT NULL,
-    PrincipalPackagePositionId bigint NOT NULL,
-    PrincipalItemPositionId bigint NOT NULL,
-
-    BindingType int NOT NULL,
-    Match bit NOT NULL,
-)
-go
-
 create table PriceAggregates.OrderPricePosition(
     OrderId bigint NOT NULL,
 	OrderPositionId bigint NOT NULL,
