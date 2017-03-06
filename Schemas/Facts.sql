@@ -29,6 +29,7 @@ if object_id('Facts.LegalPersonProfile') is not null drop table Facts.LegalPerso
 if object_id('Facts.Lock') is not null drop table Facts.Lock
 if object_id('Facts.NomenclatureCategory') is not null drop table Facts.NomenclatureCategory
 if object_id('Facts.[Order]') is not null drop table Facts.[Order]
+if object_id('Facts.OrderItem') is not null drop table Facts.OrderItem
 if object_id('Facts.OrderPosition') is not null drop table Facts.OrderPosition
 if object_id('Facts.OrderPositionAdvertisement') is not null drop table Facts.OrderPositionAdvertisement
 if object_id('Facts.OrderPositionCostPerClick') is not null drop table Facts.OrderPositionCostPerClick
