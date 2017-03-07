@@ -124,7 +124,7 @@
     <value> в заказе {{2}}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1}</value>
+    <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1} {{1}}</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:MMMM} - {4}</value>

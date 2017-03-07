@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} данного Заказа является основной для следующих позиций: {1}.
+        ///   Looks up a localized string similar to {0} {{0}} данного Заказа является основной для следующих позиций: {1} {{1}}.
         /// </summary>
         internal static string ADPValidation_Template {
             get {
