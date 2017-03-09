@@ -37,28 +37,32 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var warnings =
-                from associated in query.For<Firm.FirmPosition>()
-                let principals =
-                    (from requirement in query.For<Firm.FirmAssociatedPosition>().Where(x => x.OrderPositionId == associated.OrderPositionId && x.ItemPositionId == associated.ItemPositionId)
-                    from principal in query.For<Firm.FirmPosition>()
-                                          .Where(x => x.FirmId == associated.FirmId && x.ItemPositionId == requirement.PrincipalPositionId)
-                                          .Where(x => x.Begin == associated.Begin)
-                                          .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                          .Where(principal => requirement.BindingType == 2 ||
-                                                              ((principal.HasNoBinding == associated.HasNoBinding) &&
-                                                              ((associated.Category3Id != null &&
-                                                                associated.Category3Id == principal.Category3Id &&
-                                                                (associated.FirmAddressId == null || principal.FirmAddressId == null)) ||
-                                                               ((associated.Category1Id == null ||
-                                                                 principal.Category1Id == null ||
-                                                                 associated.Category3Id == principal.Category3Id ||
-                                                                 associated.Category1Id == principal.Category1Id && associated.Category3Id == null && principal.Category3Id == null) &&
-                                                                associated.FirmAddressId == principal.FirmAddressId))
-                                                     ? requirement.BindingType == 1
-                                                     : requirement.BindingType == 3))
-                    select principal)
-                where principals.Any() && principals.All(x => x.OrderId != associated.OrderId) && principals.Select(x => x.OrderId).Distinct().Count() == 1
-                select new { associated, principal = principals.First() };
+                query.For<Firm.FirmPosition>().Select(associated => new
+                         {
+                             associated,
+                             principals = (query.For<Firm.FirmAssociatedPosition>()
+                                                .Where(x => x.OrderPositionId == associated.OrderPositionId && x.ItemPositionId == associated.ItemPositionId)
+                                                .SelectMany(requirement => query.For<Firm.FirmPosition>()
+                                                                                .Where(x => x.Begin == associated.Begin && x.FirmId == associated.FirmId)
+                                                                                .Where(x => x.ItemPositionId == requirement.PrincipalPositionId && x.FirmId == requirement.FirmId)
+                                                                                .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
+                                                                                .Where(principal => requirement.BindingType == 2 || ((principal.HasNoBinding == associated.HasNoBinding) &&
+                                                                                                     ((associated.Category3Id != null &&
+                                                                                                       associated.Category3Id == principal.Category3Id &&
+                                                                                                       (associated.FirmAddressId == null ||
+                                                                                                        principal.FirmAddressId == null)) ||
+                                                                                                      ((associated.Category1Id == null ||
+                                                                                                        principal.Category1Id == null ||
+                                                                                                        associated.Category3Id == principal.Category3Id ||
+                                                                                                        associated.Category1Id == principal.Category1Id &&
+                                                                                                        associated.Category3Id == null &&
+                                                                                                        principal.Category3Id == null) &&
+                                                                                                       associated.FirmAddressId == principal.FirmAddressId))
+                                                                                                        ? requirement.BindingType == 1
+                                                                                                        : requirement.BindingType == 3))))
+                         })
+                     .Where(@t => @t.principals.Any() && @t.principals.All(x => x.OrderId != @t.associated.OrderId) && @t.principals.Select(x => x.OrderId).Distinct().Count() == 1)
+                     .Select(@t => new { @t.associated, principal = @t.principals.First() });
 
             var messages =
                 from warning in warnings
@@ -84,6 +88,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         Result = RuleResult,
                     };
 
+            var xxx = messages.ToString();
             return messages;
         }
     }

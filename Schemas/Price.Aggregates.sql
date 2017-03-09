@@ -234,7 +234,7 @@ ON [PriceAggregates].[FirmPosition] ([FirmId],[ItemPositionId],[Begin])
 INCLUDE ([OrderId],[OrderPositionId],[PackagePositionId],[HasNoBinding],[Category1Id],[Category3Id],[FirmAddressId],[Scope],[End])
 GO
 
-CREATE NONCLUSTERED INDEX IX_FirmAssociatedPosition_OrderPositionId_ItemPositionId
-ON [PriceAggregates].FirmAssociatedPosition (OrderPositionId, ItemPositionId)
+CREATE NONCLUSTERED INDEX IX_FirmAssociatedPosition_OrderPositionId_ItemPositionId_FirmId
+ON [PriceAggregates].FirmAssociatedPosition (OrderPositionId, ItemPositionId, FirmId)
 include(PrincipalPositionId, BindingType)
 GO
