@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
-using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -39,10 +38,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// A: Erm позволяет одобрить заказ, но при проверке первого - появляется ошибка.
     /// </summary>
     // todo: переименовать PrincipalPositionMustHaveDifferentBindingObject
+    // todo: проверка не срабатывает - похоже, продажи невозможны
     public sealed class ConflictingPrincipalPosition : ValidationResultAccessorBase
     {
-        private const int BindingTypeDifferent = 3;
-
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenSingleForApprove(Result.Error)
                                                                     .WhenMass(Result.Error)
@@ -55,47 +53,35 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var orderPositions =
-                from order in query.For<Order>()
-                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
-                join position in query.For<Order.OrderPosition>() on order.Id equals position.OrderId
-                select new Dto<Order.OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
-
-            var associatedPositions =
-                from order in query.For<Order>()
-                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
-                join position in query.For<Order.OrderAssociatedPosition>() on order.Id equals position.OrderId
-                where position.BindingType == BindingTypeDifferent
-                select new Dto<Order.OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
-
-            var conflictingPositions =
-                associatedPositions.SelectMany(Specs.Join.Aggs.RegardlessBindingObject(orderPositions.DefaultIfEmpty()), Specs.Join.Aggs.RegardlessBindingObject())
-                                   .Where(x => x.Match == Match.MatchedBindingObject);
+            var errors =
+                query.For<Firm.FirmPosition>()
+                     .SelectMany(Specs.Join.Aggs.PrincipalPositions(query.For<Firm.FirmAssociatedPosition>(), query.For<Firm.FirmPosition>()), (associated, principal) => new { associated, principal })
+                     .Where(dto => dto.principal.RequiredDifferent && !dto.principal.IsBindingObjectConditionSatisfied)
+                     .Select(dto => new { dto.associated, principal = dto.principal.Position });
 
             var messages =
-                from conflict in conflictingPositions
-                from period in query.For<Period>().Where(x => x.Start == conflict.Start && x.OrganizationUnitId == conflict.OrganizationUnitId)
+                from error in errors
                 select new Version.ValidationResult
-                    {
-                        MessageParams =
+                {
+                    MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrderPosition>(conflict.CausePosition.OrderPositionId,
-                                        new Reference<EntityTypeOrder>(conflict.CausePosition.OrderId),
-                                        new Reference<EntityTypePosition>(conflict.CausePosition.PackagePositionId),
-                                        new Reference<EntityTypePosition>(conflict.CausePosition.ItemPositionId)),
+                                    new Reference<EntityTypeOrderPosition>(error.associated.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(error.associated.OrderId),
+                                        new Reference<EntityTypePosition>(error.associated.PackagePositionId),
+                                        new Reference<EntityTypePosition>(error.associated.ItemPositionId)),
 
-                                    new Reference<EntityTypeOrderPosition>(conflict.RelatedPosition.OrderPositionId,
-                                        new Reference<EntityTypeOrder>(conflict.RelatedPosition.OrderId),
-                                        new Reference<EntityTypePosition>(conflict.RelatedPosition.PackagePositionId),
-                                        new Reference<EntityTypePosition>(conflict.RelatedPosition.ItemPositionId)))
+                                    new Reference<EntityTypeOrderPosition>(error.principal.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(error.principal.OrderId),
+                                        new Reference<EntityTypePosition>(error.principal.PackagePositionId),
+                                        new Reference<EntityTypePosition>(error.principal.ItemPositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = period.Start,
-                        PeriodEnd = period.End,
-                        OrderId = conflict.CausePosition.OrderId,
+                    PeriodStart = error.associated.Begin,
+                    PeriodEnd = error.associated.End,
+                    OrderId = error.associated.OrderId,
 
-                        Result = RuleResult,
-                    };
+                    Result = RuleResult,
+                };
 
             return messages;
         }

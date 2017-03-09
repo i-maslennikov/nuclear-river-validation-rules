@@ -113,7 +113,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         End = period.End,
                     };
 
-                return principals;
+                return principals.Distinct();
             }
 
             public FindSpecification<Firm.FirmPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

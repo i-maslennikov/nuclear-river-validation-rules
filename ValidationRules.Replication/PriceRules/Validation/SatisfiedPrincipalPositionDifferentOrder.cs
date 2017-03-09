@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     ///     И позиция Z продана в заказ 1. По логике (бага?) проверки LinkedObjectsMissedInPrincipalsActor (Q3) ошибка должна быть.
     /// A: Ошибка есть.
     /// </summary>
-    public sealed class SatisfiedPrincipalPositionDifferentOrder : ValidationResultAccessorBase2
+    public sealed class SatisfiedPrincipalPositionDifferentOrder : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingleForCancel(Result.Warning);
 
@@ -36,59 +36,39 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var warnings =
-                query.For<Firm.FirmPosition>().Select(associated => new
-                         {
-                             associated,
-                             principals = (query.For<Firm.FirmAssociatedPosition>()
-                                                .Where(x => x.OrderPositionId == associated.OrderPositionId && x.ItemPositionId == associated.ItemPositionId)
-                                                .SelectMany(requirement => query.For<Firm.FirmPosition>()
-                                                                                .Where(x => x.Begin == associated.Begin && x.FirmId == associated.FirmId)
-                                                                                .Where(x => x.ItemPositionId == requirement.PrincipalPositionId && x.FirmId == requirement.FirmId)
-                                                                                .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                                                                .Where(principal => requirement.BindingType == 2 || ((principal.HasNoBinding == associated.HasNoBinding) &&
-                                                                                                     ((associated.Category3Id != null &&
-                                                                                                       associated.Category3Id == principal.Category3Id &&
-                                                                                                       (associated.FirmAddressId == null ||
-                                                                                                        principal.FirmAddressId == null)) ||
-                                                                                                      ((associated.Category1Id == null ||
-                                                                                                        principal.Category1Id == null ||
-                                                                                                        associated.Category3Id == principal.Category3Id ||
-                                                                                                        associated.Category1Id == principal.Category1Id &&
-                                                                                                        associated.Category3Id == null &&
-                                                                                                        principal.Category3Id == null) &&
-                                                                                                       associated.FirmAddressId == principal.FirmAddressId))
-                                                                                                        ? requirement.BindingType == 1
-                                                                                                        : requirement.BindingType == 3))))
-                         })
-                     .Where(@t => @t.principals.Any() && @t.principals.All(x => x.OrderId != @t.associated.OrderId) && @t.principals.Select(x => x.OrderId).Distinct().Count() == 1)
-                     .Select(@t => new { @t.associated, principal = @t.principals.First() });
+            // t.Principals.Any() выглядит избыточным при наличии  t.Principals.Select(x => x.OrderId).Distinct().Count() == 1, но обеспечивает ускорение выполнения запроса.
+            var errors =
+                query.For<Firm.FirmPosition>()
+                     .Select(Specs.Join.Aggs.WithPrincipalPositions(query.For<Firm.FirmAssociatedPosition>(), query.For<Firm.FirmPosition>()))
+                     .Where(dto => dto.Principals.Any() &&
+                                   dto.Principals.Where(x => x.IsBindingObjectConditionSatisfied).All(x => x.Position.OrderId != dto.Associated.OrderId) &&
+                                   dto.Principals.Where(x => x.IsBindingObjectConditionSatisfied).Select(x => x.Position.OrderId).Distinct().Count() == 1)
+                     .Select(dto => new { associated = dto.Associated, principal = dto.Principals.First().Position });
 
             var messages =
-                from warning in warnings
+                from error in errors
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrderPosition>(warning.principal.OrderPositionId,
-                                        new Reference<EntityTypeOrder>(warning.principal.OrderId),
-                                        new Reference<EntityTypePosition>(warning.principal.PackagePositionId),
-                                        new Reference<EntityTypePosition>(warning.principal.ItemPositionId)),
+                                    new Reference<EntityTypeOrderPosition>(error.principal.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(error.principal.OrderId),
+                                        new Reference<EntityTypePosition>(error.principal.PackagePositionId),
+                                        new Reference<EntityTypePosition>(error.principal.ItemPositionId)),
 
-                                    new Reference<EntityTypeOrderPosition>(warning.associated.OrderPositionId,
-                                        new Reference<EntityTypeOrder>(warning.associated.OrderId),
-                                        new Reference<EntityTypePosition>(warning.associated.PackagePositionId),
-                                        new Reference<EntityTypePosition>(warning.associated.ItemPositionId)))
+                                    new Reference<EntityTypeOrderPosition>(error.associated.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(error.associated.OrderId),
+                                        new Reference<EntityTypePosition>(error.associated.PackagePositionId),
+                                        new Reference<EntityTypePosition>(error.associated.ItemPositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = warning.principal.Begin,
-                        PeriodEnd = warning.principal.End,
-                        OrderId = warning.principal.OrderId,
+                        PeriodStart = error.principal.Begin,
+                        PeriodEnd = error.principal.End,
+                        OrderId = error.principal.OrderId,
 
                         Result = RuleResult,
                     };
 
-            var xxx = messages.ToString();
             return messages;
         }
     }

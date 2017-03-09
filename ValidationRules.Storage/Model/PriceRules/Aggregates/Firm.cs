@@ -6,7 +6,7 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     {
         public long Id { get; set; }
 
-        public class FirmPosition
+        public class FirmPosition : IBindingObject
         {
             public long FirmId { get; set; }
             public long OrderId { get; set; }

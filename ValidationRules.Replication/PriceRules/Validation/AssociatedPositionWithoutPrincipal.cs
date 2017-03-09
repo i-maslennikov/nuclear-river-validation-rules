@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
-using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -36,40 +35,27 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var orderPositions =
-                from order in query.For<Order>()
-                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
-                join position in query.For<Order.OrderPosition>() on order.Id equals position.OrderId
-                select new Dto<Order.OrderPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
-
-            var associatedPositions =
-                from order in query.For<Order>()
-                join period in query.For<Period.OrderPeriod>() on order.Id equals period.OrderId
-                join position in query.For<Order.OrderAssociatedPosition>() on order.Id equals position.OrderId
-                select new Dto<Order.OrderAssociatedPosition> { FirmId = order.FirmId, Start = period.Start, OrganizationUnitId = period.OrganizationUnitId, Scope = period.Scope, Position = position };
-
-            var unsatisfiedPositions =
-                associatedPositions.SelectMany(Specs.Join.Aggs.RegardlessBindingObject(orderPositions.DefaultIfEmpty()), Specs.Join.Aggs.RegardlessBindingObject())
-                                   .GroupBy(x => new { x.Start, x.OrganizationUnitId, x.CausePosition.OrderId, x.CausePosition.PackagePositionId, x.CausePosition.ItemPositionId, x.CausePosition.OrderPositionId })
-                                   .Where(group => group.Max(x => x.Match) == Match.NoPosition)
-                                   .Select(group => group.Key);
+            var errors =
+                query.For<Firm.FirmPosition>()
+                     .Select(Specs.Join.Aggs.WithPrincipalPositions(query.For<Firm.FirmAssociatedPosition>(), query.For<Firm.FirmPosition>()))
+                     .Where(dto => dto.RequirePrincipal && !dto.Principals.Any())
+                     .Select(dto => dto.Associated);
 
             var messages =
-                from unsatisfied in unsatisfiedPositions
-                from period in query.For<Period>().Where(x => x.Start == unsatisfied.Start && x.OrganizationUnitId == unsatisfied.OrganizationUnitId)
+                from error in errors
                 select new Version.ValidationResult
-                    {
-                        MessageParams =
+                {
+                    MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrderPosition>(unsatisfied.OrderPositionId,
-                                        new Reference<EntityTypeOrder>(unsatisfied.OrderId),
-                                        new Reference<EntityTypePosition>(unsatisfied.PackagePositionId),
-                                        new Reference<EntityTypePosition>(unsatisfied.ItemPositionId)))
+                                    new Reference<EntityTypeOrderPosition>(error.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(error.OrderId),
+                                        new Reference<EntityTypePosition>(error.PackagePositionId),
+                                        new Reference<EntityTypePosition>(error.ItemPositionId)))
                                 .ToXDocument(),
 
-                    PeriodStart = period.Start,
-                    PeriodEnd = period.End,
-                    OrderId = unsatisfied.OrderId,
+                    PeriodStart = error.Begin,
+                    PeriodEnd = error.End,
+                    OrderId = error.OrderId,
 
                     Result = RuleResult,
                 };
