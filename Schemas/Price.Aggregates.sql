@@ -228,3 +228,13 @@ create table PriceAggregates.FirmAssociatedPosition(
     [Source] int not null,
 )
 go
+
+CREATE NONCLUSTERED INDEX IX_FirmPosition_FirmId_ItemPositionId_Begin
+ON [PriceAggregates].[FirmPosition] ([FirmId],[ItemPositionId],[Begin])
+INCLUDE ([OrderId],[OrderPositionId],[PackagePositionId],[HasNoBinding],[Category1Id],[Category3Id],[FirmAddressId],[Scope],[End])
+GO
+
+CREATE NONCLUSTERED INDEX IX_FirmAssociatedPosition_OrderPositionId_ItemPositionId
+ON [PriceAggregates].FirmAssociatedPosition (OrderPositionId, ItemPositionId)
+include(PrincipalPositionId, BindingType)
+GO

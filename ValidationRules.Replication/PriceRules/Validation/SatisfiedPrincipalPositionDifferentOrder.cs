@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     ///     И позиция Z продана в заказ 1. По логике (бага?) проверки LinkedObjectsMissedInPrincipalsActor (Q3) ошибка должна быть.
     /// A: Ошибка есть.
     /// </summary>
-    public sealed class SatisfiedPrincipalPositionDifferentOrder : ValidationResultAccessorBase
+    public sealed class SatisfiedPrincipalPositionDifferentOrder : ValidationResultAccessorBase2
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingleForCancel(Result.Warning);
 
@@ -38,23 +38,25 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         {
             var warnings =
                 from associated in query.For<Firm.FirmPosition>()
-                from requirement in query.For<Firm.FirmAssociatedPosition>().Where(x => x.OrderPositionId == associated.OrderPositionId && x.ItemPositionId == associated.ItemPositionId)
-                let principals = query.For<Firm.FirmPosition>()
-                                      .Where(x => x.FirmId == associated.FirmId && x.ItemPositionId == requirement.PrincipalPositionId)
-                                      .Where(x => x.Begin == associated.Begin)
-                                      .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                      .Where(principal => requirement.BindingType == 2 ||
-                                                          ((principal.HasNoBinding == associated.HasNoBinding) &&
-                                                          ((associated.Category3Id != null &&
-                                                            associated.Category3Id == principal.Category3Id &&
-                                                            (associated.FirmAddressId == null || principal.FirmAddressId == null)) ||
-                                                           ((associated.Category1Id == null ||
-                                                             principal.Category1Id == null ||
-                                                             associated.Category3Id == principal.Category3Id ||
-                                                             associated.Category1Id == principal.Category1Id && associated.Category3Id == null && principal.Category3Id == null) &&
-                                                            associated.FirmAddressId == principal.FirmAddressId))
-                                                 ? requirement.BindingType == 1
-                                                 : requirement.BindingType == 3))
+                let principals =
+                    (from requirement in query.For<Firm.FirmAssociatedPosition>().Where(x => x.OrderPositionId == associated.OrderPositionId && x.ItemPositionId == associated.ItemPositionId)
+                    from principal in query.For<Firm.FirmPosition>()
+                                          .Where(x => x.FirmId == associated.FirmId && x.ItemPositionId == requirement.PrincipalPositionId)
+                                          .Where(x => x.Begin == associated.Begin)
+                                          .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
+                                          .Where(principal => requirement.BindingType == 2 ||
+                                                              ((principal.HasNoBinding == associated.HasNoBinding) &&
+                                                              ((associated.Category3Id != null &&
+                                                                associated.Category3Id == principal.Category3Id &&
+                                                                (associated.FirmAddressId == null || principal.FirmAddressId == null)) ||
+                                                               ((associated.Category1Id == null ||
+                                                                 principal.Category1Id == null ||
+                                                                 associated.Category3Id == principal.Category3Id ||
+                                                                 associated.Category1Id == principal.Category1Id && associated.Category3Id == null && principal.Category3Id == null) &&
+                                                                associated.FirmAddressId == principal.FirmAddressId))
+                                                     ? requirement.BindingType == 1
+                                                     : requirement.BindingType == 3))
+                    select principal)
                 where principals.Any() && principals.All(x => x.OrderId != associated.OrderId) && principals.Select(x => x.OrderId).Distinct().Count() == 1
                 select new { associated, principal = principals.First() };
 
