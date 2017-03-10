@@ -123,12 +123,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceAggregates::Order.OrderPosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
-            builder.Entity<PriceAggregates::Order.OrderAssociatedPosition>()
-                  .HasSchemaName(PriceAggregatesSchema);
-
-            builder.Entity<PriceAggregates::Order.OrderDeniedPosition>()
-                  .HasSchemaName(PriceAggregatesSchema);
-
             builder.Entity<PriceAggregates::Order.OrderPricePosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 

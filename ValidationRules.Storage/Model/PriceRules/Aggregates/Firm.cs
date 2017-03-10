@@ -45,5 +45,25 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public int BindingType { get; set; }
             public PositionSources Source { get; set; }
         }
+
+        public interface IBindingObject
+        {
+            bool HasNoBinding { get; }
+            long? Category1Id { get; }
+            long? Category3Id { get; }
+            long? FirmAddressId { get; }
+        }
+
+        [Flags]
+        public enum PositionSources
+        {
+            None = 0,
+
+            Opa = 1,
+            Pkg = 1 << 1,
+
+            Price = 1 << 2,
+            Ruleset = 1 << 3,
+        }
     }
 }

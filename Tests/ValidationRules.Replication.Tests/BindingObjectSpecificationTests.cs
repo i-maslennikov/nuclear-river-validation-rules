@@ -57,7 +57,7 @@ namespace NuClear.ValidationRules.Replication.Tests
     [TestFixture]
     public sealed class BindingObjectSpecificationTests
     {
-        private static readonly Func<IBindingObject, IBindingObject, bool> BindingObjectCompare
+        private static readonly Func<Firm.IBindingObject, Firm.IBindingObject, bool> BindingObjectCompare
             = Specs.Join.Aggs.MatchedBindingObjects().Compile();
 
         [TestCaseSource(nameof(Examples))]
@@ -134,7 +134,7 @@ namespace NuClear.ValidationRules.Replication.Tests
                 };
         }
 
-        public class Parameter : IBindingObject
+        public class Parameter : Firm.IBindingObject
         {
             public bool HasNoBinding { get; set; }
             public long? Category1Id { get; set; }

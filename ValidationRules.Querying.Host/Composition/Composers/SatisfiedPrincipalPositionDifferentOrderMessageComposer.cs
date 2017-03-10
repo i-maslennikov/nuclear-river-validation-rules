@@ -7,7 +7,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
     public sealed class SatisfiedPrincipalPositionDifferentOrderMessageComposer : IMessageComposer
     {
-        public MessageTypeCode MessageType => MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder;
+        public MessageTypeCode MessageType => MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {

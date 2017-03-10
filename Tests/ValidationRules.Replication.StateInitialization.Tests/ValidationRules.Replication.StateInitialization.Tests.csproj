@@ -137,10 +137,6 @@
     <Compile Include="Identitites\Connections\MessagesTestConnectionStringIdentity.cs" />
     <Compile Include="Price\MinimumAdvertisementAmount.cs" />
     <Compile Include="Price\MaximumAdvertisementAmount.cs" />
-    <Compile Include="Price\LinkedObjectsMissedInPrincipals.cs" />
-    <Compile Include="Price\DeniedPositionsCheck.cs" />
-    <Compile Include="Price\ConflictingPrincipalPosition.cs" />
-    <Compile Include="Price\AssociatedPositionWithoutPrincipal.cs" />
     <Compile Include="Price\AdvertisementCountPerThemeShouldBeLimited.cs" />
     <Compile Include="Price\AdvertisementCountPerCategoryShouldBeLimited.cs" />
     <Compile Include="Price\OrderPositionsShouldCorrespontToActualPrice.cs" />

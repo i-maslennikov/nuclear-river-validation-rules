@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Q2: Может ли пакет быть удовлетворён своим элементом или наоборот?
     /// </summary>
     // todo: переименовать PrincipalPositionMustExistForAssociated
-    public sealed class AssociatedPositionWithoutPrincipal : ValidationResultAccessorBase
+    public sealed class FirmAssociatedPositionMustHavePrincipal : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenSingleForApprove(Result.Error)
@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public AssociatedPositionWithoutPrincipal(IQuery query) : base(query, MessageTypeCode.AssociatedPositionWithoutPrincipal)
+        public FirmAssociatedPositionMustHavePrincipal(IQuery query) : base(query, MessageTypeCode.FirmAssociatedPositionMustHavePrincipal)
         {
         }
 

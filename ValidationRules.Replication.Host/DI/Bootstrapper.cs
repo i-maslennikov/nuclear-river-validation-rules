@@ -305,6 +305,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<Lock, LockAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<NomenclatureCategory, NomenclatureCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<Order, OrderAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<OrderItem, OrderItemAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<OrderPosition, OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<OrderPositionAdvertisement, OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<OrderPositionCostPerClick, OrderPositionCostPerClickAccessor>(entryPointSpecificLifetimeManagerFactory)

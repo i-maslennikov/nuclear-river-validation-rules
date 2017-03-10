@@ -26,11 +26,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     ///     И позиция Z продана в заказ 1. По логике (бага?) проверки LinkedObjectsMissedInPrincipalsActor (Q3) ошибка должна быть.
     /// A: Ошибка есть.
     /// </summary>
-    public sealed class SatisfiedPrincipalPositionDifferentOrder : ValidationResultAccessorBase
+    public sealed class FirmAssociatedPositionShouldNotStayAlone : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingleForCancel(Result.Warning);
 
-        public SatisfiedPrincipalPositionDifferentOrder(IQuery query) : base(query, MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder)
+        public FirmAssociatedPositionShouldNotStayAlone(IQuery query) : base(query, MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone)
         {
         }
 

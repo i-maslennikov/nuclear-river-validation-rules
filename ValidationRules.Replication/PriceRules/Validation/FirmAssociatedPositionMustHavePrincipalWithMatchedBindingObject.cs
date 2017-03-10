@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// TODO: можно вполне выводить в какой именно основной позиции отсутствуют объекты привязки, но в ERM так не делают, и мы не будем
     /// </summary>
     // todo: переименовать PrincipalPositionMustHaveSameBindingObject
-    public sealed class LinkedObjectsMissedInPrincipals : ValidationResultAccessorBase
+    public sealed class FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenSingleForApprove(Result.Error)
@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public LinkedObjectsMissedInPrincipals(IQuery query) : base(query, MessageTypeCode.LinkedObjectsMissedInPrincipals)
+        public FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject(IQuery query) : base(query, MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject)
         {
         }
 

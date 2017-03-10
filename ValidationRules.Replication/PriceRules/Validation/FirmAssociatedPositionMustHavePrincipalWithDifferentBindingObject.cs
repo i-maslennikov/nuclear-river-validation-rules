@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     // todo: переименовать PrincipalPositionMustHaveDifferentBindingObject
     // todo: проверка не срабатывает - похоже, продажи невозможны
-    public sealed class ConflictingPrincipalPosition : ValidationResultAccessorBase
+    public sealed class FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenSingleForApprove(Result.Error)
@@ -47,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public ConflictingPrincipalPosition(IQuery query) : base(query, MessageTypeCode.ConflictingPrincipalPosition)
+        public FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject(IQuery query) : base(query, MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject)
         {
         }
 

@@ -313,9 +313,8 @@
     <Compile Include="Accessors\AssociatedPositionAccessor.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementCountPerCategoryShouldBeLimited.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementCountPerThemeShouldBeLimited.cs" />
-    <Compile Include="PriceRules\Validation\DeniedPositionsCheck.cs" />
+    <Compile Include="PriceRules\Validation\FirmPositionMustNotHaveDeniedPositions.cs" />
     <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCount.cs" />
-    <Compile Include="PriceRules\Validation\Dto\Dto.cs" />
     <Compile Include="PriceRules\Validation\MaximumAdvertisementAmount.cs" />
     <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecified.cs" />
     <Compile Include="PriceRules\Validation\MinimumAdvertisementAmount.cs" />
@@ -330,10 +329,10 @@
     <Compile Include="ValidationResultQueryableExtensions.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />
     <Compile Include="Messages\ValidationRuleActor.cs" />
-    <Compile Include="PriceRules\Validation\ConflictingPrincipalPosition.cs" />
-    <Compile Include="PriceRules\Validation\SatisfiedPrincipalPositionDifferentOrder.cs" />
-    <Compile Include="PriceRules\Validation\LinkedObjectsMissedInPrincipals.cs" />
-    <Compile Include="PriceRules\Validation\AssociatedPositionWithoutPrincipal.cs" />
+    <Compile Include="PriceRules\Validation\FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject.cs" />
+    <Compile Include="PriceRules\Validation\FirmAssociatedPositionShouldNotStayAlone.cs" />
+    <Compile Include="PriceRules\Validation\FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject.cs" />
+    <Compile Include="PriceRules\Validation\FirmAssociatedPositionMustHavePrincipal.cs" />
     <Compile Include="Assembling\CustomerIntelligenceReplicationAssembly.cs" />
     <Compile Include="Commands\IncrementStateCommand.cs" />
     <Compile Include="Commands\CreateNewVersionCommand.cs" />

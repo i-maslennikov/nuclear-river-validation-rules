@@ -38,11 +38,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
-                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
-                        MessageTypeCode.ConflictingPrincipalPosition,
-                        MessageTypeCode.DeniedPositionsCheck,
-                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
-                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
                     };
 
             public IQueryable<Position> GetSource() => _query

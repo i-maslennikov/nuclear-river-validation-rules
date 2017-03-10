@@ -21,27 +21,27 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     // Одобренный заказ с продажей на три месяца
                     new Aggregates::Order { Id = 1 },
-                    new Aggregates::Order.OrderPosition { OrderId = 1, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Order.OrderPosition { OrderId = 1, ItemPositionId = 1, CategoryId = 1 },
                     new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
                     new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
                     new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(3), Scope = 0 },
 
                     // Другой одобренный заказ с продажей (пересекается только в одном месяце)
                     new Aggregates::Order { Id = 2 },
-                    new Aggregates::Order.OrderPosition { OrderId = 2, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Order.OrderPosition { OrderId = 2, ItemPositionId = 1, CategoryId = 3 },
                     new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(3), Scope = 0 },
                     new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(4), Scope = 0 },
                     new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(5), Scope = 0 },
 
                     // Заказ "на утверждении", размещается, когда есть две одобренных продажи и получает ошибку
                     new Aggregates::Order { Id = 3 },
-                    new Aggregates::Order.OrderPosition { OrderId = 3, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Order.OrderPosition { OrderId = 3, ItemPositionId = 1, CategoryId = 3 },
                     new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(3), Scope = -1 },
                     new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(4), Scope = -1 },
 
                     // Заказ "на оформлении", размещается, когда есть одна одобренная продажа и один заказ на оформлении и тоже получает ошибку
                     new Aggregates::Order { Id = 4 },
-                    new Aggregates::Order.OrderPosition { OrderId = 4, ItemPositionId = 1, Category1Id = 1, Category3Id = 3 },
+                    new Aggregates::Order.OrderPosition { OrderId = 4, ItemPositionId = 1, CategoryId = 3 },
                     new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(4), Scope = 4 },
                     new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(5), Scope = 4 },
 

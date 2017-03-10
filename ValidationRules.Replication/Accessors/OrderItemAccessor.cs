@@ -26,6 +26,11 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<OrderItem> GetSource()
         {
+            // join тут можно использовать:
+            //  PricePosition не меняет PositionId, поэтому его изменения ни на что не влияют
+            //  OrderPositionAdvertisement практически честный value-object сущности OrderPosition - когда происходят изменения в OrderPositionAdvertisement всегда логируеется изменение OrderPosition
+            //  Order может быть изменён независимо, но он влияет на наличие/отсутствие OrderItem, а не на его содержимое (подобную оптимизацию мы использовали в river-ci)
+
             var opas =
                 from order in _query.For<Erm::Order>().Where(Specs.Find.Erm.Order)
                 from orderPosition in _query.For<Erm::OrderPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.OrderId == order.Id)
@@ -66,7 +71,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public FindSpecification<OrderItem> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
-            return SpecificationFactory<OrderItem>.Contains(x => x.OrderPositionId, ids); // TODO: here
+            return SpecificationFactory<OrderItem>.Contains(x => x.OrderPositionId, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<OrderItem> dataObjects)
@@ -82,7 +87,11 @@ namespace NuClear.ValidationRules.Replication.Accessors
         {
             var orderIds = dataObjects.Select(x => x.OrderId);
 
-            return new EventCollectionHelper<OrderItem> { { typeof(Order), orderIds } };
+            var firmIds =
+                from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
+                select order.FirmId;
+
+            return new EventCollectionHelper<OrderItem> { { typeof(Firm), firmIds } };
         }
     }
 }

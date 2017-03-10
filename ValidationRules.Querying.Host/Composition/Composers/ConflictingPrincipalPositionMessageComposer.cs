@@ -7,7 +7,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
     public sealed class ConflictingPrincipalPositionMessageComposer : IMessageComposer
     {
-        public MessageTypeCode MessageType => MessageTypeCode.ConflictingPrincipalPosition;
+        public MessageTypeCode MessageType => MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {

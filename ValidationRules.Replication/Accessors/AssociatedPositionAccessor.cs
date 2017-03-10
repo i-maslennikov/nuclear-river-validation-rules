@@ -53,12 +53,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
         {
             var ids = dataObjects.Select(x => x.Id).ToList();
 
-            var orderIds = from associatedPosition in _query.For<AssociatedPosition>().Where(x => ids.Contains(x.Id))
+            var firmIds = from associatedPosition in _query.For<AssociatedPosition>().Where(x => ids.Contains(x.Id))
                            from associatedPositionGroup in _query.For<AssociatedPositionsGroup>().Where(x => x.Id == associatedPosition.AssociatedPositionsGroupId)
                            from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == associatedPositionGroup.PricePositionId)
-                           select orderPosition.OrderId;
+                           from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
+                           select order.FirmId;
 
-            return new EventCollectionHelper<AssociatedPosition> { { typeof(Order), orderIds } };
+            return new EventCollectionHelper<AssociatedPosition> { { typeof(Firm), firmIds.Distinct() } };
         }
     }
 }

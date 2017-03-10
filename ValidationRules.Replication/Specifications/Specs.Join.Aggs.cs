@@ -89,7 +89,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// https://github.com/2gis/nuclear-river/blob/feature/validation-rules/docs/ru/validation-rules/compare-linking-objects.md
                 /// Выражение достаточно не тривиальное и используется многократно, поэтому и создан <see cref="ExpandMethodCallVisitor"/>
                 /// </summary>
-                public static Expression<Func<IBindingObject, IBindingObject, bool>> MatchedBindingObjects()
+                public static Expression<Func<Firm.IBindingObject, Firm.IBindingObject, bool>> MatchedBindingObjects()
                 {
                     return (position, binding) => (binding.HasNoBinding == position.HasNoBinding) &&
                                                   ((position.Category3Id != null &&

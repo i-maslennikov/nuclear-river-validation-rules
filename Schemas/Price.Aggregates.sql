@@ -9,8 +9,6 @@ if object_id('PriceAggregates.Period') is not null drop table PriceAggregates.Pe
 if object_id('PriceAggregates.OrderPrice') is not null drop table PriceAggregates.OrderPrice
 if object_id('PriceAggregates.OrderPricePosition') is not null drop table PriceAggregates.OrderPricePosition
 if object_id('PriceAggregates.OrderPosition') is not null drop table PriceAggregates.OrderPosition
-if object_id('PriceAggregates.OrderDeniedPosition') is not null drop table PriceAggregates.OrderDeniedPosition
-if object_id('PriceAggregates.OrderAssociatedPosition') is not null drop table PriceAggregates.OrderAssociatedPosition
 if object_id('PriceAggregates.AmountControlledPosition') is not null drop table PriceAggregates.AmountControlledPosition
 if object_id('PriceAggregates.[Order]') is not null drop table PriceAggregates.[Order]
 
@@ -22,6 +20,7 @@ if object_id('PriceAggregates.AssociatedPositionGroupOvercount') is not null dro
 if object_id('PriceAggregates.Firm') is not null drop table PriceAggregates.Firm
 if object_id('PriceAggregates.FirmPosition') is not null drop table PriceAggregates.FirmPosition
 if object_id('PriceAggregates.FirmAssociatedPosition') is not null drop table PriceAggregates.FirmAssociatedPosition
+if object_id('PriceAggregates.FirmDeniedPosition') is not null drop table PriceAggregates.FirmDeniedPosition
 
 go
 
@@ -56,10 +55,8 @@ go
 -- order aggregate
 create table PriceAggregates.[Order](
     Id bigint NOT NULL,
-    FirmId bigint NOT NULL,
     constraint PK_Order primary key (Id)
 )
-create index IX_Order_FirmId ON PriceAggregates.[Order] ([FirmId]) include (Id)
 go
 
 create table PriceAggregates.AmountControlledPosition(
@@ -70,63 +67,12 @@ go
 
 create table PriceAggregates.OrderPosition(
     OrderId bigint NOT NULL,
-    OrderPositionId bigint NOT NULL,
-    PackagePositionId bigint NOT NULL,
     ItemPositionId bigint NOT NULL,
 
-    HasNoBinding bit NOT NULL,
-    Category3Id bigint NULL,
-    Category1Id bigint NULL,
-    FirmAddressId bigint NULL,
-
+    CategoryId bigint NULL,
     ThemeId bigint NULL,
 )
 create index IX_OrderPosition_OrderId ON PriceAggregates.OrderPosition (OrderId)
-go
-
-create table PriceAggregates.OrderDeniedPosition(
-    OrderId bigint NOT NULL,
-    CauseOrderPositionId bigint NOT NULL,
-    CausePackagePositionId bigint NOT NULL,
-    CauseItemPositionId bigint NOT NULL,
-
-    DeniedPositionId bigint NOT NULL,
-    BindingType int NOT NULL,
-
-	HasNoBinding bit NOT NULL,
-    Category3Id bigint NULL,
-    Category1Id bigint NULL,
-    FirmAddressId bigint NULL,
-
-    Source int not null,
-)
-create index IX_OrderDeniedPosition_OrderId_DeniedPositionId_BindingType
-on [PriceAggregates].[OrderDeniedPosition] ([OrderId],[DeniedPositionId],[BindingType])
-include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[HasNoBinding],[Category3Id],[Category1Id],[FirmAddressId])
-go
-
-create table PriceAggregates.OrderAssociatedPosition(
-    OrderId bigint NOT NULL,
-    CauseOrderPositionId bigint NOT NULL,
-    CausePackagePositionId bigint NOT NULL,
-    CauseItemPositionId bigint NOT NULL,
-
-    PrincipalPositionId bigint NOT NULL,
-	BindingType int NOT NULL,
-
-	HasNoBinding bit NOT NULL,
-    Category3Id bigint NULL,
-    Category1Id bigint NULL,
-    FirmAddressId bigint NULL,
-
-	Source int not null,
-)
-create index IX_OrderAssociatedPosition_OrderId_PrincipalPositionId_BindingType
-on [PriceAggregates].[OrderAssociatedPosition] ([OrderId],[PrincipalPositionId],[BindingType])
-include ([CauseOrderPositionId],[CausePackagePositionId],[CauseItemPositionId],[HasNoBinding],[Category3Id],[Category1Id],[FirmAddressId])
-
-create index IX_OrderAssociatedPosition_CauseOrderPositionId_CauseItemPositionId_BindingType
-on [PriceAggregates].[OrderAssociatedPosition] ([CauseOrderPositionId],[CauseItemPositionId],[BindingType])
 go
 
 create table PriceAggregates.OrderPricePosition(
@@ -185,7 +131,7 @@ GO
 
 CREATE NONCLUSTERED INDEX IX_OrderPosition_ItemPositionId
 ON [PriceAggregates].[OrderPosition] ([ItemPositionId])
-INCLUDE ([OrderId],[Category3Id],[Category1Id])
+INCLUDE ([OrderId],[CategoryId])
 GO
 
 CREATE NONCLUSTERED INDEX IX_OrderPeriod_Scope

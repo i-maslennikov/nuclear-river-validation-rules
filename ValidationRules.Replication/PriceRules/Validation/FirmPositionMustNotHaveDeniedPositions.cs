@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     ///         AssociatedAndDeniedPricePositionsOrderValidationRule/ADPCheckModeOrderBeingReapproved_MessageTemplate
     /// Когда заказ переведён "на расторжение", он не должен мешать создать другой заказ с конфликтующей позицией, но возврат в размещение должно быть невозможно.
     /// </summary>
-    public sealed class DeniedPositionsCheck : ValidationResultAccessorBase
+    public sealed class FirmPositionMustNotHaveDeniedPositions : ValidationResultAccessorBase
     {
         private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
                                                                     .WhenSingleForApprove(Result.Error)
@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                                     .WhenMassPrerelease(Result.Error)
                                                                     .WhenMassRelease(Result.Error);
 
-        public DeniedPositionsCheck(IQuery query) : base(query, MessageTypeCode.DeniedPositionsCheck)
+        public FirmPositionMustNotHaveDeniedPositions(IQuery query) : base(query, MessageTypeCode.FirmPositionMustNotHaveDeniedPositions)
         {
         }
 

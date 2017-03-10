@@ -27,10 +27,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 // OrderPositionAdvertisement
                 new Aggregates::Order { },
 
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, HasNoBinding = true },
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1 },
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = null, Category1Id = 1 },
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1, FirmAddressId = 111 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
 
                 new Aggregates::Position { Id = 21 },
                 new Aggregates::Order.OrderPricePosition { OrderPositionId = 1, PositionId = 21, IsActive = true });
@@ -59,14 +59,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 // OrderPositionAdvertisement
                 new Aggregates::Order { },
 
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, HasNoBinding = true },
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1 },
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 21, Category3Id = 3, Category1Id = 1, FirmAddressId = 111 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
 
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 22, HasNoBinding = true },
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 23, Category3Id = 3, Category1Id = 1 },
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 24, Category3Id = 3, Category1Id = 1 },
-                new Aggregates::Order.OrderPosition { OrderPositionId = 1, PackagePositionId = 21, ItemPositionId = 25, Category3Id = 3, Category1Id = 1, FirmAddressId = 111 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 22 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 23 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 24 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 25 },
 
                 new Aggregates::Position { Id = 21 },
                 new Aggregates::Position { Id = 22 },
@@ -118,25 +118,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 10 },
                     new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 1, PositionId = 1, PriceId = 1, IsActive = true },
-                    new Aggregates::Order.OrderPosition { OrderId = 1, OrderPositionId = 1, PackagePositionId = 1, ItemPositionId = 1, HasNoBinding = true },
+                    new Aggregates::Order.OrderPosition { OrderId = 1, ItemPositionId = 1 },
 
                     new Aggregates::Position { Id = 1, CategoryCode = 10 },
                     new Aggregates::Price.AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10, CategoryName = "empty" });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement OrderWithDeniedPositions
-            => ArrangeMetadataElement.Config
-                .Name(nameof(OrderWithDeniedPositions))
-                .Fact(
-                    new Facts::Order { Id = 1 },
-                    new Facts::OrderPosition { Id = 2, OrderId = 1, PricePositionId = 4 },
-                    new Facts::OrderPositionAdvertisement { Id = 5, OrderPositionId = 2, PositionId = 7 },
-                    new Facts::PricePosition { Id = 4, PriceId = 9, PositionId = 7, IsActiveNotDeleted = true },
-                    new Facts::Position { Id = 7 },
-                    new Facts::DeniedPosition { Id = 11, PriceId = 9, PositionId = 7, PositionDeniedId = 14 })
-                .Aggregate(
-                    new Aggregates::Order { Id = 1 },
-                    new Aggregates::Order.OrderDeniedPosition { OrderId = 1, CauseOrderPositionId = 2, CausePackagePositionId = 7, CauseItemPositionId = 7, DeniedPositionId = 14, HasNoBinding = true, Source = Aggregates::PositionSources.Opa | Aggregates::PositionSources.Price },
-                    new Aggregates::Order.OrderPricePosition {OrderId = 1, OrderPositionId = 2, PositionId = 7, PriceId = 9, IsActive = true });
     }
 }

@@ -303,7 +303,6 @@
     <Compile Include="Model\ProjectRules\Aggregates\Project.cs" />
     <Compile Include="Model\Facts\CategoryOrganizationUnit.cs" />
     <Compile Include="Model\Facts\CostPerClickCategoryRestriction.cs" />
-    <Compile Include="Model\PriceRules\Aggregates\IBindingObject.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Order.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Period.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Position.cs" />

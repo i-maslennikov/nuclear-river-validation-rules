@@ -98,15 +98,10 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 // PriceAggregates
                 .Aggregate<PriceAggregates::Order>(
                     x => x.Match<Facts::Order>()
-                          .DependOn<Facts::AssociatedPosition>()
-                          .DependOn<Facts::AssociatedPositionsGroup>()
-                          .DependOn<Facts::Category>()
-                          .DependOn<Facts::DeniedPosition>()
                           .DependOn<Facts::OrderPosition>()
                           .DependOn<Facts::OrderPositionAdvertisement>()
                           .DependOn<Facts::Position>()
-                          .DependOn<Facts::PricePosition>()
-                          .DependOn<Facts::RulesetRule>())
+                          .DependOn<Facts::PricePosition>())
                 .Aggregate<PriceAggregates::Position>(
                     x => x.Match<Facts::Position>())
                 .Aggregate<PriceAggregates::Price>(
@@ -115,6 +110,15 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::Position>()
                           .DependOn<Facts::PricePosition>()
                           .DependOn<Facts::NomenclatureCategory>())
+                .Aggregate<PriceAggregates::Firm>(
+                    x => x.DependOn<Facts::Order>()
+                          .DependOn<Facts::OrderItem>()
+                          .DependOn<Facts::AssociatedPosition>()
+                          .DependOn<Facts::AssociatedPositionsGroup>()
+                          .DependOn<Facts::Category>()
+                          .DependOn<Facts::DeniedPosition>()
+                          .DependOn<Facts::PricePosition>()
+                          .DependOn<Facts::RulesetRule>())
 
                 // ProjectAggregates
                 .Aggregate<ProjectAggregates::FirmAddress>(

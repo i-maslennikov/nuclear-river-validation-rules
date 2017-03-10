@@ -61,8 +61,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order.AmountControlledPosition(),
                 new Aggregates::Price.AssociatedPositionGroupOvercount(),
                 new Aggregates::Order(),
-                new Aggregates::Order.OrderAssociatedPosition(),
-                new Aggregates::Order.OrderDeniedPosition(),
                 new Aggregates::Period.OrderPeriod(),
                 new Aggregates::Order.OrderPosition(),
                 new Aggregates::Order.OrderPricePosition(),

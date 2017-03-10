@@ -9,6 +9,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -43,12 +44,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipal,
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject,
+                        MessageTypeCode.FirmPositionMustNotHaveDeniedPositions,
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject,
+                        MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone,
                     };
 
             public IQueryable<Firm> GetSource()
-                => from firm in _query.For<Facts::Firm>()
-                   where _query.For<Facts.Order>().Any(x => x.FirmId == firm.Id)
-                   select new Firm { Id = firm.Id };
+                => _query.For<Facts.Order>().Select(order => new Firm { Id = order.FirmId }).Distinct();
 
             public FindSpecification<Firm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -60,7 +64,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 return new FindSpecification<Firm>(x => aggregateIds.Contains(x.Id));
             }
         }
-
 
         public sealed class FirmPositionAccessor : DataChangesHandler<Firm.FirmPosition>, IStorageBasedDataObjectAccessor<Firm.FirmPosition>
         {
@@ -74,6 +77,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipal,
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject,
+                        MessageTypeCode.FirmPositionMustNotHaveDeniedPositions,
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject,
+                        MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone,
                     };
 
             public IQueryable<Firm.FirmPosition> GetSource()
@@ -96,22 +104,22 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     from period in periods.Where(x => x.FirmId == order.FirmId && x.Begin >= order.BeginDistribution && x.End <= order.EndDistributionPlan)
                     from category in _query.For<Facts::Category>().Where(x => x.Id == position.CategoryId).DefaultIfEmpty()
                     select new Firm.FirmPosition
-                    {
-                        FirmId = order.FirmId,
-                        OrderId = position.OrderId,
-                        OrderPositionId = position.OrderPositionId,
-                        PackagePositionId = position.PackagePositionId,
-                        ItemPositionId = position.ItemPositionId,
+                        {
+                            FirmId = order.FirmId,
+                            OrderId = position.OrderId,
+                            OrderPositionId = position.OrderPositionId,
+                            PackagePositionId = position.PackagePositionId,
+                            ItemPositionId = position.ItemPositionId,
 
-                        HasNoBinding = position.CategoryId == null && position.FirmAddressId == null,
-                        Category1Id = category.L1Id,
-                        Category3Id = category.L3Id,
-                        FirmAddressId = position.FirmAddressId,
+                            HasNoBinding = position.CategoryId == null && position.FirmAddressId == null,
+                            Category1Id = category.L1Id,
+                            Category3Id = category.L3Id,
+                            FirmAddressId = position.FirmAddressId,
 
-                        Scope = order.EndDistributionFact > period.Begin ? Scope.Compute(order.WorkflowStep, order.Id) : order.Id,
-                        Begin = period.Begin,
-                        End = period.End,
-                    };
+                            Scope = order.EndDistributionFact > period.Begin ? Scope.Compute(order.WorkflowStep, order.Id) : order.Id,
+                            Begin = period.Begin,
+                            End = period.End,
+                        };
 
                 return principals.Distinct();
             }
@@ -137,6 +145,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipal,
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject,
+                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject,
+                        MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone,
                     };
 
             public IQueryable<Firm.FirmAssociatedPosition> GetSource()
@@ -155,7 +167,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             PrincipalPositionId = ap.PositionId,
                             ap.ObjectBindingType,
 
-                            Source = PositionSources.Price,
+                            Source = Firm.PositionSources.Price,
                         };
 
                 var associatedByRuleset =
@@ -172,7 +184,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             rule.PrincipalPositionId,
                             rule.ObjectBindingType,
 
-                            Source = PositionSources.Ruleset,
+                            Source = Firm.PositionSources.Ruleset,
                         };
 
                 var result =
@@ -215,8 +227,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
-                {
-                };
+                    {
+                        MessageTypeCode.FirmPositionMustNotHaveDeniedPositions,
+                    };
 
             public IQueryable<Firm.FirmDeniedPosition> GetSource()
             {
@@ -225,51 +238,51 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == item.PricePositionId)
                     from deniedPosition in _query.For<Facts::DeniedPosition>().Where(x => x.PriceId == pricePosition.PriceId && x.PositionId == pricePosition.PositionId)
                     select new
-                    {
-                        item.OrderId,
-                        item.OrderPositionId,
-                        item.PackagePositionId,
-                        item.ItemPositionId,
+                        {
+                            item.OrderId,
+                            item.OrderPositionId,
+                            item.PackagePositionId,
+                            item.ItemPositionId,
 
-                        DeniedPositionId = deniedPosition.PositionDeniedId,
-                        deniedPosition.ObjectBindingType,
+                            DeniedPositionId = deniedPosition.PositionDeniedId,
+                            deniedPosition.ObjectBindingType,
 
-                        Source = PositionSources.Price,
-                    };
+                            Source = Firm.PositionSources.Price,
+                        };
 
                 var deniedByRuleset =
                     from item in _query.For<Facts::OrderItem>()
                     from rule in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeDenied)
                                        .Where(x => x.DependentPositionId == item.ItemPositionId)
                     select new
-                    {
-                        item.OrderId,
-                        item.OrderPositionId,
-                        item.PackagePositionId,
-                        item.ItemPositionId,
+                        {
+                            item.OrderId,
+                            item.OrderPositionId,
+                            item.PackagePositionId,
+                            item.ItemPositionId,
 
-                        DeniedPositionId = rule.PrincipalPositionId,
-                        rule.ObjectBindingType,
+                            DeniedPositionId = rule.PrincipalPositionId,
+                            rule.ObjectBindingType,
 
-                        Source = PositionSources.Ruleset,
-                    };
+                            Source = Firm.PositionSources.Ruleset,
+                        };
 
                 var result =
                     from denied in deniedByPrice.Union(deniedByRuleset)
                     from order in _query.For<Facts::Order>().Where(x => x.Id == denied.OrderId)
                     select new Firm.FirmDeniedPosition
-                    {
-                        FirmId = order.FirmId,
-                        OrderId = denied.OrderId,
-                        OrderPositionId = denied.OrderPositionId,
-                        PackagePositionId = denied.PackagePositionId,
-                        ItemPositionId = denied.ItemPositionId,
+                        {
+                            FirmId = order.FirmId,
+                            OrderId = denied.OrderId,
+                            OrderPositionId = denied.OrderPositionId,
+                            PackagePositionId = denied.PackagePositionId,
+                            ItemPositionId = denied.ItemPositionId,
 
-                        DeniedPositionId = denied.DeniedPositionId,
-                        BindingType = denied.ObjectBindingType,
+                            DeniedPositionId = denied.DeniedPositionId,
+                            BindingType = denied.ObjectBindingType,
 
-                        Source = denied.Source,
-                    };
+                            Source = denied.Source,
+                        };
 
                 return result;
             }
