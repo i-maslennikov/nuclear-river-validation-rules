@@ -6,8 +6,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.AccountRules.Validation
 {
     /// <summary>
@@ -19,12 +17,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
     /// </summary>
     public sealed class AccountBalanceShouldBePositive : ValidationResultAccessorBase
     {
-        // В erm эта проверка не вызывается при ручной проверке, только при сборке (в том числе бете)
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
-                                                                    .WhenMassWithAccount(Result.Error)
-                                                                    .WhenMassPrerelease(Result.None)
-                                                                    .WhenMassRelease(Result.Error);
-
         // todo: завести настройку SignificantDigitsNumber и вообще решить вопрос с настройками проверок
         private static readonly decimal Epsilon = 0.01m;
 
@@ -58,8 +50,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                         PeriodStart = accountPeriod.Start,
                         PeriodEnd = accountPeriod.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

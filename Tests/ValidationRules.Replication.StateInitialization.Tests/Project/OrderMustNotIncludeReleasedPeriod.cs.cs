@@ -28,7 +28,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
-                            Result = 3,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,

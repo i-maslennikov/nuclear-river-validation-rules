@@ -5,8 +5,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
@@ -17,11 +15,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// </summary>
     public sealed class OrderPositionMustNotReferenceDeletedAdvertisement : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public OrderPositionMustNotReferenceDeletedAdvertisement(IQuery query) : base(query, MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement)
         {
         }
@@ -45,8 +38,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                         PeriodStart = order.BeginDistributionDate,
                         PeriodEnd = order.EndDistributionDatePlan,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

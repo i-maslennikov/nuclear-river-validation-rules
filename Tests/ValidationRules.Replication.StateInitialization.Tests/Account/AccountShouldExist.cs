@@ -26,7 +26,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AccountShouldExist,
-                            Result = 240,
                             PeriodStart = FirstDayJan,
                             PeriodEnd = FirstDayMar,
                             OrderId = 1,

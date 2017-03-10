@@ -5,8 +5,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
 {
     /// <summary>
@@ -18,11 +16,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     public sealed class OrderPositionCostPerClickMustBeSpecified : ValidationResultAccessorBase
     {
         public const int CostPerClickSalesModel = 12; // erm: MultiPlannedProvision
-
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
 
         public OrderPositionCostPerClickMustBeSpecified(IQuery query) : base(query, MessageTypeCode.OrderPositionCostPerClickMustBeSpecified)
         {
@@ -48,8 +41,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

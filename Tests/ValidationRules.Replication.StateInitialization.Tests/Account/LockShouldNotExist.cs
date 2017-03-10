@@ -33,7 +33,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.LockShouldNotExist,
-                            Result = 240,
                             PeriodStart = FirstDayJan,
                             PeriodEnd = FirstDayFeb,
                             OrderId = 1,

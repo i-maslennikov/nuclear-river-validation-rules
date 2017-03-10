@@ -5,28 +5,8 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication
 {
-    internal static class ValidationResultQueryableExtensions
+    internal static class ValidationResultExtensions
     {
-        public static IQueryable<Version.ValidationResult> GetValidationResults(this IQueryable<Version.ValidationResult> queryable, long versionId)
-        {
-            var filtered = queryable.Where(x => x.VersionId <= versionId);
-
-            // если выше по стеку нашли resolved результаты, то отфильтровываем их
-            var results = from vr in filtered.Where(x => !x.Resolved)
-                          where !filtered.Any(x => x.VersionId > vr.VersionId &&
-                                                   x.Resolved &&
-
-                                                   x.MessageType == vr.MessageType &&
-                                                   x.MessageParams == vr.MessageParams &&
-                                                   x.PeriodStart == vr.PeriodStart &&
-                                                   x.PeriodEnd == vr.PeriodEnd &&
-                                                   x.ProjectId == vr.ProjectId &&
-                                                   x.OrderId == vr.OrderId &&
-                                                   x.Result == vr.Result)
-                          select vr;
-            return results;
-        }
-
         /// <summary>
         /// Проставляет для всех сущностей VersionId
         /// </summary>
@@ -41,7 +21,6 @@ namespace NuClear.ValidationRules.Replication
                 PeriodStart = x.PeriodStart,
                 ProjectId = x.ProjectId,
                 OrderId = x.OrderId,
-                Result = x.Result,
                 Resolved = x.Resolved,
             });
 
@@ -56,7 +35,6 @@ namespace NuClear.ValidationRules.Replication
                 PeriodStart = x.PeriodStart,
                 ProjectId = x.ProjectId,
                 OrderId = x.OrderId,
-                Result = x.Result,
             });
 
         /// <summary>
@@ -72,7 +50,6 @@ namespace NuClear.ValidationRules.Replication
                     PeriodStart = x.PeriodStart,
                     ProjectId = x.ProjectId,
                     OrderId = x.OrderId,
-                    Result = x.Result,
                 });
     }
 }

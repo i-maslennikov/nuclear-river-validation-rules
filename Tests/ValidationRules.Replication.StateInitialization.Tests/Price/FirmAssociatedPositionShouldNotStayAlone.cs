@@ -56,7 +56,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone,
-                            Result = 2048,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 2,
@@ -78,7 +77,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone,
-                            Result = 2048,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 7,

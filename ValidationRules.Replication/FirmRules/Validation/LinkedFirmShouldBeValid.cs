@@ -6,8 +6,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
@@ -20,11 +18,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// </summary>
     public sealed class LinkedFirmShouldBeValid : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public LinkedFirmShouldBeValid(IQuery query) : base(query, MessageTypeCode.LinkedFirmShouldBeValid)
         {
         }
@@ -46,8 +39,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

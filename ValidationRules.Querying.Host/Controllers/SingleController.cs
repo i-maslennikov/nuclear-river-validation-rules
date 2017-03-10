@@ -26,13 +26,10 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         {
             using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
             {
-                var sqlBitwiseFilter = ResultType.Single.ToBitMask();
-
                 var query = validator.Execute()
-                    .Where(x => x.OrderId == request.OrderId)
-                    .Where(x => (x.Result & sqlBitwiseFilter) != 0);
+                    .Where(x => x.OrderId == request.OrderId);
 
-                var messages = query.ToMessages(ResultType.Single).ToList();
+                var messages = query.ToMessages(ResultType.Single);
                 var result = _factory.GetValidationResult(messages);
                 return Ok(result);
             }

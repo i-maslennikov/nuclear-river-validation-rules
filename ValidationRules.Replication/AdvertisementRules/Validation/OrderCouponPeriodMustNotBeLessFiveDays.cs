@@ -5,8 +5,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
@@ -18,11 +16,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     public sealed class OrderCouponPeriodMustNotBeLessFiveDays : ValidationResultAccessorBase
     {
         private const int MaxOffsetInDays = 5;
-
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.None)
-                                                                    .WhenMassRelease(Result.None);
 
         public OrderCouponPeriodMustNotBeLessFiveDays(IQuery query) : base(query, MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays)
         {
@@ -45,8 +38,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                   PeriodStart = order.BeginDistributionDate,
                         PeriodEnd = order.EndDistributionDatePlan,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

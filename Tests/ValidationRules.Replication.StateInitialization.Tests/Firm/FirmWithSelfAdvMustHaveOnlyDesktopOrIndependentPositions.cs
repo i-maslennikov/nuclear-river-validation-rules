@@ -73,7 +73,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                        Result = 1023,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(3),
                         OrderId = 1,
@@ -84,7 +83,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         MessageParams = new MessageParams(new Reference<EntityTypeOrder>(2)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                        Result = 1023,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(3),
                         OrderId = 2,
@@ -93,7 +91,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         MessageParams = new MessageParams(new Reference<EntityTypeOrder>(3)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                        Result = 1023,
                         PeriodStart = MonthStart(2),
                         PeriodEnd = MonthStart(4),
                         OrderId = 3,
@@ -104,7 +101,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         MessageParams = new MessageParams(new Reference<EntityTypeOrder>(6)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                        Result = 1023,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(3),
                         OrderId = 6,
@@ -115,7 +111,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     {
                         MessageParams = new MessageParams(new Reference<EntityTypeOrder>(9)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                        Result = 1023,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(3),
                         OrderId = 9,

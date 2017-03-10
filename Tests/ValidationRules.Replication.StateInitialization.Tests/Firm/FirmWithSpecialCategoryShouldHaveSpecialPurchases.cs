@@ -75,7 +75,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                            Result = 1020,
                             PeriodStart = DateTime.MinValue,
                             PeriodEnd = MonthStart(1),
                             ProjectId = 0,
@@ -84,7 +83,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                            Result = 1020,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             ProjectId = 0,
@@ -93,7 +91,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                            Result = 1020,
                             PeriodStart = MonthStart(3),
                             PeriodEnd = DateTime.MaxValue,
                             ProjectId = 0,
@@ -102,7 +99,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1), new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
-                            Result = 2,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,

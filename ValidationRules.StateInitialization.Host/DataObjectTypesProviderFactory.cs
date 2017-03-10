@@ -177,6 +177,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                         {
                             typeof(Messages::Version),
                             typeof(Messages::Version.ValidationResult),
+                            typeof(Messages::Version.ValidationResultType),
                         });
             }
 

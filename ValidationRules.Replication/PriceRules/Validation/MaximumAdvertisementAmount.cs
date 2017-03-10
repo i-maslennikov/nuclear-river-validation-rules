@@ -4,7 +4,6 @@ using System.Linq;
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -22,11 +21,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     // todo: теперь мы можем выводить число позиций в одобренных заказах (см. первый вариант сообщения)
     public sealed class MaximumAdvertisementAmount : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public MaximumAdvertisementAmount(IQuery query) : base(query, MessageTypeCode.MaximumAdvertisementAmount)
         {
         }
@@ -82,8 +76,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return messages;

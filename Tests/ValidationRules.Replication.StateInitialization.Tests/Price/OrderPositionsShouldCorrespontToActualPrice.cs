@@ -33,7 +33,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeOrder>(2)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
-                            Result = 3,
                             PeriodStart = FirstDayJan,
                             PeriodEnd = FirstDayFeb,
                             OrderId = 2,

@@ -16,13 +16,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class OrderPositionMayCorrespontToActualPrice : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult =
-            new ResultBuilder()
-                .WhenSingle(Result.Warning)
-                .WhenMass(Result.None)
-                .WhenMassPrerelease(Result.None)
-                .WhenMassRelease(Result.None);
-
         public OrderPositionMayCorrespontToActualPrice(IQuery query) : base(query, MessageTypeCode.OrderPositionMayCorrespontToActualPrice)
         {
         }
@@ -66,8 +59,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         PeriodStart = order.Start,
                         PeriodEnd = order.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return messages;

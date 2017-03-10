@@ -45,7 +45,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                             new Reference<EntityTypeOrder>(1))
                                         .ToXDocument(),
                         MessageType = (int)MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays,
-                        Result = 2,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
                         OrderId = 1,

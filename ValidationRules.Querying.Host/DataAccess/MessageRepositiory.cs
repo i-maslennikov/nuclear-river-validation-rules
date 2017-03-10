@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 using NuClear.ValidationRules.Storage.Model.Messages;
+using NuClear.ValidationRules.Storage.Specifications;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
-    public class MessageRepositiory
+    public sealed class MessageRepositiory
     {
         private const string ConfigurationString = "Messages";
 
@@ -40,57 +40,23 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         public IReadOnlyCollection<Message> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ResultType resultType)
         {
-            var dateFilter = CreateDateFilter(start, end);
-
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
-                var validationResults = GetValidationResult(connection.GetTable<Version.ValidationResult>().Where(x => x.VersionId <= versionId));
+                var validationResults = connection.GetTable<Version.ValidationResult>()
+                                                  .ForOrdersOrProject(orderIds, projectId)
+                                                  .ForPeriod(start, end)
+                                                  .ForVersion(versionId);
 
-                var resultsByOrder = validationResults.Where(dateFilter).Where(CreateOrderFilter(orderIds));
-                var resultsByProject = validationResults.Where(dateFilter).Where(CreateProjectFilter(projectId));
+                var validationResultTypes = connection.GetTable<Version.ValidationResultType>()
+                                                  .Where(x => x.ResultType == resultType);
 
-                var query = resultsByOrder.Concat(resultsByProject).Where(x => (x.Result & resultType.ToBitMask()) != 0);
+                var messages = from validationResult in validationResults
+                               from validationResultType in validationResultTypes
+                                                            .Where(x => x.MessageType == validationResult.MessageType)
+                               select validationResult.ToMessage(validationResultType.Result);
 
-                return query.ToMessages(resultType).ToList();
+                return messages.ToList();
             }
-        }
-
-        private static IQueryable<Version.ValidationResult> GetValidationResult(IQueryable<Version.ValidationResult> query)
-        {
-            // если выше по стеку нашли resolved результаты, то отфильтровываем их
-            return from vr in query.Where(x => !x.Resolved)
-                   where !query.Any(x => x.VersionId > vr.VersionId &&
-                                           x.Resolved &&
-
-                                           x.MessageType == vr.MessageType &&
-                                           x.MessageParams == vr.MessageParams &&
-                                           x.PeriodStart == vr.PeriodStart &&
-                                           x.PeriodEnd == vr.PeriodEnd &&
-                                           x.ProjectId == vr.ProjectId &&
-                                           x.OrderId == vr.OrderId &&
-                                           x.Result == vr.Result)
-                   select vr;
-        }
-
-        private static Expression<Func<Version.ValidationResult, bool>> CreateDateFilter(DateTime start, DateTime end)
-        {
-            return x => x.PeriodStart < end && start < x.PeriodEnd;
-        }
-
-        private static Expression<Func<Version.ValidationResult, bool>> CreateOrderFilter(IReadOnlyCollection<long> orderIds)
-        {
-            if (orderIds.Any())
-                return x => x.OrderId.HasValue && orderIds.Contains(x.OrderId.Value);
-
-            return x => false;
-        }
-
-        private static Expression<Func<Version.ValidationResult, bool>> CreateProjectFilter(long? projectId)
-        {
-            if (projectId.HasValue)
-                return x => x.ProjectId.HasValue && x.ProjectId == projectId.Value;
-
-            return x => false;
         }
     }
 }

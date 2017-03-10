@@ -51,7 +51,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.LinkedFirmShouldBeValid,
-                            Result = 243,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 4,
@@ -67,7 +66,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 .ToXDocument(),
 
                         MessageType = (int)MessageTypeCode.LinkedFirmShouldBeValid,
-                        Result = 243,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(2),
                         OrderId = 6,
@@ -83,7 +81,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 .ToXDocument(),
 
                         MessageType = (int)MessageTypeCode.LinkedFirmShouldBeValid,
-                        Result = 243,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(2),
                         OrderId = 8,

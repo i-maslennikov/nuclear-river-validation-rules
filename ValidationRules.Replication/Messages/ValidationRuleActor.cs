@@ -19,6 +19,7 @@ using NuClear.ValidationRules.Replication.PriceRules.Validation;
 using NuClear.ValidationRules.Replication.ProjectRules.Validation;
 using NuClear.ValidationRules.Replication.ThemeRules.Validation;
 using NuClear.ValidationRules.Storage.Model.Messages;
+using NuClear.ValidationRules.Storage.Specifications;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -62,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                 using (Probe.Create("Query Target"))
                 {
-                    var query = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion);
+                    var query = _query.For<Version.ValidationResult>().ForVersion(currentVersion);
                     targetValidationResults = query.ToList();
                 }
 

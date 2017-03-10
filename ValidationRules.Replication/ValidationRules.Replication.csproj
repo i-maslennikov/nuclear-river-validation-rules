@@ -220,6 +220,7 @@
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
+    <Compile Include="Messages\ValidationResultTypeAccessor.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="SyncEntityNameActor.cs" />
@@ -327,7 +328,7 @@
     <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
-    <Compile Include="ValidationResultQueryableExtensions.cs" />
+    <Compile Include="ValidationResultExtensions.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />
     <Compile Include="Messages\ValidationRuleActor.cs" />
     <Compile Include="PriceRules\Validation\FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject.cs" />
@@ -356,7 +357,6 @@
     <Compile Include="Commands\SyncDataObjectCommand.cs" />
     <Compile Include="Events\RelatedDataObjectOutdatedEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResultBuilder.cs" />
     <Compile Include="Specifications\Specs.Find.Aggs.cs" />
   </ItemGroup>
   <ItemGroup>

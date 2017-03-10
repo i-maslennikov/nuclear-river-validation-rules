@@ -15,11 +15,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
     /// </summary>
     public sealed class ThemePeriodMustContainOrderPeriod : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public ThemePeriodMustContainOrderPeriod(IQuery query) : base(query, MessageTypeCode.ThemePeriodMustContainOrderPeriod)
         {
         }
@@ -43,8 +38,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                         PeriodStart = order.BeginDistributionDate,
                         PeriodEnd = order.EndDistributionDateFact,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

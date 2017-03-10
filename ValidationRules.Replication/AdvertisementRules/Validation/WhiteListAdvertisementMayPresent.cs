@@ -5,8 +5,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
@@ -19,11 +17,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// </summary>
     public sealed class WhiteListAdvertisementMayPresent : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Info)
-                                                                    .WhenMass(Result.Info)
-                                                                    .WhenMassPrerelease(Result.Info)
-                                                                    .WhenMassRelease(Result.Info);
-
         public WhiteListAdvertisementMayPresent(IQuery query) : base(query, MessageTypeCode.WhiteListAdvertisementMayPresent)
         {
         }
@@ -48,8 +41,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                         PeriodStart = period != null && period.Start > order.BeginDistributionDate ? period.Start : order.BeginDistributionDate,
                         PeriodEnd = period != null && period.End < order.EndDistributionDatePlan ? period.End : order.EndDistributionDatePlan,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

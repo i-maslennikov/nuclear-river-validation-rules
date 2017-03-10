@@ -6,8 +6,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
@@ -28,8 +26,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class FirmAssociatedPositionShouldNotStayAlone : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingleForCancel(Result.Warning);
-
         public FirmAssociatedPositionShouldNotStayAlone(IQuery query) : base(query, MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone)
         {
         }
@@ -65,8 +61,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         PeriodStart = error.principal.Begin,
                         PeriodEnd = error.principal.End,
                         OrderId = error.principal.OrderId,
-
-                        Result = RuleResult,
                     };
 
             return messages;

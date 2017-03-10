@@ -3,6 +3,7 @@
 if object_id('Messages.Version') is not null drop table Messages.Version
 if object_id('Messages.ErmState') is not null drop table Messages.ErmState
 if object_id('Messages.ValidationResult') is not null drop table Messages.ValidationResult
+if object_id('Messages.ValidationResultType') is not null drop table Messages.ValidationResultType
 go
 
 create table Messages.Version(
@@ -30,8 +31,16 @@ create table Messages.ValidationResult(
     ProjectId bigint NULL,
     OrderId bigint NULL,
 
-    Result int NOT NULL,
     Resolved bit not null,
+)
+go
+
+create table Messages.ValidationResultType(
+    ResultType int NOT NULL,
+    MessageType int NOT NULL,
+    Result int NOT NULL,
+
+    constraint [PK_ValidationResultType] primary key ([ResultType], [MessageType])
 )
 go
 
@@ -41,5 +50,5 @@ CREATE INDEX [IX_ValidationResult_VersionId] ON [Messages].[ValidationResult] ([
 -- индекс используется при выборке нерешённых ошибок по версии
 CREATE NONCLUSTERED INDEX IX_ValidationResult_Resolved_VersionId
 ON [Messages].[ValidationResult] ([Resolved],[VersionId])
-INCLUDE ([MessageType],[MessageParams],[PeriodStart],[PeriodEnd],[ProjectId],[OrderId],[Result])
+INCLUDE ([MessageType],[MessageParams],[PeriodStart],[PeriodEnd],[ProjectId],[OrderId])
 GO

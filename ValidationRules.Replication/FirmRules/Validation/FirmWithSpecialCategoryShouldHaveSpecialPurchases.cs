@@ -6,8 +6,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
@@ -18,11 +16,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// </summary>
     public sealed class FirmWithSpecialCategoryShouldHaveSpecialPurchases : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public FirmWithSpecialCategoryShouldHaveSpecialPurchases(IQuery query) : base(query, MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases)
         {
         }
@@ -50,8 +43,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                         PeriodStart = begin.Date,
                         PeriodEnd = end.Date,
                         ProjectId = firm.ProjectId,
-
-                        Result = RuleResult,
                     };
 
             return results;

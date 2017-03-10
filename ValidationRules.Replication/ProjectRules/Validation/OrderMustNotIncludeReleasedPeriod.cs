@@ -17,11 +17,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     /// </summary>
     public sealed class OrderMustNotIncludeReleasedPeriod : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.None)
-                                                                    .WhenMassRelease(Result.None);
-
         public OrderMustNotIncludeReleasedPeriod(IQuery query) : base(query, MessageTypeCode.OrderMustNotIncludeReleasedPeriod)
         {
         }
@@ -42,8 +37,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

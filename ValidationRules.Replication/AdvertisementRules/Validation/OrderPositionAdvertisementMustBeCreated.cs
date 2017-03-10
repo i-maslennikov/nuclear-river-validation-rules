@@ -18,12 +18,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// </summary>
     public sealed class OrderPositionAdvertisementMustBeCreated : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
-        public OrderPositionAdvertisementMustBeCreated(IQuery query) : base(query, MessageTypeCode.OrderPositionAdvertisementMustBeCreated)
+       public OrderPositionAdvertisementMustBeCreated(IQuery query) : base(query, MessageTypeCode.OrderPositionAdvertisementMustBeCreated)
         {
         }
 
@@ -47,8 +42,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                         PeriodStart = order.BeginDistributionDate,
                         PeriodEnd = order.EndDistributionDatePlan,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

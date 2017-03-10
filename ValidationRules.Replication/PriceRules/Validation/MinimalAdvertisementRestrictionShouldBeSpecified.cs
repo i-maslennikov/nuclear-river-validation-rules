@@ -6,8 +6,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
@@ -19,11 +17,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class MinimalAdvertisementRestrictionShouldBeSpecified : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public MinimalAdvertisementRestrictionShouldBeSpecified(IQuery query) : base(query, MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified)
         {
         }
@@ -46,8 +39,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         ProjectId = period.ProjectId,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

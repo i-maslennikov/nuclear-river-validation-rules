@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 
 using LinqToDB.Data;
 
@@ -23,8 +22,6 @@ namespace ValidationRules.Replication.Comparison.Tests
     {
         private const int OrdersPerRule = 20;
 
-        private static readonly Expression<Func<Version.ValidationResult, bool>> IsApplicableForSingleCheck = x => (x.Result & 0x3) > 0;
-
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
         private readonly ErmToRiverResultAdapter _ermService = new ErmToRiverResultAdapter("Erm");
 
@@ -41,10 +38,12 @@ namespace ValidationRules.Replication.Comparison.Tests
 
                 using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
                 {
-                    var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue).Where(IsApplicableForSingleCheck);
-                    var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
+                    var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
+                    var resultTypes = dc.GetTable<Version.ValidationResultType>().Where(x => x.ResultType == ResultType.Single);
+                    var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved);
                     var results =
                         from message in orderErrors
+                        from resultType in resultTypes.Where(x => x.MessageType == message.MessageType)
                         where !resolved.Any(x => x.MessageType == message.MessageType && x.OrderId == message.OrderId && x.VersionId > message.VersionId)
                         select message;
 
