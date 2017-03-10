@@ -175,7 +175,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             Source = PositionSources.Ruleset,
                         };
 
-                var associateds =
+                var result =
                     from associated in associatedByPrice.Union(associatedByRuleset)
                     from order in _query.For<Facts::Order>().Where(x => x.Id == associated.OrderId)
                     select new Firm.FirmAssociatedPosition
@@ -192,13 +192,92 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             Source = associated.Source,
                         };
 
-                return associateds;
+                return result;
             }
 
             public FindSpecification<Firm.FirmAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Firm.FirmAssociatedPosition>(x => aggregateIds.Contains(x.FirmId));
+            }
+        }
+
+        public sealed class FirmDeniedPositionAccessor : DataChangesHandler<Firm.FirmDeniedPosition>, IStorageBasedDataObjectAccessor<Firm.FirmDeniedPosition>
+        {
+            private const int RulesetRuleTypeDenied = 2;
+
+            private readonly IQuery _query;
+
+            public FirmDeniedPositionAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                {
+                };
+
+            public IQueryable<Firm.FirmDeniedPosition> GetSource()
+            {
+                var deniedByPrice =
+                    from item in _query.For<Facts::OrderItem>()
+                    from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == item.PricePositionId)
+                    from deniedPosition in _query.For<Facts::DeniedPosition>().Where(x => x.PriceId == pricePosition.PriceId && x.PositionId == pricePosition.PositionId)
+                    select new
+                    {
+                        item.OrderId,
+                        item.OrderPositionId,
+                        item.PackagePositionId,
+                        item.ItemPositionId,
+
+                        DeniedPositionId = deniedPosition.PositionDeniedId,
+                        deniedPosition.ObjectBindingType,
+
+                        Source = PositionSources.Price,
+                    };
+
+                var deniedByRuleset =
+                    from item in _query.For<Facts::OrderItem>()
+                    from rule in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeDenied)
+                                       .Where(x => x.DependentPositionId == item.ItemPositionId)
+                    select new
+                    {
+                        item.OrderId,
+                        item.OrderPositionId,
+                        item.PackagePositionId,
+                        item.ItemPositionId,
+
+                        DeniedPositionId = rule.PrincipalPositionId,
+                        rule.ObjectBindingType,
+
+                        Source = PositionSources.Ruleset,
+                    };
+
+                var result =
+                    from denied in deniedByPrice.Union(deniedByRuleset)
+                    from order in _query.For<Facts::Order>().Where(x => x.Id == denied.OrderId)
+                    select new Firm.FirmDeniedPosition
+                    {
+                        FirmId = order.FirmId,
+                        OrderId = denied.OrderId,
+                        OrderPositionId = denied.OrderPositionId,
+                        PackagePositionId = denied.PackagePositionId,
+                        ItemPositionId = denied.ItemPositionId,
+
+                        DeniedPositionId = denied.DeniedPositionId,
+                        BindingType = denied.ObjectBindingType,
+
+                        Source = denied.Source,
+                    };
+
+                return result;
+            }
+
+            public FindSpecification<Firm.FirmDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Firm.FirmDeniedPosition>(x => aggregateIds.Contains(x.FirmId));
             }
         }
     }

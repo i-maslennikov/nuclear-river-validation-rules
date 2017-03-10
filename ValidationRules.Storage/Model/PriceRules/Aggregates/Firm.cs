@@ -33,5 +33,17 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public int BindingType { get; set; }
             public PositionSources Source { get; set; }
         }
+
+        public class FirmDeniedPosition
+        {
+            public long FirmId { get; set; }
+            public long OrderId { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PackagePositionId { get; set; }
+            public long ItemPositionId { get; set; }
+            public long DeniedPositionId { get; set; }
+            public int BindingType { get; set; }
+            public PositionSources Source { get; set; }
+        }
     }
 }

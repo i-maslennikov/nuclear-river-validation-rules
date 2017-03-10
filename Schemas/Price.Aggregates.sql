@@ -229,12 +229,29 @@ create table PriceAggregates.FirmAssociatedPosition(
 )
 go
 
+create table PriceAggregates.FirmDeniedPosition(
+    FirmId bigint not null,
+    OrderId bigint not null,
+    OrderPositionId bigint not null,
+    PackagePositionId bigint not null,
+    ItemPositionId bigint not null,
+    DeniedPositionId bigint not null,
+    BindingType int not null,
+    [Source] int not null,
+)
+go
+
 CREATE NONCLUSTERED INDEX IX_FirmPosition_FirmId_ItemPositionId_Begin
 ON [PriceAggregates].[FirmPosition] ([FirmId],[ItemPositionId],[Begin])
 INCLUDE ([OrderId],[OrderPositionId],[PackagePositionId],[HasNoBinding],[Category1Id],[Category3Id],[FirmAddressId],[Scope],[End])
 GO
 
 CREATE NONCLUSTERED INDEX IX_FirmAssociatedPosition_OrderPositionId_ItemPositionId_FirmId
-ON [PriceAggregates].FirmAssociatedPosition (OrderPositionId, ItemPositionId, FirmId)
-include(PrincipalPositionId, BindingType)
+ON [PriceAggregates].FirmAssociatedPosition ([FirmId],[OrderPositionId],[ItemPositionId])
+include([PrincipalPositionId],[BindingType])
+GO
+
+CREATE NONCLUSTERED INDEX IX_FirmDeniedPosition_FirmId_OrderPositionId_ItemPositionId
+ON [PriceAggregates].[FirmDeniedPosition] ([FirmId],[OrderPositionId],[ItemPositionId])
+INCLUDE ([DeniedPositionId],[BindingType])
 GO

@@ -85,6 +85,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Firm),
                             typeof(PriceAggregates::Firm.FirmPosition),
                             typeof(PriceAggregates::Firm.FirmAssociatedPosition),
+                            typeof(PriceAggregates::Firm.FirmDeniedPosition),
                             typeof(PriceAggregates::Order),
                             typeof(PriceAggregates::Order.OrderPosition),
                             typeof(PriceAggregates::Order.OrderAssociatedPosition),

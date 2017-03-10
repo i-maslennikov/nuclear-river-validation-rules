@@ -110,6 +110,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceAggregates::Firm.FirmAssociatedPosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
+            builder.Entity<PriceAggregates::Firm.FirmDeniedPosition>()
+                  .HasSchemaName(PriceAggregatesSchema);
+
             builder.Entity<PriceAggregates::Order>()
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);

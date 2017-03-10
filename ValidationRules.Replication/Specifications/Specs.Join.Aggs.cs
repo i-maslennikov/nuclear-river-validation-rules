@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using NuClear.ValidationRules.Replication.PriceRules.Validation.Dto;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 namespace NuClear.ValidationRules.Replication.Specifications
@@ -32,16 +31,41 @@ namespace NuClear.ValidationRules.Replication.Specifications
                     return (Expression<Func<Firm.FirmPosition, AssociatedPositionDto>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
-                public static Expression<Func<Firm.FirmPosition, IEnumerable<PrincipalPositionDto>>> PrincipalPositions(IQueryable<Firm.FirmAssociatedPosition> requirements, IQueryable<Firm.FirmPosition> principals)
+                public static Expression<Func<Firm.FirmPosition, IEnumerable<RelatedPositionDto>>> PrincipalPositions(IQueryable<Firm.FirmAssociatedPosition> requirements, IQueryable<Firm.FirmPosition> principals)
                 {
-                    Expression<Func<Firm.FirmPosition, IEnumerable<PrincipalPositionDto>>> expression =
+                    Expression<Func<Firm.FirmPosition, IEnumerable<RelatedPositionDto>>> expression =
                         associated => PrincipalPositions().Compile().Invoke(associated, requirements, principals);
-                    return (Expression<Func<Firm.FirmPosition, IEnumerable<PrincipalPositionDto>>>)new ExpandMethodCallVisitor().Visit(expression);
+                    return (Expression<Func<Firm.FirmPosition, IEnumerable<RelatedPositionDto>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
-                private static Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmAssociatedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<PrincipalPositionDto>>> PrincipalPositions()
+                public static Expression<Func<Firm.FirmPosition, IEnumerable<RelatedPositionDto>>> DeniedPositions(IQueryable<Firm.FirmDeniedPosition> requirements, IQueryable<Firm.FirmPosition> principals)
                 {
-                    Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmAssociatedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<PrincipalPositionDto>>> expression =
+                    Expression<Func<Firm.FirmPosition, IEnumerable<RelatedPositionDto>>> expression =
+                        associated => DeniedPositions().Compile().Invoke(associated, requirements, principals);
+                    return (Expression<Func<Firm.FirmPosition, IEnumerable<RelatedPositionDto>>>)new ExpandMethodCallVisitor().Visit(expression);
+                }
+
+                private static Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmDeniedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<RelatedPositionDto>>> DeniedPositions()
+                {
+                    Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmDeniedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<RelatedPositionDto>>> expression =
+                        (associated, requirements, principals) =>
+                            requirements
+                                .Where(requirement => requirement.OrderPositionId == associated.OrderPositionId && requirement.ItemPositionId == associated.ItemPositionId)
+                                .SelectMany(requirement => principals
+                                                .Where(principal => principal.Begin == associated.Begin && principal.FirmId == associated.FirmId)
+                                                .Where(principal => principal.ItemPositionId == requirement.DeniedPositionId && principal.FirmId == requirement.FirmId)
+                                                .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
+                                                .Select(principal => new RelatedPositionDto
+                                                    {
+                                                        Position = principal,
+                                                        IsBindingObjectConditionSatisfied = requirement.BindingType == NoDependency || (MatchedBindingObjects().Compile().Invoke(principal, associated) ? requirement.BindingType == BindingObjectMatch : requirement.BindingType == Different)
+                                                    }));
+                    return (Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmDeniedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<RelatedPositionDto>>>)new ExpandMethodCallVisitor().Visit(expression);
+                }
+
+                private static Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmAssociatedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<RelatedPositionDto>>> PrincipalPositions()
+                {
+                    Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmAssociatedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<RelatedPositionDto>>> expression =
                         (associated, requirements, principals) =>
                             requirements
                                 .Where(requirement => requirement.OrderPositionId == associated.OrderPositionId && requirement.ItemPositionId == associated.ItemPositionId)
@@ -49,65 +73,14 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                 .Where(principal => principal.Begin == associated.Begin && principal.FirmId == associated.FirmId)
                                                 .Where(principal => principal.ItemPositionId == requirement.PrincipalPositionId && principal.FirmId == requirement.FirmId)
                                                 .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))
-                                                .Select(principal => new PrincipalPositionDto
+                                                .Select(principal => new RelatedPositionDto
                                                 {
                                                     Position = principal,
                                                     RequiredMatch = requirement.BindingType == BindingObjectMatch,
                                                     RequiredDifferent = requirement.BindingType == Different,
                                                     IsBindingObjectConditionSatisfied = requirement.BindingType == NoDependency || (MatchedBindingObjects().Compile().Invoke(principal, associated) ? requirement.BindingType == BindingObjectMatch : requirement.BindingType == Different)
                                                 }));
-                    return (Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmAssociatedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<PrincipalPositionDto>>>)new ExpandMethodCallVisitor().Visit(expression);
-                }
-
-                /// <summary>
-                /// Возвращает выражение выборки запрещённых позиций заказа по принципу совпадения обектов привязки.
-                /// </summary>
-                public static Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> DeniedWithMatchedBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
-                {
-                    Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
-                        denied => principals.Where(principal => MatchedPeriod<Order.OrderDeniedPosition>().Compile().Invoke(principal, denied))
-                                            .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
-                                            .Where(principal => MatchedBindingObjects().Compile().Invoke(principal.Position, denied.Position))
-                                            .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
-                                                                principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
-                }
-
-                /// <summary>
-                /// Возвращает выражение выборки запрещённых позиций заказа по принципу различия обектов привязки.
-                /// </summary>
-                public static Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> DeniedWithDifferentBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
-                {
-                    Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
-                        denied => principals.Where(principal => MatchedPeriod<Order.OrderDeniedPosition>().Compile().Invoke(principal, denied))
-                                            .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
-                                            .Where(principal => !MatchedBindingObjects().Compile().Invoke(principal.Position, denied.Position))
-                                            .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
-                                                                principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
-                }
-
-                /// <summary>
-                /// Возвращает выражение выборки запрещённых позиций заказа без учёта обектов привязки.
-                /// </summary>
-                public static Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> DeniedWithoutConsideringBindingObject(IQueryable<Dto<Order.OrderPosition>> principals)
-                {
-                    Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>> expression =
-                        denied => principals.Where(principal => MatchedPeriod<Order.OrderDeniedPosition>().Compile().Invoke(principal, denied))
-                                            .Where(principal => Scope.CanSee(denied.Scope, principal.Scope))
-                                            .Where(principal => principal.Position.ItemPositionId == denied.Position.DeniedPositionId &&
-                                                                principal.Position.OrderPositionId != denied.Position.CauseOrderPositionId);
-                    return (Expression<Func<Dto<Order.OrderDeniedPosition>, IEnumerable<Dto<Order.OrderPosition>>>>)new ExpandMethodCallVisitor().Visit(expression);
-                }
-
-                /// <summary>
-                /// Возвращает выражение для пересечения влияющих друг на друга позиций (сопутствующих или запрещённых)
-                /// </summary>
-                private static Expression<Func<Dto<Order.OrderPosition>, Dto<T>, bool>> MatchedPeriod<T>()
-                {
-                    return (principal, dto) => principal.FirmId == dto.FirmId &&
-                                               principal.Start == dto.Start &&
-                                               principal.OrganizationUnitId == dto.OrganizationUnitId;
+                    return (Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmAssociatedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<RelatedPositionDto>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
                 /// <summary>
@@ -183,11 +156,11 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 public class AssociatedPositionDto
                 {
                     public Firm.FirmPosition Associated { get; set; }
-                    public IEnumerable<PrincipalPositionDto> Principals { get; set; }
+                    public IEnumerable<RelatedPositionDto> Principals { get; set; }
                     public bool RequirePrincipal { get; set; }
                 }
 
-                public class PrincipalPositionDto
+                public class RelatedPositionDto
                 {
                     public Firm.FirmPosition Position { get; set; }
                     public bool RequiredMatch { get; set; }
