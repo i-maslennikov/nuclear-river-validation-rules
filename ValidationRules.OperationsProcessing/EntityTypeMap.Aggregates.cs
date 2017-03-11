@@ -111,7 +111,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::PricePosition>()
                           .DependOn<Facts::NomenclatureCategory>())
                 .Aggregate<PriceAggregates::Firm>(
-                    x => x.DependOn<Facts::Order>()
+                    x => x.Match<Facts::Firm>()
+                          .DependOn<Facts::Order>()
                           .DependOn<Facts::OrderItem>()
                           .DependOn<Facts::AssociatedPosition>()
                           .DependOn<Facts::AssociatedPositionsGroup>()

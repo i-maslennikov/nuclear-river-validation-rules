@@ -48,6 +48,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(FirmAggregates::Firm), typeof(FirmActors::FirmAggregateRootActor) },
                     { typeof(FirmAggregates::Order), typeof(FirmActors::OrderAggregateRootActor) },
 
+                    { typeof(PriceAggregates::Firm), typeof(PriceActors::FirmAggregateRootActor) },
                     { typeof(PriceAggregates::Order), typeof(PriceActors::OrderAggregateRootActor) },
                     { typeof(PriceAggregates::Period), typeof(PriceActors::PeriodAggregateRootActor) },
                     { typeof(PriceAggregates::Position), typeof(PriceActors::PositionAggregateRootActor) },
