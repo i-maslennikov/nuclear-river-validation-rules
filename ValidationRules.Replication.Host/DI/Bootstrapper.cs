@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
+using Jobs.RemoteControl.PortResolver;
+using Jobs.RemoteControl.Provider;
+using Jobs.RemoteControl.Registrar;
+using Jobs.RemoteControl.Settings;
+
 using LinqToDB.Mapping;
 
 using Microsoft.Practices.Unity;
@@ -70,6 +75,8 @@ using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.River.Hosting.Common.Identities.Connections;
+using NuClear.River.Hosting.Common.Settings;
 using NuClear.Security;
 using NuClear.Security.API.Auth;
 using NuClear.Security.API.Context;
@@ -113,6 +120,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .ConfigureSettingsAspects(settingsContainer)
                      .ConfigureTracing(tracer, tracerContextManager)
                      .ConfigureSecurityAspects()
+                     .ConfigureQuartzRemoteControl()
                      .ConfigureQuartz()
                      .ConfigureIdentityInfrastructure()
                      .ConfigureWcf()
@@ -166,7 +174,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         private static IUnityContainer ConfigureQuartz(this IUnityContainer container)
         {
             return container
-                .ConfigureQuartzRemoteControl()
                 .RegisterType<IJobFactory, JobFactory>(Lifetime.Singleton, new InjectionConstructor(container.Resolve<UnityJobFactory>(), container.Resolve<ITracer>()))
                 .RegisterType<IJobStoreFactory, JobStoreFactory>(Lifetime.Singleton)
                 .RegisterType<ISchedulerManager, SchedulerManager>(Lifetime.Singleton);
@@ -175,29 +182,28 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         private static IUnityContainer ConfigureQuartzRemoteControl(
             this IUnityContainer container)
         {
-            string quartzStoreConnectionString = null;
-            //var remoteControlEnabled = (environmentSettings.Type == EnvironmentType.Development || environmentSettings.Type == EnvironmentType.Test)
-            //                               && taskServiceRemoteControlSettings.RemoteControlEnabled
-            //                               && connectionStringSettings.AllConnectionStrings.TryGetValue(InfrastructureConnectionStringIdentity.Instance, out quartzStoreConnectionString)
-            //                               && quartzStoreConnectionString != null;
-            var remoteControlEnabled = false;
+            var environmentSettings = container.Resolve<IEnvironmentSettings>();
+            var connectionStringSettings = container.Resolve<IConnectionStringSettings>();
+            var taskServiceRemoteControlSettings = container.Resolve<ITaskServiceRemoteControlSettings>();
 
-            // scheduler exporter
-            if (!remoteControlEnabled)
+            if (taskServiceRemoteControlSettings.RemoteControlEnabled)
             {
-                container.RegisterType<ISchedulerExporterProvider, AlwaysOffSchedulerExporterProvider>(Lifetime.Singleton);
+                string quartzStoreConnectionString = null;
+                connectionStringSettings.AllConnectionStrings.TryGetValue(InfrastructureConnectionStringIdentity.Instance, out quartzStoreConnectionString);
+
+                container.RegisterType<ISchedulerExporterProvider, SchedulerExporterProvider>(Lifetime.Singleton,
+                             new InjectionConstructor(environmentSettings.EnvironmentName,
+                                 typeof(ITaskServiceRemoteControlSettings),
+                                 typeof(ISchedulerExportPortResolver),
+                                 typeof(ISchedulerExporterRegistrar),
+                                 typeof(ITracer)))
+                         .RegisterType<ISchedulerExportPortResolver, SchedulerExportPortResolver>(Lifetime.Singleton)
+                         .RegisterType<ISchedulerExporterRegistrar, MsSQLPersistenceSchedulerExporterRegistrar>(Lifetime.Singleton,
+                             new InjectionConstructor(quartzStoreConnectionString));
             }
             else
             {
-                //container.RegisterType<ISchedulerExporterProvider, SchedulerExporterProvider>(Lifetime.Singleton,
-                //                                                                              new InjectionConstructor(environmentSettings.EnvironmentName,
-                //                                                                                                       typeof(ITaskServiceRemoteControlSettings),
-                //                                                                                                       typeof(ISchedulerExportPortResolver),
-                //                                                                                                       typeof(ISchedulerExporterRegistrar),
-                //                                                                                                       typeof(ITracer)))
-                //         .RegisterType<ISchedulerExportPortResolver, SchedulerExportPortResolver>(Lifetime.Singleton)
-                //         .RegisterType<ISchedulerExporterRegistrar, MsSQLPersistenceSchedulerExporterRegistrar>(Lifetime.Singleton,
-                //                                                                                                new InjectionConstructor(quartzStoreConnectionString));
+                container.RegisterType<ISchedulerExporterProvider, AlwaysOffSchedulerExporterProvider>(Lifetime.Singleton);
             }
 
             return container;
