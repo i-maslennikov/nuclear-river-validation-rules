@@ -62,6 +62,10 @@
       <HintPath>..\packages\2GIS.NuClear.Jobs.2.1.4\lib\net451\2GIS.NuClear.Jobs.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="2GIS.NuClear.Jobs.RemoteControl, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Jobs.RemoteControl.2.1.4\lib\net451\2GIS.NuClear.Jobs.RemoteControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.Jobs.Unity, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Jobs.Unity.2.1.4\lib\net451\2GIS.NuClear.Jobs.Unity.dll</HintPath>
       <Private>True</Private>
