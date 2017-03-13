@@ -8,9 +8,10 @@ using NuClear.Metamodeling.Provider;
 using NuClear.OperationsProcessing.API;
 using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.OperationsProcessing.API.Primary;
-using NuClear.Security.API;
-using NuClear.Telemetry.Probing;
+using NuClear.Security.API.Context;
+using NuClear.Security.API.Auth;
 using NuClear.Tracing.API;
+using NuClear.Telemetry.Probing;
 using NuClear.Utils;
 
 using Quartz;
@@ -26,10 +27,11 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         public ProcessingJob(
             IMetadataProvider metadataProvider,
             IMessageFlowProcessorFactory messageFlowProcessorFactory,
-            ISignInService signInService,
-            IUserImpersonationService userImpersonationService,
+            IUserContextManager userContextManager,
+            IUserAuthenticationService userAuthenticationService,
+            IUserAuthorizationService userAuthorizationService,
             ITracer tracer)
-            : base(signInService, userImpersonationService, tracer)
+            : base(userContextManager, userAuthenticationService, userAuthorizationService, tracer)
         {
             _metadataProvider = metadataProvider;
             _messageFlowProcessorFactory = messageFlowProcessorFactory;

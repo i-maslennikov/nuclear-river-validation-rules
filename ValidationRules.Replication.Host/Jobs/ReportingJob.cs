@@ -6,7 +6,8 @@ using NuClear.Jobs;
 using NuClear.Messaging.API.Flows;
 using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
-using NuClear.Security.API;
+using NuClear.Security.API.Auth;
+using NuClear.Security.API.Context;
 using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
@@ -24,12 +25,14 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         private readonly IServiceBusSettingsFactory _serviceBusSettingsFactory;
         private readonly ITracer _tracer;
 
-        public ReportingJob(ITracer tracer,
-                            ISignInService signInService,
-                            IUserImpersonationService userImpersonationService,
-                            ITelemetryPublisher telemetry,
-                            IServiceBusSettingsFactory serviceBusSettingsFactory)
-            : base(signInService, userImpersonationService, tracer)
+        public ReportingJob(
+            ITelemetryPublisher telemetry,
+            IServiceBusSettingsFactory serviceBusSettingsFactory,
+            IUserContextManager userContextManager,
+            IUserAuthenticationService userAuthenticationService,
+            IUserAuthorizationService userAuthorizationService,
+            ITracer tracer)
+            : base(userContextManager, userAuthenticationService, userAuthorizationService, tracer)
         {
             _tracer = tracer;
             _telemetry = telemetry;

@@ -327,6 +327,8 @@
     <Compile Include="DI\CachingTelemetryPublisherDecorator.cs" />
     <Compile Include="DI\ReplicationHostAssembly.cs" />
     <Compile Include="DI\ReplicationRoot.cs" />
+    <Compile Include="Security\TracerContextUserContextScopeChangesObserver.cs" />
+    <Compile Include="Security\UserAuthorizationService.cs" />
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Processor\PrimaryProcessorResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Receiver\MessageFlowReceiverResolveStrategy.cs" />
