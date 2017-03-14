@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                     {
                                                         Position = principal,
                                                         IsBindingObjectConditionSatisfied = requirement.BindingType == NoDependency || (MatchedBindingObjects().Compile().Invoke(principal, associated) ? requirement.BindingType == BindingObjectMatch : requirement.BindingType == Different)
-                                                    }));
+                                                }));
                     return (Expression<Func<Firm.FirmPosition, IQueryable<Firm.FirmDeniedPosition>, IQueryable<Firm.FirmPosition>, IEnumerable<RelatedPositionDto>>>)new ExpandMethodCallVisitor().Visit(expression);
                 }
 
@@ -88,6 +88,8 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 /// Выражение пытается реализивать таблицу соответствий, описанную в документации:
                 /// https://github.com/2gis/nuclear-river/blob/feature/validation-rules/docs/ru/validation-rules/compare-linking-objects.md
                 /// Выражение достаточно не тривиальное и используется многократно, поэтому и создан <see cref="ExpandMethodCallVisitor"/>
+                /// 
+                /// Внимание: эта проверка не рассчитана на случай, когда заполнена C3 и не заполнена C1, поскольку такого не встречается.
                 /// </summary>
                 public static Expression<Func<Firm.IBindingObject, Firm.IBindingObject, bool>> MatchedBindingObjects()
                 {
