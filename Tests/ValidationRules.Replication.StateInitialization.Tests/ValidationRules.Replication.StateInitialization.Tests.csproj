@@ -135,6 +135,11 @@
     <Compile Include="Firm\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
     <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Identitites\Connections\MessagesTestConnectionStringIdentity.cs" />
+    <Compile Include="Price\FirmAssociatedPositionMustHavePrincipal.cs" />
+    <Compile Include="Price\FirmPositionMustNotHaveDeniedPositions.cs" />
+    <Compile Include="Price\FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject.cs" />
+    <Compile Include="Price\FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject.cs" />
+    <Compile Include="Price\FirmAssociatedPositionShouldNotStayAlone.cs" />
     <Compile Include="Price\MinimumAdvertisementAmount.cs" />
     <Compile Include="Price\MaximumAdvertisementAmount.cs" />
     <Compile Include="Price\AdvertisementCountPerThemeShouldBeLimited.cs" />
