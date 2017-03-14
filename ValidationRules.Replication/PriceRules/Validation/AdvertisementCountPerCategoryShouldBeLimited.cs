@@ -18,6 +18,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Source: AdvertisementForCategoryAmountOrderValidationRule
     /// 
     /// Внимание, в этой проверке как наследство erm есть две совершенно различные вещи, обозначаемые словом Category: рубрика и категория номенклатуры.
+    /// 
+    /// Q: Если "чистая" продажа в рубрику одна, а продаж в рубрику адреса - много, проверка должна срабатывать?
+    /// A: Эти объявления (CategoryCode = 38) привязываются только к рубрике (или фирме, если пакет) - поэтому этот вопрос не важен.
     /// </summary>
     public sealed class AdvertisementCountPerCategoryShouldBeLimited : ValidationResultAccessorBase
     {

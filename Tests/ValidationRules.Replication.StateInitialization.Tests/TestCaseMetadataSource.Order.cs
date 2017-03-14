@@ -28,9 +28,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order { },
 
                 new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21, CategoryId = 3 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21, CategoryId = 1 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21, CategoryId = 3 },
 
                 new Aggregates::Position { Id = 21 },
                 new Aggregates::Order.OrderPricePosition { OrderPositionId = 1, PositionId = 21, IsActive = true });
@@ -60,13 +60,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Order { },
 
                 new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 21, CategoryId = 3 },
 
                 new Aggregates::Order.OrderPosition { ItemPositionId = 22 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 23 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 24 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 25 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 23, CategoryId = 3 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 24, CategoryId = 3 },
+                new Aggregates::Order.OrderPosition { ItemPositionId = 25, CategoryId = 3 },
 
                 new Aggregates::Position { Id = 21 },
                 new Aggregates::Position { Id = 22 },

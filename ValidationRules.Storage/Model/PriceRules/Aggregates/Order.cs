@@ -12,6 +12,7 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
         /// <summary>
         /// Связь заказа с номенклатурной позицией, импортируется из ERM.OrderPosition + ERM.OrderPositionAdv
         /// </summary>
+        // TODO: Сущность с последними изменениями стала достаточно узкоспециализированной, можно окончательно заточить её под решение конкретных задач и упростить проверку
         public sealed class OrderPosition
         {
             public long OrderId { get; set; }

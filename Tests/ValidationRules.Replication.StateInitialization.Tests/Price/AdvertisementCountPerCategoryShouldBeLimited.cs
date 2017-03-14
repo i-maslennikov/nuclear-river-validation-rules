@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     // Одобренный заказ с продажей на три месяца
                     new Aggregates::Order { Id = 1 },
-                    new Aggregates::Order.OrderPosition { OrderId = 1, ItemPositionId = 1, CategoryId = 1 },
+                    new Aggregates::Order.OrderPosition { OrderId = 1, ItemPositionId = 1, CategoryId = 3 },
                     new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
                     new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
                     new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(3), Scope = 0 },
