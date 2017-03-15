@@ -23,12 +23,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Firm> firmRepository,
             IBulkRepository<Firm.FirmPosition> firmPositionRepository,
-            IBulkRepository<Firm.FirmAssociatedPosition> firmAssociatedPositionRepository)
+            IBulkRepository<Firm.FirmAssociatedPosition> firmAssociatedPositionRepository,
+            IBulkRepository<Firm.FirmDeniedPosition> firmDeniedPositionRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new FirmAccessor(query), firmRepository,
                 HasValueObject(new FirmPositionAccessor(query), firmPositionRepository),
-                HasValueObject(new FirmAssociatedPositionAccessor(query), firmAssociatedPositionRepository));
+                HasValueObject(new FirmAssociatedPositionAccessor(query), firmAssociatedPositionRepository),
+                HasValueObject(new FirmDeniedPositionAccessor(query), firmDeniedPositionRepository));
         }
 
         public sealed class FirmAccessor : DataChangesHandler<Firm>, IStorageBasedDataObjectAccessor<Firm>
