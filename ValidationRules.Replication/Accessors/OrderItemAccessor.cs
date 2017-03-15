@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
             var opas =
                 from order in _query.For<Erm::Order>().Where(Specs.Find.Erm.Order)
-                from orderPosition in _query.For<Erm::OrderPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.OrderId == order.Id)
+                from orderPosition in _query.For<Erm::OrderPosition>().Where(Specs.Find.Erm.OrderPosition).Where(x => x.OrderId == order.Id)
                 from pricePosition in _query.For<Erm::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
                 from opa in _query.For<Erm::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                 select new OrderItem
@@ -50,7 +50,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
             var pkgs =
                 from order in _query.For<Erm::Order>().Where(Specs.Find.Erm.Order)
-                from orderPosition in _query.For<Erm::OrderPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.OrderId == order.Id)
+                from orderPosition in _query.For<Erm::OrderPosition>().Where(Specs.Find.Erm.OrderPosition).Where(x => x.OrderId == order.Id)
                 from pricePosition in _query.For<Erm::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
                 from opa in _query.For<Erm::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                 select new OrderItem
