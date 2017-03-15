@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="CompareReleaseToErmTests.cs" />
     <Compile Include="CompareManualToErmTests.cs" />
+    <Compile Include="CompareSingleForCancelToErmTests.cs" />
     <Compile Include="CompareSingleToErmTests.cs" />
     <Compile Include="CompareSingleToMassTests.cs" />
     <Compile Include="ErmService\ErmToRiverResultAdapter.cs" />
@@ -75,8 +76,19 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ErmService\OrderValidationApplicationService.wsdl" />
+    <None Include="Service References\ErmService\OrderValidationApplicationService.wsdl">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ErmService\Validate.wsdl" />
+    <None Include="Service References\ErmService\Validate4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\Validate5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ErmService\Validate3.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ErmService\Validate.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -86,15 +98,6 @@
     <None Include="Service References\ErmService\Validate2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ErmService\Validate3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ErmService\Validate4.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ErmService\Validate5.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateOrdersResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -102,6 +105,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateChangeResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse.datasource">
@@ -125,9 +131,6 @@
     <WCFMetadataStorage Include="Service References\ErmService\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ErmService\Validate.disco" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Service References\ErmService\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +141,9 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ErmService\Validate.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

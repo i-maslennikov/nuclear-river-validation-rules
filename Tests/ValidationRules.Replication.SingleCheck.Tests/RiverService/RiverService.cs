@@ -62,6 +62,10 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
         RiverValidationResult[] Single(RiverSingleCheckRequest request);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "/api/SingleForCancel?culture=ru-RU", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        RiverValidationResult[] SingleForCancel(RiverSingleCheckRequest request);
+
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/api/Manual?culture=ru-RU", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         RiverValidationResult[] Manual(RiverMassCheckRequest request);
 
@@ -85,6 +89,11 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
         public RiverValidationResult[] Single(RiverSingleCheckRequest request)
         {
             return base.Channel.Single(request);
+        }
+
+        public RiverValidationResult[] SingleForCancel(RiverSingleCheckRequest request)
+        {
+            return base.Channel.SingleForCancel(request);
         }
 
         public RiverValidationResult[] Manual(RiverMassCheckRequest request)

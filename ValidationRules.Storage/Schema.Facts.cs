@@ -104,6 +104,8 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Order>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
+            builder.Entity<OrderItem>()
+                   .HasSchemaName(FactsSchema);
             builder.Entity<OrderPosition>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);

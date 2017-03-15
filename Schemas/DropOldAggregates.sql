@@ -19,4 +19,8 @@ if object_id('FirmAggregates.SpecialPosition') is not null drop table FirmAggreg
 if object_id('ConsistencyAggregates.InvalidCategoryFirmAddress') is not null drop table ConsistencyAggregates.InvalidCategoryFirmAddress
 
 if object_id('ConsistencyAggregates.InvalidFirm') is not null drop table ConsistencyAggregates.InvalidFirm
+
+if object_id('PriceAggregates.OrderDeniedPosition') is not null drop table PriceAggregates.OrderDeniedPosition
+if object_id('PriceAggregates.OrderAssociatedPosition') is not null drop table PriceAggregates.OrderAssociatedPosition
 go
+

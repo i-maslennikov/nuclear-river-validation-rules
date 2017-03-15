@@ -16,7 +16,6 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace ValidationRules.Replication.SingleCheck.Tests
 {
-    [Ignore]
     [TestFixture]
     public sealed class CompareSingleToMassTests
     {
@@ -84,7 +83,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
         }
 
         private IReadOnlyDictionary<XNode, List<Tuple<DateTime, DateTime>>> MergePeriods(IEnumerable<Version.ValidationResult> results)
-            => results.GroupBy(x => x.MessageParams, x => Tuple.Create(x.PeriodStart, x.PeriodEnd), XNode.EqualityComparer)
+            => results.GroupBy(x => new XElement("rule", new XAttribute("id", x.MessageType), x.MessageParams.Root), x => Tuple.Create(x.PeriodStart, x.PeriodEnd), XNode.EqualityComparer)
                       .ToDictionary(x => x.Key, x => x.OrderBy(y => y.Item1).Aggregate(new List<Tuple<DateTime, DateTime>>(), AppendPeriod), XNode.EqualityComparer);
 
         private List<Tuple<DateTime, DateTime>> AppendPeriod(List<Tuple<DateTime, DateTime>> list, Tuple<DateTime, DateTime> period)

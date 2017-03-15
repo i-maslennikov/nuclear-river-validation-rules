@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} данного Заказа является основной для следующих позиций: {1}.
+        ///   Looks up a localized string similar to {0} {{0}} данного Заказа является основной для следующих позиций: {1} {{1}}.
         /// </summary>
         internal static string ADPValidation_Template {
             get {
@@ -142,7 +142,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} является сопутствующей, основная позиция не найдена..
+        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; является сопутствующей, основная позиция не найдена..
         /// </summary>
         internal static string AssociatedPositionWithoutPrincipalTemplate {
             get {
@@ -178,7 +178,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} не может быть продана в рубрику {1} проекта {2}.
+        ///   Looks up a localized string similar to Позиция &quot;{0}&quot; не может быть продана в рубрику &quot;{1}&quot; проекта &quot;{2}&quot;.
         /// </summary>
         internal static string CategoryIsRestrictedForSpecifiedSalesModelError {
             get {
@@ -772,7 +772,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to У фирмы {0}, с рубрикой &quot;Выгодные покупки с 2ГИС&quot;, отсутствуют продажи по позициям &quot;Самореклама только для ПК&quot; или &quot;Выгодные покупки с 2ГИС&quot;.
+        ///   Looks up a localized string similar to У фирмы {0}, с рубрикой &quot;Выгодные покупки с 2ГИС&quot;, отсутствуют продажи по позициям &quot;Самореклама только для ПК&quot; или &quot;Выгодные покупки с 2ГИС&quot;..
         /// </summary>
         internal static string ThereIsNoAdvertisementForAdvantageousPurchasesCategory {
             get {

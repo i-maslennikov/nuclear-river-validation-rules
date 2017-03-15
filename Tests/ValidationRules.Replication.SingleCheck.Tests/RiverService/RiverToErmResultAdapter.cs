@@ -23,6 +23,13 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
             return new ErmValidationResult { OrderCount = 1, Messages = messages };
         }
 
+        public ErmValidationResult ValidateSingleForCancel(long orderId)
+        {
+            var response = _riverClient.SingleForCancel(new RiverSingleCheckRequest { OrderId = orderId });
+            var messages = Format(response, FormatDescriptionSingle);
+            return new ErmValidationResult { OrderCount = 1, Messages = messages };
+        }
+
         public ErmValidationResult ValidateMassManual(long[] orderIds, long projectId, DateTime releaseDate)
         {
             var response = _riverClient.Manual(new RiverMassCheckRequest {OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate});

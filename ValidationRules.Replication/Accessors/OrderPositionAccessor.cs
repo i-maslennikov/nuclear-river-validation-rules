@@ -8,6 +8,7 @@ using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
@@ -25,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<OrderPosition> GetSource() => _query
             .For<Erm::OrderPosition>()
-            .Where(x => x.IsActive && !x.IsDeleted)
+            .Where(Specs.Find.Erm.OrderPosition)
             .Select(x => new OrderPosition
             {
                 Id = x.Id,

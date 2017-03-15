@@ -8,7 +8,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
     public sealed class LinkedObjectsMissedInPrincipalsMessageComposer : IMessageComposer
     {
-        public MessageTypeCode MessageType => MessageTypeCode.LinkedObjectsMissedInPrincipals;
+        public MessageTypeCode MessageType => MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {

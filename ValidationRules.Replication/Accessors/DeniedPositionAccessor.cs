@@ -58,12 +58,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
             // И плюс к тому пересчитать все заказы, оформленные по прайс-листу изменённой denied position, в opa которого указны позиции изменных denied position.
             // Но я выбрал решение проще - прересчитать все заказы по прайс-листам изменённых denied position, ибо нефиг менять опубликованный прайс-лист.
 
-            var orderIds = from deniedPosition in _query.For<DeniedPosition>().Where(x => ids.Contains(x.Id))
+            var firmIds = from deniedPosition in _query.For<DeniedPosition>().Where(x => ids.Contains(x.Id))
                            from pricePosition in _query.For<PricePosition>().Where(x => x.PriceId == deniedPosition.PriceId)
                            from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
-                           select orderPosition.OrderId;
+                           from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
+                           select order.FirmId;
 
-            return new EventCollectionHelper<DeniedPosition> { { typeof(Order), orderIds } };
+            return new EventCollectionHelper<DeniedPosition> { { typeof(Firm), firmIds } };
         }
     }
 }

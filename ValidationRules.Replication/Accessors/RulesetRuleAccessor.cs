@@ -56,20 +56,20 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 .Union(dataObjects.Select(x => x.PrincipalPositionId));
 
             // Для пакетов и простых позиций
-            var orderIdsFromPricePostion =
+            var firmIdsFromPricePostion =
                 from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
                 from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
                 from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
-                select order.Id;
+                select order.FirmId;
 
             // Для элементов пакетов и простых позиций
-            var orderIdsFromOpa =
+            var firmIdsFromOpa =
                 from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
                 from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
                 from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
-                select order.Id;
+                select order.FirmId;
 
-            return new EventCollectionHelper<RulesetRule> { { typeof(Order), orderIdsFromPricePostion.Concat(orderIdsFromOpa) } };
+            return new EventCollectionHelper<RulesetRule> { { typeof(Firm), firmIdsFromPricePostion.Concat(firmIdsFromOpa) } };
         }
     }
 }

@@ -13,11 +13,16 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService
             _ermService = new OrderValidationApplicationServiceClient(endpointConfigurationName);
         }
 
-        public ErmValidationResult ValidateSingle(long orderId)
+        public IReadOnlyCollection<ErmOrderValidationMessage> ValidateSingle(long orderId)
         {
             var validationResult = _ermService.ValidateSingleOrder(new ValidateSingleOrderRequest(orderId)).ValidateSingleOrderResult;
-            validationResult.Messages = Format(validationResult.Messages).ToArray();
-            return validationResult;
+            return Format(validationResult.Messages).ToArray();
+        }
+
+        public IReadOnlyCollection<ErmOrderValidationMessage> ValidateSingleForCancel(long orderId)
+        {
+            var validationResult = _ermService.ValidateSingleOrderStateChange(new ValidateSingleOrderStateChangeRequest(orderId, 4)).ValidateSingleOrderStateChangeResult;
+            return Format(validationResult.Messages).ToArray();
         }
 
         private static IEnumerable<ErmOrderValidationMessage> Format(IReadOnlyCollection<ErmOrderValidationMessage> messages)

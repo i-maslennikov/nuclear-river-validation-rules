@@ -22,17 +22,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.OrderPosition> orderPositionBulkRepository,
             IBulkRepository<Order.OrderPricePosition> orderPricePositionBulkRepository,
-            IBulkRepository<Order.AmountControlledPosition> amountControlledPositionBulkRepository,
-            IBulkRepository<Order.OrderDeniedPosition> orderDeniedPositionBulkRepository,
-            IBulkRepository<Order.OrderAssociatedPosition> orderAssociatedPositionBulkRepository)
+            IBulkRepository<Order.AmountControlledPosition> amountControlledPositionBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
                 HasValueObject(new OrderPositionAccessor(query), orderPositionBulkRepository),
                 HasValueObject(new OrderPricePositionAccessor(query), orderPricePositionBulkRepository),
-                HasValueObject(new AmountControlledPositionAccessor(query), amountControlledPositionBulkRepository),
-                HasValueObject(new OrderDeniedPositionAccessor(query), orderDeniedPositionBulkRepository),
-                HasValueObject(new OrderAssociatedPositionAccessor(query), orderAssociatedPositionBulkRepository));
+                HasValueObject(new AmountControlledPositionAccessor(query), amountControlledPositionBulkRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -50,21 +46,16 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
-                        MessageTypeCode.ConflictingPrincipalPosition,
-                        MessageTypeCode.DeniedPositionsCheck,
-                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
                         MessageTypeCode.MaximumAdvertisementAmount,
                         MessageTypeCode.MinimumAdvertisementAmount,
                         MessageTypeCode.OrderPositionCorrespontToInactivePosition,
                         MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
-                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
                     };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   select new Order { Id = order.Id, FirmId = order.FirmId };
+                   select new Order { Id = order.Id };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -91,11 +82,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
-                        MessageTypeCode.ConflictingPrincipalPosition,
-                        MessageTypeCode.DeniedPositionsCheck,
-                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
-                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
                     };
 
             public IQueryable<Order.OrderPosition> GetSource()
@@ -104,19 +90,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                            join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
                            join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                           from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                            select new Order.OrderPosition
                            {
                                OrderId = orderPosition.OrderId,
-                               OrderPositionId = orderPosition.Id,
-                               PackagePositionId = pricePosition.PositionId,
                                ItemPositionId = opa.PositionId,
 
-                               HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                               Category3Id = category.L3Id,
-                               FirmAddressId = opa.FirmAddressId,
-                               Category1Id = category.L1Id,
-
+                               CategoryId = opa.CategoryId,
                                ThemeId = opa.ThemeId,
                            };
 
@@ -125,19 +104,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                            join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
                            join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
                            join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
-                           from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
                            select new Order.OrderPosition
                            {
                                OrderId = orderPosition.OrderId,
-                               OrderPositionId = orderPosition.Id,
-                               PackagePositionId = pricePosition.PositionId,
                                ItemPositionId = pricePosition.PositionId,
 
-                               HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                               Category3Id = category.L3Id,
-                               FirmAddressId = opa.FirmAddressId,
-                               Category1Id = category.L1Id,
-
+                               CategoryId = opa.CategoryId,
                                ThemeId = opa.ThemeId,
                            };
 
@@ -221,233 +193,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
-            }
-        }
-
-        public sealed class OrderDeniedPositionAccessor : DataChangesHandler<Order.OrderDeniedPosition>, IStorageBasedDataObjectAccessor<Order.OrderDeniedPosition>
-        {
-            private const int RulesetRuleTypeDenied = 2;
-
-            private readonly IQuery _query;
-
-            public OrderDeniedPositionAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.DeniedPositionsCheck
-                    };
-
-            public IQueryable<Order.OrderDeniedPosition> GetSource()
-            {
-                var opas =
-                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                    join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
-                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
-                    select new
-                        {
-                            PriceId = pricePosition.PriceId,
-                            OrderId = orderPosition.OrderId,
-                            CauseOrderPositionId = orderPosition.Id,
-                            CausePackagePositionId = pricePosition.PositionId,
-                            CauseItemPositionId = opa.PositionId,
-                            HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                            Category3Id = category.L3Id,
-                            FirmAddressId = opa.FirmAddressId,
-                            Category1Id = category.L1Id,
-                            Source = PositionSources.Opa,
-                        };
-
-                var pkgs =
-                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                    join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
-                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
-                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
-                    select new
-                        {
-                            PriceId = pricePosition.PriceId,
-                            OrderId = orderPosition.OrderId,
-                            CauseOrderPositionId = orderPosition.Id,
-                            CausePackagePositionId = pricePosition.PositionId,
-                            CauseItemPositionId = pricePosition.PositionId,
-                            HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                            Category3Id = category.L3Id,
-                            FirmAddressId = opa.FirmAddressId,
-                            Category1Id = category.L1Id,
-                            Source = PositionSources.Pkg,
-                        };
-
-                var deniedByPrice =
-                    from bingingObject in opas.Union(pkgs)
-                    join denied in _query.For<Facts::DeniedPosition>()
-                        on new { bingingObject.PriceId, PositionId = bingingObject.CauseItemPositionId } equals new { denied.PriceId, denied.PositionId }
-                    select new Order.OrderDeniedPosition
-                        {
-                            OrderId = bingingObject.OrderId,
-                            CauseOrderPositionId = bingingObject.CauseOrderPositionId,
-                            CausePackagePositionId = bingingObject.CausePackagePositionId,
-                            CauseItemPositionId = bingingObject.CauseItemPositionId,
-                            HasNoBinding = bingingObject.HasNoBinding,
-                            Category3Id = bingingObject.Category3Id,
-                            FirmAddressId = bingingObject.FirmAddressId,
-                            Category1Id = bingingObject.Category1Id,
-
-                            DeniedPositionId = denied.PositionDeniedId,
-                            BindingType = denied.ObjectBindingType,
-
-                            Source = bingingObject.Source | PositionSources.Price,
-                        };
-
-                var deniedByRuleset =
-                    from bingingObject in opas.Union(pkgs)
-                    join denied in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeDenied)
-                        on bingingObject.CauseItemPositionId equals denied.DependentPositionId
-                    select new Order.OrderDeniedPosition
-                    {
-                        OrderId = bingingObject.OrderId,
-                        CauseOrderPositionId = bingingObject.CauseOrderPositionId,
-                        CausePackagePositionId = bingingObject.CausePackagePositionId,
-                        CauseItemPositionId = bingingObject.CauseItemPositionId,
-                        HasNoBinding = bingingObject.HasNoBinding,
-                        Category3Id = bingingObject.Category3Id,
-                        FirmAddressId = bingingObject.FirmAddressId,
-                        Category1Id = bingingObject.Category1Id,
-
-                        DeniedPositionId = denied.PrincipalPositionId,
-                        BindingType = denied.ObjectBindingType,
-
-                        Source = bingingObject.Source | PositionSources.Ruleset,
-                    };
-
-                return deniedByPrice.Union(deniedByRuleset);
-            }
-
-            public FindSpecification<Order.OrderDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.OrderDeniedPosition>(x => aggregateIds.Contains(x.OrderId));
-            }
-        }
-
-        public sealed class OrderAssociatedPositionAccessor : DataChangesHandler<Order.OrderAssociatedPosition>, IStorageBasedDataObjectAccessor<Order.OrderAssociatedPosition>
-        {
-            private const int RulesetRuleTypeAssociated = 1;
-
-            private readonly IQuery _query;
-
-            public OrderAssociatedPositionAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
-                        MessageTypeCode.ConflictingPrincipalPosition,
-                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
-                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
-                    };
-
-            public IQueryable<Order.OrderAssociatedPosition> GetSource()
-            {
-                var opas =
-                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                    join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
-                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
-                    select new
-                    {
-                        PricePositionId = pricePosition.Id,
-                        orderPosition.OrderId,
-                        CauseOrderPositionId = orderPosition.Id,
-                        CausePackagePositionId = pricePosition.PositionId,
-                        CauseItemPositionId = opa.PositionId,
-                        HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                        Category3Id = category.L3Id,
-                        opa.FirmAddressId,
-                        Category1Id = category.L1Id,
-                        Source = PositionSources.Opa,
-                    };
-
-                var pkgs =
-                    from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                    join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
-                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
-                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId).DefaultIfEmpty()
-                    select new
-                    {
-                        PricePositionId = pricePosition.Id,
-                        orderPosition.OrderId,
-                        CauseOrderPositionId = orderPosition.Id,
-                        CausePackagePositionId = pricePosition.PositionId,
-                        CauseItemPositionId = pricePosition.PositionId,
-                        HasNoBinding = opa.CategoryId == null && opa.FirmAddressId == null,
-                        Category3Id = category.L3Id,
-                        opa.FirmAddressId,
-                        Category1Id = category.L1Id,
-                        Source = PositionSources.Pkg,
-                    };
-
-                var associatedByPrice =
-                    from bingingObject in opas.Union(pkgs)
-                    join apg in _query.For<Facts::AssociatedPositionsGroup>() on bingingObject.PricePositionId equals apg.PricePositionId
-                    join ap in _query.For<Facts::AssociatedPosition>() on apg.Id equals ap.AssociatedPositionsGroupId
-                    select new Order.OrderAssociatedPosition
-                    {
-                        OrderId = bingingObject.OrderId,
-                        CauseOrderPositionId = bingingObject.CauseOrderPositionId,
-                        CausePackagePositionId = bingingObject.CausePackagePositionId,
-                        CauseItemPositionId = bingingObject.CauseItemPositionId,
-                        HasNoBinding = bingingObject.HasNoBinding,
-                        Category3Id = bingingObject.Category3Id,
-                        FirmAddressId = bingingObject.FirmAddressId,
-                        Category1Id = bingingObject.Category1Id,
-
-                        PrincipalPositionId = ap.PositionId,
-                        BindingType = ap.ObjectBindingType,
-
-                        Source = bingingObject.Source | PositionSources.Price,
-                    };
-
-                var associatedByRuleset =
-                    from bingingObject in opas.Union(pkgs)
-                    join associated in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeAssociated)
-                        on bingingObject.CauseItemPositionId equals associated.DependentPositionId
-                    select new Order.OrderAssociatedPosition
-                    {
-                        OrderId = bingingObject.OrderId,
-                        CauseOrderPositionId = bingingObject.CauseOrderPositionId,
-                        CausePackagePositionId = bingingObject.CausePackagePositionId,
-                        CauseItemPositionId = bingingObject.CauseItemPositionId,
-                        HasNoBinding = bingingObject.HasNoBinding,
-                        Category3Id = bingingObject.Category3Id,
-                        FirmAddressId = bingingObject.FirmAddressId,
-                        Category1Id = bingingObject.Category1Id,
-
-                        PrincipalPositionId = associated.PrincipalPositionId,
-                        BindingType = associated.ObjectBindingType,
-
-                        Source = bingingObject.Source | PositionSources.Ruleset,
-                    };
-
-                return associatedByPrice.Union(associatedByRuleset);
-            }
-
-            public FindSpecification<Order.OrderAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.OrderAssociatedPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }

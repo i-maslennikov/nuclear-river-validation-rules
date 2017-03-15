@@ -7,7 +7,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
     public sealed class DeniedPositionsCheckMessageComposer : IMessageComposer
     {
-        public MessageTypeCode MessageType => MessageTypeCode.DeniedPositionsCheck;
+        public MessageTypeCode MessageType => MessageTypeCode.FirmPositionMustNotHaveDeniedPositions;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {

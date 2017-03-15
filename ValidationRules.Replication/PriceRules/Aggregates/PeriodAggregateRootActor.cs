@@ -46,17 +46,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
                         MessageTypeCode.AssociatedPositionsGroupCount,
-                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
-                        MessageTypeCode.ConflictingPrincipalPosition,
-                        MessageTypeCode.DeniedPositionsCheck,
-                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
                         MessageTypeCode.MaximumAdvertisementAmount,
                         MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                         MessageTypeCode.MinimumAdvertisementAmount,
                         MessageTypeCode.OrderPositionCorrespontToInactivePosition,
                         MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
-                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
                     };
 
             public IQueryable<Period> GetSource()
@@ -156,17 +151,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.AssociatedPositionWithoutPrincipal,
-                        MessageTypeCode.ConflictingPrincipalPosition,
-                        MessageTypeCode.DeniedPositionsCheck,
-                        MessageTypeCode.LinkedObjectsMissedInPrincipals,
                         MessageTypeCode.MaximumAdvertisementAmount,
                         MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                         MessageTypeCode.MinimumAdvertisementAmount,
                         MessageTypeCode.OrderPositionCorrespontToInactivePosition,
                         MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
-                        MessageTypeCode.SatisfiedPrincipalPositionDifferentOrder,
                     };
 
             public IQueryable<Period.OrderPeriod> GetSource()

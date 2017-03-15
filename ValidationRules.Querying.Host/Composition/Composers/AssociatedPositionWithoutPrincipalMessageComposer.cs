@@ -8,7 +8,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
     public sealed class AssociatedPositionWithoutPrincipalMessageComposer : IMessageComposer
     {
-        public MessageTypeCode MessageType => MessageTypeCode.AssociatedPositionWithoutPrincipal;
+        public MessageTypeCode MessageType => MessageTypeCode.FirmAssociatedPositionMustHavePrincipal;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {

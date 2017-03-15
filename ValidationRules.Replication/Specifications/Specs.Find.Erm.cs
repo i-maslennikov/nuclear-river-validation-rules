@@ -34,6 +34,9 @@ namespace NuClear.ValidationRules.Replication.Specifications
                 public static FindSpecification<Erm::Order> Order { get; }
                     = new FindSpecification<Erm::Order>(x => x.IsActive && !x.IsDeleted && !Erm::Order.FilteredStates.Contains(x.WorkflowStepId));
 
+                public static FindSpecification<Erm::OrderPosition> OrderPosition { get; }
+                    = new FindSpecification<Erm::OrderPosition>(x => x.IsActive && !x.IsDeleted);
+
                 public static FindSpecification<Erm::Position> Position { get; }
                     = new FindSpecification<Erm::Position>(x => true);
 

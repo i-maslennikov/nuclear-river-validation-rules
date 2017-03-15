@@ -55,11 +55,12 @@ namespace NuClear.ValidationRules.Replication.Accessors
                            from pricePosition in _query.For<PricePosition>().Where(x => x.Id == associatedPositionsGroup.PricePositionId)
                            select pricePosition.PriceId;
 
-            var orderIds = from associatedPositionsGroup in _query.For<AssociatedPositionsGroup>().Where(x => ids.Contains(x.Id))
-                           from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == associatedPositionsGroup.PricePositionId)
-                           select orderPosition.OrderId;
+            var firmIds = from associatedPositionsGroup in _query.For<AssociatedPositionsGroup>().Where(x => ids.Contains(x.Id))
+                          from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == associatedPositionsGroup.PricePositionId)
+                          from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
+                          select order.FirmId;
 
-            return new EventCollectionHelper<AssociatedPositionsGroup> { { typeof(Order), orderIds }, { typeof(Price), priceIds } };
+            return new EventCollectionHelper<AssociatedPositionsGroup> { { typeof(Firm), firmIds }, { typeof(Price), priceIds } };
         }
     }
 }

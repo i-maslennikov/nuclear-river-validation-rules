@@ -124,7 +124,7 @@
     <value> в заказе {{2}}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1}</value>
+    <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1} {{1}}</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:MMMM} - {4}</value>
@@ -148,7 +148,7 @@
     <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} {{0}} является сопутствующей, основная позиция не найдена.</value>
+    <value>{0} "{{0}}" является сопутствующей, основная позиция не найдена.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
     <value>Договор не может иметь дату подписания позднее даты подписания заказа</value>
@@ -160,7 +160,7 @@
     <value>Юр. лицо исполнителя</value>
   </data>
   <data name="CategoryIsRestrictedForSpecifiedSalesModelError" xml:space="preserve">
-    <value>Позиция {0} не может быть продана в рубрику {1} проекта {2}</value>
+    <value>Позиция "{0}" не может быть продана в рубрику "{1}" проекта "{2}"</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
     <value>{0} {{0}} содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} {{1}}</value>
@@ -358,7 +358,7 @@
     <value>Тематика {0} использует удаленную рубрику {1}</value>
   </data>
   <data name="ThereIsNoAdvertisementForAdvantageousPurchasesCategory" xml:space="preserve">
-    <value>У фирмы {0}, с рубрикой "Выгодные покупки с 2ГИС", отсутствуют продажи по позициям "Самореклама только для ПК" или "Выгодные покупки с 2ГИС"</value>
+    <value>У фирмы {0}, с рубрикой "Выгодные покупки с 2ГИС", отсутствуют продажи по позициям "Самореклама только для ПК" или "Выгодные покупки с 2ГИС".</value>
   </data>
   <data name="ThereIsNoSpecifiedDealForOrder" xml:space="preserve">
     <value>Для заказа не указана работа</value>

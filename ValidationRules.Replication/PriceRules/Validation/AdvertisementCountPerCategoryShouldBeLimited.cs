@@ -18,6 +18,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Source: AdvertisementForCategoryAmountOrderValidationRule
     /// 
     /// Внимание, в этой проверке как наследство erm есть две совершенно различные вещи, обозначаемые словом Category: рубрика и категория номенклатуры.
+    /// 
+    /// Q: Если "чистая" продажа в рубрику одна, а продаж в рубрику адреса - много, проверка должна срабатывать?
+    /// A: Эти объявления (CategoryCode = 38) привязываются только к рубрике (или фирме, если пакет) - поэтому этот вопрос не важен.
     /// </summary>
     public sealed class AdvertisementCountPerCategoryShouldBeLimited : ValidationResultAccessorBase
     {
@@ -41,25 +44,24 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var sales =
-                from orderPosition in query.For<Order.OrderPosition>().Where(x => x.Category3Id != null || x.Category1Id != null)
+                from orderPosition in query.For<Order.OrderPosition>().Where(x => x.CategoryId != null)
                 from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
                 from position in query.For<Position>().Where(x => x.Id == orderPosition.ItemPositionId && x.CategoryCode == TargetCategoryCode)
-                select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.Category1Id, orderPosition.Category3Id };
+                select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.CategoryId };
 
             var saleCounts =
-                sales.GroupBy(x => new { x.Scope, x.Start, x.OrganizationUnitId, x.Category1Id, x.Category3Id })
+                sales.GroupBy(x => new { x.Scope, x.Start, x.OrganizationUnitId, x.CategoryId })
                      .Select(x => new { x.Key, Count = x.Count() });
 
             var oversales =
                 from sale in sales
-                let count = saleCounts.Where(x => x.Key.Category1Id == sale.Category1Id
-                                                  && x.Key.Category3Id == sale.Category3Id
+                let count = saleCounts.Where(x => x.Key.CategoryId == sale.CategoryId
                                                   && x.Key.OrganizationUnitId == sale.OrganizationUnitId
                                                   && x.Key.Start == sale.Start
                                                   && Scope.CanSee(sale.Scope, x.Key.Scope))
                                       .Sum(x => x.Count)
                 where count > MaxPositionsPerCategory
-                select new { sale.Start, sale.OrganizationUnitId, sale.OrderId, sale.Category1Id, sale.Category3Id, Count = count };
+                select new { sale.Start, sale.OrganizationUnitId, sale.OrderId, sale.CategoryId, Count = count };
 
             var messages =
                 from oversale in oversales.Distinct()
@@ -70,7 +72,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "max", MaxPositionsPerCategory }, { "count", oversale.Count } },
-                                    new Reference<EntityTypeCategory>((oversale.Category3Id ?? oversale.Category1Id).Value),
+                                    new Reference<EntityTypeCategory>(oversale.CategoryId.Value),
                                     new Reference<EntityTypeProject>(period.ProjectId))
                                 .ToXDocument(),
 

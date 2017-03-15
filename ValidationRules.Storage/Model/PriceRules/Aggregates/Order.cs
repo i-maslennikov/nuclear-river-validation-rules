@@ -8,64 +8,18 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     public sealed class Order
     {
         public long Id { get; set; }
-        public long FirmId { get; set; }
 
         /// <summary>
         /// Связь заказа с номенклатурной позицией, импортируется из ERM.OrderPosition + ERM.OrderPositionAdv
         /// </summary>
+        // TODO: Сущность с последними изменениями стала достаточно узкоспециализированной, можно окончательно заточить её под решение конкретных задач и упростить проверку
         public sealed class OrderPosition
         {
             public long OrderId { get; set; }
-            public long OrderPositionId { get; set; }
-            public long PackagePositionId { get; set; }
             public long ItemPositionId { get; set; }
 
-            public bool HasNoBinding { get; set; }
-            public long? Category3Id { get; set; }
-            public long? Category1Id { get; set; }
-            public long? FirmAddressId { get; set; }
+            public long? CategoryId { get; set; }
             public long? ThemeId { get; set; }
-        }
-
-        public sealed class OrderAssociatedPosition : IBindingObject
-        {
-            public long OrderId { get; set; }
-            public long CauseOrderPositionId { get; set; }
-            public long CausePackagePositionId { get; set; }
-            public long CauseItemPositionId { get; set; }
-
-            public long PrincipalPositionId { get; set; }
-            public long BindingType { get; set; }
-
-            public bool HasNoBinding { get; set; }
-            public long? Category3Id { get; set; }
-            public long? FirmAddressId { get; set; }
-            public long? Category1Id { get; set; }
-
-            public PositionSources Source { get; set; }
-        }
-
-        /// <summary>
-        /// Представляет запрет, порождаемый одной из позиций заказа.
-        /// Запрет распространяется не только на позиции заказа, к которому он привязан,
-        /// но и ко всем заказа того же периода той же фирмы.
-        /// </summary>
-        public sealed class OrderDeniedPosition : IBindingObject
-        {
-            public long OrderId { get; set; }
-            public long CauseOrderPositionId { get; set; }
-            public long CausePackagePositionId { get; set; }
-            public long CauseItemPositionId { get; set; }
-
-            public long DeniedPositionId { get; set; }
-            public long BindingType { get; set; }
-
-            public bool HasNoBinding { get; set; }
-            public long? Category3Id { get; set; }
-            public long? FirmAddressId { get; set; }
-            public long? Category1Id { get; set; }
-
-            public PositionSources Source { get; set; }
         }
 
         /// <summary>
@@ -95,17 +49,5 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long OrderId { get; set; }
             public long CategoryCode { get; set; }
         }
-    }
-
-    [Flags]
-    public enum PositionSources
-    {
-        None = 0,
-
-        Opa = 1,
-        Pkg = 1 << 1,
-
-        Price = 1 << 2,
-        Ruleset = 1 << 3,
     }
 }
