@@ -1,4 +1,6 @@
-﻿using NuClear.DataTest.Metamodel.Dsl;
+﻿using System;
+
+using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -39,7 +41,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Position { Id = 5, SalesModel = 11 },
                     new Facts::Category { Id = 12, IsActiveNotDeleted = true },
                     new Facts::CategoryOrganizationUnit { CategoryId = 12 },
-                    new Facts::Project())
+                    new Facts::Project(),
+                    new Facts::CostPerClickCategoryRestriction { Begin = MonthStart(1), CategoryId = 12 })
                 .Aggregate(
                     // Заказ с позицией с покликовой моделью, но без ставки - есть ошибка
                     new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(3) },
@@ -54,7 +57,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.CategoryAdvertisement { OrderId = 3, OrderPositionId = 3, PositionId = 4, CategoryId = 12, SalesModel = 12 },
                     new Aggregates::Order.CostPerClickAdvertisement { OrderId = 3, OrderPositionId = 3, PositionId = 4, CategoryId = 12 },
 
-                    new Aggregates::Project.Category { CategoryId = 12 })
+                    new Aggregates::Project.Category { CategoryId = 12 },
+                    new Aggregates::Project.CostPerClickRestriction { CategoryId = 12, Begin = MonthStart(1), End = DateTime.MaxValue })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
