@@ -114,7 +114,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             public IQueryable<Project.CostPerClickRestriction> GetSource()
                 => from project in _query.For<Facts::Project>()
                    from restriction in _query.For<Facts::CostPerClickCategoryRestriction>().Where(x => x.ProjectId == project.Id)
-                   let nextRestriction = _query.For<Facts::CostPerClickCategoryRestriction>().Where(x => x.ProjectId == project.Id && x.CategoryId == restriction.CategoryId && x.Begin > restriction.Begin).Min(x => (DateTime?)x.Begin)
+                   let nextRestriction = _query.For<Facts::CostPerClickCategoryRestriction>().Where(x => x.ProjectId == project.Id && x.Begin > restriction.Begin).Min(x => (DateTime?)x.Begin)
                    select new Project.CostPerClickRestriction
                    {
                        ProjectId = project.Id,
@@ -179,16 +179,18 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
                     };
 
             public IQueryable<Project.NextRelease> GetSource()
                 => from project in _query.For<Facts::Project>()
-                   from releaseInfo in _query.For<Facts::ReleaseInfo>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId).OrderByDescending(x => x.PeriodEndDate).Take(1)
+                   let releaseInfo = _query.For<Facts::ReleaseInfo>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId).OrderByDescending(x => x.PeriodEndDate).FirstOrDefault()
+                   where releaseInfo != null
                    select new Project.NextRelease
-                   {
-                       ProjectId = project.Id,
-                       Date = releaseInfo.PeriodEndDate,
-                   };
+                       {
+                           ProjectId = project.Id,
+                           Date = releaseInfo.PeriodEndDate,
+                       };
 
             public FindSpecification<Project.NextRelease> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
