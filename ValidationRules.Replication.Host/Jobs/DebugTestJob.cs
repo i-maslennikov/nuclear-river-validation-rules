@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 
 using NuClear.Jobs;
-using NuClear.Security.API;
+using NuClear.Security.API.Context;
+using NuClear.Security.API.Auth;
 using NuClear.Tracing.API;
 
 using Quartz;
@@ -11,8 +12,11 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 {
     public sealed class DebugTestJob : TaskServiceJobBase
     {
-        public DebugTestJob(ITracer tracer, ISignInService signInService, IUserImpersonationService userImpersonationService)
-            : base(signInService, userImpersonationService, tracer)
+        public DebugTestJob(IUserContextManager userContextManager,
+                            IUserAuthenticationService userAuthenticationService,
+                            IUserAuthorizationService userAuthorizationService,
+                            ITracer tracer)
+            : base(userContextManager, userAuthenticationService, userAuthorizationService, tracer)
         {
         }
 

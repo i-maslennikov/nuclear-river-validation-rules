@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
+
+using Jobs.RemoteControl.Settings;
 
 using NuClear.IdentityService.Client.Settings;
 using NuClear.OperationsLogging.Transports.ServiceBus;
@@ -11,6 +14,8 @@ using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Telemetry.Logstash;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
+
+using Quartz.Impl;
 
 namespace NuClear.ValidationRules.Replication.Host.Settings
 {
@@ -54,6 +59,8 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
                     }
                 });
 
+            var quartzProperties = (NameValueCollection)ConfigurationManager.GetSection(StdSchedulerFactory.ConfigurationSectionName);
+
             Aspects.Use(connectionStringSettings)
                    .Use<ServiceBusMessageLockRenewalSettings>()
                    .Use<EnvironmentSettingsAspect>()
@@ -61,7 +68,8 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
                    .Use(new ServiceBusReceiverSettingsAspect(connectionStringSettings.GetConnectionString(ServiceBusConnectionStringIdentity.Instance)))
                    .Use<ArchiveVersionsSettings>()
                    .Use<LogstashSettingsAspect>()
-                   .Use<IdentityServiceClientSettingsAspect>();
+                   .Use<IdentityServiceClientSettingsAspect>()
+                   .Use(new TaskServiceRemoteControlSettings(quartzProperties));
         }
 
         public int ReplicationBatchSize

@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
+using Jobs.RemoteControl.PortResolver;
+using Jobs.RemoteControl.Provider;
+using Jobs.RemoteControl.Registrar;
+using Jobs.RemoteControl.Settings;
+
 using LinqToDB.Mapping;
 
 using Microsoft.Practices.Unity;
@@ -25,6 +30,7 @@ using NuClear.DI.Unity.Config;
 using NuClear.DI.Unity.Config.RegistrationResolvers;
 using NuClear.IdentityService.Client.Interaction;
 using NuClear.Jobs.Schedulers;
+using NuClear.Jobs.Schedulers.Exporter;
 using NuClear.Jobs.Unity;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
@@ -69,10 +75,11 @@ using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
+using NuClear.River.Hosting.Common.Identities.Connections;
+using NuClear.River.Hosting.Common.Settings;
 using NuClear.Security;
-using NuClear.Security.API;
-using NuClear.Security.API.UserContext;
-using NuClear.Security.API.UserContext.Identity;
+using NuClear.Security.API.Auth;
+using NuClear.Security.API.Context;
 using NuClear.Settings.API;
 using NuClear.Settings.Unity;
 using NuClear.Storage.API.ConnectionStrings;
@@ -113,6 +120,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .ConfigureSettingsAspects(settingsContainer)
                      .ConfigureTracing(tracer, tracerContextManager)
                      .ConfigureSecurityAspects()
+                     .ConfigureQuartzRemoteControl()
                      .ConfigureQuartz()
                      .ConfigureIdentityInfrastructure()
                      .ConfigureWcf()
@@ -157,13 +165,10 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         private static IUnityContainer ConfigureSecurityAspects(this IUnityContainer container)
         {
             return container
-                .RegisterType<IUserAuthenticationService, NullUserAuthenticationService>(Lifetime.PerScope)
-                .RegisterType<IUserProfileService, NullUserProfileService>(Lifetime.PerScope)
-                .RegisterType<IUserContext, UserContext>(Lifetime.PerScope, new InjectionFactory(c => new UserContext(null, null)))
-                .RegisterType<IUserLogonAuditor, LoggerContextUserLogonAuditor>(Lifetime.Singleton)
-                .RegisterType<IUserIdentityLogonService, UserIdentityLogonService>(Lifetime.PerScope)
-                .RegisterType<ISignInService, WindowsIdentitySignInService>(Lifetime.PerScope)
-                .RegisterType<IUserImpersonationService, UserImpersonationService>(Lifetime.PerScope);
+                .RegisterType<IUserAuthorizationService, Security.UserAuthorizationService>(Lifetime.PerScope)
+                .RegisterType<IUserContextManager, UserContextManager>(Lifetime.PerScope)
+                .RegisterInstance<IUserAuthenticationService>(new UserAuthenticationService(new[] { new WindowsIdentityExtractor() }))
+                .RegisterType<IUserContextScopeChangesObserver, Security.TracerContextUserContextScopeChangesObserver>(Lifetime.Singleton);
         }
 
         private static IUnityContainer ConfigureQuartz(this IUnityContainer container)
@@ -172,6 +177,36 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IJobFactory, JobFactory>(Lifetime.Singleton, new InjectionConstructor(container.Resolve<UnityJobFactory>(), container.Resolve<ITracer>()))
                 .RegisterType<IJobStoreFactory, JobStoreFactory>(Lifetime.Singleton)
                 .RegisterType<ISchedulerManager, SchedulerManager>(Lifetime.Singleton);
+        }
+
+        private static IUnityContainer ConfigureQuartzRemoteControl(
+            this IUnityContainer container)
+        {
+            var environmentSettings = container.Resolve<IEnvironmentSettings>();
+            var connectionStringSettings = container.Resolve<IConnectionStringSettings>();
+            var taskServiceRemoteControlSettings = container.Resolve<ITaskServiceRemoteControlSettings>();
+
+            if (taskServiceRemoteControlSettings.RemoteControlEnabled)
+            {
+                string quartzStoreConnectionString = null;
+                connectionStringSettings.AllConnectionStrings.TryGetValue(InfrastructureConnectionStringIdentity.Instance, out quartzStoreConnectionString);
+
+                container.RegisterType<ISchedulerExporterProvider, SchedulerExporterProvider>(Lifetime.Singleton,
+                             new InjectionConstructor(environmentSettings.EnvironmentName,
+                                 typeof(ITaskServiceRemoteControlSettings),
+                                 typeof(ISchedulerExportPortResolver),
+                                 typeof(ISchedulerExporterRegistrar),
+                                 typeof(ITracer)))
+                         .RegisterType<ISchedulerExportPortResolver, SchedulerExportPortResolver>(Lifetime.Singleton)
+                         .RegisterType<ISchedulerExporterRegistrar, MsSQLPersistenceSchedulerExporterRegistrar>(Lifetime.Singleton,
+                             new InjectionConstructor(quartzStoreConnectionString));
+            }
+            else
+            {
+                container.RegisterType<ISchedulerExporterProvider, AlwaysOffSchedulerExporterProvider>(Lifetime.Singleton);
+            }
+
+            return container;
         }
 
         private static IUnityContainer ConfigureWcf(this IUnityContainer container)
@@ -213,7 +248,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .RegisterType<IEventLogger, SequentialEventLogger>()
                      .RegisterType<IServiceBusMessageSender, ServiceBusMessageSender>();
 
-            return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(typeof(IUserContext)), Lifetime.Singleton)
+            return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(), Lifetime.Singleton)
                             .RegisterType(typeof(ServiceBusMessageFlowReceiver), Lifetime.Singleton)
                             .RegisterType<IServiceBusLockRenewer, NullServiceBusLockRenewer>(Lifetime.Singleton)
                             .RegisterType<IServiceBusSettingsFactory, ServiceBusSettingsFactory>(Lifetime.Singleton)

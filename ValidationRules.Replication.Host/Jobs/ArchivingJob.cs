@@ -2,9 +2,10 @@
 using System.Transactions;
 
 using NuClear.Jobs;
-using NuClear.Security.API;
-using NuClear.Telemetry.Probing;
+using NuClear.Security.API.Context;
+using NuClear.Security.API.Auth;
 using NuClear.Tracing.API;
+using NuClear.Telemetry.Probing;
 using NuClear.ValidationRules.Replication.Messages;
 using NuClear.ValidationRules.Replication.Settings;
 
@@ -20,12 +21,13 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         private readonly TransactionOptions _transactionOptions;
 
         public ArchivingJob(
-            ISignInService signInService,
-            IUserImpersonationService userImpersonationService,
             ArchiveVersionsService archiveVersionsService,
             IArchiveVersionsSettings settings,
+            IUserContextManager userContextManager,
+            IUserAuthenticationService userAuthenticationService,
+            IUserAuthorizationService userAuthorizationService,
             ITracer tracer)
-            : base(signInService, userImpersonationService, tracer)
+            : base(userContextManager, userAuthenticationService, userAuthorizationService, tracer)
         {
             _archiveVersionsService = archiveVersionsService;
             _settings = settings;

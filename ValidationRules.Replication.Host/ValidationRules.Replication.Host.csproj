@@ -59,11 +59,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Jobs, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Jobs.1.3.0\lib\net451\2GIS.NuClear.Jobs.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Jobs.2.1.4\lib\net451\2GIS.NuClear.Jobs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Jobs.RemoteControl, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Jobs.RemoteControl.2.1.4\lib\net451\2GIS.NuClear.Jobs.RemoteControl.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Jobs.Unity, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Jobs.Unity.1.3.0\lib\net451\2GIS.NuClear.Jobs.Unity.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Jobs.Unity.2.1.4\lib\net451\2GIS.NuClear.Jobs.Unity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Messaging, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
@@ -159,11 +163,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Security.2.0.0\lib\net451\2GIS.NuClear.Security.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Security.3.0.0\lib\net451\2GIS.NuClear.Security.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Security.API, Version=2.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Security.API.2.0.0\lib\net451\2GIS.NuClear.Security.API.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Security.API.3.0.0\lib\net451\2GIS.NuClear.Security.API.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
@@ -327,6 +331,8 @@
     <Compile Include="DI\CachingTelemetryPublisherDecorator.cs" />
     <Compile Include="DI\ReplicationHostAssembly.cs" />
     <Compile Include="DI\ReplicationRoot.cs" />
+    <Compile Include="Security\TracerContextUserContextScopeChangesObserver.cs" />
+    <Compile Include="Security\UserAuthorizationService.cs" />
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Processor\PrimaryProcessorResolveStrategy.cs" />
     <Compile Include="Factories\Messaging\Receiver\MessageFlowReceiverResolveStrategy.cs" />
