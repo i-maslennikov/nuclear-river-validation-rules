@@ -232,7 +232,8 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new MinimalAdvertisementRestrictionShouldBeSpecified(_query),
                     new MinimumAdvertisementAmount(_query),
                     new OrderPositionCorrespontToInactivePosition(_query),
-                    new OrderPositionShouldCorrespontToActualPrice(_query),
+                    new OrderPositionMayCorrespontToActualPrice(_query),
+                    new OrderPositionMustCorrespontToActualPrice(_query),
                     new OrderPositionsShouldCorrespontToActualPrice(_query),
                     new FirmAssociatedPositionShouldNotStayAlone(_query),
 

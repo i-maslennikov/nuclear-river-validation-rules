@@ -22,13 +22,15 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.OrderPosition> orderPositionBulkRepository,
             IBulkRepository<Order.OrderPricePosition> orderPricePositionBulkRepository,
-            IBulkRepository<Order.AmountControlledPosition> amountControlledPositionBulkRepository)
+            IBulkRepository<Order.AmountControlledPosition> amountControlledPositionBulkRepository,
+            IBulkRepository<Order.ActualPrice> actualPriceBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
                 HasValueObject(new OrderPositionAccessor(query), orderPositionBulkRepository),
                 HasValueObject(new OrderPricePositionAccessor(query), orderPricePositionBulkRepository),
-                HasValueObject(new AmountControlledPositionAccessor(query), amountControlledPositionBulkRepository));
+                HasValueObject(new AmountControlledPositionAccessor(query), amountControlledPositionBulkRepository),
+                HasValueObject(new ActualPriceBulkRepositoryAccessor(query), actualPriceBulkRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -49,7 +51,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.MaximumAdvertisementAmount,
                         MessageTypeCode.MinimumAdvertisementAmount,
                         MessageTypeCode.OrderPositionCorrespontToInactivePosition,
-                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
                     };
 
@@ -136,7 +139,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.OrderPositionCorrespontToInactivePosition,
-                        MessageTypeCode.OrderPositionShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
                     };
 
             public IQueryable<Order.OrderPricePosition> GetSource()
@@ -193,6 +197,46 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class ActualPriceBulkRepositoryAccessor : DataChangesHandler<Order.ActualPrice>, IStorageBasedDataObjectAccessor<Order.ActualPrice>
+        {
+            private readonly IQuery _query;
+
+            public ActualPriceBulkRepositoryAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
+                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                    };
+
+            public IQueryable<Order.ActualPrice> GetSource()
+            {
+                return
+                    from order in _query.For<Facts::Order>()
+                    let price = _query.For<Facts::Price>()
+                                .Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                                .Where(x => x.BeginDate <= order.BeginDistribution)
+                                .OrderByDescending(x => x.BeginDate)
+                                .FirstOrDefault()
+                    select new Order.ActualPrice
+                    {
+                        OrderId = order.Id,
+                        PriceId = price != null ? (long?)price.Id : null
+                    };
+            }
+
+            public FindSpecification<Order.ActualPrice> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.ActualPrice>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }

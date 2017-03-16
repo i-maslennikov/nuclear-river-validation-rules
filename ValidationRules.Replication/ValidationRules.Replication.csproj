@@ -221,6 +221,7 @@
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="SyncEntityNameActor.cs" />
     <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
     <Compile Include="DataChangesHandler.cs" />
@@ -320,7 +321,7 @@
     <Compile Include="PriceRules\Validation\MinimumAdvertisementAmount.cs" />
     <Compile Include="AggregateActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePosition.cs" />
-    <Compile Include="PriceRules\Validation\OrderPositionShouldCorrespontToActualPrice.cs" />
+    <Compile Include="PriceRules\Validation\OrderPositionMayCorrespontToActualPrice.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionsShouldCorrespontToActualPrice.cs" />
     <Compile Include="PriceRules\Aggregates\PeriodAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />

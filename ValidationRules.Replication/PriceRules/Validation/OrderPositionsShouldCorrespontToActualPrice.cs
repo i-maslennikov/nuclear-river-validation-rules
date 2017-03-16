@@ -5,8 +5,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
@@ -30,15 +28,23 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var orders =
-                from order in query.For<Order>()
-                from start in query.For<Period.OrderPeriod>().Where(x => x.OrderId == order.Id)
-                from end in query.For<Period.OrderPeriod>().Where(x => x.OrderId == order.Id).SelectMany(x => query.For<Period>().Where(y => y.Start == x.Start && y.OrganizationUnitId == x.OrganizationUnitId))
-                group new { start.Start, end.End } by new { order.Id, start.OrganizationUnitId } into groups
-                select new { groups.Key.Id, groups.Key.OrganizationUnitId, Start = groups.Min(x => x.Start), End = groups.Max(x => x.End) };
+                from orderPeriod in query.For<Period.OrderPeriod>()
+                from period in query.For<Period>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
+                select new { orderPeriod.OrderId, period.Start, period.End }
+                into dto
+                group dto by dto.OrderId
+                into dtoGroup
+                select new
+                {
+                    Id = dtoGroup.Key,
+                    Start = dtoGroup.Min(x => x.Start),
+                    End = dtoGroup.Max(x => x.End)
+                };
 
-            var result =
+            var messages =
                 from order in orders
-                where !query.For<Period.PricePeriod>().Any(x => x.Start <= order.Start && x.OrganizationUnitId == order.OrganizationUnitId)
+                from actualPrice in query.For<Order.ActualPrice>().Where(x => x.OrderId == order.Id)
+                where actualPrice.PriceId == null // не нашли актуальный прайс-лист
                 select new Version.ValidationResult
                     {
                         MessageParams =
@@ -53,7 +59,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         Result = RuleResult,
                     };
 
-            return result;
+            return messages;
         }
     }
 }

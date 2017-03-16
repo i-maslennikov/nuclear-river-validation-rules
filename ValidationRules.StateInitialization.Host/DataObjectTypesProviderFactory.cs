@@ -90,6 +90,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             typeof(PriceAggregates::Order.OrderPosition),
                             typeof(PriceAggregates::Order.OrderPricePosition),
                             typeof(PriceAggregates::Order.AmountControlledPosition),
+                            typeof(PriceAggregates::Order.ActualPrice),
                             typeof(PriceAggregates::Period),
                             typeof(PriceAggregates::Period.OrderPeriod),
                             typeof(PriceAggregates::Period.PricePeriod),
