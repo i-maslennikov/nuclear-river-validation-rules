@@ -82,7 +82,7 @@ namespace ValidationRules.Replication.Comparison.Tests
                 projectId = dc.GetTable<Project>().Where(x => x.IsActive && x.OrganizationUnitId == organizationUnitId).Select(x => x.Id).Single();
             }
 
-            return _riverService.ValidateMassManual(orderIds, projectId, releaseDate)
+            return _riverService.ValidateMassManualWithAccounts(orderIds, projectId, releaseDate)
                                 .Messages
                                 .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => Tuple.Create(x.TargetEntityId, x.MessageText))
                                 .ToDictionary(x => x.Key, x => x.ToArray());
@@ -90,7 +90,7 @@ namespace ValidationRules.Replication.Comparison.Tests
 
         private IDictionary<int, Tuple<long, string>[]> InvokeErm(long organizationUnitId, DateTime releaseDate)
         {
-            return _ermService.ValidateMassManual(organizationUnitId, releaseDate).Messages
+            return _ermService.ValidateMassManualWithAccounts(organizationUnitId, releaseDate).Messages
                               .GroupBy(x => x.RuleCode, x => Tuple.Create(x.TargetEntityId, x.MessageText))
                               .ToDictionary(x => x.Key, x => x.ToArray());
         }

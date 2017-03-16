@@ -27,7 +27,7 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
             return Format(validationResult.Messages).ToArray();
         }
 
-        public ErmValidationResult ValidateMassManual(long organizationUnitId, DateTime releaseDate)
+        public ErmValidationResult ValidateMassManualWithAccounts(long organizationUnitId, DateTime releaseDate)
         {
             var request = new ValidateOrdersRequest(ValidationType.ManualReportWithAccountsCheck,
                                         organizationUnitId,

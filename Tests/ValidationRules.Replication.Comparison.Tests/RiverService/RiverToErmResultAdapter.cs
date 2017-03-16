@@ -29,9 +29,9 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
             return new ErmValidationResult { OrderCount = 1, Messages = messages };
         }
 
-        public ErmValidationResult ValidateMassManual(long[] orderIds, long projectId, DateTime releaseDate)
+        public ErmValidationResult ValidateMassManualWithAccounts(long[] orderIds, long projectId, DateTime releaseDate)
         {
-            var response = _riverClient.Manual(new RiverMassCheckRequest {OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate});
+            var response = _riverClient.ManualWithAccount(new RiverMassCheckRequest {OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate});
             var messages = Format(response, FormatDescriptionMass);
             return new ErmValidationResult { OrderCount = orderIds.Length, Messages = messages };
         }
