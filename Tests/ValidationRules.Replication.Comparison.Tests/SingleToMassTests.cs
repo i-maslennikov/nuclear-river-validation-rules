@@ -14,14 +14,14 @@ using NUnit.Framework;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace ValidationRules.Replication.SingleCheck.Tests
+namespace ValidationRules.Replication.Comparison.Tests
 {
     [TestFixture]
-    public sealed class CompareSingleToMassTests
+    public sealed class SingleToMassTests
     {
         private const int OrderPerRule = 1;
 
-        private readonly PipelineFactory PipelineFactory = new PipelineFactory();
+        private static readonly PipelineFactory PipelineFactory = new PipelineFactory();
 
         private IEnumerable<MessageTypeCode> Rules
             => Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>();

@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-using ValidationRules.Replication.SingleCheck.Tests.ErmService;
+using ValidationRules.Replication.Comparison.Tests.ErmService;
 
-namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
+namespace ValidationRules.Replication.Comparison.Tests.RiverService
 {
     public sealed class RiverToErmResultAdapter
     {
@@ -66,6 +65,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
                                       MessageText = AdaptMessage(x, descriptionFormatter)
                                   }).ToArray();
 
+        // todo: по идее, эта хрень уже не нужна
         private static long AdaptTargetEntityId(RiverValidationResult result)
         {
             switch (result.Rule)

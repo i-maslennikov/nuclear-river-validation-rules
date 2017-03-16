@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
+namespace ValidationRules.Replication.Comparison.Tests.RiverService
 {
     [DataContract]
     public class RiverSingleCheckRequest

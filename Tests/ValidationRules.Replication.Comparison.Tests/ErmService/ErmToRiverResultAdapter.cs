@@ -2,7 +2,8 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ValidationRules.Replication.SingleCheck.Tests.ErmService
+
+namespace ValidationRules.Replication.Comparison.Tests.ErmService
 {
     internal sealed class ErmToRiverResultAdapter
     {

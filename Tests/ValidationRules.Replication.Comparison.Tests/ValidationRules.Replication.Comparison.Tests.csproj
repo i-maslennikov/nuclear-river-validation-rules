@@ -7,8 +7,8 @@
     <ProjectGuid>{037FA64B-8A47-44D2-87A7-02DC4FA4BD0B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ValidationRules.Replication.SingleCheck.Tests</RootNamespace>
-    <AssemblyName>ValidationRules.Replication.SingleCheck.Tests</AssemblyName>
+    <RootNamespace>ValidationRules.Replication.Comparison.Tests</RootNamespace>
+    <AssemblyName>ValidationRules.Replication.Comparison.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -53,11 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompareReleaseToErmTests.cs" />
-    <Compile Include="CompareManualToErmTests.cs" />
-    <Compile Include="CompareSingleForCancelToErmTests.cs" />
-    <Compile Include="CompareSingleToErmTests.cs" />
-    <Compile Include="CompareSingleToMassTests.cs" />
+    <Compile Include="ReleaseToErmTests.cs" />
+    <Compile Include="ManualToErmTests.cs" />
+    <Compile Include="SingleForCancelToErmTests.cs" />
+    <Compile Include="SingleToErmTests.cs" />
+    <Compile Include="SingleToMassTests.cs" />
     <Compile Include="ErmService\ErmToRiverResultAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RiverService\RiverService.cs" />
@@ -98,19 +98,19 @@
     <None Include="Service References\ErmService\Validate2.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateOrdersResponse.datasource">
+    <None Include="Service References\ErmService\ValidationRules.Replication.Comparison.Tests.ErmService.ValidateOrdersResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderResponse.datasource">
+    <None Include="Service References\ErmService\ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRestResponse.datasource">
+    <None Include="Service References\ErmService\ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderRestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ErmService\ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateChangeResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ErmService\ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
   </ItemGroup>
