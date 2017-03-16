@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -24,6 +25,32 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
         {
             var validationResult = _ermService.ValidateSingleOrderStateChange(new ValidateSingleOrderStateChangeRequest(orderId, 4)).ValidateSingleOrderStateChangeResult;
             return Format(validationResult.Messages).ToArray();
+        }
+
+        public ErmValidationResult ValidateMassManual(long organizationUnitId, DateTime releaseDate)
+        {
+            var request = new ValidateOrdersRequest(ValidationType.ManualReportWithAccountsCheck,
+                                        organizationUnitId,
+                                        new TimePeriod { Start = releaseDate, End = releaseDate.AddMonths(1).AddSeconds(-1) },
+                                        null,
+                                        false);
+
+            var validationResult = _ermService.ValidateOrders(request).ValidateOrdersResult;
+            validationResult.Messages = Format(validationResult.Messages).ToArray();
+            return validationResult;
+        }
+
+        public ErmValidationResult ValidateMassRelease(long organizationUnitId, DateTime releaseDate)
+        {
+            var request = new ValidateOrdersRequest(ValidationType.PreReleaseFinal,
+                                                    organizationUnitId,
+                                                    new TimePeriod { Start = releaseDate, End = releaseDate.AddMonths(1).AddSeconds(-1) },
+                                                    null,
+                                                    false);
+
+            var validationResult = _ermService.ValidateOrders(request).ValidateOrdersResult;
+            validationResult.Messages = Format(validationResult.Messages).ToArray();
+            return validationResult;
         }
 
         private static IEnumerable<ErmOrderValidationMessage> Format(IReadOnlyCollection<ErmOrderValidationMessage> messages)

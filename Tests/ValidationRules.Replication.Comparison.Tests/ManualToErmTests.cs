@@ -15,12 +15,11 @@ using ValidationRules.Replication.Comparison.Tests.RiverService;
 
 namespace ValidationRules.Replication.Comparison.Tests
 {
-    [Ignore]
     [TestFixture]
     public sealed class ManualToErmTests
     {
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
-        private readonly OrderValidationApplicationServiceClient _ermService = new OrderValidationApplicationServiceClient("Erm");
+        private readonly ErmToRiverResultAdapter _ermService = new ErmToRiverResultAdapter("Erm");
 
         public IReadOnlyCollection<TestCaseData> Releases
         {
@@ -57,8 +56,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             var ermResult = InvokeErm(organizationUnitId, releaseDate);
             ermTime.Stop();
 
-            var diff = riverResult
-                .Keys
+            var diff = riverResult.Keys.Union(ermResult.Keys)
                 .Select(x => new { Key = x, River = TryGetSorted(riverResult, x), Erm = TryGetSorted(ermResult, x) })
                 .OrderBy(x => x.Key)
                 .ToDictionary(x => x.Key, x => new RuleReport(x.River, x.Erm))
@@ -91,12 +89,7 @@ namespace ValidationRules.Replication.Comparison.Tests
 
         private IDictionary<int, Tuple<long, string>[]> InvokeErm(long organizationUnitId, DateTime releaseDate)
         {
-            var request = new ValidateOrdersRequest(ValidationType.ManualReportWithAccountsCheck,
-                                                    organizationUnitId,
-                                                    new TimePeriod { Start = releaseDate, End = releaseDate.AddMonths(1).AddSeconds(-1) },
-                                                    null,
-                                                    false);
-            return _ermService.ValidateOrders(request).ValidateOrdersResult.Messages
+            return _ermService.ValidateMassManual(organizationUnitId, releaseDate).Messages
                               .GroupBy(x => x.RuleCode, x => Tuple.Create(x.TargetEntityId, x.MessageText))
                               .ToDictionary(x => x.Key, x => x.ToArray());
         }

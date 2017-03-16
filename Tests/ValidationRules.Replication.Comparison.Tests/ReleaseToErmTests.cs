@@ -20,7 +20,7 @@ namespace ValidationRules.Replication.Comparison.Tests
     public sealed class ReleaseToErmTests
     {
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
-        private readonly OrderValidationApplicationServiceClient _ermService = new OrderValidationApplicationServiceClient("Erm");
+        private readonly ErmToRiverResultAdapter _ermService = new ErmToRiverResultAdapter("Erm");
 
         public IReadOnlyCollection<TestCaseData> Releases
         {
@@ -91,12 +91,7 @@ namespace ValidationRules.Replication.Comparison.Tests
 
         private IDictionary<int, Tuple<long, string>[]> InvokeErm(long organizationUnitId, DateTime releaseDate)
         {
-            var request = new ValidateOrdersRequest(ValidationType.PreReleaseFinal,
-                                                    organizationUnitId,
-                                                    new TimePeriod { Start = releaseDate, End = releaseDate.AddMonths(1).AddSeconds(-1) },
-                                                    null,
-                                                    false);
-            return _ermService.ValidateOrders(request).ValidateOrdersResult.Messages
+            return _ermService.ValidateMassRelease(organizationUnitId, releaseDate).Messages
                               .GroupBy(x => x.RuleCode, x => Tuple.Create(x.TargetEntityId, x.MessageText))
                               .ToDictionary(x => x.Key, x => x.ToArray());
         }

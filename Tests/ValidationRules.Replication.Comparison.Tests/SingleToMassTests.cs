@@ -115,14 +115,14 @@ namespace ValidationRules.Replication.Comparison.Tests
                 if (!expected.TryGetValue(key, out leftPeriods))
                 {
                     var keys = string.Join(Environment.NewLine, expected.Keys.Select(x => x.ToString(SaveOptions.DisableFormatting)));
-                    Assert.Fail($"{key.ToString(SaveOptions.DisableFormatting)}\n is missing in expected, but present:\n {keys}");
+                    Assert.Fail($"one of actual:{key.ToString(SaveOptions.DisableFormatting)}\nis missing in expected:\n {keys}");
                 }
 
                 List<Tuple<DateTime, DateTime>> rightPeriods;
                 if (!actual.TryGetValue(key, out rightPeriods))
                 {
                     var keys = string.Join(Environment.NewLine, actual.Keys.Select(x => x.ToString(SaveOptions.DisableFormatting)));
-                    Assert.Fail($"{key.ToString(SaveOptions.DisableFormatting)}\n is missing in actual, but present:\n {keys}");
+                    Assert.Fail($"one of expected:{key.ToString(SaveOptions.DisableFormatting)}\nis missing in actual:\n {keys}");
                 }
 
                 Assert.AreEqual(leftPeriods, rightPeriods);
