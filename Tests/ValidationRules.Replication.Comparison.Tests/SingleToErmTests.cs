@@ -39,7 +39,7 @@ namespace ValidationRules.Replication.Comparison.Tests
 
                 var result = new List<TestCaseData>(rules.Count);
 
-                using (var dc = new DataConnection("ReferenceSource").AddMappingSchema(Schema.Messages))
+                using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
                 {
                     var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue).Where(IsApplicableForSingleCheck);
                     var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);

@@ -29,7 +29,7 @@ namespace ValidationRules.Replication.Comparison.Tests
         [TestCaseSource(nameof(Rules))]
         public void TestRule(MessageTypeCode rule)
         {
-            using (var dc = new DataConnection("ReferenceSource").AddMappingSchema(Schema.Messages))
+            using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
             {
                 var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
                 var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
@@ -47,7 +47,7 @@ namespace ValidationRules.Replication.Comparison.Tests
 
                 foreach (var expected in expecteds)
                 {
-                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", expected.Key), new PersistentTableStoreFactory("Pipeline"), new HashSetStoreFactory()))
+                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", expected.Key), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
                     {
                         var actual = validator.Execute().Where(x => x.OrderId == expected.Key && x.MessageType == (int)rule).ToArray();
                         AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
@@ -62,7 +62,7 @@ namespace ValidationRules.Replication.Comparison.Tests
         [TestCaseSource(nameof(Orders))]
         public void TestOrder(long orderId)
         {
-            using (var dc = new DataConnection("ReferenceSource").AddMappingSchema(Schema.Messages))
+            using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
             {
                 var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
                 var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
@@ -74,7 +74,7 @@ namespace ValidationRules.Replication.Comparison.Tests
 
                 var expected = results.ToArray();
 
-                using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", orderId), new PersistentTableStoreFactory("Pipeline"), new HashSetStoreFactory()))
+                using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", orderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
                 {
                     var actual = validator.Execute().Where(x => x.OrderId == orderId).ToArray();
                     AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
