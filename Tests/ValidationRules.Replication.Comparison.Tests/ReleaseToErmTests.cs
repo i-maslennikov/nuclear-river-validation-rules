@@ -15,7 +15,6 @@ using ValidationRules.Replication.Comparison.Tests.RiverService;
 
 namespace ValidationRules.Replication.Comparison.Tests
 {
-    [Ignore]
     [TestFixture]
     public sealed class ReleaseToErmTests
     {

@@ -73,6 +73,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             }
         }
 
+        [Category("CronDaily")]
         [TestCaseSource(nameof(Rules))]
         public void TestRule(int ermRule, Int32Collection riverRules, long? orderId)
         {
