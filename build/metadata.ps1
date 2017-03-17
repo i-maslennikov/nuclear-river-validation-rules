@@ -35,6 +35,11 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 			$entryPointsMetadata += Get-AssemblyMetadata $Context
 		}
 
+        'ValidationRules.Replication.StateInitialization.Tests' {
+			$Context.EntryPoint = $_
+			$entryPointsMetadata += Get-AssemblyMetadata $Context
+		}
+
 		default {
 			throw "Can't find entrypoint $_"
 		}

@@ -35,7 +35,6 @@
   <ItemGroup>
     <None Include="bulktool.ps1" />
     <None Include="convertusecases.ps1" />
-    <None Include="datatest.ps1" />
     <None Include="default.ps1" />
     <None Include="metadata.ps1" />
     <None Include="metadata.nunit.psm1" />

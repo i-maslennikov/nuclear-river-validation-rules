@@ -15,7 +15,6 @@ Include 'servicebus.ps1'
 Include 'convertusecases.ps1'
 Include 'updateschemas.ps1'
 Include 'bulktool.ps1'
-Include 'datatest.ps1'
 
 # Querying.Host
 function QueueBuild-QueryingHost {
@@ -44,10 +43,15 @@ function QueueDeploy-ReplicationHost {
 }
 
 # Replication.Host
-function QueueBuild-ComparisonTests {
+function QueueBuild-Tests {
 	if ($Metadata['ValidationRules.Replication.Comparison.Tests']){
 		$projectFileName = Get-ProjectFileName 'Tests' 'ValidationRules.Replication.Comparison.Tests'
 		QueueBuild-AppPackage $projectFileName 'ValidationRules.Replication.Comparison.Tests'
+	}
+    
+	if ($Metadata['ValidationRules.Replication.StateInitialization.Tests']){
+		$projectFileName = Get-ProjectFileName 'Tests' 'ValidationRules.Replication.StateInitialization.Tests'
+		QueueBuild-AppPackage $projectFileName 'ValidationRules.Replication.StateInitialization.Tests'
 	}
 }
 
@@ -61,7 +65,7 @@ Task QueueBuild-Packages {
 	QueueBuild-BulkTool
 	QueueBuild-QueryingHost
 	QueueBuild-ReplicationHost
-	QueueBuild-ComparisonTests
+	QueueBuild-Tests
 
 	Invoke-MSBuildQueue
 }
@@ -75,12 +79,7 @@ Task QueueDeploy-Packages {
 	Invoke-DeployQueue
 }
 
-Task Run-DataTests {
-	$projects = Find-Projects '.' '*.StateInitialization.Tests*'
-	Run-DataTests $projects 'UnitTests'
-}
-
-Task Validate-PullRequest -depends Run-UnitTests, Run-DataTests
+Task Validate-PullRequest -depends Run-UnitTests
 
 Task Build-Packages -depends `
 Build-ConvertUseCasesService, `
