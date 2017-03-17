@@ -18,7 +18,6 @@ if ($Properties.Count -eq 0){
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 #------------------------------
-cls
 
 $Properties.SolutionDir = Join-Path $PSScriptRoot '..'
 $Properties.BuildFile = Join-Path $PSScriptRoot 'default.ps1'
