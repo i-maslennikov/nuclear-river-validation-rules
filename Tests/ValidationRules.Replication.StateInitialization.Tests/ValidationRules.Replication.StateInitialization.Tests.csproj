@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\2GIS.NuClear.Assembling.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Assembling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="2GIS.NuClear.DataTest.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.DataTest.0.22.0-linq2db0002\lib\net46\2GIS.NuClear.DataTest.Engine.dll</HintPath>
       <Private>True</Private>
@@ -149,6 +153,7 @@
     <Compile Include="Consistency\OrderMustHaveActiveLegalEntities.cs" />
     <Compile Include="Consistency\OrderMustHaveActiveDeal.cs" />
     <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
+    <Compile Include="DI\StateInitializationTestsRoot.cs" />
     <Compile Include="Firm\LinkedFirmShouldBeValid.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />

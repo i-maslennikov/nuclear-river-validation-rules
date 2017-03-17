@@ -3,16 +3,17 @@ using System.Collections.Generic;
 
 using Microsoft.Practices.Unity;
 
+using NuClear.Assembling.TypeProcessing;
 using NuClear.DataTest.Engine;
+using NuClear.DataTest.Engine.Command;
 using NuClear.DataTest.Metamodel;
 using NuClear.DataTest.Metamodel.Dsl;
-using NuClear.DataTest.Engine.Command;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Storage.API.ConnectionStrings;
-using NuClear.ValidationRules.Replication.AdvertisementRules.Validation;
+using NuClear.ValidationRules.Replication.StateInitialization.Tests.DI;
 
 using NUnit.Framework;
 
@@ -21,8 +22,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     [TestFixture]
     public sealed class DataTests
     {
-        private readonly AdvertisementElementMustPassReview Anchor = null;
-
         private UnityContainer _container;
         private MetadataProvider _metadataProvider;
         private TestRunner _testRunner;
@@ -30,6 +29,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
+            StateInitializationTestsRoot.Instance.PerformTypesMassProcessing(Array.Empty<IMassProcessor>(), true, typeof(object));
             _container = new UnityContainer();
             _metadataProvider =
                 new MetadataProvider(
@@ -40,13 +40,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             _container.RegisterType<DataConnectionFactory>();
             _container.RegisterInstance<IMetadataProvider>(_metadataProvider);
 
-            //var dropDatabases = _container.Resolve<DropDatabasesCommand>();
-            //var createDatabases = _container.Resolve<CreateDatabasesCommand>();
-            //var createSchemata = _container.Resolve<CreateDatabaseSchemataCommand>();
+#if !DEBUG
+            var dropDatabases = _container.Resolve<DropDatabasesCommand>();
+            var createDatabases = _container.Resolve<CreateDatabasesCommand>();
+            var createSchemata = _container.Resolve<CreateDatabaseSchemataCommand>();
 
-            //dropDatabases.Execute();
-            //createDatabases.Execute();
-            //createSchemata.Execute();
+            dropDatabases.Execute();
+            createDatabases.Execute();
+            createSchemata.Execute();
+#endif
 
             _testRunner = _container.Resolve<TestRunner>();
         }
@@ -60,6 +62,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         public void Test(KeyValuePair<Uri, IMetadataElement> element)
         {
             var test = element.Value as TestCaseMetadataElement;
+
+            Assume.That(test != null);
+            Assume.That(!test.Arrange.IsIgnored);
+
             _testRunner.Execute(test);
         }
     }
