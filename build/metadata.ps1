@@ -290,6 +290,8 @@ $AllEnvironments = @{
 	'Test.604' = @{ EnvType = 'Test'; Country = 'Kazakhstan'; Index = '604' }
 	'Test.605' = @{ EnvType = 'Test'; Country = 'Kazakhstan'; Index = '605' }
 	'Test.608' = @{ EnvType = 'Test'; Country = 'Kazakhstan'; Index = '608' }
+
+	'Appveyor' = @{ EnvType = 'Appveyor'; Country = 'Russia' }
 }
 
 return Parse-EnvironmentMetadata $Properties
