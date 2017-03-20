@@ -12,6 +12,7 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
+using NuClear.Storage.API.ConnectionStrings;
 using NuClear.ValidationRules.Replication.StateInitialization.Tests.DI;
 
 using NUnit.Framework;
@@ -35,7 +36,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new IMetadataSource[] { new SchemaMetadataSource(), new TestCaseMetadataSource() },
                     new IMetadataProcessor[0]);
 
-            _container.RegisterInstance(new DataConnectionFactory(new RunnerConnectionStringSettings()));
+            _container.RegisterType<ConnectionStringSettingsAspect, RunnerConnectionStringSettings>();
+            _container.RegisterType<DataConnectionFactory>();
             _container.RegisterInstance<IMetadataProvider>(_metadataProvider);
 
 #if !DEBUG
