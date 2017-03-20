@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-using ValidationRules.Replication.SingleCheck.Tests.ErmService;
+using ValidationRules.Replication.Comparison.Tests.ErmService;
 
-namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
+namespace ValidationRules.Replication.Comparison.Tests.RiverService
 {
     public sealed class RiverToErmResultAdapter
     {
@@ -30,9 +29,9 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
             return new ErmValidationResult { OrderCount = 1, Messages = messages };
         }
 
-        public ErmValidationResult ValidateMassManual(long[] orderIds, long projectId, DateTime releaseDate)
+        public ErmValidationResult ValidateMassManualWithAccounts(long[] orderIds, long projectId, DateTime releaseDate)
         {
-            var response = _riverClient.Manual(new RiverMassCheckRequest {OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate});
+            var response = _riverClient.ManualWithAccount(new RiverMassCheckRequest {OrderIds = orderIds, ProjectId = projectId, ReleaseDate = releaseDate});
             var messages = Format(response, FormatDescriptionMass);
             return new ErmValidationResult { OrderCount = orderIds.Length, Messages = messages };
         }
@@ -66,6 +65,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
                                       MessageText = AdaptMessage(x, descriptionFormatter)
                                   }).ToArray();
 
+        // todo: по идее, эта хрень уже не нужна
         private static long AdaptTargetEntityId(RiverValidationResult result)
         {
             switch (result.Rule)

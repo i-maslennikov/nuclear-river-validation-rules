@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1C7C6AC-4AAC-45E4-94AC-DEC47A72F447}"
 	ProjectSection(SolutionItems) = preProject
@@ -76,7 +76,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Querying.Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.SingleCheck", "ValidationRules.SingleCheck\ValidationRules.SingleCheck.csproj", "{2AEE5EB1-9F9F-49D3-8AA3-A9C9338AAF4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Replication.SingleCheck.Tests", "Tests\ValidationRules.Replication.SingleCheck.Tests\ValidationRules.Replication.SingleCheck.Tests.csproj", "{037FA64B-8A47-44D2-87A7-02DC4FA4BD0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Replication.Comparison.Tests", "Tests\ValidationRules.Replication.Comparison.Tests\ValidationRules.Replication.Comparison.Tests.csproj", "{037FA64B-8A47-44D2-87A7-02DC4FA4BD0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

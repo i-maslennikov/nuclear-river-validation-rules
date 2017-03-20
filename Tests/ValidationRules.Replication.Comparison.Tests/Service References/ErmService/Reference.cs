@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
+namespace ValidationRules.Replication.Comparison.Tests.ErmService {
     using System.Runtime.Serialization;
     using System;
     
@@ -23,7 +23,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmOrderValidationMessage[] MessagesField;
+        private ValidationRules.Replication.Comparison.Tests.ErmService.ErmOrderValidationMessage[] MessagesField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private int OrderCountField;
@@ -39,7 +39,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmOrderValidationMessage[] Messages {
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ErmOrderValidationMessage[] Messages {
             get {
                 return this.MessagesField;
             }
@@ -100,7 +100,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
         private int TargetEntityTypeCodeField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private ValidationRules.Replication.SingleCheck.Tests.ErmService.MessageType TypeField;
+        private ValidationRules.Replication.Comparison.Tests.ErmService.MessageType TypeField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -178,7 +178,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.MessageType Type {
+        public ValidationRules.Replication.Comparison.Tests.ErmService.MessageType Type {
             get {
                 return this.TypeField;
             }
@@ -307,12 +307,12 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
         [System.ServiceModel.OperationContractAttribute(Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationRestSer" +
             "vice/ValidateSingleOrderRest", ReplyAction="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationRestSer" +
             "vice/ValidateSingleOrderRestResponse")]
-        ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRestResponse ValidateSingleOrderRest(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRestRequest request);
+        ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderRestResponse ValidateSingleOrderRest(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderRestRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationRestSer" +
             "vice/ValidateSingleOrderStateTransferRest", ReplyAction="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationRestSer" +
             "vice/ValidateSingleOrderStateTransferRestResponse")]
-        ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse ValidateSingleOrderStateTransferRest(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateTransferRestRequest request);
+        ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse ValidateSingleOrderStateTransferRest(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateTransferRestRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -337,12 +337,12 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
     public partial class ValidateSingleOrderRestResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=0)]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateSingleOrderRestResult;
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateSingleOrderRestResult;
         
         public ValidateSingleOrderRestResponse() {
         }
         
-        public ValidateSingleOrderRestResponse(ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateSingleOrderRestResult) {
+        public ValidateSingleOrderRestResponse(ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateSingleOrderRestResult) {
             this.ValidateSingleOrderRestResult = ValidateSingleOrderRestResult;
         }
     }
@@ -373,23 +373,23 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
     public partial class ValidateSingleOrderStateTransferRestResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=0)]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateSingleOrderStateTransferRestResult;
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateSingleOrderStateTransferRestResult;
         
         public ValidateSingleOrderStateTransferRestResponse() {
         }
         
-        public ValidateSingleOrderStateTransferRestResponse(ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateSingleOrderStateTransferRestResult) {
+        public ValidateSingleOrderStateTransferRestResponse(ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateSingleOrderStateTransferRestResult) {
             this.ValidateSingleOrderStateTransferRestResult = ValidateSingleOrderStateTransferRestResult;
         }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IOrderValidationApplicationRestServiceChannel : ValidationRules.Replication.SingleCheck.Tests.ErmService.IOrderValidationApplicationRestService, System.ServiceModel.IClientChannel {
+    public interface IOrderValidationApplicationRestServiceChannel : ValidationRules.Replication.Comparison.Tests.ErmService.IOrderValidationApplicationRestService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class OrderValidationApplicationRestServiceClient : System.ServiceModel.ClientBase<ValidationRules.Replication.SingleCheck.Tests.ErmService.IOrderValidationApplicationRestService>, ValidationRules.Replication.SingleCheck.Tests.ErmService.IOrderValidationApplicationRestService {
+    public partial class OrderValidationApplicationRestServiceClient : System.ServiceModel.ClientBase<ValidationRules.Replication.Comparison.Tests.ErmService.IOrderValidationApplicationRestService>, ValidationRules.Replication.Comparison.Tests.ErmService.IOrderValidationApplicationRestService {
         
         public OrderValidationApplicationRestServiceClient() {
         }
@@ -410,11 +410,11 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
                 base(binding, remoteAddress) {
         }
         
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRestResponse ValidateSingleOrderRest(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRestRequest request) {
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderRestResponse ValidateSingleOrderRest(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderRestRequest request) {
             return base.Channel.ValidateSingleOrderRest(request);
         }
         
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse ValidateSingleOrderStateTransferRest(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateTransferRestRequest request) {
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse ValidateSingleOrderStateTransferRest(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateTransferRestRequest request) {
             return base.Channel.ValidateSingleOrderStateTransferRest(request);
         }
     }
@@ -426,17 +426,17 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
         [System.ServiceModel.OperationContractAttribute(Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService" +
             "/ValidateSingleOrder", ReplyAction="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService" +
             "/ValidateSingleOrderResponse")]
-        ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderResponse ValidateSingleOrder(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRequest request);
+        ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderResponse ValidateSingleOrder(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService" +
             "/ValidateSingleOrderStateChange", ReplyAction="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService" +
             "/ValidateSingleOrderStateChangeResponse")]
-        ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateChangeResponse ValidateSingleOrderStateChange(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateChangeRequest request);
+        ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateChangeResponse ValidateSingleOrderStateChange(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateChangeRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService" +
             "/ValidateOrders", ReplyAction="http://2gis.ru/erm/api/ordervalidation/2013/03/IOrderValidationApplicationService" +
             "/ValidateOrdersResponse")]
-        ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateOrdersResponse ValidateOrders(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateOrdersRequest request);
+        ValidationRules.Replication.Comparison.Tests.ErmService.ValidateOrdersResponse ValidateOrders(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateOrdersRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -461,12 +461,12 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
     public partial class ValidateSingleOrderResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=0)]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateSingleOrderResult;
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateSingleOrderResult;
         
         public ValidateSingleOrderResponse() {
         }
         
-        public ValidateSingleOrderResponse(ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateSingleOrderResult) {
+        public ValidateSingleOrderResponse(ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateSingleOrderResult) {
             this.ValidateSingleOrderResult = ValidateSingleOrderResult;
         }
     }
@@ -497,12 +497,12 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
     public partial class ValidateSingleOrderStateChangeResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=0)]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateSingleOrderStateChangeResult;
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateSingleOrderStateChangeResult;
         
         public ValidateSingleOrderStateChangeResponse() {
         }
         
-        public ValidateSingleOrderStateChangeResponse(ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateSingleOrderStateChangeResult) {
+        public ValidateSingleOrderStateChangeResponse(ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateSingleOrderStateChangeResult) {
             this.ValidateSingleOrderStateChangeResult = ValidateSingleOrderStateChangeResult;
         }
     }
@@ -513,13 +513,13 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
     public partial class ValidateOrdersRequest {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=0)]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidationType validationType;
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ValidationType validationType;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=1)]
         public long organizationUnitId;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=2)]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.TimePeriod period;
+        public ValidationRules.Replication.Comparison.Tests.ErmService.TimePeriod period;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=3)]
         public System.Nullable<long> ownerCode;
@@ -530,7 +530,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
         public ValidateOrdersRequest() {
         }
         
-        public ValidateOrdersRequest(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidationType validationType, long organizationUnitId, ValidationRules.Replication.SingleCheck.Tests.ErmService.TimePeriod period, System.Nullable<long> ownerCode, bool includeOwnerDescendants) {
+        public ValidateOrdersRequest(ValidationRules.Replication.Comparison.Tests.ErmService.ValidationType validationType, long organizationUnitId, ValidationRules.Replication.Comparison.Tests.ErmService.TimePeriod period, System.Nullable<long> ownerCode, bool includeOwnerDescendants) {
             this.validationType = validationType;
             this.organizationUnitId = organizationUnitId;
             this.period = period;
@@ -545,23 +545,23 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
     public partial class ValidateOrdersResponse {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://2gis.ru/erm/api/ordervalidation/2013/03", Order=0)]
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateOrdersResult;
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateOrdersResult;
         
         public ValidateOrdersResponse() {
         }
         
-        public ValidateOrdersResponse(ValidationRules.Replication.SingleCheck.Tests.ErmService.ErmValidationResult ValidateOrdersResult) {
+        public ValidateOrdersResponse(ValidationRules.Replication.Comparison.Tests.ErmService.ErmValidationResult ValidateOrdersResult) {
             this.ValidateOrdersResult = ValidateOrdersResult;
         }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IOrderValidationApplicationServiceChannel : ValidationRules.Replication.SingleCheck.Tests.ErmService.IOrderValidationApplicationService, System.ServiceModel.IClientChannel {
+    public interface IOrderValidationApplicationServiceChannel : ValidationRules.Replication.Comparison.Tests.ErmService.IOrderValidationApplicationService, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class OrderValidationApplicationServiceClient : System.ServiceModel.ClientBase<ValidationRules.Replication.SingleCheck.Tests.ErmService.IOrderValidationApplicationService>, ValidationRules.Replication.SingleCheck.Tests.ErmService.IOrderValidationApplicationService {
+    public partial class OrderValidationApplicationServiceClient : System.ServiceModel.ClientBase<ValidationRules.Replication.Comparison.Tests.ErmService.IOrderValidationApplicationService>, ValidationRules.Replication.Comparison.Tests.ErmService.IOrderValidationApplicationService {
         
         public OrderValidationApplicationServiceClient() {
         }
@@ -582,15 +582,15 @@ namespace ValidationRules.Replication.SingleCheck.Tests.ErmService {
                 base(binding, remoteAddress) {
         }
         
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderResponse ValidateSingleOrder(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderRequest request) {
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderResponse ValidateSingleOrder(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderRequest request) {
             return base.Channel.ValidateSingleOrder(request);
         }
         
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateChangeResponse ValidateSingleOrderStateChange(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateChangeRequest request) {
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateChangeResponse ValidateSingleOrderStateChange(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateChangeRequest request) {
             return base.Channel.ValidateSingleOrderStateChange(request);
         }
         
-        public ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateOrdersResponse ValidateOrders(ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateOrdersRequest request) {
+        public ValidationRules.Replication.Comparison.Tests.ErmService.ValidateOrdersResponse ValidateOrders(ValidationRules.Replication.Comparison.Tests.ErmService.ValidateOrdersRequest request) {
             return base.Channel.ValidateOrders(request);
         }
     }

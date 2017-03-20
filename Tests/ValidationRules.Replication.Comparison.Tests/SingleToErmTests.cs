@@ -11,16 +11,15 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 using NUnit.Framework;
 
-using ValidationRules.Replication.SingleCheck.Tests.ErmService;
-
-using ValidationRules.Replication.SingleCheck.Tests.RiverService;
+using ValidationRules.Replication.Comparison.Tests.ErmService;
+using ValidationRules.Replication.Comparison.Tests.RiverService;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace ValidationRules.Replication.SingleCheck.Tests
+namespace ValidationRules.Replication.Comparison.Tests
 {
     [TestFixture]
-    public sealed class CompareSingleToErmTests
+    public sealed class SingleToErmTests
     {
         private const int OrdersPerRule = 20;
 
@@ -40,7 +39,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
                 var result = new List<TestCaseData>(rules.Count);
 
-                using (var dc = new DataConnection("ReferenceSource").AddMappingSchema(Schema.Messages))
+                using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
                 {
                     var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue).Where(IsApplicableForSingleCheck);
                     var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
@@ -74,6 +73,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
             }
         }
 
+        [Category("CronDaily")]
         [TestCaseSource(nameof(Rules))]
         public void TestRule(int ermRule, Int32Collection riverRules, long? orderId)
         {

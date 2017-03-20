@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
+namespace ValidationRules.Replication.Comparison.Tests.RiverService
 {
     [DataContract]
     public class RiverSingleCheckRequest
@@ -70,6 +70,10 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
         RiverValidationResult[] Manual(RiverMassCheckRequest request);
 
         [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "/api/ManualWithAccount?culture=ru-RU", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
+        RiverValidationResult[] ManualWithAccount(RiverMassCheckRequest request);
+
+        [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/api/Prerelease?culture=ru-RU", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         RiverValidationResult[] Prerelease(RiverMassCheckRequest request);
 
@@ -99,6 +103,11 @@ namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
         public RiverValidationResult[] Manual(RiverMassCheckRequest request)
         {
             return base.Channel.Manual(request);
+        }
+
+        public RiverValidationResult[] ManualWithAccount(RiverMassCheckRequest request)
+        {
+            return base.Channel.ManualWithAccount(request);
         }
 
         public RiverValidationResult[] Prerelease(RiverMassCheckRequest request)

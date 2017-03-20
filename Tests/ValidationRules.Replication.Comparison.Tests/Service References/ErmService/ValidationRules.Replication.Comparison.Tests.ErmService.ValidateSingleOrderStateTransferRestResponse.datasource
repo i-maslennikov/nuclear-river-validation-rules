@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="ValidateSingleOrderStateTransferRestResponse" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>ValidationRules.Replication.SingleCheck.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse, Service References.ErmService.Reference.cs.dll, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+   <TypeInfo>ValidationRules.Replication.Comparison.Tests.ErmService.ValidateSingleOrderStateTransferRestResponse, Service References.ErmService.Reference.cs.dll, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

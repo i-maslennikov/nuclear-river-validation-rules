@@ -3,7 +3,7 @@ using System.Linq;
 
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-namespace ValidationRules.Replication.SingleCheck.Tests.RiverService
+namespace ValidationRules.Replication.Comparison.Tests.RiverService
 {
     public static class RiverToErmMappingExtensions
     {

@@ -14,14 +14,14 @@ using NUnit.Framework;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace ValidationRules.Replication.SingleCheck.Tests
+namespace ValidationRules.Replication.Comparison.Tests
 {
     [TestFixture]
-    public sealed class CompareSingleToMassTests
+    public sealed class SingleToMassTests
     {
         private const int OrderPerRule = 1;
 
-        private readonly PipelineFactory PipelineFactory = new PipelineFactory();
+        private static readonly PipelineFactory PipelineFactory = new PipelineFactory();
 
         private IEnumerable<MessageTypeCode> Rules
             => Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>();
@@ -29,7 +29,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
         [TestCaseSource(nameof(Rules))]
         public void TestRule(MessageTypeCode rule)
         {
-            using (var dc = new DataConnection("ReferenceSource").AddMappingSchema(Schema.Messages))
+            using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
             {
                 var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
                 var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
@@ -47,7 +47,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
                 foreach (var expected in expecteds)
                 {
-                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", expected.Key), new PersistentTableStoreFactory("Pipeline"), new HashSetStoreFactory()))
+                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", expected.Key), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
                     {
                         var actual = validator.Execute().Where(x => x.OrderId == expected.Key && x.MessageType == (int)rule).ToArray();
                         AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
@@ -62,7 +62,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
         [TestCaseSource(nameof(Orders))]
         public void TestOrder(long orderId)
         {
-            using (var dc = new DataConnection("ReferenceSource").AddMappingSchema(Schema.Messages))
+            using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
             {
                 var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
                 var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
@@ -74,7 +74,7 @@ namespace ValidationRules.Replication.SingleCheck.Tests
 
                 var expected = results.ToArray();
 
-                using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", orderId), new PersistentTableStoreFactory("Pipeline"), new HashSetStoreFactory()))
+                using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", orderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
                 {
                     var actual = validator.Execute().Where(x => x.OrderId == orderId).ToArray();
                     AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
@@ -115,14 +115,14 @@ namespace ValidationRules.Replication.SingleCheck.Tests
                 if (!expected.TryGetValue(key, out leftPeriods))
                 {
                     var keys = string.Join(Environment.NewLine, expected.Keys.Select(x => x.ToString(SaveOptions.DisableFormatting)));
-                    Assert.Fail($"{key.ToString(SaveOptions.DisableFormatting)}\n is missing in expected, but present:\n {keys}");
+                    Assert.Fail($"one of actual:{key.ToString(SaveOptions.DisableFormatting)}\nis missing in expected:\n {keys}");
                 }
 
                 List<Tuple<DateTime, DateTime>> rightPeriods;
                 if (!actual.TryGetValue(key, out rightPeriods))
                 {
                     var keys = string.Join(Environment.NewLine, actual.Keys.Select(x => x.ToString(SaveOptions.DisableFormatting)));
-                    Assert.Fail($"{key.ToString(SaveOptions.DisableFormatting)}\n is missing in actual, but present:\n {keys}");
+                    Assert.Fail($"one of expected:{key.ToString(SaveOptions.DisableFormatting)}\nis missing in actual:\n {keys}");
                 }
 
                 Assert.AreEqual(leftPeriods, rightPeriods);

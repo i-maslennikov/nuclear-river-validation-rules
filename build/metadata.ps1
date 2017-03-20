@@ -3,6 +3,7 @@
 Import-Module "$PSScriptRoot\metadata.web.psm1" -DisableNameChecking
 Import-Module "$PSScriptRoot\metadata.winservice.psm1" -DisableNameChecking
 Import-Module "$PSScriptRoot\metadata.transform.psm1" -DisableNameChecking
+Import-Module "$PSScriptRoot\metadata.nunit.psm1" -DisableNameChecking
 
 function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 
@@ -28,6 +29,12 @@ function Get-EntryPointsMetadata ($EntryPoints, $Context) {
 			$Context.EntryPoint = $_
 			$entryPointsMetadata += Get-WinServiceMetadata $Context
 		}
+
+		'ValidationRules.Replication.Comparison.Tests' {
+			$Context.EntryPoint = $_
+			$entryPointsMetadata += Get-AssemblyMetadata $Context
+		}
+
 		default {
 			throw "Can't find entrypoint $_"
 		}

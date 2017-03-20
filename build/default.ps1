@@ -42,6 +42,15 @@ function QueueDeploy-ReplicationHost {
 		QueueDeploy-WinService 'ValidationRules.Replication.Host'
 	}
 }
+
+# Replication.Host
+function QueueBuild-ComparisonTests {
+	if ($Metadata['ValidationRules.Replication.Comparison.Tests']){
+		$projectFileName = Get-ProjectFileName 'Tests' 'ValidationRules.Replication.Comparison.Tests'
+		QueueBuild-AppPackage $projectFileName 'ValidationRules.Replication.Comparison.Tests'
+	}
+}
+
 Task Stop-ReplicationHost -Precondition { $Metadata['ValidationRules.Replication.Host'] } {
 	Load-WinServiceModule 'ValidationRules.Replication.Host'
 	Take-WinServiceOffline 'ValidationRules.Replication.Host'
@@ -52,6 +61,7 @@ Task QueueBuild-Packages {
 	QueueBuild-BulkTool
 	QueueBuild-QueryingHost
 	QueueBuild-ReplicationHost
+	QueueBuild-ComparisonTests
 
 	Invoke-MSBuildQueue
 }
