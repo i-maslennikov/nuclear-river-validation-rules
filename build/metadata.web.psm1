@@ -51,6 +51,9 @@ function Get-TargetHostsMetadata ($Context) {
 		'Load' {
 			return @{ 'TargetHosts' = @('uk-erm-iis12') }
 		}
+		'Appveyor' {
+			return @{ 'TargetHosts' = @() }
+		}
 		default {
 			throw "Unknown environment type '$($Context.EnvType)'"
 		}
