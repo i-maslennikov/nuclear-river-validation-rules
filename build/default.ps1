@@ -79,15 +79,20 @@ Task QueueDeploy-Packages {
 	Invoke-DeployQueue
 }
 
+Task Build-NuGetOnly {
+    $projects = Find-Projects '.' -Filter '*.nuproj'
+    Build-PackagesFromNuProjs $projects 'NuGet'
+}
+
 Task Validate-PullRequest -depends Run-UnitTests
 
 Task Build-Packages -depends `
-Build-ConvertUseCasesService, `
-QueueBuild-Packages
+    Build-ConvertUseCasesService, `
+    QueueBuild-Packages
 
 Task Deploy-Packages -depends `
-Stop-ReplicationHost, `
-Deploy-ServiceBus, `
-Update-Schemas, `
-Run-BulkTool, `
-QueueDeploy-Packages
+    Stop-ReplicationHost, `
+    Deploy-ServiceBus, `
+    Update-Schemas, `
+    Run-BulkTool, `
+    QueueDeploy-Packages
