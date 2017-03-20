@@ -24,12 +24,12 @@ $Properties.BuildFile = Join-Path $PSScriptRoot 'default.ps1'
 
 # Restore-Packages
 & {
-	$NugetPath = Join-Path $Properties.SolutionDir '.nuget\NuGet_v3.3.0.exe'
+	$NugetPath = Join-Path $Properties.SolutionDir '.nuget\NuGet_v3.5.0.exe'
 	if (!(Test-Path $NugetPath)){
 		$webClient = New-Object System.Net.WebClient
 		$webClient.UseDefaultCredentials = $true
 		$webClient.Proxy.Credentials = $webClient.Credentials
-		$webClient.DownloadFile('https://dist.nuget.org/win-x86-commandline/v3.3.0/nuget.exe', $NugetPath)
+		$webClient.DownloadFile('https://dist.nuget.org/win-x86-commandline/v3.5.0/nuget.exe', $NugetPath)
 	}
 	$solution = Get-ChildItem $Properties.SolutionDir -Filter '*.sln'
 	& $NugetPath @('restore', $solution.FullName, '-NonInteractive', '-Verbosity', 'quiet')
