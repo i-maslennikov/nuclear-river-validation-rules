@@ -17,28 +17,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderPositionsShouldCorrespontToActualPrice))
                 .Aggregate(
+
                     new Aggregates::Order { Id = 1 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = FirstDayJan },
-                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = FirstDayFeb },
+                    new Aggregates::Order.ActualPrice { OrderId = 1, PriceId = 1 },
 
                     new Aggregates::Order { Id = 2 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = FirstDayFeb },
+                    new Aggregates::Order.ActualPrice { OrderId = 2, PriceId = null },
 
-                    new Aggregates::Period { Start = FirstDayJan, End = FirstDayFeb },
-                    new Aggregates::Period { Start = FirstDayFeb, End = FirstDayMar },
-
-                    new Aggregates::Period.PricePeriod { Start = FirstDayFeb },
-
-                    new Aggregates::Price())
+                    new Aggregates::Period { OrganizationUnitId = 1, Start = FirstDayJan, End = FirstDayFeb },
+                    new Aggregates::Period.OrderPeriod { OrganizationUnitId = 1, Start = FirstDayJan, OrderId = 1 },
+                    new Aggregates::Period.OrderPeriod { OrganizationUnitId = 1, Start = FirstDayJan, OrderId = 2 }
+                    )
                 .Message(
                     new Messages::Version.ValidationResult
                         {
-                            MessageParams = new MessageParams(new Reference<EntityTypeOrder>(1)).ToXDocument(),
+                            MessageParams = new MessageParams(new Reference<EntityTypeOrder>(2)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
-                            Result = 3,
                             PeriodStart = FirstDayJan,
-                            PeriodEnd = FirstDayMar,
-                            OrderId = 1,
+                            PeriodEnd = FirstDayFeb,
+                            OrderId = 2,
                         });
     }
 }

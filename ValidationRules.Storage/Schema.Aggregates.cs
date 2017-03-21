@@ -129,6 +129,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceAggregates::Order.AmountControlledPosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
+            builder.Entity<PriceAggregates::Order.ActualPrice>()
+                   .HasSchemaName(PriceAggregatesSchema);
+
             builder.Entity<PriceAggregates::Period>()
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Start)

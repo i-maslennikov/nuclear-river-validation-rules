@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 {
@@ -18,11 +15,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
     /// </summary>
     public sealed class LinkedCategoryFirmAddressShouldBeValid : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public LinkedCategoryFirmAddressShouldBeValid(IQuery query) : base(query, MessageTypeCode.LinkedCategoryFirmAddressShouldBeValid)
         {
         }
@@ -47,8 +39,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                         PeriodStart = order.BeginDistribution,
                         PeriodEnd = order.EndDistributionPlan,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

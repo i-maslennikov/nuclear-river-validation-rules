@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
 {
@@ -22,11 +19,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
     /// </summary>
     public sealed class DefaultThemeMustBeExactlyOne : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public DefaultThemeMustBeExactlyOne(IQuery query) : base(query, MessageTypeCode.DefaultThemeMustBeExactlyOne)
         {
         }
@@ -36,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
             var dates =
                 query.For<Project.ProjectDefaultTheme>().Select(x => new { x.ProjectId, Date = x.Start })
                      .Union(query.For<Project.ProjectDefaultTheme>().Select(x => new { x.ProjectId, Date = x.End }))
-                     .Union(query.For<Project>().Select(x => new { ProjectId = x.Id, Date = DateTime.MinValue })); // Фиктивное начало для каждого проекта, даже если в нём нет ни одной тематики по умолчанию
+                     .Union(query.For<Project>().Select(x => new { ProjectId = x.Id, Date = System.DateTime.MinValue })); // Фиктивное начало для каждого проекта, даже если в нём нет ни одной тематики по умолчанию
 
             var projectPeriods =
                 from date in dates
@@ -44,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                 select new
                     {
                         Start = date.Date,
-                        End = nextDate != null ? nextDate.Date : DateTime.MaxValue,
+                        End = nextDate != null ? nextDate.Date : System.DateTime.MaxValue,
                         date.ProjectId
                     };
 
@@ -63,8 +55,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                         PeriodStart = projectPeriod.Start,
                         PeriodEnd = projectPeriod.End,
                         ProjectId = projectPeriod.ProjectId,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

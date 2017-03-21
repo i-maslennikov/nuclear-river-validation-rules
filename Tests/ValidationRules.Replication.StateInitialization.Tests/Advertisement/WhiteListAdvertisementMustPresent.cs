@@ -44,7 +44,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         MessageParams = new MessageParams(
                                 new Reference<EntityTypeFirm>(7)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.WhiteListAdvertisementMustPresent,
-                        Result = 746,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
                         OrderId = 1,
@@ -82,7 +81,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new Reference<EntityTypeFirm>(7),
                                 new Reference<EntityTypeAdvertisement>(6)).ToXDocument(),
                         MessageType = (int)MessageTypeCode.WhiteListAdvertisementMayPresent,
-                        Result = 341,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
                         OrderId = 1,
@@ -111,7 +109,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     new Reference<EntityTypeFirm>(0),
                                     new Reference<EntityTypeAdvertisement>(0)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.WhiteListAdvertisementMayPresent,
-                            Result = 341,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 1,
@@ -121,7 +118,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageParams = new MessageParams(
                                         new Reference<EntityTypeFirm>(0)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.WhiteListAdvertisementMustPresent,
-                            Result = 746,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,

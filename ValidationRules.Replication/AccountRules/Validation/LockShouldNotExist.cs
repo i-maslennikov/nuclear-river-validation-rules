@@ -1,12 +1,9 @@
 ﻿using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.AccountRules.Validation
 {
@@ -18,12 +15,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
     /// </summary>
     public sealed class LockShouldNotExist : ValidationResultAccessorBase
     {
-        // В erm эта проверка не вызывается при ручной проверке, только при сборке (в том числе бете)
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public LockShouldNotExist(IQuery query) : base(query, MessageTypeCode.LockShouldNotExist)
         {
         }
@@ -43,8 +34,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                         PeriodStart = @lock.Start,
                         PeriodEnd = @lock.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

@@ -58,7 +58,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     new Reference<EntityTypeOrderPosition>(4),
                                     new Reference<EntityTypePosition>(5))).ToXDocument(),
                         MessageType = (int)MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
-                        Result = 2,
                         PeriodStart = FirstDayJan,
                         PeriodEnd = FirstDayFeb,
                         OrderId = 1,

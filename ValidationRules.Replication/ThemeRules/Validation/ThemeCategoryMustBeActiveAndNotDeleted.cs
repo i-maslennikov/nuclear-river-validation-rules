@@ -15,11 +15,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
     /// </summary>
     public sealed class ThemeCategoryMustBeActiveAndNotDeleted : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.None)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public ThemeCategoryMustBeActiveAndNotDeleted(IQuery query) : base(query, MessageTypeCode.ThemeCategoryMustBeActiveAndNotDeleted)
         {
         }
@@ -65,8 +60,6 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Validation
                         PeriodStart = invalidMaxPeriod.BeginDistributionDate,
                         PeriodEnd = invalidMaxPeriod.EndDistributionDateFact,
                         ProjectId = invalidMaxPeriod.ProjectId,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

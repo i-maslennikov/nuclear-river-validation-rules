@@ -3,10 +3,8 @@
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
-
-using Order = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates.Order;
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
@@ -22,11 +20,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// </summary>
     public sealed class FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions(IQuery query) : base(query, MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions)
         {
         }
@@ -65,8 +58,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                     PeriodStart = order.Begin,
                         PeriodEnd = order.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return result;

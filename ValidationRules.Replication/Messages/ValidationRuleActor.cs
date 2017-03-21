@@ -19,6 +19,7 @@ using NuClear.ValidationRules.Replication.PriceRules.Validation;
 using NuClear.ValidationRules.Replication.ProjectRules.Validation;
 using NuClear.ValidationRules.Replication.ThemeRules.Validation;
 using NuClear.ValidationRules.Storage.Model.Messages;
+using NuClear.ValidationRules.Storage.Specifications;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -62,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                 using (Probe.Create("Query Target"))
                 {
-                    var query = _query.For<Version.ValidationResult>().GetValidationResults(currentVersion);
+                    var query = _query.For<Version.ValidationResult>().ForVersion(currentVersion);
                     targetValidationResults = query.ToList();
                 }
 
@@ -232,7 +233,8 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new MinimalAdvertisementRestrictionShouldBeSpecified(_query),
                     new MinimumAdvertisementAmount(_query),
                     new OrderPositionCorrespontToInactivePosition(_query),
-                    new OrderPositionShouldCorrespontToActualPrice(_query),
+                    new OrderPositionMayCorrespontToActualPrice(_query),
+                    new OrderPositionMustCorrespontToActualPrice(_query),
                     new OrderPositionsShouldCorrespontToActualPrice(_query),
                     new FirmAssociatedPositionShouldNotStayAlone(_query),
 

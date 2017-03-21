@@ -57,7 +57,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                         new Reference<EntityTypeProject>(0))
                                     .ToXDocument(),
                             MessageType = (int)MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
-                            Result = 1023,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 2,

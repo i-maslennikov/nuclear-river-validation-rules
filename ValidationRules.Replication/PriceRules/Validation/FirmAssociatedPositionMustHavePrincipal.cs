@@ -6,8 +6,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
@@ -23,12 +21,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     // todo: переименовать PrincipalPositionMustExistForAssociated
     public sealed class FirmAssociatedPositionMustHavePrincipal : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenSingleForApprove(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public FirmAssociatedPositionMustHavePrincipal(IQuery query) : base(query, MessageTypeCode.FirmAssociatedPositionMustHavePrincipal)
         {
         }
@@ -56,8 +48,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                     PeriodStart = error.Begin,
                     PeriodEnd = error.End,
                     OrderId = error.OrderId,
-
-                    Result = RuleResult,
                 };
 
             return messages;

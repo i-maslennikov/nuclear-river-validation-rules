@@ -23,8 +23,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                    XNode.EqualityComparer.Equals(x.MessageParams, y.MessageParams) &&
                    Date(x.PeriodStart).Equals(Date(y.PeriodStart)) &&
                    Date(x.PeriodEnd).Equals(Date(y.PeriodEnd)) &&
-                   x.ProjectId == y.ProjectId &&
-                   x.Result == y.Result;
+                   x.ProjectId == y.ProjectId;
         }
 
         public int GetHashCode(Version.ValidationResult obj)
@@ -36,7 +35,6 @@ namespace NuClear.ValidationRules.Replication.Messages
                 hashCode = (hashCode * 397) ^ Date(obj.PeriodStart).GetHashCode();
                 hashCode = (hashCode * 397) ^ Date(obj.PeriodEnd).GetHashCode();
                 hashCode = (hashCode * 397) ^ obj.ProjectId.GetHashCode();
-                hashCode = (hashCode * 397) ^ obj.Result;
                 return hashCode;
             }
         }

@@ -7,8 +7,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
@@ -20,11 +18,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     public sealed class FirmShouldHaveLimitedCategoryCount : ValidationResultAccessorBase
     {
         private const int MaxCategoriesAlowedForFirm = 20;
-
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
-                                                                    .WhenMass(Result.Warning)
-                                                                    .WhenMassPrerelease(Result.Warning)
-                                                                    .WhenMassRelease(Result.None);
 
         public FirmShouldHaveLimitedCategoryCount(IQuery query) : base(query, MessageTypeCode.FirmShouldHaveLimitedCategoryCount)
         {
@@ -64,8 +57,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                         PeriodStart = firmPeriod.Begin,
                         PeriodEnd = firmPeriod.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return messages;

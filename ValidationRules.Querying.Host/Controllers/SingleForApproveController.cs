@@ -9,13 +9,13 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
 {
-    [RoutePrefix("api/SingleForCancel")]
-    public class SingleForCancelController : ApiController
+    [RoutePrefix("api/SingleForApprove")]
+    public class SingleForApproveController : ApiController
     {
         private readonly ValidationResultFactory _factory;
         private readonly PipelineFactory _pipelineFactory;
 
-        public SingleForCancelController(ValidationResultFactory factory, PipelineFactory pipelineFactory)
+        public SingleForApproveController(ValidationResultFactory factory, PipelineFactory pipelineFactory)
         {
             _factory = factory;
             _pipelineFactory = pipelineFactory;
@@ -26,13 +26,10 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         {
             using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
             {
-                var sqlBitwiseFilter = ResultType.SingleForCancel.ToBitMask();
-
                 var query = validator.Execute()
-                    .Where(x => x.OrderId == request.OrderId)
-                    .Where(x => (x.Result & sqlBitwiseFilter) != 0);
+                    .Where(x => x.OrderId == request.OrderId);
 
-                var messages = query.ToMessages(ResultType.SingleForCancel).ToList();
+                var messages = query.ToMessages(ResultType.SingleForApprove);
                 var result = _factory.GetValidationResult(messages);
                 return Ok(result);
             }

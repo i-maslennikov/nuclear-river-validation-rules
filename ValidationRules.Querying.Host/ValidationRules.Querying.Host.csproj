@@ -133,6 +133,7 @@
     <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveDealMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderCouponPeriodMustBeInReleaseMessageComposer.cs" />
+    <Compile Include="Composition\Composers\OrderPositionMustCorrespontToActualPriceMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionSalesModelMustMatchCategorySalesModelMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCostPerClickMustBeSpecifiedMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCostPerClickMustNotBeLessMinimumMessageComposer.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="DataAccess\DataConnectionFactory.cs" />
     <Compile Include="DataAccess\Message.cs" />
     <Compile Include="DataAccess\MessageRepositiory.cs" />
+    <Compile Include="DataAccess\ValidationResultExtensions.cs" />
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="DI\UnityDependencyResolver.cs" />
     <Compile Include="ExceptionTracer.cs" />
@@ -211,7 +213,7 @@
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCorrespontToInactivePositionMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionMustNotReferenceDeletedAdvertisementMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderPositionShouldCorrespontToActualPriceMessageComposer.cs" />
+    <Compile Include="Composition\Composers\OrderPositionMayCorrespontToActualPriceMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionsShouldCorrespontToActualPriceMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderRequiredFieldsShouldBeSpecifiedMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderScanShouldPresentMessageComposer.cs" />

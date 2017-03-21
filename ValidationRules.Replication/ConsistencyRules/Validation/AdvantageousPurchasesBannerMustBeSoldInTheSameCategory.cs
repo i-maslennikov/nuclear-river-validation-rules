@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Xml.Linq;
 
 using NuClear.Storage.API.Readings;
-using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -18,11 +16,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
     /// </summary>
     public sealed class AdvantageousPurchasesBannerMustBeSoldInTheSameCategory : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public AdvantageousPurchasesBannerMustBeSoldInTheSameCategory(IQuery query) : base(query, MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory)
         {
         }

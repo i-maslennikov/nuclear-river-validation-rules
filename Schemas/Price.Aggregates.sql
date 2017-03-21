@@ -10,6 +10,7 @@ if object_id('PriceAggregates.OrderPrice') is not null drop table PriceAggregate
 if object_id('PriceAggregates.OrderPricePosition') is not null drop table PriceAggregates.OrderPricePosition
 if object_id('PriceAggregates.OrderPosition') is not null drop table PriceAggregates.OrderPosition
 if object_id('PriceAggregates.AmountControlledPosition') is not null drop table PriceAggregates.AmountControlledPosition
+if object_id('PriceAggregates.ActualPrice') is not null drop table PriceAggregates.ActualPrice
 if object_id('PriceAggregates.[Order]') is not null drop table PriceAggregates.[Order]
 
 if object_id('PriceAggregates.PriceAssociatedPosition') is not null drop table PriceAggregates.PriceAssociatedPosition
@@ -62,6 +63,12 @@ go
 create table PriceAggregates.AmountControlledPosition(
     OrderId bigint NOT NULL,
     CategoryCode bigint NOT NULL
+)
+go
+
+create table PriceAggregates.ActualPrice(
+    OrderId bigint NOT NULL,
+    PriceId bigint NULL
 )
 go
 

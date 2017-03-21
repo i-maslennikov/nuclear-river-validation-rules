@@ -7,8 +7,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
@@ -20,11 +18,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     public sealed class AdvertisementCountPerThemeShouldBeLimited : ValidationResultAccessorBase
     {
         private const int MaxPositionsPerTheme = 10;
-
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
 
         public AdvertisementCountPerThemeShouldBeLimited(IQuery query) : base(query, MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited)
         {
@@ -67,8 +60,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return messages;

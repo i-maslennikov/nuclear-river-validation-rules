@@ -3,6 +3,7 @@ using System.Linq;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Storage.Specifications;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -36,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.Messages
             if (versions.Count > 1)
             {
                 var keepVersion = versions.First();
-                var keepValidationResults = _query.For<Version.ValidationResult>().GetValidationResults(keepVersion.Id).ApplyVersionId(keepVersion.Id).ToList();
+                var keepValidationResults = _query.For<Version.ValidationResult>().ForVersion(keepVersion.Id).ApplyVersionId(keepVersion.Id).ToList();
 
                 _validationResultDeleteRepository.Delete(versions.Select(x => new Version.ValidationResultBulkDelete { VersionId = x.Id }));
                 _ermStateDeleteRepository.Delete(versions.Select(x => new Version.ErmStateBulkDelete { VersionId = x.Id }));

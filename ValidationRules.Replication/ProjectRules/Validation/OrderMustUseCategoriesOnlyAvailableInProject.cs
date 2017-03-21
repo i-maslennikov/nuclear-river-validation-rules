@@ -5,8 +5,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
 {
     /// <summary>
@@ -21,11 +19,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     /// </summary>
     public sealed class OrderMustUseCategoriesOnlyAvailableInProject : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public OrderMustUseCategoriesOnlyAvailableInProject(IQuery query) : base(query, MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject)
         {
         }
@@ -51,8 +44,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                         PeriodStart = order.Begin,
                         PeriodEnd = order.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;

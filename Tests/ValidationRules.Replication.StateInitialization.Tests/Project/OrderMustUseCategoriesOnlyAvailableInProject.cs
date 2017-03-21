@@ -39,7 +39,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     .ToXDocument(),
 
                             MessageType = (int)MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
-                            Result = 243,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,

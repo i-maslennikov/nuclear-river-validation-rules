@@ -32,9 +32,15 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public long? ProjectId { get; set; }
             public long? OrderId { get; set; }
 
-            public int Result { get; set; }
-
             public bool Resolved { get; set; }
+        }
+
+        public sealed class ValidationResultType
+        {
+            public ResultType ResultType { get; set; }
+            public int MessageType { get; set; }
+
+            public Result Result { get; set; }
         }
 
         public sealed class ValidationResultBulkDelete

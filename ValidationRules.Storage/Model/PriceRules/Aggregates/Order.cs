@@ -49,5 +49,11 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long OrderId { get; set; }
             public long CategoryCode { get; set; }
         }
+
+        public sealed class ActualPrice
+        {
+            public long OrderId { get; set; }
+            public long? PriceId { get; set; }
+        }
     }
 }

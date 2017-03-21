@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
-
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
 {
@@ -19,11 +16,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     /// </summary>
     public sealed class ProjectMustContainCostPerClickMinimumRestriction : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public ProjectMustContainCostPerClickMinimumRestriction(IQuery query) : base(query, MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction)
         {
         }
@@ -54,8 +46,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                     PeriodStart = req.Begin,
                     PeriodEnd = req.End,
                     OrderId = req.OrderId,
-
-                    Result = RuleResult,
                 };
 
             return ruleResults;

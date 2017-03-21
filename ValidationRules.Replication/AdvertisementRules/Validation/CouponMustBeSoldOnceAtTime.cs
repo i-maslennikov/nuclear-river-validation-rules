@@ -6,8 +6,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
@@ -18,11 +16,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// </summary>
     public sealed class CouponMustBeSoldOnceAtTime : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
-
         public CouponMustBeSoldOnceAtTime(IQuery query) : base(query, MessageTypeCode.CouponMustBeSoldOnceAtTime)
         {
         }
@@ -79,8 +72,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
                                         PeriodStart = coupon.Key.Begin,
                                         PeriodEnd = coupon.Key.End,
                                         OrderId = coupon.Key.OrderId,
-
-                                        Result = RuleResult,
                                     });
 
             return ruleResults.AsQueryable();

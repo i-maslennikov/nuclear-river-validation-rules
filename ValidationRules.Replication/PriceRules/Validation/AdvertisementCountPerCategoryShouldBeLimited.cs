@@ -7,8 +7,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
@@ -28,14 +26,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         private const int TargetCategoryCode = 38;
 
         private const int MaxPositionsPerCategory = 2;
-
-        // todo: согласовать ошибку при всех типах проверок.
-        // сейчас повторяется логика erm, но мне она кажется странной, ошибка должна быть на всех уровнях - нельзя пропускать лишний заказ в ядро.
-        // например, аналогичная проверка на количество тематик в выпуске - выдает всегда ошибку.
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Warning)
-                                                                    .WhenMass(Result.Error)
-                                                                    .WhenMassPrerelease(Result.Error)
-                                                                    .WhenMassRelease(Result.Error);
 
         public AdvertisementCountPerCategoryShouldBeLimited(IQuery query) : base(query, MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited)
         {
@@ -79,8 +69,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return messages;

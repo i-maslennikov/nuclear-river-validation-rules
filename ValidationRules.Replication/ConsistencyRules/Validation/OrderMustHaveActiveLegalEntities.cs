@@ -6,8 +6,6 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
-
 namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
 {
     /// <summary>
@@ -18,11 +16,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
     /// </summary>
     public sealed class OrderMustHaveActiveLegalEntities : ValidationResultAccessorBase
     {
-        private static readonly int RuleResult = new ResultBuilder().WhenSingle(Result.Error)
-                                                                    .WhenMass(Result.None)
-                                                                    .WhenMassPrerelease(Result.None)
-                                                                    .WhenMassRelease(Result.None);
-
         public OrderMustHaveActiveLegalEntities(IQuery query) : base(query, MessageTypeCode.OrderMustHaveActiveLegalEntities)
         {
         }
@@ -50,8 +43,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                         PeriodStart = order.BeginDistribution,
                         PeriodEnd = order.EndDistributionPlan,
                         OrderId = order.Id,
-
-                        Result = RuleResult,
                     };
 
             return ruleResults;
