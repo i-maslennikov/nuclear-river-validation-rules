@@ -32,7 +32,7 @@ $Properties.BuildFile = Join-Path $PSScriptRoot 'default.ps1'
 		$webClient.DownloadFile('https://dist.nuget.org/win-x86-commandline/v3.5.0/nuget.exe', $NugetPath)
 	}
 	$solution = Get-ChildItem $Properties.SolutionDir -Filter '*.sln'
-	& $NugetPath @('restore', $solution.FullName, '-NonInteractive', '-Verbosity', 'quiet')
+	& $NugetPath @('restore', $solution.FullName, '-NonInteractive', '-Verbosity', 'detailed')
 }
 
 $packageName = "2GIS.NuClear.BuildTools"
