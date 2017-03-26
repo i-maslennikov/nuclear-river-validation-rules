@@ -33,5 +33,9 @@ namespace NuClear.ValidationRules.SingleCheck.Store
         {
             return _store;
         }
+
+        public void Dispose()
+        {
+        }
     }
 }

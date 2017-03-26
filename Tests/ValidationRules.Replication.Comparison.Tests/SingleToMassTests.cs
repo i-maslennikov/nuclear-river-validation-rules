@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
 using LinqToDB.Data;
 
 using NuClear.ValidationRules.SingleCheck;
-using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -21,38 +21,26 @@ namespace ValidationRules.Replication.Comparison.Tests
     {
         private const int OrderPerRule = 1;
 
-        private static readonly PipelineFactory PipelineFactory = new PipelineFactory();
-
         private IEnumerable<MessageTypeCode> Rules
             => Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>();
 
         [TestCaseSource(nameof(Rules))]
         public void TestRule(MessageTypeCode rule)
         {
-            using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
+            var results = GetResultsFromBigDatabase(x => x.MessageType == (int)rule && x.OrderId.HasValue);
+            if (!results.Any())
             {
-                var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
-                var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
+                Assert.Inconclusive();
+            }
 
-                var results =
-                    from result in orderErrors.Where(x => x.MessageType == (int)rule)
-                    where !resolved.Any(x => x.MessageType == result.MessageType && x.OrderId == result.OrderId && x.VersionId > result.VersionId)
-                    select result;
+            var expectedResultsByOrder = results.GroupBy(x => x.OrderId.Value, x => x).Take(OrderPerRule).ToArray();
 
-                var expecteds = results.GroupBy(x => x.OrderId.Value, x => x).Take(OrderPerRule).ToArray();
-                if (expecteds.Length == 0)
-                {
-                    Assert.Inconclusive();
-                }
+            var validator = new ValidatorFactory().Create();
+            foreach (var expected in expectedResultsByOrder)
+            {
+                var actual = validator.Execute(expected.Key).Where(x => x.MessageType == (int)rule).ToArray();
 
-                foreach (var expected in expecteds)
-                {
-                    using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", expected.Key), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
-                    {
-                        var actual = validator.Execute().Where(x => x.OrderId == expected.Key && x.MessageType == (int)rule).ToArray();
-                        AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
-                    }
-                }
+                AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
             }
         }
 
@@ -62,23 +50,27 @@ namespace ValidationRules.Replication.Comparison.Tests
         [TestCaseSource(nameof(Orders))]
         public void TestOrder(long orderId)
         {
+            var expected = GetResultsFromBigDatabase(x => x.OrderId == orderId);
+
+            var validator = new ValidatorFactory().Create();
+            var actual = validator.Execute(orderId);
+
+            AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
+        }
+
+        private IReadOnlyCollection<Version.ValidationResult> GetResultsFromBigDatabase(Expression<Func<Version.ValidationResult, bool>> filter)
+        {
             using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
             {
                 var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
                 var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == true);
 
                 var results =
-                    from result in orderErrors.Where(x => x.OrderId == orderId)
+                    from result in orderErrors.Where(filter)
                     where !resolved.Any(x => x.MessageType == result.MessageType && x.OrderId == result.OrderId && x.VersionId > result.VersionId)
                     select result;
 
-                var expected = results.ToArray();
-
-                using (var validator = new Validator(PipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", orderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
-                {
-                    var actual = validator.Execute().Where(x => x.OrderId == orderId).ToArray();
-                    AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
-                }
+                return results.ToArray();
             }
         }
 

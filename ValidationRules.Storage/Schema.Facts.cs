@@ -23,10 +23,13 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<Advertisement>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.IsDeleted }, x => new { x.Id });
             builder.Entity<AdvertisementElement>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.AdvertisementElementTemplateId, x.IsEmpty }, x => new { x.Id, x.AdvertisementId })
+                   .HasIndex(x => new { x.AdvertisementElementTemplateId, x.Status }, x => new { x.Id, x.AdvertisementId });
             builder.Entity<AdvertisementElementTemplate>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -35,10 +38,12 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<AssociatedPosition>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.AssociatedPositionsGroupId });
             builder.Entity<AssociatedPositionsGroup>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.PricePositionId });
             builder.Entity<Bargain>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -70,21 +75,26 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<DeniedPosition>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.PriceId });
             builder.Entity<EntityName>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
                    .HasPrimaryKey(x => x.EntityType);
             builder.Entity<Firm>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.Id }, x => new { x.IsClosedForAscertainment, x.IsActive, x.IsDeleted });
             builder.Entity<FirmAddress>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.FirmId, x.IsActive, x.IsDeleted, x.IsClosedForAscertainment }, x => new { x.Id });
             builder.Entity<FirmAddressCategory>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
-                   .HasPrimaryKey(x => x.CategoryId);
+                   .HasPrimaryKey(x => x.CategoryId)
+                   .HasIndex(x => new { x.CategoryId }, x => new { x.FirmAddressId })
+                   .HasIndex(x => new { x.FirmAddressId, x.CategoryId });
             builder.Entity<FirmAddressWebsite>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -93,7 +103,8 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<LegalPersonProfile>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.LegalPersonId }, x => new { x.Id });
             builder.Entity<Lock>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -103,25 +114,38 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.PriceId);
             builder.Entity<Order>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.DestOrganizationUnitId }, x => new { x.Id, x.FirmId, x.BeginDistribution, x.EndDistributionFact, x.EndDistributionPlan, x.WorkflowStep })
+                   .HasIndex(x => new { x.LegalPersonId, x.SignupDate }, x => new { x.Id })
+                   .HasIndex(x => new { x.BargainId }, x => new { x.Id })
+                   .HasIndex(x => new { x.BargainId, x.SignupDate }, x => new { x.Id });
             builder.Entity<OrderItem>()
                    .HasSchemaName(FactsSchema);
             builder.Entity<OrderPosition>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.OrderId }, x => new { x.Id })
+                   .HasIndex(x => new { x.PricePositionId }, x => new { x.Id, x.OrderId });
             builder.Entity<OrderPositionAdvertisement>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.AdvertisementId }, x => new { x.OrderPositionId, x.PositionId })
+                   .HasIndex(x => new { x.OrderPositionId }, x => new { x.FirmAddressId, x.PositionId })
+                   .HasIndex(x => new { x.PositionId })
+                   .HasIndex(x => new { x.FirmAddressId, x.CategoryId }, x => new { x.OrderPositionId, x.PositionId })
+                   .HasIndex(x => new { x.CategoryId }, x => new { x.OrderPositionId });
             builder.Entity<OrderPositionCostPerClick>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.OrderPositionId)
                    .HasPrimaryKey(x => x.CategoryId);
             builder.Entity<OrderScanFile>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.OrderId }, x => new { x.Id });
             builder.Entity<Position>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.IsComposite });
             builder.Entity<PositionChild>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.MasterPositionId)
@@ -131,7 +155,9 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<PricePosition>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.PriceId })
+                   .HasIndex(x => new { x.PositionId });
             builder.Entity<Project>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -141,7 +167,8 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ReleaseWithdrawal>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.OrderPositionId)
-                   .HasPrimaryKey(x => x.Start);
+                   .HasPrimaryKey(x => x.Start)
+                   .HasIndex(x => new { x.OrderPositionId }, x => new { x.Amount });
             builder.Entity<RulesetRule>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.RuleType)

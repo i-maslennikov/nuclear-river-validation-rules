@@ -8,7 +8,9 @@ using NuClear.Assembling.TypeProcessing;
 using NuClear.Replication.Core;
 using NuClear.StateInitialization.Core.Actors;
 using NuClear.Storage.API.ConnectionStrings;
+using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.StateInitialization.Host.Assembling;
+using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
@@ -46,11 +48,17 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             }
 
             var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), ConnectionStringSettings);
-            var copyTablesActor = new CopyTablesActor(new DataObjectTypesProviderFactory(), ConnectionStringSettings);
 
             var sw = Stopwatch.StartNew();
             bulkReplicationActor.ExecuteCommands(commands);
-            copyTablesActor.ExecuteCommands(commands);
+
+            var lockManager = new LockManager();
+            var schemaManager = new SchemaManager(Schema.WebApp, Array.Empty<Type>());
+            foreach (var @lock in lockManager.GetAllLocks())
+            {
+                schemaManager.DestroySchema(@lock);
+            }
+
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
 
