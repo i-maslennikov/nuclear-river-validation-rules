@@ -85,6 +85,8 @@ function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
 		}
 	}
 
+    $updateSchemasMetadata.Add('WebApp', $AllSchemas['WebApp'])
+
 	if ($updateSchemasMetadata.Count -ne 0){
 		$metadata += @{ 'UpdateSchemas' = $updateSchemasMetadata }
 		$metadata += Get-BulkToolMetadata $UpdateSchemas $Context
@@ -186,6 +188,11 @@ $AllSchemas = @{
 	'Messages' = @{
 		ConnectionStringKey = 'Messages'
 		SqlFiles = @('Schemas\Messages.sql')
+	}
+
+	'WebApp' = @{
+		ConnectionStringKey = 'Messages'
+		SqlFiles = @('Schemas\WebApp.sql')
 	}
 }
 
