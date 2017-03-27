@@ -55,7 +55,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Telemetry.0.13.0\lib\net451\2GIS.NuClear.Telemetry.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Telemetry.0.13.1\lib\net451\2GIS.NuClear.Telemetry.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
