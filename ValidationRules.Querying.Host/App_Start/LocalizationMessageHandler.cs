@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
-using NuClear.Telemetry.Probing;
-
 namespace NuClear.ValidationRules.Querying.Host
 {
     public sealed class LocalizationMessageHandler : DelegatingHandler

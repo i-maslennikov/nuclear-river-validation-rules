@@ -14,6 +14,7 @@ namespace NuClear.ValidationRules.Querying.Host
             config.MapHttpAttributeRoutes();
             config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new Int64ToStringConverter());
             config.MessageHandlers.Add(new LocalizationMessageHandler(typeof(Resources)));
+            config.MessageHandlers.Add(new TelemetryMessageHandler());
         }
     }
 }
