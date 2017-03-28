@@ -34,7 +34,7 @@ create table AdvertisementAggregates.[Order] (
     ProjectId bigint not null,
     FirmId bigint not null,
     RequireWhiteListAdvertisement bit not null,
-    ProvideWhiteListAdvertisement bit not null,
+    ProvideWhiteListAdvertisementId bigint null,
     constraint PK_Order primary key (Id)
 )
 go

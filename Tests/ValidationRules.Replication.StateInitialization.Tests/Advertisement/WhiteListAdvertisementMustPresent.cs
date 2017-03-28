@@ -66,7 +66,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::AdvertisementTemplate { Id = 8, IsAllowedToWhiteList = true } // должен быть РМ в белом списке
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, EndDistributionDateFact = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true, ProvideWhiteListAdvertisement = true },
+                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, EndDistributionDateFact = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true, ProvideWhiteListAdvertisementId = 6 },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
                     new Aggregates::Firm.WhiteListDistributionPeriod { FirmId = 7, Start = FirstDayJan, End = FirstDayFeb, AdvertisementId = 6, ProvidedByOrderId = 1 },
@@ -107,7 +107,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(
                                     new Reference<EntityTypeFirm>(0),
-                                    new Reference<EntityTypeAdvertisement>(0)).ToXDocument(),
+                                    new Reference<EntityTypeAdvertisement>(111)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.WhiteListAdvertisementMayPresent,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
