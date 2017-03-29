@@ -147,13 +147,13 @@ namespace ValidationRules.Replication.Comparison.Tests
         private IDictionary<int, string[]> InvokeRiver(long orderId, int[] rules = null)
             => _riverService.ValidateSingle(orderId).Messages
                             .Where(x => rules == null || rules.Contains(x.RuleCode))
-                            .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => x.MessageText.TrimEnd('.'))
+                            .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => x.MessageText.TrimEnd('.').Replace("\"", ""))
                             .ToDictionary(x => x.Key, x => x.OrderBy(y => y).ToArray());
 
         private IDictionary<int, string[]> InvokeErm(long orderId, int? rule = null)
             => _ermService.ValidateSingle(orderId)
                           .Where(x => rule == null || x.RuleCode == rule)
-                          .GroupBy(x => x.RuleCode, x => x.MessageText.TrimEnd('.'))
+                          .GroupBy(x => x.RuleCode, x => x.MessageText.TrimEnd('.').Replace("\"", ""))
                           .ToDictionary(x => x.Key, x => x.OrderBy(y => y).ToArray());
 
         private string[] TryGet(IDictionary<int, string[]> result, int key)
