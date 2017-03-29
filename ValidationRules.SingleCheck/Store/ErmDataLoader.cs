@@ -212,6 +212,15 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                                         .Execute(); // Можно ужесточить: рубрики из свзанных заказов нам на самом деле не нужны.
             store.AddRange(costPerClickCategoryRestrictions);
 
+            var maxDate = costPerClickCategoryRestrictions.Max(x => x.BeginningDate);
+            var nextCostPerClickCategoryRestrictions = query.GetTable<CostPerClickCategoryRestriction>()
+                                                        .Where(x => x.ProjectId == project.Id)
+                                                        .Where(x => x.BeginningDate > maxDate)
+                                                        .Take(1)
+                                                        .Execute(); // Нужно для того, чтобы понять, что имеющиеся ограчения не являются актуальными
+            store.AddRange(nextCostPerClickCategoryRestrictions);
+
+
             var salesModelCategoryRestrictions = query.GetTable<SalesModelCategoryRestriction>()
                                                       .Where(x => x.ProjectId == project.Id)
                                                       .Where(x => categoryIds.Contains(x.CategoryId))
