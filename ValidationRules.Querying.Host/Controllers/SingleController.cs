@@ -22,8 +22,8 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         [Route(""), HttpPost]
         public IHttpActionResult Post([FromBody] ApiRequest request)
         {
-            var validator = _validatorFactory.Create();
-            var query = validator.Execute(request.OrderId);
+            var pipeline = _validatorFactory.Create();
+            var query = pipeline.Execute(request.OrderId);
 
             var messages = query.ToMessages(ResultType.Single);
             var result = _factory.GetValidationResult(messages);

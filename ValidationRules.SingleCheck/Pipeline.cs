@@ -11,7 +11,7 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.SingleCheck
 {
-    public sealed class Pipline
+    public sealed class Pipeline
     {
         private readonly IReadOnlyCollection<Type> _factAccessorTypes;
         private readonly IReadOnlyCollection<Type> _aggregateAccessorTypes;
@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.SingleCheck
         private readonly SchemaManager _schemaManager; // todo: убрать, некрасиво
         private readonly LockManager _lockManager;
 
-        public Pipline(IReadOnlyCollection<Type> factAccessorTypes, IReadOnlyCollection<Type> aggregateAccessorTypes, IReadOnlyCollection<Type> messageAccessorTypes, SchemaManager schemaManager)
+        public Pipeline(IReadOnlyCollection<Type> factAccessorTypes, IReadOnlyCollection<Type> aggregateAccessorTypes, IReadOnlyCollection<Type> messageAccessorTypes, SchemaManager schemaManager)
         {
             _factAccessorTypes = factAccessorTypes;
             _aggregateAccessorTypes = aggregateAccessorTypes;

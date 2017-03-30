@@ -24,10 +24,10 @@ namespace NuClear.ValidationRules.SingleCheck
         private static readonly Lazy<IReadOnlyCollection<Type>> DataObjectypes =
             new Lazy<IReadOnlyCollection<Type>>(() => AccessorTypes.Value.SelectMany(x => x.Value).Select(x => x.GetInterfaces().Single(IsAccessorInterface)).Select(GetAccessorDataObject).Distinct().ToArray());
 
-        public Pipline Create()
+        public Pipeline Create()
         {
             var pool = new SchemaManager(new MappingSchema(Facts, Aggregates, Messages, WebApp), DataObjectypes.Value);
-            return new Pipline(AccessorTypes.Value[Facts], AccessorTypes.Value[Aggregates], AccessorTypes.Value[Messages], pool);
+            return new Pipeline(AccessorTypes.Value[Facts], AccessorTypes.Value[Aggregates], AccessorTypes.Value[Messages], pool);
         }
 
         private static IReadOnlyDictionary<MappingSchema, List<Type>> ScanForAccessors(IReadOnlyCollection<MappingSchema> schemata)
