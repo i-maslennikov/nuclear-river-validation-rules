@@ -80,8 +80,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                 var themeProjects =
                     from project in _query.For<Facts::Project>()
                     from themeOrgUnit in _query.For<Facts::ThemeOrganizationUnit>().Where(x => x.OrganizationUnitId == project.OrganizationUnitId)
-                    from theme in _query.For<Facts::Theme>().Where(x => x.Id == themeOrgUnit.ThemeId)
-                    where theme.IsDefault // тематика по умолчанию
+                    from theme in _query.For<Facts::Theme>().Where(x => x.IsDefault).Where(x => x.Id == themeOrgUnit.ThemeId)
                     select new Project.ProjectDefaultTheme
                     {
                         ProjectId = project.Id,

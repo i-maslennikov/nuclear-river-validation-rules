@@ -41,12 +41,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                 from orderPosition in query.For<Order.OrderPricePosition>()
                                            .Where(x => x.OrderId == order.Id)
                 from actualPrice in query.For<Order.ActualPrice>()
-                                         .Where(x => x.PriceId != null)
+                                         .Where(x => x.PriceId.HasValue)
                                          .Where(x => x.OrderId == order.Id)
                 from orderPeriod in query.For<Period.OrderPeriod>()
+                                         .Where(x => x.Scope == 0) // заказ в статусе Одобрен
                                          .Where(x => x.OrderId == order.Id && x.Start == order.Start)
                 where orderPosition.PriceId != actualPrice.PriceId.Value // прайс-лист позиции заказа отличается от актуального прайс-листа заказа
-                where orderPeriod.Scope == 0                             // заказ в статусе Одобрен
                 select new Version.ValidationResult
                     {
                         MessageParams =

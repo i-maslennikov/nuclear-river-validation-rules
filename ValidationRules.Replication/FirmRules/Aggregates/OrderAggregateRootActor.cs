@@ -133,8 +133,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                     from position in _query.For<Facts::Position>()
-                        .Where(x => !x.IsDeleted)
-                        .Where(x => x.CategoryCode == SelfAdvertisementOnlyOnPc)
+                        .Where(x => !x.IsDeleted && x.CategoryCode == SelfAdvertisementOnlyOnPc)
                         .Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     select new Order.SelfAdvertisementPosition { OrderId = orderPosition.OrderId }).Distinct();
 
@@ -190,12 +189,11 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public IQueryable<Order.InvalidFirm> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from firm in _query.For<Facts::Firm>().Where(x => x.Id == order.FirmId)
+                   from firm in _query.For<Facts::Firm>().Where(x => !x.IsActive || x.IsDeleted || x.IsClosedForAscertainment).Where(x => x.Id == order.FirmId)
                    let state = firm.IsDeleted ? InvalidFirmState.Deleted
                                    : !firm.IsActive ? InvalidFirmState.ClosedForever
                                    : firm.IsClosedForAscertainment ? InvalidFirmState.ClosedForAscertainment
                                    : InvalidFirmState.NotSet
-                   where state != InvalidFirmState.NotSet // todo: интересно было бы глянуть на сгенерированный sql
                    select new Order.InvalidFirm
                    {
                        FirmId = firm.Id,

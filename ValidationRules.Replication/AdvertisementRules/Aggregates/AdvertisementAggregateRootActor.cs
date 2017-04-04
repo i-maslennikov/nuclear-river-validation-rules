@@ -127,10 +127,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Advertisement.RequiredElementMissing> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
-                   join element in _query.For<Facts::AdvertisementElement>() on advertisement.Id equals element.AdvertisementId
-                   where element.IsEmpty // ЭРМ пустой
-                   join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>() on element.AdvertisementElementTemplateId equals elementTemplate.Id
-                   where elementTemplate.IsRequired // шаблон ЭРМ обязателен
+                   join element in _query.For<Facts::AdvertisementElement>().Where(x => x.IsEmpty) on advertisement.Id equals element.AdvertisementId
+                   join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>().Where(x => x.IsRequired) on element.AdvertisementElementTemplateId equals elementTemplate.Id
                    select new Advertisement.RequiredElementMissing
                    {
                        AdvertisementId = advertisement.Id,
@@ -168,11 +166,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
                    join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
                    where advertisement.Id != template.DummyAdvertisementId // РМ - не заглушка
-                   join element in _query.For<Facts::AdvertisementElement>() on advertisement.Id equals element.AdvertisementId
-                   where element.Status == StatusInvalid || // ЭРМ выверен с ошибками
-                         element.Status == StatusDraft      // ЭРМ - черновик
-                   join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>() on element.AdvertisementElementTemplateId equals elementTemplate.Id
-                   where elementTemplate.NeedsValidation // ЭРМ должен быть выверен
+                   join element in _query.For<Facts::AdvertisementElement>().Where(x => x.Status == StatusInvalid || x.Status == StatusDraft) on advertisement.Id equals element.AdvertisementId
+                   join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>().Where(x => x.NeedsValidation) on element.AdvertisementElementTemplateId equals elementTemplate.Id
                    select new Advertisement.ElementNotPassedReview
                    {
                        AdvertisementId = advertisement.Id,
@@ -213,8 +208,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Advertisement.Coupon> GetSource()
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
-                   from element in _query.For<Facts::AdvertisementElement>().Where(x => x.AdvertisementId == advertisement.Id)
-                   where element.BeginDate != null && element.EndDate != null
+                   from element in _query.For<Facts::AdvertisementElement>().Where(x => x.BeginDate.HasValue && x.EndDate.HasValue).Where(x => x.AdvertisementId == advertisement.Id)
                    let beginDate = element.BeginDate.Value
                    let endDate = element.EndDate.Value
                    select new Advertisement.Coupon

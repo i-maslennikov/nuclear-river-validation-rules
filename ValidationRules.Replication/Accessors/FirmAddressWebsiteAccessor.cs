@@ -27,8 +27,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<FirmAddressWebsite> GetSource() => _query
             .For<Erm::FirmContact>()
-            .Where(x => x.FirmAddressId != null)
-            .Where(x => x.ContactType == Website)
+            .Where(x => x.FirmAddressId != null && x.ContactType == Website)
             .Select(x => new FirmAddressWebsite
             {
                 Id = x.Id,

@@ -23,8 +23,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                from category in query.For<Order.InvalidCategory>().Where(x => x.OrderId == order.Id)
-                where category.State == InvalidCategoryState.NotBelongToFirm && category.MayNotBelongToFirm
+                from category in query.For<Order.InvalidCategory>().Where(x => x.State == InvalidCategoryState.NotBelongToFirm && x.MayNotBelongToFirm) .Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
                     {
                         MessageParams =

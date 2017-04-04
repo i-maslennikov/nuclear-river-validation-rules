@@ -101,18 +101,18 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
             public IQueryable<Order.AddressAdvertisement> GetSource()
                 => (from order in _query.For<Facts::Order>()
-                   from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                   from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                   from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == orderPositionAdvertisement.FirmAddressId)
-                   select new Order.AddressAdvertisement
-                       {
-                           OrderId = order.Id,
-                           OrderPositionId = orderPosition.Id,
-                           PositionId = position.Id,
-                           AddressId = firmAddress.Id,
-                           MustBeLocatedOnTheMap = !ExceptionalCategoryCodes.Contains(position.CategoryCode)
-                       }).Distinct();
+                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.FirmAddressId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
+                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                    from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == orderPositionAdvertisement.FirmAddressId)
+                    select new Order.AddressAdvertisement
+                        {
+                            OrderId = order.Id,
+                            OrderPositionId = orderPosition.Id,
+                            PositionId = position.Id,
+                            AddressId = firmAddress.Id,
+                            MustBeLocatedOnTheMap = !ExceptionalCategoryCodes.Contains(position.CategoryCode)
+                        }).Distinct();
 
             public FindSpecification<Order.AddressAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
