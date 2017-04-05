@@ -11,18 +11,18 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
     public class SingleForApproveController : ApiController
     {
         private readonly ValidationResultFactory _factory;
-        private readonly ValidatorFactory _validatorFactory;
+        private readonly PipelineFactory _pipelineFactory;
 
-        public SingleForApproveController(ValidationResultFactory factory, ValidatorFactory validatorFactory)
+        public SingleForApproveController(ValidationResultFactory factory, PipelineFactory pipelineFactory)
         {
             _factory = factory;
-            _validatorFactory = validatorFactory;
+            _pipelineFactory = pipelineFactory;
         }
 
         [Route(""), HttpPost]
         public IHttpActionResult Post([FromBody] ApiRequest request)
         {
-            var pipeline = _validatorFactory.Create();
+            var pipeline = _pipelineFactory.Create();
             var query = pipeline.Execute(request.OrderId);
 
             var messages = query.ToMessages(ResultType.SingleForApprove);

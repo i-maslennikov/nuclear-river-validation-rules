@@ -11,7 +11,7 @@ using NuClear.ValidationRules.Storage;
 
 namespace NuClear.ValidationRules.SingleCheck
 {
-    public class ValidatorFactory
+    public class PipelineFactory
     {
         private static readonly MappingSchema Facts = Schema.Facts;
         private static readonly MappingSchema Aggregates = Schema.Aggregates;

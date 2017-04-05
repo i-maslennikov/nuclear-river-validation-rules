@@ -11,18 +11,18 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
     public class SingleForCancelController : ApiController
     {
         private readonly ValidationResultFactory _factory;
-        private readonly ValidatorFactory _validatorFactory;
+        private readonly PipelineFactory _pipelineFactory;
 
-        public SingleForCancelController(ValidationResultFactory factory, ValidatorFactory validatorFactory)
+        public SingleForCancelController(ValidationResultFactory factory, PipelineFactory pipelineFactory)
         {
             _factory = factory;
-            _validatorFactory = validatorFactory;
+            _pipelineFactory = pipelineFactory;
         }
 
         [Route(""), HttpPost]
         public IHttpActionResult Post([FromBody]ApiRequest request)
         {
-            var pipeline = _validatorFactory.Create();
+            var pipeline = _pipelineFactory.Create();
             var query = pipeline.Execute(request.OrderId);
 
             var messages = query.ToMessages(ResultType.SingleForCancel);

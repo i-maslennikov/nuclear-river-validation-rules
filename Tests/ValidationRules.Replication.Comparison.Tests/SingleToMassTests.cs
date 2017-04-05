@@ -35,7 +35,7 @@ namespace ValidationRules.Replication.Comparison.Tests
 
             var expectedResultsByOrder = results.GroupBy(x => x.OrderId.Value, x => x).Take(OrderPerRule).ToArray();
 
-            var validator = new ValidatorFactory().Create();
+            var validator = new PipelineFactory().Create();
             foreach (var expected in expectedResultsByOrder)
             {
                 var actual = validator.Execute(expected.Key).Where(x => x.MessageType == (int)rule).ToArray();
@@ -52,7 +52,7 @@ namespace ValidationRules.Replication.Comparison.Tests
         {
             var expected = GetResultsFromBigDatabase(x => x.OrderId == orderId);
 
-            var validator = new ValidatorFactory().Create();
+            var validator = new PipelineFactory().Create();
             var actual = validator.Execute(orderId);
 
             AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
