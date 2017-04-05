@@ -12,11 +12,6 @@ function Get-QuartzConfigMetadata ($Context){
 	switch ($Context.EnvType){
 		'Test' {
 			switch ($Context.Country){
-				'Russia' {
-					$quartzConfigs = @('Templates\quartz.Test.Russia.config')
-					
-					$alterQuartzConfigs = @()
-				}
 				default {
 					$quartzConfigs = @('Templates\quartz.Test.config')
 					$alterQuartzConfigs = @()
@@ -25,10 +20,6 @@ function Get-QuartzConfigMetadata ($Context){
 		}
 		'Production' {
 			switch ($Context.Country){
-				'Russia' {
-					$quartzConfigs = @('quartz.Production.Russia.config')
-					$alterQuartzConfigs = @()
-				}
 				default {
 					$quartzConfigs = @('quartz.Production.config')
 					$alterQuartzConfigs = @()
@@ -37,10 +28,6 @@ function Get-QuartzConfigMetadata ($Context){
 		}
 		default {
 			switch ($Context.Country){
-				'Russia' {
-					$quartzConfigs = @("quartz.$($Context.EnvType).Russia.config")
-					$alterQuartzConfigs = @('Templates\quartz.Test.Russia.config')
-				}
 				default {
 					$quartzConfigs = @("quartz.$($Context.EnvType).config")
 					$alterQuartzConfigs = @('Templates\quartz.Test.config')

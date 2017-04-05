@@ -19,7 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environments", "Environment
 		Environments\Erm.Load.config = Environments\Erm.Load.config
 		Environments\Erm.Production.config = Environments\Erm.Production.config
 		Environments\quartz.Production.config = Environments\quartz.Production.config
-		Environments\quartz.Production.Russia.config = Environments\quartz.Production.Russia.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{F3C74BF1-8646-4DB6-AECB-42E10F8542B6}"
@@ -27,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{
 		Environments\Templates\ConvertUseCases.Test.config = Environments\Templates\ConvertUseCases.Test.config
 		Environments\Templates\Erm.Test.config = Environments\Templates\Erm.Test.config
 		Environments\Templates\quartz.Test.config = Environments\Templates\quartz.Test.config
-		Environments\Templates\quartz.Test.Russia.config = Environments\Templates\quartz.Test.Russia.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{8A646634-2535-493C-A699-90B4D1C40A83}"
