@@ -129,7 +129,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Telemetry.0.12.3\lib\net451\2GIS.NuClear.Telemetry.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Telemetry.0.13.1\lib\net451\2GIS.NuClear.Telemetry.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
@@ -213,6 +213,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +236,10 @@
     <ProjectReference Include="..\ValidationRules.Replication\ValidationRules.Replication.csproj">
       <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
       <Name>ValidationRules.Replication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidationRules.SingleCheck\ValidationRules.SingleCheck.csproj">
+      <Project>{2AEE5EB1-9F9F-49D3-8AA3-A9C9338AAF4B}</Project>
+      <Name>ValidationRules.SingleCheck</Name>
     </ProjectReference>
     <ProjectReference Include="..\ValidationRules.Storage\ValidationRules.Storage.csproj">
       <Project>{E799A2EE-408F-467A-8B50-FC729E92D3F3}</Project>

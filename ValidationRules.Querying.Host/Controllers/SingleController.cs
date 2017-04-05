@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Web.Http;
+﻿using System.Web.Http;
 
 using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.SingleCheck;
-using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Controllers
@@ -22,17 +20,14 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         }
 
         [Route(""), HttpPost]
-        public IHttpActionResult Post([FromBody]ApiRequest request)
+        public IHttpActionResult Post([FromBody] ApiRequest request)
         {
-            using (var validator = new Validator(_pipelineFactory.CreatePipeline(), new ErmStoreFactory("Erm", request.OrderId), new PersistentTableStoreFactory("Messages"), new HashSetStoreFactory()))
-            {
-                var query = validator.Execute()
-                    .Where(x => x.OrderId == request.OrderId);
+            var pipeline = _pipelineFactory.Create();
+            var query = pipeline.Execute(request.OrderId);
 
-                var messages = query.ToMessages(ResultType.Single);
-                var result = _factory.GetValidationResult(messages);
-                return Ok(result);
-            }
+            var messages = query.ToMessages(ResultType.Single);
+            var result = _factory.GetValidationResult(messages);
+            return Ok(result);
         }
 
         public class ApiRequest

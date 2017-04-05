@@ -50,6 +50,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{2798
 		Schemas\Price.Aggregates.sql = Schemas\Price.Aggregates.sql
 		Schemas\Project.Aggregates.sql = Schemas\Project.Aggregates.sql
 		Schemas\Theme.Aggregates.sql = Schemas\Theme.Aggregates.sql
+		Schemas\WebApp.sql = Schemas\WebApp.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D5758A2D-BB93-47E5-A13B-4EEC203D4371}"

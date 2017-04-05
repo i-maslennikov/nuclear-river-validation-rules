@@ -4,12 +4,11 @@ using System.Linq;
 
 using LinqToDB;
 using LinqToDB.Data;
-using LinqToDB.Mapping;
 
-using NuClear.Replication.Core;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
-using NuClear.ValidationRules.Storage;
+using NuClear.Telemetry.Probing;
+using NuClear.ValidationRules.Storage.Model.WebApp;
 
 namespace NuClear.ValidationRules.SingleCheck.Store
 {
@@ -18,54 +17,46 @@ namespace NuClear.ValidationRules.SingleCheck.Store
     /// </summary>
     public sealed class PersistentTableStoreFactory : IStoreFactory
     {
-        public static readonly Lazy<MappingSchema> MappingSchema =
-            new Lazy<MappingSchema>(() => new MappingSchema(Schema.Facts, Schema.Aggregates));
+        private readonly LockManager _lockManager;
+        private readonly DataConnection _connection;
+        private readonly Lock _lock;
 
-        public static readonly Lazy<EqualityComparerFactory> EqualityComparerFactory =
-            new Lazy<EqualityComparerFactory>(() => new EqualityComparerFactory(new LinqToDbPropertyProvider(MappingSchema.Value)));
-
-        private readonly TableStore _tableStore;
-
-        public PersistentTableStoreFactory(string connectionStringName)
+        public PersistentTableStoreFactory(LockManager lockManager, SchemaManager schemaManager)
         {
-            _tableStore = new TableStore(new DataConnection(connectionStringName).AddMappingSchema(MappingSchema.Value));
+            using (Probe.Create("Get lock"))
+            {
+                _lockManager = lockManager;
+                _lock = _lockManager.GetLock();
+                _connection = new DataConnection("Messages").AddMappingSchema(schemaManager.GetSchema(_lock));
+                _connection.BeginTransaction(System.Data.IsolationLevel.Snapshot);
+            }
         }
 
         public IStore CreateStore()
-            => _tableStore;
+            => new Linq2DbStore(_connection);
 
         public IQuery CreateQuery()
-            => _tableStore;
+            => new Linq2DbQuery(_connection);
 
-        private class TableStore : IStore, IQuery, IDisposable
+        public void Dispose()
         {
-            private bool _disposed;
+            _connection.RollbackTransaction();
+            _connection.Dispose();
+            _lockManager.Release(_lock);
+        }
+
+        private class Linq2DbQuery : IQuery
+        {
             private readonly DataConnection _connection;
 
-            public TableStore(DataConnection connection)
+            public Linq2DbQuery(DataConnection connection)
             {
-                _disposed = false;
                 _connection = connection;
-                _connection.BeginTransaction();
-            }
-
-            void IStore.Add<T>(T entity)
-            {
-                var original = _connection.MappingSchema.GetAttribute<TableAttribute>(typeof(T));
-                _connection.Insert(entity, schemaName: "dbo", tableName: $"{original.Schema}_{original.Name ?? typeof(T).Name}");
-            }
-
-            void IStore.AddRange<T>(IEnumerable<T> entities)
-            {
-                var original = _connection.MappingSchema.GetAttribute<TableAttribute>(typeof(T));
-                var table = _connection.GetTable<T>().SchemaName("dbo").TableName($"{original.Schema}_{original.Name ?? typeof(T).Name}");
-                table.BulkCopy(entities);
             }
 
             IQueryable<T> IQuery.For<T>()
             {
-                var original = _connection.MappingSchema.GetAttribute<TableAttribute>(typeof(T));
-                return _connection.GetTable<T>().SchemaName("dbo").TableName($"{original.Schema}_{original.Name ?? typeof(T).Name}");
+                return _connection.GetTable<T>();
             }
 
             IQueryable IQuery.For(Type objType)
@@ -77,27 +68,25 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             {
                 throw new NotSupportedException();
             }
+        }
 
-            public void Dispose()
+        private class Linq2DbStore : IStore
+        {
+            private readonly DataConnection _connection;
+
+            public Linq2DbStore(DataConnection connection)
             {
-                Dispose(true);
-                GC.SuppressFinalize(this);
+                _connection = connection;
             }
 
-            private void Dispose(bool disposing)
+            void IStore.Add<T>(T entity)
             {
-                if (_disposed)
-                {
-                    return;
-                }
+                _connection.Insert(entity);
+            }
 
-                _disposed = true;
-
-                if (disposing)
-                {
-                    _connection.RollbackTransaction();
-                    _connection?.Dispose();
-                }
+            void IStore.AddRange<T>(IEnumerable<T> entities)
+            {
+                _connection.GetTable<T>().BulkCopy(entities);
             }
         }
     }

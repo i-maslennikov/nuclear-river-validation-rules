@@ -129,7 +129,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Telemetry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Telemetry.0.12.3\lib\net451\2GIS.NuClear.Telemetry.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Telemetry.0.13.1\lib\net451\2GIS.NuClear.Telemetry.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
@@ -194,14 +194,17 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
-    <Compile Include="Store\PersistentTableStoreFactory.cs" />
     <Compile Include="Store\ErmStoreFactory.cs" />
+    <Compile Include="Store\PersistentTableStoreFactory.cs" />
+    <Compile Include="Store\LockManager.cs" />
+    <Compile Include="Store\SchemaManager.cs" />
     <Compile Include="Store\HashSetStoreFactory.cs" />
     <Compile Include="Store\IStoreFactory.cs" />
     <Compile Include="Store\ErmDataLoader.cs" />
@@ -209,9 +212,8 @@
     <Compile Include="Store\IStore.cs" />
     <Compile Include="Store\HashSetStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Pipeline.cs" />
     <Compile Include="PipelineFactory.cs" />
-    <Compile Include="Validator.cs" />
+    <Compile Include="Pipeline.cs" />
     <Compile Include="FieldComparer\XDocumentComparer.cs" />
   </ItemGroup>
   <ItemGroup>

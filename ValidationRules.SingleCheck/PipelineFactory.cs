@@ -6,22 +6,28 @@ using LinqToDB.Mapping;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.ValidationRules.Replication;
+using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage;
 
 namespace NuClear.ValidationRules.SingleCheck
 {
     public class PipelineFactory
     {
-        public static readonly MappingSchema Erm = Schema.Erm;
-        public static readonly MappingSchema Facts = Schema.Facts;
-        public static readonly MappingSchema Aggregates = Schema.Aggregates;
-        public static readonly MappingSchema Messages = Schema.Messages;
+        private static readonly MappingSchema Facts = Schema.Facts;
+        private static readonly MappingSchema Aggregates = Schema.Aggregates;
+        private static readonly MappingSchema Messages = Schema.Messages;
+        private static readonly MappingSchema WebApp = Schema.WebApp;
 
-        public static readonly IReadOnlyDictionary<MappingSchema, List<Type>> AccessorTypes = ScanForAccessors(new[] { Facts, Aggregates, Messages });
+        private static readonly Lazy<IReadOnlyDictionary<MappingSchema, List<Type>>> AccessorTypes =
+            new Lazy<IReadOnlyDictionary<MappingSchema, List<Type>>>(() => ScanForAccessors(new[] { Facts, Aggregates, Messages }));
 
-        public Pipeline CreatePipeline()
+        private static readonly Lazy<IReadOnlyCollection<Type>> DataObjectypes =
+            new Lazy<IReadOnlyCollection<Type>>(() => AccessorTypes.Value.SelectMany(x => x.Value).Select(x => x.GetInterfaces().Single(IsAccessorInterface)).Select(GetAccessorDataObject).Distinct().ToArray());
+
+        public Pipeline Create()
         {
-            return new Pipeline(AccessorTypes[Facts], AccessorTypes[Aggregates], AccessorTypes[Messages]);
+            var pool = new SchemaManager(new MappingSchema(Facts, Aggregates, Messages, WebApp), DataObjectypes.Value);
+            return new Pipeline(AccessorTypes.Value[Facts], AccessorTypes.Value[Aggregates], AccessorTypes.Value[Messages], pool);
         }
 
         private static IReadOnlyDictionary<MappingSchema, List<Type>> ScanForAccessors(IReadOnlyCollection<MappingSchema> schemata)
@@ -37,7 +43,7 @@ namespace NuClear.ValidationRules.SingleCheck
 
                 foreach (var schema in schemata)
                 {
-                    if (!string.IsNullOrEmpty(schema.GetEntityDescriptor(dataObjectType).SchemaName))
+                    if (schema.GetAttribute<TableAttribute>(dataObjectType) != null)
                     {
                         result[schema].Add(accessorType);
                         break;
