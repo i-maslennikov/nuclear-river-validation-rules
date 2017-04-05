@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.SingleCheck
 
                 foreach (var schema in schemata)
                 {
-                    if (!string.IsNullOrEmpty(schema.GetEntityDescriptor(dataObjectType).SchemaName))
+                    if (schema.GetAttribute<TableAttribute>(dataObjectType) != null)
                     {
                         result[schema].Add(accessorType);
                         break;
