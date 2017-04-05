@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                      .Where(dto => dto.Principals.Any() &&
                                    dto.Principals.Where(x => x.IsBindingObjectConditionSatisfied).All(x => x.Position.OrderId != dto.Associated.OrderId) &&
                                    dto.Principals.Where(x => x.IsBindingObjectConditionSatisfied).Select(x => x.Position.OrderId).Distinct().Count() == 1)
-                     .Select(dto => new { associated = dto.Associated, principal = dto.Principals.First().Position });
+                     .Select(dto => new { associated = dto.Associated, principal = dto.Principals.First(x => x.IsBindingObjectConditionSatisfied).Position });
 
             var messages =
                 from error in errors
