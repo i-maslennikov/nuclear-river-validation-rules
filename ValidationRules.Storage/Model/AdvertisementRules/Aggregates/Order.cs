@@ -11,7 +11,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
         public long ProjectId { get; set; }
         public long FirmId { get; set; }
         public bool RequireWhiteListAdvertisement { get; set; }
-        public bool ProvideWhiteListAdvertisement { get; set; }
+        public long? ProvideWhiteListAdvertisementId { get; set; }
 
         public sealed class MissingAdvertisementReference
         {

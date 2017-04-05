@@ -27,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
             .For<Erm::OrderPositionCostPerClick>()
             .Where(cpc =>
                    cpc.BidIndex == _query.For<Erm::OrderPositionCostPerClick>()
-                                         .Where(x => x.CategoryId == cpc.CategoryId && x.OrderPositionId == cpc.OrderPositionId)
+                                         .Where(x => x.OrderPositionId == cpc.OrderPositionId)
                                          .Max(x => x.BidIndex))
             .Select(cpc => new OrderPositionCostPerClick
             {

@@ -7,20 +7,25 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public static class BulkReplicationCommands
     {
+        private static readonly ExecutionMode ParallelReplication = new ExecutionMode(4, false);
+
         public static ReplicateInBulkCommand AggregatesToMessages { get; } =
             new ReplicateInBulkCommand(
                 new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
-                new StorageDescriptor(MessagesConnectionStringIdentity.Instance, Schema.Messages));
+                new StorageDescriptor(MessagesConnectionStringIdentity.Instance, Schema.Messages),
+                executionMode: ParallelReplication);
 
         public static ReplicateInBulkCommand FactsToAggregates { get; } =
             new ReplicateInBulkCommand(
                 new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
-                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates));
+                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
+                executionMode: ParallelReplication);
 
         public static ReplicateInBulkCommand ErmToFacts { get; } =
             new ReplicateInBulkCommand(
                 new StorageDescriptor(ErmConnectionStringIdentity.Instance, Schema.Erm),
-                new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
+                new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
+                executionMode: ParallelReplication);
 
         public static ReplicateInBulkCommand AggregatesToMessagesTest { get; } =
             new ReplicateInBulkCommand(

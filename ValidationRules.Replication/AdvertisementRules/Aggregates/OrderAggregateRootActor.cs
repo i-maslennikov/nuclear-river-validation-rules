@@ -78,7 +78,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    let provide = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                                   from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.Id == opa.AdvertisementId)
-                                  select a.IsSelectedToWhiteList).Any(x => x)
+                                  where a.IsSelectedToWhiteList
+                                  select (long?)a.Id).FirstOrDefault()
                    select new Order
                        {
                            Id = order.Id,
@@ -89,8 +90,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                            ProjectId = project.Id,
                            FirmId = order.FirmId,
                            RequireWhiteListAdvertisement = require,
-                           ProvideWhiteListAdvertisement = provide,
-                        };
+                           ProvideWhiteListAdvertisementId = provide,
+                       };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

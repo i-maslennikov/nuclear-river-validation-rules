@@ -23,27 +23,51 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults =
+            var ordersProvideWhiteListAdvertisement =
                 from order in query.For<Order>().Where(x => x.RequireWhiteListAdvertisement)
-                from advertisement in query.For<Advertisement>().Where(x => x.FirmId == order.FirmId && x.IsSelectedToWhiteList)
+                where order.ProvideWhiteListAdvertisementId.HasValue
+                select new
+                {
+                    FirmId = order.FirmId,
+                    AdvertisementId = order.ProvideWhiteListAdvertisementId.Value,
+
+                    PeriodStart = order.BeginDistributionDate,
+                    PeriodEnd = order.EndDistributionDatePlan,
+                    OrderId = order.Id,
+                };
+
+            var ordersNotProvideWhiteListAdvertisement =
+                from order in query.For<Order>().Where(x => x.RequireWhiteListAdvertisement)
                 from period in query.For<Firm.WhiteListDistributionPeriod>()
                                     .Where(x => x.FirmId == order.FirmId && x.Start < order.EndDistributionDatePlan && order.BeginDistributionDate < x.End)
-                                    .Where(x => x.ProvidedByOrderId.HasValue).DefaultIfEmpty()
-                where period != null || order.ProvideWhiteListAdvertisement
+                                    .Where(x => x.ProvidedByOrderId.HasValue)
+                where !order.ProvideWhiteListAdvertisementId.HasValue
+                select new
+                {
+                    FirmId = order.FirmId,
+                    AdvertisementId = period.AdvertisementId.Value,
+
+                    PeriodStart = period.Start > order.BeginDistributionDate ? period.Start : order.BeginDistributionDate,
+                    PeriodEnd = period.End < order.EndDistributionDatePlan ? period.End : order.EndDistributionDatePlan,
+                    OrderId = order.Id,
+                };
+
+            var result =
+                from order in ordersProvideWhiteListAdvertisement.Concat(ordersNotProvideWhiteListAdvertisement)
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
                                     new Reference<EntityTypeFirm>(order.FirmId),
-                                    new Reference<EntityTypeAdvertisement>(advertisement.Id))
+                                    new Reference<EntityTypeAdvertisement>(order.AdvertisementId))
                                 .ToXDocument(),
 
-                        PeriodStart = period != null && period.Start > order.BeginDistributionDate ? period.Start : order.BeginDistributionDate,
-                        PeriodEnd = period != null && period.End < order.EndDistributionDatePlan ? period.End : order.EndDistributionDatePlan,
-                        OrderId = order.Id,
+                        PeriodStart = order.PeriodStart,
+                        PeriodEnd = order.PeriodEnd,
+                        OrderId = order.OrderId,
                     };
 
-            return ruleResults;
+            return result;
         }
     }
 }
