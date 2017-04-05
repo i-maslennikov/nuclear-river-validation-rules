@@ -31,6 +31,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         {
             StateInitializationRoot.Instance.PerformTypesMassProcessing(Array.Empty<IMassProcessor>(), true, typeof(object));
 
+            var lockManager = new LockManager();
+            var schemaManager = new SchemaManager(Schema.WebApp, Array.Empty<Type>());
+            foreach (var @lock in lockManager.GetAllLocks())
+            {
+                schemaManager.DestroySchema(@lock);
+            }
+
             var commands = new List<ICommand>();
             if (args.Contains("-facts"))
             {
@@ -51,13 +58,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
             var sw = Stopwatch.StartNew();
             bulkReplicationActor.ExecuteCommands(commands);
-
-            var lockManager = new LockManager();
-            var schemaManager = new SchemaManager(Schema.WebApp, Array.Empty<Type>());
-            foreach (var @lock in lockManager.GetAllLocks())
-            {
-                schemaManager.DestroySchema(@lock);
-            }
 
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
