@@ -111,47 +111,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 return result;
             }
 
-            /// <summary>
-            /// Хороший способ. Проще, понятнее и более производительный. Не работает из-за бага в linq2db
-            /// https://github.com/linq2db/linq2db/issues/395
-            /// </summary>
-            /// <returns></returns>
-            public IQueryable<Account.AccountPeriod> GetSourceDisabled()
-            {
-                var releaseWithdrawals =
-                    from releaseWithdrawal in _query.For<Facts::ReleaseWithdrawal>()
-                    join orderPosition in _query.For<Facts::OrderPosition>() on releaseWithdrawal.OrderPositionId equals orderPosition.Id
-                    join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id
-                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
-                    select new { AccountId = account.Id, Start = releaseWithdrawal.Start, ReleaseWithdrawal = releaseWithdrawal.Amount, Lock = 0M };
-
-                var locks =
-                    from @lock in _query.For<Facts::Lock>()
-                    join account in _query.For<Facts::Account>() on @lock.AccountId equals account.Id
-                    select new { AccountId = account.Id, Start = @lock.Start, ReleaseWithdrawal = 0M, Lock = @lock.Amount };
-
-                var lockSums =
-                    from @lock in _query.For<Facts::Lock>().GroupBy(x => x.AccountId)
-                    select new { AccountId = @lock.Key, Sum = @lock.Select(x => x.Amount).Sum() };
-
-                var result =
-                    from item in releaseWithdrawals.Union(locks).Select(x => new { x.AccountId, x.Start, x.Lock, x.ReleaseWithdrawal }).GroupBy(a => new { a.AccountId, a.Start })
-                    from account in _query.For<Facts::Account>().Where(x => x.Id == item.Key.AccountId)
-                    from sum in lockSums.Where(x => x.AccountId == item.Key.AccountId).DefaultIfEmpty()
-                    select new Account.AccountPeriod
-                        {
-                            AccountId = item.Key.AccountId,
-                            Start = item.Key.Start,
-                            End = item.Key.Start.AddMonths(1),
-                            Balance = account.Balance,
-                            ReleaseAmount = item.Select(x => x.ReleaseWithdrawal).Sum(),
-                            LockedAmount = item.Select(x => x.Lock).Sum(),
-                            OwerallLockedAmount = sum == null ? sum.Sum : 0,
-                        };
-
-                return result;
-            }
-
             public FindSpecification<Account.AccountPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
