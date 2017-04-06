@@ -305,9 +305,17 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
             var locks =
                 query.GetTable<Lock>()
+                     .Where(x => x.IsActive && !x.IsDeleted)
                      .Where(x => accountIds.Contains(x.AccountId))
                      .Execute();
             store.AddRange(locks);
+            var orderIds = locks.Select(x => x.OrderId);
+
+            var orders =
+                query.GetTable<Order>()
+                     .Where(x => orderIds.Contains(x.Id))
+                     .Execute();
+            store.AddRange(orders);
         }
 
         private static void LoadReleaseWithdrawals(DataConnection query, Order order, IStore store)
