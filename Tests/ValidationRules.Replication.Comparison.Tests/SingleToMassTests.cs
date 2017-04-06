@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Xml.Linq;
 
 using LinqToDB.Data;
@@ -99,25 +100,37 @@ namespace ValidationRules.Replication.Comparison.Tests
 
         private void AssertCollectionsEqual(IReadOnlyDictionary<XNode, List<Tuple<DateTime, DateTime>>> expected, IReadOnlyDictionary<XNode, List<Tuple<DateTime, DateTime>>> actual)
         {
-            var allKeys = expected.Keys.Union(actual.Keys, XNode.EqualityComparer);
+            var commonKeys = expected.Keys.Intersect(actual.Keys, XNode.EqualityComparer).ToArray();
+            var expectedOnlyKeys = expected.Keys.Except(actual.Keys, XNode.EqualityComparer).ToArray();
+            var actualOnlyKeys = actual.Keys.Except(expected.Keys, XNode.EqualityComparer).ToArray();
 
-            foreach (var key in allKeys)
+            foreach (var key in commonKeys)
             {
-                List<Tuple<DateTime, DateTime>> leftPeriods;
-                if (!expected.TryGetValue(key, out leftPeriods))
+                Assert.AreEqual(expected[key], actual[key]);
+            }
+
+            if (expectedOnlyKeys.Any() || actualOnlyKeys.Any())
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("Expected only:");
+                foreach (var key in expectedOnlyKeys)
                 {
-                    var keys = string.Join(Environment.NewLine, expected.Keys.Select(x => x.ToString(SaveOptions.DisableFormatting)));
-                    Assert.Fail($"one of actual:{key.ToString(SaveOptions.DisableFormatting)}\nis missing in expected:\n {keys}");
+                    sb.AppendLine(key.ToString(SaveOptions.DisableFormatting));
                 }
 
-                List<Tuple<DateTime, DateTime>> rightPeriods;
-                if (!actual.TryGetValue(key, out rightPeriods))
+                sb.AppendLine("Actual only:");
+                foreach (var key in actualOnlyKeys)
                 {
-                    var keys = string.Join(Environment.NewLine, actual.Keys.Select(x => x.ToString(SaveOptions.DisableFormatting)));
-                    Assert.Fail($"one of expected:{key.ToString(SaveOptions.DisableFormatting)}\nis missing in actual:\n {keys}");
+                    sb.AppendLine(key.ToString(SaveOptions.DisableFormatting));
                 }
 
-                Assert.AreEqual(leftPeriods, rightPeriods);
+                sb.AppendLine("Common:");
+                foreach (var key in commonKeys)
+                {
+                    sb.AppendLine(key.ToString(SaveOptions.DisableFormatting));
+                }
+
+                Assert.Fail(sb.ToString());
             }
         }
     }
