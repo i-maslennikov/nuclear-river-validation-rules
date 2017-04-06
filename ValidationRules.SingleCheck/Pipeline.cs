@@ -213,7 +213,7 @@ namespace NuClear.ValidationRules.SingleCheck
         {
             public void ProcessMessages(IReadOnlyCollection<Replicator> messageReplicators, Optimizer optimizer)
             {
-                var skipMessageReplicators = messageReplicators.Where(x => x.SkipCheckFunction.Invoke(optimizer.IsKnownEmpty)).ToArray();
+                var skipMessageReplicators = messageReplicators.Where(x => x.SkipCheckFunction.Invoke(optimizer.IsKnownEmpty)).ToList();
 
                 foreach (var r in messageReplicators.Except(skipMessageReplicators))
                 {
@@ -223,14 +223,14 @@ namespace NuClear.ValidationRules.SingleCheck
 
             public void ProcessAggregates(IReadOnlyCollection<Replicator> aggregateReplicators, IReadOnlyCollection<Replicator> messageReplicators, Optimizer optimizer)
             {
-                var skipAggregateReplicators = aggregateReplicators.Where(x => x.SkipCheckFunction.Invoke(optimizer.IsKnownEmpty)).ToArray();
+                var skipAggregateReplicators = aggregateReplicators.Where(x => x.SkipCheckFunction.Invoke(optimizer.IsKnownEmpty)).ToList();
                 foreach (var r in skipAggregateReplicators)
                     r.Process(true);
 
-                var skipMessageReplicators = messageReplicators.Where(x => x.SkipCheckFunction.Invoke(optimizer.IsKnownEmpty)).ToArray();
+                var skipMessageReplicators = messageReplicators.Where(x => x.SkipCheckFunction.Invoke(optimizer.IsKnownEmpty)).ToList();
 
-                var actualAggregateTypes = messageReplicators.Except(skipMessageReplicators).SelectMany(x => x.Dependencies).Distinct().ToArray();
-                var inactualAggregateReplicators = aggregateReplicators.Where(x => !actualAggregateTypes.Contains(x.DataObjectType)).ToArray();
+                var actualAggregateTypes = new HashSet<Type>(messageReplicators.Except(skipMessageReplicators).SelectMany(x => x.Dependencies));
+                var inactualAggregateReplicators = aggregateReplicators.Where(x => !actualAggregateTypes.Contains(x.DataObjectType)).ToList();
 
                 foreach (var r in aggregateReplicators.Except(skipAggregateReplicators).Except(inactualAggregateReplicators))
                 {
@@ -248,13 +248,13 @@ namespace NuClear.ValidationRules.SingleCheck
                 foreach (var r in skipAggregateReplicators)
                     r.Process(true);
 
-                var skipMessageReplicators = messageReplicators.Where(x => x.SkipCheckFunction.Invoke(optimizer.IsKnownEmpty)).ToArray();
+                var skipMessageReplicators = messageReplicators.Where(x => x.SkipCheckFunction.Invoke(optimizer.IsKnownEmpty)).ToList();
 
                 var actualAggregateTypes = new HashSet<Type>(messageReplicators.Except(skipMessageReplicators).SelectMany(x => x.Dependencies));
-                var inactualAggregateReplicators = aggregateReplicators.Where(x => !actualAggregateTypes.Contains(x.DataObjectType)).ToArray();
+                var inactualAggregateReplicators = aggregateReplicators.Where(x => !actualAggregateTypes.Contains(x.DataObjectType)).ToList();
 
                 var actualFactTypes = new HashSet<Type>(aggregateReplicators.Except(skipAggregateReplicators).Except(inactualAggregateReplicators).SelectMany(x => x.Dependencies));
-                var inactualFactReplicators = factReplicators.Where(x => !actualFactTypes.Contains(x.DataObjectType)).ToArray();
+                var inactualFactReplicators = factReplicators.Where(x => !actualFactTypes.Contains(x.DataObjectType)).ToList();
 
                 foreach (var r in factReplicators.Except(skipFactReplicators).Except(inactualFactReplicators))
                 {
