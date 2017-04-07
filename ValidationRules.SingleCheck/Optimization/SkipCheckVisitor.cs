@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.SingleCheck.Optimization
 
         public ParameterExpression Parameter => _check;
 
-        public HashSet<LambdaExpression> DependencyPredicates => _dependencyPredicates;
+        public IReadOnlyCollection<LambdaExpression> DependencyPredicates => _dependencyPredicates;
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
