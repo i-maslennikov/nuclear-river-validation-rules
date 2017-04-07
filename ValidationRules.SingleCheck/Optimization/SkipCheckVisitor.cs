@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using NuClear.Storage.API.Readings;
 
@@ -25,33 +26,34 @@ namespace NuClear.ValidationRules.SingleCheck.Optimization
 
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (node.Method.Name == "For" && node.Object != null && typeof(IQuery).IsAssignableFrom(node.Object.Type))
+            IQuery query;
+            if (node.Method.Name == nameof(query.For) && node.Method.DeclaringType == typeof(IQuery))
             {
                 var type = node.Method.GetGenericArguments().Single();
                 return GenerateEmptyCheckCall(type, _predicate);
             }
 
-            if (node.Method.Name == "DefaultIfEmpty" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.DefaultIfEmpty) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return Expression.Constant(false);
             }
 
-            if (node.Method.Name == "SelectMany" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.SelectMany) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return Expression.Or(base.Visit(node.Arguments[0]), base.Visit(node.Arguments[1]));
             }
 
-            if (node.Method.Name == "Union" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.Union) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return Expression.And(base.Visit(node.Arguments[0]), base.Visit(node.Arguments[1]));
             }
 
-            if (node.Method.Name == "Concat" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.Concat) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return Expression.And(base.Visit(node.Arguments[0]), base.Visit(node.Arguments[1]));
             }
 
-            if (node.Method.Name == "Where")
+            if (node.Method.Name == nameof(Queryable.Where))
             {
                 _predicate = node.Arguments[1];
                 var result = base.Visit(node.Arguments[0]);
@@ -59,32 +61,32 @@ namespace NuClear.ValidationRules.SingleCheck.Optimization
                 return result;
             }
 
-            if (node.Method.Name == "Select" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.Select) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return base.Visit(node.Arguments[0]);
             }
 
-            if (node.Method.Name == "GroupBy" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.GroupBy) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return base.Visit(node.Arguments[0]);
             }
 
-            if (node.Method.Name == "Distinct" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.Distinct) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return base.Visit(node.Arguments[0]);
             }
 
-            if (node.Method.Name == "OrderBy" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.OrderBy) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return base.Visit(node.Arguments[0]);
             }
 
-            if (node.Method.Name == "Join" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.Join) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return Expression.Or(base.Visit(node.Arguments[0]), base.Visit(node.Arguments[1]));
             }
 
-            if (node.Method.Name == "Take" && node.Method.DeclaringType == typeof(Queryable))
+            if (node.Method.Name == nameof(Queryable.Take) && node.Method.DeclaringType == typeof(Queryable))
             {
                 return base.Visit(node.Arguments[0]);
             }
