@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+п»їusing System.Linq.Expressions;
 
 namespace NuClear.ValidationRules.SingleCheck.Optimization
 {
@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.SingleCheck.Optimization
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            // Предикат считаем простыи, если в нём используется его параметр и константы - никаких внешних объектов
+            // РџСЂРµРґРёРєР°С‚ СЃС‡РёС‚Р°РµРј РїСЂРѕСЃС‚С‹Рё, РµСЃР»Рё РІ РЅС‘Рј РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РµРіРѕ РїР°СЂР°РјРµС‚СЂ Рё РєРѕРЅСЃС‚Р°РЅС‚С‹ - РЅРёРєР°РєРёС… РІРЅРµС€РЅРёС… РѕР±СЉРµРєС‚РѕРІ
             _isSimple = _isSimple & (node == _parameter);
             return base.VisitParameter(node);
         }

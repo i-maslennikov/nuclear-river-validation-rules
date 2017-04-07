@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
                     .SingleOrDefault(x => x.Id == projectId);
 
                 if (project == null)
-                    throw new ArgumentException($"Проект {projectId}", nameof(project));
+                    throw new ArgumentException($"РџСЂРѕРµРєС‚ {projectId}", nameof(project));
 
                 var lastRelease = connection
                     .GetTable<ReleaseInfo>()
@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.WebApp.DataAccess
                     .FirstOrDefault(x => x.OrganizationUnitId == project.OrganizationUnitId);
 
                 if (lastRelease == null)
-                    throw new ArgumentException($"Не найден предыдущий релиз для проекта {projectId}", nameof(project));
+                    throw new ArgumentException($"РќРµ РЅР°Р№РґРµРЅ РїСЂРµРґС‹РґСѓС‰РёР№ СЂРµР»РёР· РґР»СЏ РїСЂРѕРµРєС‚Р° {projectId}", nameof(project));
 
                 return lastRelease.PeriodEndDate.AddSeconds(1);
             }
