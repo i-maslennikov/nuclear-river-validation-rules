@@ -22,59 +22,26 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var couponOverlapPeriods =
+            var result =
                 from period in query.For<Order.CouponDistributionPeriod>()
-                from intersectingPeriod in query.For<Order.CouponDistributionPeriod>()
-                                                .Where(x => x.AdvertisementId == period.AdvertisementId && x.Begin < period.End && period.Begin < x.End && Scope.CanSee(period.Scope, x.Scope))
-                where query.For<Order.CouponDistributionPeriod>()
-                                                .Count(x => x.AdvertisementId == period.AdvertisementId && x.Begin < period.End && period.Begin < x.End && Scope.CanSee(period.Scope, x.Scope)) > 1
-                let order = query.For<Order>().Single(x => x.Id == period.OrderId)
-                let advertisement = query.For<Advertisement>().Single(x => x.Id == period.AdvertisementId)
-                select new
+                    .Where(x => query.For<Order.CouponDistributionPeriod>().Count(y => x.AdvertisementId == y.AdvertisementId && x.Begin < y.End && y.Begin < x.End && Scope.CanSee(x.Scope, y.Scope)) > 1)
+                from other in query.For<Order.CouponDistributionPeriod>().Where(x => period.AdvertisementId == x.AdvertisementId && period.Begin < x.End && x.Begin < period.End && Scope.CanSee(period.Scope, x.Scope))
+                select new Version.ValidationResult
                     {
-                        Key = new
-                            {
-                                order.ProjectId,
+                        MessageParams =
+                            new MessageParams(
+                                    new Reference<EntityTypeAdvertisement>(period.AdvertisementId),
+                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                        new Reference<EntityTypeOrderPosition>(other.OrderPositionId),
+                                        new Reference<EntityTypePosition>(other.PositionId)))
+                                .ToXDocument(),
 
-                                period.OrderId,
-                                period.AdvertisementId,
-                                period.Begin,
-                                period.End,
-                            },
-
-                        Value = new
-                            {
-                                intersectingPeriod.OrderPositionId,
-                                intersectingPeriod.PositionId,
-                            },
+                        PeriodStart = period.Begin,
+                        PeriodEnd = period.End,
+                        OrderId = period.OrderId,
                     };
 
-            // Вычисления в памяти, поскольку linq2db сам в памяти группировки не умеет
-            var data = couponOverlapPeriods.ToArray();
-            var ruleResults =
-                data.GroupBy(x => x.Key)
-                    .Select(coupon =>
-                                new Version.ValidationResult
-                                    {
-                                        MessageParams =
-                                            new MessageParams(
-                                                    new Reference[]
-                                                            {
-                                                                new Reference<EntityTypeAdvertisement>(coupon.Key.AdvertisementId),
-                                                                new Reference<EntityTypeOrder>(coupon.Key.OrderId),
-                                                            }.Concat(
-                                                                 coupon.Distinct()
-                                                                       .Select(x => new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                                                                   new Reference<EntityTypeOrderPosition>(x.Value.OrderPositionId),
-                                                                                   new Reference<EntityTypePosition>(x.Value.PositionId)))).ToArray())
-                                                .ToXDocument(),
-
-                                        PeriodStart = coupon.Key.Begin,
-                                        PeriodEnd = coupon.Key.End,
-                                        OrderId = coupon.Key.OrderId,
-                                    });
-
-            return ruleResults.AsQueryable();
+            return result;
         }
     }
 }
