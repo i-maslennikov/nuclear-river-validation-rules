@@ -24,9 +24,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IQueryable<Lock> GetSource() =>
-            from @lock in _query.For<Erm::Lock>()
+            from @lock in _query.For<Erm::Lock>().Where(x => x.IsActive && !x.IsDeleted)
             from order in _query.For<Erm::Order>().Where(x => x.Id == @lock.OrderId) // тип заказа после создания блокировки не меняется, поэтому join допустим
-            where @lock.IsActive && !@lock.IsDeleted
             select new Lock
                 {
                     Id = @lock.Id,

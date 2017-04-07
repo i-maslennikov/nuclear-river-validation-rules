@@ -48,8 +48,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var pricePositionIsNotActiveErrors =
                 from orderFirstPeriodDto in orderFirstPeriodDtos
-                join orderPricePosition in query.For<Order.OrderPricePosition>() on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
-                where !orderPricePosition.IsActive
+                join orderPricePosition in query.For<Order.OrderPricePosition>().Where(x => !x.IsActive) on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
                 select new Version.ValidationResult
                     {
                         MessageParams =

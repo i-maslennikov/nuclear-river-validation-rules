@@ -129,22 +129,23 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                          ChildPositionId = child != null ? child.ChildPositionId : position.Id
                                      };
 
-                return from order in _query.For<Facts::Order>()
-                       join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
-                       join pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on op.PricePositionId equals pp.Id
-                       join positionChild in positionChilds on pp.PositionId equals positionChild.PositionId
-                       join p in _query.For<Facts::Position>().Where(x => !x.IsDeleted) on positionChild.ChildPositionId equals p.Id
-                       join template in _query.For<Facts::AdvertisementTemplate>() on p.AdvertisementTemplateId equals template.Id
-                       where template.IsAdvertisementRequired // РМ должен быть указан
-                       join opa in _query.For<Facts::OrderPositionAdvertisement>() on new { OrderPositionId = op.Id, PositionId = p.Id } equals new { opa.OrderPositionId, opa.PositionId }
-                       where opa.AdvertisementId == null // РМ не указан
-                       select new Order.MissingAdvertisementReference
-                           {
-                               OrderId = order.Id,
-                               OrderPositionId = op.Id,
-                               CompositePositionId = pp.PositionId,
-                               PositionId = p.Id,
-                       };
+                var result =
+                    from order in _query.For<Facts::Order>()
+                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
+                    join pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on op.PricePositionId equals pp.Id
+                    join positionChild in positionChilds on pp.PositionId equals positionChild.PositionId
+                    join p in _query.For<Facts::Position>().Where(x => !x.IsDeleted) on positionChild.ChildPositionId equals p.Id
+                    join template in _query.For<Facts::AdvertisementTemplate>().Where(x => x.IsAdvertisementRequired) on p.AdvertisementTemplateId equals template.Id
+                    join opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.AdvertisementId == null) on new { OrderPositionId = op.Id, PositionId = p.Id } equals new { opa.OrderPositionId, opa.PositionId }
+                    select new Order.MissingAdvertisementReference
+                        {
+                            OrderId = order.Id,
+                            OrderPositionId = op.Id,
+                            CompositePositionId = pp.PositionId,
+                            PositionId = p.Id,
+                        };
+
+                return result;
             }
 
             public FindSpecification<Order.MissingAdvertisementReference> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -173,8 +174,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on op.PricePositionId equals pp.Id
-                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted) on pp.PositionId equals position.Id
-                   where !position.IsCompositionOptional // нужен хотя бы один объект привязки
+                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && !x.IsCompositionOptional) on pp.PositionId equals position.Id
                    join childPosition in _query.For<Facts::PositionChild>() on position.Id equals childPosition.MasterPositionId
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.ChildPositionId).DefaultIfEmpty()
                    where opa == null // позиция не продана
@@ -212,8 +212,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                   join advertisement in _query.For<Facts::Advertisement>() on opa.AdvertisementId equals advertisement.Id
-                   where advertisement.IsDeleted // РМ удалён
+                   join advertisement in _query.For<Facts::Advertisement>().Where(x => x.IsDeleted) on opa.AdvertisementId equals advertisement.Id
                    select new Order.AdvertisementDeleted
                    {
                        OrderId = order.Id,
@@ -327,10 +326,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from order in GetOrdersFact().Union(GetOrdersPlan())
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted) on opa.PositionId equals position.Id
+                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.CategoryCode == CouponPositionCategoryCode) on opa.PositionId equals position.Id
                    join advertisement in _query.For<Facts::Advertisement>() on opa.AdvertisementId equals advertisement.Id
                    join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
-                   where position.CategoryCode == CouponPositionCategoryCode // выгодные покупки с 2ГИС
                    where opa.AdvertisementId != template.DummyAdvertisementId // РМ не является заглушкой
                    select new Order.CouponDistributionPeriod
                        {

@@ -179,9 +179,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             public IQueryable<Order.CategoryNotBelongsToAddress> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                   where opa.CategoryId != null
-                   from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId && x.IsActive && !x.IsClosedForAscertainment && !x.IsDeleted)
+                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
+                   from address in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsClosedForAscertainment && !x.IsDeleted).Where(x => x.Id == opa.FirmAddressId)
                    from cfa in _query.For<Facts::FirmAddressCategory>().Where(x => x.FirmAddressId == address.Id && x.CategoryId == opa.CategoryId.Value).DefaultIfEmpty()
                    where cfa == null
                    select new Order.CategoryNotBelongsToAddress
@@ -220,7 +219,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             public IQueryable<Order.InvalidCategory> GetSource()
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id && x.CategoryId.HasValue)
+                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
                    let categoryBelongToFirm = _query.For<Facts::FirmAddress>()
@@ -530,8 +529,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.LegalPersonProfileBargainExpired> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from profile in _query.For<Facts::LegalPersonProfile>().Where(x => x.LegalPersonId == order.LegalPersonId)
-                   where profile.BargainEndDate.HasValue && profile.BargainEndDate.Value < order.SignupDate
+                   from profile in _query.For<Facts::LegalPersonProfile>().Where(x => x.BargainEndDate.HasValue).Where(x => x.LegalPersonId == order.LegalPersonId)
+                   where profile.BargainEndDate.Value < order.SignupDate
                    select new Order.LegalPersonProfileBargainExpired
                    {
                        OrderId = order.Id,
@@ -562,8 +561,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.LegalPersonProfileWarrantyExpired> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from profile in _query.For<Facts::LegalPersonProfile>().Where(x => x.LegalPersonId == order.LegalPersonId)
-                   where profile.WarrantyEndDate.HasValue && profile.WarrantyEndDate.Value < order.SignupDate
+                   from profile in _query.For<Facts::LegalPersonProfile>().Where(x => x.WarrantyEndDate.HasValue).Where(x => x.LegalPersonId == order.LegalPersonId)
+                   where profile.WarrantyEndDate.Value < order.SignupDate
                    select new Order.LegalPersonProfileWarrantyExpired
                    {
                        OrderId = order.Id,
@@ -593,9 +592,9 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.MissingBargainScan> GetSource()
-                => from order in _query.For<Facts::Order>()
+                => from order in _query.For<Facts::Order>().Where(x => x.BargainId.HasValue)
                    from scan in _query.For<Facts::BargainScanFile>().Where(x => x.BargainId == order.BargainId).DefaultIfEmpty()
-                   where order.BargainId.HasValue && scan == null
+                   where scan == null
                    select new Order.MissingBargainScan
                    {
                        OrderId = order.Id,

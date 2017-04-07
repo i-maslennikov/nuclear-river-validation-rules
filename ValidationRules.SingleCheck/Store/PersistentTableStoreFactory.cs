@@ -84,7 +84,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                 _connection.Insert(entity);
             }
 
-            void IStore.AddRange<T>(IEnumerable<T> entities)
+            void IStore.AddRange<T>(IReadOnlyCollection<T> entities)
             {
                 _connection.GetTable<T>().BulkCopy(entities);
             }

@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             }
         }
 
-        void IStore.AddRange<T>(IEnumerable<T> entities)
+        void IStore.AddRange<T>(IReadOnlyCollection<T> entities)
         {
             var table = GetTable<T>();
             foreach (var entity in entities)

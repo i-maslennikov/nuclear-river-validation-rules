@@ -78,9 +78,8 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 var releaseWithdrawalPeriods =
                     from releaseWithdrawal in _query.For<Facts::ReleaseWithdrawal>()
                     join orderPosition in _query.For<Facts::OrderPosition>() on releaseWithdrawal.OrderPositionId equals orderPosition.Id
-                    join order in _query.For<Facts::Order>() on orderPosition.OrderId equals order.Id
+                    join order in _query.For<Facts::Order>().Where(x => !x.IsFreeOfCharge && PayableStates.Contains(x.WorkflowStep)) on orderPosition.OrderId equals order.Id
                     from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
-                    where !order.IsFreeOfCharge && PayableStates.Contains(order.WorkflowStep)
                     select new { AccountId = account.Id, releaseWithdrawal.Start, releaseWithdrawal.Amount, Type = 1 };
 
                 var locks = _query.For<Facts::Lock>().Where(x => !x.IsOrderFreeOfCharge);

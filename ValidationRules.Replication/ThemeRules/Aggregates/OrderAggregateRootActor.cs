@@ -87,13 +87,13 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             public IQueryable<Order.OrderTheme> GetSource()
             {
                 var orderThemes = (from order in _query.For<Facts::Order>()
-                                    from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.ThemeId != null && x.OrderPositionId == op.Id)
-                                    select new Order.OrderTheme
-                                    {
-                                        OrderId = order.Id,
-                                        ThemeId = opa.ThemeId.Value
-                                    }).Distinct();
+                                   from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.ThemeId != null).Where(x => x.OrderPositionId == op.Id)
+                                   select new Order.OrderTheme
+                                       {
+                                           OrderId = order.Id,
+                                           ThemeId = opa.ThemeId.Value
+                                       }).Distinct();
 
                 return orderThemes;
             }

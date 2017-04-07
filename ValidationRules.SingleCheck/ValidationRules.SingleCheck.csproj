@@ -201,7 +201,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
-    <Compile Include="Store\ErmStoreFactory.cs" />
+    <Compile Include="Optimization\DebuggingVisitor.cs" />
+    <Compile Include="Optimization\DependencyVisitor.cs" />
+    <Compile Include="Optimization\PredicateVisitor.cs" />
+    <Compile Include="Optimization\SkipCheckVisitor.cs" />
+    <Compile Include="Replicator.cs" />
     <Compile Include="Store\PersistentTableStoreFactory.cs" />
     <Compile Include="Store\LockManager.cs" />
     <Compile Include="Store\SchemaManager.cs" />

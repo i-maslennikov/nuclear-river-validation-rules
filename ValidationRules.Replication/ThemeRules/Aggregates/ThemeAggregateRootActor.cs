@@ -84,8 +84,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             {
                 var invalidCategories =
                     from themeCategory in _query.For<Facts::ThemeCategory>()
-                    from category in _query.For<Facts::Category>().Where(x => x.Id == themeCategory.CategoryId)
-                    where !category.IsActiveNotDeleted // рубрика невалидна
+                    from category in _query.For<Facts::Category>().Where(x => !x.IsActiveNotDeleted).Where(x => x.Id == themeCategory.CategoryId)
                     select new Theme.InvalidCategory
                     {
                         ThemeId = themeCategory.ThemeId,

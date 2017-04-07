@@ -38,8 +38,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var messages =
                 from order in orders
-                from actualPrice in query.For<Order.ActualPrice>().Where(x => x.OrderId == order.Id)
-                where actualPrice.PriceId == null // не нашли актуальный прайс-лист
+                from actualPrice in query.For<Order.ActualPrice>().Where(x => x.PriceId == null).Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
                     {
                         MessageParams =
