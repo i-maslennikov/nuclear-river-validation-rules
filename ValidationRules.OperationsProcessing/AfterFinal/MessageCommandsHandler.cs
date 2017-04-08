@@ -26,8 +26,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
         public MessageCommandsHandler(
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer,
-            ValidationRuleActor validationRuleActor,
-            ArchiveVersionsService archiveVersionsService)
+            ValidationRuleActor validationRuleActor)
         {
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;

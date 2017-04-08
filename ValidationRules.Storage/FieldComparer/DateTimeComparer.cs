@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NuClear.ValidationRules.SingleCheck.FieldComparer
+namespace NuClear.ValidationRules.Storage.FieldComparer
 {
-    internal class DateTimeComparer : IEqualityComparer<DateTime>
+    public sealed class DateTimeComparer : IEqualityComparer<DateTime>
     {
         public bool Equals(DateTime x, DateTime y)
         {

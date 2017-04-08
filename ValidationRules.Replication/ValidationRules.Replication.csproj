@@ -257,7 +257,6 @@
     <Compile Include="FirmRules\Validation\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Messages\ArchiveVersionsService.cs" />
     <Compile Include="Messages\ErmStatesQueryableExtensions.cs" />
-    <Compile Include="Messages\ValidationResultEqualityComparer.cs" />
     <Compile Include="Messages\VersionAccessor.cs" />
     <Compile Include="ProjectRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="ProjectRules\Aggregates\FirmAddressAggregateRootActor.cs" />
