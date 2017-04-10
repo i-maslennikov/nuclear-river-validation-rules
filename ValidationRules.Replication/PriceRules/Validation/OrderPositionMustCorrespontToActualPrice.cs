@@ -12,7 +12,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// "Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа"
     /// 
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionDoesntCorrespontToActualPrice
+    /// 
     /// Есть нюанс: можно одобрить заказ, а потом действующий прайс изменится. Эта ситуация должна вызывать не ошибку, а предупреждение.
+    ///             Для заказов в статусе "На расторжении" эта проверка не должна мешать их вернуть в размещение
     /// </summary>
     public sealed class OrderPositionMustCorrespontToActualPrice : ValidationResultAccessorBase
     {
@@ -22,31 +24,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var orders =
-                from orderPeriod in query.For<Period.OrderPeriod>()
-                from period in query.For<Period>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
-                select new { orderPeriod.OrderId, period.Start, period.End }
-                into dto
-                group dto by dto.OrderId
-                into dtoGroup
-                select new
-                {
-                    Id = dtoGroup.Key,
-                    Start = dtoGroup.Min(x => x.Start),
-                    End = dtoGroup.Max(x => x.End)
-                };
-
             var messages =
-                from order in orders
-                from orderPosition in query.For<Order.OrderPricePosition>()
-                                           .Where(x => x.OrderId == order.Id)
+                from order in query.For<Order>().Where(x => !x.IsApproved)
                 from actualPrice in query.For<Order.ActualPrice>()
-                                         .Where(x => x.PriceId != null)
+                                         .Where(x => x.PriceId.HasValue)
                                          .Where(x => x.OrderId == order.Id)
-                from orderPeriod in query.For<Period.OrderPeriod>()
-                                         .Where(x => x.OrderId == order.Id && x.Start == order.Start)
-                where orderPosition.PriceId != actualPrice.PriceId.Value // прайс-лист позиции заказа отличается от актуального прайс-листа заказа
-                where orderPeriod.Scope != 0                             // заказ не в статусе Одобрен
+                from orderPosition in query.For<Order.OrderPricePosition>()
+                                           .Where(x => x.OrderId == order.Id && x.PriceId != actualPrice.PriceId.Value)
                 select new Version.ValidationResult
                     {
                         MessageParams =
@@ -56,8 +40,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                         new Reference<EntityTypePosition>(orderPosition.PositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = order.Start,
-                        PeriodEnd = order.End,
+                        PeriodStart = order.Begin,
+                        PeriodEnd = order.EndPlan,
                         OrderId = order.Id,
                     };
 

@@ -22,22 +22,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var orders =
-                from orderPeriod in query.For<Period.OrderPeriod>()
-                from period in query.For<Period>().Where(x => x.Start == orderPeriod.Start && x.OrganizationUnitId == orderPeriod.OrganizationUnitId)
-                select new { orderPeriod.OrderId, period.Start, period.End }
-                into dto
-                group dto by dto.OrderId
-                into dtoGroup
-                select new
-                {
-                    Id = dtoGroup.Key,
-                    Start = dtoGroup.Min(x => x.Start),
-                    End = dtoGroup.Max(x => x.End)
-                };
-
             var messages =
-                from order in orders
+                from order in query.For<Order>()
                 from actualPrice in query.For<Order.ActualPrice>().Where(x => x.PriceId == null).Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
                     {
@@ -46,8 +32,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                     new Reference<EntityTypeOrder>(order.Id))
                                 .ToXDocument(),
 
-                        PeriodStart = order.Start,
-                        PeriodEnd = order.End,
+                        PeriodStart = order.Begin,
+                        PeriodEnd = order.EndPlan,
                         OrderId = order.Id,
                     };
 
