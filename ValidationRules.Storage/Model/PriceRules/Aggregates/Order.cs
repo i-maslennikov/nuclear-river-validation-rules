@@ -8,9 +8,9 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     public sealed class Order
     {
         public long Id { get; set; }
-        public DateTime Begin { get; set; }
-        public DateTime EndPlan { get; set; }
-        public bool IsApproved { get; set; }
+        public DateTime BeginDistribution { get; set; }
+        public DateTime EndDistributionPlan { get; set; }
+        public bool IsCommitted { get; set; }
 
         /// <summary>
         /// Связь заказа с номенклатурной позицией, импортируется из ERM.OrderPosition + ERM.OrderPositionAdv

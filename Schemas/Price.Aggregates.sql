@@ -56,6 +56,9 @@ go
 -- order aggregate
 create table PriceAggregates.[Order](
     Id bigint NOT NULL,
+    BeginDistribution datetime2(2) NOT NULL,
+    EndDistributionPlan datetime2(2) NOT NULL,
+    IsCommitted bit NOT NULL,
     constraint PK_Order primary key (Id)
 )
 go

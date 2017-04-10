@@ -36,8 +36,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                         new Reference<EntityTypePosition>(orderPricePosition.PositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = order.Begin,
-                        PeriodEnd = order.EndPlan,
+                        PeriodStart = order.BeginDistribution,
+                        PeriodEnd = order.EndDistributionPlan,
                         OrderId = order.Id,
                     };
 

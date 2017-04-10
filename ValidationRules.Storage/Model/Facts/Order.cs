@@ -35,7 +35,15 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
             public const int OnTermination = 4;
             public const int Approved = 5;
 
+            /// <summary>
+            /// Состояния, означающие, что заказ влияет на лицевой счёт.
+            /// </summary>
             public static readonly int[] Payable = { OnTermination, Approved };
+
+            /// <summary>
+            /// Состояния, означающие, что заказ размещается.
+            /// </summary>
+            public static readonly int[] Committed = { OnTermination, Approved };
         }
     }
 }

@@ -58,7 +58,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   select new Order { Id = order.Id };
+                   select new Order
+                       {
+                           Id = order.Id,
+                           BeginDistribution = order.BeginDistribution,
+                           EndDistributionPlan = order.EndDistributionPlan,
+                           IsCommitted = Facts::Order.State.Committed.Contains(order.WorkflowStep)
+                       };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

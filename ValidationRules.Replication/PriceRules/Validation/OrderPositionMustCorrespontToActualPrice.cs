@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var messages =
-                from order in query.For<Order>().Where(x => !x.IsApproved)
+                from order in query.For<Order>().Where(x => !x.IsCommitted)
                 from actualPrice in query.For<Order.ActualPrice>()
                                          .Where(x => x.PriceId.HasValue)
                                          .Where(x => x.OrderId == order.Id)
@@ -40,8 +40,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                         new Reference<EntityTypePosition>(orderPosition.PositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = order.Begin,
-                        PeriodEnd = order.EndPlan,
+                        PeriodStart = order.BeginDistribution,
+                        PeriodEnd = order.EndDistributionPlan,
                         OrderId = order.Id,
                     };
 
