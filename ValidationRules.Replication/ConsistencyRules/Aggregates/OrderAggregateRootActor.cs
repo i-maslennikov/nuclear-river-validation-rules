@@ -17,7 +17,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
     public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
         private const int BindingObjectTypeCategoryMultipleAsterix = 1;
-        private const int WorkflowStepOnRegistration = 1;
 
         public OrderAggregateRootActor(
             IQuery query,
@@ -494,7 +493,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.InvalidBillsTotal> GetSource()
-                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == WorkflowStepOnRegistration)
+                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == Facts::Order.State.OnRegistration)
                    let billTotal = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Sum(x => (decimal?)x.PayablePlan)
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
@@ -623,7 +622,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.MissingBills> GetSource()
-                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == WorkflowStepOnRegistration)
+                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == Facts::Order.State.OnRegistration)
                    let billCount = _query.For<Facts::Bill>().Count(x => x.OrderId == order.Id)
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)

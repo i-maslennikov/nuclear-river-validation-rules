@@ -33,8 +33,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
-            private const int OrderOnRegistration = 1;
-
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query) : base(CreateInvalidator())
@@ -63,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                            Begin = order.BeginDistribution,
                            End = order.EndDistributionPlan, // ?
                            ProjectId = project.Id,
-                           IsDraft = order.WorkflowStep == OrderOnRegistration,
+                           IsDraft = order.WorkflowStep == Facts::Order.State.OnRegistration,
                        };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
