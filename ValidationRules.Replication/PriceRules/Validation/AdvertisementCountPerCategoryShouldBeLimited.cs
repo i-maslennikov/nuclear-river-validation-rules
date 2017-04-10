@@ -22,9 +22,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// </summary>
     public sealed class AdvertisementCountPerCategoryShouldBeLimited : ValidationResultAccessorBase
     {
-        // Объявление в рубрике(Объявление под списком выдачи)
-        private const int TargetCategoryCode = 38;
-
         private const int MaxPositionsPerCategory = 2;
 
         public AdvertisementCountPerCategoryShouldBeLimited(IQuery query) : base(query, MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited)
@@ -36,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var sales =
                 from orderPosition in query.For<Order.OrderPosition>().Where(x => x.CategoryId.HasValue)
                 from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
-                from position in query.For<Position>().Where(x => x.CategoryCode == TargetCategoryCode).Where(x => x.Id == orderPosition.ItemPositionId)
+                from position in query.For<Position>().Where(x => x.CategoryCode == Position.AdvertisementInCategory).Where(x => x.Id == orderPosition.ItemPositionId)
                 select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.CategoryId };
 
             var saleCounts =

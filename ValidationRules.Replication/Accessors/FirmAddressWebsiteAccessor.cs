@@ -16,8 +16,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class FirmAddressWebsiteAccessor : IStorageBasedDataObjectAccessor<FirmAddressWebsite>, IDataChangesHandler<FirmAddressWebsite>
     {
-        private const int Website = 4;
-
         private readonly IQuery _query;
 
         public FirmAddressWebsiteAccessor(IQuery query)
@@ -27,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<FirmAddressWebsite> GetSource() => _query
             .For<Erm::FirmContact>()
-            .Where(x => x.FirmAddressId != null && x.ContactType == Website)
+            .Where(x => x.FirmAddressId != null && x.ContactType == Erm::FirmContact.Website)
             .Select(x => new FirmAddressWebsite
             {
                 Id = x.Id,

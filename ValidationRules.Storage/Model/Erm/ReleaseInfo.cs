@@ -4,6 +4,8 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
 {
     public sealed class ReleaseInfo
     {
+        public const int Success = 2;
+
         public long Id { get; set; }
         public long OrganizationUnitId { get; set; }
         public bool IsBeta { get; set; }

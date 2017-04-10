@@ -17,7 +17,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
     public sealed class BillAccessor : IStorageBasedDataObjectAccessor<Bill>, IDataChangesHandler<Bill>
     {
         private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
-        private const int BillTypePayment = 1;
 
         private readonly IQuery _query;
 
@@ -28,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<Bill> GetSource() => _query
             .For<Erm::Bill>()
-            .Where(x => x.IsActive && !x.IsDeleted && x.BillType == BillTypePayment)
+            .Where(x => x.IsActive && !x.IsDeleted && x.BillType == Erm::Bill.Payment)
             .Select(x => new Bill
                 {
                     Id = x.Id,

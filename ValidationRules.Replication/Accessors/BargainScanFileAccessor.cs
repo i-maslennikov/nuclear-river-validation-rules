@@ -16,8 +16,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class BargainScanFileAccessor : IStorageBasedDataObjectAccessor<BargainScanFile>, IDataChangesHandler<BargainScanFile>
     {
-        private const int BargainScanFileKind = 12;
-
         private readonly IQuery _query;
 
         public BargainScanFileAccessor(IQuery query)
@@ -27,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<BargainScanFile> GetSource() => _query
             .For<Erm::BargainFile>()
-            .Where(x => x.IsActive && !x.IsDeleted && x.FileKind == BargainScanFileKind)
+            .Where(x => x.IsActive && !x.IsDeleted && x.FileKind == Erm::BargainFile.BargainScan)
             .Select(x => new BargainScanFile
                 {
                     Id = x.Id,

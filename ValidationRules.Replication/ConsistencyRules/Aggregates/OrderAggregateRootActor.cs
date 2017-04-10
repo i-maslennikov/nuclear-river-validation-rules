@@ -16,8 +16,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 {
     public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private const int BindingObjectTypeCategoryMultipleAsterix = 1;
-
         public OrderAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
@@ -236,7 +234,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                            CategoryId = category.Id,
                            OrderPositionId = orderPosition.Id,
                            PositionId = opa.PositionId,
-                           MayNotBelongToFirm = position.BindingObjectType == BindingObjectTypeCategoryMultipleAsterix,
+                           MayNotBelongToFirm = position.BindingObjectType == Facts::Position.BindingObjectTypeCategoryMultipleAsterix,
                            State = state,
                        };
 

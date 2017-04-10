@@ -2,6 +2,16 @@
 {
     public sealed class Position
     {
+        public const long CategoryCodeAdvantageousPurchaseWith2Gis = 14; // Выгодные покупки с 2ГИС (купоны с периодом размещения)
+        public const long CategoryCodeSelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
+
+        public const int BindingObjectTypeCategoryMultipleAsterix = 1;
+
+        public const long PlatformIndependent = 0;
+        public const long PlatformDesktop = 1;
+
+        public const int PositionsGroupMedia = 1;
+
         public long Id { get; set; }
 
         public long? AdvertisementTemplateId { get; set; }

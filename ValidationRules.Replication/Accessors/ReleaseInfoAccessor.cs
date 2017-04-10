@@ -16,7 +16,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class ReleaseInfoAccessor : IStorageBasedDataObjectAccessor<ReleaseInfo>, IDataChangesHandler<ReleaseInfo>
     {
-        private const int ReleaseStatusSuccess = 2;
         private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
 
         private readonly IQuery _query;
@@ -28,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<ReleaseInfo> GetSource() => _query
             .For<Erm::ReleaseInfo>()
-            .Where(x => x.IsActive && !x.IsDeleted && !x.IsBeta && x.Status == ReleaseStatusSuccess)
+            .Where(x => x.IsActive && !x.IsDeleted && !x.IsBeta && x.Status == Erm::ReleaseInfo.Success)
             .Select(x => new ReleaseInfo
             {
                 Id = x.Id,

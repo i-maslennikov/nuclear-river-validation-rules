@@ -121,8 +121,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
         public sealed class CategoryAdvertisementAccessor : DataChangesHandler<Order.CategoryAdvertisement>, IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
         {
-            private const int PositionsGroupMedia = 1;
-
             private readonly IQuery _query;
 
             public CategoryAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
@@ -152,8 +150,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                             PositionId = opa.PositionId,
                             CategoryId = category.Id,
                             SalesModel = position.SalesModel,
-                            IsSalesModelRestrictionApplicable = category.L3Id != null && position.PositionsGroup != PositionsGroupMedia
-                        }).Distinct();
+                            IsSalesModelRestrictionApplicable = category.L3Id != null && position.PositionsGroup != Facts::Position.PositionsGroupMedia
+                    }).Distinct();
 
             public FindSpecification<Order.CategoryAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

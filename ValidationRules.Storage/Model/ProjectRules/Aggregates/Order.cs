@@ -21,6 +21,8 @@ namespace NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates
 
         public class CategoryAdvertisement
         {
+            public const int CostPerClickSalesModel = 12; // erm: MultiPlannedProvision
+
             public long OrderId { get; set; }
             public long OrderPositionId { get; set; }
             public long PositionId { get; set; }

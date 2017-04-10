@@ -79,9 +79,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class NotApplicapleForDesktopPositionAccessor : DataChangesHandler<Order.NotApplicapleForDesktopPosition>, IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
         {
-            private const long PlatformIndependent = 0;
-            private const long PlatformDesktop = 1;
-
             private readonly IQuery _query;
 
             public NotApplicapleForDesktopPositionAccessor(IQuery query) : base(CreateInvalidator())
@@ -101,7 +98,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                     from position in _query.For<Facts::Position>()
                         .Where(x => !x.IsDeleted)
-                        .Where(x => x.Platform != PlatformDesktop && x.Platform != PlatformIndependent)
+                        .Where(x => x.Platform != Facts::Position.PlatformDesktop && x.Platform != Facts::Position.PlatformIndependent)
                         .Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     select new Order.NotApplicapleForDesktopPosition { OrderId = orderPosition.OrderId }).Distinct();
 
@@ -114,7 +111,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class SelfAdvertisementPositionAccessor : DataChangesHandler<Order.SelfAdvertisementPosition>, IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
         {
-            private const long SelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
             private readonly IQuery _query;
 
             public SelfAdvertisementPositionAccessor(IQuery query) : base(CreateInvalidator())
@@ -133,7 +129,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                     from position in _query.For<Facts::Position>()
-                        .Where(x => !x.IsDeleted && x.CategoryCode == SelfAdvertisementOnlyOnPc)
+                        .Where(x => !x.IsDeleted && x.CategoryCode == Facts::Position.CategoryCodeSelfAdvertisementOnlyOnPc)
                         .Where(x => x.Id == orderPositionAdvertisement.PositionId)
                     select new Order.SelfAdvertisementPosition { OrderId = orderPosition.OrderId }).Distinct();
 
