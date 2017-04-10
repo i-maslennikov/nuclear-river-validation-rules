@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var sales =
-                from orderPosition in query.For<Order.OrderPosition>().Where(x => x.ThemeId != null)
+                from orderPosition in query.For<Order.OrderThemePosition>()
                 from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
                 select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.ThemeId };
 
@@ -53,7 +53,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "max", MaxPositionsPerTheme }, { "count", oversale.Count } },
-                                    new Reference<EntityTypeTheme>(oversale.ThemeId.Value),
+                                    new Reference<EntityTypeTheme>(oversale.ThemeId),
                                     new Reference<EntityTypeProject>(period.ProjectId))
                                 .ToXDocument(),
 

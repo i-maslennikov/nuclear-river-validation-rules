@@ -31,9 +31,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var sales =
-                from orderPosition in query.For<Order.OrderPosition>().Where(x => x.CategoryId.HasValue)
+                from orderPosition in query.For<Order.OrderCategoryPosition>()
                 from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
-                from position in query.For<Position>().Where(x => x.CategoryCode == Position.AdvertisementInCategory).Where(x => x.Id == orderPosition.ItemPositionId)
                 select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.CategoryId };
 
             var saleCounts =
@@ -59,7 +58,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "max", MaxPositionsPerCategory }, { "count", oversale.Count } },
-                                    new Reference<EntityTypeCategory>(oversale.CategoryId.Value),
+                                    new Reference<EntityTypeCategory>(oversale.CategoryId),
                                     new Reference<EntityTypeProject>(period.ProjectId))
                                 .ToXDocument(),
 

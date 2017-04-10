@@ -8,73 +8,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement SimpleOrderPositionTest
-            => ArrangeMetadataElement.Config
-            .Name(nameof(SimpleOrderPositionTest))
-            .Fact(
-                new Facts::Order { },
-                new Facts::OrderPosition { Id = 1, PricePositionId = 11 },
-                new Facts::PricePosition { Id = 11, PositionId = 21, IsActiveNotDeleted = true },
-                new Facts::OrderPositionAdvertisement { Id = 31, PositionId = 21, OrderPositionId = 1 },
-                new Facts::OrderPositionAdvertisement { Id = 32, PositionId = 21, OrderPositionId = 1, CategoryId = 3 },
-                new Facts::OrderPositionAdvertisement { Id = 33, PositionId = 21, OrderPositionId = 1, CategoryId = 1 },
-                new Facts::OrderPositionAdvertisement { Id = 34, PositionId = 21, OrderPositionId = 1, CategoryId = 3, FirmAddressId = 111 },
-                new Facts::Position { Id = 21, IsComposite = false },
-                new Facts::Category { Id = 3, L1Id = 1, L2Id = 2, L3Id = 3 },
-                new Facts::Category { Id = 2, L1Id = 1, L2Id = 2 },
-                new Facts::Category { Id = 1, L1Id = 1 })
-            .Aggregate(
-                // OrderPositionAdvertisement
-                new Aggregates::Order { },
-
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21, CategoryId = 3 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21, CategoryId = 1 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21, CategoryId = 3 },
-
-                new Aggregates::Position { Id = 21 },
-                new Aggregates::Order.OrderPricePosition { OrderPositionId = 1, PositionId = 21, IsActive = true });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement PackageOrderPositionTest
-            => ArrangeMetadataElement.Config
-            .Name(nameof(PackageOrderPositionTest))
-            .Fact(
-                new Facts::Order { },
-                new Facts::OrderPosition { Id = 1, PricePositionId = 11 },
-                new Facts::PricePosition { Id = 11, PositionId = 21, IsActiveNotDeleted = true },
-                new Facts::OrderPositionAdvertisement { Id = 31, PositionId = 22, OrderPositionId = 1 },
-                new Facts::OrderPositionAdvertisement { Id = 32, PositionId = 23, OrderPositionId = 1, CategoryId = 3 },
-                new Facts::OrderPositionAdvertisement { Id = 33, PositionId = 24, OrderPositionId = 1, CategoryId = 3 },
-                new Facts::OrderPositionAdvertisement { Id = 34, PositionId = 25, OrderPositionId = 1, CategoryId = 3, FirmAddressId = 111 },
-                new Facts::Position { Id = 21, IsComposite = true },
-                new Facts::Position { Id = 22, IsComposite = false },
-                new Facts::Position { Id = 23, IsComposite = false },
-                new Facts::Position { Id = 24, IsComposite = false },
-                new Facts::Position { Id = 25, IsComposite = false },
-                new Facts::Category { Id = 3, L1Id = 1, L2Id = 2, L3Id = 3 },
-                new Facts::Category { Id = 2, L1Id = 1, L2Id = 2 },
-                new Facts::Category { Id = 1, L1Id = 1 })
-            .Aggregate(
-                // OrderPositionAdvertisement
-                new Aggregates::Order { },
-
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 21, CategoryId = 3 },
-
-                new Aggregates::Order.OrderPosition { ItemPositionId = 22 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 23, CategoryId = 3 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 24, CategoryId = 3 },
-                new Aggregates::Order.OrderPosition { ItemPositionId = 25, CategoryId = 3 },
-
-                new Aggregates::Position { Id = 21 },
-                new Aggregates::Position { Id = 22 },
-                new Aggregates::Position { Id = 23 },
-                new Aggregates::Position { Id = 24 },
-                new Aggregates::Position { Id = 25 },
-                new Aggregates::Order.OrderPricePosition { OrderPositionId = 1, PositionId = 21, IsActive = true });
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderPriceTest
             => ArrangeMetadataElement.Config
             .Name(nameof(OrderPriceTest))
@@ -117,9 +50,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 10 },
                     new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 1, PositionId = 1, PriceId = 1, IsActive = true },
-                    new Aggregates::Order.OrderPosition { OrderId = 1, ItemPositionId = 1 },
 
-                    new Aggregates::Position { Id = 1, CategoryCode = 10 },
                     new Aggregates::Price.AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10, CategoryName = "empty" });
     }
 }

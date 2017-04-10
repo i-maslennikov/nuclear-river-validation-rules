@@ -22,5 +22,8 @@ if object_id('ConsistencyAggregates.InvalidFirm') is not null drop table Consist
 
 if object_id('PriceAggregates.OrderDeniedPosition') is not null drop table PriceAggregates.OrderDeniedPosition
 if object_id('PriceAggregates.OrderAssociatedPosition') is not null drop table PriceAggregates.OrderAssociatedPosition
+
+if object_id('PriceAggregates.Position') is not null drop table PriceAggregates.Position
+if object_id('PriceAggregates.OrderPosition') is not null drop table PriceAggregates.OrderPosition
 go
 

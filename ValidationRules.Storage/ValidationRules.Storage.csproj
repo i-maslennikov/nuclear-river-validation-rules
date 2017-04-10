@@ -308,7 +308,6 @@
     <Compile Include="Model\Facts\CostPerClickCategoryRestriction.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Order.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Period.cs" />
-    <Compile Include="Model\PriceRules\Aggregates\Position.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Price.cs" />
     <Compile Include="Model\Erm\AssociatedPosition.cs" />
     <Compile Include="Model\Erm\AssociatedPositionsGroup.cs" />

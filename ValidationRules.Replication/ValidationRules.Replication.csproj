@@ -327,7 +327,6 @@
     <Compile Include="PriceRules\Aggregates\PeriodAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
-    <Compile Include="PriceRules\Aggregates\PositionAggregateRootActor.cs" />
     <Compile Include="ValidationResultExtensions.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />
     <Compile Include="Messages\ValidationRuleActor.cs" />

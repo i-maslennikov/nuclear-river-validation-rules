@@ -62,10 +62,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Aggregates::Price.AssociatedPositionGroupOvercount(),
                 new Aggregates::Order(),
                 new Aggregates::Period.OrderPeriod(),
-                new Aggregates::Order.OrderPosition(),
                 new Aggregates::Order.OrderPricePosition(),
+                new Aggregates::Order.OrderCategoryPosition(),
+                new Aggregates::Order.OrderThemePosition(),
                 new Aggregates::Period(),
-                new Aggregates::Position(),
                 new Aggregates::Price(),
                 new Aggregates::Period.PricePeriod())
             .Ignored();

@@ -13,19 +13,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
         public bool IsCommitted { get; set; }
 
         /// <summary>
-        /// Связь заказа с номенклатурной позицией, импортируется из ERM.OrderPosition + ERM.OrderPositionAdv
-        /// </summary>
-        // TODO: Сущность с последними изменениями стала достаточно узкоспециализированной, можно окончательно заточить её под решение конкретных задач и упростить проверку
-        public sealed class OrderPosition
-        {
-            public long OrderId { get; set; }
-            public long ItemPositionId { get; set; }
-
-            public long? CategoryId { get; set; }
-            public long? ThemeId { get; set; }
-        }
-
-        /// <summary>
         /// Связь заказа с его позицией и позицией прайс-листа
         /// </summary>
         public sealed class OrderPricePosition
@@ -35,6 +22,26 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long PositionId { get; set; }
             public long PriceId { get; set; }
             public bool IsActive { get; set; }
+        }
+
+        /// <summary>
+        /// Продажа "Объявление в рубрике", чьё количество должно быть ограниено
+        /// </summary>
+        public sealed class OrderCategoryPosition
+        {
+            public long OrderId { get; set; }
+            public long OrderPositionAdvertisementId { get; set; }
+            public long CategoryId { get; set; }
+        }
+
+        /// <summary>
+        /// Продажа тематики
+        /// </summary>
+        public sealed class OrderThemePosition
+        {
+            public long OrderId { get; set; }
+            public long OrderPositionAdvertisementId { get; set; }
+            public long ThemeId { get; set; }
         }
 
         /// <summary>
