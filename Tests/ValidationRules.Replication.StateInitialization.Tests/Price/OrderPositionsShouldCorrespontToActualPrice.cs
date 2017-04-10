@@ -18,23 +18,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(OrderPositionsShouldCorrespontToActualPrice))
                 .Aggregate(
 
-                    new Aggregates::Order { Id = 1 },
+                    new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order.ActualPrice { OrderId = 1, PriceId = 1 },
 
-                    new Aggregates::Order { Id = 2 },
-                    new Aggregates::Order.ActualPrice { OrderId = 2, PriceId = null },
-
-                    new Aggregates::Period { OrganizationUnitId = 1, Start = FirstDayJan, End = FirstDayFeb },
-                    new Aggregates::Period.OrderPeriod { OrganizationUnitId = 1, Start = FirstDayJan, OrderId = 1 },
-                    new Aggregates::Period.OrderPeriod { OrganizationUnitId = 1, Start = FirstDayJan, OrderId = 2 }
+                    new Aggregates::Order { Id = 2, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Aggregates::Order.ActualPrice { OrderId = 2, PriceId = null }
                     )
                 .Message(
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeOrder>(2)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
-                            PeriodStart = FirstDayJan,
-                            PeriodEnd = FirstDayFeb,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
                             OrderId = 2,
                         });
     }
