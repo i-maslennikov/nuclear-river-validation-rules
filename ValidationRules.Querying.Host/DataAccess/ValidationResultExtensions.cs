@@ -11,16 +11,6 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
     internal static class ValidationResultExtensions
     {
-        internal static IQueryable<Version.ValidationResult> ForPeriod(this IQueryable<Version.ValidationResult> query, DateTime start, DateTime end)
-        {
-            return query.Where(x => x.PeriodStart < end && start < x.PeriodEnd);
-        }
-
-        internal static IQueryable<Version.ValidationResult> ForOrdersOrProject(this IQueryable<Version.ValidationResult> query, IReadOnlyCollection<long> orderIds, long? projectId)
-        {
-            return query.Where(x => x.OrderId.HasValue && orderIds.Contains(x.OrderId.Value) || x.ProjectId.HasValue && x.ProjectId == projectId);
-        }
-
         internal static IReadOnlyCollection<Message> ToMessages(this IEnumerable<Version.ValidationResult> query, ResultType resultType)
         {
             var resultMap = ResultTypeMap.Map[resultType];

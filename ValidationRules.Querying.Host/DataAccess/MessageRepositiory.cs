@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Specifications;
@@ -43,8 +44,8 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
                 var validationResults = connection.GetTable<Version.ValidationResult>()
-                                                  .ForOrdersOrProject(orderIds, projectId)
-                                                  .ForPeriod(start, end)
+                                                  .Where(ForOrdersOrProject(orderIds, projectId))
+                                                  .Where(ForPeriod(start, end))
                                                   .ForVersion(versionId);
 
                 var validationResultTypes = connection.GetTable<Version.ValidationResultType>()
@@ -58,5 +59,11 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                 return messages.ToList();
             }
         }
+
+        private static Expression<Func<Version.ValidationResult, bool>> ForPeriod(DateTime start, DateTime end)
+            => x => x.PeriodStart < end && start < x.PeriodEnd;
+
+        private static Expression<Func<Version.ValidationResult, bool>> ForOrdersOrProject(IReadOnlyCollection<long> orderIds, long? projectId)
+            => x => x.OrderId.HasValue && orderIds.Contains(x.OrderId.Value) || x.ProjectId.HasValue && x.ProjectId == projectId;
     }
 }
