@@ -54,7 +54,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.OrderPositionCorrespontToInactivePosition,
                         MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
-                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderMustHaveActualPrice,
                     };
 
             public IQueryable<Order> GetSource()
@@ -243,7 +243,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
-                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderMustHaveActualPrice,
                     };
 
             public IQueryable<Order.ActualPrice> GetSource()

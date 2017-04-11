@@ -12,10 +12,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement OrderPositionsShouldCorrespontToActualPrice
+        private static ArrangeMetadataElement OrderMustHaveActualPrice
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(OrderPositionsShouldCorrespontToActualPrice))
+                .Name(nameof(OrderMustHaveActualPrice))
                 .Aggregate(
 
                     new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(new Reference<EntityTypeOrder>(2)).ToXDocument(),
-                            MessageType = (int)MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                            MessageType = (int)MessageTypeCode.OrderMustHaveActualPrice,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 2,

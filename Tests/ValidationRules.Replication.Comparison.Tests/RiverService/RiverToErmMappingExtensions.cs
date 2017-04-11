@@ -12,7 +12,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                     {
                             { MessageTypeCode.MaximumAdvertisementAmount, 26 },
                             { MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified, 26 },
-                            { MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice, 15 },
+                            { MessageTypeCode.OrderMustHaveActualPrice, 15 },
                             { MessageTypeCode.OrderPositionCorrespontToInactivePosition, 15 },
                             { MessageTypeCode.OrderPositionMayCorrespontToActualPrice, 15 },
                             { MessageTypeCode.OrderPositionMustCorrespontToActualPrice, 15 },

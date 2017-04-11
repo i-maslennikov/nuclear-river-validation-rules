@@ -4,7 +4,7 @@
     {
         MaximumAdvertisementAmount = 1,
         MinimalAdvertisementRestrictionShouldBeSpecified = 2,
-        OrderPositionsShouldCorrespontToActualPrice = 3,
+        OrderMustHaveActualPrice = 3,
         OrderPositionCorrespontToInactivePosition = 4,
         OrderPositionMayCorrespontToActualPrice = 5,
         OrderPositionMustCorrespontToActualPrice = 31,

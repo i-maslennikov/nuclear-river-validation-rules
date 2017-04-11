@@ -323,7 +323,7 @@
     <Compile Include="AggregateActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePosition.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMayCorrespontToActualPrice.cs" />
-    <Compile Include="PriceRules\Validation\OrderPositionsShouldCorrespontToActualPrice.cs" />
+    <Compile Include="PriceRules\Validation\OrderMustHaveActualPrice.cs" />
     <Compile Include="PriceRules\Aggregates\PeriodAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />

@@ -14,9 +14,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionsDoesntCorrespontToActualPrice
     /// TODO: странный текст ошибки, нужно исправить.
     /// </summary>
-    public class OrderPositionsShouldCorrespontToActualPrice : ValidationResultAccessorBase
+    public class OrderMustHaveActualPrice : ValidationResultAccessorBase
     {
-        public OrderPositionsShouldCorrespontToActualPrice(IQuery query) : base(query, MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice)
+        public OrderMustHaveActualPrice(IQuery query) : base(query, MessageTypeCode.OrderMustHaveActualPrice)
         {
         }
 

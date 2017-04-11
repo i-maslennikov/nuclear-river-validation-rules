@@ -227,7 +227,7 @@
     <Compile Include="Composition\Composers\OrderPositionCorrespontToInactivePositionMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionMustNotReferenceDeletedAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionMayCorrespontToActualPriceMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderPositionsShouldCorrespontToActualPriceMessageComposer.cs" />
+    <Compile Include="Composition\Composers\OrderMustHaveActualPriceMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderRequiredFieldsShouldBeSpecifiedMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderScanShouldPresentMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderShouldHaveAtLeastOnePositionMessageComposer.cs" />
