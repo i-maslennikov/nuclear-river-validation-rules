@@ -8,15 +8,15 @@
 
         public const int BindingObjectTypeCategoryMultipleAsterix = 1;
 
-        public const long PlatformIndependent = 0;
-        public const long PlatformDesktop = 1;
+        public const int PlatformIndependent = 0;
+        public const int PlatformDesktop = 1;
 
         public const int PositionsGroupMedia = 1;
 
         public long Id { get; set; }
 
         public long? AdvertisementTemplateId { get; set; }
-        public long BindingObjectType { get; set; }
+        public int BindingObjectType { get; set; }
         public int SalesModel { get; set; }
         public int PositionsGroup { get; set; }
 
