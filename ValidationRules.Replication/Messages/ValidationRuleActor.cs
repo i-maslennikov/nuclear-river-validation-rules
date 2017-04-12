@@ -7,6 +7,7 @@ using System.Transactions;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
+using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Writings;
 using NuClear.Telemetry.Probing;
@@ -32,17 +33,20 @@ namespace NuClear.ValidationRules.Replication.Messages
         private readonly IBulkRepository<Version.ErmState> _ermStatesRepository;
         private readonly IBulkRepository<Version.ValidationResult> _validationResultRepository;
         private readonly Dictionary<MessageTypeCode, IValidationResultAccessor> _accessors;
+        private readonly IEqualityComparer<Version.ValidationResult> _equalityComparer;
 
         public ValidationRuleActor(IQuery query,
                                    IRepository<Version> versionRepository,
                                    IBulkRepository<Version.ErmState> ermStatesRepository,
-                                   IBulkRepository<Version.ValidationResult> validationResultRepository)
+                                   IBulkRepository<Version.ValidationResult> validationResultRepository,
+                                   IEqualityComparerFactory equalityComparerFactory)
         {
             _query = query;
             _versionRepository = versionRepository;
             _ermStatesRepository = ermStatesRepository;
             _validationResultRepository = validationResultRepository;
             _accessors = new ValidationRuleRegistry(query).CreateAccessors().ToDictionary(x => (MessageTypeCode)x.MessageTypeId, x => x);
+            _equalityComparer = equalityComparerFactory.CreateCompleteComparer<Version.ValidationResult>();
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -137,7 +141,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                 using (Probe.Create("Merge"))
                 {
                     var destObjects = currentVersionResults.Where(x => x.MessageType == (int)ruleCode).Where(filter.Compile());
-                    var mergeResult = MergeTool.Merge(sourceObjects, destObjects, ValidationResultEqualityComparer.Instance);
+                    var mergeResult = MergeTool.Merge(sourceObjects, destObjects, _equalityComparer);
                     return mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved());
                 }
             }

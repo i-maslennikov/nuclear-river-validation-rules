@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace NuClear.ValidationRules.SingleCheck.FieldComparer
+namespace NuClear.ValidationRules.Storage.FieldComparer
 {
-    internal class XDocumentComparer : IEqualityComparer<XDocument>
+    public sealed class XDocumentComparer : IEqualityComparer<XDocument>
     {
         // XNodeEqualityComparer использует DeepEquals и соответствующий hashCode
         private static readonly XNodeEqualityComparer Comparer = XNode.EqualityComparer;

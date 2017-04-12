@@ -4,8 +4,8 @@ using LinqToDB.Mapping;
 
 using NuClear.Replication.Core;
 using NuClear.Storage.API.Readings;
-using NuClear.ValidationRules.SingleCheck.FieldComparer;
 using NuClear.ValidationRules.Storage;
+using NuClear.ValidationRules.Storage.FieldComparer;
 
 namespace NuClear.ValidationRules.SingleCheck.Store
 {

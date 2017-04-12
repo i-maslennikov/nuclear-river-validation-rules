@@ -200,7 +200,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FieldComparer\DateTimeComparer.cs" />
     <Compile Include="Optimization\DebuggingVisitor.cs" />
     <Compile Include="Optimization\DependencyVisitor.cs" />
     <Compile Include="Optimization\PredicateVisitor.cs" />
@@ -218,7 +217,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PipelineFactory.cs" />
     <Compile Include="Pipeline.cs" />
-    <Compile Include="FieldComparer\XDocumentComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

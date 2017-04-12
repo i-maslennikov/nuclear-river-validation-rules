@@ -94,6 +94,7 @@ using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
+using NuClear.ValidationRules.Storage.FieldComparer;
 using NuClear.WCF.Client;
 using NuClear.WCF.Client.Config;
 
@@ -295,8 +296,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IReadableDomainContext, CachingReadableDomainContext>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterInstance<ILinqToDbModelFactory>(
                     new LinqToDbModelFactory(schemaMapping, transactionOptions, storageSettings.SqlCommandTimeout), Lifetime.Singleton)
-                .RegisterInstance<IObjectPropertyProvider>(
-                    new LinqToDbPropertyProvider(schemaMapping.Values.ToArray()), Lifetime.Singleton)
+                .RegisterInstance<IEqualityComparerFactory>(
+                    new EqualityComparerFactory(new LinqToDbPropertyProvider(schemaMapping.Values.ToArray()), new DateTimeComparer(), new XDocumentComparer()), Lifetime.Singleton)
                 .RegisterType<IWritingStrategyFactory, WritingStrategyFactory>()
                 .RegisterType<IReadableDomainContextFactory, LinqToDBDomainContextFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IModifiableDomainContextFactory, LinqToDBDomainContextFactory>(entryPointSpecificLifetimeManagerFactory())
@@ -312,7 +313,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         {
             return container
                 .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
-                .RegisterType<IEqualityComparerFactory, EqualityComparerFactory>(Lifetime.Singleton)
 
                 .RegisterAccessor<Account, AccountAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<Advertisement, AdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
