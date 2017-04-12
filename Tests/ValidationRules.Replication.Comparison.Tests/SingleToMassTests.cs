@@ -138,8 +138,8 @@ namespace ValidationRules.Replication.Comparison.Tests
         {
             public IReadOnlyCollection<MessageTypeCode> Rules { get; set; }
 
-            public Result GetRuleSeverityLevel(MessageTypeCode rule)
-                => Result.None;
+            public RuleSeverityLevel GetRuleSeverityLevel(MessageTypeCode rule)
+                => RuleSeverityLevel.None;
 
             public static TestCheckMode SingleRule(MessageTypeCode rule)
                 => new TestCheckMode { Rules = new[] { rule } };

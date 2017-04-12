@@ -58,7 +58,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                         MainReference = ConvertReference(composerResult.MainReference),
                         References = composerResult.References.Select(ConvertReference).ToList(),
                         Template = composerResult.Template,
-                        Result = checkModeDescriptor.GetRuleSeverityLevel(message.MessageType),
+                        RuleSeverityLevel = checkModeDescriptor.GetRuleSeverityLevel(message.MessageType),
                         Rule = message.MessageType,
                     };
             }
