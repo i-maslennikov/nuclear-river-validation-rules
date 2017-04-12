@@ -39,24 +39,17 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             }
         }
 
-        public IReadOnlyCollection<Message> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ResultType resultType)
+        public IReadOnlyCollection<Version.ValidationResult> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ICheckModeDescriptor checkModeDescriptor)
         {
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
                 var validationResults = connection.GetTable<Version.ValidationResult>()
                                                   .Where(ForOrdersOrProject(orderIds, projectId))
                                                   .Where(ForPeriod(start, end))
+                                                  .Where(ForMode(checkModeDescriptor))
                                                   .ForVersion(versionId);
 
-                var validationResultTypes = connection.GetTable<Version.ValidationResultType>()
-                                                  .Where(x => x.ResultType == resultType);
-
-                var messages = from validationResult in validationResults
-                               from validationResultType in validationResultTypes
-                                                            .Where(x => x.MessageType == validationResult.MessageType)
-                               select validationResult.ToMessage(validationResultType.Result);
-
-                return messages.ToList();
+                return validationResults.ToList();
             }
         }
 
@@ -65,5 +58,8 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         private static Expression<Func<Version.ValidationResult, bool>> ForOrdersOrProject(IReadOnlyCollection<long> orderIds, long? projectId)
             => x => x.OrderId.HasValue && orderIds.Contains(x.OrderId.Value) || x.ProjectId.HasValue && x.ProjectId == projectId;
+
+        private static Expression<Func<Version.ValidationResult, bool>> ForMode(ICheckModeDescriptor checkModeDescriptor)
+            => x => checkModeDescriptor.Rules.Contains((MessageTypeCode)x.MessageType);
     }
 }

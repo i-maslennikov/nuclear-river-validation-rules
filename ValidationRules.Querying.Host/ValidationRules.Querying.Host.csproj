@@ -168,7 +168,6 @@
     <Compile Include="DataAccess\DataConnectionFactory.cs" />
     <Compile Include="DataAccess\Message.cs" />
     <Compile Include="DataAccess\MessageRepositiory.cs" />
-    <Compile Include="DataAccess\ValidationResultExtensions.cs" />
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="DI\UnityDependencyResolver.cs" />
     <Compile Include="ExceptionTracer.cs" />

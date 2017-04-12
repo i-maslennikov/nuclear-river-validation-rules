@@ -11,6 +11,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Telemetry.Probing;
 using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -35,8 +36,9 @@ namespace NuClear.ValidationRules.SingleCheck
             _strategy = new OverOptimizedPipelineStrategy(); // new OptimizedPipelineStrategy();
         }
 
-        public IReadOnlyCollection<Version.ValidationResult> Execute(long orderId)
+        public IReadOnlyCollection<Version.ValidationResult> Execute(long orderId, ICheckModeDescriptor checkModeDescriptor)
         {
+            // todo: можно использовать checkModeDescriptor для дальнейшей оптимизации
             var optimization = new Optimizer();
             Func<IStore, IStore> wrap = store => new OptimizerStore(optimization, store);
 
@@ -72,7 +74,7 @@ namespace NuClear.ValidationRules.SingleCheck
                     _strategy.ProcessMessages(messageReplicators, optimization);
 
                 using (Probe.Create("Query result"))
-                    return messages.CreateQuery().For<Version.ValidationResult>().Where(x => x.OrderId == orderId).ToArray();
+                    return messages.CreateQuery().For<Version.ValidationResult>().Where(x => x.OrderId == orderId && checkModeDescriptor.Rules.Contains((MessageTypeCode)x.MessageType)).ToArray();
             }
         }
 

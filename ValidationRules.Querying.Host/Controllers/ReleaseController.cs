@@ -13,11 +13,13 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
     {
         private readonly MessageRepositiory _repositiory;
         private readonly ValidationResultFactory _factory;
+        private readonly ICheckModeDescriptor _checkModeDescriptor;
 
-        public ReleaseController(MessageRepositiory repositiory, ValidationResultFactory factory)
+        public ReleaseController(MessageRepositiory repositiory, ValidationResultFactory factory, ICheckModeDescriptorFactory descriptorFactory)
         {
             _repositiory = repositiory;
             _factory = factory;
+            _checkModeDescriptor = descriptorFactory.GetDescriptorFor(ResultType.Release);
         }
 
         [Route("{stateToken:guid}"), HttpPost]
@@ -29,17 +31,8 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
                 return NotFound();
             }
 
-            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), ResultType.Release);
-            var result = _factory.GetValidationResult(messages);
-            return Ok(result);
-        }
-
-        [Route(""), HttpPost]
-        public IHttpActionResult Post([FromBody]ApiRequest request)
-        {
-            var versionId = _repositiory.GetLatestVersion();
-            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), ResultType.Release);
-            var result = _factory.GetValidationResult(messages);
+            var validationResults = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), _checkModeDescriptor);
+            var result = _factory.GetValidationResult(validationResults, _checkModeDescriptor);
             return Ok(result);
         }
 
