@@ -7,7 +7,7 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
     // TODO: переименовать Mass=>Manual, MassPrerelease => Prerelease
     public static class ResultTypeMap
     {
-        public static readonly IReadOnlyDictionary<ResultType, Dictionary<MessageTypeCode, Result>> Map = new Dictionary<MessageTypeCode, Dictionary<ResultType, Result>>()
+        public static readonly IReadOnlyDictionary<CheckMode, Dictionary<MessageTypeCode, Result>> Map = new Dictionary<MessageTypeCode, Dictionary<CheckMode, Result>>()
             {
                 // В erm эта проверка не вызывается при ручной проверке, только при сборке (в том числе бете)
                 { MessageTypeCode.AccountBalanceShouldBePositive, ResultBuilder(x => x.WhenSingle(Result.None)
@@ -365,41 +365,41 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
                                                                                          .WhenMassRelease(Result.Error)) },
         }.ToResultTypeMap();
 
-        private static Dictionary<ResultType, Result> ResultBuilder(Func<Dictionary<ResultType, Result>, Dictionary<ResultType, Result>> action)
+        private static Dictionary<CheckMode, Result> ResultBuilder(Func<Dictionary<CheckMode, Result>, Dictionary<CheckMode, Result>> action)
         {
-            return action(new Dictionary<ResultType, Result>());
+            return action(new Dictionary<CheckMode, Result>());
         }
 
         // TODO: WhenMass => WhenManual и т.д.
-        private static Dictionary<ResultType, Result> WhenSingle(this Dictionary<ResultType, Result> map, Result result) =>
-            map.AddResult(ResultType.Single, result);
-        private static Dictionary<ResultType, Result> WhenSingleForCancel(this Dictionary<ResultType, Result> map, Result result) =>
-            map.AddResult(ResultType.SingleForCancel, result);
-        private static Dictionary<ResultType, Result> WhenSingleForApprove(this Dictionary<ResultType, Result> map, Result result) =>
-            map.AddResult(ResultType.SingleForApprove, result);
-        private static Dictionary<ResultType, Result> WhenMass(this Dictionary<ResultType, Result> map, Result result) =>
-            map.AddResult(ResultType.Manual, result)
-               .AddResult(ResultType.ManualWithAccount, result);
-        private static Dictionary<ResultType, Result> WhenMassWithAccount(this Dictionary<ResultType, Result> map, Result result) =>
-            map.AddResult(ResultType.ManualWithAccount, result);
-        private static Dictionary<ResultType, Result> WhenMassPrerelease(this Dictionary<ResultType, Result> map, Result result) =>
-            map.AddResult(ResultType.Prerelease, result);
-        private static Dictionary<ResultType, Result> WhenMassRelease(this Dictionary<ResultType, Result> map, Result result) =>
-            map.AddResult(ResultType.Release, result);
+        private static Dictionary<CheckMode, Result> WhenSingle(this Dictionary<CheckMode, Result> map, Result result) =>
+            map.AddResult(CheckMode.Single, result);
+        private static Dictionary<CheckMode, Result> WhenSingleForCancel(this Dictionary<CheckMode, Result> map, Result result) =>
+            map.AddResult(CheckMode.SingleForCancel, result);
+        private static Dictionary<CheckMode, Result> WhenSingleForApprove(this Dictionary<CheckMode, Result> map, Result result) =>
+            map.AddResult(CheckMode.SingleForApprove, result);
+        private static Dictionary<CheckMode, Result> WhenMass(this Dictionary<CheckMode, Result> map, Result result) =>
+            map.AddResult(CheckMode.Manual, result)
+               .AddResult(CheckMode.ManualWithAccount, result);
+        private static Dictionary<CheckMode, Result> WhenMassWithAccount(this Dictionary<CheckMode, Result> map, Result result) =>
+            map.AddResult(CheckMode.ManualWithAccount, result);
+        private static Dictionary<CheckMode, Result> WhenMassPrerelease(this Dictionary<CheckMode, Result> map, Result result) =>
+            map.AddResult(CheckMode.Prerelease, result);
+        private static Dictionary<CheckMode, Result> WhenMassRelease(this Dictionary<CheckMode, Result> map, Result result) =>
+            map.AddResult(CheckMode.Release, result);
 
-        private static Dictionary<ResultType, Result> AddResult(this Dictionary<ResultType, Result> map, ResultType resultType, Result result)
+        private static Dictionary<CheckMode, Result> AddResult(this Dictionary<CheckMode, Result> map, CheckMode checkMode, Result result)
         {
             // не храним None
-            if (resultType != ResultType.None && result != Result.None)
+            if (result != Result.None)
             {
-                map.Add(resultType, result);
+                map.Add(checkMode, result);
             }
             return map;
         }
 
-        private static Dictionary<ResultType, Dictionary<MessageTypeCode, Result>> ToResultTypeMap(this Dictionary<MessageTypeCode, Dictionary<ResultType, Result>> messageTypeMap)
+        private static Dictionary<CheckMode, Dictionary<MessageTypeCode, Result>> ToResultTypeMap(this Dictionary<MessageTypeCode, Dictionary<CheckMode, Result>> messageTypeMap)
         {
-            return messageTypeMap.Aggregate(new Dictionary<ResultType, Dictionary<MessageTypeCode, Result>>(),
+            return messageTypeMap.Aggregate(new Dictionary<CheckMode, Dictionary<MessageTypeCode, Result>>(),
             (resultTypeMap, messageTypePair) =>
             {
                 foreach (var resultTypePair in messageTypePair.Value)

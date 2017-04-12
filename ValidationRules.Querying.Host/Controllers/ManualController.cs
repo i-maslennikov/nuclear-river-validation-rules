@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         {
             _repositiory = repositiory;
             _factory = factory;
-            _checkModeDescriptor = descriptorFactory.GetDescriptorFor(ResultType.Manual);
+            _checkModeDescriptor = descriptorFactory.GetDescriptorFor(CheckMode.Manual);
         }
 
         [Route("{stateToken:guid}"), HttpPost]

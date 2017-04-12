@@ -2,6 +2,6 @@
 {
     public interface ICheckModeDescriptorFactory
     {
-        ICheckModeDescriptor GetDescriptorFor(ResultType resultType);
+        ICheckModeDescriptor GetDescriptorFor(CheckMode checkMode);
     }
 }

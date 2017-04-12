@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         {
             _factory = factory;
             _pipelineFactory = pipelineFactory;
-            _checkModeDescriptor = descriptorFactory.GetDescriptorFor(ResultType.SingleForCancel);
+            _checkModeDescriptor = descriptorFactory.GetDescriptorFor(CheckMode.SingleForCancel);
         }
 
         [Route(""), HttpPost]
