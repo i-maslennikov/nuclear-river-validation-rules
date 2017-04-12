@@ -16,11 +16,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
     public sealed class AccountAggregateRootActor : AggregateRootActor<Account>
     {
-        private const int OrderOnTermination = 4;
-        private const int OrderApproved = 5;
-
-        private static readonly int[] PayableStates = { OrderOnTermination, OrderApproved };
-
         public AccountAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
@@ -78,7 +73,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                 var releaseWithdrawalPeriods =
                     from releaseWithdrawal in _query.For<Facts::ReleaseWithdrawal>()
                     join orderPosition in _query.For<Facts::OrderPosition>() on releaseWithdrawal.OrderPositionId equals orderPosition.Id
-                    join order in _query.For<Facts::Order>().Where(x => !x.IsFreeOfCharge && PayableStates.Contains(x.WorkflowStep)) on orderPosition.OrderId equals order.Id
+                    join order in _query.For<Facts::Order>().Where(x => !x.IsFreeOfCharge && Facts::Order.State.Payable.Contains(x.WorkflowStep)) on orderPosition.OrderId equals order.Id
                     from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                     select new { AccountId = account.Id, releaseWithdrawal.Start, releaseWithdrawal.Amount, Type = 1 };
 

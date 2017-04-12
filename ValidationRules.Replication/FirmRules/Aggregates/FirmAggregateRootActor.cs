@@ -69,11 +69,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
         public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : DataChangesHandler<Firm.AdvantageousPurchasePositionDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
         {
-            private const long AdvantageousPurchaseWith2Gis = 14; // Выгодные покупки с 2ГИС
-            private const long SelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
-            private const long SpecialCategoryId = 18599; // Выгодные покупки с 2ГИС.
-            private const long PlatformDesktop = 1;
-
             private readonly IQuery _query;
 
             public AdvantageousPurchasePositionDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
@@ -91,7 +86,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             public IQueryable<Firm.AdvantageousPurchasePositionDistributionPeriod> GetSource()
             {
                 var firmsWithCategory =
-                    from firmAddressCategory in _query.For<Facts::FirmAddressCategory>().Where(x => x.CategoryId == SpecialCategoryId)
+                    from firmAddressCategory in _query.For<Facts::FirmAddressCategory>().Where(x => x.CategoryId == Facts::Category.AdvantageousPurchaseWith2Gis)
                     from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == firmAddressCategory.FirmAddressId)
                     from firm in _query.For<Facts::Firm>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == firmAddress.FirmId)
                     select firm;
@@ -103,8 +98,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 var specialPositions = _query.For<Facts::Position>().Where(x => !x.IsDeleted).Select(x => new
                 {
                     x.Id,
-                    IsAdvantageousPurchaseOnPc = x.CategoryCode == AdvantageousPurchaseWith2Gis && x.Platform == PlatformDesktop,
-                    IsSelfAdvertisementOnPc = x.CategoryCode == SelfAdvertisementOnlyOnPc,
+                    IsAdvantageousPurchaseOnPc = x.CategoryCode == Facts::Position.CategoryCodeAdvantageousPurchaseWith2Gis && x.Platform == Facts::Position.PlatformDesktop,
+                    IsSelfAdvertisementOnPc = x.CategoryCode == Facts::Position.CategoryCodeSelfAdvertisementOnlyOnPc,
                 });
 
                 var periodsForAllOrders =

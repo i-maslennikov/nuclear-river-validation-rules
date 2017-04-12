@@ -18,17 +18,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Name(nameof(OrderPositionMayMustCorrespontToActualPrice))
                 .Aggregate(
 
-                    new Aggregates::Order { Id = 1 },
+                    new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2), IsCommitted = true },
                     new Aggregates::Order.ActualPrice { OrderId = 1, PriceId = 1 },
                     new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 1, PriceId = ~1, IsActive = true },
 
-                    new Aggregates::Order { Id = 2 },
+                    new Aggregates::Order { Id = 2, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2), IsCommitted = false },
                     new Aggregates::Order.ActualPrice { OrderId = 2, PriceId = 2 },
-                    new Aggregates::Order.OrderPricePosition { OrderId = 2, OrderPositionId = 2, PriceId = ~2, IsActive = true },
-
-                    new Aggregates::Period { OrganizationUnitId = 1, Start = FirstDayJan, End = FirstDayFeb },
-                    new Aggregates::Period.OrderPeriod { OrganizationUnitId = 1, Start = FirstDayJan, OrderId = 1, Scope = 0 },
-                    new Aggregates::Period.OrderPeriod { OrganizationUnitId = 1, Start = FirstDayJan, OrderId = 2, Scope = ~0 }
+                    new Aggregates::Order.OrderPricePosition { OrderId = 2, OrderPositionId = 2, PriceId = ~2, IsActive = true }
                     )
                 .Message(
                     new Messages::Version.ValidationResult
@@ -38,8 +34,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                     new Reference<EntityTypeOrder>(1),
                                                     new Reference<EntityTypePosition>(0))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
-                            PeriodStart = FirstDayJan,
-                            PeriodEnd = FirstDayFeb,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
                             OrderId = 1,
                         },
                     new Messages::Version.ValidationResult
@@ -49,8 +45,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                     new Reference<EntityTypeOrder>(2),
                                                     new Reference<EntityTypePosition>(0))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
-                            PeriodStart = FirstDayJan,
-                            PeriodEnd = FirstDayFeb,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
                             OrderId = 2,
                         }
                     ).RunOnlyThis();

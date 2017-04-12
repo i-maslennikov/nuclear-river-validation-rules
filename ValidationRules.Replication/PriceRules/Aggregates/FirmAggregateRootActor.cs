@@ -135,8 +135,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
         public sealed class FirmAssociatedPositionAccessor : DataChangesHandler<Firm.FirmAssociatedPosition>, IStorageBasedDataObjectAccessor<Firm.FirmAssociatedPosition>
         {
-            private const int RulesetRuleTypeAssociated = 1;
-
             private readonly IQuery _query;
 
             public FirmAssociatedPositionAccessor(IQuery query) : base(CreateInvalidator())
@@ -174,7 +172,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
                 var associatedByRuleset =
                     from item in _query.For<Facts::OrderItem>()
-                    from rule in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeAssociated)
+                    from rule in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == Facts::RulesetRule.Associated)
                                        .Where(x => x.DependentPositionId == item.ItemPositionId)
                     select new
                         {
@@ -218,8 +216,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
         public sealed class FirmDeniedPositionAccessor : DataChangesHandler<Firm.FirmDeniedPosition>, IStorageBasedDataObjectAccessor<Firm.FirmDeniedPosition>
         {
-            private const int RulesetRuleTypeDenied = 2;
-
             private readonly IQuery _query;
 
             public FirmDeniedPositionAccessor(IQuery query) : base(CreateInvalidator())
@@ -254,7 +250,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
                 var deniedByRuleset =
                     from item in _query.For<Facts::OrderItem>()
-                    from rule in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == RulesetRuleTypeDenied)
+                    from rule in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == Facts::RulesetRule.Denied)
                                        .Where(x => x.DependentPositionId == item.ItemPositionId)
                     select new
                         {

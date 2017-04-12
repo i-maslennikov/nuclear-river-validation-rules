@@ -16,8 +16,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class OrderScanFileAccessor : IStorageBasedDataObjectAccessor<OrderScanFile>, IDataChangesHandler<OrderScanFile>
     {
-        private const int OrderScanFileKind = 8;
-
         private readonly IQuery _query;
 
         public OrderScanFileAccessor(IQuery query)
@@ -27,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<OrderScanFile> GetSource() => _query
             .For<Erm::OrderFile>()
-            .Where(x => x.IsActive && !x.IsDeleted && x.FileKind == OrderScanFileKind)
+            .Where(x => x.IsActive && !x.IsDeleted && x.FileKind == Erm::OrderFile.OrderScan)
             .Select(x => new OrderScanFile
                 {
                     Id = x.Id,

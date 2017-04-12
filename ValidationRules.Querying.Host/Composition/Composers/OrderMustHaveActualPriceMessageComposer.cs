@@ -6,9 +6,9 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
-    public sealed class OrderPositionsShouldCorrespontToActualPriceMessageComposer : IMessageComposer
+    public sealed class OrderMustHaveActualPriceMessageComposer : IMessageComposer
     {
-        public MessageTypeCode MessageType => MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice;
+        public MessageTypeCode MessageType => MessageTypeCode.OrderMustHaveActualPrice;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {

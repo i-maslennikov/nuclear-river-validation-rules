@@ -4,6 +4,9 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
 {
     public sealed class AdvertisementElement
     {
+        public const int Invalid = 2;
+        public const int Draft = 3;
+
         public long Id { get; set; }
         public long AdvertisementId { get; set; }
         public long AdvertisementElementTemplateId { get; set; }

@@ -239,7 +239,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new OrderPositionCorrespontToInactivePosition(_query),
                     new OrderPositionMayCorrespontToActualPrice(_query),
                     new OrderPositionMustCorrespontToActualPrice(_query),
-                    new OrderPositionsShouldCorrespontToActualPrice(_query),
+                    new OrderMustHaveActualPrice(_query),
                     new FirmAssociatedPositionShouldNotStayAlone(_query),
 
                     new FirmAndOrderShouldBelongTheSameOrganizationUnit(_query),

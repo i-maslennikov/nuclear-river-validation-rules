@@ -100,8 +100,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
         public sealed class WhiteListDistributionPeriodAccessor : DataChangesHandler<Firm.WhiteListDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.WhiteListDistributionPeriod>
         {
-            private const int OrderOnRegistration = 1;
-
             private readonly IQuery _query;
 
             public WhiteListDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
@@ -136,7 +134,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 var result =
                     from period in firmPeriods
                     let advertisementPosition =
-                        (from order in _query.For<Facts::Order>().Where(x => x.FirmId == period.FirmId && x.BeginDistribution <= period.Start && period.End <= x.EndDistributionFact && x.WorkflowStep != OrderOnRegistration)
+                        (from order in _query.For<Facts::Order>().Where(x => x.FirmId == period.FirmId && x.BeginDistribution <= period.Start && period.End <= x.EndDistributionFact && x.WorkflowStep != Facts::Order.State.OnRegistration)
                          from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                          from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.AdvertisementId.HasValue)
                          from a in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId.Value && x.FirmId == period.FirmId && x.IsSelectedToWhiteList && ! x.IsDeleted)

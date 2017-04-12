@@ -307,8 +307,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
         public sealed class CouponDistributionPeriodAccessor : DataChangesHandler<Order.CouponDistributionPeriod>, IStorageBasedDataObjectAccessor<Order.CouponDistributionPeriod>
         {
-            private const int CouponPositionCategoryCode = 14;
-
             private readonly IQuery _query;
 
             public CouponDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
@@ -326,7 +324,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from order in GetOrdersFact().Union(GetOrdersPlan())
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.CategoryCode == CouponPositionCategoryCode) on opa.PositionId equals position.Id
+                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.CategoryCode == Facts::Position.CategoryCodeAdvantageousPurchaseWith2Gis) on opa.PositionId equals position.Id
                    join advertisement in _query.For<Facts::Advertisement>() on opa.AdvertisementId equals advertisement.Id
                    join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
                    where opa.AdvertisementId != template.DummyAdvertisementId // РМ не является заглушкой

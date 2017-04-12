@@ -46,11 +46,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     // сопутствующий хлам
                     new Aggregates::Period { Start = DateTime.Parse("2012-12-12"), End = DateTime.MaxValue },
-                    new Aggregates::Period.PricePeriod { PriceId = 1, Start = DateTime.Parse("2012-12-12") },
-
-                    new Aggregates::Position { Id = 2, CategoryCode = 101 },
-                    new Aggregates::Position { Id = 3, CategoryCode = 102 },
-                    new Aggregates::Position { Id = 4, CategoryCode = 103 });
+                    new Aggregates::Period.PricePeriod { PriceId = 1, Start = DateTime.Parse("2012-12-12") });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PriceWithAssociatedPositionGroupOvercount
@@ -72,7 +68,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Price { Id = 1, BeginDate = DateTime.Parse("2012-12-12") },
                     new Aggregates::Price.AssociatedPositionGroupOvercount { PriceId = 1, Count = 2, PricePositionId = 10, PositionId = 3 },
 
-                    new Aggregates::Position { Id = 3, CategoryCode = 1 },
                     new Aggregates::Period.PricePeriod { PriceId = 1, Start = DateTime.Parse("2012-12-12") },
                     new Aggregates::Period { Start = DateTime.Parse("2012-12-12"), End = DateTime.MaxValue }
                     );

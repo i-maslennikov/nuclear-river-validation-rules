@@ -49,10 +49,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.MaximumAdvertisementAmount,
                         MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                         MessageTypeCode.MinimumAdvertisementAmount,
-                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
-                        MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
-                        MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
-                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
                     };
 
             public IQueryable<Period> GetSource()
@@ -153,10 +149,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.MaximumAdvertisementAmount,
                         MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                         MessageTypeCode.MinimumAdvertisementAmount,
-                        MessageTypeCode.OrderPositionCorrespontToInactivePosition,
-                        MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
-                        MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
-                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
                     };
 
             public IQueryable<Period.OrderPeriod> GetSource()

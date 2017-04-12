@@ -8,14 +8,13 @@ using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 {
     /// <summary>
-    /// Для заказов, позиции которых ссылаются на не действительные номенклатурные позиции, должна выводиться ошибка.
+    /// Для заказов, позиции которых ссылаются на недействительные номенклатурные позиции, должна выводиться ошибка.
     /// "Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа"
     /// 
     /// Source: OrderPositionsRefereceCurrentPriceListOrderValidationRule/OrderCheckOrderPositionCorrespontToInactivePosition
     /// 
     /// Q: Получается, если позицию скрыли после одобрения - то заказ попадёт в сборку?
     /// 
-    /// todo: Убрать из этой группы проверок - понятия периода/scope не имеют смысла для этой проверки
     /// </summary>
     public sealed class OrderPositionCorrespontToInactivePosition : ValidationResultAccessorBase
     {
@@ -25,45 +24,24 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            // проверка проверяет соответствие только первого периода
-            var orderFirstPeriods =
-                from orderPeriod1 in query.For<Period.OrderPeriod>()
-                from orderPeriod2 in query.For<Period.OrderPeriod>().Where(x => orderPeriod1.OrderId == x.OrderId && orderPeriod1.Start > x.Start).DefaultIfEmpty()
-                where orderPeriod2 == null
-                select orderPeriod1;
-
-            var orderFirstPeriodDtos =
-                from orderFirstPeriod in orderFirstPeriods
-                join order in query.For<Order>() on orderFirstPeriod.OrderId equals order.Id
-                join period in query.For<Period>()
-                on new { orderFirstPeriod.OrganizationUnitId, orderFirstPeriod.Start } equals new { period.OrganizationUnitId, period.Start }
-                select new
-                    {
-                        OrderId = order.Id,
-
-                        period.ProjectId,
-                        period.Start,
-                        period.End,
-                    };
-
-            var pricePositionIsNotActiveErrors =
-                from orderFirstPeriodDto in orderFirstPeriodDtos
-                join orderPricePosition in query.For<Order.OrderPricePosition>().Where(x => !x.IsActive) on orderFirstPeriodDto.OrderId equals orderPricePosition.OrderId
+            var messages =
+                from order in query.For<Order>()
+                from orderPricePosition in query.For<Order.OrderPricePosition>().Where(x => !x.IsActive).Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
                                     new Reference<EntityTypeOrderPosition>(orderPricePosition.OrderPositionId,
-                                        new Reference<EntityTypeOrder>(orderFirstPeriodDto.OrderId),
+                                        new Reference<EntityTypeOrder>(order.Id),
                                         new Reference<EntityTypePosition>(orderPricePosition.PositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = orderFirstPeriodDto.Start,
-                        PeriodEnd = orderFirstPeriodDto.End,
-                        OrderId = orderFirstPeriodDto.OrderId,
+                        PeriodStart = order.BeginDistribution,
+                        PeriodEnd = order.EndDistributionPlan,
+                        OrderId = order.Id,
                     };
 
-            return pricePositionIsNotActiveErrors;
+            return messages;
         }
     }
 }

@@ -33,8 +33,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
-            private const int OrderOnRegistration = 1;
-
             private readonly IQuery _query;
 
             public OrderAccessor(IQuery query) : base(CreateInvalidator())
@@ -63,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                            Begin = order.BeginDistribution,
                            End = order.EndDistributionPlan, // ?
                            ProjectId = project.Id,
-                           IsDraft = order.WorkflowStep == OrderOnRegistration,
+                           IsDraft = order.WorkflowStep == Facts::Order.State.OnRegistration,
                        };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -123,8 +121,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
 
         public sealed class CategoryAdvertisementAccessor : DataChangesHandler<Order.CategoryAdvertisement>, IStorageBasedDataObjectAccessor<Order.CategoryAdvertisement>
         {
-            private const int PositionsGroupMedia = 1;
-
             private readonly IQuery _query;
 
             public CategoryAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
@@ -154,8 +150,8 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                             PositionId = opa.PositionId,
                             CategoryId = category.Id,
                             SalesModel = position.SalesModel,
-                            IsSalesModelRestrictionApplicable = category.L3Id != null && position.PositionsGroup != PositionsGroupMedia
-                        }).Distinct();
+                            IsSalesModelRestrictionApplicable = category.L3Id != null && position.PositionsGroup != Facts::Position.PositionsGroupMedia
+                    }).Distinct();
 
             public FindSpecification<Order.CategoryAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

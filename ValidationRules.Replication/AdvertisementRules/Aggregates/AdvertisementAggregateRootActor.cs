@@ -146,9 +146,6 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
         public sealed class ElementNotPassedReviewAccessor : DataChangesHandler<Advertisement.ElementNotPassedReview>, IStorageBasedDataObjectAccessor<Advertisement.ElementNotPassedReview>
         {
-            private const int StatusInvalid = 2;
-            private const int StatusDraft = 3;
-
             private readonly IQuery _query;
 
             public ElementNotPassedReviewAccessor(IQuery query) : base(CreateInvalidator())
@@ -166,7 +163,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted)
                    join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
                    where advertisement.Id != template.DummyAdvertisementId // РМ - не заглушка
-                   join element in _query.For<Facts::AdvertisementElement>().Where(x => x.Status == StatusInvalid || x.Status == StatusDraft) on advertisement.Id equals element.AdvertisementId
+                   join element in _query.For<Facts::AdvertisementElement>().Where(x => x.Status == Facts::AdvertisementElement.Invalid || x.Status == Facts::AdvertisementElement.Draft) on advertisement.Id equals element.AdvertisementId
                    join elementTemplate in _query.For<Facts::AdvertisementElementTemplate>().Where(x => x.NeedsValidation) on element.AdvertisementElementTemplateId equals elementTemplate.Id
                    select new Advertisement.ElementNotPassedReview
                    {
@@ -175,8 +172,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        AdvertisementElementId = element.Id,
                        AdvertisementElementTemplateId = element.AdvertisementElementTemplateId,
 
-                       Status = element.Status == StatusInvalid ? Advertisement.ReviewStatus.Invalid :
-                                                    element.Status == StatusDraft ? Advertisement.ReviewStatus.Draft :
+                       Status = element.Status == Facts::AdvertisementElement.Invalid ? Advertisement.ReviewStatus.Invalid :
+                                                    element.Status == Facts::AdvertisementElement.Draft ? Advertisement.ReviewStatus.Draft :
                                                     Advertisement.ReviewStatus.NotSet,
                    };
 

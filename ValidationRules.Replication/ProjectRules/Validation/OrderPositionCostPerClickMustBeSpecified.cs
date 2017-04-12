@@ -15,8 +15,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     /// </summary>
     public sealed class OrderPositionCostPerClickMustBeSpecified : ValidationResultAccessorBase
     {
-        public const int CostPerClickSalesModel = 12; // erm: MultiPlannedProvision
-
         public OrderPositionCostPerClickMustBeSpecified(IQuery query) : base(query, MessageTypeCode.OrderPositionCostPerClickMustBeSpecified)
         {
         }
@@ -25,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                from adv in query.For<Order.CategoryAdvertisement>().Where(x => x.SalesModel == CostPerClickSalesModel).Where(x => x.OrderId == order.Id)
+                from adv in query.For<Order.CategoryAdvertisement>().Where(x => x.SalesModel == Order.CategoryAdvertisement.CostPerClickSalesModel).Where(x => x.OrderId == order.Id)
                 where !query.For<Order.CostPerClickAdvertisement>().Any(x => x.OrderPositionId == adv.OrderPositionId && x.CategoryId == adv.CategoryId)
                 select new Version.ValidationResult
                     {

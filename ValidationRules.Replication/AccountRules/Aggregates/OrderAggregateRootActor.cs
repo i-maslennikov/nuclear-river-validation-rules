@@ -16,9 +16,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 {
     public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
-        private const int OrderOnTermination = 4;
-        private const int OrderApproved = 5;
-
         public OrderAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
@@ -50,8 +47,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     };
 
             public IQueryable<Order> GetSource()
-                => from order in _query.For<Facts::Order>()
-                   where order.WorkflowStep == OrderOnTermination || order.WorkflowStep == OrderApproved
+                => from order in _query.For<Facts::Order>().Where(x => Facts::Order.State.Payable.Contains(x.WorkflowStep))
                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId).DefaultIfEmpty()
                    select new Order
                        {

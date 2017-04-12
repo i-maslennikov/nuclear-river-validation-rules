@@ -28,5 +28,22 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public bool IsSelfAds { get; set; }
 
         public int ReleaseCountPlan { get; set; }
+
+        public static class State
+        {
+            public const int OnRegistration = 1;
+            public const int OnTermination = 4;
+            public const int Approved = 5;
+
+            /// <summary>
+            /// Состояния, означающие, что заказ влияет на лицевой счёт.
+            /// </summary>
+            public static readonly int[] Payable = { OnTermination, Approved };
+
+            /// <summary>
+            /// Состояния, означающие, что заказ размещается.
+            /// </summary>
+            public static readonly int[] Committed = { OnTermination, Approved };
+        }
     }
 }

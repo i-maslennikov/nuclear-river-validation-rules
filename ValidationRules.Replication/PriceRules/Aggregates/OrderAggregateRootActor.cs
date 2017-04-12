@@ -20,17 +20,19 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
-            IBulkRepository<Order.OrderPosition> orderPositionBulkRepository,
             IBulkRepository<Order.OrderPricePosition> orderPricePositionBulkRepository,
+            IBulkRepository<Order.OrderCategoryPosition> orderCategoryPositionBulkRepository,
+            IBulkRepository<Order.OrderThemePosition> orderThemePositionBulkRepository,
             IBulkRepository<Order.AmountControlledPosition> amountControlledPositionBulkRepository,
             IBulkRepository<Order.ActualPrice> actualPriceBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
-                HasValueObject(new OrderPositionAccessor(query), orderPositionBulkRepository),
                 HasValueObject(new OrderPricePositionAccessor(query), orderPricePositionBulkRepository),
+                HasValueObject(new OrderCategoryPositionAccessor(query), orderCategoryPositionBulkRepository),
+                HasValueObject(new OrderThemePositionAccessor(query), orderThemePositionBulkRepository),
                 HasValueObject(new AmountControlledPositionAccessor(query), amountControlledPositionBulkRepository),
-                HasValueObject(new ActualPriceBulkRepositoryAccessor(query), actualPriceBulkRepository));
+                HasValueObject(new ActualPriceAccessor(query), actualPriceBulkRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -39,7 +41,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
-
                 _query = query;
             }
 
@@ -53,12 +54,18 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.OrderPositionCorrespontToInactivePosition,
                         MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
-                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderMustHaveActualPrice,
                     };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   select new Order { Id = order.Id };
+                   select new Order
+                       {
+                           Id = order.Id,
+                           BeginDistribution = order.BeginDistribution,
+                           EndDistributionPlan = order.EndDistributionPlan,
+                           IsCommitted = Facts::Order.State.Committed.Contains(order.WorkflowStep)
+                       };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -68,61 +75,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
-            }
-        }
-
-        public sealed class OrderPositionAccessor : DataChangesHandler<Order.OrderPosition>, IStorageBasedDataObjectAccessor<Order.OrderPosition>
-        {
-            private readonly IQuery _query;
-
-            public OrderPositionAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
-                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                    };
-
-            public IQueryable<Order.OrderPosition> GetSource()
-            {
-                var opas = from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                           join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                           join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
-                           join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                           select new Order.OrderPosition
-                           {
-                               OrderId = orderPosition.OrderId,
-                               ItemPositionId = opa.PositionId,
-
-                               CategoryId = opa.CategoryId,
-                               ThemeId = opa.ThemeId,
-                           };
-
-                var pkgs = from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                           join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
-                           join pricePosition in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on orderPosition.PricePositionId equals pricePosition.Id
-                           join opa in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals opa.OrderPositionId
-                           join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsComposite) on pricePosition.PositionId equals position.Id
-                           select new Order.OrderPosition
-                           {
-                               OrderId = orderPosition.OrderId,
-                               ItemPositionId = pricePosition.PositionId,
-
-                               CategoryId = opa.CategoryId,
-                               ThemeId = opa.ThemeId,
-                           };
-
-                return pkgs.Union(opas);
-            }
-
-            public FindSpecification<Order.OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.OrderPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 
@@ -166,6 +118,83 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
+        public sealed class OrderCategoryPositionAccessor : DataChangesHandler<Order.OrderCategoryPosition>, IStorageBasedDataObjectAccessor<Order.OrderCategoryPosition>
+        {
+            private readonly IQuery _query;
+
+            public OrderCategoryPositionAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                    };
+
+            public IQueryable<Order.OrderCategoryPosition> GetSource()
+            {
+                var result =
+                    from order in _query.For<Facts::Order>()
+                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
+                    from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodeAdvertisementInCategory).Where(x => x.Id == opa.PositionId) // join для того, чтобы отбросить неподходящие продажи
+                    select new Order.OrderCategoryPosition
+                    {
+                        OrderId = order.Id,
+                        OrderPositionAdvertisementId = opa.Id,
+                        CategoryId = opa.CategoryId.Value,
+                    };
+
+                return result;
+            }
+
+            public FindSpecification<Order.OrderCategoryPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.OrderCategoryPosition>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class OrderThemePositionAccessor : DataChangesHandler<Order.OrderThemePosition>, IStorageBasedDataObjectAccessor<Order.OrderThemePosition>
+        {
+            private readonly IQuery _query;
+
+            public OrderThemePositionAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                    };
+
+            public IQueryable<Order.OrderThemePosition> GetSource()
+            {
+                var result =
+                    from order in _query.For<Facts::Order>()
+                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.ThemeId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
+                    select new Order.OrderThemePosition
+                    {
+                        OrderId = order.Id,
+                        OrderPositionAdvertisementId = opa.Id,
+                        ThemeId = opa.ThemeId.Value,
+                    };
+
+                return result;
+            }
+
+            public FindSpecification<Order.OrderThemePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.OrderThemePosition>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
         public sealed class AmountControlledPositionAccessor : DataChangesHandler<Order.AmountControlledPosition>, IStorageBasedDataObjectAccessor<Order.AmountControlledPosition>
         {
             private readonly IQuery _query;
@@ -200,11 +229,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
         }
 
-        public sealed class ActualPriceBulkRepositoryAccessor : DataChangesHandler<Order.ActualPrice>, IStorageBasedDataObjectAccessor<Order.ActualPrice>
+        public sealed class ActualPriceAccessor : DataChangesHandler<Order.ActualPrice>, IStorageBasedDataObjectAccessor<Order.ActualPrice>
         {
             private readonly IQuery _query;
 
-            public ActualPriceBulkRepositoryAccessor(IQuery query) : base(CreateInvalidator())
+            public ActualPriceAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
@@ -214,7 +243,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
-                        MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice,
+                        MessageTypeCode.OrderMustHaveActualPrice,
                     };
 
             public IQueryable<Order.ActualPrice> GetSource()

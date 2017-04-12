@@ -303,7 +303,7 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
                                                                                                 .WhenMassPrerelease(Result.None)
                                                                                                 .WhenMassRelease(Result.None)) },
 
-                { MessageTypeCode.OrderPositionsShouldCorrespontToActualPrice, ResultBuilder(x => x.WhenSingle(Result.Error)
+                { MessageTypeCode.OrderMustHaveActualPrice, ResultBuilder(x => x.WhenSingle(Result.Error)
                                                                                                    .WhenMass(Result.None)
                                                                                                    .WhenMassPrerelease(Result.None)
                                                                                                    .WhenMassRelease(Result.None)) },
