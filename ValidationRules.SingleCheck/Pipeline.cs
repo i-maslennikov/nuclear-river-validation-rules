@@ -55,7 +55,8 @@ namespace NuClear.ValidationRules.SingleCheck
                 {
                     factReplicators = CreateReplicators(_factAccessorTypes, erm.CreateQuery(), wrap(store.CreateStore()));
                     aggregateReplicators = CreateReplicators(_aggregateAccessorTypes, store.CreateQuery(), wrap(store.CreateStore()));
-                    messageReplicators = CreateReplicators(_messageAccessorTypes, store.CreateQuery(), wrap(messages.CreateStore())).Where(x => x.DataObjectType == typeof(Version.ValidationResult)).ToArray();
+                    messageReplicators = CreateReplicators(_messageAccessorTypes, store.CreateQuery(), wrap(messages.CreateStore()))
+                        .Where(x => x.DataObjectType == typeof(Version.ValidationResult) && checkModeDescriptor.Rules.Contains(x.Rule)).ToArray();
 
                     var predicates = factReplicators.Concat(aggregateReplicators).Concat(messageReplicators).SelectMany(x => x.DependencyPredicates);
                     optimization.PrepareToUse(predicates.Distinct());
