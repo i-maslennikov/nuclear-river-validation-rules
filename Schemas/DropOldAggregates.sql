@@ -25,5 +25,7 @@ if object_id('PriceAggregates.OrderAssociatedPosition') is not null drop table P
 
 if object_id('PriceAggregates.Position') is not null drop table PriceAggregates.Position
 if object_id('PriceAggregates.OrderPosition') is not null drop table PriceAggregates.OrderPosition
+
+if object_id('Messages.ValidationResultType') is not null drop table Messages.ValidationResultType
 go
 
