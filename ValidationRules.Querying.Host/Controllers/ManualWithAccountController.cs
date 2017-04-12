@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Http;
 
+using NuClear.ValidationRules.Querying.Host.CheckModes;
 using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -15,7 +16,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         private readonly ValidationResultFactory _factory;
         private readonly ICheckModeDescriptor _checkModeDescriptor;
 
-        public ManualWithAccountController(MessageRepositiory repositiory, ValidationResultFactory factory, ICheckModeDescriptorFactory descriptorFactory)
+        public ManualWithAccountController(MessageRepositiory repositiory, ValidationResultFactory factory, CheckModeDescriptorFactory descriptorFactory)
         {
             _repositiory = repositiory;
             _factory = factory;

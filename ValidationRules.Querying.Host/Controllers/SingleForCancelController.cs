@@ -1,5 +1,6 @@
 ﻿using System.Web.Http;
 
+using NuClear.ValidationRules.Querying.Host.CheckModes;
 using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.SingleCheck;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -13,7 +14,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
         private readonly PipelineFactory _pipelineFactory;
         private readonly ICheckModeDescriptor _checkModeDescriptor;
 
-        public SingleForCancelController(ValidationResultFactory factory, PipelineFactory pipelineFactory, ICheckModeDescriptorFactory descriptorFactory)
+        public SingleForCancelController(ValidationResultFactory factory, PipelineFactory pipelineFactory, CheckModeDescriptorFactory descriptorFactory)
         {
             _factory = factory;
             _pipelineFactory = pipelineFactory;
