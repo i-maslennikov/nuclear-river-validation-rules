@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-namespace NuClear.ValidationRules.Querying.Host.DataAccess
+namespace NuClear.ValidationRules.Querying.Host.Composition
 {
     public sealed class Message
     {

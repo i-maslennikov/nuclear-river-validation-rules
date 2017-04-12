@@ -3,7 +3,6 @@ using System.Linq;
 
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
-using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;

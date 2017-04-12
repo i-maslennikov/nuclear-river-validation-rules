@@ -157,7 +157,7 @@
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
     <Compile Include="Composition\IDistinctor.cs" />
-    <Compile Include="Composition\NameResolvingService.cs" />
+    <Compile Include="DataAccess\NameResolvingService.cs" />
     <Compile Include="Composition\ResolvedNameContainer.cs" />
     <Compile Include="Controllers\ManualWithAccountController.cs" />
     <Compile Include="Controllers\SingleForCancelController.cs" />
@@ -168,7 +168,7 @@
     <Compile Include="Controllers\ManualController.cs" />
     <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="DataAccess\DataConnectionFactory.cs" />
-    <Compile Include="DataAccess\Message.cs" />
+    <Compile Include="Composition\Message.cs" />
     <Compile Include="DataAccess\MessageRepositiory.cs" />
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="DI\UnityDependencyResolver.cs" />
