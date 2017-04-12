@@ -26,13 +26,13 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var nonFreeOfChargeOrders = query.For<Order>().Where(x => !x.IsFreeOfCharge);
-
             var ruleResults =
-                from accountPeriod in query.For<Account.AccountPeriod>().Where(x => x.ReleaseAmount > 0)
-                join order in nonFreeOfChargeOrders on accountPeriod.AccountId equals order.AccountId
-                where order.BeginDistributionDate < accountPeriod.End && accountPeriod.Start < order.EndDistributionDate
-                where accountPeriod.Balance - accountPeriod.ReleaseAmount - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) <= -Epsilon
+                from accountPeriod in query.For<Account.AccountPeriod>()
+                                           .Where(x => x.ReleaseAmount > 0 && (x.Balance - x.ReleaseAmount - (x.OwerallLockedAmount - x.LockedAmount) <= -Epsilon))
+                from order in query.For<Order>()
+                                   .Where(x => !x.IsFreeOfCharge)
+                                   .Where(x => x.AccountId == accountPeriod.AccountId)
+                                   .Where(x => x.BeginDistributionDate < accountPeriod.End && accountPeriod.Start < x.EndDistributionDate)
                 where !query.For<Order.DebtPermission>().Any(x => x.OrderId == order.Id && x.Start <= accountPeriod.Start && accountPeriod.End <= x.End)
                 select new Version.ValidationResult
                     {
@@ -40,8 +40,8 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                             new MessageParams(
                                     new Dictionary<string, object>
                                         {
-                                                { "available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) },
-                                                { "planned", accountPeriod.ReleaseAmount }
+                                            { "available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) },
+                                            { "planned", accountPeriod.ReleaseAmount }
                                         },
                                     new Reference<EntityTypeAccount>(accountPeriod.AccountId),
                                     new Reference<EntityTypeOrder>(order.Id))

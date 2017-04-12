@@ -45,7 +45,6 @@ namespace ValidationRules.Replication.Comparison.Tests
             }
         }
 
-        [Category("CronDaily")]
         [TestCaseSource(nameof(Releases))]
         public void TestRelease(long organizationUnitId, DateTime releaseDate)
         {

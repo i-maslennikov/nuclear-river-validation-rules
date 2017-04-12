@@ -45,6 +45,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             }
         }
 
+        [Category("CronDaily")]
         [TestCaseSource(nameof(Releases))]
         public void TestRelease(long organizationUnitId, DateTime releaseDate)
         {
@@ -56,8 +57,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             var ermResult = InvokeErm(organizationUnitId, releaseDate);
             ermTime.Stop();
 
-            var diff = riverResult
-                .Keys
+            var diff = riverResult.Keys.Union(ermResult.Keys)
                 .Select(x => new { Key = x, River = TryGetSorted(riverResult, x), Erm = TryGetSorted(ermResult, x) })
                 .OrderBy(x => x.Key)
                 .ToDictionary(x => x.Key, x => new RuleReport(x.River, x.Erm))

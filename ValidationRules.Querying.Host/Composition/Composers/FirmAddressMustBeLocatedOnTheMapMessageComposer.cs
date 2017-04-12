@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
             var order = references.Get<EntityTypeOrder>();
-            var orderPosition = references.Get<EntityTypeOrderPositionAdvertisement>();
+            var orderPosition = references.Get<EntityTypeOrderPosition>();
             var firmAddress = references.Get<EntityTypeFirmAddress>();
 
             return new MessageComposerResult(

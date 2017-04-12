@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -12,8 +13,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderPosition = (OrderPositionNamedReference)references.Get<EntityTypeOrderPosition>();
-            var orderPositionAdvertisement = references.Get<EntityTypeOrderPositionAdvertisement>();
+            var orderPosition = (OrderPositionNamedReference)references.GetMany<EntityTypeOrderPosition>().First();
+            var orderPositionAdvertisement = references.GetMany<EntityTypeOrderPosition>().Last();
 
             return new MessageComposerResult(
                 orderPosition.Order,

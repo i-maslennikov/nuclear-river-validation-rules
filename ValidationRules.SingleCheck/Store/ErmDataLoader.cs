@@ -157,6 +157,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                  .Where(x => usedPositionIds.Contains(x.Id))
                                  .Execute(); // Можно ограничиться проверямым заказов
             store.AddRange(positions);
+            var advertisementTemplateIds = positions.Where(x => x.AdvertisementTemplateId.HasValue).Select(x => x.AdvertisementTemplateId.Value).ToList();
 
             var positionChilds = query.GetTable<PositionChild>()
                                       .Where(x => usedPositionIds.Contains(x.MasterPositionId) || usedPositionIds.Contains(x.ChildPositionId))
@@ -236,7 +237,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                       .Execute();
             store.AddRange(advertisements);
             var advertisementIds = advertisements.Select(x => x.Id).ToList();
-            var advertisementTemplateIds = advertisements.Select(x => x.AdvertisementTemplateId).ToList();
+            var usedAdvertisementTemplateIds = advertisements.Select(x => x.AdvertisementTemplateId).ToList();
 
             var advertisementElements = query.GetTable<AdvertisementElement>()
                                              .Where(x => advertisementIds.Contains(x.AdvertisementId))
@@ -256,7 +257,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.AddRange(advertisementElementTemplates);
 
             var advertisementTemplates = query.GetTable<AdvertisementTemplate>()
-                                              .Where(x => advertisementTemplateIds.Contains(x.Id))
+                                              .Where(x => advertisementTemplateIds.Union(usedAdvertisementTemplateIds).Contains(x.Id))
                                               .Execute();
             store.AddRange(advertisementTemplates);
 
@@ -305,9 +306,17 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
             var locks =
                 query.GetTable<Lock>()
+                     .Where(x => x.IsActive && !x.IsDeleted)
                      .Where(x => accountIds.Contains(x.AccountId))
                      .Execute();
             store.AddRange(locks);
+            var orderIds = locks.Select(x => x.OrderId);
+
+            var orders =
+                query.GetTable<Order>()
+                     .Where(x => orderIds.Contains(x.Id))
+                     .Execute();
+            store.AddRange(orders);
         }
 
         private static void LoadReleaseWithdrawals(DataConnection query, Order order, IStore store)

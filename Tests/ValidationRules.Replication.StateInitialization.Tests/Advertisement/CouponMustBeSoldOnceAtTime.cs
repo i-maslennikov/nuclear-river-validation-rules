@@ -85,10 +85,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(
                                 new Reference<EntityTypeAdvertisement>(6),
-                                new Reference<EntityTypeOrder>(1),
-                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                    new Reference<EntityTypeOrderPosition>(4),
-                                    new Reference<EntityTypePosition>(5)),
                                 new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                     new Reference<EntityTypeOrderPosition>(5),
                                     new Reference<EntityTypePosition>(5))).ToXDocument(),
@@ -96,7 +92,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 1,
-                        });
+                        },
+                    new Messages::Version.ValidationResult
+                    {
+                        MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(4),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
+                        MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        PeriodStart = MonthStart(1),
+                        PeriodEnd = MonthStart(2),
+                        OrderId = 1,
+                    });
 
         // ReSharper disable once UnusedMember.Local
         // ReSharper disable once InconsistentNaming
@@ -124,12 +132,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(
                                 new Reference<EntityTypeAdvertisement>(6),
-                                new Reference<EntityTypeOrder>(1),
                                 new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                     new Reference<EntityTypeOrderPosition>(4),
-                                    new Reference<EntityTypePosition>(5)),
-                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                    new Reference<EntityTypeOrderPosition>(6),
                                     new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             PeriodStart = MonthStart(1),
@@ -137,21 +141,41 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             OrderId = 1,
                         },
                     new Messages::Version.ValidationResult
+                    {
+                        MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(6),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
+                        MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        PeriodStart = MonthStart(1),
+                        PeriodEnd = MonthStart(2),
+                        OrderId = 1,
+                    },
+                    new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
                                 new Reference<EntityTypeAdvertisement>(6),
-                                new Reference<EntityTypeOrder>(2),
                                 new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                     new Reference<EntityTypeOrderPosition>(5),
-                                    new Reference<EntityTypePosition>(5)),
-                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                    new Reference<EntityTypeOrderPosition>(6),
                                     new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 2,
-                        });
+                        },
+                    new Messages::Version.ValidationResult
+                    {
+                        MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(6),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
+                        MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        PeriodStart = MonthStart(1),
+                        PeriodEnd = MonthStart(2),
+                        OrderId = 2,
+                    });
 
 
 
@@ -178,17 +202,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams = new MessageParams(
                                 new Reference<EntityTypeAdvertisement>(6),
-                                new Reference<EntityTypeOrder>(1),
                                 new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                     new Reference<EntityTypeOrderPosition>(4),
-                                    new Reference<EntityTypePosition>(5)),
-                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                    new Reference<EntityTypeOrderPosition>(5),
                                     new Reference<EntityTypePosition>(5))).ToXDocument(),
                             MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,
-                        });
+                        },
+                    new Messages::Version.ValidationResult
+                    {
+                        MessageParams = new MessageParams(
+                                new Reference<EntityTypeAdvertisement>(6),
+                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                    new Reference<EntityTypeOrderPosition>(5),
+                                    new Reference<EntityTypePosition>(5))).ToXDocument(),
+                        MessageType = (int)MessageTypeCode.CouponMustBeSoldOnceAtTime,
+                        PeriodStart = MonthStart(2),
+                        PeriodEnd = MonthStart(3),
+                        OrderId = 1,
+                    });
     }
 }
