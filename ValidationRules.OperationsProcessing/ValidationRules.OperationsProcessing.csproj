@@ -197,9 +197,6 @@
     <Compile Include="AggregatesFlow\AggregatesFlowHandler.cs" />
     <Compile Include="AggregatesFlow\AggregatesFlow.cs" />
     <Compile Include="FactsFlow\FactsFlow.cs" />
-    <Compile Include="Identities\Operations\ManageDraftRulesetIdentity.cs" />
-    <Compile Include="Identities\Operations\OperationIdentityIds.cs" />
-    <Compile Include="Identities\Operations\PublishRulesetIdentity.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
     <Compile Include="ICommandFactory.cs" />
@@ -213,9 +210,7 @@
     <Compile Include="Transports\ServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\XmlEventSerializer.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Identities\Flows\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
