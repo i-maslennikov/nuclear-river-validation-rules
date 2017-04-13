@@ -276,8 +276,8 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
 
                     Rule(MessageTypeCode.MinimumAdvertisementAmount,
                          single: RuleSeverityLevel.Warning,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
+                         prerelease: RuleSeverityLevel.Warning,
+                         release: RuleSeverityLevel.Warning),
 
                     Rule(MessageTypeCode.OrderPositionCorrespontToInactivePosition,
                          single: RuleSeverityLevel.Error),
