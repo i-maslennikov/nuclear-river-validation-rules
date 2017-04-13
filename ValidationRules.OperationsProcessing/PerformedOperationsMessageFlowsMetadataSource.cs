@@ -6,7 +6,6 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
-using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
@@ -21,19 +20,19 @@ namespace NuClear.ValidationRules.OperationsProcessing
             PerformedOperations.Flows
                                .Primary(
                                         MessageFlowMetadata.Config.For<FactsFlow.FactsFlow>()
-                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<MessagesFlowReceiverTelemetryReporter>>()
                                                            .Accumulator<FactsFlowAccumulator>()
                                                            .Handler<FactsFlowHandler>()
                                                            .To.Primary().Flow<FactsFlow.FactsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<AggregatesFlow.AggregatesFlow>()
-                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<MessagesFlowReceiverTelemetryReporter>>()
                                                            .Accumulator<AggregatesFlowAccumulator>()
                                                            .Handler<AggregatesFlowHandler>()
                                                            .To.Primary().Flow<AggregatesFlow.AggregatesFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<MessagesFlow.MessagesFlow>()
-                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<MessagesFlowReceiverTelemetryReporter>>()
                                                            .Accumulator<MessagesFlowAccumulator>()
                                                            .Handler<MessagesFlowHandler>()
                                                            .To.Primary().Flow<MessagesFlow.MessagesFlow>().Connect()

@@ -207,6 +207,10 @@
     <Compile Include="Telemetry\MessageProcessedOperationCountIdentity.cs" />
     <Compile Include="Telemetry\MessageProcessingDelayIdentity.cs" />
     <Compile Include="Telemetry\MessagesQueueLengthIdentity.cs" />
+    <Compile Include="AggregatesFlow\AggregatesFlowReceiverTelemetryReporter.cs" />
+    <Compile Include="FactsFlow\FactsFlowReceiverTelemetryReporter.cs" />
+    <Compile Include="MessagesFlow\MessagesFlowReceiverTelemetryReporter.cs" />
+    <Compile Include="IReceiverTelemetryReporter.cs" />
     <Compile Include="Transports\ServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\XmlEventSerializer.cs" />
   </ItemGroup>
