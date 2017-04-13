@@ -11,7 +11,8 @@ using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Telemetry;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
+using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 using NuClear.ValidationRules.OperationsProcessing.Telemetry;
 using NuClear.ValidationRules.Replication.Events;
 
@@ -32,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
         {
             var flows = new Dictionary<IMessageFlow, IFlowAspect<TEvent>>
                 {
-                    { CommonEventsFlow.Instance, _unityContainer.Resolve<CommonEventsFlowAspect<TEvent>>() },
+                    { AggregatesFlow.Instance, _unityContainer.Resolve<CommonEventsFlowAspect<TEvent>>() },
                     { MessagesFlow.Instance, _unityContainer.Resolve<MessagesFlowAspect<TEvent>>() }
                 };
 

@@ -17,16 +17,16 @@ using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
 
-namespace NuClear.ValidationRules.OperationsProcessing.Final
+namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 {
-    public sealed class AggregateCommandsHandler : IMessageProcessingHandler
+    public sealed class AggregatesFlowHandler : IMessageProcessingHandler
     {
         private readonly IAggregateActorFactory _aggregateActorFactory;
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
 
-        public AggregateCommandsHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer, IEventLogger eventLogger)
+        public AggregatesFlowHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer, IEventLogger eventLogger)
         {
             _aggregateActorFactory = aggregateActorFactory;
             _telemetryPublisher = telemetryPublisher;

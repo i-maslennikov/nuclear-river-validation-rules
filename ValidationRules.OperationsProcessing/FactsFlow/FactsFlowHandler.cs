@@ -17,9 +17,9 @@ using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
 
-namespace NuClear.ValidationRules.OperationsProcessing.Primary
+namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 {
-    public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
+    public sealed class FactsFlowHandler : IMessageProcessingHandler
     {
         private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
         private readonly SyncEntityNameActor _syncEntityNameActor;
@@ -27,7 +27,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
 
-        public ImportFactsFromErmHandler(
+        public FactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
             SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
@@ -96,20 +96,21 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
 
             // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
             var actors = _dataObjectsActorFactory.Create();
+            IEnumerable<IEvent> events = Array.Empty<IEvent>();
+
             foreach (var actor in actors)
             {
-                IReadOnlyCollection<IEvent> events;
-
                 var actorType = actor.GetType().GetFriendlyName();
                 using (Probe.Create($"ETL1 {actorType}"))
                 {
-                    events = new HashSet<IEvent>(actor.ExecuteCommands(commands));
+                    events = events.Union(actor.ExecuteCommands(commands));
                 }
+            }
 
-                if (events.Any())
-                {
-                    _eventLogger.Log(events);
-                }
+            var result = events.ToList();
+            if (result.Any())
+            {
+                _eventLogger.Log(result);
             }
 
             _syncEntityNameActor.ExecuteCommands(commands);

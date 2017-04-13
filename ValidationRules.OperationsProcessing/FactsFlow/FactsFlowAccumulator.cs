@@ -9,18 +9,17 @@ using NuClear.Replication.OperationsProcessing;
 using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 using NuClear.ValidationRules.Replication.Commands;
 
-namespace NuClear.ValidationRules.OperationsProcessing.Primary
+namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 {
-    public sealed class ImportFactsFromErmAccumulator : MessageProcessingContextAccumulatorBase<ImportFactsFromErmFlow, TrackedUseCase, AggregatableMessage<ICommand>>
+    public sealed class FactsFlowAccumulator : MessageProcessingContextAccumulatorBase<FactsFlow, TrackedUseCase, AggregatableMessage<ICommand>>
     {
         private readonly ITracer _tracer;
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ICommandFactory _commandFactory;
 
-        public ImportFactsFromErmAccumulator(ITracer tracer,
+        public FactsFlowAccumulator(ITracer tracer,
                                              ITelemetryPublisher telemetryPublisher)
         {
             _tracer = tracer;

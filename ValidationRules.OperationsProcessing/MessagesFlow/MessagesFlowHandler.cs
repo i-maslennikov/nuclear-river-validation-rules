@@ -15,15 +15,15 @@ using NuClear.ValidationRules.OperationsProcessing.Telemetry;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Messages;
 
-namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
+namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 {
-    public sealed class MessageCommandsHandler : IMessageProcessingHandler
+    public sealed class MessagesFlowHandler : IMessageProcessingHandler
     {
         private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
         private readonly ValidationRuleActor _validationRuleActor;
 
-        public MessageCommandsHandler(
+        public MessagesFlowHandler(
             ITelemetryPublisher telemetryPublisher,
             ITracer tracer,
             ValidationRuleActor validationRuleActor)

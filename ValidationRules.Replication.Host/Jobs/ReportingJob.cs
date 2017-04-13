@@ -11,7 +11,9 @@ using NuClear.Security.API.Context;
 using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
+using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 using NuClear.ValidationRules.OperationsProcessing.Telemetry;
 
 using Quartz;
@@ -42,8 +44,8 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         protected override void ExecuteInternal(IJobExecutionContext context)
         {
             WithinErrorLogging(ReportMemoryUsage);
-            WithinErrorLogging(ReportQueueLength<ImportFactsFromErmFlow, PrimaryProcessingQueueLengthIdentity>);
-            WithinErrorLogging(ReportQueueLength<CommonEventsFlow, FinalProcessingAggregateQueueLengthIdentity>);
+            WithinErrorLogging(ReportQueueLength<FactsFlow, PrimaryProcessingQueueLengthIdentity>);
+            WithinErrorLogging(ReportQueueLength<AggregatesFlow, FinalProcessingAggregateQueueLengthIdentity>);
             WithinErrorLogging(ReportQueueLength<MessagesFlow, MessagesQueueLengthIdentity>);
             WithinErrorLogging(ReportProbes);
         }

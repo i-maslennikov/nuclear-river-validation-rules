@@ -16,7 +16,6 @@ using NuClear.Aggregates.Storage.DI.Unity;
 using NuClear.Assembling.TypeProcessing;
 using NuClear.ValidationRules.OperationsProcessing;
 using NuClear.ValidationRules.OperationsProcessing.Contexts;
-using NuClear.ValidationRules.OperationsProcessing.Final;
 using NuClear.ValidationRules.OperationsProcessing.Transports;
 using NuClear.ValidationRules.Replication.Host.Factories;
 using NuClear.ValidationRules.Replication.Host.Factories.Messaging.Processor;
@@ -92,6 +91,7 @@ using NuClear.Storage.LinqToDB.Writings;
 using NuClear.Storage.Readings;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
 using NuClear.ValidationRules.Storage.FieldComparer;
@@ -242,7 +242,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .RegisterType<IXmlEventSerializer, XmlEventSerializer>();
 
             // final
-            container.RegisterTypeWithDependencies(typeof(AggregateCommandsHandler), Lifetime.PerResolve, null);
+            container.RegisterTypeWithDependencies(typeof(AggregatesFlowHandler), Lifetime.PerResolve, null);
 
             container.RegisterType<IEventLoggingStrategyProvider, UnityEventLoggingStrategyProvider>()
                      .RegisterType<IEvent2BrokeredMessageConverter<IEvent>, Event2BrokeredMessageConverter>()
