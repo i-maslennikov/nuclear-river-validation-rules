@@ -10,8 +10,6 @@ using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.Replication.OperationsProcessing.Telemetry;
-using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
@@ -22,11 +20,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
     public sealed class AggregatesFlowHandler : IMessageProcessingHandler
     {
         private readonly IAggregateActorFactory _aggregateActorFactory;
-        private readonly ITelemetryPublisher _telemetryPublisher;
+        private readonly AggregatesFlowTelemetryPublisher _telemetryPublisher;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
 
-        public AggregatesFlowHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer, IEventLogger eventLogger)
+        public AggregatesFlowHandler(IAggregateActorFactory aggregateActorFactory, AggregatesFlowTelemetryPublisher telemetryPublisher, ITracer tracer, IEventLogger eventLogger)
         {
             _aggregateActorFactory = aggregateActorFactory;
             _telemetryPublisher = telemetryPublisher;
@@ -66,7 +64,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
             _eventLogger.Log(new IEvent[] { new AggregatesDelayLoggedEvent(DateTime.UtcNow) });
-            _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+            _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
         }
 
         private void Handle(IReadOnlyCollection<IncrementStateCommand> commands)
@@ -106,8 +104,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             {
                 _eventLogger.Log(events);
             }
-
-            _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(commands.Count);
         }
     }
 }

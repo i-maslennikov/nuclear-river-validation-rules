@@ -2,29 +2,26 @@
 
 namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 {
-    public sealed class FactsFlowReceiverTelemetryReporter : IReceiverTelemetryReporter
+    public sealed class FactsFlowTelemetryPublisher : IFlowTelemetryPublisher
     {
         private readonly ITelemetryPublisher _telemetryPublisher;
 
-        public FactsFlowReceiverTelemetryReporter(ITelemetryPublisher telemetryPublisher)
+        public FactsFlowTelemetryPublisher(ITelemetryPublisher telemetryPublisher)
         {
             _telemetryPublisher = telemetryPublisher;
         }
 
         public void Peeked(int count)
-        {
-            _telemetryPublisher.Publish<FactsFlowPeekedEventCountIdentity>(count);
-        }
+            => _telemetryPublisher.Publish<FactsFlowPeekedEventCountIdentity>(count);
 
         public void Completed(int count)
-        {
-            _telemetryPublisher.Publish<FactsFlowCompletedEventCountIdentity>(count);
-        }
+            => _telemetryPublisher.Publish<FactsFlowCompletedEventCountIdentity>(count);
 
         public void Failed(int count)
-        {
-            _telemetryPublisher.Publish<FactsFlowFailedEventCountIdentity>(count);
-        }
+            => _telemetryPublisher.Publish<FactsFlowFailedEventCountIdentity>(count);
+
+        public void Delay(int delay)
+            => _telemetryPublisher.Publish<FactsFlowDelayIdentity>(delay);
 
         public sealed class FactsFlowPeekedEventCountIdentity : TelemetryIdentityBase<FactsFlowPeekedEventCountIdentity>
         {
@@ -42,6 +39,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
         {
             public override int Id => 0;
             public override string Description => nameof(FactsFlowFailedEventCountIdentity);
+        }
+
+        public sealed class FactsFlowDelayIdentity : TelemetryIdentityBase<FactsFlowDelayIdentity>
+        {
+            public override int Id => 0;
+            public override string Description => nameof(FactsFlowDelayIdentity);
         }
     }
 }

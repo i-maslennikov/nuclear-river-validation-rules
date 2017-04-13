@@ -1,6 +1,6 @@
 ﻿namespace NuClear.ValidationRules.OperationsProcessing
 {
-    public interface IReceiverTelemetryReporter
+    public interface IFlowTelemetryPublisher
     {
         void Peeked(int count);
         void Completed(int count);

@@ -7,13 +7,10 @@ using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.OperationsLogging.API;
 using NuClear.OperationsLogging.Transports.ServiceBus;
-using NuClear.Replication.OperationsProcessing.Telemetry;
 using NuClear.Replication.OperationsProcessing.Transports;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
-using NuClear.Telemetry;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
-using NuClear.ValidationRules.OperationsProcessing.Telemetry;
 using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories
@@ -33,7 +30,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
         {
             var flows = new Dictionary<IMessageFlow, IFlowAspect<TEvent>>
                 {
-                    { AggregatesFlow.Instance, _unityContainer.Resolve<CommonEventsFlowAspect<TEvent>>() },
+                    { AggregatesFlow.Instance, _unityContainer.Resolve<AggregatesFlowAspect<TEvent>>() },
                     { MessagesFlow.Instance, _unityContainer.Resolve<MessagesFlowAspect<TEvent>>() }
                 };
 
@@ -54,37 +51,24 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
             return new EventLoggingStrategyDecorator<TEvent>(strategy, flow);
         }
 
-        private class CommonEventsFlowAspect<TEvent> : IFlowAspect<TEvent>
+        private class AggregatesFlowAspect<TEvent> : IFlowAspect<TEvent>
         {
-            private readonly ITelemetryPublisher _telemetryPublisher;
-
-            public CommonEventsFlowAspect(ITelemetryPublisher telemetryPublisher)
-            {
-                _telemetryPublisher = telemetryPublisher;
-            }
-
             public bool ShouldEventBeLogged(TEvent @event)
                 => !(@event is AggregatesStateIncrementedEvent || @event is AggregatesDelayLoggedEvent || @event is ResultOutdatedEvent || @event is ResultPartiallyOutdatedEvent);
 
             public void ReportMessageLoggedCount(long count)
-                => _telemetryPublisher.Publish<AggregateEnqueuedOperationCountIdentity>(count);
-
+            {
+            }
         }
 
         private class MessagesFlowAspect<TEvent> : IFlowAspect<TEvent>
         {
-            private readonly ITelemetryPublisher _telemetryPublisher;
-
-            public MessagesFlowAspect(ITelemetryPublisher telemetryPublisher)
-            {
-                _telemetryPublisher = telemetryPublisher;
-            }
-
             public bool ShouldEventBeLogged(TEvent @event)
                 => @event is AggregatesStateIncrementedEvent || @event is AggregatesDelayLoggedEvent || @event is ResultOutdatedEvent || @event is ResultPartiallyOutdatedEvent;
 
             public void ReportMessageLoggedCount(long count)
-                => _telemetryPublisher.Publish<MessageEnqueuedOperationCountIdentity>(count);
+            {
+            }
         }
     }
 }

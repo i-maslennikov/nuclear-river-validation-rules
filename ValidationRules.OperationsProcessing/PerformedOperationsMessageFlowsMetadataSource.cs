@@ -20,19 +20,19 @@ namespace NuClear.ValidationRules.OperationsProcessing
             PerformedOperations.Flows
                                .Primary(
                                         MessageFlowMetadata.Config.For<FactsFlow.FactsFlow>()
-                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<FactsFlowReceiverTelemetryReporter>>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<FactsFlowTelemetryPublisher>>()
                                                            .Accumulator<FactsFlowAccumulator>()
                                                            .Handler<FactsFlowHandler>()
                                                            .To.Primary().Flow<FactsFlow.FactsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<AggregatesFlow.AggregatesFlow>()
-                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<AggregatesFlowReceiverTelemetryReporter>>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<AggregatesFlowTelemetryPublisher>>()
                                                            .Accumulator<AggregatesFlowAccumulator>()
                                                            .Handler<AggregatesFlowHandler>()
                                                            .To.Primary().Flow<AggregatesFlow.AggregatesFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<MessagesFlow.MessagesFlow>()
-                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<MessagesFlowReceiverTelemetryReporter>>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<MessagesFlowTelemetryPublisher>>()
                                                            .Accumulator<MessagesFlowAccumulator>()
                                                            .Handler<MessagesFlowHandler>()
                                                            .To.Primary().Flow<MessagesFlow.MessagesFlow>().Connect()

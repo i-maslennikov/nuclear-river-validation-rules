@@ -14,7 +14,6 @@ using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
-using NuClear.ValidationRules.OperationsProcessing.Telemetry;
 
 using Quartz;
 
@@ -87,6 +86,12 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             var manager = NamespaceManager.CreateFromConnectionString(settings.ConnectionString);
             var subscription = manager.GetSubscription(settings.TransportEntityPath, flow.Id.ToString());
             _telemetry.Publish<TTelemetryIdentity>(subscription.MessageCountDetails.ActiveMessageCount);
+        }
+
+        private class MessagesQueueLengthIdentity : TelemetryIdentityBase<MessagesQueueLengthIdentity>
+        {
+            public override int Id => 0;
+            public override string Description => nameof(MessagesQueueLengthIdentity);
         }
     }
 }

@@ -8,10 +8,8 @@ using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.Telemetry;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Messages;
 
@@ -19,12 +17,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 {
     public sealed class MessagesFlowHandler : IMessageProcessingHandler
     {
-        private readonly ITelemetryPublisher _telemetryPublisher;
+        private readonly MessagesFlowTelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
         private readonly ValidationRuleActor _validationRuleActor;
 
         public MessagesFlowHandler(
-            ITelemetryPublisher telemetryPublisher,
+            MessagesFlowTelemetryPublisher telemetryPublisher,
             ITracer tracer,
             ValidationRuleActor validationRuleActor)
         {
@@ -63,7 +61,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
-            _telemetryPublisher.Publish<MessageProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+            _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
         }
 
         private void Handle(IReadOnlyCollection<IValidationRuleCommand> commands)
@@ -84,8 +82,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 
                 scope.Complete();
             }
-
-            _telemetryPublisher.Publish<MessageProcessedOperationCountIdentity>(commands.Count);
         }
     }
 }

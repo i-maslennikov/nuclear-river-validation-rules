@@ -10,15 +10,15 @@ using NuClear.Telemetry.Probing;
 namespace NuClear.ValidationRules.OperationsProcessing.Transports
 {
     public sealed class BatchingServiceBusMessageReceiverTelemetryDecorator<TReceiverActionReporter> : IMessageReceiver
-        where TReceiverActionReporter : IReceiverTelemetryReporter
+        where TReceiverActionReporter : IFlowTelemetryPublisher
     {
         private readonly IMessageReceiver _receiver;
-        private readonly IReceiverTelemetryReporter _reporter;
+        private readonly IFlowTelemetryPublisher _publisher;
 
-        public BatchingServiceBusMessageReceiverTelemetryDecorator(ServiceBusMessageReceiver receiver, TReceiverActionReporter reporter)
+        public BatchingServiceBusMessageReceiverTelemetryDecorator(ServiceBusMessageReceiver receiver, TReceiverActionReporter publisher)
         {
             _receiver = receiver;
-            _reporter = reporter;
+            _publisher = publisher;
         }
 
         public IReadOnlyList<IMessage> Peek()
@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
             using (Probe.Create("Peek messages from ServiceBus"))
             {
                 var messages = _receiver.Peek();
-                _reporter.Peeked(messages.Count);
+                _publisher.Peeked(messages.Count);
                 return messages;
             }
         }
@@ -38,13 +38,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                 foreach (var batch in successfullyProcessedMessages.CreateBatches(500))
                 {
                     _receiver.Complete(batch, Array.Empty<IMessage>());
-                    _reporter.Completed(batch.Count);
+                    _publisher.Completed(batch.Count);
                 }
 
                 foreach (var batch in failedProcessedMessages.CreateBatches(500))
                 {
                     _receiver.Complete(Array.Empty<IMessage>(), batch);
-                    _reporter.Failed(batch.Count);
+                    _publisher.Failed(batch.Count);
                 }
             }
         }

@@ -9,8 +9,6 @@ using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.Replication.OperationsProcessing.Telemetry;
-using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication;
@@ -25,13 +23,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
         private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
-        private readonly ITelemetryPublisher _telemetryPublisher;
+        private readonly FactsFlowTelemetryPublisher _telemetryPublisher;
 
         public FactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
             SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
-            ITelemetryPublisher telemetryPublisher,
+            FactsFlowTelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
@@ -73,7 +71,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
             _eventLogger.Log(new IEvent[] { new FactsDelayLoggedEvent(DateTime.UtcNow) });
-            _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+            _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
         }
 
         private void Handle(IReadOnlyCollection<IncrementStateCommand> commands)
@@ -114,8 +112,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             }
 
             _syncEntityNameActor.ExecuteCommands(commands);
-
-            _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);
         }
     }
 }
