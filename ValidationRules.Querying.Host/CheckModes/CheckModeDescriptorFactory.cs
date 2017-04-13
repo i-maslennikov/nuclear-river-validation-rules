@@ -42,7 +42,7 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
             public RuleSeverityLevel GetRuleSeverityLevel(MessageTypeCode rule)
             {
                 RuleSeverityLevel level;
-                if (_checkModeRules.TryGetValue(rule, out level))
+                if (!_checkModeRules.TryGetValue(rule, out level))
                 {
                     throw new ArgumentException($"Rule {rule} is not defined for check mode {_checkMode}", nameof(rule));
                 }
