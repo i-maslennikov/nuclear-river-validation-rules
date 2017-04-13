@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Querying.Host.Model
         public string Template { get; set; }
         public IReadOnlyCollection<Reference> References { get; set; }
         public Reference MainReference { get; set; }
-        public RuleSeverityLevel RuleSeverityLevel { get; set; }
+        public RuleSeverityLevel Result { get; set; }
 
         public sealed class Reference
         {
