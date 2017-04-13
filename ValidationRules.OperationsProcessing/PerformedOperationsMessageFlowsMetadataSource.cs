@@ -20,13 +20,13 @@ namespace NuClear.ValidationRules.OperationsProcessing
             PerformedOperations.Flows
                                .Primary(
                                         MessageFlowMetadata.Config.For<FactsFlow.FactsFlow>()
-                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<MessagesFlowReceiverTelemetryReporter>>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<FactsFlowReceiverTelemetryReporter>>()
                                                            .Accumulator<FactsFlowAccumulator>()
                                                            .Handler<FactsFlowHandler>()
                                                            .To.Primary().Flow<FactsFlow.FactsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<AggregatesFlow.AggregatesFlow>()
-                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<MessagesFlowReceiverTelemetryReporter>>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<AggregatesFlowReceiverTelemetryReporter>>()
                                                            .Accumulator<AggregatesFlowAccumulator>()
                                                            .Handler<AggregatesFlowHandler>()
                                                            .To.Primary().Flow<AggregatesFlow.AggregatesFlow>().Connect(),

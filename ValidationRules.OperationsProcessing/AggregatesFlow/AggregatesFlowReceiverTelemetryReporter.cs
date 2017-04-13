@@ -1,5 +1,4 @@
 ﻿using NuClear.Telemetry;
-using NuClear.ValidationRules.OperationsProcessing.Transports;
 
 namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 {
