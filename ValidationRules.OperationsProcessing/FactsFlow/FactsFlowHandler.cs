@@ -47,9 +47,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
-                    Handle(commands.OfType<ISyncDataObjectCommand>().ToList());
-                    Handle(commands.OfType<IncrementStateCommand>().ToList());
-                    Handle(commands.OfType<LogDelayCommand>().ToList());
+                    var events =
+                        Handle(commands.OfType<ISyncDataObjectCommand>().ToList())
+                            .Concat(Handle(commands.OfType<IncrementStateCommand>().ToList()))
+                            .Concat(Handle(commands.OfType<LogDelayCommand>().ToList()))
+                            .ToList();
+
+                    _eventLogger.Log(events);
 
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
@@ -61,57 +65,52 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             }
         }
 
-        private void Handle(IReadOnlyCollection<LogDelayCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<LogDelayCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
-            _eventLogger.Log(new IEvent[] { new FactsDelayLoggedEvent(DateTime.UtcNow) });
             _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
+            return new IEvent[] { new FactsDelayLoggedEvent(DateTime.UtcNow) };
         }
 
-        private void Handle(IReadOnlyCollection<IncrementStateCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementStateCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
             var states = commands.SelectMany(command => command.States).ToArray();
-            _eventLogger.Log(new IEvent[] { new FactsStateIncrementedEvent(states) });
+            return new IEvent[] { new FactsStateIncrementedEvent(states) };
         }
 
-        private void Handle(IReadOnlyCollection<ISyncDataObjectCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<ISyncDataObjectCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
-            // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
             var actors = _dataObjectsActorFactory.Create();
-            IEnumerable<IEvent> events = Array.Empty<IEvent>();
+            var events = new HashSet<IEvent>();
 
             foreach (var actor in actors)
             {
                 var actorType = actor.GetType().GetFriendlyName();
                 using (Probe.Create($"ETL1 {actorType}"))
                 {
-                    events = events.Union(actor.ExecuteCommands(commands));
+                    events.UnionWith(actor.ExecuteCommands(commands));
                 }
             }
 
-            var result = events.ToList();
-            if (result.Any())
-            {
-                _eventLogger.Log(result);
-            }
-
             _syncEntityNameActor.ExecuteCommands(commands);
+
+            return events;
         }
     }
 }
