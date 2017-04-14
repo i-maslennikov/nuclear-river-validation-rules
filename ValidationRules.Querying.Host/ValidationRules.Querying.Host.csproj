@@ -169,7 +169,7 @@
     <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="DataAccess\DataConnectionFactory.cs" />
     <Compile Include="Composition\Message.cs" />
-    <Compile Include="DataAccess\MessageRepositiory.cs" />
+    <Compile Include="DataAccess\ValidationResultRepositiory.cs" />
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="DI\UnityDependencyResolver.cs" />
     <Compile Include="ExceptionTracer.cs" />

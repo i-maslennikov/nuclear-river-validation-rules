@@ -12,11 +12,11 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
     [RoutePrefix("api/Prerelease")]
     public class PrereleaseController : ApiController
     {
-        private readonly MessageRepositiory _repositiory;
+        private readonly ValidationResultRepositiory _repositiory;
         private readonly ValidationResultFactory _factory;
         private readonly ICheckModeDescriptor _checkModeDescriptor;
 
-        public PrereleaseController(MessageRepositiory repositiory, ValidationResultFactory factory, CheckModeDescriptorFactory descriptorFactory)
+        public PrereleaseController(ValidationResultRepositiory repositiory, ValidationResultFactory factory, CheckModeDescriptorFactory descriptorFactory)
         {
             _repositiory = repositiory;
             _factory = factory;
@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
                 return NotFound();
             }
 
-            var validationResults = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), _checkModeDescriptor);
+            var validationResults = _repositiory.GetResults(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), _checkModeDescriptor);
             var result = _factory.GetValidationResult(validationResults, _checkModeDescriptor);
             return Ok(result);
         }

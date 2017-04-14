@@ -10,13 +10,13 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
-    public sealed class MessageRepositiory
+    public sealed class ValidationResultRepositiory
     {
         private const string ConfigurationString = "Messages";
 
         private readonly DataConnectionFactory _factory;
 
-        public MessageRepositiory(DataConnectionFactory factory)
+        public ValidationResultRepositiory(DataConnectionFactory factory)
         {
             _factory = factory;
         }
@@ -39,7 +39,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             }
         }
 
-        public IReadOnlyCollection<Version.ValidationResult> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ICheckModeDescriptor checkModeDescriptor)
+        public IReadOnlyCollection<Version.ValidationResult> GetResults(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ICheckModeDescriptor checkModeDescriptor)
         {
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
