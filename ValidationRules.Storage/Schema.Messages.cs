@@ -37,11 +37,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Version.ValidationResult>()
                    .HasSchemaName(MessagesSchema);
 
-            builder.Entity<Version.ValidationResultType>()
-                   .HasPrimaryKey(x => x.ResultType)
-                   .HasPrimaryKey(x => x.MessageType)
-                   .HasSchemaName(MessagesSchema);
-
             builder.Entity<Version.ValidationResultBulkDelete>()
                    .HasTableName(nameof(Version.ValidationResult))
                    .HasSchemaName(MessagesSchema);

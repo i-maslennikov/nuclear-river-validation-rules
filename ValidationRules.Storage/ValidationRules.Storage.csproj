@@ -295,13 +295,13 @@
     <Compile Include="Model\FirmRules\Aggregates\Firm.cs" />
     <Compile Include="Model\FirmRules\Aggregates\Order.cs" />
     <Compile Include="Model\Facts\FirmAddressCategory.cs" />
+    <Compile Include="Model\Messages\ICheckModeDescriptor.cs" />
     <Compile Include="Model\Messages\Reference.cs" />
     <Compile Include="Model\Messages\MessageParams.cs" />
     <Compile Include="Model\Messages\MessageParamsExtensions.cs" />
     <Compile Include="Model\Messages\MessageTypeCode.cs" />
-    <Compile Include="Model\Messages\Result.cs" />
-    <Compile Include="Model\Messages\ResultType.cs" />
-    <Compile Include="Model\Messages\ResultTypeMap.cs" />
+    <Compile Include="Model\Messages\RuleSeverityLevel.cs" />
+    <Compile Include="Model\Messages\CheckMode.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Firm.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\FirmAddress.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Order.cs" />

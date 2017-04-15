@@ -1,9 +1,7 @@
 namespace NuClear.ValidationRules.Storage.Model.Messages
 {
-    public enum ResultType
+    public enum CheckMode
     {
-        None = 0,
-
         Single = 1,
         SingleForCancel = 2,
         SingleForApprove = 3,

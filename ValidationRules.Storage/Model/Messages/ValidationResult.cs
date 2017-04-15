@@ -35,14 +35,6 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
             public bool Resolved { get; set; }
         }
 
-        public sealed class ValidationResultType
-        {
-            public ResultType ResultType { get; set; }
-            public int MessageType { get; set; }
-
-            public Result Result { get; set; }
-        }
-
         public sealed class ValidationResultBulkDelete
         {
             public long VersionId { get; set; }

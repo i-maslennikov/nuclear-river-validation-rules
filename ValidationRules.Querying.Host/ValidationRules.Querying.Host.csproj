@@ -141,6 +141,8 @@
     <Compile Include="App_Start\Int64ToStringConverter.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="CheckModes\CheckModeDescriptorFactory.cs" />
+    <Compile Include="CheckModes\CheckModeRegistry.cs" />
     <Compile Include="Composition\Composers\FirmAddressMustBeLocatedOnTheMapMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />
@@ -155,7 +157,7 @@
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
     <Compile Include="Composition\IDistinctor.cs" />
-    <Compile Include="Composition\NameResolvingService.cs" />
+    <Compile Include="DataAccess\NameResolvingService.cs" />
     <Compile Include="Composition\ResolvedNameContainer.cs" />
     <Compile Include="Controllers\ManualWithAccountController.cs" />
     <Compile Include="Controllers\SingleForCancelController.cs" />
@@ -166,9 +168,8 @@
     <Compile Include="Controllers\ManualController.cs" />
     <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="DataAccess\DataConnectionFactory.cs" />
-    <Compile Include="DataAccess\Message.cs" />
-    <Compile Include="DataAccess\MessageRepositiory.cs" />
-    <Compile Include="DataAccess\ValidationResultExtensions.cs" />
+    <Compile Include="Composition\Message.cs" />
+    <Compile Include="DataAccess\ValidationResultRepositiory.cs" />
     <Compile Include="DI\Bootstrapper.cs" />
     <Compile Include="DI\UnityDependencyResolver.cs" />
     <Compile Include="ExceptionTracer.cs" />

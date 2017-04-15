@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Specifications;
@@ -9,13 +10,13 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
-    public sealed class MessageRepositiory
+    public sealed class ValidationResultRepositiory
     {
         private const string ConfigurationString = "Messages";
 
         private readonly DataConnectionFactory _factory;
 
-        public MessageRepositiory(DataConnectionFactory factory)
+        public ValidationResultRepositiory(DataConnectionFactory factory)
         {
             _factory = factory;
         }
@@ -38,25 +39,27 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             }
         }
 
-        public IReadOnlyCollection<Message> GetMessages(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ResultType resultType)
+        public IReadOnlyCollection<Version.ValidationResult> GetResults(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ICheckModeDescriptor checkModeDescriptor)
         {
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
                 var validationResults = connection.GetTable<Version.ValidationResult>()
-                                                  .ForOrdersOrProject(orderIds, projectId)
-                                                  .ForPeriod(start, end)
+                                                  .Where(ForOrdersOrProject(orderIds, projectId))
+                                                  .Where(ForPeriod(start, end))
+                                                  .Where(ForMode(checkModeDescriptor))
                                                   .ForVersion(versionId);
 
-                var validationResultTypes = connection.GetTable<Version.ValidationResultType>()
-                                                  .Where(x => x.ResultType == resultType);
-
-                var messages = from validationResult in validationResults
-                               from validationResultType in validationResultTypes
-                                                            .Where(x => x.MessageType == validationResult.MessageType)
-                               select validationResult.ToMessage(validationResultType.Result);
-
-                return messages.ToList();
+                return validationResults.ToList();
             }
         }
+
+        private static Expression<Func<Version.ValidationResult, bool>> ForPeriod(DateTime start, DateTime end)
+            => x => x.PeriodStart < end && start < x.PeriodEnd;
+
+        private static Expression<Func<Version.ValidationResult, bool>> ForOrdersOrProject(IReadOnlyCollection<long> orderIds, long? projectId)
+            => x => x.OrderId.HasValue && orderIds.Contains(x.OrderId.Value) || x.ProjectId.HasValue && x.ProjectId == projectId;
+
+        private static Expression<Func<Version.ValidationResult, bool>> ForMode(ICheckModeDescriptor checkModeDescriptor)
+            => x => checkModeDescriptor.Rules.Contains((MessageTypeCode)x.MessageType);
     }
 }

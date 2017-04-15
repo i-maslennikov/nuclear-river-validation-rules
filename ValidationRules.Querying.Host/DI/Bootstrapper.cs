@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.Querying.Host.DI
         {
             return container
                 .RegisterType<DataConnectionFactory>(new ContainerControlledLifetimeManager())
-                .RegisterType<MessageRepositiory>(new PerResolveLifetimeManager());
+                .RegisterType<ValidationResultRepositiory>(new PerResolveLifetimeManager());
         }
 
         private static IUnityContainer ConfigureComposers(this IUnityContainer container)

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.ValidationRules.Querying.Host.DataAccess;
+using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-namespace NuClear.ValidationRules.Querying.Host.Composition
+namespace NuClear.ValidationRules.Querying.Host.DataAccess
 {
     public class NameResolvingService
     {

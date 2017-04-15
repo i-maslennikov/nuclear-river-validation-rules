@@ -39,7 +39,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             var validator = new PipelineFactory().Create();
             foreach (var expected in expectedResultsByOrder)
             {
-                var actual = validator.Execute(expected.Key).Where(x => x.MessageType == (int)rule).ToArray();
+                var actual = validator.Execute(expected.Key, TestCheckMode.SingleRule(rule)).ToArray();
 
                 AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
             }
@@ -54,7 +54,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             var expected = GetResultsFromBigDatabase(x => x.OrderId == orderId);
 
             var validator = new PipelineFactory().Create();
-            var actual = validator.Execute(orderId);
+            var actual = validator.Execute(orderId, TestCheckMode.AllRules());
 
             AssertCollectionsEqual(MergePeriods(expected), MergePeriods(actual));
         }
@@ -132,6 +132,20 @@ namespace ValidationRules.Replication.Comparison.Tests
 
                 Assert.Fail(sb.ToString());
             }
+        }
+
+        private class TestCheckMode : ICheckModeDescriptor
+        {
+            public IReadOnlyCollection<MessageTypeCode> Rules { get; set; }
+
+            public RuleSeverityLevel GetRuleSeverityLevel(MessageTypeCode rule)
+                => RuleSeverityLevel.None;
+
+            public static TestCheckMode SingleRule(MessageTypeCode rule)
+                => new TestCheckMode { Rules = new[] { rule } };
+
+            public static TestCheckMode AllRules()
+                => new TestCheckMode { Rules = Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>().ToList() };
         }
     }
 }

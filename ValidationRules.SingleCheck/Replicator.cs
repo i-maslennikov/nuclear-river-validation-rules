@@ -5,8 +5,10 @@ using System.Linq.Expressions;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.SingleCheck.Optimization;
 using NuClear.ValidationRules.SingleCheck.Store;
+using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.SingleCheck
 {
@@ -27,6 +29,7 @@ namespace NuClear.ValidationRules.SingleCheck
         public abstract Func<Func<Type, LambdaExpression, bool>, bool> SkipCheckFunction { get; }
         public abstract IReadOnlyCollection<Type> Dependencies { get; }
         public abstract Type DataObjectType { get; }
+        public abstract MessageTypeCode Rule { get; }
 
         private static AccessorInfo GetAccessorInfo(Type accessorType, Lazy<Expression> expression)
             => Cache.GetOrAdd(accessorType, t => ParseExpression(expression.Value));
@@ -64,6 +67,9 @@ namespace NuClear.ValidationRules.SingleCheck
             public override IReadOnlyCollection<Type> Dependencies => _info.Dependencies;
 
             public override Type DataObjectType => typeof(TDataType);
+
+            public override MessageTypeCode Rule
+                => (MessageTypeCode)((IValidationResultAccessor)_accessor).MessageTypeId;
 
             public override void Process(bool isEmpty)
             {

@@ -3,7 +3,6 @@ using System.Linq;
 
 using NuClear.Model.Common;
 using NuClear.Model.Common.Entities;
-using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -29,13 +28,12 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         }
 
         public IEnumerable<Message> Distinct(IEnumerable<Message> messages)
-            => messages.GroupBy(x => new { x.OrderId, x.MessageType, x.ProjectId, x.Result, AdvertisementId = Get<EntityTypeAdvertisement>(x.References).Id }, x => x.References)
+            => messages.GroupBy(x => new { x.OrderId, x.MessageType, x.ProjectId, AdvertisementId = Get<EntityTypeAdvertisement>(x.References).Id }, x => x.References)
                        .Select(x => new Message
                            {
                                OrderId = x.Key.OrderId,
                                MessageType = x.Key.MessageType,
                                ProjectId = x.Key.ProjectId,
-                               Result = x.Key.Result,
                                References = new[]
                                    {
                                        new Reference(EntityTypeOrder.Instance.Id, x.Key.OrderId.Value),

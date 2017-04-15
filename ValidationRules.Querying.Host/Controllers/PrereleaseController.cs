@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Http;
 
+using NuClear.ValidationRules.Querying.Host.CheckModes;
 using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -11,13 +12,15 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
     [RoutePrefix("api/Prerelease")]
     public class PrereleaseController : ApiController
     {
-        private readonly MessageRepositiory _repositiory;
+        private readonly ValidationResultRepositiory _repositiory;
         private readonly ValidationResultFactory _factory;
+        private readonly ICheckModeDescriptor _checkModeDescriptor;
 
-        public PrereleaseController(MessageRepositiory repositiory, ValidationResultFactory factory)
+        public PrereleaseController(ValidationResultRepositiory repositiory, ValidationResultFactory factory, CheckModeDescriptorFactory descriptorFactory)
         {
             _repositiory = repositiory;
             _factory = factory;
+            _checkModeDescriptor = descriptorFactory.GetDescriptorFor(CheckMode.Prerelease);
         }
 
         [Route("{stateToken:guid}"), HttpPost]
@@ -29,8 +32,8 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
                 return NotFound();
             }
 
-            var messages = _repositiory.GetMessages(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), ResultType.Prerelease);
-            var result = _factory.GetValidationResult(messages);
+            var validationResults = _repositiory.GetResults(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), _checkModeDescriptor);
+            var result = _factory.GetValidationResult(validationResults, _checkModeDescriptor);
             return Ok(result);
         }
 

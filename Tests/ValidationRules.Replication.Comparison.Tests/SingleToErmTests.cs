@@ -39,11 +39,9 @@ namespace ValidationRules.Replication.Comparison.Tests
                 using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
                 {
                     var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
-                    var resultTypes = dc.GetTable<Version.ValidationResultType>().Where(x => x.ResultType == ResultType.Single);
                     var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved);
                     var results =
                         from message in orderErrors
-                        from resultType in resultTypes.Where(x => x.MessageType == message.MessageType)
                         where !resolved.Any(x => x.MessageType == message.MessageType && x.OrderId == message.OrderId && x.VersionId > message.VersionId)
                         select message;
 

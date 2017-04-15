@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.Querying.Host.Model;
 using NuClear.ValidationRules.Storage.Model.Messages;
+
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition
 {
@@ -30,14 +33,15 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             _distinctors = distinctors.ToDictionary(x => x.MessageType, x => x);
         }
 
-        public IReadOnlyCollection<ValidationResult> GetValidationResult(IReadOnlyCollection<Message> messages)
+        public IReadOnlyCollection<ValidationResult> GetValidationResult(IReadOnlyCollection<Version.ValidationResult> validationResults, ICheckModeDescriptor checkModeDescriptor)
         {
+            var messages = validationResults.Select(ToMessage).ToList();
             var resolvedNames = _nameResolvingService.Resolve(messages);
-            var result = MakeDistinct(messages).Select(x => Compose(x, resolvedNames)).ToList();
+            var result = MakeDistinct(messages).Select(x => Compose(x, resolvedNames, checkModeDescriptor)).ToList();
             return result;
         }
 
-        private ValidationResult Compose(Message message, ResolvedNameContainer resolvedNames)
+        private ValidationResult Compose(Message message, ResolvedNameContainer resolvedNames, ICheckModeDescriptor checkModeDescriptor)
         {
             try
             {
@@ -50,13 +54,13 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                 var composerResult = composer.Compose(message.References.Select(resolvedNames.For).ToArray(), message.Extra);
 
                 return new ValidationResult
-                {
-                    MainReference = ConvertReference(composerResult.MainReference),
-                    References = composerResult.References.Select(ConvertReference).ToList(),
-                    Template = composerResult.Template,
-                    Result = message.Result,
-                    Rule = message.MessageType,
-                };
+                    {
+                        MainReference = ConvertReference(composerResult.MainReference),
+                        References = composerResult.References.Select(ConvertReference).ToList(),
+                        Template = composerResult.Template,
+                        Result = checkModeDescriptor.GetRuleSeverityLevel(message.MessageType),
+                        Rule = message.MessageType,
+                    };
             }
             catch (Exception ex)
             {
@@ -76,6 +80,25 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             IDistinctor distinctor;
             return _distinctors.TryGetValue(messageType, out distinctor) ? distinctor : Default;
         }
+
+        private static Message ToMessage(Version.ValidationResult x)
+            => new Message
+                {
+                    MessageType = (MessageTypeCode)x.MessageType,
+                    References = ParseReferences(x.MessageParams),
+                    Extra = ParseExtra(x.MessageParams),
+                    OrderId = x.OrderId,
+                    ProjectId = x.ProjectId,
+                };
+
+        private static IReadOnlyCollection<Reference> ParseReferences(XDocument messageParams)
+            => messageParams.Root.Elements().Select(Parse).ToList();
+
+        private static IReadOnlyDictionary<string, string> ParseExtra(XDocument messageParams)
+            => messageParams.Root.Attributes().ToDictionary(x => x.Name.LocalName, x => x.Value);
+
+        private static Reference Parse(XElement element)
+            => new Reference((int)element.Attribute("type"), (long)element.Attribute("id"), element.Elements().Select(Parse).ToArray());
 
         private sealed class DefaultDistinctor : IDistinctor, IEqualityComparer<Message>
         {
