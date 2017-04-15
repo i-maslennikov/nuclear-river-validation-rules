@@ -68,7 +68,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                 using (Probe.Create("Query Target"))
                 {
                     var query = _query.For<Version.ValidationResult>().ForVersion(currentVersion);
-                    targetValidationResults = query.ToList();
+                    targetValidationResults = query.ApplyVersionId(0).ToList();
                 }
 
                 foreach (var ruleCommands in ruleGroups)
