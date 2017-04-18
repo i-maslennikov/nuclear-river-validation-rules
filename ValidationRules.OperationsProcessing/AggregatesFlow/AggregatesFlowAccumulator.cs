@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 
         public AggregatesFlowAccumulator()
         {
-            _commandFactory = new AggregateCommandFactory();
+            _commandFactory = new AggregatesFlowCommandFactory();
         }
 
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             };
         }
 
-        private sealed class AggregateCommandFactory : ICommandFactory
+        private sealed class AggregatesFlowCommandFactory : ICommandFactory
         {
             public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
