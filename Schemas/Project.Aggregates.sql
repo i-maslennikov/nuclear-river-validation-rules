@@ -1,8 +1,7 @@
 ﻿if not exists (select * from sys.schemas where name = 'ProjectAggregates') exec('create schema ProjectAggregates')
 
-if object_id('ProjectAggregates.FirmAddress') is not null drop table ProjectAggregates.FirmAddress
 if object_id('ProjectAggregates.[Order]') is not null drop table ProjectAggregates.[Order]
-if object_id('ProjectAggregates.AddressAdvertisement') is not null drop table ProjectAggregates.AddressAdvertisement
+if object_id('ProjectAggregates.AddressAdvertisementNonOnTheMap') is not null drop table ProjectAggregates.AddressAdvertisementNonOnTheMap
 if object_id('ProjectAggregates.CategoryAdvertisement') is not null drop table ProjectAggregates.CategoryAdvertisement
 if object_id('ProjectAggregates.CostPerClickAdvertisement') is not null drop table ProjectAggregates.CostPerClickAdvertisement
 if object_id('ProjectAggregates.Project') is not null drop table ProjectAggregates.Project
@@ -29,12 +28,11 @@ create table ProjectAggregates.[Order](
 )
 go
 
-create table ProjectAggregates.AddressAdvertisement(
+create table ProjectAggregates.AddressAdvertisementNonOnTheMap(
     OrderId bigint not null,
     OrderPositionId bigint not null,
     PositionId bigint not null,
     AddressId bigint not null,
-    MustBeLocatedOnTheMap bit not null,
 )
 go
 

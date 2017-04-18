@@ -10,13 +10,12 @@ namespace NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates
         public DateTime End { get; set; }
         public bool IsDraft { get; set; }
 
-        public sealed class AddressAdvertisement
+        public sealed class AddressAdvertisementNonOnTheMap
         {
             public long OrderId { get; set; }
             public long OrderPositionId { get; set; }
             public long PositionId { get; set; }
             public long AddressId { get; set; }
-            public bool MustBeLocatedOnTheMap { get; set; } // ?
         }
 
         public class CategoryAdvertisement

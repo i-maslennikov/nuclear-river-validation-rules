@@ -303,7 +303,6 @@
     <Compile Include="Model\Messages\RuleSeverityLevel.cs" />
     <Compile Include="Model\Messages\CheckMode.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Firm.cs" />
-    <Compile Include="Model\ProjectRules\Aggregates\FirmAddress.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Order.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Project.cs" />
     <Compile Include="Model\Facts\CategoryOrganizationUnit.cs" />

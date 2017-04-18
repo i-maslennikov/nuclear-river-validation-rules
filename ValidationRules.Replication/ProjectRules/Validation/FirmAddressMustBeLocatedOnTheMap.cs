@@ -24,14 +24,12 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                from advertisement in query.For<Order.AddressAdvertisement>().Where(x => x.OrderId == order.Id && x.MustBeLocatedOnTheMap)
-                from firmAddress in query.For<FirmAddress>().Where(x => x.Id == advertisement.AddressId)
-                where !firmAddress.IsLocatedOnTheMap
+                from advertisement in query.For<Order.AddressAdvertisementNonOnTheMap>().Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeFirmAddress>(firmAddress.Id),
+                                    new Reference<EntityTypeFirmAddress>(advertisement.AddressId),
                                     new Reference<EntityTypeOrder>(order.Id),
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                         new Reference<EntityTypeOrderPosition>(advertisement.OrderPositionId),

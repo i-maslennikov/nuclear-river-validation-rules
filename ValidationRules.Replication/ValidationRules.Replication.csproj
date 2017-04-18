@@ -258,7 +258,6 @@
     <Compile Include="Messages\ErmStatesQueryableExtensions.cs" />
     <Compile Include="Messages\VersionAccessor.cs" />
     <Compile Include="ProjectRules\Aggregates\ProjectAggregateRootActor.cs" />
-    <Compile Include="ProjectRules\Aggregates\FirmAddressAggregateRootActor.cs" />
     <Compile Include="ProjectRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="Accessors\CategoryOrganizationUnitAccessor.cs" />
     <Compile Include="Accessors\CostPerClickCategoryRestrictionAccessor.cs" />

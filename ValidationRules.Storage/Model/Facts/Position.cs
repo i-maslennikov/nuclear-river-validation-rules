@@ -1,4 +1,6 @@
-﻿namespace NuClear.ValidationRules.Storage.Model.Facts
+﻿using System.Collections.Generic;
+
+namespace NuClear.ValidationRules.Storage.Model.Facts
 {
     public sealed class Position
     {
@@ -12,6 +14,13 @@
         public const int PlatformDesktop = 1;
 
         public const int PositionsGroupMedia = 1;
+
+        public static readonly IReadOnlyCollection<long> CategoryCodesAllowNotLocatedOnTheMap = new long[]
+            {
+                11, // Рекламная ссылка
+                14, // Выгодные покупки с 2ГИС
+                26, // Комментарий к адресу
+            };
 
         public long Id { get; set; }
 
