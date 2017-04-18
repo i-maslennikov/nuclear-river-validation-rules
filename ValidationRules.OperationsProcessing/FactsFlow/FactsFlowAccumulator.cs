@@ -16,12 +16,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
         public FactsFlowAccumulator()
         {
-            _commandFactory = new ImportFactsFromErmCommandFactory();
+            _commandFactory = new FactsFlowCommandFactory();
         }
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase trackedUseCase)
         {
-            var commands = _commandFactory.CreateCommands(new ImportFactsFromErmEvent(trackedUseCase)).ToList();
+            var commands = _commandFactory.CreateCommands(new TrackedUseCaseEvent(trackedUseCase)).ToList();
 
             commands.Add(new IncrementStateCommand(new[] { trackedUseCase.Id }));
             commands.Add(new LogDelayCommand(trackedUseCase.Context.Finished.UtcDateTime));
@@ -33,11 +33,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             };
         }
 
-        private sealed class ImportFactsFromErmCommandFactory : ICommandFactory
+        private sealed class FactsFlowCommandFactory : ICommandFactory
         {
             public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
-                var importFactsFromErmEvent = @event as ImportFactsFromErmEvent;
+                var importFactsFromErmEvent = @event as TrackedUseCaseEvent;
                 if (importFactsFromErmEvent != null)
                 {
                     var changes = importFactsFromErmEvent.TrackedUseCase.Operations.SelectMany(x => x.AffectedEntities.Changes);
@@ -65,14 +65,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             }
         }
 
-        private sealed class ImportFactsFromErmEvent : IEvent
+        private sealed class TrackedUseCaseEvent : IEvent
         {
-            public TrackedUseCase TrackedUseCase { get; }
-
-            public ImportFactsFromErmEvent(TrackedUseCase trackedUseCase)
+            public TrackedUseCaseEvent(TrackedUseCase trackedUseCase)
             {
                 TrackedUseCase = trackedUseCase;
             }
+
+            public TrackedUseCase TrackedUseCase { get; }
         }
     }
 }
