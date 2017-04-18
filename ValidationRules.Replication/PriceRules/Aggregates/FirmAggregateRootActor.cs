@@ -39,19 +39,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FirmAccessor(IQuery query) : base(CreateInvalidator())
             {
-
                 _query = query;
             }
 
             private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipal,
-                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject,
-                        MessageTypeCode.FirmPositionMustNotHaveDeniedPositions,
-                        MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject,
-                        MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone,
-                    };
+                => new RuleInvalidator();
 
             public IQueryable<Firm> GetSource()
                 => _query.For<Facts.Order>().Select(order => new Firm { Id = order.FirmId }).Distinct();
