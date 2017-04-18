@@ -2,11 +2,11 @@
 
 using NuClear.Messaging.API.Flows;
 
-namespace NuClear.ValidationRules.OperationsProcessing.Identities.Flows
+namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 {
-    public sealed class ImportFactsFromErmFlow : MessageFlowBase<ImportFactsFromErmFlow>
+    public sealed class AggregatesFlow : MessageFlowBase<AggregatesFlow>
     {
-        public override Guid Id => new Guid("6A75B8B4-74A6-4523-9388-84E4DFFD5B06");
+        public override Guid Id => new Guid("CB1434CA-D575-4470-8616-4F08D074C8DA");
 
         public override string Description => "Маркер для потока выполненных операций в системе обеспечивающих репликацию изменений в домен Validation Rules";
     }

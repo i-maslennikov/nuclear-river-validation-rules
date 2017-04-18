@@ -10,23 +10,21 @@ using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.Replication.OperationsProcessing.Telemetry;
-using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
 
-namespace NuClear.ValidationRules.OperationsProcessing.Final
+namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 {
-    public sealed class AggregateCommandsHandler : IMessageProcessingHandler
+    public sealed class AggregatesFlowHandler : IMessageProcessingHandler
     {
         private readonly IAggregateActorFactory _aggregateActorFactory;
-        private readonly ITelemetryPublisher _telemetryPublisher;
+        private readonly AggregatesFlowTelemetryPublisher _telemetryPublisher;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
 
-        public AggregateCommandsHandler(IAggregateActorFactory aggregateActorFactory, ITelemetryPublisher telemetryPublisher, ITracer tracer, IEventLogger eventLogger)
+        public AggregatesFlowHandler(IAggregateActorFactory aggregateActorFactory, AggregatesFlowTelemetryPublisher telemetryPublisher, ITracer tracer, IEventLogger eventLogger)
         {
             _aggregateActorFactory = aggregateActorFactory;
             _telemetryPublisher = telemetryPublisher;
@@ -42,9 +40,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
-                    Handle(commands.OfType<IAggregateCommand>().ToList());
-                    Handle(commands.OfType<IncrementStateCommand>().ToList());
-                    Handle(commands.OfType<LogDelayCommand>().ToList());
+                    var events =
+                        Handle(commands.OfType<IAggregateCommand>().ToList())
+                            .Concat(Handle(commands.OfType<IncrementStateCommand>().ToList()))
+                            .Concat(Handle(commands.OfType<LogDelayCommand>().ToList()))
+                            .ToList();
+
+                    _eventLogger.Log(events);
 
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
@@ -56,42 +58,40 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
             }
         }
 
-        private void Handle(IReadOnlyCollection<LogDelayCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<LogDelayCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
-            _eventLogger.Log(new IEvent[] { new AggregatesDelayLoggedEvent(DateTime.UtcNow) });
-            _telemetryPublisher.Publish<AggregateProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+            _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
+            return new IEvent[] { new AggregatesDelayLoggedEvent(DateTime.UtcNow) };
         }
 
-        private void Handle(IReadOnlyCollection<IncrementStateCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementStateCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
             var states = commands.SelectMany(command => command.States).ToArray();
-            _eventLogger.Log(new IEvent[] { new AggregatesStateIncrementedEvent(states) });
+            return new IEvent[] { new AggregatesStateIncrementedEvent(states) };
         }
 
-        private void Handle(IReadOnlyCollection<IAggregateCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IAggregateCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
             var actors = _aggregateActorFactory.Create(new HashSet<Type>(commands.Select(x => x.AggregateRootType)));
-
             var events = new HashSet<IEvent>();
 
-            // TODO: Can agreggate actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
             foreach (var actor in actors)
             {
                 var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
@@ -102,12 +102,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Final
                 }
             }
 
-            if (events.Any())
-            {
-                _eventLogger.Log(events);
-            }
-
-            _telemetryPublisher.Publish<AggregateProcessedOperationCountIdentity>(commands.Count);
+            return events;
         }
     }
 }

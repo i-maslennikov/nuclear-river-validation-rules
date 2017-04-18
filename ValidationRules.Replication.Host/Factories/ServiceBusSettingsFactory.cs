@@ -7,7 +7,9 @@ using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
+using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories
 {
@@ -26,21 +28,21 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
 
         public IServiceBusMessageReceiverSettings CreateReceiverSettings(IMessageFlow messageFlow)
         {
-            if (messageFlow.Id == ImportFactsFromErmFlow.Instance.Id)
+            if (FactsFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
                     TransportEntityPath = _ermOperationsFlowTopic.Value,
                 };
 
-            if (messageFlow.Id == CommonEventsFlow.Instance.Id)
+            if (AggregatesFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
                     TransportEntityPath = _commonEventsFlowTopic.Value,
                 };
 
-            if (messageFlow.Id == MessagesFlow.Instance.Id)
+            if (MessagesFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
@@ -52,14 +54,14 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
 
         public IServiceBusMessageSenderSettings CreateSenderSettings(IMessageFlow messageFlow)
         {
-            if (messageFlow.Id == CommonEventsFlow.Instance.Id)
+            if (AggregatesFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
                     TransportEntityPath = _commonEventsFlowTopic.Value,
                 };
 
-            if (messageFlow.Id == MessagesFlow.Instance.Id)
+            if (MessagesFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,

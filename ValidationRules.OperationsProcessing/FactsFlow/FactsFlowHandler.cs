@@ -9,29 +9,27 @@ using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.Replication.OperationsProcessing.Telemetry;
-using NuClear.Telemetry;
 using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
 
-namespace NuClear.ValidationRules.OperationsProcessing.Primary
+namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 {
-    public sealed class ImportFactsFromErmHandler : IMessageProcessingHandler
+    public sealed class FactsFlowHandler : IMessageProcessingHandler
     {
         private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
         private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
-        private readonly ITelemetryPublisher _telemetryPublisher;
+        private readonly FactsFlowTelemetryPublisher _telemetryPublisher;
 
-        public ImportFactsFromErmHandler(
+        public FactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
             SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
-            ITelemetryPublisher telemetryPublisher,
+            FactsFlowTelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
@@ -49,9 +47,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
-                    Handle(commands.OfType<ISyncDataObjectCommand>().ToList());
-                    Handle(commands.OfType<IncrementStateCommand>().ToList());
-                    Handle(commands.OfType<LogDelayCommand>().ToList());
+                    var events =
+                        Handle(commands.OfType<ISyncDataObjectCommand>().ToList())
+                            .Concat(Handle(commands.OfType<IncrementStateCommand>().ToList()))
+                            .Concat(Handle(commands.OfType<LogDelayCommand>().ToList()))
+                            .ToList();
+
+                    _eventLogger.Log(events);
 
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
@@ -63,58 +65,52 @@ namespace NuClear.ValidationRules.OperationsProcessing.Primary
             }
         }
 
-        private void Handle(IReadOnlyCollection<LogDelayCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<LogDelayCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
-            _eventLogger.Log(new IEvent[] { new FactsDelayLoggedEvent(DateTime.UtcNow) });
-            _telemetryPublisher.Publish<PrimaryProcessingDelayIdentity>((long)delta.TotalMilliseconds);
+            _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
+            return new IEvent[] { new FactsDelayLoggedEvent(DateTime.UtcNow) };
         }
 
-        private void Handle(IReadOnlyCollection<IncrementStateCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementStateCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
             var states = commands.SelectMany(command => command.States).ToArray();
-            _eventLogger.Log(new IEvent[] { new FactsStateIncrementedEvent(states) });
+            return new IEvent[] { new FactsStateIncrementedEvent(states) };
         }
 
-        private void Handle(IReadOnlyCollection<ISyncDataObjectCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<ISyncDataObjectCommand> commands)
         {
             if (!commands.Any())
             {
-                return;
+                return Array.Empty<IEvent>();
             }
 
-            // TODO: Can actors be executed in parallel? See https://github.com/2gis/nuclear-river/issues/76
             var actors = _dataObjectsActorFactory.Create();
+            var events = new HashSet<IEvent>();
+
             foreach (var actor in actors)
             {
-                IReadOnlyCollection<IEvent> events;
-
                 var actorType = actor.GetType().GetFriendlyName();
                 using (Probe.Create($"ETL1 {actorType}"))
                 {
-                    events = new HashSet<IEvent>(actor.ExecuteCommands(commands));
-                }
-
-                if (events.Any())
-                {
-                    _eventLogger.Log(events);
+                    events.UnionWith(actor.ExecuteCommands(commands));
                 }
             }
 
             _syncEntityNameActor.ExecuteCommands(commands);
 
-            _telemetryPublisher.Publish<ErmProcessedOperationCountIdentity>(commands.Count);
+            return events;
         }
     }
 }

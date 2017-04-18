@@ -5,19 +5,18 @@ using System.Linq;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
 
-namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
+namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 {
-    public sealed class MessageCommandsAccumulator : MessageProcessingContextAccumulatorBase<MessagesFlow, EventMessage, AggregatableMessage<ICommand>>
+    public sealed class MessagesFlowAccumulator : MessageProcessingContextAccumulatorBase<MessagesFlow, EventMessage, AggregatableMessage<ICommand>>
     {
         private readonly ICommandFactory _commandFactory;
 
-        public MessageCommandsAccumulator()
+        public MessagesFlowAccumulator()
         {
-            _commandFactory = new MessageCommandFactory();
+            _commandFactory = new MessagesFlowCommandFactory();
         }
 
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
@@ -29,7 +28,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AfterFinal
             };
         }
 
-        private sealed class MessageCommandFactory : ICommandFactory
+        private sealed class MessagesFlowCommandFactory : ICommandFactory
         {
             public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {

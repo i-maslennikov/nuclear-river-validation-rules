@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NuClear.ValidationRules.OperationsProcessing.Identities.Flows;
-using NuClear.ValidationRules.OperationsProcessing.Primary;
 using NuClear.Messaging.API.Flows.Metadata;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
-using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
-using NuClear.ValidationRules.OperationsProcessing.AfterFinal;
-using NuClear.ValidationRules.OperationsProcessing.Final;
+using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 using NuClear.ValidationRules.OperationsProcessing.Transports;
 
 namespace NuClear.ValidationRules.OperationsProcessing
@@ -21,23 +19,23 @@ namespace NuClear.ValidationRules.OperationsProcessing
         private static readonly HierarchyMetadata MetadataRoot =
             PerformedOperations.Flows
                                .Primary(
-                                        MessageFlowMetadata.Config.For<ImportFactsFromErmFlow>()
-                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
-                                                           .Accumulator<ImportFactsFromErmAccumulator>()
-                                                           .Handler<ImportFactsFromErmHandler>()
-                                                           .To.Primary().Flow<ImportFactsFromErmFlow>().Connect(),
+                                        MessageFlowMetadata.Config.For<FactsFlow.FactsFlow>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<FactsFlowTelemetryPublisher>>()
+                                                           .Accumulator<FactsFlowAccumulator>()
+                                                           .Handler<FactsFlowHandler>()
+                                                           .To.Primary().Flow<FactsFlow.FactsFlow>().Connect(),
 
-                                        MessageFlowMetadata.Config.For<CommonEventsFlow>()
-                                                           .Receiver<ServiceBusMessageReceiverTelemetryDecorator>()
-                                                           .Accumulator<AggregateCommandsAccumulator>()
-                                                           .Handler<AggregateCommandsHandler>()
-                                                           .To.Primary().Flow<CommonEventsFlow>().Connect(),
+                                        MessageFlowMetadata.Config.For<AggregatesFlow.AggregatesFlow>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<AggregatesFlowTelemetryPublisher>>()
+                                                           .Accumulator<AggregatesFlowAccumulator>()
+                                                           .Handler<AggregatesFlowHandler>()
+                                                           .To.Primary().Flow<AggregatesFlow.AggregatesFlow>().Connect(),
 
-                                        MessageFlowMetadata.Config.For<MessagesFlow>()
-                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator>()
-                                                           .Accumulator<MessageCommandsAccumulator>()
-                                                           .Handler<MessageCommandsHandler>()
-                                                           .To.Primary().Flow<MessagesFlow>().Connect()
+                                        MessageFlowMetadata.Config.For<MessagesFlow.MessagesFlow>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<MessagesFlowTelemetryPublisher>>()
+                                                           .Accumulator<MessagesFlowAccumulator>()
+                                                           .Handler<MessagesFlowHandler>()
+                                                           .To.Primary().Flow<MessagesFlow.MessagesFlow>().Connect()
                                        );
 
         public PerformedOperationsMessageFlowsMetadataSource()
