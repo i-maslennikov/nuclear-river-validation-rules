@@ -28,21 +28,21 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
 
         public IServiceBusMessageReceiverSettings CreateReceiverSettings(IMessageFlow messageFlow)
         {
-            if (messageFlow.Id == FactsFlow.Instance.Id)
+            if (FactsFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
                     TransportEntityPath = _ermOperationsFlowTopic.Value,
                 };
 
-            if (messageFlow.Id == AggregatesFlow.Instance.Id)
+            if (AggregatesFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
                     TransportEntityPath = _commonEventsFlowTopic.Value,
                 };
 
-            if (messageFlow.Id == MessagesFlow.Instance.Id)
+            if (MessagesFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
@@ -54,14 +54,14 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
 
         public IServiceBusMessageSenderSettings CreateSenderSettings(IMessageFlow messageFlow)
         {
-            if (messageFlow.Id == AggregatesFlow.Instance.Id)
+            if (AggregatesFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
                     TransportEntityPath = _commonEventsFlowTopic.Value,
                 };
 
-            if (messageFlow.Id == MessagesFlow.Instance.Id)
+            if (MessagesFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,
