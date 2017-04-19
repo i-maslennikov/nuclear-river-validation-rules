@@ -52,7 +52,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuClear.River.StateInitialization.5.1.1-accessor-types-p0005\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuClear.River.StateInitialization.5.2.1-accessor-types-p0011\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
@@ -64,7 +64,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.StateInitialization.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuClear.River.StateInitialization.5.1.1-accessor-types-p0005\lib\net461\2GIS.NuClear.StateInitialization.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuClear.River.StateInitialization.5.2.1-accessor-types-p0011\lib\net461\2GIS.NuClear.StateInitialization.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
