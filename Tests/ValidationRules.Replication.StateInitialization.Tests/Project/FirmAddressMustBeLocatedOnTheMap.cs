@@ -20,13 +20,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
+                    new Facts::OrderPositionAdvertisement { Id = 2, OrderPositionId = 3, FirmAddressId = 2, PositionId = 5 },
+                    new Facts::OrderPositionAdvertisement { Id = 3, OrderPositionId = 3, FirmAddressId = 3, PositionId = 4 },
+                    new Facts::OrderPositionAdvertisement { Id = 4, OrderPositionId = 3, FirmAddressId = 3, PositionId = 5 },
+                    new Facts::OrderPositionAdvertisement { Id = 5, OrderPositionId = 3, FirmAddressId = 4, PositionId = 4 },
+                    new Facts::OrderPositionAdvertisement { Id = 6, OrderPositionId = 3, FirmAddressId = 4, PositionId = 5 },
+
+
                     new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, IsActive = true },
+                    new Facts::FirmAddress { Id = 3, IsLocatedOnTheMap = false, IsActive = false },
+                    new Facts::FirmAddress { Id = 4, IsLocatedOnTheMap = true, IsActive = true },
+
                     new Facts::Position { Id = 4 },
+                    new Facts::Position { Id = 5, CategoryCode = 11 }, // Позиции "Рекламная ссылка", "Выгодные покупки с 2ГИС", "Комментарий к адресу" могут продаваться к адресам, не размещённым на карте
+
                     new Facts::Project())
                 .Aggregate(
                     new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::Order.AddressAdvertisement { OrderId = 1, AddressId = 2, MustBeLocatedOnTheMap = true, OrderPositionId = 3, PositionId = 4 },
-                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false })
+                    new Aggregates::Order.AddressAdvertisementNonOnTheMap { OrderId = 1, AddressId = 2, OrderPositionId = 3, PositionId = 4 },
+                    new Aggregates::Order.AddressAdvertisementNonOnTheMap { OrderId = 1, AddressId = 3, OrderPositionId = 3, PositionId = 4 })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
@@ -42,45 +54,21 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 1,
-                        });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement FirmAddressMustBeLocatedOnTheMapFirmAddressNotActive
-            => ArrangeMetadataElement
-                .Config
-                .Name(nameof(FirmAddressMustBeLocatedOnTheMapFirmAddressNotActive))
-                .Fact(
-                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
-                    new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
-                    new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
-                    // firm address not active
-                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, IsActive = false },
-                    new Facts::Position { Id = 4 },
-                    new Facts::Project())
-                .Aggregate(
-                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false })
-                .Message();
-
-        /// <summary>
-        /// Позиции "Рекламная ссылка", "Выгодные покупки с 2ГИС", "Комментарий к адресу" могут продаваться к адресам, не размещённым на карте
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement FirmAddressMustBeLocatedOnTheMapSpecialCategoryCode
-            => ArrangeMetadataElement
-                .Config
-                .Name(nameof(FirmAddressMustBeLocatedOnTheMapSpecialCategoryCode))
-                .Fact(
-                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
-                    new Facts::OrderPosition { Id = 3, OrderId = 1, PricePositionId = 1 },
-                    new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 3, FirmAddressId = 2, PositionId = 4 },
-                    new Facts::FirmAddress { Id = 2, IsLocatedOnTheMap = false, IsActive = true },
-                    new Facts::Position { Id = 4, CategoryCode = 11 },
-                    new Facts::Project())
-                .Aggregate(
-                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::Order.AddressAdvertisement { OrderId = 1, AddressId = 2, MustBeLocatedOnTheMap = false, OrderPositionId = 3, PositionId = 4},
-                    new Aggregates::FirmAddress { Id = 2, IsLocatedOnTheMap = false })
-                .Message();
+                        },
+                    new Messages::Version.ValidationResult
+                    {
+                        MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeFirmAddress>(3),
+                                        new Reference<EntityTypeOrder>(1),
+                                        new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                            new Reference<EntityTypeOrderPosition>(3),
+                                            new Reference<EntityTypePosition>(4)))
+                                    .ToXDocument(),
+                        MessageType = (int)MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
+                        PeriodStart = MonthStart(1),
+                        PeriodEnd = MonthStart(2),
+                        OrderId = 1,
+                    });
     }
 }

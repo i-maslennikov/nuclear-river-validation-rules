@@ -20,13 +20,13 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
-            IBulkRepository<Order.AddressAdvertisement> addressAdvertisementRepository,
+            IBulkRepository<Order.AddressAdvertisementNonOnTheMap> addressAdvertisementRepository,
             IBulkRepository<Order.CategoryAdvertisement> categoryAdvertisementRepository,
             IBulkRepository<Order.CostPerClickAdvertisement> costPerClickAdvertisementRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
-               HasValueObject(new AddressAdvertisementAccessor(query), addressAdvertisementRepository),
+               HasValueObject(new AddressAdvertisementNonOnTheMapAccessor(query), addressAdvertisementRepository),
                HasValueObject(new CategoryAdvertisementAccessor(query), categoryAdvertisementRepository),
                HasValueObject(new CostPerClickAdvertisementAccessor(query), costPerClickAdvertisementRepository));
         }
@@ -75,18 +75,11 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
             }
         }
 
-        public sealed class AddressAdvertisementAccessor : DataChangesHandler<Order.AddressAdvertisement>, IStorageBasedDataObjectAccessor<Order.AddressAdvertisement>
+        public sealed class AddressAdvertisementNonOnTheMapAccessor : DataChangesHandler<Order.AddressAdvertisementNonOnTheMap>, IStorageBasedDataObjectAccessor<Order.AddressAdvertisementNonOnTheMap>
         {
-            private static readonly long[] ExceptionalCategoryCodes =
-                {
-                    11, // Рекламная ссылка
-                    14, // Выгодные покупки с 2ГИС
-                    26, // Комментарий к адресу
-                };
-
             private readonly IQuery _query;
 
-            public AddressAdvertisementAccessor(IQuery query) : base(CreateInvalidator())
+            public AddressAdvertisementNonOnTheMapAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
@@ -97,25 +90,26 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                         MessageTypeCode.FirmAddressMustBeLocatedOnTheMap,
                     };
 
-            public IQueryable<Order.AddressAdvertisement> GetSource()
+            public IQueryable<Order.AddressAdvertisementNonOnTheMap> GetSource()
                 => (from order in _query.For<Facts::Order>()
                     from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.FirmAddressId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                    from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == orderPositionAdvertisement.FirmAddressId)
-                    select new Order.AddressAdvertisement
+                    from position in _query.For<Facts::Position>()
+                                           .Where(x => !x.IsDeleted && !Facts::Position.CategoryCodesAllowNotLocatedOnTheMap.Contains(x.CategoryCode))
+                                           .Where(x => x.Id == orderPositionAdvertisement.PositionId)
+                    from firmAddress in _query.For<Facts::FirmAddress>().Where(x => !x.IsLocatedOnTheMap).Where(x => x.Id == orderPositionAdvertisement.FirmAddressId)
+                    select new Order.AddressAdvertisementNonOnTheMap
                         {
                             OrderId = order.Id,
                             OrderPositionId = orderPosition.Id,
                             PositionId = position.Id,
                             AddressId = firmAddress.Id,
-                            MustBeLocatedOnTheMap = !ExceptionalCategoryCodes.Contains(position.CategoryCode)
                         }).Distinct();
 
-            public FindSpecification<Order.AddressAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+        public FindSpecification<Order.AddressAdvertisementNonOnTheMap> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.AddressAdvertisement>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.AddressAdvertisementNonOnTheMap>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

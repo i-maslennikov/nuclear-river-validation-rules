@@ -163,15 +163,11 @@ namespace NuClear.ValidationRules.Storage
 
         private static FluentMappingBuilder RegisterProjectAggregates(this FluentMappingBuilder builder)
         {
-            builder.Entity<ProjectAggregates::FirmAddress>()
-                   .HasSchemaName(ProjectAggregatesSchema)
-                   .HasPrimaryKey(x => x.Id);
-
             builder.Entity<ProjectAggregates::Order>()
                    .HasSchemaName(ProjectAggregatesSchema)
                    .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<ProjectAggregates::Order.AddressAdvertisement>()
+            builder.Entity<ProjectAggregates::Order.AddressAdvertisementNonOnTheMap>()
                    .HasSchemaName(ProjectAggregatesSchema);
 
             builder.Entity<ProjectAggregates::Order.CategoryAdvertisement>()

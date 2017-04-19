@@ -121,8 +121,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::RulesetRule>())
 
                 // ProjectAggregates
-                .Aggregate<ProjectAggregates::FirmAddress>(
-                    x => x.Match<Facts::FirmAddress>())
                 .Aggregate<ProjectAggregates::Order>(
                     x => x.Match<Facts::Order>()
                           .DependOn<Facts::Category>()
