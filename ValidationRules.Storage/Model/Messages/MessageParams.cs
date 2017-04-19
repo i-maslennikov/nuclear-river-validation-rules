@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace NuClear.ValidationRules.Storage.Model.Messages
 {
@@ -19,5 +21,15 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
 
         public IReadOnlyDictionary<string, object> ExtraParameters { get; }
         public IReadOnlyCollection<Reference> Children { get; }
+
+        public XDocument ToXDocument()
+            => new XDocument(new XElement("root", ExtraParameters.Select(ToAttribute).Concat(Children.Select(ToElement).ToArray())));
+
+        private static object ToAttribute(KeyValuePair<string, object> pair)
+            => new XAttribute(pair.Key, pair.Value);
+
+        private static object ToElement(Reference reference)
+            => new XElement("ref", new XAttribute("type", reference.EntityType), new XAttribute("id", reference.Id), reference.Children.Select(ToElement));
+
     }
 }

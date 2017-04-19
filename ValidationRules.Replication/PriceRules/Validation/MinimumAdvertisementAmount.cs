@@ -54,7 +54,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var messages =
                 from violation in violations
-                from order in query.For<Order>().Where(x => x.Id == violation.OrderId)
                 from period in query.For<Period>().Where(x => x.Start == violation.Start && x.OrganizationUnitId == violation.OrganizationUnitId)
                 select new Version.ValidationResult
                     {
@@ -68,12 +67,12 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                                 { "name", violation.CategoryName },
                                                 { "month", violation.Start },
                                         },
-                                    new Reference<EntityTypeOrder>(order.Id))
+                                    new Reference<EntityTypeOrder>(violation.OrderId))
                                 .ToXDocument(),
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
-                        OrderId = order.Id,
+                        OrderId = violation.OrderId,
                     };
 
             return messages;

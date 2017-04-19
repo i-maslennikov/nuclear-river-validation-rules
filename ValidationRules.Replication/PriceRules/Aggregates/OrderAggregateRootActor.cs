@@ -47,10 +47,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
-                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
-                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.MaximumAdvertisementAmount,
-                        MessageTypeCode.MinimumAdvertisementAmount,
                         MessageTypeCode.OrderPositionCorrespontToInactivePosition,
                         MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
                         MessageTypeCode.OrderPositionMustCorrespontToActualPrice,

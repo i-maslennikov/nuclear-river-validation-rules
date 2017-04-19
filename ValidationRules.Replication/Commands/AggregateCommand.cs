@@ -37,19 +37,9 @@ namespace NuClear.ValidationRules.Replication.Commands
             }
         }
 
-        public sealed class Initialize : AggregateCommand
-        {
-            public Initialize(Type aggregateRootType, long aggregateRootId) : base(aggregateRootType, aggregateRootId) { }
-        }
-
         public sealed class Recalculate : AggregateCommand
         {
             public Recalculate(Type aggregateRootType, long aggregateRootId) : base(aggregateRootType, aggregateRootId) { }
-        }
-
-        public sealed class Destroy : AggregateCommand
-        {
-            public Destroy(Type aggregateRootType, long aggregateRootId) : base(aggregateRootType, aggregateRootId) { }
         }
     }
 }

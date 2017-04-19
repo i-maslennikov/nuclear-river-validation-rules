@@ -52,7 +52,6 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var messages =
                 from oversale in oversales.Distinct()
                 join period in query.For<Period>() on new { oversale.Start, oversale.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                join order in query.For<Order>() on oversale.OrderId equals order.Id
                 select new Version.ValidationResult
                     {
                         MessageParams =
@@ -64,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
                         PeriodStart = period.Start,
                         PeriodEnd = period.End,
-                        OrderId = order.Id,
+                        OrderId = oversale.OrderId,
                     };
 
             return messages;

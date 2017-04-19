@@ -13,7 +13,6 @@ namespace NuClear.ValidationRules.Replication
 {
     public class AggregateActor : IAggregateActor
     {
-        private readonly LeafToRootActor _leafToRootActor;
         private readonly RootToLeafActor _rootToLeafActor;
         private readonly SubrootToLeafActor _subrootToLeafActor;
         private readonly IAggregateRootActor _aggregateRootActor;
@@ -21,7 +20,6 @@ namespace NuClear.ValidationRules.Replication
         public AggregateActor(IAggregateRootActor aggregateRootActor)
         {
             _aggregateRootActor = aggregateRootActor;
-            _leafToRootActor = new LeafToRootActor(aggregateRootActor);
             _rootToLeafActor = new RootToLeafActor(aggregateRootActor);
             _subrootToLeafActor = new SubrootToLeafActor(aggregateRootActor.GetEntityActors());
         }
@@ -44,26 +42,6 @@ namespace NuClear.ValidationRules.Replication
             var aggregateNameParts = _aggregateRootActor.EntityType.FullName.Split('.').Reverse().ToArray();
             using (Probe.Create("Aggregate", aggregateNameParts[2], aggregateNameParts[0]))
             {
-                var destroyCommands =
-                    aggregateCommands.OfType<AggregateCommand.Destroy>()
-                                     .SelectMany(next => new ICommand[]
-                                                     {
-                                                         new DeleteDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
-                                                         new ReplaceValueObjectCommand(next.AggregateRootId)
-                                                     })
-                                     .ToArray();
-                events = events.Union(_leafToRootActor.ExecuteCommands(destroyCommands));
-
-                var initializeCommands =
-                    aggregateCommands.OfType<AggregateCommand.Initialize>()
-                                     .SelectMany(next => new ICommand[]
-                                                     {
-                                                         new CreateDataObjectCommand(next.AggregateRootType, next.AggregateRootId),
-                                                         new ReplaceValueObjectCommand(next.AggregateRootId)
-                                                     })
-                                     .ToArray();
-                events = events.Union(_rootToLeafActor.ExecuteCommands(initializeCommands));
-
                 var recalculateCommands =
                     aggregateCommands.OfType<AggregateCommand.Recalculate>()
                                      .SelectMany(next => new ICommand[]

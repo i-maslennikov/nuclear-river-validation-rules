@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
                 if (createdEvent != null)
                 {
                     return AggregateTypesFor<DataObjectCreatedEvent>(createdEvent.DataObjectType)
-                           .Select(x => new AggregateCommand.Initialize(x, createdEvent.DataObjectId));
+                           .Select(x => new AggregateCommand.Recalculate(x, createdEvent.DataObjectId));
                 }
 
                 var updatedEvent = @event as DataObjectUpdatedEvent;
@@ -51,7 +51,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
                 if (deletedEvent != null)
                 {
                     return AggregateTypesFor<DataObjectDeletedEvent>(deletedEvent.DataObjectType)
-                           .Select(x => new AggregateCommand.Destroy(x, deletedEvent.DataObjectId));
+                           .Select(x => new AggregateCommand.Recalculate(x, deletedEvent.DataObjectId));
                 }
 
                 var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
