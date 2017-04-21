@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,13 +50,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Position), x.Id)).ToList();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Position), x.Id)).ToList();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Position> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Position), x.Id)).ToList();
+            => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Position> dataObjects)
         {
