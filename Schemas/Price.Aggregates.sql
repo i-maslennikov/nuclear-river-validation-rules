@@ -1,9 +1,8 @@
 ﻿if not exists (select * from sys.schemas where name = 'PriceAggregates') exec('create schema PriceAggregates')
 
-if object_id('PriceAggregates.OrderPeriod') is not null drop table PriceAggregates.OrderPeriod
-if object_id('PriceAggregates.PricePeriod') is not null drop table PriceAggregates.PricePeriod
 if object_id('PriceAggregates.Period') is not null drop table PriceAggregates.Period
 
+if object_id('PriceAggregates.OrderPeriod') is not null drop table PriceAggregates.OrderPeriod
 if object_id('PriceAggregates.OrderPrice') is not null drop table PriceAggregates.OrderPrice
 if object_id('PriceAggregates.OrderPricePosition') is not null drop table PriceAggregates.OrderPricePosition
 if object_id('PriceAggregates.OrderCategoryPosition') is not null drop table PriceAggregates.OrderCategoryPosition
@@ -12,9 +11,10 @@ if object_id('PriceAggregates.AmountControlledPosition') is not null drop table 
 if object_id('PriceAggregates.ActualPrice') is not null drop table PriceAggregates.ActualPrice
 if object_id('PriceAggregates.[Order]') is not null drop table PriceAggregates.[Order]
 
+if object_id('PriceAggregates.Price') is not null drop table PriceAggregates.Price
+if object_id('PriceAggregates.PricePeriod') is not null drop table PriceAggregates.PricePeriod
 if object_id('PriceAggregates.PriceAssociatedPosition') is not null drop table PriceAggregates.PriceAssociatedPosition
 if object_id('PriceAggregates.AdvertisementAmountRestriction') is not null drop table PriceAggregates.AdvertisementAmountRestriction
-if object_id('PriceAggregates.Price') is not null drop table PriceAggregates.Price
 if object_id('PriceAggregates.AssociatedPositionGroupOvercount') is not null drop table PriceAggregates.AssociatedPositionGroupOvercount
 
 if object_id('PriceAggregates.Firm') is not null drop table PriceAggregates.Firm
@@ -28,8 +28,15 @@ go
 
 create table PriceAggregates.Price(
     Id bigint NOT NULL,
-    BeginDate datetime2(2) NOT NULL,
     constraint PK_Price primary key (Id)
+)
+go
+
+create table PriceAggregates.PricePeriod(
+    PriceId bigint NOT NULL,
+    ProjectId bigint NOT NULL,
+    [Begin] datetime2(2) NOT NULL,
+    [End] datetime2(2) NOT NULL,
 )
 go
 
@@ -62,8 +69,19 @@ create table PriceAggregates.[Order](
 )
 go
 
+create table PriceAggregates.OrderPeriod(
+    OrderId bigint NOT NULL,
+    [Begin] datetime2(2) NOT NULL,
+    [End] datetime2(2) NOT NULL,
+    Scope bigint NOT NULL,
+)
+go
+create index IX_OrderPeriod_OrderId ON [PriceAggregates].[OrderPeriod] ([OrderId]) INCLUDE ([Begin],[End],[Scope]) -- todo: добавить в схему
+GO
+
 create table PriceAggregates.AmountControlledPosition(
     OrderId bigint NOT NULL,
+    ProjectId bigint NOT NULL,
     CategoryCode bigint NOT NULL
 )
 go
@@ -88,6 +106,7 @@ go
 
 create table PriceAggregates.OrderCategoryPosition(
     OrderId bigint NOT NULL,
+    ProjectId bigint NOT NULL,
     OrderPositionAdvertisementId bigint NOT NULL,
     CategoryId bigint NOT NULL,
 )
@@ -95,6 +114,7 @@ go
 
 create table PriceAggregates.OrderThemePosition(
     OrderId bigint NOT NULL,
+    ProjectId bigint NOT NULL,
     OrderPositionAdvertisementId bigint NOT NULL,
     ThemeId bigint NOT NULL,
 )
@@ -109,31 +129,6 @@ create table PriceAggregates.Period(
     constraint PK_Period primary key (OrganizationUnitId, [Start])
 )
 go
-
-create table PriceAggregates.OrderPeriod(
-    OrderId bigint NOT NULL,
-    OrganizationUnitId bigint NOT NULL,
-    Start datetime2(2) NOT NULL,
-    Scope bigint NOT NULL,
-)
-create index IX_OrderPeriod_OrderId ON PriceAggregates.OrderPeriod (OrderId)
-create index IX_OrderPeriod_OrganizationUnitId_Start ON PriceAggregates.OrderPeriod (OrganizationUnitId, Start)
-go
-
-create table PriceAggregates.PricePeriod(
-    PriceId bigint NOT NULL,
-    OrganizationUnitId bigint NOT NULL,
-    Start datetime2(2) NOT NULL,
-)
-create index IX_PricePeriod_PriceId ON PriceAggregates.PricePeriod (PriceId)
-create index IX_PricePeriod_OrganizationUnitId_Start ON PriceAggregates.PricePeriod (OrganizationUnitId, Start)
-go
-
-CREATE NONCLUSTERED INDEX IX_OrderPeriod_Scope
-ON [PriceAggregates].[OrderPeriod] ([Scope])
-INCLUDE ([OrderId],[OrganizationUnitId],[Start])
-GO
-
 
 -- firm aggregate
 create table PriceAggregates.Firm(

@@ -28,39 +28,35 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             // todo: Тематики больше не продаются, проверка не оттестирована тщательно, вероятно скоро можно будет удалить совсем.
             var sales =
                 from orderPosition in query.For<Order.OrderThemePosition>()
-                from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
-                select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.ThemeId };
-
-            var saleCounts =
-                sales.GroupBy(x => new { x.Scope, x.Start, x.OrganizationUnitId, x.ThemeId })
-                     .Select(x => new { x.Key, Count = x.Count() });
+                from orderPeriod in query.For<Order.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
+                from period in query.For<Period>().Where(x => orderPeriod.Begin <= x.Start && x.End <= orderPeriod.End && x.ProjectId == orderPosition.ProjectId)
+                select new { orderPosition.ThemeId, orderPosition.ProjectId, orderPeriod.OrderId, orderPeriod.Scope, period.Start, period.End };
 
             var oversales =
                 from sale in sales
-                let count = saleCounts.Where(x => x.Key.ThemeId == sale.ThemeId
-                                                  && x.Key.OrganizationUnitId == sale.OrganizationUnitId
-                                                  && x.Key.Start == sale.Start
-                                                  && Scope.CanSee(sale.Scope, x.Key.Scope))
-                                      .Sum(x => x.Count)
+                let count = sales
+                    .Count(x => x.ThemeId == sale.ThemeId
+                                && x.ProjectId == sale.ProjectId
+                                && x.Start == sale.Start
+                                && Scope.CanSee(sale.Scope, x.Scope))
                 where count > MaxPositionsPerTheme
-                select new { sale.Start, sale.OrganizationUnitId, sale.OrderId, sale.ThemeId, Count = count };
+                select new { sale.Start, sale.End, sale.ProjectId, sale.OrderId, sale.ThemeId, Count = count };
 
             var messages =
                 from oversale in oversales
-                join period in query.For<Period>() on new { oversale.Start, oversale.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                 select new Version.ValidationResult
-                    {
-                        MessageParams =
+                {
+                    MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "max", MaxPositionsPerTheme }, { "count", oversale.Count } },
                                     new Reference<EntityTypeTheme>(oversale.ThemeId),
-                                    new Reference<EntityTypeProject>(period.ProjectId))
+                                    new Reference<EntityTypeProject>(oversale.ProjectId))
                                 .ToXDocument(),
 
-                        PeriodStart = period.Start,
-                        PeriodEnd = period.End,
-                        OrderId = oversale.OrderId,
-                    };
+                    PeriodStart = oversale.Start,
+                    PeriodEnd = oversale.End,
+                    OrderId = oversale.OrderId,
+                };
 
             return messages;
         }

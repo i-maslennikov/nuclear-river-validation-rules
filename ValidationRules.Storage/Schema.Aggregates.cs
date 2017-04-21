@@ -95,6 +95,9 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
+            builder.Entity<PriceAggregates::Price.PricePeriod>()
+                   .HasSchemaName(PriceAggregatesSchema);
+
             builder.Entity<PriceAggregates::Price.AssociatedPositionGroupOvercount>()
                   .HasSchemaName(PriceAggregatesSchema);
 
@@ -123,11 +126,8 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<PriceAggregates::Period.OrderPeriod>()
-                  .HasSchemaName(PriceAggregatesSchema)
-                  .HasIndex(x => new { x.Scope }, x => new { x.OrderId, x.OrganizationUnitId, x.Start })
-                  .HasIndex(x => new { x.OrderId })
-                  .HasIndex(x => new { x.OrganizationUnitId, x.Start });
+            builder.Entity<PriceAggregates::Order.OrderPeriod>()
+                   .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::Order.OrderPricePosition>()
                    .HasSchemaName(PriceAggregatesSchema)
@@ -152,11 +152,6 @@ namespace NuClear.ValidationRules.Storage
                   .HasPrimaryKey(x => x.Start)
                   .HasPrimaryKey(x => x.End)
                   .HasPrimaryKey(x => x.ProjectId);
-
-            builder.Entity<PriceAggregates::Period.PricePeriod>()
-                   .HasSchemaName(PriceAggregatesSchema)
-                   .HasIndex(x => new { x.PriceId })
-                   .HasIndex(x => new { x.OrganizationUnitId, x.Start });
 
             return builder;
         }

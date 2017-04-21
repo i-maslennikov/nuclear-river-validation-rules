@@ -23,25 +23,23 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults =
+            var messages =
                 from restriction in query.For<Price.AdvertisementAmountRestriction>().Where(x => x.MissingMinimalRestriction)
-                join pp in query.For<Period.PricePeriod>() on restriction.PriceId equals pp.PriceId
-                join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
-                join op in query.For<Period.OrderPeriod>() on new { pp.Start, pp.OrganizationUnitId } equals new { op.Start, op.OrganizationUnitId }
+                join pp in query.For<Price.PricePeriod>() on restriction.PriceId equals pp.PriceId
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "name", restriction.CategoryName } },
-                                    new Reference<EntityTypeProject>(period.ProjectId))
+                                    new Reference<EntityTypeProject>(pp.ProjectId))
                                 .ToXDocument(),
 
-                        PeriodStart = period.Start,
-                        PeriodEnd = period.End,
-                        ProjectId = period.ProjectId,
+                        PeriodStart = pp.Begin,
+                        PeriodEnd = pp.End,
+                        ProjectId = pp.ProjectId,
                     };
 
-            return ruleResults;
+            return messages;
         }
     }
 }

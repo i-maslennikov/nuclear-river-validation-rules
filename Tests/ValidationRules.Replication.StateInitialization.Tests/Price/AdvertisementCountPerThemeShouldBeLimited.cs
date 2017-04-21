@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
@@ -31,22 +32,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderThemePosition { OrderId = 1, ThemeId = 3 },
                     new Aggregates::Order.OrderThemePosition { OrderId = 1, ThemeId = 3 },
                     new Aggregates::Order.OrderThemePosition { OrderId = 1, ThemeId = 3 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(1), Scope = 0 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(2), Scope = 0 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 1, Start = MonthStart(3), Scope = 0 },
+                    new Aggregates::Order.OrderPeriod { OrderId = 1, Begin = MonthStart(1), End = MonthStart(4), Scope = 0 },
 
                     // Другой одобренный заказ с продажей (пересекается только в одном месяце)
                     new Aggregates::Order { Id = 2 },
                     new Aggregates::Order.OrderThemePosition { OrderId = 2, ThemeId = 3 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(3), Scope = 0 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(4), Scope = 0 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 2, Start = MonthStart(5), Scope = 0 },
+                    new Aggregates::Order.OrderPeriod { OrderId = 2, Begin = MonthStart(3), End = MonthStart(6), Scope = 0 },
 
                     // Заказ "на утверждении", размещается, когда есть две одобренных продажи и получает ошибку
                     new Aggregates::Order { Id = 3 },
                     new Aggregates::Order.OrderThemePosition { OrderId = 3, ThemeId = 3 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(3), Scope = -1 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 3, Start = MonthStart(4), Scope = -1 },
+                    new Aggregates::Order.OrderPeriod { OrderId = 3, Begin = MonthStart(3), End = MonthStart(5), Scope = -1 },
 
                     // Заказ "на оформлении", размещается, когда есть одна одобренная продажа и один заказ на оформлении и тоже получает ошибку
                     new Aggregates::Order { Id = 4 },
@@ -59,8 +55,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderThemePosition { OrderId = 4, ThemeId = 3 },
                     new Aggregates::Order.OrderThemePosition { OrderId = 4, ThemeId = 3 },
                     new Aggregates::Order.OrderThemePosition { OrderId = 4, ThemeId = 3 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(4), Scope = 4 },
-                    new Aggregates::Period.OrderPeriod { OrderId = 4, Start = MonthStart(5), Scope = 4 },
+                    new Aggregates::Order.OrderPeriod { OrderId = 4, Begin = MonthStart(4), End = MonthStart(6), Scope = 4 },
 
                     new Aggregates::Period { Start = MonthStart(1), End = MonthStart(2) },
                     new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3) },
@@ -69,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Period { Start = MonthStart(5), End = MonthStart(6) },
                     new Aggregates::Period { Start = MonthStart(6), End = MonthStart(7) },
 
-                    new Aggregates::Period.PricePeriod { Start = MonthStart(1) })
+                    new Aggregates::Price.PricePeriod { Begin = MonthStart(1), End = DateTime.MaxValue })
                 .Message(
                     new Messages::Version.ValidationResult
                         {

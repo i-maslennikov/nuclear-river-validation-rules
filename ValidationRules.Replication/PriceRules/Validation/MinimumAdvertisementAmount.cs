@@ -27,51 +27,44 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         {
             var restrictionGrid =
                 from restriction in query.For<Price.AdvertisementAmountRestriction>()
-                from pp in query.For<Period.PricePeriod>().Where(x => x.PriceId == restriction.PriceId)
-                select new { pp.Start, pp.OrganizationUnitId, restriction.CategoryCode, restriction.Min, restriction.Max, restriction.CategoryName };
+                from pp in query.For<Price.PricePeriod>().Where(x => x.PriceId == restriction.PriceId)
+                select new { pp.Begin, pp.End, pp.ProjectId, restriction.CategoryCode, restriction.Min, restriction.Max, restriction.CategoryName };
 
             var saleGrid =
                 from position in query.For<Order.AmountControlledPosition>()
-                from op in query.For<Period.OrderPeriod>().Where(x => x.OrderId == position.OrderId)
-                group new { op.Start, op.OrganizationUnitId, position.CategoryCode, op.Scope }
-                    by new { op.Start, op.OrganizationUnitId, position.CategoryCode, op.Scope }
-                into groups
-                select new { groups.Key, Count = groups.Count() };
+                from orderPeriod in query.For<Order.OrderPeriod>().Where(x => x.OrderId == position.OrderId)
+                from period in query.For<Period>().Where(x => orderPeriod.Begin <= x.Start && x.End <= orderPeriod.End && x.ProjectId == position.ProjectId)
+                select new { position.OrderId, period.Start, period.End, orderPeriod.Scope, position.ProjectId, position.CategoryCode };
 
             var violations =
-                from position in query.For<Order.AmountControlledPosition>()
-                from op in query.For<Period.OrderPeriod>().Where(x => x.OrderId == position.OrderId)
-                from restriction in restrictionGrid.Where(x => x.Start == op.Start &&
-                                                               x.OrganizationUnitId == op.OrganizationUnitId &&
-                                                               x.CategoryCode == position.CategoryCode)
-                let count = saleGrid.Where(x => x.Key.CategoryCode == position.CategoryCode &&
-                                                x.Key.OrganizationUnitId == op.OrganizationUnitId &&
-                                                x.Key.Start == op.Start &&
-                                                Scope.CanSee(op.Scope, x.Key.Scope))
-                                    .Sum(x => x.Count)
-                where count < restriction.Min
-                select new { op.OrderId, op.Start, op.OrganizationUnitId, restriction.Min, restriction.Max, Count = count, restriction.CategoryName };
+                from sale in saleGrid
+                from restriction in restrictionGrid.Where(x => x.Begin <= sale.Start && sale.End <= x.End && x.ProjectId == sale.ProjectId && x.CategoryCode == sale.CategoryCode)
+                let count = saleGrid.Count(x => x.CategoryCode == sale.CategoryCode &&
+                                                x.ProjectId == sale.ProjectId &&
+                                                x.Start == sale.Start &&
+                                                Scope.CanSee(sale.Scope, x.Scope))
+                select new { sale.OrderId, sale.Start, sale.End, restriction.Min, restriction.Max, Count = count, restriction.CategoryName };
 
             var messages =
                 from violation in violations
-                from period in query.For<Period>().Where(x => x.Start == violation.Start && x.OrganizationUnitId == violation.OrganizationUnitId)
+                where violation.Count < violation.Min
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object>
                                         {
-                                                { "min", violation.Min },
-                                                { "max", violation.Max },
-                                                { "count", violation.Count },
-                                                { "name", violation.CategoryName },
-                                                { "month", violation.Start },
+                                            { "min", violation.Min },
+                                            { "max", violation.Max },
+                                            { "count", violation.Count },
+                                            { "name", violation.CategoryName },
+                                            { "month", violation.Start },
                                         },
                                     new Reference<EntityTypeOrder>(violation.OrderId))
                                 .ToXDocument(),
 
-                        PeriodStart = period.Start,
-                        PeriodEnd = period.End,
+                        PeriodStart = violation.Start,
+                        PeriodEnd = violation.End,
                         OrderId = violation.OrderId,
                     };
 

@@ -32,37 +32,33 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
         {
             var sales =
                 from orderPosition in query.For<Order.OrderCategoryPosition>()
-                from orderPeriod in query.For<Period.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
-                select new { orderPosition.OrderId, orderPeriod.Scope, orderPeriod.Start, orderPeriod.OrganizationUnitId, orderPosition.CategoryId };
-
-            var saleCounts =
-                sales.GroupBy(x => new { x.Scope, x.Start, x.OrganizationUnitId, x.CategoryId })
-                     .Select(x => new { x.Key, Count = x.Count() });
+                from orderPeriod in query.For<Order.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
+                from period in query.For<Period>().Where(x => orderPeriod.Begin <= x.Start && x.End <= orderPeriod.End && x.ProjectId == orderPosition.ProjectId)
+                select new { orderPosition.CategoryId, orderPosition.ProjectId, orderPeriod.OrderId, orderPeriod.Scope, period.Start, period.End };
 
             var oversales =
                 from sale in sales
-                let count = saleCounts.Where(x => x.Key.CategoryId == sale.CategoryId
-                                                  && x.Key.OrganizationUnitId == sale.OrganizationUnitId
-                                                  && x.Key.Start == sale.Start
-                                                  && Scope.CanSee(sale.Scope, x.Key.Scope))
-                                      .Sum(x => x.Count)
+                let count = sales
+                    .Count(x => x.CategoryId == sale.CategoryId
+                                && x.ProjectId == sale.ProjectId
+                                && x.Start == sale.Start
+                                && Scope.CanSee(sale.Scope, x.Scope))
                 where count > MaxPositionsPerCategory
-                select new { sale.Start, sale.OrganizationUnitId, sale.OrderId, sale.CategoryId, Count = count };
+                select new { sale.Start, sale.End, sale.ProjectId, sale.OrderId, sale.CategoryId, Count = count };
 
             var messages =
                 from oversale in oversales.Distinct()
-                join period in query.For<Period>() on new { oversale.Start, oversale.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "max", MaxPositionsPerCategory }, { "count", oversale.Count } },
                                     new Reference<EntityTypeCategory>(oversale.CategoryId),
-                                    new Reference<EntityTypeProject>(period.ProjectId))
+                                    new Reference<EntityTypeProject>(oversale.ProjectId))
                                 .ToXDocument(),
 
-                        PeriodStart = period.Start,
-                        PeriodEnd = period.End,
+                        PeriodStart = oversale.Start,
+                        PeriodEnd = oversale.End,
                         OrderId = oversale.OrderId,
                     };
 
