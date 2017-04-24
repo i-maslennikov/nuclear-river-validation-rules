@@ -92,7 +92,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                             new PeriodKey
                                 {
                                     Date = (DateTime)statisticsKey.Attribute(Date),
-                            });
+                                });
                     }
                 }
             }

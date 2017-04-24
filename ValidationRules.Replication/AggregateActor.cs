@@ -14,14 +14,12 @@ namespace NuClear.ValidationRules.Replication
     public class AggregateActor : IAggregateActor
     {
         private readonly RootToLeafActor _rootToLeafActor;
-        private readonly SubrootToLeafActor _subrootToLeafActor;
         private readonly IAggregateRootActor _aggregateRootActor;
 
         public AggregateActor(IAggregateRootActor aggregateRootActor)
         {
             _aggregateRootActor = aggregateRootActor;
             _rootToLeafActor = new RootToLeafActor(aggregateRootActor);
-            _subrootToLeafActor = new SubrootToLeafActor(aggregateRootActor.GetEntityActors());
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -53,14 +51,13 @@ namespace NuClear.ValidationRules.Replication
                 events = events.Union(_rootToLeafActor.ExecuteCommands(recalculateCommands));
 
                 var recalculatePeriodCommands =
-                    aggregateCommands.OfType<RecalculatePeriodAggregateCommand>()
+                    aggregateCommands.OfType<RecalculatePeriodCommand>()
                                      .SelectMany(next => new ICommand[]
-                                                     {
-                                                         new SyncPeriodDataObjectCommand(next.PeriodKey),
-                                                         new ReplacePeriodValueObjectCommand(next.PeriodKey)
-                                                     })
+                                         {
+                                             new SyncPeriodCommand(next.AggregateRootType, next.Point.Date)
+                                         })
                                      .ToArray();
-                events = events.Union(_subrootToLeafActor.ExecuteCommands(recalculatePeriodCommands));
+                events = events.Union(_rootToLeafActor.ExecuteCommands(recalculatePeriodCommands));
 
                 return events.ToArray();
             }

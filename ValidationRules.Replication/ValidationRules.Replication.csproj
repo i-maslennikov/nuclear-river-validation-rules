@@ -220,8 +220,10 @@
     <Compile Include="AdvertisementRules\Validation\OrderMustNotContainDummyAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
+    <Compile Include="Commands\SyncPeriodCommand.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
+    <Compile Include="Commands\RecalculatePeriodCommand.cs" />
     <Compile Include="SyncEntityNameActor.cs" />
     <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
     <Compile Include="DataChangesHandler.cs" />
@@ -336,7 +338,6 @@
     <Compile Include="Commands\CreateNewVersionCommand.cs" />
     <Compile Include="Commands\AggregateCommand.cs" />
     <Compile Include="Commands\IValidationRuleCommand.cs" />
-    <Compile Include="Commands\PeriodCommands.cs" />
     <Compile Include="Commands\CreateDataObjectCommand.cs" />
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
     <Compile Include="Commands\LogDelayCommand.cs" />
@@ -353,7 +354,6 @@
     <Compile Include="Commands\SyncDataObjectCommand.cs" />
     <Compile Include="Events\RelatedDataObjectOutdatedEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Specifications\Specs.Find.Aggs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

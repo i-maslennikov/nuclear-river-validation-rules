@@ -65,9 +65,21 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public FindSpecification<Period> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<SyncPeriodDataObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
-                return Specs.Find.Aggs.Periods(aggregateIds);
+                var dates = commands.Cast<SyncPeriodCommand>().Select(c => c.Date).Distinct();
+                return Periods(dates);
             }
+
+            public static FindSpecification<Period> Periods(IEnumerable<DateTime> aggregateIds)
+            {
+                var result = new FindSpecification<Period>(x => false);
+
+                return aggregateIds.Select(PeriodSpecificationForSingleKey)
+                                   .Aggregate(result, (current, spec) => current | spec);
+            }
+
+            private static FindSpecification<Period> PeriodSpecificationForSingleKey(DateTime date)
+                => new FindSpecification<Period>(x => x.Start <= date && date <= x.End);
+
         }
     }
 }
