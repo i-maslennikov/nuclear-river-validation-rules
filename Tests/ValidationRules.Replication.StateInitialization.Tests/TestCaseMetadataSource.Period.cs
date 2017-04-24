@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderPeriod { OrderId = 2, Begin = MonthStart(1), End = MonthStart(2), Scope = -1 },
                     new Aggregates::Order.OrderPeriod { OrderId = 3, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
                     new Aggregates::Order.OrderPeriod { OrderId = 4, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
-                    new Aggregates::Order.OrderPeriod { OrderId = 4, Begin = MonthStart(2), End = MonthStart(2), Scope = 4 });
+                    new Aggregates::Order.OrderPeriod { OrderId = 4, Begin = MonthStart(2), End = MonthStart(3), Scope = 4 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PricePeriod
@@ -38,8 +38,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Aggregate(
                     new Aggregates::Price { Id = 1 },
                     new Aggregates::Price { Id = 2 },
-                    new Aggregates::Price.PricePeriod { PriceId = 1, Begin = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::Price.PricePeriod { PriceId = 2, Begin = MonthStart(2), End = DateTime.MaxValue });
+                    new Aggregates::Price.PricePeriod { PriceId = 1, ProjectId = 123, Begin = MonthStart(1), End = MonthStart(2) },
+                    new Aggregates::Price.PricePeriod { PriceId = 2, ProjectId = 123, Begin = MonthStart(2), End = DateTime.MaxValue });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement Period
@@ -61,10 +61,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3) },
                     new Aggregates::Period { Start = MonthStart(3), End = MonthStart(4) },
                     new Aggregates::Period { Start = MonthStart(4), End = MonthStart(5) },
-                    new Aggregates::Period { Start = MonthStart(5), End = DateTime.MaxValue },
-
-                    // Для второго отделения организации должны быть свои периоды, не влияющие на первое
-                    new Aggregates::Period { Start = MonthStart(3), End = MonthStart(5) },
                     new Aggregates::Period { Start = MonthStart(5), End = MonthStart(7) },
                     new Aggregates::Period { Start = MonthStart(7), End = DateTime.MaxValue });
     }
