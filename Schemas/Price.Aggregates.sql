@@ -122,11 +122,9 @@ go
 
 -- period aggregate
 create table PriceAggregates.Period(
-    ProjectId bigint NOT NULL,
-    OrganizationUnitId bigint NOT NULL,
     [Start] datetime2(2) NOT NULL,
     [End] datetime2(2) NOT NULL,
-    constraint PK_Period primary key (OrganizationUnitId, [Start])
+    constraint PK_Period primary key ([Start])
 )
 go
 

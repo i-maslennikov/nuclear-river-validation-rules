@@ -49,25 +49,19 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Period> GetSource()
             {
-                // не менять код, он выверен до буквы
-                var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
-                                  .SelectMany(x => _query.For<Facts::Project>().Where(p => p.OrganizationUnitId == x.OrganizationUnitId),
-                                              (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
-                                  .OrderBy(x => x.Date);
+                var dates =
+                    _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistribution })
+                          .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact }))
+                          .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan }))
+                          .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate }));
 
-                return dates.Select(x => new { Start = x, End = dates.FirstOrDefault(y => y.Date > x.Date && y.OrganizationUnitId == x.OrganizationUnitId) })
-                                  .Select(x => new Period
-                                  {
-                                      Start = x.Start.Date,
-                                      End = x.End != null ? x.End.Date : DateTime.MaxValue,
-                                      OrganizationUnitId = x.Start.OrganizationUnitId,
-                                      ProjectId = x.Start.ProjectId
-                                  });
+                var result =
+                    from date in dates
+                    from next in dates.Where(x => x.Date > date.Date).OrderBy(x => x.Date).Take(1).DefaultIfEmpty()
+                    select new Period { Start = date.Date, End = next != null ? next.Date : DateTime.MaxValue };
+
+                return result;
             }
-
 
             public FindSpecification<Period> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var saleGrid =
                 from position in query.For<Order.AmountControlledPosition>()
                 from orderPeriod in query.For<Order.OrderPeriod>().Where(x => x.OrderId == position.OrderId)
-                from period in query.For<Period>().Where(x => orderPeriod.Begin <= x.Start && x.End <= orderPeriod.End && x.ProjectId == position.ProjectId)
+                from period in query.For<Period>().Where(x => orderPeriod.Begin <= x.Start && x.End <= orderPeriod.End)
                 select new { position.OrderId, period.Start, period.End, orderPeriod.Scope, position.ProjectId, position.CategoryCode };
 
             var violations =

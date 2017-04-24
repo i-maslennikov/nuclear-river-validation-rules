@@ -57,15 +57,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = MonthStart(2), EndDistributionFact = MonthStart(3), EndDistributionPlan = MonthStart(4) },
                     new Facts::Order { Id = 3, DestOrganizationUnitId = 1, BeginDistribution = MonthStart(5), EndDistributionFact = MonthStart(7), EndDistributionPlan = MonthStart(7) })
                 .Aggregate(
-                    new Aggregates::Period { Start = MonthStart(1), End = MonthStart(2), OrganizationUnitId = 2, ProjectId = 2},
-                    new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3), OrganizationUnitId = 2, ProjectId = 2},
-                    new Aggregates::Period { Start = MonthStart(3), End = MonthStart(4), OrganizationUnitId = 2, ProjectId = 2},
-                    new Aggregates::Period { Start = MonthStart(4), End = MonthStart(5), OrganizationUnitId = 2, ProjectId = 2},
-                    new Aggregates::Period { Start = MonthStart(5), End = DateTime.MaxValue, OrganizationUnitId = 2, ProjectId = 2},
+                    new Aggregates::Period { Start = MonthStart(1), End = MonthStart(2) },
+                    new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3) },
+                    new Aggregates::Period { Start = MonthStart(3), End = MonthStart(4) },
+                    new Aggregates::Period { Start = MonthStart(4), End = MonthStart(5) },
+                    new Aggregates::Period { Start = MonthStart(5), End = DateTime.MaxValue },
 
                     // Для второго отделения организации должны быть свои периоды, не влияющие на первое
-                    new Aggregates::Period { Start = MonthStart(3), End = MonthStart(5), OrganizationUnitId = 1, ProjectId = 1},
-                    new Aggregates::Period { Start = MonthStart(5), End = MonthStart(7), OrganizationUnitId = 1, ProjectId = 1},
-                    new Aggregates::Period { Start = MonthStart(7), End = DateTime.MaxValue, OrganizationUnitId = 1, ProjectId = 1});
+                    new Aggregates::Period { Start = MonthStart(3), End = MonthStart(5) },
+                    new Aggregates::Period { Start = MonthStart(5), End = MonthStart(7) },
+                    new Aggregates::Period { Start = MonthStart(7), End = DateTime.MaxValue });
     }
 }

@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
             var sales =
                 from orderPosition in query.For<Order.OrderThemePosition>()
                 from orderPeriod in query.For<Order.OrderPeriod>().Where(x => x.OrderId == orderPosition.OrderId)
-                from period in query.For<Period>().Where(x => orderPeriod.Begin <= x.Start && x.End <= orderPeriod.End && x.ProjectId == orderPosition.ProjectId)
+                from period in query.For<Period>().Where(x => orderPeriod.Begin <= x.Start && x.End <= orderPeriod.End)
                 select new { orderPosition.ThemeId, orderPosition.ProjectId, orderPeriod.OrderId, orderPeriod.Scope, period.Start, period.End };
 
             var oversales =
