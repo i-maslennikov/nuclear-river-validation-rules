@@ -23,7 +23,6 @@ go
 
 create table ConsistencyAggregates.[Order](
     Id bigint not null,
-    ProjectId bigint not null,
     BeginDistribution datetime2(2) not null,
     EndDistributionFact datetime2(2) not null,
     EndDistributionPlan datetime2(2) not null,

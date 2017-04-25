@@ -28,7 +28,6 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
     public sealed class Order
     {
         public long Id { get; set; }
-        public long ProjectId { get; set; }
         public DateTime BeginDistribution { get; set; }
         public DateTime EndDistributionFact { get; set; }
         public DateTime EndDistributionPlan { get; set; }

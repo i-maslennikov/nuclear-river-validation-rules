@@ -95,15 +95,13 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                    select new Order
                        {
                            Id = order.Id,
-                           ProjectId = project.Id,
                            BeginDistribution = order.BeginDistribution,
                            EndDistributionFact = order.EndDistributionFact,
                            EndDistributionPlan = order.EndDistributionPlan,
-                   };
+                       };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
