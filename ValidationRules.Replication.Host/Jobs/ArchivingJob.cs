@@ -31,7 +31,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         {
             _archiveVersionsService = archiveVersionsService;
             _settings = settings;
-            _transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.Snapshot, Timeout = TimeSpan.Zero };
+            _transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
         }
 
         protected override void ExecuteInternal(IJobExecutionContext context)
