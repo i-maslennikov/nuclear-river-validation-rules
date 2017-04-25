@@ -134,7 +134,6 @@
     <Compile Include="Account\LockShouldNotExist.cs" />
     <Compile Include="Account\AccountShouldExist.cs" />
     <Compile Include="Account\AccountBalanceShouldBePositive.cs" />
-    <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Advertisement\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
     <Compile Include="Advertisement\OrderCouponPeriodMustBeInRelease.cs" />
     <Compile Include="Advertisement\OrderCouponPeriodMustNotBeLessFiveDays.cs" />
@@ -152,7 +151,6 @@
     <Compile Include="ConnectionStringName.cs" />
     <Compile Include="Consistency\OrderMustHaveActiveLegalEntities.cs" />
     <Compile Include="Consistency\OrderMustHaveActiveDeal.cs" />
-    <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="DI\StateInitializationTestsRoot.cs" />
     <Compile Include="Firm\LinkedFirmShouldBeValid.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
@@ -172,7 +170,6 @@
     <Compile Include="Price\OrderPositionsShouldCorrespontToActualPrice.cs" />
     <Compile Include="ContextName.cs" />
     <Compile Include="Keys.cs" />
-    <Compile Include="Price\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Project\OrderPositionSalesModelMustMatchCategorySalesModel.cs" />
     <Compile Include="Project\OrderPositionCostPerClickMustBeSpecified.cs" />
     <Compile Include="Project\ProjectMustContainCostPerClickMinimumRestriction.cs" />
