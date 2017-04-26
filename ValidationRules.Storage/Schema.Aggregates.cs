@@ -112,14 +112,14 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceAggregates::Firm.FirmPosition>()
                    .HasSchemaName(PriceAggregatesSchema)
                    .HasIndex(x => new { x.FirmId, x.ItemPositionId, x.Begin },
-                       x => new { x.OrderId, x.OrderPositionId, x.PackagePositionId, x.HasNoBinding, x.Category1Id, x.Category3Id, x.FirmAddressId, x.Scope, x.End });
+                             x => new { x.OrderId, x.OrderPositionId, x.PackagePositionId, x.HasNoBinding, x.Category1Id, x.Category3Id, x.FirmAddressId, x.Scope, x.End });
 
             builder.Entity<PriceAggregates::Firm.FirmAssociatedPosition>()
-                  .HasSchemaName(PriceAggregatesSchema)
+                   .HasSchemaName(PriceAggregatesSchema)
                    .HasIndex(x => new { x.FirmId, x.OrderPositionId, x.ItemPositionId }, x => new { x.PrincipalPositionId, x.BindingType });
 
             builder.Entity<PriceAggregates::Firm.FirmDeniedPosition>()
-                  .HasSchemaName(PriceAggregatesSchema)
+                   .HasSchemaName(PriceAggregatesSchema)
                    .HasIndex(x => new { x.FirmId, x.OrderPositionId, x.ItemPositionId }, x => new { x.DeniedPositionId, x.BindingType });
 
             builder.Entity<PriceAggregates::Order>()
@@ -127,7 +127,8 @@ namespace NuClear.ValidationRules.Storage
                   .HasPrimaryKey(x => x.Id);
 
             builder.Entity<PriceAggregates::Order.OrderPeriod>()
-                   .HasSchemaName(PriceAggregatesSchema);
+                   .HasSchemaName(PriceAggregatesSchema)
+                   .HasIndex(x => new { x.OrderId }, x => new { x.Begin, x.End, x.Scope });
 
             builder.Entity<PriceAggregates::Order.OrderPricePosition>()
                    .HasSchemaName(PriceAggregatesSchema)

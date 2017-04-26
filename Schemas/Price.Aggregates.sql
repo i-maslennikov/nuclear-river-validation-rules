@@ -76,7 +76,7 @@ create table PriceAggregates.OrderPeriod(
     Scope bigint NOT NULL,
 )
 go
-create index IX_OrderPeriod_OrderId ON [PriceAggregates].[OrderPeriod] ([OrderId]) INCLUDE ([Begin],[End],[Scope]) -- todo: добавить в схему
+create index IX_OrderPeriod_OrderId ON [PriceAggregates].[OrderPeriod] ([OrderId]) INCLUDE ([Begin],[End],[Scope])
 GO
 
 create table PriceAggregates.AmountControlledPosition(
