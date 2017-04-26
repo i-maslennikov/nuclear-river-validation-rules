@@ -9,7 +9,6 @@ using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Security.API.Auth;
 using NuClear.Security.API.Context;
 using NuClear.Telemetry;
-using NuClear.Telemetry.Probing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
@@ -46,7 +45,6 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             WithinErrorLogging(ReportQueueLength<FactsFlow, PrimaryProcessingQueueLengthIdentity>);
             WithinErrorLogging(ReportQueueLength<AggregatesFlow, FinalProcessingAggregateQueueLengthIdentity>);
             WithinErrorLogging(ReportQueueLength<MessagesFlow, MessagesQueueLengthIdentity>);
-            WithinErrorLogging(ReportProbes);
         }
 
         private void WithinErrorLogging(Action action)
@@ -66,15 +64,6 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             var process = System.Diagnostics.Process.GetCurrentProcess();
             _telemetry.Publish<ProcessPrivateMemorySizeIdentity>(process.PrivateMemorySize64);
             _telemetry.Publish<ProcessWorkingSetIdentity>(process.WorkingSet64);
-        }
-
-        private void ReportProbes()
-        {
-            var reports = DefaultReportSink.Instance.ConsumeReports();
-            foreach (var report in reports)
-            {
-                _telemetry.Trace("ProbeReport", report);
-            }
         }
 
         private void ReportQueueLength<TFlow, TTelemetryIdentity>()

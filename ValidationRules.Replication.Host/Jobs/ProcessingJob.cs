@@ -10,6 +10,7 @@ using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.OperationsProcessing.API.Primary;
 using NuClear.Security.API.Context;
 using NuClear.Security.API.Auth;
+using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.Telemetry.Probing;
 using NuClear.Utils;
@@ -23,6 +24,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly IMessageFlowProcessorFactory _messageFlowProcessorFactory;
+        private readonly ITelemetryPublisher _telemetry;
 
         public ProcessingJob(
             IMetadataProvider metadataProvider,
@@ -30,11 +32,13 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             IUserContextManager userContextManager,
             IUserAuthenticationService userAuthenticationService,
             IUserAuthorizationService userAuthorizationService,
+            ITelemetryPublisher telemetry,
             ITracer tracer)
             : base(userContextManager, userAuthenticationService, userAuthorizationService, tracer)
         {
             _metadataProvider = metadataProvider;
             _messageFlowProcessorFactory = messageFlowProcessorFactory;
+            _telemetry = telemetry;
         }
 
         public int BatchSize { get; set; }
@@ -52,6 +56,12 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             using (Probe.Create(Flow))
             {
                 ProcessFlow();
+            }
+
+            var reports = DefaultReportSink.Instance.ConsumeReports();
+            foreach (var report in reports)
+            {
+                _telemetry.Trace("ProbeReport", report);
             }
         }
 
