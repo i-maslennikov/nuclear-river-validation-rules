@@ -40,7 +40,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             _container.RegisterType<DataConnectionFactory>();
             _container.RegisterInstance<IMetadataProvider>(_metadataProvider);
 
-#if !DEBUG
             var dropDatabases = _container.Resolve<DropDatabasesCommand>();
             var createDatabases = _container.Resolve<CreateDatabasesCommand>();
             var createSchemata = _container.Resolve<CreateDatabaseSchemataCommand>();
@@ -48,7 +47,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             dropDatabases.Execute();
             createDatabases.Execute();
             createSchemata.Execute();
-#endif
 
             _testRunner = _container.Resolve<TestRunner>();
         }
