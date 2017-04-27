@@ -14,6 +14,9 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// "Для фирмы {0} задано слишком большое число рубрик - {1}. Максимально допустимое - {2}"
     /// 
     /// Source: CategoriesForFirmAmountOrderValidationRule
+    /// 
+    /// Q: Что если у фирмы 20 рубрик в одном заказе, который в статусе на расторжении и ещё одна рубрика в заказе, который начинает размещение с даты расторжения (и пересекается по датам с первым)
+    /// A: Проверка не срабатывает
     /// </summary>
     public sealed class FirmShouldHaveLimitedCategoryCount : ValidationResultAccessorBase
     {
