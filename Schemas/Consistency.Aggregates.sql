@@ -145,5 +145,5 @@ go
 
 CREATE NONCLUSTERED INDEX IX_Order_Id
 ON [ConsistencyAggregates].[Order] ([Id])
-INCLUDE ([ProjectId],[BeginDistribution],[EndDistributionPlan])
+INCLUDE ([BeginDistribution],[EndDistributionPlan])
 GO

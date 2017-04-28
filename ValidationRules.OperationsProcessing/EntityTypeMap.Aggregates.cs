@@ -75,7 +75,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::OrderPositionAdvertisement>()
                           .DependOn<Facts::OrderScanFile>()
                           .DependOn<Facts::Position>()
-                          .DependOn<Facts::Project>()
                           .DependOn<Facts::ReleaseWithdrawal>())
 
                 // FirmAggregates
