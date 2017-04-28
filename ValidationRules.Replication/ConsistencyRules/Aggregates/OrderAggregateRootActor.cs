@@ -51,8 +51,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 HasValueObject(new OrderInvalidEndDistributionDateAccessor(query), orderInvalidEndDistributionDateRepository),
                 HasValueObject(new OrderInvalidBillsPeriodAccessor(query), orderInvalidBillsPeriodRepository),
                 HasValueObject(new OrderInvalidBillsTotalAccessor(query), orderInvalidBillsTotalRepository),
-                HasValueObject(new OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor(query), orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository),
-                HasValueObject(new OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor(query), orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository),
+                HasValueObject(new LegalPersonProfileBargainExpiredAccessor(query), orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository),
+                HasValueObject(new LegalPersonProfileWarrantyExpiredAccessor(query), orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository),
                 HasValueObject(new OrderMissingBargainScanAccessor(query), orderMissingBargainScanRepository),
                 HasValueObject(new OrderMissingBillsAccessor(query), orderMissingBillsRepository),
                 HasValueObject(new MissingRequiredFieldAccessor(query), orderMissingRequiredFieldRepository),
@@ -95,15 +95,13 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                    select new Order
                        {
                            Id = order.Id,
-                           ProjectId = project.Id,
                            BeginDistribution = order.BeginDistribution,
                            EndDistributionFact = order.EndDistributionFact,
                            EndDistributionPlan = order.EndDistributionPlan,
-                   };
+                       };
 
             public FindSpecification<Order> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -214,29 +212,34 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.InvalidCategory> GetSource()
-                => from order in _query.For<Facts::Order>()
-                   from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
-                   from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
-                   from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
-                   let categoryBelongToFirm = _query.For<Facts::FirmAddress>()
-                                                           .Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
-                                                           .Where(x => x.FirmId == order.FirmId)
-                                                           .SelectMany(fa => _query.For<Facts::FirmAddressCategory>().Where(cfa => cfa.FirmAddressId == fa.Id))
-                                                           .Any(x => x.CategoryId == opa.CategoryId)
-                   let state = !category.IsActiveNotDeleted ? InvalidCategoryState.Inactive
-                                   : !categoryBelongToFirm ? InvalidCategoryState.NotBelongToFirm
-                                   : InvalidCategoryState.NotSet
-                   where state != InvalidCategoryState.NotSet
-                   select new Order.InvalidCategory
-                       {
-                           OrderId = order.Id,
-                           CategoryId = category.Id,
-                           OrderPositionId = orderPosition.Id,
-                           PositionId = opa.PositionId,
-                           MayNotBelongToFirm = position.BindingObjectType == Facts::Position.BindingObjectTypeCategoryMultipleAsterix,
-                           State = state,
-                       };
+            {
+                var result = 
+                    from order in _query.For<Facts::Order>()
+                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
+                    from category in _query.For<Facts::Category>().Where(x => x.Id == opa.CategoryId)
+                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.PositionId)
+                    let categoryBelongToFirm = _query.For<Facts::FirmAddress>()
+                                                     .Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
+                                                     .Where(x => x.FirmId == order.FirmId)
+                                                     .SelectMany(fa => _query.For<Facts::FirmAddressCategory>().Where(cfa => cfa.FirmAddressId == fa.Id))
+                                                     .Any(x => x.CategoryId == opa.CategoryId)
+                    let state = !category.IsActiveNotDeleted ? InvalidCategoryState.Inactive
+                        : !categoryBelongToFirm ? InvalidCategoryState.NotBelongToFirm
+                            : InvalidCategoryState.NotSet
+                    where state != InvalidCategoryState.NotSet
+                    select new Order.InvalidCategory
+                        {
+                            OrderId = order.Id,
+                            CategoryId = category.Id,
+                            OrderPositionId = orderPosition.Id,
+                            PositionId = opa.PositionId,
+                            MayNotBelongToFirm = position.BindingObjectType == Facts::Position.BindingObjectTypeCategoryMultipleAsterix,
+                            State = state,
+                        };
+
+                return result;
+            }
 
             public FindSpecification<Order.InvalidCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -261,12 +264,13 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.BargainSignedLaterThanOrder> GetSource()
-                => from order in _query.For<Facts::Order>()
+                => from order in _query.For<Facts::Order>().Where(x => x.BargainId.HasValue)
                    from bargain in _query.For<Facts::Bargain>().Where(x => x.Id == order.BargainId)
                    where bargain.SignupDate > order.SignupDate
                    select new Order.BargainSignedLaterThanOrder
                    {
                        OrderId = order.Id,
+                       BargainId = order.BargainId.Value,
                    };
 
             public FindSpecification<Order.BargainSignedLaterThanOrder> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -509,11 +513,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor : DataChangesHandler<Order.LegalPersonProfileBargainExpired>, IStorageBasedDataObjectAccessor<Order.LegalPersonProfileBargainExpired>
+        public sealed class LegalPersonProfileBargainExpiredAccessor : DataChangesHandler<Order.LegalPersonProfileBargainExpired>, IStorageBasedDataObjectAccessor<Order.LegalPersonProfileBargainExpired>
         {
             private readonly IQuery _query;
 
-            public OrderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateAccessor(IQuery query) : base(CreateInvalidator())
+            public LegalPersonProfileBargainExpiredAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
@@ -541,11 +545,11 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             }
         }
 
-        public sealed class OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor : DataChangesHandler<Order.LegalPersonProfileWarrantyExpired>, IStorageBasedDataObjectAccessor<Order.LegalPersonProfileWarrantyExpired>
+        public sealed class LegalPersonProfileWarrantyExpiredAccessor : DataChangesHandler<Order.LegalPersonProfileWarrantyExpired>, IStorageBasedDataObjectAccessor<Order.LegalPersonProfileWarrantyExpired>
         {
             private readonly IQuery _query;
 
-            public OrderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateAccessor(IQuery query) : base(CreateInvalidator())
+            public LegalPersonProfileWarrantyExpiredAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }

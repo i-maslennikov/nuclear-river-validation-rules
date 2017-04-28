@@ -262,7 +262,7 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ConsistencyAggregates::Order>()
                    .HasSchemaName(ConsistencyAggregatesSchema)
                    .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.Id }, x => new { x.ProjectId, x.BeginDistribution, x.EndDistributionPlan });
+                   .HasIndex(x => new { x.Id }, x => new { x.BeginDistribution, x.EndDistributionPlan });
 
             builder.Entity<ConsistencyAggregates::Order.BargainSignedLaterThanOrder>()
                   .HasSchemaName(ConsistencyAggregatesSchema);

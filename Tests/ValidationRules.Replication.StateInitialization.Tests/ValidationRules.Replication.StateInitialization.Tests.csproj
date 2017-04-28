@@ -131,10 +131,23 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Consistency\BargainScanShouldPresent.cs" />
+    <Compile Include="Consistency\OrderScanShouldPresent.cs" />
+    <Compile Include="Consistency\LegalPersonProfileWarrantyShouldNotBeExpired.cs" />
+    <Compile Include="Consistency\LegalPersonProfileBargainShouldNotBeExpired.cs" />
+    <Compile Include="Consistency\LinkedFirmAddressShouldBeValid.cs" />
+    <Compile Include="Consistency\OrderEndDistrubutionShouldBeLastSecondOfMonth.cs" />
+    <Compile Include="Consistency\BillsPeriodShouldMatchOrder.cs" />
+    <Compile Include="Consistency\OrderBeginDistrubutionShouldBeFirstDayOfMonth.cs" />
+    <Compile Include="Consistency\OrderShouldHaveAtLeastOnePosition.cs" />
+    <Compile Include="Consistency\LegalPersonShouldHaveAtLeastOneProfile.cs" />
+    <Compile Include="Consistency\OrderShouldNotBeSignedBeforeBargain.cs" />
+    <Compile Include="Consistency\LinkedCategoryFirmAddressShouldBeValid.cs" />
+    <Compile Include="Consistency\BillsShouldBeCreated.cs" />
+    <Compile Include="Consistency\BillsSumShouldMatchOrder.cs" />
     <Compile Include="Account\LockShouldNotExist.cs" />
     <Compile Include="Account\AccountShouldExist.cs" />
     <Compile Include="Account\AccountBalanceShouldBePositive.cs" />
-    <Compile Include="Account\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Advertisement\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
     <Compile Include="Advertisement\OrderCouponPeriodMustBeInRelease.cs" />
     <Compile Include="Advertisement\OrderCouponPeriodMustNotBeLessFiveDays.cs" />
@@ -150,9 +163,9 @@
     <Compile Include="ArrangeMetadataElementBuilderExtensions.cs" />
     <Compile Include="BulkReplicationAdapter.cs" />
     <Compile Include="ConnectionStringName.cs" />
+    <Compile Include="Consistency\LinkedCategoryAsterixMayBelongToFirm.cs" />
     <Compile Include="Consistency\OrderMustHaveActiveLegalEntities.cs" />
     <Compile Include="Consistency\OrderMustHaveActiveDeal.cs" />
-    <Compile Include="Consistency\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="DI\StateInitializationTestsRoot.cs" />
     <Compile Include="Firm\LinkedFirmShouldBeValid.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
@@ -172,7 +185,6 @@
     <Compile Include="Price\OrderPositionsShouldCorrespontToActualPrice.cs" />
     <Compile Include="ContextName.cs" />
     <Compile Include="Keys.cs" />
-    <Compile Include="Price\TestCaseMetadataSource.Ignored.cs" />
     <Compile Include="Project\OrderPositionSalesModelMustMatchCategorySalesModel.cs" />
     <Compile Include="Project\OrderPositionCostPerClickMustBeSpecified.cs" />
     <Compile Include="Project\ProjectMustContainCostPerClickMinimumRestriction.cs" />
