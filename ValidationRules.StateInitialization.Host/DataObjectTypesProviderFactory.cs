@@ -143,8 +143,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                             typeof(FirmAggregates::Firm),
                             typeof(FirmAggregates::Firm.AdvantageousPurchasePositionDistributionPeriod),
+                            typeof(FirmAggregates::Firm.CategoryPurchase),
                             typeof(FirmAggregates::Order),
-                            typeof(FirmAggregates::Order.CategoryPurchase),
                             typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
                             typeof(FirmAggregates::Order.InvalidFirm),
                             typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
