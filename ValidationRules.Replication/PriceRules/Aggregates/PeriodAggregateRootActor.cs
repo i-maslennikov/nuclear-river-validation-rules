@@ -21,14 +21,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
         public PeriodAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
-            IBulkRepository<Period> bulkRepository,
-            IBulkRepository<Period.PricePeriod> pricePeriodBulkRepository,
-            IBulkRepository<Period.OrderPeriod> orderPeriodBulkRepository)
+            IBulkRepository<Period> bulkRepository)
             : base(query, equalityComparerFactory)
         {
-            HasRootEntity(new PeriodAccessor(query), bulkRepository,
-                HasValueObject(new PricePeriodAccessor(query), pricePeriodBulkRepository),
-                HasValueObject(new OrderPeriodAccessor(query), orderPeriodBulkRepository));
+            HasRootEntity(new PeriodAccessor(query), bulkRepository);
         }
 
         public sealed class PeriodAccessor : DataChangesHandler<Period>, IStorageBasedDataObjectAccessor<Period>
@@ -45,139 +41,43 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.AssociatedPositionsGroupCount,
                         MessageTypeCode.MaximumAdvertisementAmount,
-                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                         MessageTypeCode.MinimumAdvertisementAmount,
                     };
 
             public IQueryable<Period> GetSource()
             {
-                // не менять код, он выверен до буквы
-                var dates = _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }))
-                                  .SelectMany(x => _query.For<Facts::Project>().Where(p => p.OrganizationUnitId == x.OrganizationUnitId),
-                                              (x, p) => new { x.Date, x.OrganizationUnitId, ProjectId = p.Id })
-                                  .OrderBy(x => x.Date);
-
-                return dates.Select(x => new { Start = x, End = dates.FirstOrDefault(y => y.Date > x.Date && y.OrganizationUnitId == x.OrganizationUnitId) })
-                                  .Select(x => new Period
-                                  {
-                                      Start = x.Start.Date,
-                                      End = x.End != null ? x.End.Date : DateTime.MaxValue,
-                                      OrganizationUnitId = x.Start.OrganizationUnitId,
-                                      ProjectId = x.Start.ProjectId
-                                  });
-            }
-
-
-            public FindSpecification<Period> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.Cast<SyncPeriodDataObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
-                return Specs.Find.Aggs.Periods(aggregateIds);
-            }
-        }
-
-        public sealed class PricePeriodAccessor : DataChangesHandler<Period.PricePeriod>, IStorageBasedDataObjectAccessor<Period.PricePeriod>
-        {
-            private readonly IQuery _query;
-
-            public PricePeriodAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.AssociatedPositionsGroupCount,
-                        MessageTypeCode.MaximumAdvertisementAmount,
-                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
-                        MessageTypeCode.MinimumAdvertisementAmount,
-                    };
-
-            public IQueryable<Period.PricePeriod> GetSource()
-            {
-                var dates = _query.For<Facts::Order>()
-                                  .Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }));
-
-                var prices =
-                    from price in _query.For<Facts::Price>()
-                    let nextPrice = _query.For<Facts::Price>().Where(x => x.OrganizationUnitId == price.OrganizationUnitId && x.BeginDate > price.BeginDate).Min(x => (DateTime?)x.BeginDate)
-                    select new { price.Id, price.OrganizationUnitId, Begin = price.BeginDate, End = nextPrice ?? DateTime.MaxValue };
+                var dates =
+                    _query.For<Facts::Order>().Select(x => new { Date = x.BeginDistribution })
+                          .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact }))
+                          .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan }))
+                          .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate }));
 
                 var result =
                     from date in dates
-                    from price in prices.Where(x => x.OrganizationUnitId == date.OrganizationUnitId && x.Begin <= date.Date && date.Date < x.End )
-                    select new Period.PricePeriod
-                        {
-                            OrganizationUnitId = date.OrganizationUnitId,
-                            PriceId = price.Id,
-                            Start = date.Date
-                        };
+                    from next in dates.Where(x => x.Date > date.Date).OrderBy(x => x.Date).Take(1).DefaultIfEmpty()
+                    select new Period { Start = date.Date, End = next != null ? next.Date : DateTime.MaxValue };
 
                 return result;
             }
 
-            public FindSpecification<Period.PricePeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Period> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
-                var aggregateIds = commands.Cast<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
-                return Specs.Find.Aggs.PricePeriods(aggregateIds);
-            }
-        }
-
-        public sealed class OrderPeriodAccessor : DataChangesHandler<Period.OrderPeriod>, IStorageBasedDataObjectAccessor<Period.OrderPeriod>
-        {
-            private readonly IQuery _query;
-
-            public OrderPeriodAccessor(IQuery query) : base(CreateInvalidator())
-            {
-
-                _query = query;
+                var dates = commands.Cast<SyncPeriodCommand>().Select(c => c.Date).Distinct();
+                return Periods(dates);
             }
 
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
-                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.MaximumAdvertisementAmount,
-                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
-                        MessageTypeCode.MinimumAdvertisementAmount,
-                    };
-
-            public IQueryable<Period.OrderPeriod> GetSource()
+            public static FindSpecification<Period> Periods(IEnumerable<DateTime> aggregateIds)
             {
-                var dates = _query.For<Facts::Order>()
-                                  .Select(x => new { Date = x.BeginDistribution, OrganizationUnitId = x.DestOrganizationUnitId })
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionFact, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Order>().Select(x => new { Date = x.EndDistributionPlan, OrganizationUnitId = x.DestOrganizationUnitId }))
-                                  .Union(_query.For<Facts::Price>().Select(x => new { Date = x.BeginDate, x.OrganizationUnitId }));
+                var result = new FindSpecification<Period>(x => false);
 
-                var result =
-                    from order in _query.For<Facts::Order>()
-                    from date in dates.Where(date => date.OrganizationUnitId == order.DestOrganizationUnitId && order.BeginDistribution <= date.Date && date.Date < order.EndDistributionPlan)
-                    select new Period.OrderPeriod
-                        {
-                            OrderId = order.Id,
-                            OrganizationUnitId = order.DestOrganizationUnitId,
-                            Start = date.Date,
-                            Scope = order.EndDistributionFact > date.Date ? Scope.Compute(order.WorkflowStep, order.Id) : order.Id
-                        };
-
-                return result;
+                return aggregateIds.Select(PeriodSpecificationForSingleKey)
+                                   .Aggregate(result, (current, spec) => current | spec);
             }
 
-            public FindSpecification<Period.OrderPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.Cast<ReplacePeriodValueObjectCommand>().Select(c => c.PeriodKey).Distinct().ToArray();
-                return Specs.Find.Aggs.OrderPeriods(aggregateIds);
-            }
+            private static FindSpecification<Period> PeriodSpecificationForSingleKey(DateTime date)
+                => new FindSpecification<Period>(x => x.Start <= date && date <= x.End);
+
         }
     }
 }

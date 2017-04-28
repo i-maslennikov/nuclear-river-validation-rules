@@ -84,14 +84,17 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from firm in _query.For<Firm>().Where(x => x.Id == order.FirmId)
                 select firm.Id;
 
-            // И какой тип я должен тут указать?
-            // Тип outdated-сущности - это период. Нет периода в фактах, а агрегатный тип тут указывать некорректно.
-            var periodIds =
-                from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
-                group order by order.DestOrganizationUnitId into orders
-                select new PeriodKey { OrganizationUnitId = orders.Key, Start = orders.Min(y => y.BeginDistribution), End = orders.Max(y => y.EndDistributionFact) };
+            var orders =
+                (from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
+                 select new { order.BeginDistribution, order.EndDistributionFact, order.EndDistributionPlan })
+                .ToList();
 
-            return new EventCollectionHelper<Order> { { typeof(Account), accountIds }, { typeof(Firm), firmIds }, { typeof(Order), periodIds } };
+            var periods =
+                orders.Select(x => new PeriodKey { Date = x.BeginDistribution })
+                      .Concat(orders.Select(x => new PeriodKey { Date = x.EndDistributionFact }))
+                      .Concat(orders.Select(x => new PeriodKey { Date = x.EndDistributionPlan }));
+
+            return new EventCollectionHelper<Order> { { typeof(Account), accountIds }, { typeof(Firm), firmIds }, { typeof(object), periods } };
         }
     }
 }

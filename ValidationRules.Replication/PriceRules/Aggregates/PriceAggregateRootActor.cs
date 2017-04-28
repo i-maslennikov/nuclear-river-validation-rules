@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -20,11 +21,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Price> bulkRepository,
+            IBulkRepository<Price.PricePeriod> pricePeriodBulkRepository,
             IBulkRepository<Price.AdvertisementAmountRestriction> advertisementAmountRestrictionBulkRepository,
             IBulkRepository<Price.AssociatedPositionGroupOvercount> associatedPositionGroupOvercountRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new PriceAccessor(query), bulkRepository,
+                HasValueObject(new PricePeriodAccessor(query), pricePeriodBulkRepository),
                 HasValueObject(new AdvertisementAmountRestrictionAccessor(query), advertisementAmountRestrictionBulkRepository),
                 HasValueObject(new AssociatedPositionGroupOvercountAccessor(query), associatedPositionGroupOvercountRepository));
         }
@@ -41,11 +44,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
-                        MessageTypeCode.AssociatedPositionsGroupCount,
                     };
 
             public IQueryable<Price> GetSource()
-                => _query.For<Facts::Price>().Select(price => new Price { Id = price.Id, BeginDate = price.BeginDate });
+                => _query.For<Facts::Price>().Select(price => new Price { Id = price.Id });
 
             public FindSpecification<Price> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -131,5 +133,48 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 return new FindSpecification<Price.AssociatedPositionGroupOvercount>(x => aggregateIds.Contains(x.PriceId));
             }
         }
+
+        public sealed class PricePeriodAccessor : DataChangesHandler<Price.PricePeriod>, IStorageBasedDataObjectAccessor<Price.PricePeriod>
+        {
+            private readonly IQuery _query;
+
+            public PricePeriodAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AssociatedPositionsGroupCount,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
+                        MessageTypeCode.MinimumAdvertisementAmount,
+                    };
+
+            public IQueryable<Price.PricePeriod> GetSource()
+            {
+                var result =
+                    from price in _query.For<Facts::Price>()
+                    let nextPrice = _query.For<Facts::Price>().Where(x => x.OrganizationUnitId == price.OrganizationUnitId && x.BeginDate > price.BeginDate).Min(x => (DateTime?)x.BeginDate)
+                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == price.OrganizationUnitId)
+                    select new Price.PricePeriod
+                        {
+                            PriceId = price.Id,
+                            Begin = price.BeginDate,
+                            End = nextPrice ?? DateTime.MaxValue,
+                            ProjectId = project.Id,
+                        };
+
+                return result;
+            }
+
+            public FindSpecification<Price.PricePeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Price.PricePeriod>(x => aggregateIds.Contains(x.PriceId));
+            }
+        }
+
     }
 }

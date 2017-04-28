@@ -24,9 +24,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
         private const string OrderId = "orderId";
 
         private const string PeriodKey = "periodKey";
-        private const string OrganizationUnitId = "organizationUnitId";
-        private const string Start = "start";
-        private const string End = "end";
+        private const string Date = "date";
 
         private static readonly IReadOnlyDictionary<string, Type> SimpleTypes =
             AppDomain.CurrentDomain.GetAssemblies()
@@ -93,10 +91,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                             ResolveDataObjectType(relatedDataObjectType.Value),
                             new PeriodKey
                                 {
-                                    OrganizationUnitId = (long)statisticsKey.Attribute(OrganizationUnitId),
-                                    Start = (DateTime)statisticsKey.Attribute(Start),
-                                    End = (DateTime)statisticsKey.Attribute(End)
-                            });
+                                    Date = (DateTime)statisticsKey.Attribute(Date),
+                                });
                     }
                 }
             }
@@ -184,9 +180,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                                     new XElement(RelatedDataObjectType, complexOutdatedEvent.RelatedDataObjectType.FullName),
                                     new XElement(RelatedDataObjectId,
                                                  new XElement(PeriodKey,
-                                                              new XAttribute(OrganizationUnitId, complexOutdatedEvent.RelatedDataObjectId.OrganizationUnitId),
-                                                              new XAttribute(Start, complexOutdatedEvent.RelatedDataObjectId.Start),
-                                                              new XAttribute(End, complexOutdatedEvent.RelatedDataObjectId.End))));
+                                                              new XAttribute(Date, complexOutdatedEvent.RelatedDataObjectId.Date))));
             }
 
             var factsStateIncrementedEvent = @event as FactsStateIncrementedEvent;

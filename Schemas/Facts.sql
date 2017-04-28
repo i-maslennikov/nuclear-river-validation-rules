@@ -312,12 +312,12 @@ create table Facts.[Order](
 )
 go
 CREATE INDEX IX_Order_DestOrganizationUnitId ON [Facts].[Order] ([DestOrganizationUnitId]) INCLUDE ([Id],[FirmId], [BeginDistribution],[EndDistributionFact],[EndDistributionPlan],[WorkflowStep])
-GO
 CREATE INDEX IX_Order_LegalPersonId_SignupDate ON [Facts].[Order] ([LegalPersonId],[SignupDate]) INCLUDE ([Id])
-GO
 CREATE INDEX IX_Order_BargainId ON [Facts].[Order] ([BargainId]) INCLUDE ([Id])
 CREATE INDEX IX_Order_BargainId_SignupDate ON [Facts].[Order] ([BargainId],[SignupDate]) INCLUDE ([Id])
-
+CREATE INDEX IX_Order_BeginDistribution on [Facts].[Order]([BeginDistribution])
+CREATE INDEX IX_Order_EndDistributionFact on [Facts].[Order]([EndDistributionFact])
+CREATE INDEX IX_Order_EndDistributionPlan on [Facts].[Order]([EndDistributionPlan])
 GO
 
 create table Facts.OrderItem (
