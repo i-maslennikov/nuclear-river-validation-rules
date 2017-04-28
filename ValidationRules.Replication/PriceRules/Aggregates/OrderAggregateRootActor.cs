@@ -89,9 +89,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
-                        //MessageTypeCode.OrderPositionCorrespontToInactivePosition,
-                        //MessageTypeCode.OrderPositionMayCorrespontToActualPrice,
-                        //MessageTypeCode.OrderPositionMustCorrespontToActualPrice,
+                        MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
+                        MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
+                        MessageTypeCode.MaximumAdvertisementAmount,
+                        MessageTypeCode.MinimumAdvertisementAmount,
                     };
 
             public IQueryable<Order.OrderPeriod> GetSource()

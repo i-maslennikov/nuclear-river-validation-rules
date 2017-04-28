@@ -41,9 +41,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.AssociatedPositionsGroupCount,
                         MessageTypeCode.MaximumAdvertisementAmount,
-                        MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                         MessageTypeCode.MinimumAdvertisementAmount,
                     };
 
