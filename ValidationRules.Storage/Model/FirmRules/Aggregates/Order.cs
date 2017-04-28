@@ -33,12 +33,6 @@ namespace NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates
             public long OrderId { get; set; }
         }
 
-        public class CategoryPurchase
-        {
-            public long OrderId { get; set; }
-            public long CategoryId { get; set; }
-        }
-
         public class InvalidFirm
         {
             public long OrderId { get; set; }

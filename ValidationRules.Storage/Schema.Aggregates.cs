@@ -66,13 +66,14 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<FirmAggregates::Firm.AdvantageousPurchasePositionDistributionPeriod>()
                    .HasSchemaName(FirmAggregatesSchema);
 
+            builder.Entity<FirmAggregates::Firm.CategoryPurchase>()
+                   .HasSchemaName(FirmAggregatesSchema)
+                   .HasIndex(x => new { x.FirmId, x.Begin, x.End, x.CategoryId }, x => new { x.Scope });
+
             builder.Entity<FirmAggregates::Order>()
                    .HasSchemaName(FirmAggregatesSchema)
-                   .HasPrimaryKey(x => x.Id);
-
-            builder.Entity<FirmAggregates::Order.CategoryPurchase>()
-                   .HasSchemaName(FirmAggregatesSchema)
-                   .HasIndex(x => new { x.OrderId }, x => new { x.CategoryId });
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.FirmId, x.Begin, x.End }, x => new { x.Id, x.Scope });
 
             builder.Entity<FirmAggregates::Order.FirmOrganiationUnitMismatch>()
                    .HasSchemaName(FirmAggregatesSchema);

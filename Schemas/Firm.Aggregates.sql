@@ -1,4 +1,5 @@
 ﻿if not exists (select * from sys.schemas where name = 'FirmAggregates') exec('create schema FirmAggregates')
+go
 
 if object_id('FirmAggregates.Order') is not null drop table FirmAggregates.[Order]
 if object_id('FirmAggregates.InvalidFirm') is not null drop table FirmAggregates.InvalidFirm
@@ -18,21 +19,19 @@ create table FirmAggregates.[Order](
     Scope bigint not null,
     constraint PK_Order primary key (Id)
 )
-go
+create index IX_Order_FirmId_Begin_End on FirmAggregates.[Order] (FirmId, [Begin], [End]) include ([Id], [Scope])
 
 create table FirmAggregates.InvalidFirm(
     OrderId bigint not null,
     FirmId bigint not null,
     [State] int not null,
 )
-go
 
 create table FirmAggregates.Firm(
     Id bigint not null,
     ProjectId bigint not null,
     constraint PK_Firm primary key (Id)
 )
-go
 
 create table FirmAggregates.AdvantageousPurchasePositionDistributionPeriod(
     FirmId bigint not null,
@@ -41,30 +40,25 @@ create table FirmAggregates.AdvantageousPurchasePositionDistributionPeriod(
     [Begin] datetime2(2) not null,
     [End] datetime2(2) not null,
 )
-go
 
 create table FirmAggregates.FirmOrganiationUnitMismatch(
     OrderId bigint not null,
 )
-go
 
 create table FirmAggregates.CategoryPurchase(
-    OrderId bigint not null,
+    FirmId bigint not null,
     CategoryId bigint not null,
+    [Begin] datetime2(2) not null,
+    [End] datetime2(2) not null,
+    Scope bigint not null,
 )
-go
+create index IX_CategoryPurchase_FirmId_Begin_End_CategoryId on FirmAggregates.CategoryPurchase (FirmId, [Begin], [End], [CategoryId]) include ([Scope])
 
 create table FirmAggregates.NotApplicapleForDesktopPosition(
     OrderId bigint not null,
 )
-go
 
 create table FirmAggregates.SelfAdvertisementPosition(
     OrderId bigint not null,
 )
 go
-
-CREATE NONCLUSTERED INDEX IX_CategoryPurchase_OrderId
-ON [FirmAggregates].[CategoryPurchase] ([OrderId])
-INCLUDE ([CategoryId])
-GO
