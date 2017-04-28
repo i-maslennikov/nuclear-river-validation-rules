@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
                 var outdatedPeriodEvent = @event as RelatedDataObjectOutdatedEvent<PeriodKey>;
                 if (outdatedPeriodEvent != null)
                 {
-                    return new[] { new RecalculatePeriodAggregateCommand(outdatedPeriodEvent.RelatedDataObjectId) };
+                    return new[] { new RecalculatePeriodCommand(outdatedPeriodEvent.RelatedDataObjectId) };
                 }
 
                 var stateIncrementedEvent = @event as FactsStateIncrementedEvent;

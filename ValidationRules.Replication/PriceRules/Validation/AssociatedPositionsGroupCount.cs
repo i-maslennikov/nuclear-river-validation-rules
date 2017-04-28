@@ -21,25 +21,24 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var ruleResults =
+            var messages =
                 from overcount in query.For<Price.AssociatedPositionGroupOvercount>()
-                join pp in query.For<Period.PricePeriod>() on overcount.PriceId equals pp.PriceId
-                join period in query.For<Period>() on new { pp.Start, pp.OrganizationUnitId } equals new { period.Start, period.OrganizationUnitId }
+                join pp in query.For<Price.PricePeriod>() on overcount.PriceId equals pp.PriceId
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeProject>(period.ProjectId),
+                                    new Reference<EntityTypeProject>(pp.ProjectId),
                                     new Reference<EntityTypePricePosition>(overcount.PricePositionId,
                                         new Reference<EntityTypePosition>(overcount.PositionId)))
                                 .ToXDocument(),
 
-                        PeriodStart = period.Start,
-                        PeriodEnd = period.End,
-                        ProjectId = period.ProjectId,
+                        PeriodStart = pp.Begin,
+                        PeriodEnd = pp.End,
+                        ProjectId = pp.ProjectId,
                     };
 
-            return ruleResults;
+            return messages;
         }
     }
 }

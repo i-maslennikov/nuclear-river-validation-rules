@@ -45,10 +45,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 1, OrderId = 1, PricePositionId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 1, PositionId = 1 },
                     new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 1, MinAdvertisementAmount = 1, MaxAdvertisementAmount = 10, IsActiveNotDeleted = true },
-                    new Facts::Position { Id = 1, IsControlledByAmount = true, CategoryCode = 10 })
+                    new Facts::Position { Id = 1, IsControlledByAmount = true, CategoryCode = 10 },
+                    new Facts::Project { Id = 123 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
-                    new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 10 },
+                    new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 10, ProjectId = 123 },
                     new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 1, PositionId = 1, PriceId = 1, IsActive = true },
 
                     new Aggregates::Price.AdvertisementAmountRestriction { PriceId = 1, CategoryCode = 10, Min = 1, Max = 10, CategoryName = "empty" });

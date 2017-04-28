@@ -53,14 +53,18 @@ namespace NuClear.ValidationRules.Replication.Accessors
         {
             var ids = dataObjects.Select(x => x.Id).ToList();
 
-            var periodIds =
+            // Публикация нового прайс-листа неявно меняет предыдущий (его дату окончания действия)
+            var previousPrices =
                 from price in _query.For<Price>().Where(x => ids.Contains(x.Id))
-                group price by price.OrganizationUnitId into prices
-                select new PeriodKey { OrganizationUnitId = prices.Key, Start = prices.Min(y => y.BeginDate), End = DateTime.MaxValue };
+                let previous = _query.For<Price>().Where(x => x.BeginDate < price.BeginDate && x.OrganizationUnitId == price.OrganizationUnitId).OrderByDescending(x => x.BeginDate).FirstOrDefault()
+                where previous != null
+                select previous.Id;
 
-            // И какой тип я должен тут указать?
-            // Тип outdated-сущности - это период. Нет периода в фактах, а агрегатный тип тут указывать некорректно.
-            return new EventCollectionHelper<Price> { { typeof(Order), periodIds } };
+            var periods =
+                from price in _query.For<Price>().Where(x => ids.Contains(x.Id))
+                select new PeriodKey { Date = price.BeginDate };
+
+            return new EventCollectionHelper<Price> { { typeof(Price), previousPrices }, { typeof(object), periods } };
         }
     }
 }

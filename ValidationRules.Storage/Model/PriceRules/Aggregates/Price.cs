@@ -8,7 +8,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
     public sealed class Price
     {
         public long Id { get; set; }
-        public DateTime BeginDate { get; set; }
 
         /// <summary>
         /// Связь прайс-листа с номеклатурной позицией, импортируется из ERM
@@ -32,6 +31,14 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long PricePositionId { get; set; }
             public long PositionId { get; set; }
             public int Count { get; set; }
+        }
+
+        public sealed class PricePeriod
+        {
+            public long PriceId { get; set; }
+            public long ProjectId { get; set; }
+            public DateTime Begin { get; set; }
+            public DateTime End { get; set; }
         }
     }
 }
