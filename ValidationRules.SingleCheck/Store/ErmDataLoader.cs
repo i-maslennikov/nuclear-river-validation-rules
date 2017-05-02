@@ -132,10 +132,17 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                               .Execute();
             store.AddRange(themeOrganizationUnits);
 
+            var project = query.GetTable<Project>()
+                               .Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                               .Take(1)
+                               .Execute()
+                               .Single();
+            store.Add(project);
+
             //
             var actualPrice = query.GetTable<Price>()
-                                   .Where(x => x.IsActive && !x.IsDeleted && x.IsPublished)
-                                   .Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId && x.BeginDate <= order.BeginDistributionDate)
+                                   .Where(x => !x.IsDeleted && x.IsPublished)
+                                   .Where(x => x.ProjectId == project.Id && x.BeginDate <= order.BeginDistributionDate)
                                    .OrderByDescending(x => x.BeginDate)
                                    .Take(1)
                                    .Execute()
@@ -147,7 +154,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                           .Execute();
             store.AddRange(usedPricePositions);
             var monthlyUsedPrices = query.GetTable<Price>()
-                                         .Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId && x.BeginDate >= order.BeginDistributionDate && x.BeginDate <= order.EndDistributionDatePlan)
+                                         .Where(x => x.ProjectId == project.Id && x.BeginDate >= order.BeginDistributionDate && x.BeginDate <= order.EndDistributionDatePlan)
                                          .Execute();
             store.AddRange(monthlyUsedPrices);
             var usedPriceIds = usedPricePositions.Select(x => x.PriceId).Union(new[] { actualPrice.Id }).Union(monthlyUsedPrices.Select(x => x.Id)).ToList();
@@ -170,13 +177,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                   .Where(x => usedPriceIds.Contains(x.Id))
                                   .Execute();
             store.AddRange(usedPrices);
-
-            var project = query.GetTable<Project>()
-                               .Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
-                               .Take(1)
-                               .Execute()
-                               .Single();
-            store.Add(project);
 
             var releaseInfos = query.GetTable<ReleaseInfo>()
                                     .Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)

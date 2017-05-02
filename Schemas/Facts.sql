@@ -401,7 +401,7 @@ go
 
 create table Facts.Price(
     Id bigint not null,
-    OrganizationUnitId bigint not null,
+    ProjectId bigint not null,
     BeginDate datetime2(2) not null,
     constraint PK_Price primary key (Id)
 )

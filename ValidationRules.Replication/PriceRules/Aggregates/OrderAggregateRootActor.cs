@@ -290,10 +290,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Order.ActualPrice> GetSource()
             {
-                return
+                var result =
                     from order in _query.For<Facts::Order>()
+                    from destProject in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                     let price = _query.For<Facts::Price>()
-                                .Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                                .Where(x => x.ProjectId == destProject.Id)
                                 .Where(x => x.BeginDate <= order.BeginDistribution)
                                 .OrderByDescending(x => x.BeginDate)
                                 .FirstOrDefault()
@@ -302,6 +303,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         OrderId = order.Id,
                         PriceId = price != null ? (long?)price.Id : null
                     };
+
+                return result;
             }
 
             public FindSpecification<Order.ActualPrice> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
