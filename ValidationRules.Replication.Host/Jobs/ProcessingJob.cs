@@ -20,6 +20,7 @@ using Quartz;
 namespace NuClear.ValidationRules.Replication.Host.Jobs
 {
     [DisallowConcurrentExecution]
+    [PersistJobDataAfterExecution]
     public class ProcessingJob : TaskServiceJobBase
     {
         private readonly IMetadataProvider _metadataProvider;
@@ -41,8 +42,12 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             _telemetry = telemetry;
         }
 
+        public int FailCount { get; set; }
         public int BatchSize { get; set; }
         public string Flow { get; set; }
+
+        private int BatchSizeAccordingFailures
+            => Math.Max(BatchSize >> FailCount, 1);
 
         protected override void ExecuteInternal(IJobExecutionContext context)
         {
@@ -53,16 +58,37 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
                 throw new InvalidOperationException(msg);
             }
 
-            using (Probe.Create(Flow))
+            try
             {
-                ProcessFlow();
-            }
+                using (Probe.Create(Flow))
+                {
+                    ProcessFlow();
+                }
 
-            var reports = DefaultReportSink.Instance.ConsumeReports();
-            foreach (var report in reports)
-            {
-                _telemetry.Trace("ProbeReport", report);
+                DecrementFailCount(context);
             }
+            catch (Exception)
+            {
+                IncrementFailCount(context);
+            }
+            finally
+            {
+                var reports = DefaultReportSink.Instance.ConsumeReports();
+                foreach (var report in reports)
+                {
+                    _telemetry.Trace("ProbeReport", report);
+                }
+            }
+        }
+
+        private void IncrementFailCount(IJobExecutionContext context)
+        {
+            context.JobDetail.JobDataMap.Put("FailCount", FailCount + 1);
+        }
+
+        private void DecrementFailCount(IJobExecutionContext context)
+        {
+            context.JobDetail.JobDataMap.Put("FailCount", Math.Max(FailCount - 1, 0));
         }
 
         private void ProcessFlow()
@@ -83,7 +109,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             {
                 var processorSettings = new PerformedOperationsPrimaryFlowProcessorSettings
                 {
-                    MessageBatchSize = BatchSize,
+                    MessageBatchSize = BatchSizeAccordingFailures,
                     AppropriatedStages = new[]
                             {
                                 MessageProcessingStage.Transformation,
