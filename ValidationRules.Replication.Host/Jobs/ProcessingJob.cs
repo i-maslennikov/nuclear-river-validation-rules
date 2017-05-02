@@ -83,7 +83,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
         private void IncrementFailCount(IJobExecutionContext context)
         {
-            context.JobDetail.JobDataMap.Put("FailCount", FailCount + 1);
+            context.JobDetail.JobDataMap.Put("FailCount", Math.Min(FailCount + 1, 31));
         }
 
         private void DecrementFailCount(IJobExecutionContext context)
