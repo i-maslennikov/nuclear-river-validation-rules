@@ -44,7 +44,8 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(ThemeAggregatesSchema);
 
             builder.Entity<ThemeAggregates::Order>()
-                   .HasSchemaName(ThemeAggregatesSchema);
+                   .HasSchemaName(ThemeAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
             builder.Entity<ThemeAggregates::Order.OrderTheme>()
                    .HasSchemaName(ThemeAggregatesSchema);
 
