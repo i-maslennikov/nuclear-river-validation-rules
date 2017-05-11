@@ -420,12 +420,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                 .Name(nameof(PriceFacts))
                 .Erm(
-                    new Erm::Price { Id = 1, IsActive = true, IsDeleted = false, IsPublished = true, OrganizationUnitId = 1 },
-                    new Erm::Price { Id = 2, IsActive = false, IsDeleted = false, IsPublished = true },
-                    new Erm::Price { Id = 3, IsActive = true, IsDeleted = true, IsPublished = true },
-                    new Erm::Price { Id = 4, IsActive = true, IsDeleted = false, IsPublished = false })
+                    new Erm::Price { Id = 1, IsDeleted = false, IsPublished = true, ProjectId = 1 },
+                    new Erm::Price { Id = 3, IsDeleted = true, IsPublished = true },
+                    new Erm::Price { Id = 4, IsDeleted = false, IsPublished = false })
                 .Fact(
-                    new Price { Id = 1, OrganizationUnitId = 1 });
+                    new Price { Id = 1, ProjectId = 1 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement CategoryOrganizationUnitFacts

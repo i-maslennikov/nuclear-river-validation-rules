@@ -156,14 +156,13 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             {
                 var result =
                     from price in _query.For<Facts::Price>()
-                    let nextPrice = _query.For<Facts::Price>().Where(x => x.OrganizationUnitId == price.OrganizationUnitId && x.BeginDate > price.BeginDate).Min(x => (DateTime?)x.BeginDate)
-                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == price.OrganizationUnitId)
+                    let nextPrice = _query.For<Facts::Price>().Where(x => x.ProjectId == price.ProjectId && x.BeginDate > price.BeginDate).Min(x => (DateTime?)x.BeginDate)
                     select new Price.PricePeriod
                         {
                             PriceId = price.Id,
                             Begin = price.BeginDate,
                             End = nextPrice ?? DateTime.MaxValue,
-                            ProjectId = project.Id,
+                            ProjectId = price.ProjectId,
                         };
 
                 return result;

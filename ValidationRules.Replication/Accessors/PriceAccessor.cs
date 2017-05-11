@@ -26,12 +26,12 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IQueryable<Price> GetSource() => _query
             .For<Erm::Price>()
-            .Where(x => x.IsActive && !x.IsDeleted && x.IsPublished)
+            .Where(x => !x.IsDeleted && x.IsPublished)
             .Select(x => new Price
                 {
                     Id = x.Id,
                     BeginDate = x.BeginDate,
-                    OrganizationUnitId = x.OrganizationUnitId,
+                    ProjectId = x.ProjectId,
                 });
 
         public FindSpecification<Price> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -56,7 +56,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
             // Публикация нового прайс-листа неявно меняет предыдущий (его дату окончания действия)
             var previousPrices =
                 from price in _query.For<Price>().Where(x => ids.Contains(x.Id))
-                let previous = _query.For<Price>().Where(x => x.BeginDate < price.BeginDate && x.OrganizationUnitId == price.OrganizationUnitId).OrderByDescending(x => x.BeginDate).FirstOrDefault()
+                let previous = _query.For<Price>().Where(x => x.BeginDate < price.BeginDate && x.ProjectId == price.ProjectId).OrderByDescending(x => x.BeginDate).FirstOrDefault()
                 where previous != null
                 select previous.Id;
 

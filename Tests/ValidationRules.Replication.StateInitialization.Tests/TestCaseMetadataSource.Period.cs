@@ -32,9 +32,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(PricePeriod))
                 .Fact(
-                    new Facts::Price { Id = 1, BeginDate = MonthStart(1) },
-                    new Facts::Price { Id = 2, BeginDate = MonthStart(2) },
-                    new Facts::Project { Id = 123 })
+                    new Facts::Price { Id = 1, BeginDate = MonthStart(1), ProjectId = 123 },
+                    new Facts::Price { Id = 2, BeginDate = MonthStart(2), ProjectId = 123 })
                 .Aggregate(
                     new Aggregates::Price { Id = 1 },
                     new Aggregates::Price { Id = 2 },
@@ -47,9 +46,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(Period))
                 .Fact(
-                    new Facts::Price { Id = 1, OrganizationUnitId = 2, BeginDate = MonthStart(1) },
-                    new Facts::Price { Id = 2, OrganizationUnitId = 2, BeginDate = MonthStart(5) },
-                    new Facts::Price { Id = 3, OrganizationUnitId = 1, BeginDate = MonthStart(3) },
+                    new Facts::Price { Id = 1, ProjectId = 2, BeginDate = MonthStart(1) },
+                    new Facts::Price { Id = 2, ProjectId = 2, BeginDate = MonthStart(5) },
+                    new Facts::Price { Id = 3, ProjectId = 1, BeginDate = MonthStart(3) },
 
                     new Facts::Project { Id = 1, OrganizationUnitId = 1 },
                     new Facts::Project { Id = 2, OrganizationUnitId = 2 },
