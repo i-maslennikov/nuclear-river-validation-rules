@@ -23,7 +23,7 @@ namespace ValidationRules.Replication.DatabaseComparison
             return (ChangeDetector)Activator.CreateInstance(typeof(DefaultChangeDetector<>).MakeGenericType(dataObjectType));
         }
 
-        public abstract void Process(string sourceDb, MappingSchema sourceSchema, string destDb, MappingSchema destSchema);
+        public abstract void Process(string sourceConectionStringName, MappingSchema sourceSchema, string destConectionStringName, MappingSchema destSchema);
 
         private sealed class DefaultChangeDetector<T> : ChangeDetector
             where T : class
@@ -31,13 +31,13 @@ namespace ValidationRules.Replication.DatabaseComparison
             private readonly IDataObjectReader<T> _objectReader = (IDataObjectReader<T>)Activator.CreateInstance(ResolveReaderType());
             private readonly Saver<T> _saver = new Saver<T>();
 
-            public override void Process(string sourceDb, MappingSchema sourceSchema, string destDb, MappingSchema destSchema)
+            public override void Process(string sourceConectionStringName, MappingSchema sourceSchema, string destConectionStringName, MappingSchema destSchema)
             {
                 Console.Write($"{typeof(T).FullName}... ");
                 var sw = Stopwatch.StartNew();
 
-                using (var source = new DataConnection(sourceDb).AddMappingSchema(sourceSchema))
-                using (var dest = new DataConnection(destDb).AddMappingSchema(destSchema))
+                using (var source = new DataConnection(sourceConectionStringName).AddMappingSchema(sourceSchema))
+                using (var dest = new DataConnection(destConectionStringName).AddMappingSchema(destSchema))
                 {
                     var accessorTypes = TypeProvider.GetAccessors(destSchema, typeof(T));
                     var completeChanges = new EntityChanges<T>(_objectReader.ReadSource(source, accessorTypes), _objectReader.ReadDest(dest), EqualityComparerFactory.CreateCompleteComparer<T>());
