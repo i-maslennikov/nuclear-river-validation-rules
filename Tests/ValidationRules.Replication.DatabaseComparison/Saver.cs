@@ -9,11 +9,11 @@ namespace ValidationRules.Replication.DatabaseComparison
         public void Save(EntityChanges<T> changes)
         {
             var name = typeof(T).FullName.Replace("NuClear.ValidationRules.Storage.Model.", "");
-            var directory = new DirectoryInfo(Path.Combine(@"c:\dev\data", name));
+            var directory = new DirectoryInfo(Path.Combine(name));
             if (directory.Exists)
             {
                 directory.Delete(true);
-                directory = new DirectoryInfo(Path.Combine(@"c:\dev\data", name));
+                directory = new DirectoryInfo(Path.Combine(name));
             }
 
             Write(directory, nameof(changes.DestOnly), changes.DestOnly.ToArray());
