@@ -9,7 +9,7 @@ using NuClear.Replication.Core;
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.FieldComparer;
 
-namespace ValidationRules.Replication.DatabaseComparision
+namespace ValidationRules.Replication.DatabaseComparison
 {
     internal abstract class ChangeDetector
     {

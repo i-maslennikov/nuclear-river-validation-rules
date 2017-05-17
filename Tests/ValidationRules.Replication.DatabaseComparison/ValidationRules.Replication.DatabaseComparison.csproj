@@ -7,8 +7,8 @@
     <ProjectGuid>{3E0D8363-B4B7-475A-975E-6A2FDAB8831E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ValidationRules.Replication.DatabaseComparision</RootNamespace>
-    <AssemblyName>ValidationRules.Replication.DatabaseComparision</AssemblyName>
+    <RootNamespace>ValidationRules.Replication.DatabaseComparison</RootNamespace>
+    <AssemblyName>ValidationRules.Replication.DatabaseComparison</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -121,7 +121,9 @@
     <Compile Include="TypeProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

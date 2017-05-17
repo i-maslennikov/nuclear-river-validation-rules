@@ -2,7 +2,7 @@
 
 using LinqToDB.Mapping;
 
-namespace ValidationRules.Replication.DatabaseComparision
+namespace ValidationRules.Replication.DatabaseComparison
 {
     public static class Program
     {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace ValidationRules.Replication.DatabaseComparision
+namespace ValidationRules.Replication.DatabaseComparison
 {
     internal class Saver<T> where T : class
     {

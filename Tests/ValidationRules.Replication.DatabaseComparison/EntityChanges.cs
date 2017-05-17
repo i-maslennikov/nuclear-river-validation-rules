@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ValidationRules.Replication.DatabaseComparision
+namespace ValidationRules.Replication.DatabaseComparison
 {
     public class EntityChanges<T>
         where T : class

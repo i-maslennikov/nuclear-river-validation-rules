@@ -79,7 +79,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packaging", "Packaging", "{
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "ValidationRules.Replication.Host", "Packaging\ValidationRules.Replication.Host\ValidationRules.Replication.Host.nuproj", "{A230D3D9-A2D4-4BA9-A004-BB1C8D673E18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Replication.DatabaseComparision", "Tests\ValidationRules.Replication.DatabaseComparision\ValidationRules.Replication.DatabaseComparision.csproj", "{3E0D8363-B4B7-475A-975E-6A2FDAB8831E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Replication.DatabaseComparison", "Tests\ValidationRules.Replication.DatabaseComparison\ValidationRules.Replication.DatabaseComparison.csproj", "{3E0D8363-B4B7-475A-975E-6A2FDAB8831E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

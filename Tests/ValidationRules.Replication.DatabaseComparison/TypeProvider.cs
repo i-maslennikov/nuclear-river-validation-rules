@@ -8,7 +8,7 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Storage;
 
-namespace ValidationRules.Replication.DatabaseComparision
+namespace ValidationRules.Replication.DatabaseComparison
 {
     internal static class TypeProvider
     {

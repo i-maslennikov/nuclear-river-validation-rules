@@ -10,7 +10,7 @@ using NuClear.ValidationRules.Storage.Specifications;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace ValidationRules.Replication.DatabaseComparision
+namespace ValidationRules.Replication.DatabaseComparison
 {
     internal interface IDataObjectReader<T>
     {
