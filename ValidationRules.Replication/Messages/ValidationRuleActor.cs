@@ -34,6 +34,7 @@ namespace NuClear.ValidationRules.Replication.Messages
         private readonly IBulkRepository<Version.ValidationResult> _validationResultRepository;
         private readonly Dictionary<MessageTypeCode, IValidationResultAccessor> _accessors;
         private readonly IEqualityComparer<Version.ValidationResult> _equalityComparer;
+        private readonly ValidationResultCache _cache;
 
         public ValidationRuleActor(IQuery query,
                                    IRepository<Version> versionRepository,
@@ -47,6 +48,7 @@ namespace NuClear.ValidationRules.Replication.Messages
             _validationResultRepository = validationResultRepository;
             _accessors = new ValidationRuleRegistry(query).CreateAccessors().ToDictionary(x => (MessageTypeCode)x.MessageTypeId, x => x);
             _equalityComparer = equalityComparerFactory.CreateCompleteComparer<Version.ValidationResult>();
+            _cache = ValidationResultCache.Instance;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -58,17 +60,22 @@ namespace NuClear.ValidationRules.Replication.Messages
             //  3. Версия без изменений не создаётся.
 
             var currentVersion = _query.For<Version>().OrderByDescending(x => x.Id).Take(1).AsEnumerable().First().Id;
-            var validationResults = new List<Version.ValidationResult>();
+            var newValidationResults = new List<Version.ValidationResult>();
+            var resolvedValidationResults = new List<Version.ValidationResult>();
 
             var ruleGroups = commands.OfType<IRecalculateValidationRuleCommand>().GroupBy(x => x.Rule).ToList();
             if (ruleGroups.Count != 0)
             {
                 IReadOnlyCollection<Version.ValidationResult> targetValidationResults;
 
-                using (Probe.Create("Query Target"))
+                if (!_cache.TryGet(currentVersion, out targetValidationResults))
                 {
-                    var query = _query.For<Version.ValidationResult>().ForVersion(currentVersion);
-                    targetValidationResults = query.ApplyVersionId(0).ToList();
+                    using (Probe.Create("Query Target"))
+                    {
+                        targetValidationResults =
+                            _query.For<Version.ValidationResult>().ForVersion(currentVersion).ApplyVersionId(0).ToList();
+                        _cache.Put(currentVersion, targetValidationResults);
+                    }
                 }
 
                 foreach (var ruleCommands in ruleGroups)
@@ -77,17 +84,19 @@ namespace NuClear.ValidationRules.Replication.Messages
                     {
                         var filter = CreateFilter(ruleCommands);
                         var validationRuleResult = CalculateValidationRuleChanges(targetValidationResults, ruleCommands.Key, filter);
-                        validationResults.AddRange(validationRuleResult);
+                        newValidationResults.AddRange(validationRuleResult.Difference);
+                        resolvedValidationResults.AddRange(validationRuleResult.Complement);
                     }
                 }
             }
 
             var ermStates = commands.OfType<CreateNewVersionCommand>().SelectMany(x => x.States).Select(x => new Version.ErmState { Token = x });
-            if (validationResults.Count > 0)
+            if (newValidationResults.Count > 0 || resolvedValidationResults.Count > 0)
             {
                 using (Probe.Create("Create New Version"))
                 {
-                    CreateVersion(currentVersion + 1, ermStates, validationResults);
+                    CreateVersion(currentVersion + 1, ermStates, newValidationResults.Concat(resolvedValidationResults.ApplyResolved()));
+                    _cache.ApplyPatch(newValidationResults, resolvedValidationResults);
                 }
             }
             else
@@ -122,7 +131,7 @@ namespace NuClear.ValidationRules.Replication.Messages
             return x => x.OrderId.HasValue && ids.Contains(x.OrderId.Value);
         }
 
-        private IEnumerable<Version.ValidationResult> CalculateValidationRuleChanges(IReadOnlyCollection<Version.ValidationResult> currentVersionResults, MessageTypeCode ruleCode, Expression<Func<Version.ValidationResult, bool>> filter)
+        private MergeResult<Version.ValidationResult> CalculateValidationRuleChanges(IReadOnlyCollection<Version.ValidationResult> currentVersionResults, MessageTypeCode ruleCode, Expression<Func<Version.ValidationResult, bool>> filter)
         {
             try
             {
@@ -142,7 +151,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                 {
                     var destObjects = currentVersionResults.Where(x => x.MessageType == (int)ruleCode).Where(filter.Compile());
                     var mergeResult = MergeTool.Merge(sourceObjects, destObjects, _equalityComparer);
-                    return mergeResult.Difference.Union(mergeResult.Complement.ApplyResolved());
+                    return mergeResult;
                 }
             }
             catch (Exception ex)
