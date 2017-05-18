@@ -92,11 +92,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.5.2.1-accessor-types-p0013\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.5.2.1-accessor-types-p0015\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.5.2.1-accessor-types-p0013\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.5.2.1-accessor-types-p0015\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
