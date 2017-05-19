@@ -18,6 +18,8 @@ using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Agg
 
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 
+using WebApp = NuClear.ValidationRules.Storage.Model.WebApp;
+
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
@@ -163,6 +165,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 		    {
 			    typeof(Messages::Version),
 			    typeof(Messages::Version.ValidationResult),
+			    typeof(Messages::Version.ErmState),
+		    };
+
+	    public static readonly Type[] WebAppTypes =
+		    {
+			    typeof(WebApp::Lock),
 		    };
 
 		public IDataObjectTypesProvider Create(ReplicateInBulkCommand command)

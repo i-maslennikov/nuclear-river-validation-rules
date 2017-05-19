@@ -211,6 +211,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
@@ -223,6 +224,7 @@
     <Compile Include="DataObjectTypesProviderFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SchemaInitializationActor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -236,10 +238,6 @@
     <ProjectReference Include="..\ValidationRules.Replication\ValidationRules.Replication.csproj">
       <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
       <Name>ValidationRules.Replication</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ValidationRules.SingleCheck\ValidationRules.SingleCheck.csproj">
-      <Project>{2AEE5EB1-9F9F-49D3-8AA3-A9C9338AAF4B}</Project>
-      <Name>ValidationRules.SingleCheck</Name>
     </ProjectReference>
     <ProjectReference Include="..\ValidationRules.Storage\ValidationRules.Storage.csproj">
       <Project>{E799A2EE-408F-467A-8B50-FC729E92D3F3}</Project>
