@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(Version))
             .Aggregate()
-            .Message(new Version {Id = 0, Date = DateTime.UtcNow})
+            .Message(new Version(), new Version.ErmState())
             .Ignored();
     }
 }
