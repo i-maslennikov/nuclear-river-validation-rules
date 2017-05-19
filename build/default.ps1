@@ -93,6 +93,5 @@ Task Build-Packages -depends `
 Task Deploy-Packages -depends `
     Stop-ReplicationHost, `
     Deploy-ServiceBus, `
-    Update-Schemas, `
     Run-BulkTool, `
     QueueDeploy-Packages
