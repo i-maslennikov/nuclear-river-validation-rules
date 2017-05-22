@@ -27,8 +27,6 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public bool IsFreeOfCharge { get; set; }
         public bool IsSelfAds { get; set; }
 
-        public int ReleaseCountPlan { get; set; }
-
         public static class State
         {
             public const int OnRegistration = 1;

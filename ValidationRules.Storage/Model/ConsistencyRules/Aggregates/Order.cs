@@ -141,7 +141,6 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public bool BranchOfficeOrganizationUnit { get; set; }
             public bool Inspector { get; set; }
             public bool Currency { get; set; }
-            public bool ReleaseCountPlan { get; set; }
             public bool Deal { get; set; }
         }
     }

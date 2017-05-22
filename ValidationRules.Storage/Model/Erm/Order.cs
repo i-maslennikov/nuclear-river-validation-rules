@@ -31,7 +31,6 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDateFact { get; set; }
         public DateTime EndDistributionDatePlan { get; set; }
-        public int ReleaseCountPlan { get; set; }
         public int WorkflowStepId { get; set; }
         public int OrderType { get; set; }
         public string Number { get; set; }

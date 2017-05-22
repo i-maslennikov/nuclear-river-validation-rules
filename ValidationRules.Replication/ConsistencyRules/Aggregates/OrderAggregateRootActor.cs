@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -430,12 +431,13 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.InvalidEndDistributionDate> GetSource()
-                => from order in _query.For<Facts::Order>()
-                   where order.EndDistributionPlan != order.BeginDistribution.AddMonths(order.ReleaseCountPlan)
-                   select new Order.InvalidEndDistributionDate
-                   {
-                       OrderId = order.Id,
-                   };
+                =>
+                    from order in _query.For<Facts::Order>()
+                    where order.EndDistributionPlan.Day != 1 || order.EndDistributionPlan.TimeOfDay != TimeSpan.FromSeconds(0)
+                    select new Order.InvalidEndDistributionDate
+                        {
+                            OrderId = order.Id,
+                        };
 
             public FindSpecification<Order.InvalidEndDistributionDate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -669,7 +671,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                            Inspector = !order.InspectorId.HasValue,
                            LegalPerson = !order.LegalPersonId.HasValue,
                            LegalPersonProfile = !order.LegalPersonProfileId.HasValue,
-                           ReleaseCountPlan = order.ReleaseCountPlan == 0,
                            Deal = !order.DealId.HasValue,
                        };
 
