@@ -74,7 +74,7 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                                            .Distinct()
                                            .ToArray();
 
-                _tracer.Info("ThemeRules Order aggregateIds: " + string.Join(", ", aggregateIds));
+                _tracer.Warn("ThemeRules Order aggregateIds: " + string.Join(", ", aggregateIds));
 
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
             }
@@ -82,21 +82,21 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
             public override IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Order> dataObjects)
             {
                 var ids = dataObjects.Select(x => x.Id);
-                _tracer.Info("ThemeRules Order HandleCreates: " + string.Join(", ", ids));
+                _tracer.Warn("ThemeRules Order HandleCreates: " + string.Join(", ", ids));
                 return base.HandleCreates(dataObjects);
             }
 
             public override IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Order> dataObjects)
             {
                 var ids = dataObjects.Select(x => x.Id);
-                _tracer.Info("ThemeRules Order HandleUpdates: " + string.Join(", ", ids));
+                _tracer.Warn("ThemeRules Order HandleUpdates: " + string.Join(", ", ids));
                 return base.HandleUpdates(dataObjects);
             }
 
             public override IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Order> dataObjects)
             {
                 var ids = dataObjects.Select(x => x.Id);
-                _tracer.Info("ThemeRules Order HandleDeletes: " + string.Join(", ", ids));
+                _tracer.Warn("ThemeRules Order HandleDeletes: " + string.Join(", ", ids));
                 return base.HandleDeletes(dataObjects);
             }
         }
