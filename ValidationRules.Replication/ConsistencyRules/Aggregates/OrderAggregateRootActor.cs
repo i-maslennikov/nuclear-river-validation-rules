@@ -402,7 +402,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.InvalidBeginDistributionDate> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   where order.BeginDistribution.Day != 1
+                   where order.BeginDistribution.Day != 1 || order.BeginDistribution.TimeOfDay != TimeSpan.Zero
                    select new Order.InvalidBeginDistributionDate
                    {
                        OrderId = order.Id,
