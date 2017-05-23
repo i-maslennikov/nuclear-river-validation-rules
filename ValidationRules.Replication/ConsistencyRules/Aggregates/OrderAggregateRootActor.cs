@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -401,7 +402,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.InvalidBeginDistributionDate> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   where order.BeginDistribution.Day != 1
+                   where order.BeginDistribution.Day != 1 || order.BeginDistribution.TimeOfDay != TimeSpan.Zero
                    select new Order.InvalidBeginDistributionDate
                    {
                        OrderId = order.Id,
@@ -431,13 +432,13 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.InvalidEndDistributionDate> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   where order.EndDistributionPlan != order.BeginDistribution.AddMonths(order.ReleaseCountPlan)
+                   where order.EndDistributionPlan.Day != 1 || order.EndDistributionPlan.TimeOfDay != TimeSpan.Zero
                    select new Order.InvalidEndDistributionDate
-                   {
-                       OrderId = order.Id,
-                   };
+                       {
+                           OrderId = order.Id,
+                       };
 
-            public FindSpecification<Order.InvalidEndDistributionDate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+        public FindSpecification<Order.InvalidEndDistributionDate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.InvalidEndDistributionDate>(x => aggregateIds.Contains(x.OrderId));
@@ -669,7 +670,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                            Inspector = !order.InspectorId.HasValue,
                            LegalPerson = !order.LegalPersonId.HasValue,
                            LegalPersonProfile = !order.LegalPersonProfileId.HasValue,
-                           ReleaseCountPlan = order.ReleaseCountPlan == 0,
                            Deal = !order.DealId.HasValue,
                        };
 

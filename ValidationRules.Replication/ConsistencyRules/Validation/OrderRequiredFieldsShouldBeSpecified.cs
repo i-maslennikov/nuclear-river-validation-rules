@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                 from order in query.For<Order>()
                 from missing in query.For<Order.MissingRequiredField>().Where(x => x.OrderId == order.Id)
                 where missing.Currency || missing.BranchOfficeOrganizationUnit || missing.Inspector
-                      || missing.LegalPerson || missing.LegalPersonProfile || missing.ReleaseCountPlan
+                      || missing.LegalPerson || missing.LegalPersonProfile
                 select new Version.ValidationResult
                     {
                         MessageParams =
@@ -38,7 +38,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                                                 { "inspector", missing.Inspector },
                                                 { "legalPerson", missing.LegalPerson },
                                                 { "legalPersonProfile", missing.LegalPersonProfile },
-                                                { "releaseCountPlan", missing.ReleaseCountPlan },
                                         },
                                     new Reference<EntityTypeOrder>(order.Id))
                                 .ToXDocument(),

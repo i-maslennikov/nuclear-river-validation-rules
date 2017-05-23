@@ -84,8 +84,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                                                       bool deal = true,
                                                                                       bool inspector = true,
                                                                                       bool legalPerson = true,
-                                                                                      bool legalPersonProfile = true,
-                                                                                      bool releaseCountPlan = true)
+                                                                                      bool legalPersonProfile = true)
         {
             return new Aggregates::Order.MissingRequiredField
                 {
@@ -96,7 +95,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     Inspector = inspector,
                     LegalPerson = legalPerson,
                     LegalPersonProfile = legalPersonProfile,
-                    ReleaseCountPlan = releaseCountPlan,
                 };
         }
     }

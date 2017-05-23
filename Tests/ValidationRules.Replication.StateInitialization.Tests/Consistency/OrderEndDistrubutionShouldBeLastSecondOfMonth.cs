@@ -20,9 +20,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(OrderEndDistrubutionShouldBeLastSecondOfMonth))
                 .Fact(
-                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2), ReleaseCountPlan = 2 })
+                    new Facts::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2).AddSeconds(1) })
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2).AddSeconds(1) },
                     new Aggregates::Order.InvalidEndDistributionDate { OrderId = 1 })
                 .Message(
                     new Messages::Version.ValidationResult
@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 .ToXDocument(),
                             MessageType = (int)MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth,
                             PeriodStart = MonthStart(1),
-                            PeriodEnd = MonthStart(2),
+                            PeriodEnd = MonthStart(2).AddSeconds(1),
                             OrderId = 1,
                         });
     }
