@@ -70,31 +70,6 @@ function Get-BulkToolMetadata ($updateSchemas, $Context){
 	return @{ 'ValidationRules.StateInitialization.Host' = $metadata }
 }
 
-function Get-UpdateSchemasMetadata ($UpdateSchemas, $Context) {
-	$metadata = @{}
-
-	$updateSchemasMetadata = @{ }
-
-	if ($UpdateSchemas -and $UpdateSchemas -isnot [array]){
-		$UpdateSchemas = $UpdateSchemas.Split(@(','), 'RemoveEmptyEntries')
-	}
-
-	foreach ($schema in $UpdateSchemas){
-		foreach($key in $AllSchemas.Keys -match $schema) {
-			$updateSchemasMetadata.Add($key, $AllSchemas[$key])
-		}
-	}
-
-    $updateSchemasMetadata.Add('WebApp', $AllSchemas['WebApp'])
-
-	if ($updateSchemasMetadata.Count -ne 0){
-		$metadata += @{ 'UpdateSchemas' = $updateSchemasMetadata }
-		$metadata += Get-BulkToolMetadata $UpdateSchemas $Context
-	}
-
-	return $metadata
-}
-
 function Get-NuGetMetadata {
 	return @{
 		'NuGet' = @{
@@ -155,45 +130,11 @@ function Parse-EnvironmentMetadata ($Properties) {
 		if ($updateSchemas -isnot [array]){
 			$updateSchemas = $updateSchemas.Split(@(','), 'RemoveEmptyEntries')
 		}
-		$environmentMetadata += Get-UpdateSchemasMetadata $updateSchemas $context
+        
+		$environmentMetadata += Get-BulkToolMetadata $updateSchemas $context
 	}
 
 	return $environmentMetadata
-}
-
-$AllSchemas = @{
-
-	'Facts' = @{
-		ConnectionStringKey = 'Facts'
-		SqlFiles = @(
-			'Schemas\DropOldFacts.sql'
-			'Schemas\Facts.sql'
-		)
-	}
-
-	'Aggregates' = @{
-		ConnectionStringKey = 'Aggregates'
-		SqlFiles = @(
-			'Schemas\DropOldAggregates.sql'
-			'Schemas\Price.Aggregates.sql'
-			'Schemas\Account.Aggregates.sql'
-			'Schemas\Consistency.Aggregates.sql'
-			'Schemas\Firm.Aggregates.sql'
-			'Schemas\Advertisement.Aggregates.sql'
-			'Schemas\Project.Aggregates.sql'
-			'Schemas\Theme.Aggregates.sql'
-		)
-	}
-
-	'Messages' = @{
-		ConnectionStringKey = 'Messages'
-		SqlFiles = @('Schemas\Messages.sql')
-	}
-
-	'WebApp' = @{
-		ConnectionStringKey = 'Messages'
-		SqlFiles = @('Schemas\WebApp.sql')
-	}
 }
 
 $AllEntryPoints = @(

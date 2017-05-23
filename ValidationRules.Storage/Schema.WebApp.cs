@@ -21,13 +21,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(WebAppSchema)
                    .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<TableInfo>()
-                   .HasSchemaName("INFORMATION_SCHEMA")
-                   .HasTableName("TABLES")
-                   .Property(x => x.Schema).HasColumnName("TABLE_SCHEMA")
-                   .Property(x => x.Name).HasColumnName("TABLE_NAME")
-                   .Property(x => x.Type).HasColumnName("TABLE_TYPE");
-
             return builder;
         }
     }

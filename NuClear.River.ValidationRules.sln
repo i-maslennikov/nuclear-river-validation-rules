@@ -35,22 +35,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{8A6466
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "build", "build\build.csproj", "{8D547BD0-0127-4FC4-AD50-ECDD7BB17152}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schemas", "Schemas", "{2798FE00-40AA-420B-A5EC-67FC2EBF88D8}"
-	ProjectSection(SolutionItems) = preProject
-		Schemas\Account.Aggregates.sql = Schemas\Account.Aggregates.sql
-		Schemas\Advertisement.Aggregates.sql = Schemas\Advertisement.Aggregates.sql
-		Schemas\Consistency.Aggregates.sql = Schemas\Consistency.Aggregates.sql
-		Schemas\DropOldAggregates.sql = Schemas\DropOldAggregates.sql
-		Schemas\DropOldFacts.sql = Schemas\DropOldFacts.sql
-		Schemas\Facts.sql = Schemas\Facts.sql
-		Schemas\Firm.Aggregates.sql = Schemas\Firm.Aggregates.sql
-		Schemas\Messages.sql = Schemas\Messages.sql
-		Schemas\Price.Aggregates.sql = Schemas\Price.Aggregates.sql
-		Schemas\Project.Aggregates.sql = Schemas\Project.Aggregates.sql
-		Schemas\Theme.Aggregates.sql = Schemas\Theme.Aggregates.sql
-		Schemas\WebApp.sql = Schemas\WebApp.sql
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D5758A2D-BB93-47E5-A13B-4EEC203D4371}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidationRules.Replication.Tests", "Tests\ValidationRules.Replication.Tests\ValidationRules.Replication.Tests.csproj", "{0AC56434-B3DA-48FB-B896-96E45D3122CE}"

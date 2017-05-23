@@ -13,7 +13,6 @@ Include "$BuildToolsRoot\psake\nuget.ps1"
 Include "$BuildToolsRoot\psake\unittests.ps1"
 Include 'servicebus.ps1'
 Include 'convertusecases.ps1'
-Include 'updateschemas.ps1'
 Include 'bulktool.ps1'
 
 # Querying.Host
@@ -93,6 +92,5 @@ Task Build-Packages -depends `
 Task Deploy-Packages -depends `
     Stop-ReplicationHost, `
     Deploy-ServiceBus, `
-    Update-Schemas, `
     Run-BulkTool, `
     QueueDeploy-Packages

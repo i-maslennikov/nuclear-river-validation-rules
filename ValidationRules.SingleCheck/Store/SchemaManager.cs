@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Transactions;
 
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 
-using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Model.WebApp;
+using NuClear.ValidationRules.Storage.SchemaInitializer;
 
 namespace NuClear.ValidationRules.SingleCheck.Store
 {
@@ -45,37 +44,15 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             return schema;
         }
 
-        public void DestroySchema(Lock @lock)
-        {
-            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero }))
-            using (var db = new DataConnection("Messages").AddMappingSchema(_baseSchema))
-            {
-                var poolTables = db.GetTable<TableInfo>().Where(x => x.Name.EndsWith($"_{@lock.Id}")).ToArray();
-                foreach (var table in poolTables)
-                {
-                    db.DropTable<object>(tableName: table.Name, schemaName: table.Schema);
-                }
-
-                db.Delete(@lock);
-                scope.Complete();
-            }
-        }
-
         private void InitializeMappingSchema(MappingSchema schema, Lock @lock)
         {
             using (var scope = CreateTransaction())
             using (var db = new DataConnection("Messages").AddMappingSchema(schema))
             {
-                foreach (var dataObjectType in _dataObjectTypes)
-                {
-                    var tableManager = TableManager.Create(dataObjectType);
-                    tableManager.CreateTable(db);
+                var service = new SqlSchemaService(db);
+                service.CreateTablesWithIndices(schema, _dataObjectTypes);
 
-                    var indexManager = new IndexManager(dataObjectType);
-                    indexManager.CreateIndices(db);
-                }
-
-                @lock.IsNew = false;
+				@lock.IsNew = false;
                 db.Update(@lock);
 
                 scope.Complete();
@@ -84,48 +61,5 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
         private TransactionScope CreateTransaction()
             => new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero });
-
-        private abstract class TableManager
-        {
-            public static TableManager Create(Type dataObjectType)
-            {
-                var managerType = typeof(TableManagerImpl<>).MakeGenericType(dataObjectType);
-                return (TableManager)Activator.CreateInstance(managerType);
-            }
-
-            public abstract void CreateTable(DataConnection db);
-
-            private sealed class TableManagerImpl<T> : TableManager where T : class
-            {
-                public override void CreateTable(DataConnection db)
-                {
-                    db.CreateTable<T>();
-                }
-            }
-        }
-
-        private class IndexManager
-        {
-            private readonly Type _dataObjectType;
-
-            public IndexManager(Type dataObjectType)
-            {
-                _dataObjectType = dataObjectType;
-            }
-
-            public void CreateIndices(DataConnection db)
-            {
-                var table = db.MappingSchema.GetAttribute<TableAttribute>(_dataObjectType);
-                var indices = db.MappingSchema.GetAttributes<SchemaExtensions.IndexAttribute>(_dataObjectType);
-                foreach (var index in indices)
-                {
-                    var command = db.CreateCommand();
-                    command.CommandText = $"create index ix_auto_{table.Name}_{string.Join("_", index.Fields.Select(x => x.Name))} on [{table.Schema ?? "dbo"}].[{table.Name ?? _dataObjectType.Name}] "
-                                          + $"({string.Join(", ", index.Fields.Select(x => "[" + x.Name + "]"))})"
-                                          + (index.Include.Any() ? $" include ({string.Join(", ", index.Include.Select(x => "[" + x.Name + "]"))})" : string.Empty);
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
     }
 }
