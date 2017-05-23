@@ -6,6 +6,7 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
+using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
@@ -18,22 +19,31 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
     {
         public OrderAggregateRootActor(
             IQuery query,
+            ITracer tracer,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.OrderTheme> orderThemeBulkRepository)
             : base(query, equalityComparerFactory)
         {
-            HasRootEntity(new OrderAccessor(query), bulkRepository,
+            HasRootEntity(new OrderAccessor(query, tracer), bulkRepository,
                HasValueObject(new OrderThemeAccessor(query), orderThemeBulkRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
         {
             private readonly IQuery _query;
+            private readonly ITracer _tracer;
 
             public OrderAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
+                _tracer = null;
+            }
+
+            public OrderAccessor(IQuery query, ITracer tracer) : base(CreateInvalidator())
+            {
+                _query = query;
+                _tracer = tracer;
             }
 
             private static IRuleInvalidator CreateInvalidator()
@@ -63,7 +73,31 @@ namespace NuClear.ValidationRules.Replication.ThemeRules.Aggregates
                                            .Concat(commands.OfType<DeleteDataObjectCommand>().Select(c => c.DataObjectId))
                                            .Distinct()
                                            .ToArray();
+
+                _tracer.Info("ThemeRules Order aggregateIds: " + string.Join(", ", aggregateIds));
+
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
+            }
+
+            public override IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Order> dataObjects)
+            {
+                var ids = dataObjects.Select(x => x.Id);
+                _tracer.Info("ThemeRules Order HandleCreates: " + string.Join(", ", ids));
+                return base.HandleCreates(dataObjects);
+            }
+
+            public override IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Order> dataObjects)
+            {
+                var ids = dataObjects.Select(x => x.Id);
+                _tracer.Info("ThemeRules Order HandleUpdates: " + string.Join(", ", ids));
+                return base.HandleUpdates(dataObjects);
+            }
+
+            public override IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Order> dataObjects)
+            {
+                var ids = dataObjects.Select(x => x.Id);
+                _tracer.Info("ThemeRules Order HandleDeletes: " + string.Join(", ", ids));
+                return base.HandleDeletes(dataObjects);
             }
         }
 

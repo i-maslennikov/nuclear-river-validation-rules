@@ -19,13 +19,13 @@ namespace NuClear.ValidationRules.Replication
             _invalidator = invalidator;
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<T> dataObjects)
+        public virtual IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<T> dataObjects)
             => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<T> dataObjects)
+        public virtual IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<T> dataObjects)
             => Array.Empty<IEvent>();
 
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<T> dataObjects)
+        public virtual IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<T> dataObjects)
             => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<T> dataObjects)
