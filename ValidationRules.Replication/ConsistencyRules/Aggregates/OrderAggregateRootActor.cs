@@ -431,15 +431,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.InvalidEndDistributionDate> GetSource()
-                =>
-                    from order in _query.For<Facts::Order>()
-                    where order.EndDistributionPlan.Day != 1 || order.EndDistributionPlan.TimeOfDay != TimeSpan.FromSeconds(0)
-                    select new Order.InvalidEndDistributionDate
-                        {
-                            OrderId = order.Id,
-                        };
+                => from order in _query.For<Facts::Order>()
+                   where order.EndDistributionPlan.Day != 1 || order.EndDistributionPlan.TimeOfDay != TimeSpan.Zero
+                   select new Order.InvalidEndDistributionDate
+                       {
+                           OrderId = order.Id,
+                       };
 
-            public FindSpecification<Order.InvalidEndDistributionDate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+        public FindSpecification<Order.InvalidEndDistributionDate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.InvalidEndDistributionDate>(x => aggregateIds.Contains(x.OrderId));
