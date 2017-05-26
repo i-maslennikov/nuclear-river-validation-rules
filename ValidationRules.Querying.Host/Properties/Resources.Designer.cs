@@ -511,7 +511,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Фирма {0} скрыта до выяснения.
+        ///   Looks up a localized string similar to Фирма {0} скрыта до выяснения..
         /// </summary>
         internal static string OrderFirmHiddenForAscertainmentTemplate {
             get {

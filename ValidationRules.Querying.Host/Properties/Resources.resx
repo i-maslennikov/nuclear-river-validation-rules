@@ -269,7 +269,7 @@
     <value>Для заказа указана неактивная работа</value>
   </data>
   <data name="OrderFirmHiddenForAscertainmentTemplate" xml:space="preserve">
-    <value>Фирма {0} скрыта до выяснения</value>
+    <value>Фирма {0} скрыта до выяснения.</value>
   </data>
   <data name="OrderPositionAddressDeleted" xml:space="preserve">
     <value>В позиции {0} адрес фирмы {1} скрыт навсегда</value>
