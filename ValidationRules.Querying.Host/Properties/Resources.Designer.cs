@@ -673,15 +673,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to План.
-        /// </summary>
-        internal static string PlanReleaseCount {
-            get {
-                return ResourceManager.GetString("PlanReleaseCount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск.
         /// </summary>
         internal static string PricePositionHasNoMinAdvertisementAmount {

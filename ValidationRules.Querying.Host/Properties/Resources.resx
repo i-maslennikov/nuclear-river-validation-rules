@@ -324,9 +324,6 @@
   <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
     <value>В рекламном материале {0} не заполнен обязательный элемент {1}</value>
   </data>
-  <data name="PlanReleaseCount" xml:space="preserve">
-    <value>План</value>
-  </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
     <value>В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск</value>
   </data>
