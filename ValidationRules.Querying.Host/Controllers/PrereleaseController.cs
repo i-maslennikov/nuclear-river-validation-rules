@@ -37,6 +37,15 @@ namespace NuClear.ValidationRules.Querying.Host.Controllers
             return Ok(result);
         }
 
+        [Route(""), HttpPost]
+        public IHttpActionResult Post([FromBody]ApiRequest request)
+        {
+            var versionId = _repositiory.GetLatestVersion();
+            var validationResults = _repositiory.GetResults(versionId, request.OrderIds, request.ProjectId, request.ReleaseDate, request.ReleaseDate.AddMonths(1), _checkModeDescriptor);
+            var result = _factory.GetValidationResult(validationResults, _checkModeDescriptor);
+            return Ok(result);
+        }
+
         public class ApiRequest
         {
             public IReadOnlyCollection<long> OrderIds { get; set; }

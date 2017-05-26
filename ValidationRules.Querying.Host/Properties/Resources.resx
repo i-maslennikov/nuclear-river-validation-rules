@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} {{0}} является запрещённой для: {1} {{1}}</value>
+    <value>{0} "{{0}}" является запрещённой для: {1} "{{1}}"</value>
   </data>
   <data name="OrderDescriptionTemplate" xml:space="preserve">
     <value> в заказе {{2}}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} {{0}} данного Заказа является основной для следующих позиций: {1} {{1}}</value>
+    <value>{0} "{{0}}" данного Заказа является основной для следующих позиций: {1} "{{1}}"</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:MMMM} - {4}</value>
@@ -163,7 +163,7 @@
     <value>Позиция "{0}" не может быть продана в рубрику "{1}" проекта "{2}"</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
-    <value>{0} {{0}} содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} {{1}}</value>
+    <value>{0} "{{0}}" содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} "{{1}}"</value>
   </data>
   <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
     <value>Купон на скидку {{0}} прикреплён к нескольким позициям: {0}</value>
@@ -212,7 +212,7 @@
     <value>Профиль юр. лица заказчика</value>
   </data>
   <data name="LinkedObjectsMissedInPrincipals" xml:space="preserve">
-    <value>{0} {{0}} содержит объекты привязки, отсутствующие в основных позициях</value>
+    <value>{0} "{{0}}" содержит объекты привязки, отсутствующие в основных позициях.</value>
   </data>
   <data name="MoreThanOneDefaultTheme" xml:space="preserve">
     <value>Для подразделения {0} установлено более одной тематики по умолчанию</value>
@@ -269,7 +269,7 @@
     <value>Для заказа указана неактивная работа</value>
   </data>
   <data name="OrderFirmHiddenForAscertainmentTemplate" xml:space="preserve">
-    <value>Фирма {0} скрыта до выяснения</value>
+    <value>Фирма {0} скрыта до выяснения.</value>
   </data>
   <data name="OrderPositionAddressDeleted" xml:space="preserve">
     <value>В позиции {0} адрес фирмы {1} скрыт навсегда</value>
@@ -323,9 +323,6 @@
   </data>
   <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
     <value>В рекламном материале {0} не заполнен обязательный элемент {1}</value>
-  </data>
-  <data name="PlanReleaseCount" xml:space="preserve">
-    <value>План</value>
   </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
     <value>В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск</value>

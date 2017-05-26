@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} является запрещённой для: {1} {{1}}.
+        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; является запрещённой для: {1} &quot;{{1}}&quot;.
         /// </summary>
         internal static string ADPCheckModeSpecificOrder_MessageTemplate {
             get {
@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} данного Заказа является основной для следующих позиций: {1} {{1}}.
+        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; данного Заказа является основной для следующих позиций: {1} &quot;{{1}}&quot;.
         /// </summary>
         internal static string ADPValidation_Template {
             get {
@@ -187,7 +187,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} {{1}}.
+        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} &quot;{{1}}&quot;.
         /// </summary>
         internal static string ConflictingPrincipalPositionTemplate {
             get {
@@ -331,7 +331,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {{0}} содержит объекты привязки, отсутствующие в основных позициях.
+        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; содержит объекты привязки, отсутствующие в основных позициях..
         /// </summary>
         internal static string LinkedObjectsMissedInPrincipals {
             get {
@@ -511,7 +511,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Фирма {0} скрыта до выяснения.
+        ///   Looks up a localized string similar to Фирма {0} скрыта до выяснения..
         /// </summary>
         internal static string OrderFirmHiddenForAscertainmentTemplate {
             get {
@@ -669,15 +669,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrdersCheckPositionMustHaveAdvertisementElements {
             get {
                 return ResourceManager.GetString("OrdersCheckPositionMustHaveAdvertisementElements", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to План.
-        /// </summary>
-        internal static string PlanReleaseCount {
-            get {
-                return ResourceManager.GetString("PlanReleaseCount", resourceCulture);
             }
         }
         

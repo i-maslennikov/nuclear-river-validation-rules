@@ -33,10 +33,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             {
                 parameters.Add(Resources.Inspector);
             }
-            if (dto.ReleaseCountPlan)
-            {
-                parameters.Add(Resources.PlanReleaseCount);
-            }
             if (dto.Currency)
             {
                 parameters.Add(Resources.Currency);
