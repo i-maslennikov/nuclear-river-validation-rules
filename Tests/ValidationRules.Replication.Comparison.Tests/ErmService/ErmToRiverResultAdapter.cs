@@ -64,36 +64,16 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
         private static IEnumerable<ErmOrderValidationMessage> FormatLinkingObjectsOrderValidationRule(IReadOnlyCollection<ErmOrderValidationMessage> messages)
         {
             const int LinkingObjectsOrderValidationRule = 12;
-            var messagestoAggregate = new []
-            {
-                "В позиции {0} найден адрес {1}, не принадлежащий фирме заказа",
-                "В позиции {0} адрес фирмы {1} скрыт навсегда",
-                "В позиции {0} найден неактивный адрес {1}",
-                "В позиции {0} адрес фирмы {1} скрыт до выяснения"
-            };
+            var parser = new AddressMessage();
 
-            var groups = messages
-                .Where(x => x.RuleCode == LinkingObjectsOrderValidationRule)
-                .GroupBy(x => new { x.TargetEntityTypeCode, x.TargetEntityId });
+            var competitors = messages.Where(x => x.RuleCode == LinkingObjectsOrderValidationRule && parser.IsSupported(x.MessageText)).ToList();
+            var winners = competitors
+                .GroupBy(x => new { x.TargetEntityTypeCode, x.TargetEntityId, Address = parser.GetParams(x.MessageText) }, x => x)
+                .Select(x => x.OrderBy(y => parser.GetPriority(y.MessageText)).First());
 
-            var toRemove = groups.Aggregate(new List<ErmOrderValidationMessage>(), (list, @group) =>
-            {
-                var messagesToRemove = @group.Select(message => new
-                {
-                    Index = message.MessageText.IndexOfMatched(messagestoAggregate),
-                    Message = message,
-                })
-                .Where(x => x.Index != -1)
-                .OrderBy(x => x.Index)
-                .Skip(1)
-                .Select(x => x.Message);
-
-                list.AddRange(messagesToRemove);
-
-                return list;
-            });
-
-            return messages.Except(toRemove);
+            return messages
+                .Except(competitors)
+                .Concat(winners);
         }
 
         // ERM выдаёт ошибку неактивности и для юр.лица исполнителя и для юр. лица организации
@@ -119,23 +99,31 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
 
             return processed;
         }
-    }
 
-    internal static class StringExtensions
-    {
-        public static int IndexOfMatched(this string input, IEnumerable<string> resourcePatterns)
+        private class AddressMessage
         {
-            var patterns = resourcePatterns.Select(x => Regex.Replace(x, @"({)*\d*}(})*", "(.*)")).ToList();
-
-            for (var i = 0; i < patterns.Count; i++)
-            {
-                if (Regex.IsMatch(input, patterns[i]))
+            private static readonly Regex[] SupportedMessages = new[]
                 {
-                    return i;
-                }
+                    "В позиции (.+) найден адрес (.+), не принадлежащий фирме заказа",
+                    "В позиции (.+) адрес фирмы (.+) скрыт навсегда",
+                    "В позиции (.+) найден неактивный адрес (.+)",
+                    "В позиции (.+) адрес фирмы (.+) скрыт до выяснения"
+                }.Select(x => new Regex(x)).ToArray();
+
+            public bool IsSupported(string message)
+                => SupportedMessages.Any(regex => regex.Match(message).Success);
+
+            public Tuple<string, string> GetParams(string message)
+            {
+                var matched = SupportedMessages.Select(regex => regex.Match(message)).First(regex => regex.Success);
+                return Tuple.Create(matched.Groups[1].Value, matched.Groups[2].Value);
             }
 
-            return -1;
+            public int GetPriority(string message)
+            {
+                var matched = SupportedMessages.Select((regex, i) => new { regex.Match(message).Success, i }).First(x => x.Success);
+                return matched.i;
+            }
         }
     }
 }
