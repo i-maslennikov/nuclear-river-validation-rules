@@ -85,6 +85,10 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
             {
                 case 20:
                     return string.Format(CultureInfo.InvariantCulture, result.Template, result.References.Select(x => x.Name).ToArray());
+                case 60:
+                    var begin = result.References.Take(result.References.Length - 1).Select(descriptionFormatter);
+                    var end = result.References.Skip(result.References.Length - 1).Take(1).Select(x => x.Name);
+                    return string.Format(CultureInfo.InvariantCulture, result.Template, begin.Concat(end).ToArray());
                 default:
                     return string.Format(CultureInfo.InvariantCulture, result.Template, result.References.Select(descriptionFormatter).ToArray());
             }
