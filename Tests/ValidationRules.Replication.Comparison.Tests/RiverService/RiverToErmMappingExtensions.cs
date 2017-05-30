@@ -10,13 +10,13 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
         private static readonly IReadOnlyDictionary<MessageTypeCode, int> RiverToErmRuleCodeMapping
             = new Dictionary<MessageTypeCode, int>
                     {
-                            { MessageTypeCode.MaximumAdvertisementAmount, 26 },
                             { MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified, 26 },
                             { MessageTypeCode.OrderMustHaveActualPrice, 15 },
                             { MessageTypeCode.OrderPositionCorrespontToInactivePosition, 15 },
                             { MessageTypeCode.OrderPositionMayCorrespontToActualPrice, 15 },
                             { MessageTypeCode.OrderPositionMustCorrespontToActualPrice, 15 },
-                            { MessageTypeCode.MinimumAdvertisementAmount, 26 },
+                            { MessageTypeCode.AdvertisementAmountShouldMeetRestrictions, 26 },
+                            { MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass, 26 },
                             { MessageTypeCode.AssociatedPositionsGroupCount, 6 },
                             { MessageTypeCode.FirmPositionMustNotHaveDeniedPositions, 6 },
                             { MessageTypeCode.FirmAssociatedPositionMustHavePrincipal, 6 },

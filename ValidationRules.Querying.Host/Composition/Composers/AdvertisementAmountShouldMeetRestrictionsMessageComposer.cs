@@ -6,9 +6,9 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
-    public sealed class MaximumAdvertisementAmountMessageComposer : IMessageComposer, IDistinctor
+    public sealed class AdvertisementAmountShouldMeetRestrictionsMessageComposer : IMessageComposer, IDistinctor
     {
-        public MessageTypeCode MessageType => MessageTypeCode.MaximumAdvertisementAmount;
+        public MessageTypeCode MessageType => MessageTypeCode.AdvertisementAmountShouldMeetRestrictions;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {

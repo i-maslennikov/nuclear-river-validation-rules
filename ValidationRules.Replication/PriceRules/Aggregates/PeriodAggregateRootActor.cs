@@ -41,8 +41,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.MaximumAdvertisementAmount,
-                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass,
                     };
 
             public IQueryable<Period> GetSource()

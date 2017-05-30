@@ -17,37 +17,39 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Source: AdvertisementAmountOrderValidationRule/AdvertisementAmountErrorMessage
     /// </summary>
-    public sealed class MinimumAdvertisementAmount : ValidationResultAccessorBase
+    public sealed class AdvertisementAmountShouldMeetRestrictions : ValidationResultAccessorBase
     {
-        public MinimumAdvertisementAmount(IQuery query) : base(query, MessageTypeCode.MinimumAdvertisementAmount)
+        // todo: Выяснить востребованность этой проверки.
+        // В режиме единичной реакция пользователя на неё не предусмотрена, в массовом - работает MinimumAdvertisementAmountProject.
+        public AdvertisementAmountShouldMeetRestrictions(IQuery query) : base(query, MessageTypeCode.AdvertisementAmountShouldMeetRestrictions)
         {
         }
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
             var restrictionGrid =
-                from restriction in query.For<Price.AdvertisementAmountRestriction>()
-                from pp in query.For<Price.PricePeriod>().Where(x => x.PriceId == restriction.PriceId)
-                select new { pp.Begin, pp.End, pp.ProjectId, restriction.CategoryCode, restriction.Min, restriction.Max, restriction.CategoryName };
+                from period in query.For<Period>()
+                from pp in query.For<Price.PricePeriod>().Where(x => x.Begin <= period.Start && period.End <= x.End)
+                from restriction in query.For<Price.AdvertisementAmountRestriction>().Where(x => x.PriceId == pp.PriceId)
+                select new { period.Start, period.End, pp.ProjectId, restriction.CategoryCode, restriction.Min, restriction.Max, restriction.CategoryName };
 
             var saleGrid =
-                from position in query.For<Order.AmountControlledPosition>()
-                from orderPeriod in query.For<Order.OrderPeriod>().Where(x => x.OrderId == position.OrderId)
-                from period in query.For<Period>().Where(x => orderPeriod.Begin <= x.Start && x.End <= orderPeriod.End)
-                select new { position.OrderId, period.Start, period.End, orderPeriod.Scope, position.ProjectId, position.CategoryCode };
+                from orderPeriod in query.For<Order.OrderPeriod>()
+                from position in query.For<Order.AmountControlledPosition>().Where(x => orderPeriod.OrderId == x.OrderId)
+                select new { orderPeriod.Begin, orderPeriod.End, orderPeriod.Scope, position.OrderId, position.ProjectId, position.CategoryCode };
 
             var violations =
-                from sale in saleGrid
-                from restriction in restrictionGrid.Where(x => x.Begin <= sale.Start && sale.End <= x.End && x.ProjectId == sale.ProjectId && x.CategoryCode == sale.CategoryCode)
-                let count = saleGrid.Count(x => x.CategoryCode == sale.CategoryCode &&
-                                                x.ProjectId == sale.ProjectId &&
-                                                x.Start == sale.Start &&
+                from restriction in restrictionGrid
+                from sale in saleGrid.Where(x => x.Begin <= restriction.Start && restriction.End <= x.End && x.ProjectId == restriction.ProjectId && x.CategoryCode == restriction.CategoryCode)
+                let count = saleGrid.Count(x => x.CategoryCode == restriction.CategoryCode &&
+                                                x.ProjectId == restriction.ProjectId &&
+                                                x.Begin <= restriction.Start && restriction.End <= x.End &&
                                                 Scope.CanSee(sale.Scope, x.Scope))
-                select new { sale.OrderId, sale.Start, sale.End, restriction.Min, restriction.Max, Count = count, restriction.CategoryName };
+                select new { sale.OrderId, restriction.Start, restriction.End, restriction.Min, restriction.Max, restriction.CategoryName, Count = count };
 
             var messages =
                 from violation in violations
-                where violation.Count < violation.Min
+                where !(violation.Min <= violation.Count && violation.Count <= violation.Max)
                 select new Version.ValidationResult
                     {
                         MessageParams =

@@ -6,17 +6,17 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
-    public sealed class MinimumAdvertisementAmountMessageComposer : IMessageComposer, IDistinctor
+    public sealed class AdvertisementAmountShouldMeetRestrictionsMassMessageComposer : IMessageComposer, IDistinctor
     {
-        public MessageTypeCode MessageType => MessageTypeCode.MinimumAdvertisementAmount;
+        public MessageTypeCode MessageType => MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            var orderReference = references.Get<EntityTypeOrder>();
+            var projectReference = references.Get<EntityTypeProject>();
             var dto = extra.ReadAdvertisementCountMessage();
 
             return new MessageComposerResult(
-                orderReference,
+                projectReference,
                 string.Format(
                     Resources.AdvertisementAmountShortErrorMessage,
                     dto.Name,

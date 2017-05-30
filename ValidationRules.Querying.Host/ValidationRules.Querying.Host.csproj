@@ -215,9 +215,9 @@
     <Compile Include="Composition\Composers\LinkedFirmShouldBeValidMessageComposer.cs" />
     <Compile Include="Composition\Composers\LinkedObjectsMissedInPrincipalsMessageComposer.cs" />
     <Compile Include="Composition\Composers\LockShouldNotExistMessageComposer.cs" />
-    <Compile Include="Composition\Composers\MaximumAdvertisementAmountMessageComposer.cs" />
+    <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetRestrictionsMassMessageComposer.cs" />
     <Compile Include="Composition\Composers\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageComposer.cs" />
-    <Compile Include="Composition\Composers\MinimumAdvertisementAmountMessageComposer.cs" />
+    <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderBeginDistrubutionShouldBeFirstDayOfMonthMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderEndDistrubutionShouldBeLastSecondOfMonthMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveAdvertisementMessageComposer.cs" />
