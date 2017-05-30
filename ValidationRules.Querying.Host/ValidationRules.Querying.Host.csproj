@@ -157,6 +157,7 @@
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
     <Compile Include="Composition\IDistinctor.cs" />
+    <Compile Include="Composition\ReferenceExtensions.cs" />
     <Compile Include="DataAccess\NameResolvingService.cs" />
     <Compile Include="Composition\ResolvedNameContainer.cs" />
     <Compile Include="Controllers\ManualWithAccountController.cs" />
