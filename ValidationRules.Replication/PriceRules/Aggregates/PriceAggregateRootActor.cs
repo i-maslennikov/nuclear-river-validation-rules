@@ -73,7 +73,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass
                     };
 
@@ -148,7 +149,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AssociatedPositionsGroupCount,
                         MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass,
                     };
 

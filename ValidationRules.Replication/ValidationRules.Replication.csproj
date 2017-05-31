@@ -221,6 +221,7 @@
     <Compile Include="Commands\SyncPeriodCommand.cs" />
     <Compile Include="Messages\ValidationResultCache.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMaximumRestrictions.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetRestrictionsMass.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="Commands\RecalculatePeriodCommand.cs" />
@@ -317,7 +318,7 @@
     <Compile Include="PriceRules\Validation\FirmPositionMustNotHaveDeniedPositions.cs" />
     <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCount.cs" />
     <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecified.cs" />
-    <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetRestrictions.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictions.cs" />
     <Compile Include="AggregateActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePosition.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMayCorrespontToActualPrice.cs" />

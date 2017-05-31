@@ -48,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                         new MessageParams(
                                             new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "month", MonthStart(1) } },
                                             new Reference<EntityTypeOrder>(1)).ToXDocument(),
-                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 1,
@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new MessageParams(
                                                   new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "month", MonthStart(2) } },
                                                   new Reference<EntityTypeOrder>(1)).ToXDocument(),
-                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 1,

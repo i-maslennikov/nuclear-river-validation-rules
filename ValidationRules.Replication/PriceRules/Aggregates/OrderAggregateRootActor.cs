@@ -91,7 +91,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass,
                     };
 
@@ -247,7 +248,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass,
                     };
 

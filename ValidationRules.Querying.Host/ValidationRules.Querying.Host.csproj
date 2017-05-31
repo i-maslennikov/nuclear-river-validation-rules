@@ -143,6 +143,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="CheckModes\CheckModeDescriptorFactory.cs" />
     <Compile Include="CheckModes\CheckModeRegistry.cs" />
+    <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMaximumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmAddressMustBeLocatedOnTheMapMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />
@@ -218,7 +219,7 @@
     <Compile Include="Composition\Composers\LockShouldNotExistMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetRestrictionsMassMessageComposer.cs" />
     <Compile Include="Composition\Composers\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageComposer.cs" />
-    <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetRestrictionsMessageComposer.cs" />
+    <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMinimumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderBeginDistrubutionShouldBeFirstDayOfMonthMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderEndDistrubutionShouldBeLastSecondOfMonthMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveAdvertisementMessageComposer.cs" />

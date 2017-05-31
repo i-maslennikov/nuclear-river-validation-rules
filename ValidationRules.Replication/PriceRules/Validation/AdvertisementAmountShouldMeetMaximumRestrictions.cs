@@ -17,11 +17,11 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Source: AdvertisementAmountOrderValidationRule/AdvertisementAmountErrorMessage
     /// </summary>
-    public sealed class AdvertisementAmountShouldMeetRestrictions : ValidationResultAccessorBase
+    public sealed class AdvertisementAmountShouldMeetMaximumRestrictions : ValidationResultAccessorBase
     {
         // todo: Выяснить востребованность этой проверки.
         // В режиме единичной реакция пользователя на неё не предусмотрена, в массовом - работает MinimumAdvertisementAmountProject.
-        public AdvertisementAmountShouldMeetRestrictions(IQuery query) : base(query, MessageTypeCode.AdvertisementAmountShouldMeetRestrictions)
+        public AdvertisementAmountShouldMeetMaximumRestrictions(IQuery query) : base(query, MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions)
         {
         }
 
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
 
             var messages =
                 from violation in violations
-                where !(violation.Min <= violation.Count && violation.Count <= violation.Max)
+                where violation.Count > violation.Max
                 select new Version.ValidationResult
                     {
                         MessageParams =

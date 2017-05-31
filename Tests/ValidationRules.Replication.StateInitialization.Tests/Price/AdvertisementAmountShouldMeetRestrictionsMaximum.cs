@@ -53,7 +53,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new MessageParams(
                                     new Dictionary<string, object> { { "min", 0 }, { "max", 2 }, { "count", 3 }, { "name", "Category" }, { "month", MonthStart(1) } },
                                     new Reference<EntityTypeOrder>(3)).ToXDocument(),
-                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 3,
@@ -64,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new MessageParams(
                                     new Dictionary<string, object> { { "min", 0 }, { "max", 2 }, { "count", 4 }, { "name", "Category" }, { "month", MonthStart(1) } },
                                     new Reference<EntityTypeOrder>(4)).ToXDocument(),
-                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                             PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(2),
                             OrderId = 4,
@@ -75,7 +75,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new MessageParams(
                                     new Dictionary<string, object> { { "min", 0 }, { "max", 2 }, { "count", 3 }, { "name", "Category" }, { "month", MonthStart(2) } },
                                     new Reference<EntityTypeOrder>(5)).ToXDocument(),
-                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetRestrictions,
+                            MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 5,
