@@ -17,9 +17,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
     /// 
     /// Source: AdvertisementAmountOrderValidationRule/AdvertisementAmountErrorMessage
     /// </summary>
-    public sealed class AdvertisementAmountShouldMeetRestrictionsMass : ValidationResultAccessorBase
+    public sealed class AdvertisementAmountShouldMeetMinimumRestrictionsMass : ValidationResultAccessorBase
     {
-        public AdvertisementAmountShouldMeetRestrictionsMass(IQuery query) : base(query, MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass)
+        public AdvertisementAmountShouldMeetMinimumRestrictionsMass(IQuery query) : base(query, MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass)
         {
         }
 

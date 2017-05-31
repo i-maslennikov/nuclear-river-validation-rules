@@ -222,7 +222,7 @@
     <Compile Include="Messages\ValidationResultCache.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMaximumRestrictions.cs" />
-    <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetRestrictionsMass.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictionsMass.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="Commands\RecalculatePeriodCommand.cs" />
     <Compile Include="SyncEntityNameActor.cs" />

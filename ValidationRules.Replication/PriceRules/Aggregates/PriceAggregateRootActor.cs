@@ -75,7 +75,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                         MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass
                     };
 
             public IQueryable<Price.AdvertisementAmountRestriction> GetSource()
@@ -151,7 +151,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                         MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                     };
 
             public IQueryable<Price.PricePeriod> GetSource()

@@ -93,7 +93,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
                         MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                     };
 
             public IQueryable<Order.OrderPeriod> GetSource()
@@ -250,7 +250,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                     };
 
             public IQueryable<Order.AmountControlledPosition> GetSource()

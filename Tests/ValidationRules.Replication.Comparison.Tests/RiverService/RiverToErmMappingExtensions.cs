@@ -17,7 +17,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderPositionMayCorrespontToActualPrice, 15 },
                             { MessageTypeCode.OrderPositionMustCorrespontToActualPrice, 15 },
                             { MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions, 26 },
-                            { MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass, 26 },
+                            { MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass, 26 },
                             { MessageTypeCode.AssociatedPositionsGroupCount, 6 },
                             { MessageTypeCode.FirmPositionMustNotHaveDeniedPositions, 6 },
                             { MessageTypeCode.FirmAssociatedPositionMustHavePrincipal, 6 },

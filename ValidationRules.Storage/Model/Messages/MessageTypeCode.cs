@@ -9,7 +9,7 @@
         OrderPositionMayCorrespontToActualPrice = 5,
         OrderPositionMustCorrespontToActualPrice = 31,
         AdvertisementAmountShouldMeetMinimumRestrictions = 6,
-        AdvertisementAmountShouldMeetRestrictionsMass = 70,
+        AdvertisementAmountShouldMeetMinimumRestrictionsMass = 70,
         AssociatedPositionsGroupCount = 7,
         FirmPositionMustNotHaveDeniedPositions = 8,
         FirmAssociatedPositionMustHavePrincipal = 9,

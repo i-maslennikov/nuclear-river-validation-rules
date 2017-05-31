@@ -42,7 +42,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
                         MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
-                        MessageTypeCode.AdvertisementAmountShouldMeetRestrictionsMass,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                     };
 
             public IQueryable<Period> GetSource()

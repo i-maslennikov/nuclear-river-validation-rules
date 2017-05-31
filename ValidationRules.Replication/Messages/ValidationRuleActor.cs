@@ -246,7 +246,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new MinimalAdvertisementRestrictionShouldBeSpecified(_query),
                     new AdvertisementAmountShouldMeetMaximumRestrictions(_query),
                     new AdvertisementAmountShouldMeetMinimumRestrictions(_query),
-                    new AdvertisementAmountShouldMeetRestrictionsMass(_query),
+                    new AdvertisementAmountShouldMeetMinimumRestrictionsMass(_query),
                     new OrderPositionCorrespontToInactivePosition(_query),
                     new OrderPositionMayCorrespontToActualPrice(_query),
                     new OrderPositionMustCorrespontToActualPrice(_query),
