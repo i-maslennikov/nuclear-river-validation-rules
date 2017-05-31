@@ -35,6 +35,7 @@ namespace NuClear.ValidationRules.Replication.Messages
         private readonly Dictionary<MessageTypeCode, IValidationResultAccessor> _accessors;
         private readonly IEqualityComparer<Version.ValidationResult> _equalityComparer;
         private readonly ValidationResultCache _cache;
+        private readonly TransactionOptions _transactionOptions;
 
         public ValidationRuleActor(IQuery query,
                                    IRepository<Version> versionRepository,
@@ -49,6 +50,7 @@ namespace NuClear.ValidationRules.Replication.Messages
             _accessors = new ValidationRuleRegistry(query).CreateAccessors().ToDictionary(x => (MessageTypeCode)x.MessageTypeId, x => x);
             _equalityComparer = equalityComparerFactory.CreateCompleteComparer<Version.ValidationResult>();
             _cache = ValidationResultCache.Instance;
+            _transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -138,13 +140,12 @@ namespace NuClear.ValidationRules.Replication.Messages
                 List<Version.ValidationResult> sourceObjects;
 
                 using (Probe.Create("Query Source"))
-                using (var scope = new TransactionScope(TransactionScopeOption.Suppress))
+                using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, _transactionOptions))
                 {
                     // Запрос к данным посылаем вне транзакции, иначе будет DTC
                     var accessor = _accessors[ruleCode];
                     var query = accessor.GetSource().Where(filter);
                     sourceObjects = query.ToList();
-                    scope.Complete();
                 }
 
                 using (Probe.Create("Merge"))
