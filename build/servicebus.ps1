@@ -27,6 +27,7 @@ function Deploy-ServiceBus ($entryPointName){
 
 	$serviceBusMetadata = $Metadata[$entryPointName]['ServiceBus']
 	if (!$serviceBusMetadata){
+		Write-Host "Skip Deploy-ServiceBus"
 		return
 	}
 
@@ -43,21 +44,22 @@ function Deploy-ServiceBus ($entryPointName){
 		}
 	}
 
-	$recreateSubscriptions = $Metadata['UpdateSchemas'] -and $Metadata['UpdateSchemas'].Count -gt 0
-
 	if ($serviceBusMetadata['CreateSubscriptions']){
 		foreach($createSubscriptionsMetadata in $serviceBusMetadata.CreateSubscriptions.Values){
 			$connectionString = Get-EntryPointConnectionString $entryPointName $createSubscriptionsMetadata.ConnectionStringName
-			if ($recreateSubscriptions){
+			if ($Metadata['UpdateSchemas']){
 				Delete-Subscription $connectionString $createSubscriptionsMetadata.TopicName $createSubscriptionsMetadata.Name
+				Write-Host "Delete-Subscription:", $createSubscriptionsMetadata.TopicName, " ", $createSubscriptionsMetadata.Name
 			}
 			Create-Subscription $connectionString $createSubscriptionsMetadata.TopicName $createSubscriptionsMetadata.Name $createSubscriptionsMetadata.Properties
+			Write-Host "Create-Subscription:", $createSubscriptionsMetadata.TopicName, " ", $createSubscriptionsMetadata.Name
 		}
 	}
 	if ($serviceBusMetadata['DeleteSubscriptions']){
 		foreach($deleteSubscriptionsMetadata in $serviceBusMetadata.DeleteSubscriptions.Values){
 			$connectionString = Get-EntryPointConnectionString $entryPointName $deleteSubscriptionsMetadata.ConnectionStringName
 			Delete-Subscription $connectionString $deleteSubscriptionsMetadata.TopicName $deleteSubscriptionsMetadata.Name
+			Write-Host "Delete-Subscription:", $deleteSubscriptionsMetadata.TopicName, " ", $deleteSubscriptionsMetadata.Name
 		}
 	}
 }

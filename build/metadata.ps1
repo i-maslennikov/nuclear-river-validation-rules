@@ -130,8 +130,9 @@ function Parse-EnvironmentMetadata ($Properties) {
 		if ($updateSchemas -isnot [array]){
 			$updateSchemas = $updateSchemas.Split(@(','), 'RemoveEmptyEntries')
 		}
-        
+
 		$environmentMetadata += Get-BulkToolMetadata $updateSchemas $context
+		$environmentMetadata += @{ 'UpdateSchemas' = $true }
 	}
 
 	return $environmentMetadata
