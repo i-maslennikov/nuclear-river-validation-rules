@@ -127,7 +127,7 @@
     <value>{0} "{{0}}" данного Заказа является основной для следующих позиций: {1} "{{1}}"</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
-    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Фактическое количество позиций в месяц {3:MMMM} - {4}</value>
+    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}</value>
   </data>
   <data name="AdvertisementChoosenForWhitelist" xml:space="preserve">
     <value>Для фирмы {0} в белый список выбран рекламный материал {1}</value>

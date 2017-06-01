@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -92,12 +92,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0056\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0038\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0056\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0038\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
@@ -223,6 +221,8 @@
     <Compile Include="Commands\SyncPeriodCommand.cs" />
     <Compile Include="Messages\ValidationResultCache.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMaximumRestrictions.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictionsMass.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="Commands\RecalculatePeriodCommand.cs" />
     <Compile Include="SyncEntityNameActor.cs" />
@@ -317,9 +317,8 @@
     <Compile Include="PriceRules\Validation\AdvertisementCountPerThemeShouldBeLimited.cs" />
     <Compile Include="PriceRules\Validation\FirmPositionMustNotHaveDeniedPositions.cs" />
     <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCount.cs" />
-    <Compile Include="PriceRules\Validation\MaximumAdvertisementAmount.cs" />
     <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecified.cs" />
-    <Compile Include="PriceRules\Validation\MinimumAdvertisementAmount.cs" />
+    <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictions.cs" />
     <Compile Include="AggregateActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePosition.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMayCorrespontToActualPrice.cs" />

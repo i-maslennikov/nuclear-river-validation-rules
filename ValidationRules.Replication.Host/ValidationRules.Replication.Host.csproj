@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -147,12 +147,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0056\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0038\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0056\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0038\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.ResourceUtilities, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.ResourceUtilities.1.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.ResourceUtilities.dll</HintPath>

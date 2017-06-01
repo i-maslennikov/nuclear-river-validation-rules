@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using NuClear.Model.Common;
-using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -28,7 +26,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         }
 
         public IEnumerable<Message> Distinct(IEnumerable<Message> messages)
-            => messages.GroupBy(x => new { x.OrderId, x.MessageType, x.ProjectId, AdvertisementId = Get<EntityTypeAdvertisement>(x.References).Id }, x => x.References)
+            => messages.GroupBy(x => new { x.OrderId, x.MessageType, x.ProjectId, AdvertisementId = x.References.Get<EntityTypeAdvertisement>().Id }, x => x.References)
                        .Select(x => new Message
                            {
                                OrderId = x.Key.OrderId,
@@ -38,15 +36,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                                    {
                                        new Reference(EntityTypeOrder.Instance.Id, x.Key.OrderId.Value),
                                        new Reference(EntityTypeAdvertisement.Instance.Id, x.Key.AdvertisementId),
-                                   }.Concat(x.SelectMany(GetAll<EntityTypeOrderPositionAdvertisement>)).ToArray()
+                                   }.Concat(x.SelectMany(ReferenceExtensions.GetMany<EntityTypeOrderPositionAdvertisement>)).ToArray()
                            });
-
-        private static Reference Get<T>(IEnumerable<Reference> references)
-            where T : IdentityBase<T>, new()
-            => references.First(x => x.EntityType == EntityTypeBase<T>.Instance.Id);
-
-        private static IEnumerable<Reference> GetAll<T>(IEnumerable<Reference> references)
-            where T : IdentityBase<T>, new()
-            => references.Where(x => x.EntityType == EntityTypeBase<T>.Instance.Id);
     }
 }

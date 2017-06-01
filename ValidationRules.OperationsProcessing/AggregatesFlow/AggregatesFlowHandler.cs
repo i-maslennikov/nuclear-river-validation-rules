@@ -89,20 +89,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
                 return Array.Empty<IEvent>();
             }
 
-            var actors = _aggregateActorFactory.Create(new HashSet<Type>(commands.Select(x => x.AggregateRootType)));
-            var events = new HashSet<IEvent>();
-
-            foreach (var actor in actors)
+            var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
+            using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
-                var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
-                using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
+                var actors = _aggregateActorFactory.Create(new HashSet<Type>(commands.Select(x => x.AggregateRootType)));
+                var events = new HashSet<IEvent>();
+
+                foreach (var actor in actors)
                 {
                     events.UnionWith(actor.ExecuteCommands(commands));
-                    transaction.Complete();
                 }
-            }
 
-            return events;
+                transaction.Complete();
+                return events;
+            }
         }
     }
 }

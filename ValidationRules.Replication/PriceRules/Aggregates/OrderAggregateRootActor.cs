@@ -91,8 +91,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                         MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited,
-                        MessageTypeCode.MaximumAdvertisementAmount,
-                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                     };
 
             public IQueryable<Order.OrderPeriod> GetSource()
@@ -247,8 +248,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
-                        MessageTypeCode.MaximumAdvertisementAmount,
-                        MessageTypeCode.MinimumAdvertisementAmount,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
+                        MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                     };
 
             public IQueryable<Order.AmountControlledPosition> GetSource()

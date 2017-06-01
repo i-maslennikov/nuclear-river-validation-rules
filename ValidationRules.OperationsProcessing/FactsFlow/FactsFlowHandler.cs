@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
 
 using NuClear.Messaging.API.Processing;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
@@ -99,13 +101,21 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             var actors = _dataObjectsActorFactory.Create();
             var events = new HashSet<IEvent>();
 
-            foreach (var actor in actors)
+            Task.Delay(1000).Wait();
+
+            var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
+            using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {
-                var actorType = actor.GetType().GetFriendlyName();
-                using (Probe.Create($"ETL1 {actorType}"))
+                foreach (var actor in actors)
                 {
-                    events.UnionWith(actor.ExecuteCommands(commands));
+                    var actorType = actor.GetType().GetFriendlyName();
+                    using (Probe.Create($"ETL1 {actorType}"))
+                    {
+                        events.UnionWith(actor.ExecuteCommands(commands));
+                    }
                 }
+
+                transaction.Complete();
             }
 
             _syncEntityNameActor.ExecuteCommands(commands);

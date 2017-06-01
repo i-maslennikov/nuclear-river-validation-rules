@@ -264,18 +264,20 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.MaximumAdvertisementAmount,
-                         single: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
                     Rule(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
                          single: RuleSeverityLevel.Warning,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.MinimumAdvertisementAmount,
-                         single: RuleSeverityLevel.Warning,
+                    Rule(MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
+                         single: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
+                         single: RuleSeverityLevel.Warning),
+
+                    Rule(MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                          prerelease: RuleSeverityLevel.Warning,
                          release: RuleSeverityLevel.Warning),
 
