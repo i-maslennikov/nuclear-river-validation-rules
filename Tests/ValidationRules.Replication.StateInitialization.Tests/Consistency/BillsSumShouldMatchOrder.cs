@@ -33,11 +33,18 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // Заказ без счетов
                     new Facts::Order { Id = 3, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2), LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, WorkflowStep = Facts::Order.State.OnRegistration },
                     new Facts::OrderPosition { Id = 3, OrderId = 3 },
-                    new Facts::ReleaseWithdrawal { OrderPositionId = 3, Amount = 123 })
+                    new Facts::ReleaseWithdrawal { OrderPositionId = 3, Amount = 123 },
+
+                    // Бесплатный заказ с некорректными (по сумме) счетами
+                    new Facts::Order { Id = 4, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2), LegalPersonId = 1, BranchOfficeOrganizationUnitId = 1, WorkflowStep = Facts::Order.State.OnRegistration, IsFreeOfCharge = true },
+                    new Facts::Bill { Id = 3, OrderId = 4, PayablePlan = 123.1M },
+                    new Facts::OrderPosition { Id = 4, OrderId = 4 },
+                    new Facts::ReleaseWithdrawal { OrderPositionId = 4, Amount = 123 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order { Id = 2, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order { Id = 3, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
+                    new Aggregates::Order { Id = 4, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
 
                     new Aggregates::Order.InvalidBillsTotal { OrderId = 2 })
                 .Message(
