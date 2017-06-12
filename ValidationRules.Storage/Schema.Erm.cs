@@ -65,6 +65,8 @@ namespace NuClear.ValidationRules.Storage
 
                 config.Entity<UnlimitedOrder>().HasSchemaName(OrderValidationSchema).HasTableName("UnlimitedOrders");
 
+                config.Entity<UseCaseTrackingEvent>().HasSchemaName("Shared").HasTableName("UseCaseTrackingEvents");
+
                 return schema;
             }
         }
