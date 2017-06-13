@@ -496,7 +496,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.InvalidBillsTotal> GetSource()
-                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == Facts::Order.State.OnRegistration)
+                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == Facts::Order.State.OnRegistration && !x.IsFreeOfCharge)
                    let billTotal = _query.For<Facts::Bill>().Where(x => x.OrderId == order.Id).Sum(x => (decimal?)x.PayablePlan)
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
@@ -625,12 +625,12 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                     };
 
             public IQueryable<Order.MissingBills> GetSource()
-                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == Facts::Order.State.OnRegistration)
+                => from order in _query.For<Facts::Order>().Where(x => x.WorkflowStep == Facts::Order.State.OnRegistration && !x.IsFreeOfCharge)
                    let billCount = _query.For<Facts::Bill>().Count(x => x.OrderId == order.Id)
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
                                      select rw.Amount).Sum()
-                   where orderTotal > 0 && !order.IsFreeOfCharge && billCount == 0
+                   where orderTotal > 0 && billCount == 0
                    select new Order.MissingBills
                    {
                        OrderId = order.Id,
