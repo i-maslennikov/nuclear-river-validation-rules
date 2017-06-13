@@ -101,8 +101,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             var actors = _dataObjectsActorFactory.Create();
             var events = new HashSet<IEvent>();
 
-            Task.Delay(1000).Wait();
-
             var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
             {

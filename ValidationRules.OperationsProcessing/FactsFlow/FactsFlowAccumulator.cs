@@ -1,26 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Transactions;
 
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsTracking.API.UseCases;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
+using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 {
     public sealed class FactsFlowAccumulator : MessageProcessingContextAccumulatorBase<FactsFlow, TrackedUseCase, AggregatableMessage<ICommand>>
     {
+        private const int TotalWaitMilliseconds = 2000;
+
+        private readonly IQuery _query;
         private readonly ICommandFactory _commandFactory;
 
-        public FactsFlowAccumulator()
+        public FactsFlowAccumulator(IQuery query)
         {
+            _query = query;
             _commandFactory = new FactsFlowCommandFactory();
         }
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase trackedUseCase)
         {
+            WaitForTucToBeCommitted(trackedUseCase.Id);
+
             var commands = _commandFactory.CreateCommands(new TrackedUseCaseEvent(trackedUseCase)).ToList();
 
             commands.Add(new IncrementStateCommand(new[] { trackedUseCase.Id }));
@@ -31,6 +42,26 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                 TargetFlow = MessageFlow,
                 Commands = commands,
             };
+        }
+
+        private void WaitForTucToBeCommitted(Guid id)
+        {
+            for (var i = 0; i < TotalWaitMilliseconds / 100; i++, Task.Delay(100).Wait())
+            {
+                var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
+                {
+                    var completed = _query.For<UseCaseTrackingEvent>().Where(x => x.UseCaseId == id).Any(x => x.EventType == 3 || x.EventType == 4);
+                    transaction.Complete();
+
+                    if (completed)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            throw new Exception($"Looks like TUC '{id}' was not completed by Erm");
         }
 
         private sealed class FactsFlowCommandFactory : ICommandFactory
