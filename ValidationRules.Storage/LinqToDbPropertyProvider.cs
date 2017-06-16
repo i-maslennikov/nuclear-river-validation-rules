@@ -20,7 +20,8 @@ namespace NuClear.ValidationRules.Storage
 
         public IReadOnlyCollection<PropertyInfo> GetPrimaryKeyProperties<T>()
         {
-            return FindProperties(typeof(T), x => x.IsPrimaryKey);
+            var keyProperties = FindProperties(typeof(T), x => x.IsPrimaryKey);
+            return keyProperties.Any() ? keyProperties : GetProperties<T>();
         }
 
         public IReadOnlyCollection<PropertyInfo> GetProperties<T>()
