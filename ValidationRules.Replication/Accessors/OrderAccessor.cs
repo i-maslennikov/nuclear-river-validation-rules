@@ -43,7 +43,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 LegalPersonId = order.LegalPersonId,
                 LegalPersonProfileId = order.LegalPersonProfileId,
                 BranchOfficeOrganizationUnitId = order.BranchOfficeOrganizationUnitId,
-                InspectorId = order.InspectorCode,
                 CurrencyId = order.CurrencyId,
                 BargainId = order.BargainId,
                 DealId = order.DealId,

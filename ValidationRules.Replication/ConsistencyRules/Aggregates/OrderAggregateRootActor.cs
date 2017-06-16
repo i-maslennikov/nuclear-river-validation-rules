@@ -661,13 +661,12 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
 
             public IQueryable<Order.MissingRequiredField> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   where !(order.BranchOfficeOrganizationUnitId.HasValue && order.CurrencyId.HasValue && order.InspectorId.HasValue && order.LegalPersonId.HasValue && order.LegalPersonProfileId.HasValue && order.DealId.HasValue)
+                   where !(order.BranchOfficeOrganizationUnitId.HasValue && order.CurrencyId.HasValue && order.LegalPersonId.HasValue && order.LegalPersonProfileId.HasValue && order.DealId.HasValue)
                    select new Order.MissingRequiredField
                        {
                            OrderId = order.Id,
                            BranchOfficeOrganizationUnit = !order.BranchOfficeOrganizationUnitId.HasValue,
                            Currency = !order.CurrencyId.HasValue,
-                           Inspector = !order.InspectorId.HasValue,
                            LegalPerson = !order.LegalPersonId.HasValue,
                            LegalPersonProfile = !order.LegalPersonProfileId.HasValue,
                            Deal = !order.DealId.HasValue,
