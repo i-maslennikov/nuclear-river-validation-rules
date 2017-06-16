@@ -82,7 +82,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                                                       bool branchOfficeOrganizationUnit = true,
                                                                                       bool currency = true,
                                                                                       bool deal = true,
-                                                                                      bool inspector = true,
                                                                                       bool legalPerson = true,
                                                                                       bool legalPersonProfile = true)
         {
@@ -92,7 +91,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     BranchOfficeOrganizationUnit = branchOfficeOrganizationUnit,
                     Currency = currency,
                     Deal = deal,
-                    Inspector = inspector,
                     LegalPerson = legalPerson,
                     LegalPersonProfile = legalPersonProfile,
                 };

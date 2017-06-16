@@ -29,10 +29,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             {
                 parameters.Add(Resources.BranchOfficeOrganizationUnit);
             }
-            if (dto.Inspector)
-            {
-                parameters.Add(Resources.Inspector);
-            }
             if (dto.Currency)
             {
                 parameters.Add(Resources.Currency);

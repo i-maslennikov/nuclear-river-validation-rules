@@ -304,15 +304,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Проверяющий.
-        /// </summary>
-        internal static string Inspector {
-            get {
-                return ResourceManager.GetString("Inspector", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Юр. лицо заказчика.
         /// </summary>
         internal static string LegalPerson {

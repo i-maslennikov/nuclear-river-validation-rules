@@ -71,7 +71,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                 LegalPerson = bool.Parse(message["legalPerson"]),
                 LegalPersonProfile = bool.Parse(message["legalPersonProfile"]),
                 BranchOfficeOrganizationUnit = bool.Parse(message["legalPerson"]),
-                Inspector = bool.Parse(message["inspector"]),
                 Currency = bool.Parse(message["currency"]),
             };
         }
@@ -142,7 +141,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             public bool LegalPerson { get; set; }
             public bool LegalPersonProfile { get; set; }
             public bool BranchOfficeOrganizationUnit { get; set; }
-            public bool Inspector { get; set; }
             public bool Currency { get; set; }
         }
     }
