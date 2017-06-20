@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             {
                 LegalPerson = bool.Parse(message["legalPerson"]),
                 LegalPersonProfile = bool.Parse(message["legalPersonProfile"]),
-                BranchOfficeOrganizationUnit = bool.Parse(message["legalPerson"]),
+                BranchOfficeOrganizationUnit = bool.Parse(message["branchOfficeOrganizationUnit"]),
                 Currency = bool.Parse(message["currency"]),
             };
         }
