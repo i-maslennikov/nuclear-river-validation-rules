@@ -81,15 +81,18 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                         MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
                     };
 
-            public IQueryable<Firm.FirmWebsite> GetSource() =>
-                from firm in _query.For<Facts::Firm>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
-                from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.FirmId == firm.Id)
-                from firmAddressWebsite in _query.For<Facts::FirmAddressWebsite>().Where(x => x.FirmAddressId == firmAddress.Id)
-                select new Firm.FirmWebsite
-                    {
-                        FirmId = firm.Id,
-                        Website = firmAddressWebsite.Website
-                    };
+	        public IQueryable<Firm.FirmWebsite> GetSource()
+		        => GetFirmWebsite().Distinct();
+
+	        private IQueryable<Firm.FirmWebsite> GetFirmWebsite()
+		        => from firm in _query.For<Facts::Firm>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment)
+		           from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.FirmId == firm.Id)
+		           from firmAddressWebsite in _query.For<Facts::FirmAddressWebsite>().Where(x => x.FirmAddressId == firmAddress.Id)
+		           select new Firm.FirmWebsite
+			           {
+				           FirmId = firm.Id,
+				           Website = firmAddressWebsite.Website
+			           };
 
             public FindSpecification<Firm.FirmWebsite> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
