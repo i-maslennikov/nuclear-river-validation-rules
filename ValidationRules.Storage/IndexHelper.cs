@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Storage
             var linq2dbQueryable = queryable as IExpressionQuery<T>;
             if (linq2dbQueryable != null)
             {
-                return GetMissingIndices(queryable);
+                return GetMissingIndices(linq2dbQueryable.ToString());
             }
 
             var inner = queryable.GetType().GetField("_innerQueryable", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -60,20 +60,18 @@ namespace NuClear.ValidationRules.Storage
                     {
                         Schema = index.Attribute("Schema").Value,
                         Table = index.Attribute("Table").Value,
-                        Columns = index.Elements()
-                                       .Single(x => x.Name.LocalName == "ColumnGroup" && x.Attribute("Usage").Value == "EQUALITY")
-                                       .Elements()
-                                       .Select(x => x.Attribute("Name").Value)
-                                       .ToArray(),
-                        Include = index.Elements()
-                                       .Single(x => x.Name.LocalName == "ColumnGroup" && x.Attribute("Usage").Value == "INCLUDE")
-                                       .Elements()
-                                       .Select(x => x.Attribute("Name").Value)
-                                       .ToArray()
+                        Columns = ColumnNames(index.Elements(), "EQUALITY").Concat(ColumnNames(index.Elements(), "INEQUALITY")).ToArray(),
+                        Include = ColumnNames(index.Elements(), "INCLUDE").ToArray(),
                     };
             }
 
-            private IReadOnlyCollection<string> Include { get; set; }
+	        private static IEnumerable<string> ColumnNames(IEnumerable<XElement> elements, string usage)
+		        => elements
+			        .Where(x => x.Name.LocalName == "ColumnGroup" && x.Attribute("Usage").Value == usage)
+			        .Elements()
+			        .Select(x => x.Attribute("Name").Value);
+
+			private IReadOnlyCollection<string> Include { get; set; }
 
             private IReadOnlyCollection<string> Columns { get; set; }
 
