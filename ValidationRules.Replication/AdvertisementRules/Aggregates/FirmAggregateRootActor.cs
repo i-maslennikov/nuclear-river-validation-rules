@@ -141,7 +141,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                          from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                          from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.AdvertisementId.HasValue)
                          from a in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId.Value && x.FirmId == period.FirmId && x.IsSelectedToWhiteList && ! x.IsDeleted)
-                         select new { OrderId = order.Id, AdvertisementId = a.Id }).FirstOrDefault()
+                         select new { OrderId = order.Id, AdvertisementId = a.Id }).OrderBy(x => x.OrderId).FirstOrDefault()
                     select new Firm.WhiteListDistributionPeriod
                     {
                         FirmId = period.FirmId,
