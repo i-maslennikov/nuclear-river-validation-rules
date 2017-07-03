@@ -94,6 +94,7 @@ using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
+using NuClear.ValidationRules.Replication.Host.Customs;
 using NuClear.ValidationRules.Storage.FieldComparer;
 using NuClear.WCF.Client;
 using NuClear.WCF.Client.Config;

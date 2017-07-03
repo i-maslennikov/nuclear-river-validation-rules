@@ -7,7 +7,7 @@ using Microsoft.ServiceBus.Messaging;
 using NuClear.Messaging.Transports.ServiceBus;
 using NuClear.Messaging.Transports.ServiceBus.API;
 
-namespace NuClear.ValidationRules.Replication.Host.DI
+namespace NuClear.ValidationRules.Replication.Host.Customs
 {
     internal sealed class BatchingServiceBusMessageSender : IServiceBusMessageSender
     {
