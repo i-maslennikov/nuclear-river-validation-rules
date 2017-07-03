@@ -58,7 +58,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                             .Concat(Handle(commands.OfType<LogDelayCommand>().ToList()))
                             .ToList();
 
-                    _eventLogger.Log(events);
+                    using (var loggingTransaction = new TransactionScope(TransactionScopeOption.Suppress))
+                        _eventLogger.Log(events);
 
                     transaction.Complete();
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
