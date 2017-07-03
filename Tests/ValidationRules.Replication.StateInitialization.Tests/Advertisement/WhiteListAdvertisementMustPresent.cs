@@ -69,7 +69,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, EndDistributionDateFact = FirstDayFeb, FirmId = 7, RequireWhiteListAdvertisement = true, ProvideWhiteListAdvertisementId = 6 },
                     new Aggregates::Order.OrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
 
-                    new Aggregates::Firm.WhiteListDistributionPeriod { FirmId = 7, Start = FirstDayJan, End = FirstDayFeb, AdvertisementId = 6, ProvidedByOrderId = 1 },
+                    new Aggregates::Firm.WhiteListDistributionPeriod { FirmId = 7, Start = FirstDayJan, End = FirstDayFeb, AdvertisementId = null, ProvidedByOrderId = null },
 
                     new Aggregates::Advertisement { Id = 6, FirmId = 7, IsSelectedToWhiteList = true },
                     new Aggregates::Firm { Id = 7 }
