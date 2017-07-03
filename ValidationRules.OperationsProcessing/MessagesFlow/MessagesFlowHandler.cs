@@ -20,6 +20,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
         private readonly MessagesFlowTelemetryPublisher _telemetryPublisher;
         private readonly ITracer _tracer;
         private readonly ValidationRuleActor _validationRuleActor;
+        private readonly TransactionOptions _transactionOptions;
 
         public MessagesFlowHandler(
             MessagesFlowTelemetryPublisher telemetryPublisher,
@@ -29,19 +30,24 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
             _validationRuleActor = validationRuleActor;
+            _transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
         {
+
             try
             {
                 using (Probe.Create("ETL3 Transforming"))
+                // Транзакция важна для запросов в пространстве Messages, запросы в Aggregates нужно выполнять без транзакции, хотя в идеале хотелось бы две независимые транзакции.
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
                     Handle(commands.OfType<IValidationRuleCommand>().ToList());
                     Handle(commands.OfType<LogDelayCommand>().ToList());
 
+                    transaction.Complete();
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
             }
@@ -71,16 +77,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
                 return;
             }
 
-            // Транзакция важна для запросов в пространстве Messages, запросы в Aggregates нужно выполнять без транзакции, хотя в идеале хотелось бы две независимые транзакции.
-            var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
-            using (var scope = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
+            using (Probe.Create("ValidationRuleActor"))
             {
-                using (Probe.Create("ValidationRuleActor"))
-                {
-                    _validationRuleActor.ExecuteCommands(commands);
-                }
-
-                scope.Complete();
+                _validationRuleActor.ExecuteCommands(commands);
             }
         }
     }

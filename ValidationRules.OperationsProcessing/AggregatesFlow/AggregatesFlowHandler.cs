@@ -23,6 +23,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
         private readonly AggregatesFlowTelemetryPublisher _telemetryPublisher;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
+        private readonly TransactionOptions _transactionOptions;
 
         public AggregatesFlowHandler(IAggregateActorFactory aggregateActorFactory, AggregatesFlowTelemetryPublisher telemetryPublisher, ITracer tracer, IEventLogger eventLogger)
         {
@@ -30,6 +31,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
             _eventLogger = eventLogger;
+            _transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -37,6 +39,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             try
             {
                 using (Probe.Create("ETL2 Transforming"))
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
@@ -48,6 +51,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 
                     _eventLogger.Log(events);
 
+                    transaction.Complete();
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
             }
@@ -89,20 +93,15 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
                 return Array.Empty<IEvent>();
             }
 
-            var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
-            using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
+            var actors = _aggregateActorFactory.Create(new HashSet<Type>(commands.Select(x => x.AggregateRootType)));
+            var events = new HashSet<IEvent>();
+
+            foreach (var actor in actors)
             {
-                var actors = _aggregateActorFactory.Create(new HashSet<Type>(commands.Select(x => x.AggregateRootType)));
-                var events = new HashSet<IEvent>();
-
-                foreach (var actor in actors)
-                {
-                    events.UnionWith(actor.ExecuteCommands(commands));
-                }
-
-                transaction.Complete();
-                return events;
+                events.UnionWith(actor.ExecuteCommands(commands));
             }
+
+            return events;
         }
     }
 }
