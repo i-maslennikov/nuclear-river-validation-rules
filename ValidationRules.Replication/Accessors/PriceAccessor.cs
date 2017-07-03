@@ -64,7 +64,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from price in _query.For<Price>().Where(x => ids.Contains(x.Id))
                 select new PeriodKey { Date = price.BeginDate };
 
-            return new EventCollectionHelper<Price> { { typeof(Price), previousPrices }, { typeof(object), periods } };
+            var orderIds =
+                from price in _query.For<Price>().Where(x => ids.Contains(x.Id))
+                from project in _query.For<Project>().Where(x => x.Id == price.ProjectId)
+                from order in _query.For<Order>().Where(x => x.BeginDistribution >= price.BeginDate && x.DestOrganizationUnitId == project.OrganizationUnitId)
+                select order.Id;
+
+            return new EventCollectionHelper<Price> { { typeof(Price), previousPrices }, { typeof(object), periods }, { typeof(Order), orderIds } };
         }
     }
 }

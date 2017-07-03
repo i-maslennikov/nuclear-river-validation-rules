@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -10,6 +9,7 @@ using NuClear.OperationsTracking.API.UseCases;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Storage.API.Readings;
+using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Erm;
 
@@ -17,14 +17,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 {
     public sealed class FactsFlowAccumulator : MessageProcessingContextAccumulatorBase<FactsFlow, TrackedUseCase, AggregatableMessage<ICommand>>
     {
-        private const int TotalWaitMilliseconds = 2000;
+        private const int TotalWaitMilliseconds = 60000;
 
         private readonly IQuery _query;
+        private readonly ITracer _tracer;
         private readonly ICommandFactory _commandFactory;
 
-        public FactsFlowAccumulator(IQuery query)
+        public FactsFlowAccumulator(IQuery query, ITracer tracer)
         {
             _query = query;
+            _tracer = tracer;
             _commandFactory = new FactsFlowCommandFactory();
         }
 
@@ -61,7 +63,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                 }
             }
 
-            throw new Exception($"Looks like TUC '{id}' was not completed by Erm");
+            _tracer.Warn($"Ignored TUC {id} after {TotalWaitMilliseconds}ms waiting");
         }
 
         private sealed class FactsFlowCommandFactory : ICommandFactory
