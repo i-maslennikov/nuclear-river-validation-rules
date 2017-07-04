@@ -94,6 +94,7 @@ using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
+using NuClear.ValidationRules.Replication.Host.Customs;
 using NuClear.ValidationRules.Storage.FieldComparer;
 using NuClear.WCF.Client;
 using NuClear.WCF.Client.Config;
@@ -247,7 +248,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             container.RegisterType<IEventLoggingStrategyProvider, UnityEventLoggingStrategyProvider>()
                      .RegisterType<IEvent2BrokeredMessageConverter<IEvent>, Event2BrokeredMessageConverter>()
                      .RegisterType<IEventLogger, SequentialEventLogger>()
-                     .RegisterType<IServiceBusMessageSender, ServiceBusMessageSender>();
+                     .RegisterType<IServiceBusMessageSender, BatchingServiceBusMessageSender>();
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(), Lifetime.Singleton)
                             .RegisterType(typeof(ServiceBusMessageFlowReceiver), Lifetime.Singleton)

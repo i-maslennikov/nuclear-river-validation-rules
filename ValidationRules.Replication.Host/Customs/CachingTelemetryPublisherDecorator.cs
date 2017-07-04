@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 
-namespace NuClear.ValidationRules.Replication.Host.DI
+namespace NuClear.ValidationRules.Replication.Host.Customs
 {
     public sealed class CachingTelemetryPublisherDecorator<TPublisher> : ITelemetryPublisher, IDisposable
         where TPublisher : ITelemetryPublisher

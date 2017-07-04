@@ -26,6 +26,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
         private readonly FactsFlowTelemetryPublisher _telemetryPublisher;
+        private readonly TransactionOptions _transactionOptions;
 
         public FactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
@@ -39,6 +40,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             _eventLogger = eventLogger;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
+            _transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
         }
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
@@ -46,6 +48,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             try
             {
                 using (Probe.Create("ETL1 Transforming"))
+                using (var transaction = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
@@ -55,8 +58,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                             .Concat(Handle(commands.OfType<LogDelayCommand>().ToList()))
                             .ToList();
 
-                    _eventLogger.Log(events);
+                    using (var loggingTransaction = new TransactionScope(TransactionScopeOption.Suppress))
+                        _eventLogger.Log(events);
 
+                    transaction.Complete();
                     return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
             }
@@ -101,19 +106,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             var actors = _dataObjectsActorFactory.Create();
             var events = new HashSet<IEvent>();
 
-            var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
-            using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
+            foreach (var actor in actors)
             {
-                foreach (var actor in actors)
+                var actorType = actor.GetType().GetFriendlyName();
+                using (Probe.Create($"ETL1 {actorType}"))
                 {
-                    var actorType = actor.GetType().GetFriendlyName();
-                    using (Probe.Create($"ETL1 {actorType}"))
-                    {
-                        events.UnionWith(actor.ExecuteCommands(commands));
-                    }
+                    events.UnionWith(actor.ExecuteCommands(commands));
                 }
-
-                transaction.Complete();
             }
 
             _syncEntityNameActor.ExecuteCommands(commands);
