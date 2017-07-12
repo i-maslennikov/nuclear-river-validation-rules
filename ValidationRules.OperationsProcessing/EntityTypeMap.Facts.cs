@@ -46,9 +46,9 @@ namespace NuClear.ValidationRules.OperationsProcessing
             .AddMapping<EntityTypeOrderFile>(typeof(Facts::OrderScanFile))
             .AddMapping<EntityTypePosition>(typeof(Facts::Position),
                                             typeof(Facts::PositionChild))
-            .AddMapping<EntityTypePrice>(typeof(Facts::Price))
-            .AddMapping<EntityTypePricePosition>(typeof(Facts::PricePosition),
-                                                 typeof(Facts::NomenclatureCategory))
+            .AddMapping<EntityTypePrice>(typeof(Facts::Price),
+                                         typeof(Facts::NomenclatureCategory))
+            .AddMapping<EntityTypePricePosition>(typeof(Facts::PricePosition))
             .AddMapping<EntityTypeProject>(typeof(Facts::Project),
                                            typeof(Facts::CostPerClickCategoryRestriction),
                                            typeof(Facts::SalesModelCategoryRestriction))
