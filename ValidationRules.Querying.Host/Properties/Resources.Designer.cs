@@ -403,15 +403,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Период размещения, указанный в заказе и в счете не совпадают.
-        /// </summary>
-        internal static string OrderCheckOrderAndBillHaveDifferentPeriods {
-            get {
-                return ResourceManager.GetString("OrderCheckOrderAndBillHaveDifferentPeriods", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Отсутствует сканированная копия договора.
         /// </summary>
         internal static string OrderCheckOrderHasNoBargainScans {

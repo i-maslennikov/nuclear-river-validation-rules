@@ -184,9 +184,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(BillFacts))
             .Erm(
-                new Erm::Bill { Id = 1, IsActive = true, IsDeleted = false, BeginDistributionDate = FirstDayJan, EndDistributionDate = LastSecondJan, BillType = 1, OrderId = 2, PayablePlan = 123 })
+                new Erm::Bill { Id = 1, IsActive = true, IsDeleted = false, BillType = 1, OrderId = 2, PayablePlan = 123 })
             .Fact(
-                new Bill { Id = 1, Begin = FirstDayJan, End = LastSecondJan.AddSeconds(1), OrderId = 2, PayablePlan = 123 });
+                new Bill { Id = 1, OrderId = 2, PayablePlan = 123 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement BargainFacts

@@ -33,7 +33,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth, 9 },
                             { MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired, 25 },
                             { MessageTypeCode.LegalPersonProfileWarrantyShouldNotBeExpired, 24 },
-                            { MessageTypeCode.BillsPeriodShouldMatchOrder, 7 },
                             { MessageTypeCode.OrderShouldNotBeSignedBeforeBargain, 1 },
                             { MessageTypeCode.LegalPersonShouldHaveAtLeastOneProfile, 23 },
                             { MessageTypeCode.OrderShouldHaveAtLeastOnePosition, 14 },

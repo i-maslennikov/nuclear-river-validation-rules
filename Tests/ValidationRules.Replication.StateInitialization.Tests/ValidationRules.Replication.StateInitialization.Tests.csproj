@@ -137,7 +137,6 @@
     <Compile Include="Consistency\LegalPersonProfileBargainShouldNotBeExpired.cs" />
     <Compile Include="Consistency\LinkedFirmAddressShouldBeValid.cs" />
     <Compile Include="Consistency\OrderEndDistrubutionShouldBeLastSecondOfMonth.cs" />
-    <Compile Include="Consistency\BillsPeriodShouldMatchOrder.cs" />
     <Compile Include="Consistency\OrderBeginDistrubutionShouldBeFirstDayOfMonth.cs" />
     <Compile Include="Consistency\OrderShouldHaveAtLeastOnePosition.cs" />
     <Compile Include="Consistency\LegalPersonShouldHaveAtLeastOneProfile.cs" />

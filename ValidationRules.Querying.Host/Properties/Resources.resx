@@ -235,9 +235,6 @@
   <data name="OrderCheckIncorrectEndDistributionDate" xml:space="preserve">
     <value>Указана некорректная дата окончания размещения</value>
   </data>
-  <data name="OrderCheckOrderAndBillHaveDifferentPeriods" xml:space="preserve">
-    <value>Период размещения, указанный в заказе и в счете не совпадают</value>
-  </data>
   <data name="OrderCheckOrderHasNoBargainScans" xml:space="preserve">
     <value>Отсутствует сканированная копия договора</value>
   </data>

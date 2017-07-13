@@ -124,7 +124,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 			    typeof(ConsistencyAggregates::Order.HasNoAnyPosition),
 			    typeof(ConsistencyAggregates::Order.InactiveReference),
 			    typeof(ConsistencyAggregates::Order.InvalidBeginDistributionDate),
-			    typeof(ConsistencyAggregates::Order.InvalidBillsPeriod),
 			    typeof(ConsistencyAggregates::Order.InvalidBillsTotal),
 			    typeof(ConsistencyAggregates::Order.InvalidEndDistributionDate),
 			    typeof(ConsistencyAggregates::Order.LegalPersonProfileBargainExpired),

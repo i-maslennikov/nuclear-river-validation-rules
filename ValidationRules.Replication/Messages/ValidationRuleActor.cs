@@ -195,7 +195,6 @@ namespace NuClear.ValidationRules.Replication.Messages
                 {
                     new AdvantageousPurchasesBannerMustBeSoldInTheSameCategory(_query),
                     new BargainScanShouldPresent(_query),
-                    new BillsPeriodShouldMatchOrder(_query),
                     new LegalPersonProfileBargainShouldNotBeExpired(_query),
                     new LegalPersonProfileWarrantyShouldNotBeExpired(_query),
                     new LegalPersonShouldHaveAtLeastOneProfile(_query),

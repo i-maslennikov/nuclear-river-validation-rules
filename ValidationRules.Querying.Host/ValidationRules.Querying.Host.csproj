@@ -195,7 +195,6 @@
     <Compile Include="Composition\Composers\AssociatedPositionsGroupCountMessageComposer.cs" />
     <Compile Include="Composition\Composers\AssociatedPositionWithoutPrincipalMessageComposer.cs" />
     <Compile Include="Composition\Composers\BargainScanShouldPresentMessageComposer.cs" />
-    <Compile Include="Composition\Composers\BillsPeriodShouldMatchOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\BillsShouldBeCreatedMessageComposer.cs" />
     <Compile Include="Composition\Composers\BillsSumShouldMatchOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\ConflictingPrincipalPositionMessageComposer.cs" />

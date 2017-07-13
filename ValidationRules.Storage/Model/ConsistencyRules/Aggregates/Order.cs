@@ -128,11 +128,6 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public long OrderId { get; set; }
         }
 
-        public class InvalidBillsPeriod
-        {
-            public long OrderId { get; set; }
-        }
-
         public class MissingRequiredField
         {
             public long OrderId { get; set; }

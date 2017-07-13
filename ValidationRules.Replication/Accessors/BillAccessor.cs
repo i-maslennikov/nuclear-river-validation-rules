@@ -16,8 +16,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class BillAccessor : IStorageBasedDataObjectAccessor<Bill>, IDataChangesHandler<Bill>
     {
-        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
-
         private readonly IQuery _query;
 
         public BillAccessor(IQuery query)
@@ -32,8 +30,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 {
                     Id = x.Id,
                     OrderId = x.OrderId,
-                    Begin = x.BeginDistributionDate,
-                    End = x.EndDistributionDate + OneSecond,
                     PayablePlan = x.PayablePlan,
                 });
 
