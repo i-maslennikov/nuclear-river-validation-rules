@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NuClear.ValidationRules.Storage.Model.Messages
+﻿namespace NuClear.ValidationRules.Storage.Model.Messages
 {
     public enum MessageTypeCode
     {
@@ -29,7 +27,6 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
         OrderEndDistrubutionShouldBeLastSecondOfMonth = 19,
         LegalPersonProfileBargainShouldNotBeExpired = 20,
         LegalPersonProfileWarrantyShouldNotBeExpired = 21,
-        [Obsolete("Понятие периода ушло из счетов на оплату, проверка не требуется")]BillsPeriodShouldMatchOrder = 22,
         OrderShouldNotBeSignedBeforeBargain = 23,
         LegalPersonShouldHaveAtLeastOneProfile = 24,
         OrderShouldHaveAtLeastOnePosition = 25,
