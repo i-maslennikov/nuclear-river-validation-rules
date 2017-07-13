@@ -103,9 +103,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                     Rule(MessageTypeCode.BargainScanShouldPresent,
                          single: RuleSeverityLevel.Warning),
 
-                    Rule(MessageTypeCode.BillsPeriodShouldMatchOrder,
-                         single: RuleSeverityLevel.Error),
-
                     Rule(MessageTypeCode.BillsShouldBeCreated,
                          single: RuleSeverityLevel.Error),
 

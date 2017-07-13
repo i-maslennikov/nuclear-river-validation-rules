@@ -293,9 +293,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ConsistencyAggregates::Order.InvalidBeginDistributionDate>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
-            builder.Entity<ConsistencyAggregates::Order.InvalidBillsPeriod>()
-                  .HasSchemaName(ConsistencyAggregatesSchema);
-
             builder.Entity<ConsistencyAggregates::Order.InvalidBillsTotal>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 

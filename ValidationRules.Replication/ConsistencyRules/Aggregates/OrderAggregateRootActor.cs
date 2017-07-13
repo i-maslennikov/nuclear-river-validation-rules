@@ -30,7 +30,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IBulkRepository<Order.InactiveReference> inactiveReferenceRepository,
             IBulkRepository<Order.InvalidBeginDistributionDate> orderInvalidBeginDistributionDateRepository,
             IBulkRepository<Order.InvalidEndDistributionDate> orderInvalidEndDistributionDateRepository,
-            IBulkRepository<Order.InvalidBillsPeriod> orderInvalidBillsPeriodRepository,
             IBulkRepository<Order.InvalidBillsTotal> orderInvalidBillsTotalRepository,
             IBulkRepository<Order.LegalPersonProfileBargainExpired> orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository,
             IBulkRepository<Order.LegalPersonProfileWarrantyExpired> orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository,
@@ -50,7 +49,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 HasValueObject(new InactiveReferenceAccessor(query), inactiveReferenceRepository),
                 HasValueObject(new OrderInvalidBeginDistributionDateAccessor(query), orderInvalidBeginDistributionDateRepository),
                 HasValueObject(new OrderInvalidEndDistributionDateAccessor(query), orderInvalidEndDistributionDateRepository),
-                HasValueObject(new OrderInvalidBillsPeriodAccessor(query), orderInvalidBillsPeriodRepository),
                 HasValueObject(new OrderInvalidBillsTotalAccessor(query), orderInvalidBillsTotalRepository),
                 HasValueObject(new LegalPersonProfileBargainExpiredAccessor(query), orderLegalPersonProfileBargainEndDateIsEarlierThanOrderSignupDateRepository),
                 HasValueObject(new LegalPersonProfileWarrantyExpiredAccessor(query), orderLegalPersonProfileWarrantyEndDateIsEarlierThanOrderSignupDateRepository),
@@ -73,7 +71,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.BargainScanShouldPresent,
-                        MessageTypeCode.BillsPeriodShouldMatchOrder,
                         MessageTypeCode.BillsShouldBeCreated,
                         MessageTypeCode.BillsSumShouldMatchOrder,
                         MessageTypeCode.LegalPersonProfileBargainShouldNotBeExpired,
@@ -442,41 +439,6 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.InvalidEndDistributionDate>(x => aggregateIds.Contains(x.OrderId));
-            }
-        }
-
-        public sealed class OrderInvalidBillsPeriodAccessor : DataChangesHandler<Order.InvalidBillsPeriod>, IStorageBasedDataObjectAccessor<Order.InvalidBillsPeriod>
-        {
-            private readonly IQuery _query;
-
-            public OrderInvalidBillsPeriodAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.BillsPeriodShouldMatchOrder,
-                    };
-
-            public IQueryable<Order.InvalidBillsPeriod> GetSource()
-                => from bill in _query.For<Facts::Bill>()
-                   group bill by bill.OrderId
-                   into billGroup
-                   let minimumDate = billGroup.Min(x => x.Begin)
-                   let maximumDate = billGroup.Max(x => x.End)
-                   from order in _query.For<Facts::Order>().Where(x => x.Id == billGroup.Key)
-                   where order.BeginDistribution != minimumDate || order.EndDistributionPlan != maximumDate
-                   select new Order.InvalidBillsPeriod
-                       {
-                           OrderId = order.Id
-                       };
-
-            public FindSpecification<Order.InvalidBillsPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.InvalidBillsPeriod>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

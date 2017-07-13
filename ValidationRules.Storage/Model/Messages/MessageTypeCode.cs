@@ -27,7 +27,6 @@
         OrderEndDistrubutionShouldBeLastSecondOfMonth = 19,
         LegalPersonProfileBargainShouldNotBeExpired = 20,
         LegalPersonProfileWarrantyShouldNotBeExpired = 21,
-        BillsPeriodShouldMatchOrder = 22,
         OrderShouldNotBeSignedBeforeBargain = 23,
         LegalPersonShouldHaveAtLeastOneProfile = 24,
         OrderShouldHaveAtLeastOnePosition = 25,
