@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,16 +23,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<Advertisement> GetSource() => _query
-            .For(Specs.Find.Erm.Advertisement)
-            .Select(x => new Advertisement
-            {
-                Id = x.Id,
-                FirmId = x.FirmId,
-                AdvertisementTemplateId = x.AdvertisementTemplateId,
-                IsSelectedToWhiteList = x.IsSelectedToWhiteList,
-                IsDeleted = x.IsDeleted
-            });
+        public IQueryable<Advertisement> GetSource()
+            => Array.Empty<Advertisement>().AsQueryable();
 
         public FindSpecification<Advertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

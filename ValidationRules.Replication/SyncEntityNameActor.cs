@@ -85,20 +85,12 @@ namespace NuClear.ValidationRules.Replication
                 _query = query;
             }
 
-            public IQueryable<EntityName> GetSource() => _query
-                .For(Specs.Find.Erm.Advertisement)
-                .Select(x => new EntityName
-                {
-                    Id = x.Id,
-                    EntityType = EntityTypeIds.Advertisement,
-                    Name = x.Name
-                });
+            public IQueryable<EntityName> GetSource()
+                => Array.Empty<EntityName>().AsQueryable();
 
 
             public FindSpecification<EntityName> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => SyncEntityNameActor.GetFindSpecification(commands,
-                    typeof(Advertisement),
-                    EntityTypeIds.Advertisement);
+                => SyncEntityNameActor.GetFindSpecification(commands, typeof(Advertisement), EntityTypeIds.Advertisement);
         }
 
         public sealed class AdvertisementElementTemplateNameAccessor : IStorageBasedDataObjectAccessor<EntityName>
@@ -110,19 +102,11 @@ namespace NuClear.ValidationRules.Replication
                 _query = query;
             }
 
-            public IQueryable<EntityName> GetSource() => _query
-                .For(Specs.Find.Erm.AdvertisementElementTemplate)
-                .Select(x => new EntityName
-                    {
-                        Id = x.Id,
-                        EntityType = EntityTypeIds.AdvertisementElementTemplate,
-                        Name = x.Name,
-                    });
+            public IQueryable<EntityName> GetSource()
+                => Array.Empty<EntityName>().AsQueryable();
 
             public FindSpecification<EntityName> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => SyncEntityNameActor.GetFindSpecification(commands,
-                    typeof(AdvertisementElementTemplate),
-                    EntityTypeIds.AdvertisementElementTemplate);
+                => SyncEntityNameActor.GetFindSpecification(commands, typeof(AdvertisementElementTemplate), EntityTypeIds.AdvertisementElementTemplate);
         }
 
         public sealed class CategoryNameAccessor : IStorageBasedDataObjectAccessor<EntityName>

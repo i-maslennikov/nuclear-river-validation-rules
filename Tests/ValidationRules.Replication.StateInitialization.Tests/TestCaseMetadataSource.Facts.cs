@@ -94,54 +94,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new SalesModelCategoryRestriction { ProjectId = 1, Begin = MonthStart(1), CategoryId = 1, SalesModel = 2 });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AdvertisementFacts))
-            .Erm(
-                new Erm::Advertisement { Id = 1, IsDeleted = false },
-                new Erm::Advertisement { Id = 2, IsDeleted = true })
-            .Fact(
-                new Advertisement { Id = 1, IsDeleted = false },
-                new Advertisement { Id = 2, IsDeleted = true });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementTemplateFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AdvertisementTemplateFacts))
-            .Erm(
-                new Erm::AdvertisementTemplate { Id = 1, IsDeleted = false, IsPublished = true, DummyAdvertisementId = 1 },
-                new Erm::AdvertisementTemplate { Id = 2, IsDeleted = true },
-                new Erm::AdvertisementTemplate { Id = 3, IsPublished = false },
-                new Erm::AdvertisementTemplate { Id = 4, DummyAdvertisementId = null})
-            .Fact(
-                new AdvertisementTemplate { Id = 1, DummyAdvertisementId = 1 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementElementFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AdvertisementElementFacts))
-            .Erm(
-                new Erm::AdvertisementElement { Id = 1, IsDeleted = false },
-                new Erm::AdvertisementElementStatus { Id = 1, Status = 1 },
-
-                new Erm::AdvertisementElement { Id = 2, IsDeleted = false },
-
-                new Erm::AdvertisementElement { Id = 3, IsDeleted = true },
-                new Erm::AdvertisementElementStatus { Id = 3, Status = 3 })
-            .Fact(
-                new AdvertisementElement { Id = 1, IsEmpty = true, Status = 1 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementElementTemplateFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AdvertisementElementTemplateFacts))
-            .Erm(
-                new Erm::AdvertisementElementTemplate { Id = 1, IsDeleted = false },
-                new Erm::AdvertisementElementTemplate { Id = 2, IsDeleted = true })
-            .Fact(
-                new AdvertisementElementTemplate { Id = 1 });
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PositionChildFacts
         => ArrangeMetadataElement.Config
             .Name(nameof(PositionChildFacts))

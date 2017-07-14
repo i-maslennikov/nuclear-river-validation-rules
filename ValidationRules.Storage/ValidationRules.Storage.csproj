@@ -258,11 +258,6 @@
     <Compile Include="Model\Facts\LegalPerson.cs" />
     <Compile Include="Model\Facts\LegalPersonProfile.cs" />
     <Compile Include="Model\Facts\OrderScanFile.cs" />
-    <Compile Include="Model\Erm\Advertisement.cs" />
-    <Compile Include="Model\Erm\AdvertisementElement.cs" />
-    <Compile Include="Model\Erm\AdvertisementElementStatus.cs" />
-    <Compile Include="Model\Erm\AdvertisementElementTemplate.cs" />
-    <Compile Include="Model\Erm\AdvertisementTemplate.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Bargain.cs" />
     <Compile Include="Model\Erm\BargainFile.cs" />

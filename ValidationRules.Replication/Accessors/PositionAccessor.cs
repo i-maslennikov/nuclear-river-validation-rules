@@ -29,7 +29,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             {
                 Id = x.Id,
 
-                AdvertisementTemplateId = x.AdvertisementTemplateId,
                 BindingObjectType = x.BindingObjectTypeEnum,
                 SalesModel = x.SalesModel,
                 PositionsGroup = x.PositionsGroup,

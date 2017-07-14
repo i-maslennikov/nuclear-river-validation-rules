@@ -22,15 +22,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<AdvertisementElementTemplate> GetSource() => _query
-            .For(Specs.Find.Erm.AdvertisementElementTemplate)
-            .Select(x => new AdvertisementElementTemplate
-            {
-                Id = x.Id,
-                IsRequired = x.IsRequired,
-                NeedsValidation = x.NeedsValidation,
-                IsAdvertisementLink = x.IsAdvertisementLink,
-            });
+        public IQueryable<AdvertisementElementTemplate> GetSource()
+            => Array.Empty<AdvertisementElementTemplate>().AsQueryable();
 
         public FindSpecification<AdvertisementElementTemplate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

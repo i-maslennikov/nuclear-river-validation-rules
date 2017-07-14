@@ -23,16 +23,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<AdvertisementTemplate> GetSource() => _query
-            .For<Erm::AdvertisementTemplate>()
-            .Where(x => !x.IsDeleted && x.IsPublished && x.DummyAdvertisementId != null)
-            .Select(x => new AdvertisementTemplate
-            {
-                Id = x.Id,
-                DummyAdvertisementId = x.DummyAdvertisementId.Value,
-                IsAdvertisementRequired = x.IsAdvertisementRequired,
-                IsAllowedToWhiteList = x.IsAllowedToWhiteList,
-            });
+        public IQueryable<AdvertisementTemplate> GetSource()
+            => Array.Empty<AdvertisementTemplate>().AsQueryable();
 
         public FindSpecification<AdvertisementTemplate> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

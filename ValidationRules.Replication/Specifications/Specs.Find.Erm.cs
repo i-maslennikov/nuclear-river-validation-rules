@@ -13,12 +13,6 @@ namespace NuClear.ValidationRules.Replication.Specifications
         {
             public static class Erm
             {
-                public static FindSpecification<Erm::Advertisement> Advertisement { get; }
-                    = new FindSpecification<Erm::Advertisement>(x => true);
-
-                public static FindSpecification<Erm::AdvertisementElementTemplate> AdvertisementElementTemplate { get; }
-                    = new FindSpecification<Erm::AdvertisementElementTemplate>(x => !x.IsDeleted);
-
                 public static FindSpecification<Erm::Category> Category { get; }
                     = new FindSpecification<Erm::Category>(x => true);
 

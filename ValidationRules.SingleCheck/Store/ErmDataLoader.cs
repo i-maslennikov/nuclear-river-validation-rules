@@ -231,37 +231,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                                       .Execute(); // Можно ужесточить: рубрики из свзанных заказов нам на самом деле не нужны.
             store.AddRange(salesModelCategoryRestrictions);
 
-            //
-            var advertisements = query.GetTable<Advertisement>()
-                                      .Where(x => firmIds.Contains(x.FirmId.Value) || adverisementIds.Contains(x.Id))
-                                      .Execute();
-            store.AddRange(advertisements);
-            var advertisementIds = advertisements.Select(x => x.Id).ToList();
-            var usedAdvertisementTemplateIds = advertisements.Select(x => x.AdvertisementTemplateId).ToList();
-
-            var advertisementElements = query.GetTable<AdvertisementElement>()
-                                             .Where(x => advertisementIds.Contains(x.AdvertisementId))
-                                             .Execute();
-            store.AddRange(advertisementElements);
-            var advertisementElementIds = advertisementElements.Select(x => x.Id).ToList();
-            var advertisementElementTemplateIds = advertisementElements.Select(x => x.AdvertisementElementTemplateId).ToList();
-
-            var advertisementElementStatuses = query.GetTable<AdvertisementElementStatus>()
-                                                    .Where(x => advertisementElementIds.Contains(x.Id))
-                                                    .Execute();
-            store.AddRange(advertisementElementStatuses);
-
-            var advertisementElementTemplates = query.GetTable<AdvertisementElementTemplate>()
-                                                     .Where(x => advertisementElementTemplateIds.Contains(x.Id))
-                                                     .Execute();
-            store.AddRange(advertisementElementTemplates);
-
-            var advertisementTemplates = query.GetTable<AdvertisementTemplate>()
-                                              .Where(x => advertisementTemplateIds.Union(usedAdvertisementTemplateIds).Contains(x.Id))
-                                              .Execute();
-            store.AddRange(advertisementTemplates);
-
-
             LoadAmountControlledSales(query, order, usedPriceIds, store);
             LoadAssociatedDeniedRules(query, order, usedPriceIds, store);
         }

@@ -23,20 +23,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<AdvertisementElement> GetSource() =>
-            from element in _query.For<Erm::AdvertisementElement>().Where(x => !x.IsDeleted)
-            from status in _query.For<Erm::AdvertisementElementStatus>().Where(x => x.Id == element.Id)
-            select new AdvertisementElement
-                {
-                    Id = element.Id,
-                    AdvertisementId = element.AdvertisementId,
-                    AdvertisementElementTemplateId = element.AdvertisementElementTemplateId,
-                    IsEmpty = (element.BeginDate == null || element.EndDate == null) && element.FileId == null && string.IsNullOrEmpty(element.Text),
-                    Text = element.Text,
-                    BeginDate = element.BeginDate,
-                    EndDate = element.EndDate,
-                    Status = status.Status,
-                };
+        public IQueryable<AdvertisementElement> GetSource()
+            => Array.Empty<AdvertisementElement>().AsQueryable();
 
         public FindSpecification<AdvertisementElement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

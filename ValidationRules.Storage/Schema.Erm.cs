@@ -19,11 +19,6 @@ namespace NuClear.ValidationRules.Storage
                 var config = schema.GetFluentMappingBuilder();
 
                 config.Entity<Account>().HasSchemaName(BillingSchema).HasTableName("Accounts").HasPrimaryKey(x => x.Id);
-                config.Entity<Advertisement>().HasSchemaName(BillingSchema).HasTableName("Advertisements").HasPrimaryKey(x => x.Id);
-                config.Entity<AdvertisementTemplate>().HasSchemaName(BillingSchema).HasTableName("AdvertisementTemplates").HasPrimaryKey(x => x.Id);
-                config.Entity<AdvertisementElement>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElements").HasPrimaryKey(x => x.Id);
-                config.Entity<AdvertisementElementStatus>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElementStatuses").HasPrimaryKey(x => x.Id);
-                config.Entity<AdvertisementElementTemplate>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElementTemplates").HasPrimaryKey(x => x.Id);
                 config.Entity<AssociatedPositionsGroup>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositionsGroups").HasPrimaryKey(x => x.Id);
                 config.Entity<AssociatedPosition>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<BranchOffice>().HasSchemaName(BillingSchema).HasTableName("BranchOffices").HasPrimaryKey(x => x.Id);
