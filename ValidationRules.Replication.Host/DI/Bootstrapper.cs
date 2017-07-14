@@ -132,6 +132,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
             ReplicationRoot.Instance.PerformTypesMassProcessing(massProcessors, true, typeof(object));
 
+            LinqToDB.Common.Configuration.Linq.OptimizeJoins = false;
+
             return container;
         }
 
