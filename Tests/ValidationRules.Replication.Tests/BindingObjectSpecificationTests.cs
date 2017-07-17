@@ -34,7 +34,9 @@ namespace NuClear.ValidationRules.Replication.Tests
             var anotherCategory3 = new Parameter { Category3Id = 33, Category1Id = 11 };
             var anotherCategory1 = new Parameter { Category1Id = 11 }; // Не бывает по бизнесу
             var anotherAddressCategory3 = new Parameter { Category3Id = 33, Category1Id = 11, FirmAddressId = 11 };
-            var anotherAddressCategory1 = new Parameter { Category1Id = 11, FirmAddressId = 11 };
+            var another1AddressCategory1 = new Parameter { Category1Id = 11, FirmAddressId = 11 }; // полное отличие
+            var another2AddressCategory1 = new Parameter { Category1Id = 1, FirmAddressId = 11 }; // совпадает рубрика
+            var another3AddressCategory1 = new Parameter { Category1Id = 11, FirmAddressId = 1 }; // совпадает адрес
             var anotherAddress = new Parameter { FirmAddressId = 11 };
 
             return new[]
@@ -55,7 +57,9 @@ namespace NuClear.ValidationRules.Replication.Tests
                     new TestCaseData(category3, anotherCategory3, false),
                     //new TestCaseData(category3, anotherCategory1, false),
                     new TestCaseData(category3, anotherAddressCategory3, false),
-                    new TestCaseData(category3, anotherAddressCategory1, false),
+                    new TestCaseData(category3, another1AddressCategory1, false),
+                    new TestCaseData(category3, another2AddressCategory1, false),
+                    new TestCaseData(category3, another3AddressCategory1, false),
                     new TestCaseData(category3, anotherAddress, false),
 
                     //new TestCaseData(category1, category1, true),
@@ -73,13 +77,17 @@ namespace NuClear.ValidationRules.Replication.Tests
                     new TestCaseData(addressCategory3, address, true),
 
                     new TestCaseData(addressCategory3, anotherAddressCategory3, false),
-                    new TestCaseData(addressCategory3, anotherAddressCategory1, false),
+                    new TestCaseData(addressCategory3, another1AddressCategory1, false),
+                    new TestCaseData(addressCategory3, another2AddressCategory1, false),
+                    new TestCaseData(addressCategory3, another3AddressCategory1, false),
                     new TestCaseData(addressCategory3, anotherAddress, false),
 
                     new TestCaseData(addressCategory1, addressCategory1, true),
                     new TestCaseData(addressCategory1, address, true),
 
-                    new TestCaseData(addressCategory1, anotherAddressCategory1, false),
+                    new TestCaseData(addressCategory1, another1AddressCategory1, false),
+                    new TestCaseData(addressCategory1, another2AddressCategory1, false),
+                    new TestCaseData(addressCategory1, another3AddressCategory1, false),
                     new TestCaseData(addressCategory1, anotherAddress, false),
 
                     new TestCaseData(address, address, true),
