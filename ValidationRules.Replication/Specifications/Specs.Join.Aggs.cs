@@ -99,7 +99,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                                                     (position.FirmAddressId == null || binding.FirmAddressId == null)) ||
                                                    ((position.Category1Id == null ||
                                                      binding.Category1Id == null ||
-                                                     position.Category3Id == binding.Category3Id ||
+                                                     position.Category3Id == binding.Category3Id && position.Category3Id != null && binding.Category3Id != null ||
                                                      position.Category1Id == binding.Category1Id && position.Category3Id == null && binding.Category3Id == null) &&
                                                     position.FirmAddressId == binding.FirmAddressId));
                 }
