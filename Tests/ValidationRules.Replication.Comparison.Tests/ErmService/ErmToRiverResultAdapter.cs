@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-
 namespace ValidationRules.Replication.Comparison.Tests.ErmService
 {
     internal sealed class ErmToRiverResultAdapter
@@ -30,10 +29,10 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
         public ErmValidationResult ValidateMassManualWithAccounts(long organizationUnitId, DateTime releaseDate)
         {
             var request = new ValidateOrdersRequest(ValidationType.ManualReportWithAccountsCheck,
-                                        organizationUnitId,
-                                        new TimePeriod { Start = releaseDate, End = releaseDate.AddMonths(1).AddSeconds(-1) },
-                                        null,
-                                        false);
+                                                    organizationUnitId,
+                                                    new TimePeriod { Start = releaseDate, End = releaseDate.AddMonths(1).AddSeconds(-1) },
+                                                    null,
+                                                    false);
 
             var validationResult = _ermService.ValidateOrders(request).ValidateOrdersResult;
             validationResult.Messages = Format(validationResult.Messages).ToArray();
@@ -55,8 +54,11 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
 
         private static IEnumerable<ErmOrderValidationMessage> Format(IReadOnlyCollection<ErmOrderValidationMessage> messages)
         {
-            return FormatLinkingObjectsOrderValidationRule(messages).Concat(
-                   FormatOrderHasActiveLegalDetailsOrderValidationRule(messages));
+            var filter1 = FormatLinkingObjectsOrderValidationRule(messages).ToList();
+            var filter2 = FormatOrderHasActiveLegalDetailsOrderValidationRule(filter1).ToList();
+            var finalFilter = FormatAdvertisementAmountOrderValidationRule(filter2);
+
+            return finalFilter;
         }
 
         // ERM выдаёт несколько ошибок по адресам фирм, мы их схлапываем в одну (самую важную)
@@ -86,16 +88,46 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
             const string ReplaceValue = " Юр. лицо исполнителя";
 
             var processed = messages
-                .Where(x => x.RuleCode == OrderHasActiveLegalDetailsOrderValidationRule)
                 .Select(x =>
                             {
-                                if (searchRegex.IsMatch(x.MessageText))
+                                if (x.RuleCode == OrderHasActiveLegalDetailsOrderValidationRule)
                                 {
-                                    x.MessageText = x.MessageText.Replace(ReplaceKey, ReplaceValue);
+                                    if (searchRegex.IsMatch(x.MessageText))
+                                    {
+                                        x.MessageText = x.MessageText.Replace(ReplaceKey, ReplaceValue);
+                                    }
                                 }
 
                                 return x;
                             });
+
+            return processed;
+        }
+
+        private static IEnumerable<ErmOrderValidationMessage> FormatAdvertisementAmountOrderValidationRule(IReadOnlyCollection<ErmOrderValidationMessage> messages)
+        {
+            const int AdvertisementAmountOrderValidationRule = 26;
+            var regex1 = new Regex(@"\(оформлено - \d*, содержит ошибки - \d*\)");
+            var regex2 = new Regex(@"\sVIP");
+
+            var processed = messages
+                .Select(x =>
+                            {
+                                if (x.RuleCode == AdvertisementAmountOrderValidationRule)
+                                {
+                                    // ERM выдаёт дополнительные сообщения об ошибках, которые VR не выдаёт
+                                    if (regex1.IsMatch(x.MessageText))
+                                    {
+                                        return null;
+                                    }
+
+                                    // ERM не совсем правильно выбирает имя категории номенклатуры, корректировка на 'VIP'
+                                    x.MessageText = regex2.Replace(x.MessageText, string.Empty);
+                                }
+
+                                return x;
+                            })
+                .Where(x => x != null);
 
             return processed;
         }
