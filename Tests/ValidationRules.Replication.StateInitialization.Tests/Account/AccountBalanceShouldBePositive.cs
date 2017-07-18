@@ -40,6 +40,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::ReleaseWithdrawal { OrderPositionId = 4, Amount = 0, Start = FirstDayFeb },
                     new Facts::Lock { Id = 3, OrderId = 3, AccountId = 1, Start = FirstDayJan, Amount = 0 },
 
+                    new Facts::Order { Id = 4, BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
+                    new Facts::OrderPosition { Id = 5, OrderId = 4 },
+                    new Facts::ReleaseWithdrawal { OrderPositionId = 5, Amount = 1000, Start = FirstDayMar },
+
                     new Facts::Project())
                 .Aggregate(
                     new Aggregates::Order { Id = 1, AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
@@ -47,7 +51,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.DebtPermission { OrderId = 2, Start = FirstDayFeb, End = FirstDayMar },
                     new Aggregates::Order { Id = 3, AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true },
                     new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 11, OwerallLockedAmount = 11, ReleaseAmount = 11, Start = FirstDayJan, End = FirstDayFeb },
-                    new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 0, OwerallLockedAmount = 11, ReleaseAmount = 12, Start = FirstDayFeb, End = FirstDayMar })
+                    new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 11, LockedAmount = 0, OwerallLockedAmount = 11, ReleaseAmount = 12, Start = FirstDayFeb, End = FirstDayMar },
+                    new Aggregates::Order { Id = 4, AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar }
+                    )
                 .Message(
                     new Messages::Version.ValidationResult
                         {
