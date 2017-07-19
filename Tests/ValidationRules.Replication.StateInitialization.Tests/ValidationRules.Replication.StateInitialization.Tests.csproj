@@ -36,12 +36,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.DataTest.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.DataTest.0.22.0-linq2db0002\lib\net46\2GIS.NuClear.DataTest.Engine.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\2GIS.NuClear.DataTest.0.22.0-linq2db0003\lib\net46\2GIS.NuClear.DataTest.Engine.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.DataTest.Metamodel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.DataTest.0.22.0-linq2db0002\lib\net46\2GIS.NuClear.DataTest.Metamodel.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\2GIS.NuClear.DataTest.0.22.0-linq2db0003\lib\net46\2GIS.NuClear.DataTest.Metamodel.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Metamodeling.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Metamodeling.dll</HintPath>
