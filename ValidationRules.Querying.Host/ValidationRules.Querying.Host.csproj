@@ -147,7 +147,6 @@
     <Compile Include="Composition\Composers\FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveDealMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderCouponPeriodMustBeInReleaseMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionMustCorrespontToActualPriceMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionSalesModelMustMatchCategorySalesModelMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCostPerClickMustBeSpecifiedMessageComposer.cs" />
@@ -188,16 +187,12 @@
     <Compile Include="Composition\Composers\AccountShouldExistMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementCountPerCategoryShouldBeLimitedMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementCountPerThemeShouldBeLimitedMessageComposer.cs" />
-    <Compile Include="Composition\Composers\AdvertisementElementMustPassReviewMessageComposer.cs" />
-    <Compile Include="Composition\Composers\AdvertisementMustBelongToFirmMessageComposer.cs" />
-    <Compile Include="Composition\Composers\AdvertisementWebsiteShouldNotBeFirmWebsiteMessageComposer.cs" />
     <Compile Include="Composition\Composers\AssociatedPositionsGroupCountMessageComposer.cs" />
     <Compile Include="Composition\Composers\AssociatedPositionWithoutPrincipalMessageComposer.cs" />
     <Compile Include="Composition\Composers\BargainScanShouldPresentMessageComposer.cs" />
     <Compile Include="Composition\Composers\BillsShouldBeCreatedMessageComposer.cs" />
     <Compile Include="Composition\Composers\BillsSumShouldMatchOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\ConflictingPrincipalPositionMessageComposer.cs" />
-    <Compile Include="Composition\Composers\CouponMustBeSoldOnceAtTimeMessageComposer.cs" />
     <Compile Include="Composition\Composers\DefaultThemeMustBeExactlyOneMessageComposer.cs" />
     <Compile Include="Composition\Composers\DefaultThemeMustHaveOnlySelfAds.cs" />
     <Compile Include="Composition\Composers\DeniedPositionsCheckMessageComposer.cs" />
@@ -220,13 +215,8 @@
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMinimumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderBeginDistrubutionShouldBeFirstDayOfMonthMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderEndDistrubutionShouldBeLastSecondOfMonthMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderMustHaveAdvertisementMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderMustNotContainDummyAdvertisementMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderCouponPeriodMustNotBeLessFiveDaysMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustBeCreatedMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCorrespontToInactivePositionMessageComposer.cs" />
-    <Compile Include="Composition\Composers\OrderPositionMustNotReferenceDeletedAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionMayCorrespontToActualPriceMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActualPriceMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderRequiredFieldsShouldBeSpecifiedMessageComposer.cs" />
@@ -236,8 +226,6 @@
     <Compile Include="Composition\Composers\SatisfiedPrincipalPositionDifferentOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\ThemeCategoryMustBeActiveAndNotDeletedMessageComposer.cs" />
     <Compile Include="Composition\Composers\ThemePeriodMustContainOrderPeriodMessageComposer.cs" />
-    <Compile Include="Composition\Composers\WhiteListAdvertisementMayPresentMessageComposer.cs" />
-    <Compile Include="Composition\Composers\WhiteListAdvertisementMustPresentMessageComposer.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

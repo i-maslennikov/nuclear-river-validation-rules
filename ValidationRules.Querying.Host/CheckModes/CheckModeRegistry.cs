@@ -23,75 +23,11 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.AdvertisementElementMustPassReview,
-                         single: RuleSeverityLevel.Warning,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.AdvertisementMustBelongToFirm,
-                         single: RuleSeverityLevel.Error,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite,
-                         single: RuleSeverityLevel.Warning),
-
-                    Rule(MessageTypeCode.CouponMustBeSoldOnceAtTime,
-                         single: RuleSeverityLevel.Error,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.OrderCouponPeriodMustBeInRelease,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays,
-                         single: RuleSeverityLevel.Warning),
-
-                    Rule(MessageTypeCode.OrderMustHaveAdvertisement,
-                         single: RuleSeverityLevel.Warning,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.OrderMustNotContainDummyAdvertisement,
-                         single: RuleSeverityLevel.Warning,
-                         manualReport: RuleSeverityLevel.Warning,
-                         prerelease: RuleSeverityLevel.Warning,
-                         release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
                          single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
-                         single: RuleSeverityLevel.Warning,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement,
-                         single: RuleSeverityLevel.Error,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.WhiteListAdvertisementMayPresent,
-                         single: RuleSeverityLevel.Info,
-                         manualReport: RuleSeverityLevel.Info,
-                         prerelease: RuleSeverityLevel.Info,
-                         release: RuleSeverityLevel.Info),
-
-                    Rule(MessageTypeCode.WhiteListAdvertisementMustPresent,
-                         single: RuleSeverityLevel.Warning,
-                         manualReport: RuleSeverityLevel.Warning,
-                         prerelease: RuleSeverityLevel.Warning,
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory,

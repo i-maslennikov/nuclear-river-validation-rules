@@ -59,11 +59,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             return (InvalidFirmState)int.Parse(message["invalidFirmState"], CultureInfo.InvariantCulture);
         }
 
-        public static Advertisement.ReviewStatus ReadAdvertisementElementStatus(this IReadOnlyDictionary<string, string> message)
-        {
-            return (Advertisement.ReviewStatus)int.Parse(message["advertisementElementStatus"], CultureInfo.InvariantCulture);
-        }
-
         public static OrderRequiredFieldsDto ReadOrderRequiredFieldsMessage(this IReadOnlyDictionary<string, string> message)
         {
             return new OrderRequiredFieldsDto
@@ -89,11 +84,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         public static int ReadProjectThemeCount(this IReadOnlyDictionary<string, string> message)
         {
             return int.Parse(message["themeCount"], CultureInfo.InvariantCulture);
-        }
-
-        public static string ReadWebsite(this IReadOnlyDictionary<string, string> message)
-        {
-            return message["website"];
         }
 
         public static DealState ReadDealState(this IReadOnlyDictionary<string, string> message)

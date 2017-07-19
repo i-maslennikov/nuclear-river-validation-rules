@@ -50,15 +50,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit, 10 },
                             { MessageTypeCode.FirmShouldHaveLimitedCategoryCount, 32 },
                             { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases, 29 },
-                            { MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement, 22 },
                             { MessageTypeCode.OrderPositionAdvertisementMustBeCreated, 22 },
-                            { MessageTypeCode.OrderPositionMustNotReferenceDeletedAdvertisement, 22 },
-                            { MessageTypeCode.AdvertisementMustBelongToFirm, 22 },
-                            { MessageTypeCode.OrderMustNotContainDummyAdvertisement, 47 },
-                            { MessageTypeCode.OrderMustHaveAdvertisement, 22 },
-                            { MessageTypeCode.AdvertisementElementMustPassReview, 22 },
-                            { MessageTypeCode.WhiteListAdvertisementMustPresent, 21 },
-                            { MessageTypeCode.WhiteListAdvertisementMayPresent, 21 },
                             { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 49 },
                             { MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject, 7 },
                             { MessageTypeCode.OrderMustNotIncludeReleasedPeriod, 17 },
@@ -74,11 +66,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderMustHaveActiveDeal, 51 },
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
-                            { MessageTypeCode.CouponMustBeSoldOnceAtTime, 35 },
-                            { MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays, 2 },
-                            { MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite, 27 },
                             { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder, 29 },
-                            { MessageTypeCode.OrderCouponPeriodMustBeInRelease, 2 },
                     }.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
 
         public static int ToErmRuleCode(this int riverMessageTypeCode)
