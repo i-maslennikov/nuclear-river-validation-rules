@@ -170,8 +170,7 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ReleaseWithdrawal>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.OrderPositionId)
-                   .HasPrimaryKey(x => x.Start)
-                   .HasIndex(x => new { x.OrderPositionId }, x => new { x.Amount });
+                   .HasPrimaryKey(x => x.Start);
             builder.Entity<RulesetRule>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.RuleType)
