@@ -21,21 +21,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Account>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
-            builder.Entity<Advertisement>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.IsDeleted }, x => new { x.Id });
-            builder.Entity<AdvertisementElement>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.AdvertisementElementTemplateId, x.IsEmpty }, x => new { x.Id, x.AdvertisementId })
-                   .HasIndex(x => new { x.AdvertisementElementTemplateId, x.Status }, x => new { x.Id, x.AdvertisementId });
-            builder.Entity<AdvertisementElementTemplate>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementTemplate>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
             builder.Entity<AssociatedPosition>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
@@ -95,9 +80,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.CategoryId)
                    .HasIndex(x => new { x.CategoryId }, x => new { x.FirmAddressId })
                    .HasIndex(x => new { x.FirmAddressId, x.CategoryId });
-            builder.Entity<FirmAddressWebsite>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
             builder.Entity<LegalPerson>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);

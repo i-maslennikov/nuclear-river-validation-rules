@@ -32,17 +32,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new UnlimitedOrder { OrderId = 1, PeriodStart = MonthStart(1), PeriodEnd = MonthStart(2) });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement FirmContactsFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(FirmContactsFacts))
-            .Erm(
-                new Erm::FirmContact { Id = 1, FirmAddressId = 1, ContactType = 4, Contact = "http://localhost"},
-                new Erm::FirmContact { Id = 2, FirmAddressId = null, ContactType = 4, Contact = "http://localhost" },
-                new Erm::FirmContact { Id = 3, FirmAddressId = 1, ContactType = 3, Contact = "http://localhost" })
-            .Fact(
-                new FirmAddressWebsite { Id = 1, FirmAddressId = 1, Website = "http://localhost" });
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement ThemeOrganizationUnitFacts
         => ArrangeMetadataElement.Config
             .Name(nameof(ThemeOrganizationUnitFacts))

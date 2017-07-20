@@ -63,8 +63,6 @@ namespace NuClear.ValidationRules.Replication
         {
             return new IStorageBasedDataObjectAccessor<EntityName>[]
             {
-                new AdvertisementNameAccessor(query),
-                new AdvertisementElementTemplateNameAccessor(query),
                 new CategoryNameAccessor(query),
                 new FirmNameAccessor(query),
                 new FirmAddressNameAccessor(query),
@@ -74,39 +72,6 @@ namespace NuClear.ValidationRules.Replication
                 new ProjectNameAccessor(query),
                 new ThemeNameAccessor(query),
             };
-        }
-
-        public sealed class AdvertisementNameAccessor : IStorageBasedDataObjectAccessor<EntityName>
-        {
-            private readonly IQuery _query;
-
-            public AdvertisementNameAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<EntityName> GetSource()
-                => Array.Empty<EntityName>().AsQueryable();
-
-
-            public FindSpecification<EntityName> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => SyncEntityNameActor.GetFindSpecification(commands, typeof(Advertisement), EntityTypeIds.Advertisement);
-        }
-
-        public sealed class AdvertisementElementTemplateNameAccessor : IStorageBasedDataObjectAccessor<EntityName>
-        {
-            private readonly IQuery _query;
-
-            public AdvertisementElementTemplateNameAccessor(IQuery query)
-            {
-                _query = query;
-            }
-
-            public IQueryable<EntityName> GetSource()
-                => Array.Empty<EntityName>().AsQueryable();
-
-            public FindSpecification<EntityName> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-                => SyncEntityNameActor.GetFindSpecification(commands, typeof(AdvertisementElementTemplate), EntityTypeIds.AdvertisementElementTemplate);
         }
 
         public sealed class CategoryNameAccessor : IStorageBasedDataObjectAccessor<EntityName>

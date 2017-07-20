@@ -32,23 +32,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::Lock>())
 
                 // AdvertisementAggregates
-                .Aggregate<AdvertisementAggregates::Advertisement>(
-                    x => x.Match<Facts::Advertisement>()
-                          .DependOn<Facts::AdvertisementElement>()
-                          .DependOn<Facts::AdvertisementElementTemplate>()
-                          .DependOn<Facts::AdvertisementTemplate>())
-                .Aggregate<AdvertisementAggregates::Firm>(
-                    x => x.Match<Facts::Firm>()
-                          .DependOn<Facts::Advertisement>()
-                          .DependOn<Facts::FirmAddress>()
-                          .DependOn<Facts::FirmAddressWebsite>()
-                          .DependOn<Facts::Order>()
-                          .DependOn<Facts::OrderPosition>()
-                          .DependOn<Facts::OrderPositionAdvertisement>())
                 .Aggregate<AdvertisementAggregates::Order>(
                     x => x.Match<Facts::Order>()
-                          .DependOn<Facts::Advertisement>()
-                          .DependOn<Facts::AdvertisementTemplate>()
                           .DependOn<Facts::Firm>()
                           .DependOn<Facts::OrderPosition>()
                           .DependOn<Facts::OrderPositionAdvertisement>()

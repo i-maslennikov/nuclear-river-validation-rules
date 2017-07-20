@@ -24,7 +24,6 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
 
         public long Id { get; set; }
 
-        public long? AdvertisementTemplateId { get; set; }
         public int BindingObjectType { get; set; }
         public int SalesModel { get; set; }
         public int PositionsGroup { get; set; }

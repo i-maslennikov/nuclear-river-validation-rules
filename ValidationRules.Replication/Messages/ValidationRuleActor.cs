@@ -220,19 +220,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new LockShouldNotExist(_query),
 
                     // AdvertisementRules
-                    new AdvertisementElementMustPassReview(_query),
-                    new AdvertisementMustBelongToFirm(_query),
                     new OrderPositionAdvertisementMustBeCreated(_query),
-                    new OrderMustNotContainDummyAdvertisement(_query),
-                    new OrderMustHaveAdvertisement(_query),
-                    new OrderPositionAdvertisementMustHaveAdvertisement(_query),
-                    new OrderPositionMustNotReferenceDeletedAdvertisement(_query),
-                    new WhiteListAdvertisementMustPresent(_query),
-                    new WhiteListAdvertisementMayPresent(_query),
-                    new CouponMustBeSoldOnceAtTime(_query),
-                    new OrderCouponPeriodMustNotBeLessFiveDays(_query),
-                    new OrderCouponPeriodMustBeInRelease(_query),
-                    new AdvertisementWebsiteShouldNotBeFirmWebsite(_query),
                     new FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),

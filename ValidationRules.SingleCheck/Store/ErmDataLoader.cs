@@ -164,7 +164,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                  .Where(x => usedPositionIds.Contains(x.Id))
                                  .Execute(); // Можно ограничиться проверямым заказов
             store.AddRange(positions);
-            var advertisementTemplateIds = positions.Where(x => x.AdvertisementTemplateId.HasValue).Select(x => x.AdvertisementTemplateId.Value).ToList();
 
             var positionChilds = query.GetTable<PositionChild>()
                                       .Where(x => usedPositionIds.Contains(x.MasterPositionId) || usedPositionIds.Contains(x.ChildPositionId))
@@ -256,12 +255,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                      .Where(x => firmAddressIds.Contains(x.FirmAddressId))
                      .Execute();
             store.AddRange(categoryFirmAddresses);
-
-            var contacts =
-                query.GetTable<FirmContact>()
-                     .Where(x => firmAddressIds.Contains(x.FirmAddressId.Value))
-                     .Execute();
-            store.AddRange(contacts);
         }
 
         private static void LoadAccount(DataConnection query, Order order, IStore store)

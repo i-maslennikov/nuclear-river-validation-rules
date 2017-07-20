@@ -318,10 +318,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
 
                 .RegisterAccessor<Account, AccountAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Advertisement, AdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<AdvertisementElement, AdvertisementElementAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<AdvertisementElementTemplate, AdvertisementElementTemplateAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<AdvertisementTemplate, AdvertisementTemplateAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<AssociatedPosition, AssociatedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<AssociatedPositionsGroup, AssociatedPositionsGroupAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<Bargain, BargainAccessor>(entryPointSpecificLifetimeManagerFactory)
@@ -337,7 +333,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<Firm, FirmAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<FirmAddress, FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<FirmAddressCategory, FirmAddressCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<FirmAddressWebsite, FirmAddressWebsiteAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<LegalPerson, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<LegalPersonProfile, LegalPersonProfileAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<Lock, LockAccessor>(entryPointSpecificLifetimeManagerFactory)

@@ -235,16 +235,9 @@
     <Compile Include="Model\Facts\PositionChild.cs" />
     <Compile Include="Model\Facts\Project.cs" />
     <Compile Include="Model\Facts\ReleaseWithdrawal.cs" />
-    <Compile Include="Model\AdvertisementRules\Aggregates\Advertisement.cs" />
-    <Compile Include="Model\AdvertisementRules\Aggregates\Firm.cs" />
     <Compile Include="Model\AdvertisementRules\Aggregates\Order.cs" />
-    <Compile Include="Model\Facts\Advertisement.cs" />
-    <Compile Include="Model\Facts\AdvertisementElement.cs" />
-    <Compile Include="Model\Facts\AdvertisementTemplate.cs" />
-    <Compile Include="Model\Facts\AdvertisementElementTemplate.cs" />
     <Compile Include="Model\Facts\Firm.cs" />
     <Compile Include="Model\Facts\FirmAddress.cs" />
-    <Compile Include="Model\Facts\FirmAddressWebsite.cs" />
     <Compile Include="Model\Facts\Position.cs" />
     <Compile Include="Model\Facts\PricePosition.cs" />
     <Compile Include="Model\Facts\UnlimitedOrder.cs" />
@@ -269,7 +262,6 @@
     <Compile Include="Model\Erm\CostPerClickCategoryRestriction.cs" />
     <Compile Include="Model\Erm\Deal.cs" />
     <Compile Include="Model\Erm\Firm.cs" />
-    <Compile Include="Model\Erm\FirmContact.cs" />
     <Compile Include="Model\Erm\FirmAddress.cs" />
     <Compile Include="Model\Erm\LegalPerson.cs" />
     <Compile Include="Model\Erm\LegalPersonProfile.cs" />

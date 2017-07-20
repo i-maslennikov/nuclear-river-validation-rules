@@ -224,40 +224,8 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Order>()
                   .HasSchemaName(AdvertisementAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementAggregates::Order.MissingAdvertisementReference>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.MissingOrderPositionAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementDeleted>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementMustBelongToFirm>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementIsDummy>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.CouponDistributionPeriod>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.OrderPositionAdvertisement>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-
-            builder.Entity<AdvertisementAggregates::Advertisement>()
-                  .HasSchemaName(AdvertisementAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementAggregates::Advertisement.AdvertisementWebsite>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.RequiredElementMissing>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.ElementNotPassedReview>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.Coupon>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-
-            builder.Entity<AdvertisementAggregates::Firm>()
-                  .HasSchemaName(AdvertisementAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementAggregates::Firm.FirmWebsite>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Firm.WhiteListDistributionPeriod>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
 
             return builder;
         }
