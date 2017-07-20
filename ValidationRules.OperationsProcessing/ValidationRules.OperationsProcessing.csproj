@@ -195,7 +195,7 @@
     <Compile Include="AggregatesFlow\AggregatesFlow.cs" />
     <Compile Include="FactsFlow\FactsFlow.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
-    <Compile Include="PerformedOperationsMessageFlowsMetadataSource.cs" />
+    <Compile Include="FlowMetadataSource.cs" />
     <Compile Include="ICommandFactory.cs" />
     <Compile Include="FactsFlow\FactsFlowAccumulator.cs" />
     <Compile Include="FactsFlow\FactsFlowHandler.cs" />

@@ -13,8 +13,7 @@ using NuClear.ValidationRules.OperationsProcessing.Transports;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
-    // todo: переименовать во что-нибудь типа DataFlowMetadataSource, но одинаково в Ci и Vr
-    public sealed class PerformedOperationsMessageFlowsMetadataSource : MetadataSourceBase<MetadataMessageFlowsIdentity>
+    public sealed class FlowMetadataSource : MetadataSourceBase<MetadataMessageFlowsIdentity>
     {
         private static readonly HierarchyMetadata MetadataRoot =
             PerformedOperations.Flows
@@ -38,7 +37,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                                            .To.Primary().Flow<MessagesFlow.MessagesFlow>().Connect()
                                        );
 
-        public PerformedOperationsMessageFlowsMetadataSource()
+        public FlowMetadataSource()
         {
             Metadata = new Dictionary<Uri, IMetadataElement> { { MetadataRoot.Identity.Id, MetadataRoot } };
         }

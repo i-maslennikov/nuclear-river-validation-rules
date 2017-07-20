@@ -161,7 +161,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             container.RegisterType<IMetadataValidatorsSuite, MetadataValidatorsSuite>(Lifetime.Singleton);
 
             // register matadata sources without massprocessor
-            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(PerformedOperationsMessageFlowsMetadataSource), Lifetime.Singleton);
+            container.RegisterOne2ManyTypesPerTypeUniqueness(typeof(IMetadataSource), typeof(FlowMetadataSource), Lifetime.Singleton);
 
             return container;
         }
