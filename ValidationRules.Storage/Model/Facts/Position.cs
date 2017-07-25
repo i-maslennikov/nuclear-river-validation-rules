@@ -31,7 +31,6 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
 
         public bool IsCompositionOptional { get; set; }
         public bool IsControlledByAmount { get; set; }
-        public bool IsComposite { get; set; }
 
         public long CategoryCode { get; set; }
         public int Platform { get; set; }

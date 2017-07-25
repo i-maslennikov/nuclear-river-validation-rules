@@ -34,7 +34,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 PositionsGroup = x.PositionsGroup,
 
                 IsCompositionOptional = x.IsCompositionOptional,
-                IsComposite = x.IsComposite,
                 IsControlledByAmount = x.IsControlledByAmount,
 
                 CategoryCode = x.CategoryCode,

@@ -129,8 +129,7 @@ namespace NuClear.ValidationRules.Storage
                    .HasIndex(x => new { x.OrderId }, x => new { x.Id });
             builder.Entity<Position>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.IsComposite });
+                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PositionChild>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.MasterPositionId)
