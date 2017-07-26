@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
         public MappingSchema GetSchema(Lock @lock)
         {
-            var schema = new MappingSchema(_baseSchema);
+            var schema = new MappingSchema(@lock.Id.ToString(), _baseSchema);
             var builder = schema.GetFluentMappingBuilder();
             foreach (var dataObjectType in _dataObjectTypes)
             {
