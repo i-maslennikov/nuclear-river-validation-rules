@@ -49,12 +49,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
                             .Concat(Handle(commands.OfType<LogDelayCommand>().ToList()))
                             .ToList();
 
-                    using (var loggingTransaction = new TransactionScope(TransactionScopeOption.Suppress))
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
                         _eventLogger.Log(events);
 
                     transaction.Complete();
-                    return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
+
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                        _eventLogger.Log(events);
                 }
+
+                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
             catch (Exception ex)
             {
