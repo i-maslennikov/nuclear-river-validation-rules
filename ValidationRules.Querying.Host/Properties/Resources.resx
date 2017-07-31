@@ -303,9 +303,6 @@
   <data name="OrdersCheckNeedToCreateBills" xml:space="preserve">
     <value>Для заказа необходимо сформировать счета</value>
   </data>
-  <data name="OrdersCheckOrderHasLock" xml:space="preserve">
-    <value>Заказ имеет созданную блокировку на указанный период</value>
-  </data>
   <data name="OrdersCheckOrderHasNoAccount" xml:space="preserve">
     <value>Заказ не имеет привязки к лицевому счёту</value>
   </data>

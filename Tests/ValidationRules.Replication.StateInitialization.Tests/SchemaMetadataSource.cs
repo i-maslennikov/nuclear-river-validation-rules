@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .HasConnectionString<FactsConnectionStringIdentity>()
             .HasSchema(Schema.Facts);
 
-        private static readonly SchemaMetadataElement CustomerIntelligence = SchemaMetadataElement.Config
+        private static readonly SchemaMetadataElement Aggregates = SchemaMetadataElement.Config
             .For(ContextName.Aggregates)
             .HasConnectionString<AggregatesConnectionStringIdentity>()
             .HasSchema(Schema.Aggregates);
@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             { Erm.Identity.Id, Erm },
                             { Facts.Identity.Id, Facts },
-                            { CustomerIntelligence.Identity.Id, CustomerIntelligence },
+                            { Aggregates.Identity.Id, Aggregates },
                             { Messages.Identity.Id, Messages},
                         };
         }

@@ -191,7 +191,6 @@
     <Compile Include="Accessors\AccountAccessor.cs" />
     <Compile Include="Accessors\OrderAccessor.cs" />
     <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositive.cs" />
-    <Compile Include="AccountRules\Validation\LockShouldNotExist.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExist.cs" />
     <Compile Include="AdvertisementRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="AdvertisementRules\Aggregates\AdvertisementAggregateRootActor.cs" />

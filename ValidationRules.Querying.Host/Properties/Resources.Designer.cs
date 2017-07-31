@@ -610,15 +610,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Заказ имеет созданную блокировку на указанный период.
-        /// </summary>
-        internal static string OrdersCheckOrderHasLock {
-            get {
-                return ResourceManager.GetString("OrdersCheckOrderHasLock", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Заказ не имеет привязки к лицевому счёту.
         /// </summary>
         internal static string OrdersCheckOrderHasNoAccount {

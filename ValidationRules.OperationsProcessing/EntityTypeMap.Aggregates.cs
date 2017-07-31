@@ -28,8 +28,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .Aggregate<AccountAggregates::Order>(
                     x => x.Match<Facts::Order>()
                           .DependOn<Facts::UnlimitedOrder>()
-                          .DependOn<Facts::Account>()
-                          .DependOn<Facts::Lock>())
+                          .DependOn<Facts::Account>())
 
                 // AdvertisementAggregates
                 .Aggregate<AdvertisementAggregates::Advertisement>(

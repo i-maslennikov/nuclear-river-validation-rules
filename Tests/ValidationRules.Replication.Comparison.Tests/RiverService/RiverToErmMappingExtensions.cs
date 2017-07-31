@@ -27,7 +27,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.AdvertisementCountPerThemeShouldBeLimited, 44 },
                             { MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited, 31 },
                             { MessageTypeCode.AccountShouldExist, 3 },
-                            { MessageTypeCode.LockShouldNotExist, 13 },
                             { MessageTypeCode.AccountBalanceShouldBePositive, 20 },
                             { MessageTypeCode.OrderBeginDistrubutionShouldBeFirstDayOfMonth, 9 },
                             { MessageTypeCode.OrderEndDistrubutionShouldBeLastSecondOfMonth, 9 },

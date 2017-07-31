@@ -19,10 +19,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.LockShouldNotExist,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
                     Rule(MessageTypeCode.AdvertisementElementMustPassReview,
                          single: RuleSeverityLevel.Warning,
                          manualReport: RuleSeverityLevel.Error,

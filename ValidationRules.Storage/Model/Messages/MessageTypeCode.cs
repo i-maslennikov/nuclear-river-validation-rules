@@ -20,7 +20,6 @@
         AdvertisementCountPerCategoryShouldBeLimited = 17,
 
         AccountShouldExist = 12,
-        LockShouldNotExist = 13,
         AccountBalanceShouldBePositive = 14,
 
         OrderBeginDistrubutionShouldBeFirstDayOfMonth = 18,
