@@ -214,7 +214,6 @@
     <Compile Include="Composition\Composers\LinkedFirmAddressShouldBeValidMessageComposer.cs" />
     <Compile Include="Composition\Composers\LinkedFirmShouldBeValidMessageComposer.cs" />
     <Compile Include="Composition\Composers\LinkedObjectsMissedInPrincipalsMessageComposer.cs" />
-    <Compile Include="Composition\Composers\LockShouldNotExistMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetRestrictionsMassMessageComposer.cs" />
     <Compile Include="Composition\Composers\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMinimumRestrictionsMessageComposer.cs" />

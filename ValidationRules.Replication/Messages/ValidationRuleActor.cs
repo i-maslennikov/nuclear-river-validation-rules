@@ -217,7 +217,6 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                     new AccountShouldExist(_query),
                     new AccountBalanceShouldBePositive(_query),
-                    new LockShouldNotExist(_query),
 
                     // AdvertisementRules
                     new AdvertisementElementMustPassReview(_query),

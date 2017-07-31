@@ -26,20 +26,20 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 2, OrderId = 1 },
                     new Facts::ReleaseWithdrawal { OrderPositionId = 2, Amount = 10, Start = FirstDayJan },
                     new Facts::ReleaseWithdrawal { OrderPositionId = 2, Amount = 10, Start = FirstDayFeb },
-                    new Facts::Lock { Id = 1, OrderId = 1, AccountId = 1, Start = FirstDayJan, Amount = 10 },
+                    new Facts::Lock { Id = 1, AccountId = 1, Start = FirstDayJan, Amount = 10 },
 
                     new Facts::Order { Id = 2, BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
                     new Facts::OrderPosition { Id = 3, OrderId = 2 },
                     new Facts::ReleaseWithdrawal { OrderPositionId = 3, Amount = 1, Start = FirstDayJan },
                     new Facts::ReleaseWithdrawal { OrderPositionId = 3, Amount = 2, Start = FirstDayFeb },
-                    new Facts::Lock { Id = 2, OrderId = 2, AccountId = 1, Start = FirstDayJan, Amount = 1 },
+                    new Facts::Lock { Id = 2, AccountId = 1, Start = FirstDayJan, Amount = 1 },
                     new Facts::UnlimitedOrder { OrderId = 2, PeriodStart = FirstDayFeb, PeriodEnd = FirstDayMar },
 
                     new Facts::Order { Id = 3, BranchOfficeOrganizationUnitId = 1, LegalPersonId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4, IsFreeOfCharge = true },
                     new Facts::OrderPosition { Id = 4, OrderId = 3 },
                     new Facts::ReleaseWithdrawal { OrderPositionId = 4, Amount = 0, Start = FirstDayJan },
                     new Facts::ReleaseWithdrawal { OrderPositionId = 4, Amount = 0, Start = FirstDayFeb },
-                    new Facts::Lock { Id = 3, OrderId = 3, AccountId = 1, Start = FirstDayJan, Amount = 0 },
+                    new Facts::Lock { Id = 3, AccountId = 1, Start = FirstDayJan, Amount = 0 },
 
                     new Facts::Order { Id = 4, BranchOfficeOrganizationUnitId = 3, LegalPersonId = 4, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayMar, WorkflowStep = 4 },
                     new Facts::OrderPosition { Id = 5, OrderId = 4 },
@@ -47,6 +47,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Facts::Project())
                 .Aggregate(
+                    new Aggregates::Account { Id = 1 },
+                    new Aggregates::Account { Id = 2 },
                     new Aggregates::Order { Id = 1, AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
                     new Aggregates::Order { Id = 2, AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
                     new Aggregates::Order.DebtPermission { OrderId = 2, Start = FirstDayFeb, End = FirstDayMar },
