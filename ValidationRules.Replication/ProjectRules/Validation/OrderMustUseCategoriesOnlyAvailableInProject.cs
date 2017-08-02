@@ -10,12 +10,10 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     /// <summary>
     /// Для заказов, у которых в объектах привязки встречаются не привязные к городу назначения рубрики, должна выводиться ошибка.
     /// "В позиции {0} задействованы рубрики, не привязанные к отделению организации города назначения заказа: {рубрики}"
-    /// -> "Рубрика {0} используется в позиции {1}, но не привязана к отделению организации города назначения заказа"
     /// 
     /// Source: CategoriesLinkedToDestOrgUnitOrderValidationRule
     /// 
     /// * Рубрика первого уровня считается привязанной к городу, если првязана хотя бы одна из её дочерних.
-    /// * Сделано изменение относительно ERM - в одном сообщении только одна рубрика
     /// </summary>
     public sealed class OrderMustUseCategoriesOnlyAvailableInProject : ValidationResultAccessorBase
     {
@@ -34,7 +32,6 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrder>(order.Id),
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                         new Reference<EntityTypeOrderPosition>(opa.OrderPositionId),
                                         new Reference<EntityTypePosition>(opa.PositionId)),

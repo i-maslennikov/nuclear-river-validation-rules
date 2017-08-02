@@ -309,8 +309,8 @@
   <data name="OrdersCheckOrderInsufficientFunds" xml:space="preserve">
     <value>Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}.</value>
   </data>
-  <data name="OrdersCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
-    <value>Рубрика {0} используется в позиции {1}, но не привязана к отделению организации города назначения заказа</value>
+  <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
+    <value>В позиции {{0}} задействованы рубрики, не привязанные к отделению организации города назначения заказа: {0}</value>
   </data>
   <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
     <value>В рекламном материале {0} не заполнен обязательный элемент {1}</value>

@@ -439,6 +439,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to В позиции {{0}} задействованы рубрики, не привязанные к отделению организации города назначения заказа: {0}.
+        /// </summary>
+        internal static string OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit {
+            get {
+                return ResourceManager.GetString("OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа..
         /// </summary>
         internal static string OrderCheckOrderPositionCorrespontToInactivePosition {
@@ -624,15 +633,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrdersCheckOrderInsufficientFunds {
             get {
                 return ResourceManager.GetString("OrdersCheckOrderInsufficientFunds", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Рубрика {0} используется в позиции {1}, но не привязана к отделению организации города назначения заказа.
-        /// </summary>
-        internal static string OrdersCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit {
-            get {
-                return ResourceManager.GetString("OrdersCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit", resourceCulture);
             }
         }
         

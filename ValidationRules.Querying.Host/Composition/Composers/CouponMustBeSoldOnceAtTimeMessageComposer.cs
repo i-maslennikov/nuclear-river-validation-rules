@@ -15,14 +15,13 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         {
             var orderReference = references.Get<EntityTypeOrder>();
             var advertisementReference = references.Get<EntityTypeAdvertisement>();
-            var orderPositionReferences = references.GetMany<EntityTypeOrderPosition>();
-
-            var referencePlaceholders = orderPositionReferences.Select((x, i) => "{" + (i + 1) + "}");
+            // todo: сортировки нет в требованиях, сделана для соответствия erm
+            var orderPositionReferences = references.GetMany<EntityTypeOrderPosition>().OrderBy(x => x.Reference.Id);
 
             return new MessageComposerResult(
                 orderReference,
-                string.Format(Resources.CouponIsBoundToMultiplePositionTemplate, string.Join(", ", referencePlaceholders)),
-                new [] { advertisementReference }.Concat(orderPositionReferences.OrderBy(x => x.Reference.Id)).ToArray()); // todo: сортировки нет в требованиях, сделана для соответствия erm
+                string.Format(Resources.CouponIsBoundToMultiplePositionTemplate, string.Join(", ", orderPositionReferences.Select((x, i) => "{" + (i + 1) + "}"))),
+                new [] { advertisementReference }.Concat(orderPositionReferences).ToArray());
         }
 
         public IEnumerable<Message> Distinct(IEnumerable<Message> messages)
@@ -32,11 +31,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                                OrderId = x.Key.OrderId,
                                MessageType = x.Key.MessageType,
                                ProjectId = x.Key.ProjectId,
-                               References = new[]
-                                   {
-                                       new Reference(EntityTypeOrder.Instance.Id, x.Key.OrderId.Value),
-                                       new Reference(EntityTypeAdvertisement.Instance.Id, x.Key.AdvertisementId),
-                                   }.Concat(x.SelectMany(ReferenceExtensions.GetMany<EntityTypeOrderPositionAdvertisement>)).ToArray()
+                               References = new List<Reference>(x.SelectMany(ReferenceExtensions.GetMany<EntityTypeOrderPositionAdvertisement>))
+                                {
+                                    new Reference(EntityTypeOrder.Instance.Id, x.Key.OrderId.Value),
+                                    new Reference(EntityTypeAdvertisement.Instance.Id, x.Key.AdvertisementId),
+                                },
                            });
     }
 }
