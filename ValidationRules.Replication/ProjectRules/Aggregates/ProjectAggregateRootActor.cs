@@ -51,6 +51,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                         MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
                         MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
                         MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass,
                     };
 
             public IQueryable<Project> GetSource()
@@ -109,6 +110,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                     {
                         MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
                         MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass,
                     };
 
             public IQueryable<Project.CostPerClickRestriction> GetSource()
@@ -179,7 +181,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
-                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
+                        MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass,
                     };
 
             public IQueryable<Project.NextRelease> GetSource()

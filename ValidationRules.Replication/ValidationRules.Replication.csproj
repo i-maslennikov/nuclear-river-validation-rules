@@ -223,6 +223,7 @@
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictionsMass.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="Commands\RecalculatePeriodCommand.cs" />
+    <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="SyncEntityNameActor.cs" />
     <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
     <Compile Include="DataChangesHandler.cs" />
@@ -270,7 +271,7 @@
     <Compile Include="ProjectRules\Validation\OrderMustUseCategoriesOnlyAvailableInProject.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionSalesModelMustMatchCategorySalesModel.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustBeSpecified.cs" />
-    <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
+    <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestrictionMass.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
     <Compile Include="Settings\IArchiveVersionsSettings.cs" />
     <Compile Include="Specifications\Specs.Find.Erm.cs" />
