@@ -319,7 +319,9 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
-                         single: RuleSeverityLevel.Error,
+                         single: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),

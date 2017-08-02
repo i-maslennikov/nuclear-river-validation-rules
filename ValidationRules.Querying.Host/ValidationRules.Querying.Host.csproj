@@ -15,7 +15,7 @@
     <AssemblyName>2GIS.NuClear.ValidationRules.Querying.Host</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44374</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
@@ -156,6 +156,7 @@
     <Compile Include="Composition\Composers\OrderMustUseCategoriesOnlyAvailableInProjectMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
+    <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMassMessageComposer.cs" />
     <Compile Include="Composition\IDistinctor.cs" />
     <Compile Include="Composition\ReferenceExtensions.cs" />
     <Compile Include="DataAccess\NameResolvingService.cs" />

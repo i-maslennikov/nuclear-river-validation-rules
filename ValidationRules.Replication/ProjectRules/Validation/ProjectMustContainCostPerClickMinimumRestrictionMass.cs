@@ -14,9 +14,9 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     /// * учитываются ограничения только самой свежей версии для города.
     /// Source: IsCostPerClickRestrictionMissingOrderValidationRule
     /// </summary>
-    public sealed class ProjectMustContainCostPerClickMinimumRestriction : ValidationResultAccessorBase
+    public sealed class ProjectMustContainCostPerClickMinimumRestrictionMass : ValidationResultAccessorBase
     {
-        public ProjectMustContainCostPerClickMinimumRestriction(IQuery query) : base(query, MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction)
+        public ProjectMustContainCostPerClickMinimumRestrictionMass(IQuery query) : base(query, MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass)
         {
         }
 
@@ -26,7 +26,9 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
             var requiredRestrictions =
                 from order in query.For<Order>()
                 from bid in query.For<Order.CostPerClickAdvertisement>().Where(x => x.OrderId == order.Id)
-                select new { OrderId = order.Id, order.ProjectId, order.Begin, order.End, bid.CategoryId };
+                let nextRelease = query.For<Project.NextRelease>().FirstOrDefault(x => x.ProjectId == order.ProjectId).Date
+                where nextRelease < order.End
+                select new { OrderId = order.Id, order.ProjectId, Begin = nextRelease, order.End, bid.CategoryId };
 
             var ruleResults =
                 from req in requiredRestrictions

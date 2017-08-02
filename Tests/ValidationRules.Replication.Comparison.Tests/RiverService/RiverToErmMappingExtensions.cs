@@ -59,6 +59,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.WhiteListAdvertisementMustPresent, 21 },
                             { MessageTypeCode.WhiteListAdvertisementMayPresent, 21 },
                             { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 49 },
+                            { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass, 49 },
                             { MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject, 8 },
                             { MessageTypeCode.OrderMustNotIncludeReleasedPeriod, 17 },
                             { MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum, 48 },
