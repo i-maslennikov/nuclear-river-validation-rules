@@ -46,7 +46,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                         MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
                         MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
                     };
 
             public IQueryable<Firm> GetSource()
@@ -82,7 +81,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
                     };
 
             public IQueryable<Firm.AdvantageousPurchasePositionDistributionPeriod> GetSource()

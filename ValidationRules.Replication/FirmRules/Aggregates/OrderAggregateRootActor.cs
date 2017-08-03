@@ -49,7 +49,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                         MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
                         MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
                         MessageTypeCode.LinkedFirmShouldBeValid,
                     };
 

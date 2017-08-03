@@ -196,9 +196,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
-                         single: RuleSeverityLevel.Warning),
-
                     Rule(MessageTypeCode.LinkedFirmShouldBeValid,
                          single: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
