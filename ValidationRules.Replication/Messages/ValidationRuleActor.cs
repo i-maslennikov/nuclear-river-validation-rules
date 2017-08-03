@@ -232,7 +232,6 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new OrderCouponPeriodMustNotBeLessFiveDays(_query),
                     new OrderCouponPeriodMustBeInRelease(_query),
                     new AdvertisementWebsiteShouldNotBeFirmWebsite(_query),
-                    new FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),

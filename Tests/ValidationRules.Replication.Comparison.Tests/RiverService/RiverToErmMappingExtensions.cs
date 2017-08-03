@@ -77,7 +77,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.CouponMustBeSoldOnceAtTime, 35 },
                             { MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays, 2 },
                             { MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite, 27 },
-                            { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder, 29 },
                             { MessageTypeCode.OrderCouponPeriodMustBeInRelease, 2 },
                     }.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
 
