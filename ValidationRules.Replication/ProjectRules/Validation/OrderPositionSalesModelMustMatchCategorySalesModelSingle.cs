@@ -13,9 +13,9 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
     /// 
     /// Source: SalesModelRestrictionsOrderValidationRule
     /// </summary>
-    public sealed class OrderPositionSalesModelMustMatchCategorySalesModel : ValidationResultAccessorBase
+    public sealed class OrderPositionSalesModelMustMatchCategorySalesModelSingle : ValidationResultAccessorBase
     {
-        public OrderPositionSalesModelMustMatchCategorySalesModel(IQuery query) : base(query, MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel)
+        public OrderPositionSalesModelMustMatchCategorySalesModelSingle(IQuery query) : base(query, MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle)
         {
         }
 
@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                from restriction in query.For<Project.SalesModelRestriction>().Where(x => x.End > order.Begin && order.End > x.Begin && x.ProjectId == order.ProjectId)
+                from restriction in query.For<Project.SalesModelRestriction>().Where(x => x.Begin <= order.Begin && order.Begin < x.End && x.ProjectId == order.ProjectId)
                 from adv in query.For<Order.CategoryAdvertisement>().Where(x => x.IsSalesModelRestrictionApplicable).Where(x => x.OrderId == order.Id && x.CategoryId == restriction.CategoryId)
                 where restriction.SalesModel != adv.SalesModel
                 select new Version.ValidationResult

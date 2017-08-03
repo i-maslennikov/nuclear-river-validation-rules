@@ -50,6 +50,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                         MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
                         MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
                         MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle,
                         MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
                         MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass,
                     };
@@ -146,6 +147,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle,
                     };
 
             public IQueryable<Project.SalesModelRestriction> GetSource()

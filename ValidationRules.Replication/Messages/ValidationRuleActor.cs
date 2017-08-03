@@ -261,6 +261,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new OrderPositionCostPerClickMustBeSpecified(_query),
                     new OrderPositionCostPerClickMustNotBeLessMinimum(_query),
                     new OrderPositionSalesModelMustMatchCategorySalesModel(_query),
+                    new OrderPositionSalesModelMustMatchCategorySalesModelSingle(_query),
                     new ProjectMustContainCostPerClickMinimumRestriction(_query),
                     new ProjectMustContainCostPerClickMinimumRestrictionMass(_query),
 

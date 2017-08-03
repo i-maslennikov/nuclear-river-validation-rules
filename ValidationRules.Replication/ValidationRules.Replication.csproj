@@ -223,6 +223,7 @@
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictionsMass.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="Commands\RecalculatePeriodCommand.cs" />
+    <Compile Include="ProjectRules\Validation\OrderPositionSalesModelMustMatchCategorySalesModelSingle.cs" />
     <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="SyncEntityNameActor.cs" />
     <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
