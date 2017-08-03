@@ -49,6 +49,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                         MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
                         MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum,
                         MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle,
                         MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
                         MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass,
                     };
@@ -129,6 +130,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Aggregates
                         MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
                         MessageTypeCode.OrderPositionCostPerClickMustBeSpecified,
                         MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                        MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle,
                     };
 
             public IQueryable<Order.CategoryAdvertisement> GetSource()
