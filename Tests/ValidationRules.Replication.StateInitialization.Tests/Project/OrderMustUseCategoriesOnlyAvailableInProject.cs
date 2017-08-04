@@ -31,7 +31,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
-                                        new Reference<EntityTypeOrder>(1),
                                         new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                             new Reference<EntityTypeOrderPosition>(1),
                                             new Reference<EntityTypePosition>(4)),

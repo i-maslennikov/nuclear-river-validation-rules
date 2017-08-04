@@ -110,10 +110,13 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
             bool IEqualityComparer<Message>.Equals(Message x, Message y)
                 => x.References.Count == y.References.Count
-                   && x.References.Zip(y.References, (l, r) => Reference.Comparer.Equals(l, r)).All(equal => equal);
+                   && x.References.SequenceEqual(y.References, Reference.Comparer)
+                   && x.Extra.Count == y.Extra.Count
+                   && x.Extra.All(pair => y.Extra.TryGetValue(pair.Key, out var value) && pair.Value == value);
 
             int IEqualityComparer<Message>.GetHashCode(Message obj)
-                => obj.References.Aggregate(0, (accum, reference) => (accum * 367) ^ Reference.Comparer.GetHashCode(reference));
+                => obj.References.Aggregate(0, (accum, reference) => (accum * 397) ^ Reference.Comparer.GetHashCode(reference)) ^
+                   obj.Extra.Aggregate(0, (accum, pair) => (accum * 397) ^ (pair.Key.GetHashCode() * 397) ^ pair.Value.GetHashCode());
         }
     }
 }

@@ -89,7 +89,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
 			    typeof(AccountAggregates::Order),
 			    typeof(AccountAggregates::Order.DebtPermission),
-			    typeof(AccountAggregates::Order.Lock),
 			    typeof(AccountAggregates::Account),
 			    typeof(AccountAggregates::Account.AccountPeriod),
 

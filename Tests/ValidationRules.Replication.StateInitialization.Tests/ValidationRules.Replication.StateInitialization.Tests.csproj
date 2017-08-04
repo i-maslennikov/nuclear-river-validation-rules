@@ -139,7 +139,6 @@
     <Compile Include="Consistency\LinkedCategoryFirmAddressShouldBeValid.cs" />
     <Compile Include="Consistency\BillsShouldBeCreated.cs" />
     <Compile Include="Consistency\BillsSumShouldMatchOrder.cs" />
-    <Compile Include="Account\LockShouldNotExist.cs" />
     <Compile Include="Account\AccountShouldExist.cs" />
     <Compile Include="Account\AccountBalanceShouldBePositive.cs" />
     <Compile Include="Advertisement\OrderPositionAdvertisementMustBeCreated.cs" />

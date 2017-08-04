@@ -19,11 +19,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.LockShouldNotExist,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-
                     Rule(MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
                          single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
@@ -135,9 +130,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
-                         single: RuleSeverityLevel.Warning),
 
                     Rule(MessageTypeCode.LinkedFirmShouldBeValid,
                          single: RuleSeverityLevel.Error,
@@ -252,14 +244,18 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
+                    Rule(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle,
+                         single: RuleSeverityLevel.Error),
+
                     Rule(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
-                         single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
-                         single: RuleSeverityLevel.Error,
+                         single: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),

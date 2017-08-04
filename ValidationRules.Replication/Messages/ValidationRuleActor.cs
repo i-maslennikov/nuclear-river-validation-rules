@@ -217,11 +217,9 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                     new AccountShouldExist(_query),
                     new AccountBalanceShouldBePositive(_query),
-                    new LockShouldNotExist(_query),
 
                     // AdvertisementRules
                     new OrderPositionAdvertisementMustBeCreated(_query),
-                    new FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),
@@ -251,7 +249,9 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new OrderPositionCostPerClickMustBeSpecified(_query),
                     new OrderPositionCostPerClickMustNotBeLessMinimum(_query),
                     new OrderPositionSalesModelMustMatchCategorySalesModel(_query),
+                    new OrderPositionSalesModelMustMatchCategorySalesModelSingle(_query),
                     new ProjectMustContainCostPerClickMinimumRestriction(_query),
+                    new ProjectMustContainCostPerClickMinimumRestrictionMass(_query),
 
                     // ThemeRules
                     new DefaultThemeMustBeExactlyOne(_query),

@@ -109,6 +109,7 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
             const int AdvertisementAmountOrderValidationRule = 26;
             var regex1 = new Regex(@"\(оформлено - \d*, содержит ошибки - \d*\)");
             var regex2 = new Regex(@"\sVIP");
+            var regex3 = new Regex(@"\s\(с видео\)");
 
             var processed = messages
                 .Select(x =>
@@ -123,6 +124,11 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
 
                                     // ERM не совсем правильно выбирает имя категории номенклатуры, корректировка на 'VIP'
                                     x.MessageText = regex2.Replace(x.MessageText, string.Empty);
+                                    x.MessageText = regex3.Replace(x.MessageText, string.Empty);
+                                    x.MessageText = x.MessageText.Replace("September", "Сентябрь");
+                                    x.MessageText = x.MessageText.Replace("October", "Октябрь");
+                                    x.MessageText = x.MessageText.Replace("November", "Ноябрь");
+                                    x.MessageText = x.MessageText.Replace("December", "Декабрь");
                                 }
 
                                 return x;

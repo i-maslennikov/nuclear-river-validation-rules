@@ -15,7 +15,7 @@
     <AssemblyName>2GIS.NuClear.ValidationRules.Querying.Host</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44374</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
@@ -144,10 +144,10 @@
     <Compile Include="CheckModes\CheckModeRegistry.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMaximumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmAddressMustBeLocatedOnTheMapMessageComposer.cs" />
-    <Compile Include="Composition\Composers\FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrderMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveDealMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionMustCorrespontToActualPriceMessageComposer.cs" />
+    <Compile Include="Composition\Composers\OrderPositionSalesModelMustMatchCategorySalesModelSingleMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionSalesModelMustMatchCategorySalesModelMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCostPerClickMustBeSpecifiedMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionCostPerClickMustNotBeLessMinimumMessageComposer.cs" />
@@ -155,6 +155,7 @@
     <Compile Include="Composition\Composers\OrderMustUseCategoriesOnlyAvailableInProjectMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
+    <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMassMessageComposer.cs" />
     <Compile Include="Composition\IDistinctor.cs" />
     <Compile Include="Composition\ReferenceExtensions.cs" />
     <Compile Include="DataAccess\NameResolvingService.cs" />
@@ -209,7 +210,6 @@
     <Compile Include="Composition\Composers\LinkedFirmAddressShouldBeValidMessageComposer.cs" />
     <Compile Include="Composition\Composers\LinkedFirmShouldBeValidMessageComposer.cs" />
     <Compile Include="Composition\Composers\LinkedObjectsMissedInPrincipalsMessageComposer.cs" />
-    <Compile Include="Composition\Composers\LockShouldNotExistMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetRestrictionsMassMessageComposer.cs" />
     <Compile Include="Composition\Composers\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMinimumRestrictionsMessageComposer.cs" />

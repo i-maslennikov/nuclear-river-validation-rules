@@ -29,7 +29,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
             select new Lock
                 {
                     Id = @lock.Id,
-                    OrderId = @lock.OrderId,
                     AccountId = @lock.AccountId,
                     Amount = @lock.PlannedAmount,
                     Start = @lock.PeriodStartDate,
@@ -53,11 +52,10 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Lock> dataObjects)
         {
-            // полагаться на поля, отличные от Id не стоит, но здесь расчёт на то, что блокировку нельзя перевести с одного ЛС или заказа на другой
-            var orderIds = dataObjects.Select(x => x.OrderId);
+            // полагаться на поля, отличные от Id не стоит, но здесь расчёт на то, что блокировку нельзя перевести с одного ЛС на другой
             var accountIds = dataObjects.Select(x => x.AccountId);
 
-            return new EventCollectionHelper<Lock> { { typeof(Order), orderIds }, { typeof(Account), accountIds } };
+            return new EventCollectionHelper<Lock> { { typeof(Account), accountIds } };
         }
     }
 }

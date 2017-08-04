@@ -463,7 +463,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    let orderTotal = (from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                      from rw in _query.For<Facts::ReleaseWithdrawal>().Where(x => x.OrderPositionId == op.Id)
                                      select rw.Amount).Sum()
-                   where billTotal.HasValue && billTotal != orderTotal
+                   where orderTotal > 0 && billTotal.HasValue && billTotal != orderTotal
                    select new Order.InvalidBillsTotal
                    {
                        OrderId = order.Id,

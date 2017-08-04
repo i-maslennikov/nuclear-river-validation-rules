@@ -94,14 +94,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             PeriodStart = MonthStart(3),
                             PeriodEnd = DateTime.MaxValue,
                             ProjectId = 0,
-                        },
-                    new Messages::Version.ValidationResult
-                        {
-                            MessageParams = new MessageParams(new Reference<EntityTypeFirm>(1), new Reference<EntityTypeOrder>(1)).ToXDocument(),
-                            MessageType = (int)MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder,
-                            PeriodStart = MonthStart(2),
-                            PeriodEnd = MonthStart(3),
-                            OrderId = 1,
                         });
     }
 }

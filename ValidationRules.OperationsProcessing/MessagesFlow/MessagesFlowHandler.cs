@@ -48,8 +48,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
                     Handle(commands.OfType<LogDelayCommand>().ToList());
 
                     transaction.Complete();
-                    return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
                 }
+
+                return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
             }
             catch (Exception ex)
             {

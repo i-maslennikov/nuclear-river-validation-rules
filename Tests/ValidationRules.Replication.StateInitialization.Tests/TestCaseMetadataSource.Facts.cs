@@ -9,7 +9,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     public sealed partial class TestCaseMetadataSource
     {
-        private static readonly DateTime FirstDayDec = DateTime.Parse("2011-12-01");
         private static readonly DateTime FirstDayJan = DateTime.Parse("2012-01-01");
         private static readonly DateTime FirstDayFeb = DateTime.Parse("2012-02-01");
         private static readonly DateTime FirstDayMar = DateTime.Parse("2012-03-01");
@@ -310,7 +309,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::Position { Id = 36, BindingObjectTypeEnum = 36 },
                 new Erm::Position { Id = 37, BindingObjectTypeEnum = 37 },
 
-                new Erm::Position { Id = 999, BindingObjectTypeEnum = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true },
+                new Erm::Position { Id = 999, BindingObjectTypeEnum = 999, CategoryCode = 1, IsControlledByAmount = true },
 
                 new Erm::Position { Id = 1000, IsDeleted = true })
             .Fact(
@@ -327,7 +326,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Position { Id = 36, BindingObjectType = 36 },
                 new Position { Id = 37, BindingObjectType = 37 },
 
-                new Position { Id = 999, BindingObjectType = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true },
+                new Position { Id = 999, BindingObjectType = 999, CategoryCode = 1, IsControlledByAmount = true },
                 new Position { Id = 1000, IsDeleted = true });
 
         // ReSharper disable once UnusedMember.Local
@@ -478,7 +477,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Erm::Order { Id = 3 })
                 .Fact(
-                    new Lock { Id = 1, AccountId = 2, OrderId = 3, Start = MonthStart(1), Amount = 4, IsOrderFreeOfCharge = false });
+                    new Lock { Id = 1, AccountId = 2, Start = MonthStart(1), Amount = 4, IsOrderFreeOfCharge = false });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement ReleaseWithdrawalFacts

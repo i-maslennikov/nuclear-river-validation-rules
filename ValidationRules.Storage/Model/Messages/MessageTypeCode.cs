@@ -20,7 +20,6 @@
         AdvertisementCountPerCategoryShouldBeLimited = 17,
 
         AccountShouldExist = 12,
-        LockShouldNotExist = 13,
         AccountBalanceShouldBePositive = 14,
 
         OrderBeginDistrubutionShouldBeFirstDayOfMonth = 18,
@@ -48,7 +47,8 @@
 
         OrderPositionAdvertisementMustBeCreated = 42,
 
-        ProjectMustContainCostPerClickMinimumRestriction = 50,
+        ProjectMustContainCostPerClickMinimumRestriction = 13,
+        ProjectMustContainCostPerClickMinimumRestrictionMass = 50,
         OrderMustUseCategoriesOnlyAvailableInProject = 51,
         OrderMustNotIncludeReleasedPeriod = 52,
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
@@ -60,6 +60,7 @@
         DefaultThemeMustBeExactlyOne = 58,
 
         OrderPositionCostPerClickMustBeSpecified = 59,
+        OrderPositionSalesModelMustMatchCategorySalesModelSingle = 22,
         OrderPositionSalesModelMustMatchCategorySalesModel = 60,
 
         FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 61,

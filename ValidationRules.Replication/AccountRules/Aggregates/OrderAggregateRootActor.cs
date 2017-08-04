@@ -20,12 +20,10 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> orderBulkRepository,
-            IBulkRepository<Order.Lock> lockBulkRepository,
             IBulkRepository<Order.DebtPermission> debtPermissionBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), orderBulkRepository,
-                HasValueObject(new LockAccessor(query), lockBulkRepository),
                 HasValueObject(new DebtPermissionAccessor(query), debtPermissionBulkRepository));
         }
 
@@ -43,7 +41,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     {
                         MessageTypeCode.AccountBalanceShouldBePositive,
                         MessageTypeCode.AccountShouldExist,
-                        MessageTypeCode.LockShouldNotExist,
                     };
 
             public IQueryable<Order> GetSource()
@@ -66,36 +63,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
-            }
-        }
-
-        public sealed class LockAccessor : DataChangesHandler<Order.Lock>, IStorageBasedDataObjectAccessor<Order.Lock>
-        {
-            private readonly IQuery _query;
-
-            public LockAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.LockShouldNotExist
-                    };
-
-            public IQueryable<Order.Lock> GetSource()
-                => _query.For<Facts::Lock>().Select(x => new Order.Lock
-                    {
-                        OrderId = x.OrderId,
-                        Start = x.Start,
-                        End = x.Start.AddMonths(1)
-                });
-
-            public FindSpecification<Order.Lock> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.Lock>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

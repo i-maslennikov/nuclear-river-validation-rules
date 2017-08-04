@@ -190,7 +190,6 @@
     <Compile Include="Accessors\AccountAccessor.cs" />
     <Compile Include="Accessors\OrderAccessor.cs" />
     <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositive.cs" />
-    <Compile Include="AccountRules\Validation\LockShouldNotExist.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExist.cs" />
     <Compile Include="AdvertisementRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="Accessors\FirmAddressAccessor.cs" />
@@ -205,6 +204,8 @@
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictionsMass.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="Commands\RecalculatePeriodCommand.cs" />
+    <Compile Include="ProjectRules\Validation\OrderPositionSalesModelMustMatchCategorySalesModelSingle.cs" />
+    <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="SyncEntityNameActor.cs" />
     <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
     <Compile Include="DataChangesHandler.cs" />
@@ -235,7 +236,6 @@
     <Compile Include="FirmRules\Validation\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="FirmRules\Validation\FirmShouldHaveLimitedCategoryCount.cs" />
     <Compile Include="FirmRules\Validation\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
-    <Compile Include="FirmRules\Validation\FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder.cs" />
     <Compile Include="FirmRules\Validation\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Messages\ArchiveVersionsService.cs" />
     <Compile Include="Messages\ErmStatesQueryableExtensions.cs" />
@@ -252,7 +252,7 @@
     <Compile Include="ProjectRules\Validation\OrderMustUseCategoriesOnlyAvailableInProject.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionSalesModelMustMatchCategorySalesModel.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustBeSpecified.cs" />
-    <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
+    <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestrictionMass.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
     <Compile Include="Settings\IArchiveVersionsSettings.cs" />
     <Compile Include="Specifications\Specs.Find.Erm.cs" />

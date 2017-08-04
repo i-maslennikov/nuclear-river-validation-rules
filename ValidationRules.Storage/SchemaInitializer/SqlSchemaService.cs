@@ -20,6 +20,9 @@ namespace NuClear.ValidationRules.Storage.SchemaInitializer
         {
             foreach (var dataObjectType in dataObjectTypes)
             {
+                var schemaManager = new SchemaManager(dataObjectType);
+                schemaManager.CreateSchema(_dataConnection);
+
                 var tableManager = TableManager.Create(dataObjectType);
                 tableManager.CreateTable(_dataConnection);
 
@@ -80,8 +83,28 @@ namespace NuClear.ValidationRules.Storage.SchemaInitializer
             }
         }
 
-	    // ReSharper disable once ClassNeverInstantiated.Local
-		[Table(Name = "TABLES", Schema = "INFORMATION_SCHEMA")]
+        private sealed class SchemaManager
+        {
+            private readonly Type _dataObjectType;
+
+            public SchemaManager(Type dataObjectType)
+            {
+                _dataObjectType = dataObjectType;
+            }
+
+            public void CreateSchema(DataConnection db)
+            {
+                var table = db.MappingSchema.GetAttribute<TableAttribute>(_dataObjectType);
+                var schema = table.Schema ?? "dbo";
+
+                var command = db.CreateCommand();
+                command.CommandText = $"IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = '{schema}') EXEC('CREATE SCHEMA {schema}')";
+                command.ExecuteNonQuery();
+            }
+        }
+
+        // ReSharper disable once ClassNeverInstantiated.Local
+        [Table(Name = "TABLES", Schema = "INFORMATION_SCHEMA")]
 	    private sealed class TableInfo
 	    {
 		    [Column(Name = "TABLE_SCHEMA")]

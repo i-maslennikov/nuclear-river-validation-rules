@@ -267,17 +267,14 @@
   <data name="OrdersCheckNeedToCreateBills" xml:space="preserve">
     <value>Для заказа необходимо сформировать счета</value>
   </data>
-  <data name="OrdersCheckOrderHasLock" xml:space="preserve">
-    <value>Заказ имеет созданную блокировку на указанный период</value>
-  </data>
   <data name="OrdersCheckOrderHasNoAccount" xml:space="preserve">
     <value>Заказ не имеет привязки к лицевому счёту</value>
   </data>
   <data name="OrdersCheckOrderInsufficientFunds" xml:space="preserve">
     <value>Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}.</value>
   </data>
-  <data name="OrdersCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
-    <value>Рубрика {0} используется в позиции {1}, но не привязана к отделению организации города назначения заказа</value>
+  <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
+    <value>В позиции {{0}} задействованы рубрики, не привязанные к отделению организации города назначения заказа: {0}</value>
   </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
     <value>В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск</value>
