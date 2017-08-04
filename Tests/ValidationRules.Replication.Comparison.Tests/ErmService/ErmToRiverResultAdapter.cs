@@ -125,6 +125,7 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
                                     // ERM не совсем правильно выбирает имя категории номенклатуры, корректировка на 'VIP'
                                     x.MessageText = regex2.Replace(x.MessageText, string.Empty);
                                     x.MessageText = regex3.Replace(x.MessageText, string.Empty);
+                                    x.MessageText = x.MessageText.Replace("August", "Август");
                                     x.MessageText = x.MessageText.Replace("September", "Сентябрь");
                                     x.MessageText = x.MessageText.Replace("October", "Октябрь");
                                     x.MessageText = x.MessageText.Replace("November", "Ноябрь");
