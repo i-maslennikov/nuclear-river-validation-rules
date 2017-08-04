@@ -5,6 +5,17 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module "$PSScriptRoot\metadata.servicebus.psm1" -DisableNameChecking
 
+$DomainNames = @{
+	'Chile' = 'cl'
+	'Cyprus' = 'com.cy'
+	'Czech' = 'cz'
+	'Emirates' = 'ae'
+	'Russia' = 'ru'
+	'Ukraine' = 'ua'
+	'Kazakhstan' = 'kz'
+	'Kyrgyzstan' = 'kg'
+}
+
 $DBSuffixes = @{
 	'Chile' = 'CL'
 	'Cyprus' = 'CY'
@@ -42,6 +53,38 @@ function Get-DBHostMetadata($Context){
 	}
 
 	return @{ 'DBHost' = $dbHost }
+}
+
+function Get-ValidationUrlMetadata($Context){
+
+	$domain = $DomainNames[$Context.Country]
+
+	switch($Context.EnvType){
+		'Production'{
+			switch($Context.Country){
+				'Russia' {
+					$ermValidationUrl = "https://order-validation22.api.test.erm.2gis.ru/Validate.svc/Soap"
+					$riverValidationUrl = "https://validation.api.prod.erm.2gis.ru"
+				}
+				'Kazakhstan'{
+					$ermValidationUrl = "https://order-validation21.api.test.erm.2gis.ru/Validate.svc/Soap"
+					$riverValidationUrl = "https://validation.api.prod.erm.2gis.kz"
+				}
+				default {
+					throw "Unsupported country"
+				}
+			}
+		}
+		'Test'{
+			$ermValidationUrl = "https://order-validation$($Context['Index']).api.test.erm.2gis.$domain/Validate.svc/Soap"
+			$riverValidationUrl = "https://validation$($Context['Index']).api.test.erm.2gis.$domain"
+		}
+	}
+
+	return @{
+		'ErmValidationUrl' = $ermValidationUrl
+		'RiverValidationUrl' = $riverValidationUrl
+	}
 }
 
 function Get-XdtMetadata($Context){
@@ -121,7 +164,10 @@ function Get-RegexMetadata($Context){
 	}
 
 	$dbHostMetadata = Get-DBHostMetadata $Context
-	foreach($keyValuePair in $dbHostMetadata.GetEnumerator()){
+	$validationUrlMetadata = Get-ValidationUrlMetadata $Context
+	$keyValuePairs = $dbHostMetadata + $validationUrlMetadata
+
+	foreach($keyValuePair in $keyValuePairs.GetEnumerator()){
 		$regex["{$($keyValuePair.Key)}"] = $keyValuePair.Value
 	}
 
@@ -138,4 +184,4 @@ function Get-TransformMetadata ($Context) {
 	}
 }
 
-Export-ModuleMember -Function Get-TransformMetadata
+Export-ModuleMember -Function Get-TransformMetadata -Variable DomainNames

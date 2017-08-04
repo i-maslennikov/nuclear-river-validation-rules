@@ -5,17 +5,6 @@ $ErrorActionPreference = 'Stop'
 
 Import-Module "$PSScriptRoot\metadata.transform.psm1" -DisableNameChecking
 
-$DomainNames = @{
-	'Chile' = 'cl'
-	'Cyprus' = 'com.cy'
-	'Czech' = 'cz'
-	'Emirates' = 'ae'
-	'Russia' = 'ru'
-	'Ukraine' = 'ua'
-	'Kazakhstan' = 'kz'
-	'Kyrgyzstan' = 'kg'
-}
-
 function Get-TargetHostsMetadata ($Context) {
 
 	switch ($Context.EnvType) {
