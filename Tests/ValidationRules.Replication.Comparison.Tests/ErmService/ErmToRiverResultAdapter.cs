@@ -56,9 +56,31 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
         {
             var filter1 = FormatLinkingObjectsOrderValidationRule(messages).ToList();
             var filter2 = FormatOrderHasActiveLegalDetailsOrderValidationRule(filter1).ToList();
-            var finalFilter = FormatAdvertisementAmountOrderValidationRule(filter2);
+            var filter3 = FormatAdvertisementAmountOrderValidationRule(filter2).ToList();
+            var finalFilter = FormatDigits(filter3);
 
             return finalFilter;
+        }
+
+        // хак для локализации
+        private static IEnumerable<ErmOrderValidationMessage> FormatDigits(IReadOnlyCollection<ErmOrderValidationMessage> messages)
+        {
+            const int BalanceOrderValidationRule = 20;
+
+            // ищем точку между цифрам, заменяем на запятую
+            var searchRegex = new Regex(@"(?!\d)\.(?=\d)");
+
+            var processed = messages.Select(x =>
+            {
+                if (x.RuleCode == BalanceOrderValidationRule)
+                {
+                    x.MessageText = searchRegex.Replace(x.MessageText, ",");
+                }
+
+                return x;
+            });
+
+            return processed;
         }
 
         // ERM выдаёт несколько ошибок по адресам фирм, мы их схлапываем в одну (самую важную)
@@ -125,6 +147,8 @@ namespace ValidationRules.Replication.Comparison.Tests.ErmService
                                     // ERM не совсем правильно выбирает имя категории номенклатуры, корректировка на 'VIP'
                                     x.MessageText = regex2.Replace(x.MessageText, string.Empty);
                                     x.MessageText = regex3.Replace(x.MessageText, string.Empty);
+
+                                    // хак для локализации
                                     x.MessageText = x.MessageText.Replace("August", "Август");
                                     x.MessageText = x.MessageText.Replace("September", "Сентябрь");
                                     x.MessageText = x.MessageText.Replace("October", "Октябрь");
