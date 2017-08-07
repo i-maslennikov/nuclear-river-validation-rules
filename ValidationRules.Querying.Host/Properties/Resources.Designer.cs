@@ -295,6 +295,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} необходимо указать рекламные материалы для подпозиции {1}.
+        /// </summary>
+        internal static string OrderCheckCompositePositionMustHaveAdvertisements {
+            get {
+                return ResourceManager.GetString("OrderCheckCompositePositionMustHaveAdvertisements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции {1}.
         /// </summary>
         internal static string OrderCheckCompositePositionMustHaveLinkingObject {
@@ -390,6 +399,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrderCheckOrderPositionDoesntCorrespontToActualPrice {
             get {
                 return ResourceManager.GetString("OrderCheckOrderPositionDoesntCorrespontToActualPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} необходимо указать рекламные материалы.
+        /// </summary>
+        internal static string OrderCheckPositionMustHaveAdvertisements {
+            get {
+                return ResourceManager.GetString("OrderCheckPositionMustHaveAdvertisements", resourceCulture);
             }
         }
         
@@ -525,24 +543,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrdersCheckOrderInsufficientFunds {
             get {
                 return ResourceManager.GetString("OrdersCheckOrderInsufficientFunds", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В рекламном материале {0} не заполнен обязательный элемент {1}.
-        /// </summary>
-        internal static string OrdersCheckPositionMustHaveAdvertisementElements {
-            get {
-                return ResourceManager.GetString("OrdersCheckPositionMustHaveAdvertisementElements", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Рубрика {0} используется в позиции {1}, но не привязана к отделению организации города назначения заказа.
-        /// </summary>
-        internal static string OrdersCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit {
-            get {
-                return ResourceManager.GetString("OrdersCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit", resourceCulture);
             }
         }
         

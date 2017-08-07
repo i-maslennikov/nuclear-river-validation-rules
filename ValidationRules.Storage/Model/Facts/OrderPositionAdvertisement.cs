@@ -9,7 +9,7 @@
 
         public long? FirmAddressId { get; set; }
         public long? CategoryId { get; set; }
-        public long? AdvertisementId { get; set; } // todo: сейчас не используется в проверках, после интеграции с AMS потребуется
+        public long? AdvertisementId { get; set; }
         public long? ThemeId { get; set; }
     }
 }

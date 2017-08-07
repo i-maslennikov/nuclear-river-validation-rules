@@ -50,6 +50,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.FirmShouldHaveLimitedCategoryCount, 32 },
                             { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases, 29 },
                             { MessageTypeCode.OrderPositionAdvertisementMustBeCreated, 22 },
+                            { MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement, 22 },
                             { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 49 },
                             { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass, 49 },
                             { MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject, 8 },

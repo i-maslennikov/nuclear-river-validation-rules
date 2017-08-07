@@ -199,6 +199,9 @@
   <data name="OrderApproval_BillsSumDoesntMatchWhenProcessingOrderOnApproval" xml:space="preserve">
     <value>Сумма по счетам не совпадает с планируемой суммой заказа</value>
   </data>
+  <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
+    <value>В позиции {0} необходимо указать рекламные материалы для подпозиции {1}</value>
+  </data>
   <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
     <value>В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции {1}</value>
   </data>
@@ -228,6 +231,9 @@
   </data>
   <data name="OrderCheckOrderPositionDoesntCorrespontToActualPrice" xml:space="preserve">
     <value>Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа.</value>
+  </data>
+  <data name="OrderCheckPositionMustHaveAdvertisements" xml:space="preserve">
+    <value>В позиции {0} необходимо указать рекламные материалы</value>
   </data>
   <data name="OrderDealIsInactive" xml:space="preserve">
     <value>Для заказа указана неактивная работа</value>

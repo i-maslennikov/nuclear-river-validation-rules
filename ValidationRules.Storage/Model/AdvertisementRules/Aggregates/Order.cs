@@ -8,6 +8,16 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
         public DateTime BeginDistributionDate { get; set; }
         public DateTime EndDistributionDatePlan { get; set; }
 
+        public sealed class MissingAdvertisementReference
+        {
+            public long OrderId { get; set; }
+
+            public long OrderPositionId { get; set; }
+            public long CompositePositionId { get; set; }
+
+            public long PositionId { get; set; }
+        }
+
         public sealed class MissingOrderPositionAdvertisement
         {
             public long OrderId { get; set; }

@@ -220,6 +220,7 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                     // AdvertisementRules
                     new OrderPositionAdvertisementMustBeCreated(_query),
+                    new OrderPositionAdvertisementMustHaveAdvertisement(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),

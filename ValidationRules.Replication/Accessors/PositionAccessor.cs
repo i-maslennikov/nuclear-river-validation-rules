@@ -8,7 +8,6 @@ using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Events;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
@@ -34,6 +33,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 PositionsGroup = x.PositionsGroup,
 
                 IsCompositionOptional = x.IsCompositionOptional,
+                IsContentSales = x.IsContentSales,
                 IsControlledByAmount = x.IsControlledByAmount,
 
                 CategoryCode = x.CategoryCode,

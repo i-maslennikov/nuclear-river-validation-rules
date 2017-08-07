@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -41,6 +40,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
+                        MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
                     };
 
             public IQueryable<Order> GetSource()
@@ -65,6 +65,56 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             }
         }
 
+        public sealed class MissingAdvertisementReferenceAccessor : DataChangesHandler<Order.MissingAdvertisementReference>, IStorageBasedDataObjectAccessor<Order.MissingAdvertisementReference>
+        {
+            private readonly IQuery _query;
+
+            public MissingAdvertisementReferenceAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
+                    };
+
+            public IQueryable<Order.MissingAdvertisementReference> GetSource()
+            {
+                var positionChilds = from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted)
+                                     from child in _query.For<Facts::PositionChild>().Where(x => x.MasterPositionId == position.Id).DefaultIfEmpty()
+                                     select new
+                                         {
+                                             PositionId = position.Id,
+                                             ChildPositionId = child != null ? child.ChildPositionId : position.Id
+                                         };
+                var result =
+                    from order in _query.For<Facts::Order>()
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                    from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
+                    from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
+                    from p in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsContentSales).Where(x => x.Id == positionChild.ChildPositionId)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
+                    where opa.AdvertisementId == null // позиция IsContentSales и не указан advertisementId
+                    select new Order.MissingAdvertisementReference
+                    {
+                        OrderId = order.Id,
+                        OrderPositionId = op.Id,
+                        CompositePositionId = pp.PositionId,
+                        PositionId = p.Id,
+                    };
+
+                return result;
+            }
+
+            public FindSpecification<Order.MissingAdvertisementReference> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.MissingAdvertisementReference>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
         public sealed class MissingOrderPositionAdvertisementAccessor : DataChangesHandler<Order.MissingOrderPositionAdvertisement>, IStorageBasedDataObjectAccessor<Order.MissingOrderPositionAdvertisement>
         {
             private readonly IQuery _query;
@@ -81,20 +131,26 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     };
 
             public IQueryable<Order.MissingOrderPositionAdvertisement> GetSource()
-                => from order in _query.For<Facts::Order>()
-                   join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
-                   join pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on op.PricePositionId equals pp.Id
-                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && !x.IsCompositionOptional) on pp.PositionId equals position.Id
-                   join childPosition in _query.For<Facts::PositionChild>() on position.Id equals childPosition.MasterPositionId
-                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.ChildPositionId).DefaultIfEmpty()
-                   where opa == null // позиция не продана
-                   select new Order.MissingOrderPositionAdvertisement
-                   {
-                       OrderId = order.Id,
-                       OrderPositionId = op.Id,
-                       CompositePositionId = pp.PositionId,
-                       PositionId = childPosition.ChildPositionId,
-                   };
+            {
+                var result =
+                       from order in _query.For<Facts::Order>()
+                       from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                       from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
+                       from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => !x.IsCompositionOptional).Where(x => x.Id == pp.PositionId)
+                       from childPosition in _query.For<Facts::PositionChild>().Where(x => x.MasterPositionId == position.Id)
+                       from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.ChildPositionId)
+                                         .DefaultIfEmpty()
+                       where opa == null // позиция не IsCompositionOptional и нет ни одной продажи
+                       select new Order.MissingOrderPositionAdvertisement
+                           {
+                               OrderId = order.Id,
+                               OrderPositionId = op.Id,
+                               CompositePositionId = pp.PositionId,
+                               PositionId = childPosition.ChildPositionId,
+                           };
+
+                return result;
+            }
 
             public FindSpecification<Order.MissingOrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {

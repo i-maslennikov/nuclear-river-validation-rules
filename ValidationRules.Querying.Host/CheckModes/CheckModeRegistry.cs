@@ -25,6 +25,12 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
+                    Rule(MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
+                         single: RuleSeverityLevel.Warning,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
                     Rule(MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory,
                          single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,

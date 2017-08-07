@@ -45,6 +45,7 @@
         FirmShouldHaveLimitedCategoryCount = 39,
         FirmWithSpecialCategoryShouldHaveSpecialPurchases = 40,
 
+        OrderPositionAdvertisementMustHaveAdvertisement = 41,
         OrderPositionAdvertisementMustBeCreated = 42,
 
         ProjectMustContainCostPerClickMinimumRestriction = 13,

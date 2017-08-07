@@ -7,6 +7,7 @@
         public int SalesModel { get; set; }
         public bool IsControlledByAmount { get; set; }
         public bool IsCompositionOptional { get; set; }
+        public bool IsContentSales { get; set; }
         public int BindingObjectTypeEnum { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }

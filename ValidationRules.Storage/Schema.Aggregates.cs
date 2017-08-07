@@ -220,6 +220,8 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AdvertisementAggregates::Order>()
                   .HasSchemaName(AdvertisementAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
+            builder.Entity<AdvertisementAggregates::Order.MissingAdvertisementReference>()
+                   .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.MissingOrderPositionAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
 

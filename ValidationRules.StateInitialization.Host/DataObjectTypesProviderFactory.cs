@@ -93,7 +93,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 			    typeof(AccountAggregates::Account.AccountPeriod),
 
 			    typeof(AdvertisementAggregates::Order),
-			    typeof(AdvertisementAggregates::Order.MissingOrderPositionAdvertisement),
+		        typeof(AdvertisementAggregates::Order.MissingAdvertisementReference),
+                typeof(AdvertisementAggregates::Order.MissingOrderPositionAdvertisement),
 
 			    typeof(ConsistencyAggregates::Order),
 			    typeof(ConsistencyAggregates::Order.BargainSignedLaterThanOrder),
