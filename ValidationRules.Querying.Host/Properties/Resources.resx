@@ -309,9 +309,6 @@
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
     <value>Тематика {0} использует удаленную рубрику {1}</value>
   </data>
-  <data name="ThereIsNoAdvertisementForAdvantageousPurchasesCategory" xml:space="preserve">
-    <value>У фирмы {0}, с рубрикой "Выгодные покупки с 2ГИС", отсутствуют продажи по позициям "Самореклама только для ПК" или "Выгодные покупки с 2ГИС".</value>
-  </data>
   <data name="ThereIsNoSpecifiedDealForOrder" xml:space="preserve">
     <value>Для заказа не указана работа</value>
   </data>

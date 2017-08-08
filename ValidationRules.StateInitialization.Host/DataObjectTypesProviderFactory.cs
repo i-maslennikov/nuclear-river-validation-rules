@@ -115,7 +115,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 			    typeof(ConsistencyAggregates::Order.MissingOrderScan),
 
 			    typeof(FirmAggregates::Firm),
-			    typeof(FirmAggregates::Firm.AdvantageousPurchasePositionDistributionPeriod),
 			    typeof(FirmAggregates::Firm.CategoryPurchase),
 			    typeof(FirmAggregates::Order),
 			    typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),

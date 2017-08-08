@@ -64,9 +64,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(FirmAggregatesSchema)
                    .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<FirmAggregates::Firm.AdvantageousPurchasePositionDistributionPeriod>()
-                   .HasSchemaName(FirmAggregatesSchema);
-
             builder.Entity<FirmAggregates::Firm.CategoryPurchase>()
                    .HasSchemaName(FirmAggregatesSchema)
                    .HasIndex(x => new { x.FirmId, x.Begin, x.End, x.CategoryId }, x => new { x.Scope });

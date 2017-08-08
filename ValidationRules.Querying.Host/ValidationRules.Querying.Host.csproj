@@ -200,7 +200,6 @@
     <Compile Include="Composition\Composers\DeniedPositionsCheckMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmAndOrderShouldBelongTheSameOrganizationUnitMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmShouldHaveLimitedCategoryCountMessageComposer.cs" />
-    <Compile Include="Composition\Composers\FirmWithSpecialCategoryShouldHaveSpecialPurchasesMessageComposer.cs" />
     <Compile Include="Composition\Composers\LegalPersonProfileBargainShouldNotBeExpiredMessageComposer.cs" />
     <Compile Include="Composition\Composers\LegalPersonProfileWarrantyShouldNotBeExpiredMessageComposer.cs" />
     <Compile Include="Composition\Composers\LegalPersonShouldHaveAtLeastOneProfileMessageComposer.cs" />

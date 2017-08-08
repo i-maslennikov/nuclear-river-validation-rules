@@ -4,7 +4,6 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
 {
     public sealed class Position
     {
-        public const long CategoryCodeAdvantageousPurchaseWith2Gis = 14; // Выгодные покупки с 2ГИС (купоны с периодом размещения)
         public const long CategoryCodeSelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
         public const long CategoryCodeAdvertisementInCategory = 38; // Объявление в рубрике(Объявление под списком выдачи)
 

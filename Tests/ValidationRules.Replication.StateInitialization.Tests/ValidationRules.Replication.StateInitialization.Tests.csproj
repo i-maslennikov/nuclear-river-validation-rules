@@ -154,7 +154,6 @@
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
     <Compile Include="Firm\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
-    <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Price\FirmAssociatedPositionMustHavePrincipal.cs" />
     <Compile Include="Price\FirmPositionMustNotHaveDeniedPositions.cs" />
     <Compile Include="Price\FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject.cs" />

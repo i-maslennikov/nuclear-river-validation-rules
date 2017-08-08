@@ -20,9 +20,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(FirmAndOrderShouldBelongTheSameOrganizationUnit))
                 .Fact(
-                    new Facts::Project { Id = 1, OrganizationUnitId = 2 },
-                    new Facts::Project { Id = 2, OrganizationUnitId = 1 },
-
                     new Facts::Firm { Id = 1, OrganizationUnitId = 1, IsActive = true },
                     new Facts::Order { Id = 2, FirmId = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb, WorkflowStep = 5 },
 
@@ -31,11 +28,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 3, FirmId = 2, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionFact = FirstDayFeb, WorkflowStep = 5 })
 
                 .Aggregate(
-                    new Aggregates::Firm { Id = 1, ProjectId = 2 },
+                    new Aggregates::Firm { Id = 1, },
                     new Aggregates::Order { Id = 2, FirmId = 1, Begin = FirstDayJan, End = FirstDayFeb },
                     new Aggregates::Order.FirmOrganiationUnitMismatch { OrderId = 2 },
 
-                    new Aggregates::Firm { Id = 2, ProjectId = 2 },
+                    new Aggregates::Firm { Id = 2, },
                     new Aggregates::Order { Id = 3, FirmId = 2, Begin = FirstDayJan, End = FirstDayFeb })
                 .Message(
                     new Messages::Version.ValidationResult

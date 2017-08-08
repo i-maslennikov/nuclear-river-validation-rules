@@ -48,7 +48,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.BillsShouldBeCreated, 7 },
                             { MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit, 10 },
                             { MessageTypeCode.FirmShouldHaveLimitedCategoryCount, 32 },
-                            { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases, 29 },
                             { MessageTypeCode.OrderPositionAdvertisementMustBeCreated, 22 },
                             { MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement, 22 },
                             { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 49 },

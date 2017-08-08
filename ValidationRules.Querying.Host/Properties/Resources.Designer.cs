@@ -628,15 +628,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to У фирмы {0}, с рубрикой &quot;Выгодные покупки с 2ГИС&quot;, отсутствуют продажи по позициям &quot;Самореклама только для ПК&quot; или &quot;Выгодные покупки с 2ГИС&quot;..
-        /// </summary>
-        internal static string ThereIsNoAdvertisementForAdvantageousPurchasesCategory {
-            get {
-                return ResourceManager.GetString("ThereIsNoAdvertisementForAdvantageousPurchasesCategory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Для заказа не указана работа.
         /// </summary>
         internal static string ThereIsNoSpecifiedDealForOrder {
