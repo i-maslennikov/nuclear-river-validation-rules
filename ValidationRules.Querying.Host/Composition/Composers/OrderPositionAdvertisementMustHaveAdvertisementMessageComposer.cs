@@ -26,9 +26,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderPosition.Order,
-                Resources.OrderCheckCompositePositionMustHaveAdvertisements,
-                orderPosition,
-                orderPositionAdvertisement);
+                string.Format(Resources.OrderCheckCompositePositionMustHaveAdvertisements, orderPositionAdvertisement.Name),
+                orderPosition);
         }
     }
 }

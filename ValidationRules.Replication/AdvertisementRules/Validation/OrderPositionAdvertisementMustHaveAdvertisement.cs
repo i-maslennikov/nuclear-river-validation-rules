@@ -9,9 +9,11 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
     /// Для заказов, у которых хотя бы один шаблон РМ обязательный, и для этого шаблона не указан РМ, должна выводиться ошибка:
-    /// "В позиции {0} необходимо указать рекламные материалы для подпозиции '{1}'"
+    /// "В позиции {0} необходимо указать рекламные материалы"
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckPositionMustHaveAdvertisements
     /// 
-    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveLinkingObject
+    /// "В позиции {0} необходимо указать рекламные материалы для подпозиции '{1}'"
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveAdvertisements
     /// </summary>
     public sealed class OrderPositionAdvertisementMustHaveAdvertisement : ValidationResultAccessorBase
     {
