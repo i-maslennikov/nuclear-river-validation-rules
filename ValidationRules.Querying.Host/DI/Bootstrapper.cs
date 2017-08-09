@@ -37,26 +37,19 @@ namespace NuClear.ValidationRules.Querying.Host.DI
             var environmentName = ConfigurationManager.AppSettings["TargetEnvironmentName"];
             var entryPointName = ConfigurationManager.AppSettings["EntryPointName"];
 
-            var tracerContextEntryProviders =
-                    new ITracerContextEntryProvider[]
-                    {
-                        new TracerContextConstEntryProvider(TracerContextKeys.Required.Environment, environmentName),
-                        new TracerContextConstEntryProvider(TracerContextKeys.Required.EntryPoint, entryPointName),
-                        new TracerContextConstEntryProvider(TracerContextKeys.Required.EntryPointHost, NetworkInfo.ComputerFQDN),
-                        new TracerContextConstEntryProvider(TracerContextKeys.Required.EntryPointInstanceId, Guid.NewGuid().ToString()),
-                        new TracerContextSelfHostedEntryProvider(TracerContextKeys.Required.UserAccount)
-                    };
-
             var logstashUrl = new Uri(ConfigurationManager.ConnectionStrings["Logging"].ConnectionString);
 
-            var tracerContextManager = new TracerContextManager(tracerContextEntryProviders);
             var tracer = Log4NetTracerBuilder.Use
                                              .ApplicationXmlConfig
+                                             .WithGlobalProperties(x =>
+                                                x.Property(TracerContextKeys.Tenant, environmentName)
+                                                .Property(TracerContextKeys.EntryPoint, entryPointName)
+                                                .Property(TracerContextKeys.EntryPointHost, NetworkInfo.ComputerFQDN)
+                                                .Property(TracerContextKeys.EntryPointInstanceId, Guid.NewGuid().ToString()))
                                              .Logstash(logstashUrl)
                                              .Build;
 
             return container.RegisterInstance(tracer)
-                            .RegisterInstance(tracerContextManager)
                             .RegisterType<IExceptionLogger, ExceptionTracer>("log4net", new ContainerControlledLifetimeManager());
         }
 

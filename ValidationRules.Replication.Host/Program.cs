@@ -13,7 +13,6 @@ using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Tracing.API;
 using NuClear.Tracing.Environment;
-using NuClear.Tracing.Log4Net;
 using NuClear.Tracing.Log4Net.Config;
 using NuClear.ValidationRules.Replication.Host.DI;
 using NuClear.ValidationRules.Replication.Host.Settings;
@@ -34,29 +33,22 @@ namespace NuClear.ValidationRules.Replication.Host
             var environmentSettings = settingsContainer.AsSettings<IEnvironmentSettings>();
             var connectionStringSettings = settingsContainer.AsSettings<IConnectionStringSettings>();
 
-            var tracerContextEntryProviders =
-                    new ITracerContextEntryProvider[]
-                    {
-                        new TracerContextConstEntryProvider(TracerContextKeys.Required.Environment, environmentSettings.EnvironmentName),
-                        new TracerContextConstEntryProvider(TracerContextKeys.Required.EntryPoint, environmentSettings.EntryPointName),
-                        new TracerContextConstEntryProvider(TracerContextKeys.Required.EntryPointHost, NetworkInfo.ComputerFQDN),
-                        new TracerContextConstEntryProvider(TracerContextKeys.Required.EntryPointInstanceId, Guid.NewGuid().ToString()),
-                        new TracerContextSelfHostedEntryProvider(TracerContextKeys.Required.UserAccount)
-                    };
-
-
-            var tracerContextManager = new TracerContextManager(tracerContextEntryProviders);
             var tracer = Log4NetTracerBuilder.Use
                                              .ApplicationXmlConfig
                                              .Console
                                              .EventLog
+                                             .WithGlobalProperties(x =>
+                                                x.Property(TracerContextKeys.Tenant, environmentSettings.EnvironmentName)
+                                                .Property(TracerContextKeys.EntryPoint, environmentSettings.EntryPointName)
+                                                .Property(TracerContextKeys.EntryPointHost, NetworkInfo.ComputerFQDN)
+                                                .Property(TracerContextKeys.EntryPointInstanceId, Guid.NewGuid().ToString()))
                                              .Logstash(new Uri(connectionStringSettings.GetConnectionString(LoggingConnectionStringIdentity.Instance)))
                                              .Build;
 
             IUnityContainer container = null;
             try
             {
-                container = Bootstrapper.ConfigureUnity(settingsContainer, tracer, tracerContextManager);
+                container = Bootstrapper.ConfigureUnity(settingsContainer, tracer);
                 var schedulerManager = container.Resolve<ISchedulerManager>();
                 if (IsConsoleMode(args))
                 {
