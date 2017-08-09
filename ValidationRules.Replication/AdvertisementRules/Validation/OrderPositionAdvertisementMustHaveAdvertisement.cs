@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
     /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckPositionMustHaveAdvertisements
     /// 
     /// "В позиции {0} необходимо указать рекламные материалы для подпозиции '{1}'"
-    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveLinkingObject
+    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveAdvertisements
     /// </summary>
     public sealed class OrderPositionAdvertisementMustHaveAdvertisement : ValidationResultAccessorBase
     {

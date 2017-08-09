@@ -358,7 +358,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} необходимо указать рекламные материалы для подпозиции {1}.
+        ///   Looks up a localized string similar to В позиции {{0}} необходимо указать рекламные материалы для подпозиции &quot;{0}&quot;.
         /// </summary>
         internal static string OrderCheckCompositePositionMustHaveAdvertisements {
             get {
@@ -367,7 +367,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции {1}.
+        ///   Looks up a localized string similar to В позиции {{0}} необходимо указать хотя бы один объект привязки для подпозиции &apos;{0}&apos;.
         /// </summary>
         internal static string OrderCheckCompositePositionMustHaveLinkingObject {
             get {

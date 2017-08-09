@@ -221,10 +221,10 @@
     <value>Сумма по счетам не совпадает с планируемой суммой заказа</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
-    <value>В позиции {0} необходимо указать рекламные материалы для подпозиции {1}</value>
+    <value>В позиции {{0}} необходимо указать рекламные материалы для подпозиции "{0}"</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
-    <value>В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции {1}</value>
+    <value>В позиции {{0}} необходимо указать хотя бы один объект привязки для подпозиции '{0}'</value>
   </data>
   <data name="OrderCheckHasReleases" xml:space="preserve">
     <value>Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа</value>
