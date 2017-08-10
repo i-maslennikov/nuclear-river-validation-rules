@@ -107,7 +107,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 {
     public static class Bootstrapper
     {
-        public static IUnityContainer ConfigureUnity(ISettingsContainer settingsContainer, ITracer tracer, ITracerContextManager tracerContextManager)
+        public static IUnityContainer ConfigureUnity(ISettingsContainer settingsContainer, ITracer tracer)
         {
             IUnityContainer container = new UnityContainer();
             var massProcessors = new IMassProcessor[]
@@ -120,7 +120,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .UseParameterResolvers(ParameterResolvers.Defaults)
                      .ConfigureMetadata()
                      .ConfigureSettingsAspects(settingsContainer)
-                     .ConfigureTracing(tracer, tracerContextManager)
+                     .ConfigureTracing(tracer)
                      .ConfigureSecurityAspects()
                      .ConfigureQuartzRemoteControl()
                      .ConfigureQuartz()
@@ -142,10 +142,9 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             return Lifetime.PerScope;
         }
 
-        private static IUnityContainer ConfigureTracing(this IUnityContainer container, ITracer tracer, ITracerContextManager tracerContextManager)
+        private static IUnityContainer ConfigureTracing(this IUnityContainer container, ITracer tracer)
         {
-            return container.RegisterInstance(tracer)
-                            .RegisterInstance(tracerContextManager);
+            return container.RegisterInstance(tracer);
         }
 
         private static IUnityContainer ConfigureMetadata(this IUnityContainer container)

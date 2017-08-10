@@ -5,11 +5,11 @@ namespace NuClear.ValidationRules.Replication.Host.Security
 {
     internal sealed class TracerContextUserContextScopeChangesObserver : IUserContextScopeChangesObserver
     {
-        private readonly ITracerContextManager _tracerContextManager;
+        private readonly ITracer _tracer;
 
-        public TracerContextUserContextScopeChangesObserver(ITracerContextManager tracerContextManager)
+        public TracerContextUserContextScopeChangesObserver(ITracer tracer)
         {
-            _tracerContextManager = tracerContextManager;
+            _tracer = tracer;
         }
 
         public void ScopeChanged(IUserContextScope currentScope)
@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.Host.Security
 
         private void SetIdentityNameFromScope(IUserContextScope currentScope)
         {
-            _tracerContextManager[TracerContextKeys.Required.UserAccount] = "Not available";
+            _tracer.Context.Push(TracerContextKeys.UserAccount, "Not available");
         }
     }
 }

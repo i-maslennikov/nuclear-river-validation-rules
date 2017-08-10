@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 
 using LinqToDB.Data;
+using LinqToDB.Mapping;
 
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -37,6 +38,7 @@ namespace ValidationRules.Replication.Comparison.Tests
                 var result = new List<TestCaseData>(rules.Count);
 
                 using (var dc = new DataConnection("Messages").AddMappingSchema(Schema.Messages))
+                using (var erm = new DataConnection("Erm"))
                 {
                     var orderErrors = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved == false && x.OrderId.HasValue);
                     var resolved = dc.GetTable<Version.ValidationResult>().Where(x => x.Resolved);
@@ -52,7 +54,16 @@ namespace ValidationRules.Replication.Comparison.Tests
                                               .Select(x => x.OrderId.Value)
                                               .Distinct()
                                               .Take(OrdersPerRule)
-                                              .ToArray();
+                                              .ToList();
+
+                        // не учитываем заказы на расторжении
+                        if (orderIds.Any())
+                        {
+                            orderIds = erm.GetTable<Order>()
+                                          .Where(x => x.WorkflowStepId != 4 && orderIds.Contains(x.Id))
+                                          .Select(x => x.Id)
+                                          .ToList();
+                        }
 
                         if (!orderIds.Any())
                         {
@@ -175,6 +186,13 @@ namespace ValidationRules.Replication.Comparison.Tests
             {
                 return "[" + string.Join(", ", Values) + "]";
             }
+        }
+
+        [Table(Name = "Orders", Schema = "Billing")]
+        public sealed class Order
+        {
+            [Column] public long Id { get; set; }
+            [Column] public int WorkflowStepId { get; set; }
         }
     }
 }
