@@ -79,6 +79,10 @@ function Get-ValidationUrlMetadata($Context){
 			$ermValidationUrl = "https://order-validation$($Context['Index']).api.test.erm.2gis.$domain/Validate.svc/Soap"
 			$riverValidationUrl = "https://validation$($Context['Index']).api.test.erm.2gis.$domain"
 		}
+		default {
+			$ermValidationUrl = $null
+			$riverValidationUrl = $null
+		}
 	}
 
 	return @{
