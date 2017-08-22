@@ -93,22 +93,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
-                                                  new Reference<EntityTypeCategory>(12),
-                                                  new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                                                                                      new Reference<EntityTypeOrderPosition>(1),
-                                                                                                      new Reference<EntityTypePosition>(1)),
-                                                  new Reference<EntityTypeOrder>(1),
-                                                  new Reference<EntityTypeProject>(0))
-                                    .ToXDocument(),
-                            MessageType = (int)MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle,
-                            PeriodStart = MonthStart(1),
-                            PeriodEnd = MonthStart(3),
-                            OrderId = 1,
-                        },
-                    new Messages::Version.ValidationResult
-                        {
-                            MessageParams =
-                                new MessageParams(
                                         new Reference<EntityTypeCategory>(12),
                                         new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                             new Reference<EntityTypeOrderPosition>(4),
