@@ -4,12 +4,14 @@ using System.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
+using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Replication.Core.Equality;
 using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Model.Facts;
@@ -35,25 +37,44 @@ namespace NuClear.ValidationRules.Replication
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            if (!commands.Any())
+            if (commands.Count == 0)
             {
                 return Array.Empty<IEvent>();
             }
 
-            foreach (var accessor in CreateAccessors(_query))
+            // db accessors
+            var syncDataObjectCommands = commands.OfType<ISyncDataObjectCommand>().ToList();
+            if (syncDataObjectCommands.Count != 0)
             {
-                var specification = accessor.GetFindSpecification(commands);
+                foreach (var accessor in CreateAccessors(_query))
+                {
+                    var specification = accessor.GetFindSpecification(syncDataObjectCommands);
 
-                var dataChangesDetector = new TwoPhaseDataChangesDetector<EntityName>(
-                    spec => accessor.GetSource().WhereMatched(spec),
-                    spec => _query.For<EntityName>().WhereMatched(spec),
-                    _identityComparer,
-                    _completeComparer);
+                    var dataChangesDetector = new TwoPhaseDataChangesDetector<EntityName>(
+                        spec => accessor.GetSource().WhereMatched(spec),
+                        spec => _query.For<EntityName>().WhereMatched(spec),
+                        _identityComparer,
+                        _completeComparer);
 
-                var changes = dataChangesDetector.DetectChanges(specification);
-                _bulkRepository.Delete(changes.Complement);
-                _bulkRepository.Create(changes.Difference);
-                _bulkRepository.Update(changes.Intersection);
+                    var changes = dataChangesDetector.DetectChanges(specification);
+                    _bulkRepository.Delete(changes.Complement);
+                    _bulkRepository.Create(changes.Difference);
+                    _bulkRepository.Update(changes.Intersection);
+                }
+            }
+
+            // memory accessors
+            var replaceDataObjectCommands = commands.OfType<IReplaceDataObjectCommand>().ToList();
+            if (replaceDataObjectCommands.Count != 0)
+            {
+                foreach (var accessor in CreateMemoryAccessors())
+                {
+                    var specification = new FindSpecificationCollection<EntityName>(replaceDataObjectCommands.Select(x => accessor.GetFindSpecification(x)).ToList());
+                    _bulkRepository.Delete(_query.For<EntityName>().WhereMatched(specification));
+
+                    var entityNames = replaceDataObjectCommands.SelectMany(x => accessor.GetDataObjects(x)).ToList();
+                    _bulkRepository.Create(entityNames);
+                }
             }
 
             return Array.Empty<IEvent>();
@@ -71,6 +92,14 @@ namespace NuClear.ValidationRules.Replication
                 new PositionNameAccessor(query),
                 new ProjectNameAccessor(query),
                 new ThemeNameAccessor(query),
+            };
+        }
+
+        private static IEnumerable<IMemoryBasedDataObjectAccessor<EntityName>> CreateMemoryAccessors()
+        {
+            return new[]
+            {
+                new AdvertisementNameAccessor(null),
             };
         }
 
@@ -266,6 +295,33 @@ namespace NuClear.ValidationRules.Replication
                 => SyncEntityNameActor.GetFindSpecification(commands,
                     typeof(Theme),
                     EntityTypeIds.Theme);
+        }
+
+        public sealed class AdvertisementNameAccessor : IMemoryBasedDataObjectAccessor<EntityName>
+        {
+            // ReSharper disable once UnusedParameter.Local
+            public AdvertisementNameAccessor(IQuery query) { }
+
+            public IReadOnlyCollection<EntityName> GetDataObjects(ICommand command)
+            {
+                var dto = (AdvertisementDto)((ReplaceDataObjectCommand)command).Dto;
+
+                return new[]
+                {
+                    new EntityName
+                    {
+                        Id = dto.Id,
+                        EntityType = EntityTypeIds.Advertisement,
+                        Name = dto.Name
+                    }
+                };
+            }
+
+            public FindSpecification<EntityName> GetFindSpecification(ICommand command)
+            {
+                var dto = (AdvertisementDto)((ReplaceDataObjectCommand)command).Dto;
+                return new FindSpecification<EntityName>(x => x.Id == dto.Id && x.EntityType == EntityTypeIds.Advertisement);
+            }
         }
 
         private static FindSpecification<EntityName> GetFindSpecification(IReadOnlyCollection<ICommand> commands, Type type, int typeId)

@@ -167,6 +167,7 @@
     <Compile Include="EntityTypeIds.cs" />
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
     <Compile Include="FieldComparer\XDocumentComparer.cs" />
+    <Compile Include="Identitites\Connections\AmsConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\ErmConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\AggregatesConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="LinqToDbPropertyProvider.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Order.cs" />
+    <Compile Include="Model\Facts\Advertisement.cs" />
     <Compile Include="Model\Facts\EntityName.cs" />
     <Compile Include="Model\Facts\Lock.cs" />
     <Compile Include="Model\Facts\Order.cs" />

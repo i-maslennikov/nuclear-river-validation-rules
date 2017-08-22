@@ -20,6 +20,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 new Dictionary<IConnectionStringIdentity, string>
                     {
                         { ErmConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Erm) },
+                        { AmsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Ams) },
                         { FactsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Facts) },
                         { AggregatesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Aggregates) },
                         { MessagesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Messages) },
@@ -34,11 +35,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 			if (args.Contains("-facts"))
             {
                 commands.Add(BulkReplicationCommands.ErmToFacts);
-	            commands.Add(SchemaInitializationCommands.WebApp);
+                commands.Add(new KafkaReplicationCommand(
+                             BulkReplicationCommands.AmsToFacts));
+                commands.Add(SchemaInitializationCommands.WebApp);
 				commands.Add(SchemaInitializationCommands.Facts);
             }
 
-			if (args.Contains("-aggregates"))
+            if (args.Contains("-aggregates"))
             {
                 commands.Add(BulkReplicationCommands.FactsToAggregates);
 	            commands.Add(SchemaInitializationCommands.WebApp);
@@ -52,12 +55,16 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 				commands.Add(SchemaInitializationCommands.Messages);
             }
 
-			var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), ConnectionStringSettings);
-			var schemaInitializationActor = new SchemaInitializationActor(ConnectionStringSettings);
+            var dataObjectTypesProviderFactory = new DataObjectTypesProviderFactory();
+            var bulkReplicationActor = new BulkReplicationActor(dataObjectTypesProviderFactory, ConnectionStringSettings);
+            var kafkaReplicationActor = new KafkaReplicationActor(dataObjectTypesProviderFactory, ConnectionStringSettings);
+            var schemaInitializationActor = new SchemaInitializationActor(ConnectionStringSettings);
 
 			var sw = Stopwatch.StartNew();
 	        schemaInitializationActor.ExecuteCommands(commands);
 			bulkReplicationActor.ExecuteCommands(commands);
+            kafkaReplicationActor.ExecuteCommands(commands);
+
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
 

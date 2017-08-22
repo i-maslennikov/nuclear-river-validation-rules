@@ -7,9 +7,11 @@ using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 using NuClear.ValidationRules.OperationsProcessing.Transports;
+using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -18,6 +20,12 @@ namespace NuClear.ValidationRules.OperationsProcessing
         private static readonly HierarchyMetadata MetadataRoot =
             PerformedOperations.Flows
                                .Primary(
+                                        MessageFlowMetadata.Config.For<AmsFactsFlow.AmsFactsFlow>()
+                                                           .Receiver<KafkaReceiver>()
+                                                           .Accumulator<AmsFactsFlowAccumulator>()
+                                                           .Handler<AmsFactsFlowHandler>()
+                                                           .To.Primary().Flow<AmsFactsFlow.AmsFactsFlow>().Connect(),
+
                                         MessageFlowMetadata.Config.For<FactsFlow.FactsFlow>()
                                                            .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<FactsFlowTelemetryPublisher>>()
                                                            .Accumulator<FactsFlowAccumulator>()

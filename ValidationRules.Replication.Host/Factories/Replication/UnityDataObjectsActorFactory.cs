@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Practices.Unity;
@@ -24,21 +23,14 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 
         public IReadOnlyCollection<IActor> Create()
         {
-            var dataObjectTypes = _dataObjectTypesProvider.Get<ISyncDataObjectCommand>();
-            if (dataObjectTypes.Any())
-            {
-                return dataObjectTypes.Select(dataObjectType => (IActor)_unityContainer.Resolve(typeof(SyncDataObjectsActor<>).MakeGenericType(dataObjectType)))
-                                      .ToArray();
-            }
+            var syncActorTypes = _dataObjectTypesProvider.Get<ISyncDataObjectCommand>().Select(x => typeof(SyncDataObjectsActor<>).MakeGenericType(x));
+            var replaceActorTypes = _dataObjectTypesProvider.Get<IReplaceDataObjectCommand>().Select(x => typeof(ReplaceDataObjectsActor<>).MakeGenericType(x));
 
-            dataObjectTypes = _dataObjectTypesProvider.Get<IReplaceDataObjectCommand>();
-            if (dataObjectTypes.Any())
-            {
-                return dataObjectTypes.Select(dataObjectType => (IActor)_unityContainer.Resolve(typeof(ReplaceDataObjectsActor<>).MakeGenericType(dataObjectType)))
-                                      .ToArray();
-            }
+            var actors = syncActorTypes
+                .Concat(replaceActorTypes)
+                .Select(x => (IActor)_unityContainer.Resolve(x)).ToList();
 
-            return Array.Empty<IActor>();
+            return actors;
         }
     }
 }

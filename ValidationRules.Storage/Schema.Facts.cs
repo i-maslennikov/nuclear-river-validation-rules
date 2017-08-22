@@ -21,6 +21,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Account>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
+            builder.Entity<Advertisement>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.Id);
             builder.Entity<AssociatedPosition>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)

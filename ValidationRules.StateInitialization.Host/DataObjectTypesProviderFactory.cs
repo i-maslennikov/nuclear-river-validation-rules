@@ -68,6 +68,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 			    typeof(Facts::UnlimitedOrder),
 		    };
 
+        public static readonly Type[] AmsFactTypes =
+            {
+                typeof(Facts::Advertisement),
+                typeof(Facts::EntityName),
+            };
+
 	    public static readonly Type[] AggregateTypes =
 		    {
 			    typeof(PriceAggregates::Firm),
@@ -156,6 +162,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         {
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is FactsConnectionStringIdentity)
             {
+                if (command.SourceStorageDescriptor.ConnectionStringIdentity is AmsConnectionStringIdentity)
+                {
+                    return new KafkaReplicationActor.DataObjectTypesProvider(AmsFactTypes);
+                }
+
                 return new CommandRegardlessDataObjectTypesProvider(FactTypes);
 			}
 
