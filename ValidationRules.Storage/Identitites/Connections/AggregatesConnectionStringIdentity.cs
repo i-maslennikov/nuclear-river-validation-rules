@@ -5,14 +5,8 @@ namespace NuClear.ValidationRules.Storage.Identitites.Connections
 {
     public sealed class AggregatesConnectionStringIdentity : IdentityBase<AggregatesConnectionStringIdentity>, IConnectionStringIdentity
     {
-        public override int Id
-        {
-            get { return 17; }
-        }
+        public override int Id => 17;
 
-        public override string Description
-        {
-            get { return "Aggregates DB connection string"; }
-        }
+        public override string Description => "Aggregates DB connection string";
     }
 }
