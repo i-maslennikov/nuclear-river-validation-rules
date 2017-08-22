@@ -105,7 +105,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                         PositionId = p.Id,
                     };
 
-                return result;
+                return result.Distinct();
             }
 
             public FindSpecification<Order.MissingAdvertisementReference> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
