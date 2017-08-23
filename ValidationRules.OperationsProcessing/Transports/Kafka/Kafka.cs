@@ -18,17 +18,15 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
 
     public sealed class KafkaMessage : MessageBase
     {
-        public KafkaMessage(Message message)
+        public KafkaMessage(IReadOnlyCollection<Message> messages)
         {
             Id = Guid.NewGuid();
-            Message = message;
+            Messages = messages;
         }
 
         public override Guid Id { get; }
 
-        // Мне кажется, что один Message в KafkaMessage - слишком мало, по конвейру обработки создаются слишком много массивов из одного элемента: в Accumulator, Accessor
-        // Их нужно или агрегировать, или по конвейру использовать не одиночные KafkaMessage
-        public Message Message { get; }
+        public IReadOnlyCollection<Message> Messages { get; }
     }
 
     public sealed class KafkaReceiver : MessageReceiverBase<KafkaMessage, IPerformedOperationsReceiverSettings>
@@ -49,7 +47,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
 
         protected override IReadOnlyList<KafkaMessage> Peek()
         {
-            return _messageFlowReceiver.ReceiveBatch(MessageReceiverSettings.BatchSize).Select(x => new KafkaMessage(x)).ToList();
+            var messages = _messageFlowReceiver.ReceiveBatch(MessageReceiverSettings.BatchSize);
+            return new[] { new KafkaMessage(messages) };
         }
 
         protected override void Complete(IEnumerable<KafkaMessage> successfullyProcessedMessages, IEnumerable<KafkaMessage> failedProcessedMessages)
@@ -60,7 +59,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
                 return;
             }
 
-            var lastSuccessfulMessage = successfullyProcessedMessages.Select(x => x.Message).OrderByDescending(x => x.Offset.Value).FirstOrDefault();
+            var lastSuccessfulMessage = successfullyProcessedMessages.SelectMany(x => x.Messages).OrderByDescending(x => x.Offset.Value).FirstOrDefault();
             if (lastSuccessfulMessage != null)
             {
                 _messageFlowReceiver.Complete(lastSuccessfulMessage);

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Text;
 
 using Confluent.Kafka;
@@ -23,16 +23,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = CommandFactory.CreateCommands(message.Message),
+                Commands = CommandFactory.CreateCommands(message.Messages),
             };
         }
 
         private static class CommandFactory
         {
-            public static IReadOnlyCollection<ICommand> CreateCommands(Message message)
+            public static IReadOnlyCollection<ICommand> CreateCommands(IReadOnlyCollection<Message> messages)
             {
-                var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value));
-                return new[] { new ReplaceDataObjectCommand(typeof(Advertisement), dto) }; // Разве не нужно пересчитать EntityName?
+                return messages.Select(x =>
+                {
+                    var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value));
+                    // Разве не нужно пересчитать EntityName?
+                    return new ReplaceDataObjectCommand(typeof(Advertisement), dto);
+                }).ToList();
             }
         }
     }

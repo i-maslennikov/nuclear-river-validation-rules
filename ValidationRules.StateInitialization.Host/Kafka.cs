@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -19,7 +18,6 @@ using Newtonsoft.Json;
 using NuClear.Messaging.Transports.Kafka;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
-using NuClear.Replication.Core.Commands;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Settings;
 using NuClear.Settings.API;
@@ -80,19 +78,18 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                     IReadOnlyCollection<Message> batch;
                     while((batch = receiver.ReceiveBatch(_receiverSettings.BatchSize)).Count != 0)
                     {
-                        var replaceDataObjectCommands = new List<ICommand>();
-                        foreach (var x in batch)
-                        {
-                            // пока что хардкод для advertisement
-                            var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value));
+                        // пока что хардкод для advertisement
+                        var dtos = batch.Select(x => JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value))).ToList();
 
-                            replaceDataObjectCommands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), dto));
-                            replaceDataObjectCommands.Add(new ReplaceDataObjectCommand(typeof(EntityName), dto));
-                        }
+                        var bulkInsertCommands = new List<ICommand>
+                        {
+                            new BulkInsertDataObjectsCommand(typeof(Advertisement), dtos),
+                            new BulkInsertDataObjectsCommand(typeof(EntityName), dtos)
+                        };
 
                         foreach (var actor in actors)
                         {
-                            actor.ExecuteCommands(replaceDataObjectCommands);
+                            actor.ExecuteCommands(bulkInsertCommands);
                         }
                     }
                 });
@@ -187,12 +184,22 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 }
             }
 
-            public IReadOnlyCollection<Type> GetAccessorsFor(Type dataObjectType)
-            {
-                Type[] result;
-                return AccessorTypes.Value.TryGetValue(dataObjectType, out result) ? result : Array.Empty<Type>(); ;
-            }
+            public IReadOnlyCollection<Type> GetAccessorsFor(Type dataObjectType) => AccessorTypes.Value.TryGetValue(dataObjectType, out Type[] result) ? result : Array.Empty<Type>();
         }
+
+        // BulkInsertDataObjectsCommand для IMemoryBasedDataObjectAccessor
+        internal sealed class BulkInsertDataObjectsCommand : ICommand
+        {
+            public BulkInsertDataObjectsCommand(Type dataObjectType, IEnumerable<object> dtos)
+            {
+                DataObjectType = dataObjectType;
+                Dtos = dtos;
+            }
+
+            public Type DataObjectType { get; }
+            public IEnumerable<object> Dtos { get; }
+        }
+
 
         // BulkInsertDataObjectsActor для IMemoryBasedDataObjectAccessor
         private sealed class BulkInsertDataObjectsActor<TDataObject> : IActor
@@ -213,11 +220,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
             public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
             {
-                var effectiveCommands = commands.OfType<IReplaceDataObjectCommand>().Where(x => x.DataObjectType == DataObjectType).ToList();
-                if (effectiveCommands.Count != 0)
+                var command = commands.OfType<BulkInsertDataObjectsCommand>().SingleOrDefault(x => x.DataObjectType == DataObjectType);
+                if (command != null)
                 {
-                    var dataObjects = effectiveCommands.SelectMany(x => _dataObjectAccessor.GetDataObjects(x));
-
+                    var replaceDataObjectCommands = command.Dtos.Select(x => new ReplaceDataObjectCommand(DataObjectType, x));
+                    var dataObjects = replaceDataObjectCommands.SelectMany(x => _dataObjectAccessor.GetDataObjects(x));
                     ExecuteBulkCopy(dataObjects);
                 }
 
@@ -272,10 +279,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 DataObjectTypes = dataObjectTypes;
             }
 
-            public IReadOnlyCollection<Type> Get<TCommand>() where TCommand : ICommand
-            {
-                throw new NotImplementedException();
-            }
+            public IReadOnlyCollection<Type> Get<TCommand>() where TCommand : ICommand => throw new NotImplementedException();
         }
     }
 }
