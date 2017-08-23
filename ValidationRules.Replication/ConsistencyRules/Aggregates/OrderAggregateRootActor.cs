@@ -131,8 +131,10 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
+                   from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId)
-                   let state = address.FirmId != order.FirmId ? InvalidFirmAddressState.NotBelongToFirm
+                   let isFirmMismatchAllowed = Facts.Position.CategoryCodesAllowFirmMismatch.Contains(position.CategoryCode) && position.BindingObjectType == Facts.Position.BindingObjectTypeAddressMultiple
+                   let state = address.FirmId != order.FirmId && !isFirmMismatchAllowed ? InvalidFirmAddressState.NotBelongToFirm
                                 : address.IsDeleted ? InvalidFirmAddressState.Deleted
                                 : !address.IsActive ? InvalidFirmAddressState.NotActive
                                 : address.IsClosedForAscertainment ? InvalidFirmAddressState.ClosedForAscertainment
