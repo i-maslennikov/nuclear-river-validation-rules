@@ -35,7 +35,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             if (args.Contains("-facts"))
             {
                 commands.Add(BulkReplicationCommands.ErmToFacts);
-                commands.Add(new KafkaReplicationCommand(BulkReplicationCommands.AmsToFacts)); // Надо подумать о лишней обёртке
+                // Надо подумать о лишней обёртке
+                commands.Add(new KafkaReplicationCommand(BulkReplicationCommands.AmsToFacts));
                 commands.Add(SchemaInitializationCommands.WebApp);
                 commands.Add(SchemaInitializationCommands.Facts);
             }

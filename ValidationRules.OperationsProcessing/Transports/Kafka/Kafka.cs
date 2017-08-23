@@ -48,6 +48,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
         protected override IReadOnlyList<KafkaMessage> Peek()
         {
             var messages = _messageFlowReceiver.ReceiveBatch(MessageReceiverSettings.BatchSize);
+            if (messages.Count == 0)
+            {
+                return Array.Empty<KafkaMessage>();
+            }
+
             return new[] { new KafkaMessage(messages) };
         }
 

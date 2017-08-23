@@ -12,6 +12,8 @@ using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication;
+using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 {
@@ -42,16 +44,23 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
             {
                 using (var transaction = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
                 {
-                    var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
-                    var replaceEvents = Handle(commands.OfType<IReplaceDataObjectCommand>().ToList()).ToList();
+                    var lookups = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().ToLookup(x => x.TargetFlow, x => x.Commands);
+                    foreach (var lookup in lookups)
+                    {
+                        var flow = lookup.Key;
+                        var commands = lookup.SelectMany(x => x).ToList();
 
-                    using (new TransactionScope(TransactionScopeOption.Suppress))
-                        _eventLogger.Log(replaceEvents);
+                        var replaceEvents = Handle(commands.OfType<IReplaceDataObjectCommand>().ToList()).Select(x => new FlowEvent(flow, x)).ToList();
+                        var stateEvents = Handle(commands.OfType<IncrementAmsStateCommand>().ToList()).Select(x => new FlowEvent(flow, x));
 
-                    transaction.Complete();
+                        using (new TransactionScope(TransactionScopeOption.Suppress))
+                            _eventLogger.Log<IEvent>(replaceEvents);
 
-                    using (new TransactionScope(TransactionScopeOption.Suppress))
-                        _eventLogger.Log(replaceEvents);
+                        transaction.Complete();
+
+                        using (new TransactionScope(TransactionScopeOption.Suppress))
+                            _eventLogger.Log<IEvent>(replaceEvents.Concat(stateEvents).ToList());
+                    }
                 }
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
@@ -61,6 +70,17 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
                 _tracer.Error(ex, "Error when import facts for ERM");
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsFailed().WithExceptions(ex));
             }
+        }
+
+        private static IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementAmsStateCommand> commands)
+        {
+            if (!commands.Any())
+            {
+                return Array.Empty<IEvent>();
+            }
+
+            var maxAmsState = commands.Select(x => x.State).OrderByDescending(x => x.Offset).First();
+            return new IEvent[] { new AmsStateIncrementedEvent(maxAmsState) };
         }
 
         private IEnumerable<IEvent> Handle(IReadOnlyCollection<IReplaceDataObjectCommand> commands)

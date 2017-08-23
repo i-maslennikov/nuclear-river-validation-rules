@@ -74,7 +74,7 @@ namespace NuClear.Messaging.Transports.Kafka
         {
             var currentMessage = (Message)null;
             var eof = false;
-            var maybeEof = false;
+            var idleCount = 2;
 
             try
             {
@@ -96,12 +96,11 @@ namespace NuClear.Messaging.Transports.Kafka
 
                     if (currentMessage == null)
                     {
-                        // когда Poll не вернёт eof и не вернёт message - это либо конец очереди либо ты перед началом очереди
-                        // чтобы убедиться что это действительно конец, надо ещё раз сделать Poll
-
-                        if (!maybeEof)
+                        // иногда Poll вообще ничего не возвращает, тогда надо ещё раз вызвать Poll
+                        // может быть я неправильно готовлю, но пока вот такой вот workaround
+                        if (idleCount != 0)
                         {
-                            maybeEof = true;
+                            idleCount--;
                             continue;
                         }
 

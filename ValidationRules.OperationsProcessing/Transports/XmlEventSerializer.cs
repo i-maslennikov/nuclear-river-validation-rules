@@ -97,35 +97,29 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
                 }
             }
 
-            if (IsEventOfType(@event, typeof(FactsStateIncrementedEvent)))
+            if (IsEventOfType(@event, typeof(AmsStateIncrementedEvent)))
             {
-                var states = @event.Elements(State).Select(x => new Guid(x.Value));
-                return new FactsStateIncrementedEvent(states.ToArray());
+                var amsState = @event.Elements(State).Single();
+                return new AmsStateIncrementedEvent(new AmsState((long)amsState, (DateTime)amsState.Attribute(Date)));
             }
 
-            if (IsEventOfType(@event, typeof(AggregatesStateIncrementedEvent)))
+            if (IsEventOfType(@event, typeof(ErmStateIncrementedEvent)))
             {
-                var states = @event.Elements(State).Select(x => new Guid(x.Value));
-                return new AggregatesStateIncrementedEvent(states.ToArray());
+                var ermStates = @event.Elements(State);
+                return new ErmStateIncrementedEvent(ermStates.Select(x => new ErmState((Guid)x, (DateTime)x.Attribute(Date))));
             }
 
-            if (IsEventOfType(@event, typeof(FactsDelayLoggedEvent)))
+            if (IsEventOfType(@event, typeof(DelayLoggedEvent)))
             {
                 var time = @event.Element(EventHappendTime);
-                return new FactsDelayLoggedEvent((DateTime)time);
-            }
-
-            if (IsEventOfType(@event, typeof(AggregatesDelayLoggedEvent)))
-            {
-                var time = @event.Element(EventHappendTime);
-                return new AggregatesDelayLoggedEvent((DateTime)time);
+                return new DelayLoggedEvent((DateTime)time);
             }
 
             if (IsEventOfType(@event, typeof(ResultPartiallyOutdatedEvent)))
             {
                 var rule = @event.Element(RuleCode);
                 var orderIds = @event.Elements(OrderId);
-                return new ResultPartiallyOutdatedEvent((MessageTypeCode)(int)rule, orderIds.Select(x => (long)x).ToArray());
+                return new ResultPartiallyOutdatedEvent((MessageTypeCode)(int)rule, orderIds.Select(x => (long)x).ToList());
             }
 
             if (IsEventOfType(@event, typeof(ResultOutdatedEvent)))
@@ -139,90 +133,64 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports
 
         public XElement Serialize(IEvent @event)
         {
-            var createdEvent = @event as DataObjectCreatedEvent;
-            if (createdEvent != null)
+            switch (@event)
             {
-                return CreateRecord(createdEvent,
-                                    new XElement(DataObjectType, createdEvent.DataObjectType.FullName),
-                                    new XElement(DataObjectId, createdEvent.DataObjectId));
-            }
+                case FlowEvent flowEvent:
+                    return Serialize(flowEvent.Event);
 
-            var updatedEvent = @event as DataObjectUpdatedEvent;
-            if (updatedEvent != null)
-            {
-                return CreateRecord(updatedEvent,
-                                    new XElement(DataObjectType, updatedEvent.DataObjectType.FullName),
-                                    new XElement(DataObjectId, updatedEvent.DataObjectId));
-            }
+                case DataObjectCreatedEvent createdEvent:
+                    return CreateRecord(createdEvent,
+                                        new XElement(DataObjectType, createdEvent.DataObjectType.FullName),
+                                        new XElement(DataObjectId, createdEvent.DataObjectId));
 
-            var deletedEvent = @event as DataObjectDeletedEvent;
-            if (deletedEvent != null)
-            {
-                return CreateRecord(deletedEvent,
-                                    new XElement(DataObjectType, deletedEvent.DataObjectType.FullName),
-                                    new XElement(DataObjectId, deletedEvent.DataObjectId));
-            }
+                case DataObjectUpdatedEvent updatedEvent:
+                    return CreateRecord(updatedEvent,
+                                        new XElement(DataObjectType, updatedEvent.DataObjectType.FullName),
+                                        new XElement(DataObjectId, updatedEvent.DataObjectId));
 
-            var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
-            if (outdatedEvent != null)
-            {
-                return CreateRecord(outdatedEvent,
-                                    new XElement(DataObjectType, outdatedEvent.DataObjectType.FullName),
-                                    new XElement(RelatedDataObjectType, outdatedEvent.RelatedDataObjectType.FullName),
-                                    new XElement(RelatedDataObjectId, outdatedEvent.RelatedDataObjectId));
-            }
+                case DataObjectDeletedEvent deletedEvent:
+                    return CreateRecord(deletedEvent,
+                                        new XElement(DataObjectType, deletedEvent.DataObjectType.FullName),
+                                        new XElement(DataObjectId, deletedEvent.DataObjectId));
 
-            var complexOutdatedEvent = @event as RelatedDataObjectOutdatedEvent<PeriodKey>;
-            if (complexOutdatedEvent != null)
-            {
-                return CreateRecord(complexOutdatedEvent,
-                                    new XElement(DataObjectType, complexOutdatedEvent.DataObjectType.FullName),
-                                    new XElement(RelatedDataObjectType, complexOutdatedEvent.RelatedDataObjectType.FullName),
-                                    new XElement(RelatedDataObjectId,
-                                                 new XElement(PeriodKey,
-                                                              new XAttribute(Date, complexOutdatedEvent.RelatedDataObjectId.Date))));
-            }
+                case RelatedDataObjectOutdatedEvent<long> outdatedEvent:
+                    return CreateRecord(outdatedEvent,
+                                        new XElement(DataObjectType, outdatedEvent.DataObjectType.FullName),
+                                        new XElement(RelatedDataObjectType, outdatedEvent.RelatedDataObjectType.FullName),
+                                        new XElement(RelatedDataObjectId, outdatedEvent.RelatedDataObjectId));
 
-            var factsStateIncrementedEvent = @event as FactsStateIncrementedEvent;
-            if (factsStateIncrementedEvent != null)
-            {
-                return CreateRecord(factsStateIncrementedEvent,
-                                    factsStateIncrementedEvent.IncludedTokens.Select(guid => new XElement(State, guid.ToString())).ToArray());
-            }
+                case RelatedDataObjectOutdatedEvent<PeriodKey> complexOutdatedEvent:
+                    return CreateRecord(complexOutdatedEvent,
+                                        new XElement(DataObjectType, complexOutdatedEvent.DataObjectType.FullName),
+                                        new XElement(RelatedDataObjectType, complexOutdatedEvent.RelatedDataObjectType.FullName),
+                                        new XElement(RelatedDataObjectId,
+                                                     new XElement(PeriodKey,
+                                                                  new XAttribute(Date, complexOutdatedEvent.RelatedDataObjectId.Date))));
 
-            var aggregatesStateIncrementedEvent = @event as AggregatesStateIncrementedEvent;
-            if (aggregatesStateIncrementedEvent != null)
-            {
-                return CreateRecord(aggregatesStateIncrementedEvent,
-                                    aggregatesStateIncrementedEvent.IncludedTokens.Select(guid => new XElement(State, guid.ToString())).ToArray());
-            }
+                case AmsStateIncrementedEvent amsStateIncrementedEvent:
+                    return CreateRecord(amsStateIncrementedEvent,
+                                        new XElement(State, new XAttribute(Date, amsStateIncrementedEvent.State.UtcDateTime), amsStateIncrementedEvent.State.Offset));
 
-            var factsDelayLoggedEvent = @event as FactsDelayLoggedEvent;
-            if (factsDelayLoggedEvent != null)
-            {
-                return CreateRecord(factsDelayLoggedEvent, new XElement(EventHappendTime, factsDelayLoggedEvent.EventTime));
-            }
+                case ErmStateIncrementedEvent ermStateIncrementedEvent:
+                    return CreateRecord(ermStateIncrementedEvent,
+                                        ermStateIncrementedEvent.States.Select(x => new XElement(State,
+                                                                                                 new XAttribute(Date, x.UtcDateTime), x.Token)).ToArray());
 
-            var aggregatesDelayLoggedEvent = @event as AggregatesDelayLoggedEvent;
-            if (aggregatesDelayLoggedEvent != null)
-            {
-                return CreateRecord(aggregatesDelayLoggedEvent, new XElement(EventHappendTime, aggregatesDelayLoggedEvent.EventTime));
-            }
+                case DelayLoggedEvent delayLoggedEvent:
+                    return CreateRecord(delayLoggedEvent, new XElement(EventHappendTime, delayLoggedEvent.EventTime));
 
-            var resultOutdatedEvent = @event as ResultOutdatedEvent;
-            if (resultOutdatedEvent != null)
-            {
-                return CreateRecord(resultOutdatedEvent, new[] { new XElement(RuleCode, (int)resultOutdatedEvent.Rule) });
-            }
+                case ResultOutdatedEvent resultOutdatedEvent:
+                    return CreateRecord(resultOutdatedEvent, new XElement(RuleCode, (int)resultOutdatedEvent.Rule));
 
-            var resultPartiallyOutdatedEvent = @event as ResultPartiallyOutdatedEvent;
-            if (resultPartiallyOutdatedEvent != null)
-            {
-                var orderIds = resultPartiallyOutdatedEvent.OrderIds.Select(x => new XElement(OrderId, x));
-                return CreateRecord(resultPartiallyOutdatedEvent, new[] { new XElement(RuleCode, (int)resultPartiallyOutdatedEvent.Rule) }.Concat(orderIds).ToArray());
-            }
+                case ResultPartiallyOutdatedEvent resultPartiallyOutdatedEvent:
+                    {
+                        var orderIds = resultPartiallyOutdatedEvent.OrderIds.Select(x => new XElement(OrderId, x));
+                        return CreateRecord(resultPartiallyOutdatedEvent, new[] { new XElement(RuleCode, (int)resultPartiallyOutdatedEvent.Rule) }.Concat(orderIds).ToArray());
+                    }
 
-            throw new ArgumentException($"Unknown event type: {@event.GetType().Name}", nameof(@event));
+                default:
+                    throw new ArgumentException($"Unknown event type: {@event.GetType().Name}", nameof(@event));
+            }
         }
 
         private static bool IsEventOfType(XElement @event, Type eventType)

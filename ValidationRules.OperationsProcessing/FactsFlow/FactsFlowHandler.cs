@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Transactions;
 
 using NuClear.Messaging.API.Processing;
@@ -50,18 +49,25 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                 using (Probe.Create("ETL1 Transforming"))
                 using (var transaction = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
                 {
-                    var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
+                    var lookups = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().ToLookup(x => x.TargetFlow, x => x.Commands);
+                    foreach (var lookup in lookups)
+                    {
+                        var flow = lookup.Key;
+                        var commands = lookup.SelectMany(x => x).ToList();
 
-                    var syncEvents = Handle(commands.OfType<ISyncDataObjectCommand>().ToList()).ToList();
-                    var stateEvents = Handle(commands.OfType<IncrementStateCommand>().ToList()).Concat(Handle(commands.OfType<LogDelayCommand>().ToList()));
+                        var syncEvents = Handle(commands.OfType<ISyncDataObjectCommand>().ToList()).Select(x => new FlowEvent(flow, x)).ToList();
+                        var stateEvents = Handle(commands.OfType<IncrementErmStateCommand>().ToList()).Concat(
+                                          Handle(commands.OfType<LogDelayCommand>().ToList()))
+                                          .Select(x => new FlowEvent(flow, x));
 
-                    using (new TransactionScope(TransactionScopeOption.Suppress))
-                        _eventLogger.Log(syncEvents);
+                        using (new TransactionScope(TransactionScopeOption.Suppress))
+                            _eventLogger.Log<IEvent>(syncEvents);
 
-                    transaction.Complete();
+                        transaction.Complete();
 
-                    using (new TransactionScope(TransactionScopeOption.Suppress))
-                        _eventLogger.Log(syncEvents.Concat(stateEvents).ToList());
+                        using (new TransactionScope(TransactionScopeOption.Suppress))
+                            _eventLogger.Log<IEvent>(syncEvents.Concat(stateEvents).ToList());
+                    }
                 }
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
@@ -83,18 +89,17 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             var eldestEventTime = commands.Min(x => x.EventTime);
             var delta = DateTime.UtcNow - eldestEventTime;
             _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
-            return new IEvent[] { new FactsDelayLoggedEvent(DateTime.UtcNow) };
+            return new IEvent[] { new DelayLoggedEvent(DateTime.UtcNow) };
         }
 
-        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementStateCommand> commands)
+        private static IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementErmStateCommand> commands)
         {
             if (!commands.Any())
             {
                 return Array.Empty<IEvent>();
             }
 
-            var states = commands.SelectMany(command => command.States).ToArray();
-            return new IEvent[] { new FactsStateIncrementedEvent(states) };
+            return new IEvent[] { new ErmStateIncrementedEvent(commands.SelectMany(x => x.States)) };
         }
 
         private IEnumerable<IEvent> Handle(IReadOnlyCollection<ISyncDataObjectCommand> commands)

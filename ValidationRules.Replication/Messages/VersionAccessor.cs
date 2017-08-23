@@ -21,11 +21,28 @@ namespace NuClear.ValidationRules.Replication.Messages
         }
 
         public IQueryable<Version> GetSource()
-            => new[] { new Version { Id = 0, Date = DateTime.UtcNow } }.AsQueryable();
+            => new[] { new Version { Id = 0, UtcDateTime = DateTime.UtcNow } }.AsQueryable();
 
         public FindSpecification<Version> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
             throw new NotSupportedException();
+        }
+    }
+
+    public sealed class AmsStateAccessor : IMemoryBasedDataObjectAccessor<Version.AmsState>
+    {
+        public AmsStateAccessor(IQuery query)
+        {
+        }
+
+        public IReadOnlyCollection<Version.AmsState> GetDataObjects(ICommand command)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FindSpecification<Version.AmsState> GetFindSpecification(ICommand command)
+        {
+            throw new NotImplementedException();
         }
     }
 }

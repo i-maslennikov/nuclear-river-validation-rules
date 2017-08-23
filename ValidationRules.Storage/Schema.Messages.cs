@@ -34,6 +34,13 @@ namespace NuClear.ValidationRules.Storage
                    .HasTableName(nameof(Version.ErmState))
                    .HasSchemaName(MessagesSchema);
 
+            builder.Entity<Version.AmsState>()
+                   .HasSchemaName(MessagesSchema);
+
+            builder.Entity<Version.AmsStateBulkDelete>()
+                   .HasTableName(nameof(Version.AmsState))
+                   .HasSchemaName(MessagesSchema);
+
             builder.Entity<Version.ValidationResult>()
                    .HasSchemaName(MessagesSchema)
                    .HasIndex(x => new { x.Resolved })

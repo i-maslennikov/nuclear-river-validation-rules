@@ -64,11 +64,14 @@ namespace NuClear.ValidationRules.Replication
             {
                 foreach (var accessor in CreateMemoryAccessors())
                 {
-                    var specification = new FindSpecificationCollection<EntityName>(replaceDataObjectCommands.Select(x => accessor.GetFindSpecification(x)).ToList());
-                    _bulkRepository.Delete(_query.For<EntityName>().WhereMatched(specification));
+                    foreach (var replaceDataObjectCommand in replaceDataObjectCommands)
+                    {
+                        var specification = accessor.GetFindSpecification(replaceDataObjectCommand);
+                        _bulkRepository.Delete(_query.For<EntityName>().WhereMatched(specification));
 
-                    var entityNames = replaceDataObjectCommands.SelectMany(x => accessor.GetDataObjects(x)).ToList();
-                    _bulkRepository.Create(entityNames);
+                        var entityNames = accessor.GetDataObjects(replaceDataObjectCommand);
+                        _bulkRepository.Create(entityNames);
+                    }
                 }
             }
 
@@ -299,23 +302,22 @@ namespace NuClear.ValidationRules.Replication
 
             public IReadOnlyCollection<EntityName> GetDataObjects(ICommand command)
             {
-                var dto = (AdvertisementDto)((ReplaceDataObjectCommand)command).Dto;
+                var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<AdvertisementDto>();
 
-                return new[]
+                return dtos.Select(x => new EntityName
                 {
-                    new EntityName
-                    {
-                        Id = dto.Id,
-                        EntityType = EntityTypeIds.Advertisement,
-                        Name = dto.Name
-                    }
-                };
+                    Id = x.Id,
+                    EntityType = EntityTypeIds.Advertisement,
+                    Name = x.Name
+                }).ToList();
             }
 
             public FindSpecification<EntityName> GetFindSpecification(ICommand command)
             {
-                var dto = (AdvertisementDto)((ReplaceDataObjectCommand)command).Dto;
-                return new FindSpecification<EntityName>(x => x.Id == dto.Id && x.EntityType == EntityTypeIds.Advertisement);
+                var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<AdvertisementDto>();
+
+                var ids = dtos.Select(x => x.Id);
+                return new FindSpecification<EntityName>(x => x.EntityType == EntityTypeIds.Advertisement && ids.Contains(x.Id));
             }
         }
 

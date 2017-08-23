@@ -1,6 +1,4 @@
-﻿using System;
-
-using NuClear.DataTest.Metamodel.Dsl;
+﻿using NuClear.DataTest.Metamodel.Dsl;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -13,7 +11,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(Version))
             .Aggregate()
-            .Message(new Version(), new Version.ErmState())
+            .Message(new Version(), new Version.ErmState(), new Version.AmsState())
             .Ignored();
     }
 }

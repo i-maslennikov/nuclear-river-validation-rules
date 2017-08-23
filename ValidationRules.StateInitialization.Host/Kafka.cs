@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Transactions;
@@ -26,6 +27,7 @@ using NuClear.StateInitialization.Core.Factories;
 using NuClear.StateInitialization.Core.Storage;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Storage.API.Readings;
+using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
@@ -78,8 +80,10 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                     IReadOnlyCollection<Message> batch;
                     while((batch = receiver.ReceiveBatch(_receiverSettings.BatchSize)).Count != 0)
                     {
-                        // пока что хардкод для advertisement
-                        var dtos = batch.Select(x => JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value))).ToList();
+                        // пока что хардкод для advertisement и heartbeat
+                        var dtos = batch
+                                    .Where(x => x.Value != null)
+                                    .Select(x => JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value))).ToList();
 
                         var bulkInsertCommands = new List<ICommand>
                         {
@@ -90,6 +94,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                         foreach (var actor in actors)
                         {
                             actor.ExecuteCommands(bulkInsertCommands);
+                        }
+
+                        // state init имеет смысл прекращать когда мы вычитали все полные батчи
+                        // а то нам могут до бесконечности подкидывать новых messages
+                        if (batch.Count != _receiverSettings.BatchSize)
+                        {
+                            break;
                         }
                     }
                 });
@@ -210,12 +221,16 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             private readonly IMemoryBasedDataObjectAccessor<TDataObject> _dataObjectAccessor;
             private readonly BulkCopyOptions _bulkCopyOptions;
             private readonly ITable<TDataObject> _table;
+            private readonly PropertyInfo _predicateInfo;
 
             public BulkInsertDataObjectsActor(IMemoryBasedDataObjectAccessor<TDataObject> dataObjectAccessor, DataConnection dataConnection, BulkCopyOptions bulkCopyOptions)
             {
                 _dataObjectAccessor = dataObjectAccessor;
                 _bulkCopyOptions = bulkCopyOptions;
                 _table = dataConnection.GetTable<TDataObject>();
+
+                // хак чтобы не городить dependency injection для IQuery, потом обсудить как сделать правильно
+                _predicateInfo = typeof(FindSpecification<TDataObject>).GetProperty("Predicate", BindingFlags.NonPublic | BindingFlags.Instance);
             }
 
             public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -223,8 +238,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 var command = commands.OfType<BulkInsertDataObjectsCommand>().SingleOrDefault(x => x.DataObjectType == DataObjectType);
                 if (command != null)
                 {
-                    var replaceDataObjectCommands = command.Dtos.Select(x => new ReplaceDataObjectCommand(DataObjectType, x));
-                    var dataObjects = replaceDataObjectCommands.SelectMany(x => _dataObjectAccessor.GetDataObjects(x));
+                    var replaceDataObjectCommand = new ReplaceDataObjectCommand(DataObjectType, command.Dtos);
+
+                    var findSpecification = _dataObjectAccessor.GetFindSpecification(replaceDataObjectCommand);
+                    var predicate = (Expression<Func<TDataObject, bool>>)_predicateInfo.GetValue(findSpecification);
+                    _table.Delete(predicate);
+
+                    var dataObjects = _dataObjectAccessor.GetDataObjects(replaceDataObjectCommand);
                     ExecuteBulkCopy(dataObjects);
                 }
 
@@ -248,9 +268,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         private sealed class ReceiverSettings : IKafkaMessageFlowReceiverSettings
         {
-            private readonly StringSetting _amsFactsTopics = ConfigFileSetting.String.Required("AmsFactsTopics");
+            private readonly StringSetting _amsFactsTopics = ConfigFileSetting.String.Optional("AmsFactsTopics", "ams_okapi_vr_integration.am.validity");
             private readonly StringSetting _pollTimeout = ConfigFileSetting.String.Optional("AmsPollTimeout", "00:00:05");
-            private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 500);
+            private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 50);
 
             public ReceiverSettings(IConnectionStringSettings connectionStringSettings)
             {

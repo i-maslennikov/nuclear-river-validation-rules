@@ -10,6 +10,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Storage.API.Readings;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Erm;
 
@@ -34,8 +35,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
             var commands = CommandFactory.CreateCommands(trackedUseCase).ToList();
 
-            commands.Add(new IncrementStateCommand(new[] { trackedUseCase.Id }));
-            commands.Add(new LogDelayCommand(trackedUseCase.Context.Finished.UtcDateTime));
+            var date = trackedUseCase.Context.Finished.UtcDateTime;
+            commands.Add(new IncrementErmStateCommand(new[] { new ErmState(trackedUseCase.Id, date) }));
+            commands.Add(new LogDelayCommand(date));
 
             return new AggregatableMessage<ICommand>
             {

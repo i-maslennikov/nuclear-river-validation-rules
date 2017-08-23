@@ -23,28 +23,27 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<Advertisement> GetDataObjects(ICommand command)
         {
-            var dto = (AdvertisementDto)((ReplaceDataObjectCommand)command).Dto;
+            var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<AdvertisementDto>();
 
-            return new[]
+            return dtos.Select(x => new Advertisement
             {
-                new Advertisement
-                {
-                    Id = dto.Id,
-                    FirmId = dto.FirmId,
-                    State = dto.State
-                }
-            };
+                Id = x.Id,
+                FirmId = x.FirmId,
+                StateCode = x.StateCode
+            }).ToList();
         }
 
         public FindSpecification<Advertisement> GetFindSpecification(ICommand command)
         {
-            var dto = (AdvertisementDto)((ReplaceDataObjectCommand)command).Dto;
-            return new FindSpecification<Advertisement>(x => x.Id == dto.Id);
+            var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<AdvertisementDto>();
+            var ids = dtos.Select(x => x.Id);
+
+            return new FindSpecification<Advertisement>(x => ids.Contains(x.Id));
         }
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Advertisement> dataObjects)
         {
-            var advertisementIds = dataObjects.Select(x => x.Id).ToList();
+            var advertisementIds = dataObjects.Select(x => x.Id);
 
             var orderIds =
                 from pricePosition in _query.For<OrderPositionAdvertisement>().Where(x => x.AdvertisementId != null && advertisementIds.Contains(x.AdvertisementId.Value))
