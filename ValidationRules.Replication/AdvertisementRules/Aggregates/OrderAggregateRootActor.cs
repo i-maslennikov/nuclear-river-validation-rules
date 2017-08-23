@@ -89,14 +89,15 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                              PositionId = position.Id,
                                              ChildPositionId = child != null ? child.ChildPositionId : position.Id
                                          };
+
+                // позиция IsContentSales и не указан advertisementId
                 var result =
                     from order in _query.For<Facts::Order>()
                     from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
+                    from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted && x.Id == op.PricePositionId)
                     from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
-                    from p in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => x.IsContentSales).Where(x => x.Id == positionChild.ChildPositionId)
-                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
-                    where opa.AdvertisementId == null // позиция IsContentSales и не указан advertisementId
+                    from p in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.IsContentSales && x.Id == positionChild.ChildPositionId)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.AdvertisementId == null && x.OrderPositionId == op.Id && x.PositionId == p.Id)
                     select new Order.MissingAdvertisementReference
                     {
                         OrderId = order.Id,
@@ -105,7 +106,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                         PositionId = p.Id,
                     };
 
-                return result;
+                return result.Distinct();
             }
 
             public FindSpecification<Order.MissingAdvertisementReference> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -135,8 +136,8 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 var result =
                        from order in _query.For<Facts::Order>()
                        from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                       from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
-                       from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => !x.IsCompositionOptional).Where(x => x.Id == pp.PositionId)
+                       from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted && x.Id == op.PricePositionId)
+                       from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && !x.IsCompositionOptional && x.Id == pp.PositionId)
                        from childPosition in _query.For<Facts::PositionChild>().Where(x => x.MasterPositionId == position.Id)
                        from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.ChildPositionId)
                                          .DefaultIfEmpty()
