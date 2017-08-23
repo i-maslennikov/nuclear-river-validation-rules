@@ -32,7 +32,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::FirmAddress { Id = 3, FirmId = 1, IsActive = false },
 
                     new Facts::OrderPositionAdvertisement { Id = 4, OrderPositionId = 1, FirmAddressId = 4, PositionId = 1 },
-                    new Facts::FirmAddress { Id = 4, FirmId = 1, IsActive = true, IsClosedForAscertainment = true })
+                    new Facts::FirmAddress { Id = 4, FirmId = 1, IsActive = true, IsClosedForAscertainment = true },
+
+                    new Facts::Position {Id = 1})
                 .Aggregate(
                     new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 1, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.NotBelongToFirm },
