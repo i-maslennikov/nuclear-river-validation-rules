@@ -30,6 +30,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 new Advertisement
                 {
                     Id = dto.Id,
+                    FirmId = dto.FirmId,
                     State = dto.State
                 }
             };

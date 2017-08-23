@@ -26,6 +26,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
 
         public override Guid Id { get; }
 
+        // Мне кажется, что один Message в KafkaMessage - слишком мало, по конвейру обработки создаются слишком много массивов из одного элемента: в Accumulator, Accessor
+        // Их нужно или агрегировать, или по конвейру использовать не одиночные KafkaMessage
         public Message Message { get; }
     }
 

@@ -3,6 +3,7 @@
     public sealed class Advertisement
     {
         public long Id { get; set; }
+        public long FirmId { get; set; }
         public int State { get; set; }
     }
 }

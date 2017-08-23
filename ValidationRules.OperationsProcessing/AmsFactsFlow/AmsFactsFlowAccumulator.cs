@@ -31,26 +31,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
         {
             public static IReadOnlyCollection<ICommand> CreateCommands(Message message)
             {
-                var dto = KafkaDeserializer.Json.Deserialize<AdvertisementDto>(message);
-                return new[] { new ReplaceDataObjectCommand(typeof(Advertisement), dto) };
-            }
-
-            private static class KafkaDeserializer
-            {
-                public static class Json
-                {
-                    private static readonly JsonSerializer JsonSerializer = JsonSerializer.Create();
-
-                    public static T Deserialize<T>(Message message)
-                    {
-                        using (var stream = new MemoryStream(message.Value))
-                        using (var reader = new StreamReader(stream, Encoding.UTF8))
-                        using (var jsonReader = new JsonTextReader(reader))
-                        {
-                            return JsonSerializer.Deserialize<T>(jsonReader);
-                        }
-                    }
-                }
+                var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value));
+                return new[] { new ReplaceDataObjectCommand(typeof(Advertisement), dto) }; // Разве не нужно пересчитать EntityName?
             }
         }
     }

@@ -37,12 +37,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 {
     internal sealed class KafkaReplicationCommand : ICommand
     {
-        public ReplicateInBulkCommand ReplicateInBulkCommand { get; }
-
         public KafkaReplicationCommand(ReplicateInBulkCommand replicateInBulkCommand)
         {
             ReplicateInBulkCommand = replicateInBulkCommand;
         }
+
+        public ReplicateInBulkCommand ReplicateInBulkCommand { get; }
     }
 
     internal sealed class KafkaReplicationActor : IActor
@@ -80,16 +80,15 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                     IReadOnlyCollection<Message> batch;
                     while((batch = receiver.ReceiveBatch(_receiverSettings.BatchSize)).Count != 0)
                     {
-                        var replaceDataObjectCommands = batch.Aggregate(new List<ICommand>(), (list, x) =>
+                        var replaceDataObjectCommands = new List<ICommand>();
+                        foreach (var x in batch)
                         {
                             // пока что хардкод для advertisement
-                            var dto = KafkaDeserializer.Json.Deserialize<AdvertisementDto>(x);
+                            var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value));
 
-                            list.Add(new ReplaceDataObjectCommand(typeof(Advertisement), dto));
-                            list.Add(new ReplaceDataObjectCommand(typeof(EntityName), dto));
-
-                            return list;
-                        }).ToList();
+                            replaceDataObjectCommands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), dto));
+                            replaceDataObjectCommands.Add(new ReplaceDataObjectCommand(typeof(EntityName), dto));
+                        }
 
                         foreach (var actor in actors)
                         {
@@ -261,24 +260,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
             public Offset Offset { get; } = Offset.Beginning;
             public int BatchSize => _batchSize.Value;
-        }
-
-        private static class KafkaDeserializer
-        {
-            public static class Json
-            {
-                private static readonly JsonSerializer JsonSerializer = JsonSerializer.Create();
-
-                public static T Deserialize<T>(Message message)
-                {
-                    using (var stream = new MemoryStream(message.Value))
-                    using (var reader = new StreamReader(stream, Encoding.UTF8))
-                    using (var jsonReader = new JsonTextReader(reader))
-                    {
-                        return JsonSerializer.Deserialize<T>(jsonReader);
-                    }
-                }
-            }
         }
 
         // CommandRegardlessDataObjectTypesProvider - он internal в StateInitiallization.Core, пришлось запилить вот это

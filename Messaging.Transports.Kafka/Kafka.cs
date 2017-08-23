@@ -15,7 +15,7 @@ namespace NuClear.Messaging.Transports.Kafka
 
     public interface IKafkaMessageFlowReceiver : IDisposable
     {
-        IReadOnlyCollection<Message> ReceiveBatch(int messageCount);
+        IReadOnlyCollection<Message> ReceiveBatch(int batchSize);
         void Complete(Message lastSuccessfulMessage);
     }
 
@@ -70,7 +70,7 @@ namespace NuClear.Messaging.Transports.Kafka
             _consumer.Subscribe(_settings.Topics);
         }
 
-        public IReadOnlyCollection<Message> ReceiveBatch(int messageCount)
+        public IReadOnlyCollection<Message> ReceiveBatch(int batchSize)
         {
             var currentMessage = (Message)null;
             var eof = false;
@@ -83,9 +83,10 @@ namespace NuClear.Messaging.Transports.Kafka
                 _consumer.OnPartitionEOF += OnPartitionEof;
 
                 var messages = new HashSetLastWins();
-                while (messages.Count < messageCount)
+                while (messages.Count < batchSize)
                 {
                     currentMessage = null;
+                    // Таймаут действует для каждого одного сообщения. Если в очередь будут добавляться сообщения с интервалом 4 секунды, то пройдёт полчаса, прежде чем пакет будет принят.
                     _consumer.Poll(_settings.PollTimeout);
 
                     if (eof)

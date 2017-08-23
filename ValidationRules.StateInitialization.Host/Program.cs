@@ -17,14 +17,14 @@ namespace NuClear.ValidationRules.StateInitialization.Host
     {
         private static readonly IConnectionStringSettings ConnectionStringSettings =
             new ConnectionStringSettingsAspect(
-                new Dictionary<IConnectionStringIdentity, string>
-                    {
-                        { ErmConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Erm) },
-                        { AmsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Ams) },
-                        { FactsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Facts) },
-                        { AggregatesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Aggregates) },
-                        { MessagesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Messages) },
-                    });
+                                               new Dictionary<IConnectionStringIdentity, string>
+                                                   {
+                                                       { ErmConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Erm) },
+                                                       { AmsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Ams) },
+                                                       { FactsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Facts) },
+                                                       { AggregatesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Aggregates) },
+                                                       { MessagesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Messages) },
+                                                   });
 
         public static void Main(string[] args)
         {
@@ -32,27 +32,26 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
             var commands = new List<ICommand>();
 
-			if (args.Contains("-facts"))
+            if (args.Contains("-facts"))
             {
                 commands.Add(BulkReplicationCommands.ErmToFacts);
-                commands.Add(new KafkaReplicationCommand(
-                             BulkReplicationCommands.AmsToFacts));
+                commands.Add(new KafkaReplicationCommand(BulkReplicationCommands.AmsToFacts)); // Надо подумать о лишней обёртке
                 commands.Add(SchemaInitializationCommands.WebApp);
-				commands.Add(SchemaInitializationCommands.Facts);
+                commands.Add(SchemaInitializationCommands.Facts);
             }
 
             if (args.Contains("-aggregates"))
             {
                 commands.Add(BulkReplicationCommands.FactsToAggregates);
-	            commands.Add(SchemaInitializationCommands.WebApp);
-				commands.Add(SchemaInitializationCommands.Aggregates);
+                commands.Add(SchemaInitializationCommands.WebApp);
+                commands.Add(SchemaInitializationCommands.Aggregates);
             }
 
-			if (args.Contains("-messages"))
+            if (args.Contains("-messages"))
             {
                 commands.Add(BulkReplicationCommands.AggregatesToMessages);
-	            commands.Add(SchemaInitializationCommands.WebApp);
-				commands.Add(SchemaInitializationCommands.Messages);
+                commands.Add(SchemaInitializationCommands.WebApp);
+                commands.Add(SchemaInitializationCommands.Messages);
             }
 
             var dataObjectTypesProviderFactory = new DataObjectTypesProviderFactory();
@@ -60,9 +59,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             var kafkaReplicationActor = new KafkaReplicationActor(dataObjectTypesProviderFactory, ConnectionStringSettings);
             var schemaInitializationActor = new SchemaInitializationActor(ConnectionStringSettings);
 
-			var sw = Stopwatch.StartNew();
-	        schemaInitializationActor.ExecuteCommands(commands);
-			bulkReplicationActor.ExecuteCommands(commands);
+            var sw = Stopwatch.StartNew();
+            schemaInitializationActor.ExecuteCommands(commands);
+            bulkReplicationActor.ExecuteCommands(commands);
             kafkaReplicationActor.ExecuteCommands(commands);
 
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");

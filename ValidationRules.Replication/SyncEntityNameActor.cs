@@ -37,11 +37,6 @@ namespace NuClear.ValidationRules.Replication
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            if (commands.Count == 0)
-            {
-                return Array.Empty<IEvent>();
-            }
-
             // db accessors
             var syncDataObjectCommands = commands.OfType<ISyncDataObjectCommand>().ToList();
             if (syncDataObjectCommands.Count != 0)

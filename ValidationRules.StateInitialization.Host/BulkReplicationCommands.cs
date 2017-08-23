@@ -30,8 +30,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         public static ReplicateInBulkCommand AmsToFacts { get; } =
             new ReplicateInBulkCommand(
                                        new StorageDescriptor(AmsConnectionStringIdentity.Instance, null),
-                                       new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
-                                       executionMode: ParallelReplication);
+                                       new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
 
         public static ReplicateInBulkCommand AggregatesToMessagesTest { get; } =
             new ReplicateInBulkCommand(
