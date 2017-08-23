@@ -76,15 +76,12 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from account in _query.For<Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                 select account.Id;
 
-            var firmIds =
-                from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
-                from firm in _query.For<Firm>().Where(x => x.Id == order.FirmId)
-                select firm.Id;
-
             var orders =
                 (from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
-                 select new { order.BeginDistribution, order.EndDistributionFact, order.EndDistributionPlan })
+                 select new { order.FirmId, order.BeginDistribution, order.EndDistributionFact, order.EndDistributionPlan })
                 .ToList();
+
+            var firmIds = orders.Select(x => x.FirmId);
 
             var periods =
                 orders.Select(x => new PeriodKey { Date = x.BeginDistribution })

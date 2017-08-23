@@ -82,6 +82,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::FirmAddress>()
                           .DependOn<Facts::FirmAddressCategory>()
                           .DependOn<Facts::Order>()
+                          .DependOn<Facts::OrderItem>()
                           .DependOn<Facts::OrderPosition>()
                           .DependOn<Facts::OrderPositionAdvertisement>()
                           .DependOn<Facts::Position>()

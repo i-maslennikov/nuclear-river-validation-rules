@@ -309,10 +309,8 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle,
-                         single: RuleSeverityLevel.Error),
-
                     Rule(MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel,
+                         single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
