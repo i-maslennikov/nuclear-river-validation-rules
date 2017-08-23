@@ -60,7 +60,6 @@
         DefaultThemeMustBeExactlyOne = 58,
 
         OrderPositionCostPerClickMustBeSpecified = 59,
-        OrderPositionSalesModelMustMatchCategorySalesModelSingle = 22,
         OrderPositionSalesModelMustMatchCategorySalesModel = 60,
 
         FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 61,

@@ -62,7 +62,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.DefaultThemeMustBeExactlyOne, 40 },
                             { MessageTypeCode.OrderPositionCostPerClickMustBeSpecified, 46 },
                             { MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel, 45 },
-                            { MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModelSingle, 45 },
                             { MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions, 36 },
                             { MessageTypeCode.OrderMustHaveActiveDeal, 51 },
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
