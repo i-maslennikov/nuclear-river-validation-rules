@@ -18,8 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         public DataConnection CreateDataConnection(string configurationString)
         {
-            MappingSchema schema;
-            if (!Schemas.TryGetValue(configurationString, out schema))
+            if (!Schemas.TryGetValue(configurationString, out var schema))
             {
                 throw new ArgumentException(nameof(configurationString));
             }
