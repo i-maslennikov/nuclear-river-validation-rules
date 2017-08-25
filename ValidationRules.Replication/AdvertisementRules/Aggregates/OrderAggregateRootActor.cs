@@ -20,10 +20,12 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Order> bulkRepository,
+            IBulkRepository<Order.MissingAdvertisementReference> missingAdvertisementReferenceBulkRepository,
             IBulkRepository<Order.MissingOrderPositionAdvertisement> missingOrderPositionAdvertisementBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
+                HasValueObject(new MissingAdvertisementReferenceAccessor(query), missingAdvertisementReferenceBulkRepository),
                 HasValueObject(new MissingOrderPositionAdvertisementAccessor(query), missingOrderPositionAdvertisementBulkRepository));
         }
 
