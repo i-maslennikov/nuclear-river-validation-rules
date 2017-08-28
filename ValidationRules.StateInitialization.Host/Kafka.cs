@@ -75,32 +75,33 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                     var bulkCopyOptions = new BulkCopyOptions { BulkCopyTimeout = (int)command.BulkCopyTimeout.TotalSeconds };
                     var actors = CreateActors(dataObjectTypes, dataConnection, bulkCopyOptions);
 
-                    var receiver = new KafkaMessageFlowReceiver(_receiverSettings);
-
-                    IReadOnlyCollection<Message> batch;
-                    while((batch = receiver.ReceiveBatch(_receiverSettings.BatchSize)).Count != 0)
+                    using (var receiver = new KafkaMessageFlowReceiver(_receiverSettings))
                     {
-                        // пока что хардкод для advertisement и heartbeat
-                        var dtos = batch
-                                    .Where(x => x.Value != null)
-                                    .Select(x => JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value))).ToList();
-
-                        var bulkInsertCommands = new List<ICommand>
+                        IReadOnlyCollection<Message> batch;
+                        while ((batch = receiver.ReceiveBatch(_receiverSettings.BatchSize)).Count != 0)
                         {
-                            new BulkInsertDataObjectsCommand(typeof(Advertisement), dtos),
-                            new BulkInsertDataObjectsCommand(typeof(EntityName), dtos)
-                        };
+                            // пока что хардкод для advertisement и heartbeat
+                            var dtos = batch
+                                .Where(x => x.Value != null)
+                                .Select(x => JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value))).ToList();
 
-                        foreach (var actor in actors)
-                        {
-                            actor.ExecuteCommands(bulkInsertCommands);
-                        }
+                            var bulkInsertCommands = new List<ICommand>
+                                {
+                                    new BulkInsertDataObjectsCommand(typeof(Advertisement), dtos),
+                                    new BulkInsertDataObjectsCommand(typeof(EntityName), dtos)
+                                };
 
-                        // state init имеет смысл прекращать когда мы вычитали все полные батчи
-                        // а то нам могут до бесконечности подкидывать новых messages
-                        if (batch.Count != _receiverSettings.BatchSize)
-                        {
-                            break;
+                            foreach (var actor in actors)
+                            {
+                                actor.ExecuteCommands(bulkInsertCommands);
+                            }
+
+                            // state init имеет смысл прекращать когда мы вычитали все полные батчи
+                            // а то нам могут до бесконечности подкидывать новых messages
+                            if (batch.Count != _receiverSettings.BatchSize)
+                            {
+                                break;
+                            }
                         }
                     }
                 });
