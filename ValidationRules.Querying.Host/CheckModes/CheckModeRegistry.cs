@@ -279,6 +279,16 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.AdvertisementMustBelongToFirm,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.AdvertisementMustPassReview,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error)
                 };
 

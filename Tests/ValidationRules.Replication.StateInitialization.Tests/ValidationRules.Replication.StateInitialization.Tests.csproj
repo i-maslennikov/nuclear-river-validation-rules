@@ -127,6 +127,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Advertisement\AdvertisementMustPassReview.cs" />
+    <Compile Include="Advertisement\AdvertisementMustBelongToFirm.cs" />
     <Compile Include="Advertisement\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="Consistency\BargainScanShouldPresent.cs" />
     <Compile Include="Consistency\OrderScanShouldPresent.cs" />

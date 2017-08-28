@@ -318,4 +318,10 @@
   <data name="TooManyCategorieForFirm" xml:space="preserve">
     <value>Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}.</value>
   </data>
+  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
+    <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
+  </data>
+  <data name="AdvertisementMustPassReview" xml:space="preserve">
+    <value>Рекламный материал {0} не прошёл модерацию</value>
+  </data>
 </root>

@@ -185,6 +185,8 @@
     <Compile Include="Accessors\FirmAccessor.cs" />
     <Compile Include="Accessors\PricePositionAccessor.cs" />
     <Compile Include="Accessors\PositionAccessor.cs" />
+    <Compile Include="AdvertisementRules\Validation\AdvertisementMustPassReview.cs" />
+    <Compile Include="AdvertisementRules\Validation\AdvertisementMustBelongToFirm.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="Commands\IncrementAmsStateCommand.cs" />

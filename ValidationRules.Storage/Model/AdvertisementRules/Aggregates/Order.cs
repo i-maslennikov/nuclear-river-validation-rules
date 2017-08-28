@@ -27,5 +27,24 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
 
             public long PositionId { get; set; }
         }
+
+        public sealed class AdvertisementNotBelongToFirm
+        {
+            public long OrderId { get; set; }
+            public long AdvertisementId { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PositionId { get; set; }
+
+            public long ExpectedFirmId { get; set; }
+            public long ActualFirmId { get; set; }
+        }
+
+        public sealed class AdvertisementFailedReview
+        {
+            public long OrderId { get; set; }
+            public long AdvertisementId { get; set; }
+
+            public int ReviewState { get; set; }
+        }
     }
 }

@@ -97,6 +97,24 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Рекламный материал {0} не прошёл модерацию.
+        /// </summary>
+        internal static string AdvertisementMustPassReview {
+            get {
+                return ResourceManager.GetString("AdvertisementMustPassReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}.
+        /// </summary>
+        internal static string AdvertisementSpecifiedForPositionDoesNotBelongToFirm {
+            get {
+                return ResourceManager.GetString("AdvertisementSpecifiedForPositionDoesNotBelongToFirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; является сопутствующей, основная позиция не найдена..
         /// </summary>
         internal static string AssociatedPositionWithoutPrincipalTemplate {
