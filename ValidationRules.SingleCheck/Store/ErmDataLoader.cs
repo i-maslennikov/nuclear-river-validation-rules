@@ -22,7 +22,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.Add(order);
 
             LoadReleaseWithdrawals(query, order, store);
-            LoadFirm(query, order, store);
             LoadAccount(query, order, store);
 
             var bargainIds = new[] { order.BargainId };
@@ -108,6 +107,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             var themeIds = opas.Where(x => x.ThemeId.HasValue).Select(x => x.ThemeId.Value).ToList();
             var categoryIds = opas.Where(x => x.CategoryId.HasValue).Select(x => x.CategoryId.Value).ToList();
             var adverisementIds = opas.Where(x => x.AdvertisementId.HasValue).Select(x => x.AdvertisementId.Value).ToList();
+            var firmAddressIds = opas.Where(x => x.FirmAddressId.HasValue).Select(x => x.FirmAddressId.Value).ToList(); // список привязанных адресов из-за ЗМК может превышать список адресов фирмы
 
             var costs = query.GetTable<OrderPositionCostPerClick>()
                              .Where(x => orderPositionIds.Contains(x.OrderPositionId))
@@ -232,9 +232,10 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
             LoadAmountControlledSales(query, order, usedPriceIds, store);
             LoadAssociatedDeniedRules(query, order, usedPriceIds, store);
+            LoadFirm(query, order, firmAddressIds, store);
         }
 
-        private static void LoadFirm(DataConnection query, Order order, IStore store)
+        private static void LoadFirm(DataConnection query, Order order, IReadOnlyCollection<long> additionalFirmIds, IStore store)
         {
             var firms =
                 query.GetTable<Firm>()
@@ -244,9 +245,9 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             var firmIds = firms.Select(x => x.Id);
 
             var firmAddresses =
-                query.GetTable<FirmAddress>()
-                     .Where(x => firmIds.Contains(x.FirmId))
-                     .Execute();
+                query.GetTable<FirmAddress>().Where(x => firmIds.Contains(x.FirmId))
+                    .Union(query.GetTable<FirmAddress>().Where(x => additionalFirmIds.Contains(x.Id)))
+                    .Execute();
             store.AddRange(firmAddresses);
             var firmAddressIds = firmAddresses.Select(y => y.Id).ToList();
 

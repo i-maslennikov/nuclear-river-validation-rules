@@ -57,11 +57,16 @@ namespace NuClear.ValidationRules.Replication.Accessors
         {
             var firmIds = dataObjects.Select(x => x.FirmId);
 
-            var orderIds =
+            var orderIdsByFirm =
                 from order in _query.For<Order>().Where(x => firmIds.Contains(x.FirmId))
                 select order.Id;
 
-            return new EventCollectionHelper<FirmAddress> { { typeof(Firm), firmIds }, { typeof(Order), orderIds } };
+            var orderIdsByUsage =
+                from opa in _query.For<OrderPositionAdvertisement>().Where(x => firmIds.Contains(x.FirmAddressId.Value))
+                from op in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
+                select op.OrderId;
+
+            return new EventCollectionHelper<FirmAddress> { { typeof(Firm), firmIds }, { typeof(Order), orderIdsByFirm.Union(orderIdsByUsage) } };
         }
     }
 }
