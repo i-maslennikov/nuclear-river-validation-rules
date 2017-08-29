@@ -232,8 +232,8 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.AddRange(salesModelCategoryRestrictions);
 
             //
-            var advertisements = query.GetTable<Advertisement>()
-                                      .Where(x => firmIds.Contains(x.FirmId.Value) || adverisementIds.Contains(x.Id))
+            var advertisements = query.GetTable<Advertisement>().Where(x => firmIds.Contains(x.FirmId.Value))
+                                      .Union(query.GetTable<Advertisement>().Where(x => adverisementIds.Contains(x.Id)))
                                       .Execute();
             store.AddRange(advertisements);
             var advertisementIds = advertisements.Select(x => x.Id).ToList();
