@@ -32,8 +32,8 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
             if (AmsFactsFlow.Instance.Equals(messageFlow))
                 return new ReceiverSettings(_connectionStringSettings)
                     {
-                        ClientId = _environmentSettings.EntryPointName,
-                        GroupId = messageFlow.Id.ToString(),
+                        ClientId = _environmentSettings.EntryPointName + '-' + _environmentSettings.EnvironmentName,
+                        GroupId = messageFlow.Id.ToString() + '-' + _environmentSettings.EnvironmentName,
                     };
 
             throw new ArgumentException($"Flow '{messageFlow.Description}' settings for Kafka are undefined");
