@@ -40,13 +40,18 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                 throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state failed after {0} attempts", ErmWaitAttempts));
             }
 
-            var amsVersion = await WaitForAmsState(offset, AmsWaitAttempts, WaitInterval);
-            if (amsVersion == null)
+            if (offset != 0)
             {
-                throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state failed after {0} attempts", AmsWaitAttempts));
+                var amsVersion = await WaitForAmsState(offset, AmsWaitAttempts, WaitInterval);
+                if (amsVersion == null)
+                {
+                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state failed after {0} attempts", AmsWaitAttempts));
+                }
+
+                return ermVersion.Value > amsVersion.Value ? ermVersion.Value : amsVersion.Value;
             }
 
-            return ermVersion.Value > amsVersion.Value ? ermVersion.Value : amsVersion.Value;
+            return ermVersion.Value;
         }
 
         private async Task<long?> WaitForAmsState(long offset, int waitAttempts, TimeSpan waitInterval)
