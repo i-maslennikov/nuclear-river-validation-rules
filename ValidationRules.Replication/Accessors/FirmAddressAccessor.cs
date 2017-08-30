@@ -56,13 +56,14 @@ namespace NuClear.ValidationRules.Replication.Accessors
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<FirmAddress> dataObjects)
         {
             var firmIds = dataObjects.Select(x => x.FirmId);
+            var firmAddressIds = dataObjects.Select(x => x.Id);
 
             var orderIdsByFirm =
                 from order in _query.For<Order>().Where(x => firmIds.Contains(x.FirmId))
                 select order.Id;
 
             var orderIdsByUsage =
-                from opa in _query.For<OrderPositionAdvertisement>().Where(x => firmIds.Contains(x.FirmAddressId.Value))
+                from opa in _query.For<OrderPositionAdvertisement>().Where(x => firmAddressIds.Contains(x.FirmAddressId.Value))
                 from op in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
                 select op.OrderId;
 
