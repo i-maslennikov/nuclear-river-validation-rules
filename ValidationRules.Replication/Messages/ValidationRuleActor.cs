@@ -250,7 +250,6 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new OrderPositionCostPerClickMustNotBeLessMinimum(_query),
                     new OrderPositionSalesModelMustMatchCategorySalesModel(_query),
                     new ProjectMustContainCostPerClickMinimumRestriction(_query),
-                    new ProjectMustContainCostPerClickMinimumRestrictionMass(_query),
 
                     // ThemeRules
                     new DefaultThemeMustBeExactlyOne(_query),

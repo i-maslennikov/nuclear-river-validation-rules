@@ -51,7 +51,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderPositionAdvertisementMustBeCreated, 22 },
                             { MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement, 22 },
                             { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 49 },
-                            { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass, 49 },
                             { MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject, 8 },
                             { MessageTypeCode.OrderMustNotIncludeReleasedPeriod, 17 },
                             { MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum, 48 },

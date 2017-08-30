@@ -118,201 +118,201 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" является запрещённой для: {1} "{{1}}"</value>
+    <value>{0} "{{0}}" is prohibited for: {1} "{{1}}"</value>
   </data>
   <data name="OrderDescriptionTemplate" xml:space="preserve">
-    <value> в заказе {{2}}</value>
+    <value> in the order {{2}}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} "{{0}}" данного Заказа является основной для следующих позиций: {1} "{{1}}"</value>
+    <value>{0} "{{0}}" of this Order is the main for the following items: {1} "{{1}}"</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
-    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}</value>
+    <value>Item {0} should be present in build in quantity from {1} up to {2}. A quantity of items that can be issued per month {3:MMMM} – {4}</value>
   </data>
   <data name="AdvertisementIsLinkedWithEmptyAddressError" xml:space="preserve">
-    <value>Позиция {0} оформлена на пустой адрес {1}</value>
+    <value>The item {0} is issued for an empty address {1}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" является сопутствующей, основная позиция не найдена.</value>
+    <value>{0} "{{0}}" is an accompanying item, the main item is not found.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
-    <value>Договор не может иметь дату подписания позднее даты подписания заказа</value>
+    <value>The contract date cannot be later than the date of signing the order</value>
   </data>
   <data name="BranchOffice" xml:space="preserve">
-    <value>Юр. лицо организации</value>
+    <value>Legal entity of company</value>
   </data>
   <data name="BranchOfficeOrganizationUnit" xml:space="preserve">
-    <value>Юр. лицо исполнителя</value>
+    <value>Legal entity of the Contractor</value>
   </data>
   <data name="CategoryIsRestrictedForSpecifiedSalesModelError" xml:space="preserve">
-    <value>Позиция "{0}" не может быть продана в рубрику "{1}" проекта "{2}"</value>
+    <value>Item "{0}" cannot be sold into category "{1}" of project "{2}"</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} "{{1}}"</value>
+    <value>{0} "{{0}}" contains reference objects in conflict with reference objects of the following main item: {1} "{{1}}"</value>
   </data>
   <data name="CpcIsMissing" xml:space="preserve">
-    <value>Для позиции {0} в рубрику {1} отсутствует CPC</value>
+    <value>No CPC for item {0} in category {1}</value>
   </data>
   <data name="CpcIsTooSmall" xml:space="preserve">
-    <value>Для позиции {0} в рубрику {1} указан CPC меньше минимального</value>
+    <value>CPC for item {0} in category {1} is lower than the minimum</value>
   </data>
   <data name="CpcRestrictionIsMissing" xml:space="preserve">
-    <value>Для рубрики {0} в проекте {1} не указан минимальный CPC</value>
+    <value>No minimum CPC specified for item {0} in category {1}</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>Валюта</value>
+    <value>Currency</value>
   </data>
   <data name="CurrentPriceNotFound" xml:space="preserve">
-    <value>Позиции не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа.</value>
+    <value>Items do not correspond to the actual price-list. Please specify items from a currently valid price-list.</value>
   </data>
   <data name="DeafaultThemeMustContainOnlySelfAds" xml:space="preserve">
-    <value>Установленная по умолчанию тематика {0} должна содержать только саморекламу</value>
+    <value>The set default topic {0} should contain only self-advertisement</value>
   </data>
   <data name="DefaultThemeIsNotSpecified" xml:space="preserve">
-    <value>Для подразделения {0} не указана тематика по умолчанию</value>
+    <value>For the subdivision {0}, default topic is not specified</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
-    <value>Фирма {0} удалена.</value>
+    <value>Company {0} is deleted.</value>
   </data>
   <data name="FirmIsPermanentlyClosed" xml:space="preserve">
-    <value>Фирма {0} скрыта навсегда</value>
+    <value>The company {0} is hidden forever</value>
   </data>
   <data name="InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions" xml:space="preserve">
-    <value>В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой.</value>
+    <value>The price-list item {0} contains more than one group of accompanying items, which is not supported by the system.</value>
   </data>
   <data name="LegalPerson" xml:space="preserve">
-    <value>Юр. лицо заказчика</value>
+    <value>Legal entity of the Customer</value>
   </data>
   <data name="LegalPersonProfile" xml:space="preserve">
-    <value>Профиль юр. лица заказчика</value>
+    <value>Profile of client's legal entity</value>
   </data>
   <data name="LinkedObjectsMissedInPrincipals" xml:space="preserve">
-    <value>{0} "{{0}}" содержит объекты привязки, отсутствующие в основных позициях.</value>
+    <value>{0} "{{0}}" contains reference objects not available in main items.</value>
   </data>
   <data name="MoreThanOneDefaultTheme" xml:space="preserve">
-    <value>Для подразделения {0} установлено более одной тематики по умолчанию</value>
+    <value>For the subdivision {0}, more than one default topic is specified</value>
   </data>
   <data name="MustMakeLegalPersonProfile" xml:space="preserve">
-    <value>У юр. лица клиента отсутствует профиль.</value>
+    <value>No profile for client's legal entity</value>
   </data>
   <data name="OrderApproval_BillsSumDoesntMatchWhenProcessingOrderOnApproval" xml:space="preserve">
-    <value>Сумма по счетам не совпадает с планируемой суммой заказа</value>
+    <value>The total amount of payments does not equal the planned amount of the order</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
-    <value>В позиции {{0}} необходимо указать рекламные материалы для подпозиции "{0}"</value>
+    <value>Advertising materials should be specified in the item {{0}} for subitem "{0}"</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
-    <value>В позиции {{0}} необходимо указать хотя бы один объект привязки для подпозиции '{0}'</value>
+    <value>At least one reference object should be specified in item {{0}} for subitem '{0}'</value>
   </data>
   <data name="OrderCheckHasReleases" xml:space="preserve">
-    <value>Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа.</value>
+    <value>The order is prepared for the period for which a build is already made. Please specify different dates for order placement.</value>
   </data>
   <data name="OrderCheckIncorrectBeginDistributionDate" xml:space="preserve">
-    <value>Указана некорректная дата начала размещения.</value>
+    <value>Incorrect start date of placement is specified.</value>
   </data>
   <data name="OrderCheckIncorrectEndDistributionDate" xml:space="preserve">
-    <value>Указана некорректная дата окончания размещения.</value>
+    <value>Incorrect end data of placement is specified.</value>
   </data>
   <data name="OrderCheckOrderHasNoBargainScans" xml:space="preserve">
-    <value>Отсутствует сканированная копия договора</value>
+    <value>No scanned copy of the contract</value>
   </data>
   <data name="OrderCheckOrderHasNoPositions" xml:space="preserve">
-    <value>Заказ не содержит ни одной позиции</value>
+    <value>The order does not contain any items</value>
   </data>
   <data name="OrderCheckOrderHasNoScans" xml:space="preserve">
-    <value>Отсутствует сканированная копия Бланка заказа</value>
+    <value>No scanned copy of the Invoice</value>
   </data>
   <data name="OrderCheckOrderHasUnspecifiedFields" xml:space="preserve">
-    <value>Необходимо заполнить все обязательные для заполнения поля: {0}</value>
+    <value>It is necessary to fill in all required fields: {0}</value>
   </data>
   <data name="OrderCheckOrderPositionCorrespontToInactivePosition" xml:space="preserve">
-    <value>Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа.</value>
+    <value>Item {0} corresponds to a hidden price-list item. Please specify an active item from a currently valid price-list.</value>
   </data>
   <data name="OrderCheckOrderPositionDoesntCorrespontToActualPrice" xml:space="preserve">
-    <value>Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа.</value>
+    <value>Item {0} does not correspond to the actual price-list. Please specify an item from a currently valid price-list.</value>
   </data>
   <data name="OrderCheckPositionMustHaveAdvertisements" xml:space="preserve">
-    <value>В позиции {0} необходимо указать рекламные материалы</value>
+    <value>Please specify advertising materials in the item {0}</value>
   </data>
   <data name="OrderDealIsInactive" xml:space="preserve">
-    <value>Для заказа указана неактивная работа</value>
+    <value>Inactive work is specified for an order</value>
   </data>
   <data name="OrderFirmHiddenForAscertainmentTemplate" xml:space="preserve">
-    <value>Фирма {0} скрыта до выяснения.</value>
+    <value>The company {0} is hidden till clarification</value>
   </data>
   <data name="OrderPositionAddressDeleted" xml:space="preserve">
-    <value>В позиции {0} адрес фирмы {1} скрыт навсегда</value>
+    <value>In item {0}, address of the company {1} is hidden forever</value>
   </data>
   <data name="OrderPositionAddressHidden" xml:space="preserve">
-    <value>В позиции {0} адрес фирмы {1} скрыт до выяснения</value>
+    <value>In item {0}, the address of the company {1} is hidden till clarification</value>
   </data>
   <data name="OrderPositionAddressNotActive" xml:space="preserve">
-    <value>В позиции {0} найден неактивный адрес {1}</value>
+    <value>Inactive address {1} is found in item {0}</value>
   </data>
   <data name="OrderPositionAddressNotBelongToFirm" xml:space="preserve">
-    <value>В позиции {0} найден адрес {1}, не принадлежащий фирме заказа</value>
+    <value>Address {1} is found in item {0}, and it does not belong to the company specified in the order</value>
   </data>
   <data name="OrderPositionCategoryNotActive" xml:space="preserve">
-    <value>В позиции {0} найдена неактивная рубрика {1}</value>
+    <value>Inactive category {1} is found in item {0}</value>
   </data>
   <data name="OrderPositionCategoryNotBelongsToAddress" xml:space="preserve">
-    <value>В позиции {0} найдена рубрика {1}, не принадлежащая адресу {2}</value>
+    <value>The item {0} contains the {1} category that does not belong to the address {2}</value>
   </data>
   <data name="OrderPositionCategoryNotBelongsToFirm" xml:space="preserve">
-    <value>В позиции {0} найдена рубрика {1}, не принадлежащая фирме заказа</value>
+    <value>Item {0} has category {1} that does not belong to the company specified in the order</value>
   </data>
   <data name="OrderReferencesInactiveEntities" xml:space="preserve">
-    <value>Заказ ссылается на неактивные объекты: {0}</value>
+    <value>The order refers to inactive objects: {0}</value>
   </data>
   <data name="OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne" xml:space="preserve">
-    <value>Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы</value>
+    <value>The company division of the order assignment does not correspond to the company division of the selected company</value>
   </data>
   <data name="OrdersCheckNeedToCreateBills" xml:space="preserve">
-    <value>Для заказа необходимо сформировать счета</value>
+    <value>It is necessary to create payments for the order</value>
   </data>
   <data name="OrdersCheckOrderHasNoAccount" xml:space="preserve">
-    <value>Заказ не имеет привязки к лицевому счёту.</value>
+    <value>The order is not linked to a personal account.</value>
   </data>
   <data name="OrdersCheckOrderInsufficientFunds" xml:space="preserve">
-    <value>Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}.</value>
+    <value>There is not enough money to create order. You need: {0}. There are: {1}.</value>
   </data>
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
-    <value>В позиции {{0}} задействованы рубрики, не привязанные к отделению организации города назначения заказа: {0}</value>
+    <value>In the item {{0}}, there are categories that are not referenced to the company division in the city of order destination: {0}</value>
   </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
-    <value>В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск.</value>
+    <value>In the price-list item {0}, it is necessary to specify minimum quantity of advertisements per issue.</value>
   </data>
   <data name="ProfileBargainEndDateIsLessThanSignDate" xml:space="preserve">
-    <value>У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа.</value>
+    <value>A contract with expiry date earlier than the date of order signature is specified in the profile {0} of the client's legal entity.</value>
   </data>
   <data name="ProfileWarrantyEndDateIsLessThanSignDate" xml:space="preserve">
-    <value>У юр. лица клиента, в профиле {0} указана доверенность с датой окончания действия раньше даты подписания заказа</value>
+    <value>Power of Attorney of the client's legal entity in the profile {0} has expiry date that is earlier than the signing date of the Invoice</value>
   </data>
   <data name="RichChildPositionTypeTemplate" xml:space="preserve">
-    <value>Подпозиция "{0}" позиции</value>
+    <value>Subitem "{0}" of the item</value>
   </data>
   <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
-    <value>Позиция</value>
+    <value>Item</value>
   </data>
   <data name="SelfAdvertisementOrderValidationRuleMessage" xml:space="preserve">
-    <value>Позиция "Самореклама только для ПК" продана одновременно с рекламой в другую платформу</value>
+    <value>Item "Self-advertisement only for PC" is sold with ads to another platform</value>
   </data>
   <data name="ThemePeriodDoesNotOverlapOrderPeriod" xml:space="preserve">
-    <value>Заказ {0} не может иметь продаж в тематику {1}, поскольку тематика действует не весь период размещения заказа</value>
+    <value>The order {0} cannot have sales in the topic {1}, since the topic is not valid for the whole period of placement</value>
   </data>
   <data name="ThemeSalesExceedsLimit" xml:space="preserve">
-    <value>Слишком много продаж в тематику {{0}}. Продано {0} позиций вместо {1} возможных.</value>
+    <value>Too many sales for the topic {{0}}. {0} items are sold instead of {1} possible.</value>
   </data>
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
-    <value>Тематика {0} использует удаленную рубрику {1}.</value>
+    <value>The topic {0} uses the deleted category {1}.</value>
   </data>
   <data name="ThereIsNoSpecifiedDealForOrder" xml:space="preserve">
-    <value>Для заказа не указана работа</value>
+    <value>No work is specified for the order</value>
   </data>
   <data name="TooManyAdvertisementForCategory" xml:space="preserve">
-    <value>В рубрику {{0}} заказано слишком много объявлений: Заказано {0}, допустимо не более {1}.</value>
+    <value>Too many advertisements ordered in the category {{0}}: Ordered {0}, permitted not more than {1}.</value>
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
-    <value>Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}.</value>
+    <value>For the company {{0}}, too big number of categories is set - {0}. Maximum permitted number - {1}.</value>
   </data>
 </root>
