@@ -18,7 +18,9 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
     public sealed class VersioningService
     {
         private const string ConfigurationString = "Messages";
-        private const int WaitAttempts = 60;
+
+        private const int ErmWaitAttempts = 36; // 3 mimutes
+        private const int AmsWaitAttempts = 12; // 1 mimute
         private static readonly TimeSpan WaitInterval = TimeSpan.FromSeconds(5);
 
         private readonly DataConnectionFactory _factory;
@@ -32,16 +34,16 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         {
             var offset = AmsHelper.GetLatestOffset();
 
-            var ermVersion = await WaitForErmState(token, WaitAttempts, WaitInterval);
+            var ermVersion = await WaitForErmState(token, ErmWaitAttempts, WaitInterval);
             if (ermVersion == null)
             {
-                throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state failed after {0} attempts", WaitAttempts));
+                throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state failed after {0} attempts", ErmWaitAttempts));
             }
 
-            var amsVersion = await WaitForAmsState(offset, WaitAttempts, WaitInterval);
+            var amsVersion = await WaitForAmsState(offset, AmsWaitAttempts, WaitInterval);
             if (amsVersion == null)
             {
-                throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state failed after {0} attempts", WaitAttempts));
+                throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state failed after {0} attempts", AmsWaitAttempts));
             }
 
             return ermVersion.Value > amsVersion.Value ? ermVersion.Value : amsVersion.Value;
@@ -143,15 +145,11 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                     Config.Add("client.id", ClientId + '-' + environmentName);
                     Config.Add("group.id", ClientId + '-' + environmentName);
 
-                    var topic = ConfigurationManager.AppSettings["AmsFactsTopics"];
-                    if (topic != null)
-                    {
-                        Topic = topic.Split(',').First();
-                    }
+                    Topic = ConfigurationManager.AppSettings["AmsFactsTopics"].Split(',').First();
                 }
 
                 public Dictionary<string, object> Config { get; }
-                public string Topic { get; } = "ams_okapi_vr_integration.am.validity";
+                public string Topic { get; }
                 public TimeSpan QueryOffsetsTimeout { get; } = TimeSpan.FromSeconds(5);
             }
         }

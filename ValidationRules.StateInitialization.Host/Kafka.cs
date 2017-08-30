@@ -269,7 +269,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         private sealed class ReceiverSettings : IKafkaMessageFlowReceiverSettings
         {
-            private readonly StringSetting _amsFactsTopics = ConfigFileSetting.String.Optional("AmsFactsTopics", "ams_okapi_vr_integration.am.validity");
+            private readonly StringSetting _amsFactsTopics = ConfigFileSetting.String.Required("AmsFactsTopics");
             private readonly StringSetting _pollTimeout = ConfigFileSetting.String.Optional("AmsPollTimeout", "00:00:05");
             private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 50);
 
