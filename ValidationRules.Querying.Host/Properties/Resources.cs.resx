@@ -118,240 +118,240 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" является запрещённой для: {1} "{{1}}"</value>
+    <value>{0} "{{0}}" je zakázána pro: {1} "{{1}}"</value>
   </data>
   <data name="OrderDescriptionTemplate" xml:space="preserve">
-    <value> в заказе {{2}}</value>
+    <value> v objednávce {{2}}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} "{{0}}" данного Заказа является основной для следующих позиций: {1} "{{1}}"</value>
+    <value>{0} "{{0}}" této objednávky je hlavní pro následující položky: {1} "{{1}}"</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
-    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}</value>
+    <value>Potřebný počet pozice {0} ve sborce je od {1} do {2}. Povolený počet pozic ve vydání za měsíc je {3:MMMM} - {4}</value>
   </data>
   <data name="AdvertisementChoosenForWhitelist" xml:space="preserve">
-    <value>Для фирмы {0} в белый список выбран рекламный материал {1}</value>
+    <value>Pro organizaci {0} do bílého seznamu byl zvolen reklamní materiál {1}</value>
   </data>
   <data name="AdvertisementForWhitelistDoesNotSpecified" xml:space="preserve">
-    <value>Для фирмы {0} не указан рекламный материал в белый список</value>
+    <value>Pro organizaci {0} není uveden do bílého seznamu reklamní materiál</value>
   </data>
   <data name="AdvertisementIsLinkedWithEmptyAddressError" xml:space="preserve">
-    <value>Позиция {0} оформлена на пустой адрес {1}</value>
+    <value>Položka {0} je vytvořena s prázdnou adresou {1}</value>
   </data>
   <data name="AdvertisementPeriodEndsBeforeReleasePeriodBegins" xml:space="preserve">
-    <value>Период размещения рекламного материала {0}, выбранного в позиции {1} должен захватывать 5 дней от текущего месяца размещения</value>
+    <value>Období zveřejnění reklamního materiálu {0} vybraného z položky {1} musí pokrývat 5 dní z aktuálního měsíce, ve kterém probíhá zveřejnění</value>
   </data>
   <data name="AdvertisementPeriodError" xml:space="preserve">
-    <value>Период не может быть менее пяти дней.</value>
+    <value>Období nemůže být kratší než pět dnů.</value>
   </data>
   <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
-    <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
+    <value>V položce {0} byl vybrán reklamní materiál {1}, který nenáleží firmě {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" является сопутствующей, основная позиция не найдена.</value>
+    <value>{0} "{{0}}" je průvodní položka, hlavní položka nebyla nalezena.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
-    <value>Договор не может иметь дату подписания позднее даты подписания заказа</value>
+    <value>Smlouva nesmí být podepsána později než objednávka</value>
   </data>
   <data name="BranchOffice" xml:space="preserve">
-    <value>Юр. лицо организации</value>
+    <value>Pr. osoba organizace</value>
   </data>
   <data name="BranchOfficeOrganizationUnit" xml:space="preserve">
-    <value>Юр. лицо исполнителя</value>
+    <value>Pr. osoba zhotovitele</value>
   </data>
   <data name="CategoryIsRestrictedForSpecifiedSalesModelError" xml:space="preserve">
-    <value>Позиция "{0}" не может быть продана в рубрику "{1}" проекта "{2}"</value>
+    <value>Pozici "{0}" nelze prodat do rubriky "{1}" v projektu "{2}"</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} "{{1}}"</value>
+    <value>{0} "{{0}}" obsahuje vázané objekty, které kolidují s vázanými objekty následující hlavní položky: {1} "{{1}}"</value>
   </data>
   <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
-    <value>Купон на скидку {{0}} прикреплён к нескольким позициям: {0}</value>
+    <value>Poukaz na slevu {{0}} je připojen k několika položkám: {0}</value>
   </data>
   <data name="CpcIsMissing" xml:space="preserve">
-    <value>Для позиции {0} в рубрику {1} отсутствует CPC</value>
+    <value>Pro pozici {0} do rubriky {1} nebyla uvedena Cena za kliknutí</value>
   </data>
   <data name="CpcIsTooSmall" xml:space="preserve">
-    <value>Для позиции {0} в рубрику {1} указан CPC меньше минимального</value>
+    <value>Pro pozici {0} do rubriky {1} byla uvedena Cena za kliknutí méně minimalní hodnoty</value>
   </data>
   <data name="CpcRestrictionIsMissing" xml:space="preserve">
-    <value>Для рубрики {0} в проекте {1} не указан минимальный CPC</value>
+    <value>Pro rubriku {0} do prijektu {1} nebyla uvedena minimalní Cena za kliknutí </value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>Валюта</value>
+    <value>Měna</value>
   </data>
   <data name="CurrentPriceNotFound" xml:space="preserve">
-    <value>Позиции не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа.</value>
+    <value>Položky neodpovídají aktuálnímu ceníku. Je třeba uvést položky z aktuálně platného ceníku.</value>
   </data>
   <data name="DeafaultThemeMustContainOnlySelfAds" xml:space="preserve">
-    <value>Установленная по умолчанию тематика {0} должна содержать только саморекламу</value>
+    <value>Nastavené výchozí téma {0} musí obsahovat pouze sebepropagaci</value>
   </data>
   <data name="DefaultThemeIsNotSpecified" xml:space="preserve">
-    <value>Для подразделения {0} не указана тематика по умолчанию</value>
+    <value>U pododdílu {0} není uvedeno výchozí téma</value>
   </data>
   <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}} в заказе {{2}}, дублирующая контакт фирмы.</value>
+    <value>Společnost {{0}} má objednaný reklamní odkaz {0}, položka {{1}} v objednávce {{2}}, u kterého dochází k duplikaci firemního kontaktu.</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
-    <value>Фирма {0} удалена.</value>
+    <value>Firma {0} byla smazána.</value>
   </data>
   <data name="FirmIsPermanentlyClosed" xml:space="preserve">
-    <value>Фирма {0} скрыта навсегда</value>
+    <value>Firma {0} je skryta navždy</value>
   </data>
   <data name="InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions" xml:space="preserve">
-    <value>В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой.</value>
+    <value>Ceníková položka {0} obsahuje více než jednu skupinu průvodních položek - nepodporováno systémem.</value>
   </data>
   <data name="LegalPerson" xml:space="preserve">
-    <value>Юр. лицо заказчика</value>
+    <value>Pr. osoba objednatele</value>
   </data>
   <data name="LegalPersonProfile" xml:space="preserve">
-    <value>Профиль юр. лица заказчика</value>
+    <value>Profil pr. osoby klienta</value>
   </data>
   <data name="LinkedObjectsMissedInPrincipals" xml:space="preserve">
-    <value>{0} "{{0}}" содержит объекты привязки, отсутствующие в основных позициях.</value>
+    <value>{0} "{{0}}" obsahuje vázané objekty, které chybí v hlavních položkách.</value>
   </data>
   <data name="MoreThanOneDefaultTheme" xml:space="preserve">
-    <value>Для подразделения {0} установлено более одной тематики по умолчанию</value>
+    <value>U pododdílu {0} je nastaveno více než jedno výchozí téma</value>
   </data>
   <data name="MustMakeLegalPersonProfile" xml:space="preserve">
-    <value>У юр. лица клиента отсутствует профиль.</value>
+    <value>U pr. osoby klienta chybí profil.</value>
   </data>
   <data name="OrderApproval_BillsSumDoesntMatchWhenProcessingOrderOnApproval" xml:space="preserve">
-    <value>Сумма по счетам не совпадает с планируемой суммой заказа</value>
+    <value>Součet na fakturách neodpovídá plánované hodnotě objednávky</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
-    <value>В позиции {{0}} необходимо указать рекламные материалы для подпозиции "{0}"</value>
+    <value>V položce {{0}} je třeba uvést reklamní materiály pro podpoložku „{0}“</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
-    <value>В позиции {{0}} необходимо указать хотя бы один объект привязки для подпозиции '{0}'</value>
+    <value>V položce {{0}} je třeba uvést alespoň jeden vázaný objekt pro podpoložku '{0}'</value>
   </data>
   <data name="OrderCheckHasReleases" xml:space="preserve">
-    <value>Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа.</value>
+    <value>Objednávka je zpracována na období, pro které je již utvořena tvorba sestavy. Je třeba uvést jiný termín zveřejnění objednávky.</value>
   </data>
   <data name="OrderCheckIncorrectBeginDistributionDate" xml:space="preserve">
-    <value>Указана некорректная дата начала размещения.</value>
+    <value>Chybně uvedené datum začátku zveřejnění.</value>
   </data>
   <data name="OrderCheckIncorrectEndDistributionDate" xml:space="preserve">
-    <value>Указана некорректная дата окончания размещения.</value>
+    <value>Chybně uvedené datum ukončení zveřejnění.</value>
   </data>
   <data name="OrderCheckOrderHasNoBargainScans" xml:space="preserve">
-    <value>Отсутствует сканированная копия договора</value>
+    <value>Chybí scan kopie smlouvy</value>
   </data>
   <data name="OrderCheckOrderHasNoPositions" xml:space="preserve">
-    <value>Заказ не содержит ни одной позиции</value>
+    <value>Objednávka neobsahuje žádnou položku</value>
   </data>
   <data name="OrderCheckOrderHasNoScans" xml:space="preserve">
-    <value>Отсутствует сканированная копия Бланка заказа</value>
+    <value>Chybí scan kopie objednávky</value>
   </data>
   <data name="OrderCheckOrderHasUnspecifiedFields" xml:space="preserve">
-    <value>Необходимо заполнить все обязательные для заполнения поля: {0}</value>
+    <value>Je třeba vyplnit všechna povinná pole: {0}</value>
   </data>
   <data name="OrderCheckOrderPositionCorrespontToInactivePosition" xml:space="preserve">
-    <value>Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа.</value>
+    <value>Položka {0} odpovídá skryté položce ceníku. Je třeba uvést aktivní položku z aktuálně platného ceníku.</value>
   </data>
   <data name="OrderCheckOrderPositionDoesntCorrespontToActualPrice" xml:space="preserve">
-    <value>Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа.</value>
+    <value>Položka {0} neodpovídá aktuálnímu ceníku. Je třeba uvést položku z aktuálně platného ceníku.</value>
   </data>
   <data name="OrderCheckPositionMustHaveAdvertisements" xml:space="preserve">
-    <value>В позиции {0} необходимо указать рекламные материалы</value>
+    <value>V položce {0} je třeba uvést reklamní materiály</value>
   </data>
   <data name="OrderContainsDummyAdvertisementError" xml:space="preserve">
-    <value>Позиция {0} содержит заглушку рекламного материала</value>
+    <value>Položka {0} obsahuje Zástupný materiál reklamního materiálu</value>
   </data>
   <data name="OrderDealIsInactive" xml:space="preserve">
-    <value>Для заказа указана неактивная работа</value>
+    <value>Pro objednávku je zadána neaktivní práce/úloha</value>
   </data>
   <data name="OrderFirmHiddenForAscertainmentTemplate" xml:space="preserve">
-    <value>Фирма {0} скрыта до выяснения.</value>
+    <value>Firma {0} je skrytá do vyjasnění.</value>
   </data>
   <data name="OrderPositionAddressDeleted" xml:space="preserve">
-    <value>В позиции {0} адрес фирмы {1} скрыт навсегда</value>
+    <value>V položce {0} je adresa firmy {1} skrytá navždy</value>
   </data>
   <data name="OrderPositionAddressHidden" xml:space="preserve">
-    <value>В позиции {0} адрес фирмы {1} скрыт до выяснения</value>
+    <value>V položce {0} je adresa firmy {1} skrytá do vyjasnění</value>
   </data>
   <data name="OrderPositionAddressNotActive" xml:space="preserve">
-    <value>В позиции {0} найден неактивный адрес {1}</value>
+    <value>V položce {0} byla nalezena neaktivní adresa {1}</value>
   </data>
   <data name="OrderPositionAddressNotBelongToFirm" xml:space="preserve">
-    <value>В позиции {0} найден адрес {1}, не принадлежащий фирме заказа</value>
+    <value>V položce {0} byla nalezena adresa firmy {1}, která nenáleží firmě na objednávce</value>
   </data>
   <data name="OrderPositionCategoryNotActive" xml:space="preserve">
-    <value>В позиции {0} найдена неактивная рубрика {1}</value>
+    <value>V položce {0} byla nalezena neaktivní rubrika {1}</value>
   </data>
   <data name="OrderPositionCategoryNotBelongsToAddress" xml:space="preserve">
-    <value>В позиции {0} найдена рубрика {1}, не принадлежащая адресу {2}</value>
+    <value>V položce {0} byla nalezena rubrika {1}, která nenáleží adrese {2}</value>
   </data>
   <data name="OrderPositionCategoryNotBelongsToFirm" xml:space="preserve">
-    <value>В позиции {0} найдена рубрика {1}, не принадлежащая фирме заказа</value>
+    <value>V položce {0} byla nalezena rubrika {1}, která nenáleží firmě na objednávce</value>
   </data>
   <data name="OrderReferencesInactiveEntities" xml:space="preserve">
-    <value>Заказ ссылается на неактивные объекты: {0}</value>
+    <value>Objednávka se odkazuje na neaktivní objekty: {0}</value>
   </data>
   <data name="OrdersCheckAdvertisementElementIsDraft" xml:space="preserve">
-    <value>В рекламном материале "{0}", который подлежит выверке, элемент "{1}" находится в статусе 'Черновик'</value>
+    <value>V reklamním materiálu "{0}", který je třeba ověřit, prvek "{1}" má status 'Koncept'</value>
   </data>
   <data name="OrdersCheckAdvertisementElementWasInvalidated" xml:space="preserve">
-    <value>В рекламном материале "{0}", который подлежит выверке, элемент "{1}" содержит ошибки выверки</value>
+    <value>V reklamním materiálu {0} obsahuje prvek {1} podléhající ověření chyby ověření</value>
   </data>
   <data name="OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne" xml:space="preserve">
-    <value>Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы</value>
+    <value>Oddělení organizace účelu objednávky nesouhlasí s oddělením organizace vybrané firmy</value>
   </data>
   <data name="OrdersCheckNeedToCreateBills" xml:space="preserve">
-    <value>Для заказа необходимо сформировать счета</value>
+    <value>K objednávce je třeba vystavit faktury</value>
   </data>
   <data name="OrdersCheckOrderHasNoAccount" xml:space="preserve">
-    <value>Заказ не имеет привязки к лицевому счёту.</value>
+    <value>Objednávka nemá vazbu na osobní účet.</value>
   </data>
   <data name="OrdersCheckOrderInsufficientFunds" xml:space="preserve">
-    <value>Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}.</value>
+    <value>Nemáte dost prostředků k vytvoření objednávky. Je potřeba: {0}. Máte: {1}.</value>
   </data>
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
-    <value>В позиции {{0}} задействованы рубрики, не привязанные к отделению организации города назначения заказа: {0}</value>
+    <value>V položce {{0}} jsou rubriky, které nejsou vázány na oddělení organizace cílového města objednávky: {0}</value>
   </data>
   <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
-    <value>В рекламном материале {0} не заполнен обязательный элемент {1}</value>
+    <value>V reklamním materiálu {0} není vyplněn povinný prvek {1}</value>
   </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
-    <value>В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск.</value>
+    <value>V ceníkové položce {0} je třeba uvést minimální počet reklam k vydání.</value>
   </data>
   <data name="ProfileBargainEndDateIsLessThanSignDate" xml:space="preserve">
-    <value>У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа.</value>
+    <value>V profilu {0} pr. osoby klienta je uvedena smlouva, jejíž platnost končí před datem podepsání objednávky.</value>
   </data>
   <data name="ProfileWarrantyEndDateIsLessThanSignDate" xml:space="preserve">
-    <value>У юр. лица клиента, в профиле {0} указана доверенность с датой окончания действия раньше даты подписания заказа</value>
+    <value>V profilu {0} pr. osoby klienta je uvedena plná moc, jejíž platnost končí před datem podepsání objednávky</value>
   </data>
   <data name="RemovedAdvertisemendSpecifiedForPosition" xml:space="preserve">
-    <value>В позиции {0} выбран удалённый рекламный материал {1}</value>
+    <value>V položce {0} byl vybrán odstraněný reklamní materiál {1}</value>
   </data>
   <data name="RichChildPositionTypeTemplate" xml:space="preserve">
-    <value>Подпозиция "{0}" позиции</value>
+    <value>Podpoložka „{0}“ položky</value>
   </data>
   <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
-    <value>Позиция</value>
+    <value>Položka</value>
   </data>
   <data name="SelfAdvertisementOrderValidationRuleMessage" xml:space="preserve">
-    <value>Позиция "Самореклама только для ПК" продана одновременно с рекламой в другую платформу</value>
+    <value>Položka „Sebepropagace pro PC“ byla prodána současně s reklamou určenou pro jinou platformu</value>
   </data>
   <data name="ThemePeriodDoesNotOverlapOrderPeriod" xml:space="preserve">
-    <value>Заказ {0} не может иметь продаж в тематику {1}, поскольку тематика действует не весь период размещения заказа</value>
+    <value>Objednávka {0} nemůže obsahovat prodej k tématu {1}, protože téma neplatí po celou dobu zveřejnění objednávky</value>
   </data>
   <data name="ThemeSalesExceedsLimit" xml:space="preserve">
-    <value>Слишком много продаж в тематику {{0}}. Продано {0} позиций вместо {1} возможных.</value>
+    <value>Příliš mnoho prodejů k tématu {{0}}. Bylo prodáno {0} položek, je možné prodat {1}.</value>
   </data>
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
-    <value>Тематика {0} использует удаленную рубрику {1}.</value>
+    <value>Téma {0} využívá odstraněnou rubriku {1}.</value>
   </data>
   <data name="ThereIsNoAdvertisementForAdvantageousPurchasesCategory" xml:space="preserve">
-    <value>У фирмы {0}, с рубрикой "Выгодные покупки с 2ГИС", отсутствуют продажи по позициям "Самореклама только для ПК" или "Выгодные покупки с 2ГИС".</value>
+    <value>U firmy {0} s rubrikou „Výhodné nákupy s 2GIS“ chybí prodeje v položkách „Sebeprezentace pouze pro PC“ nebo „Výhodné nákupy s 2GIS“.</value>
   </data>
   <data name="ThereIsNoSpecifiedDealForOrder" xml:space="preserve">
-    <value>Для заказа не указана работа</value>
+    <value>Pro objednávku nebyla zadána práce/úloha</value>
   </data>
   <data name="TooManyAdvertisementForCategory" xml:space="preserve">
-    <value>В рубрику {{0}} заказано слишком много объявлений: Заказано {0}, допустимо не более {1}.</value>
+    <value>Do rubriky {{0}} je objednáno příliš mnoho inzerátů: Objednáno {0}, maximální počet {1}.</value>
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
-    <value>Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}.</value>
+    <value>U firmy {{0}} bylo zadáno příliš mnoho rubrik - {0}. Maximální počet - {1}.</value>
   </data>
 </root>
