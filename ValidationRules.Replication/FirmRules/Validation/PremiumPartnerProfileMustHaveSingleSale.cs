@@ -10,13 +10,8 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
-    /// Для фирм, которые одновременно размещаются более чем в N рубриках, должно выводиться предупреждение.
-    /// "Для фирмы {0} задано слишком большое число рубрик - {1}. Максимально допустимое - {2}"
-    /// 
-    /// Source: CategoriesForFirmAmountOrderValidationRule
-    /// 
-    /// Q: Что если у фирмы 20 рубрик в одном заказе, который в статусе на расторжении и ещё одна рубрика в заказе, который начинает размещение с даты расторжения (и пересекается по датам с первым)
-    /// A: Проверка не срабатывает
+    /// Для заказов с позицией "Реклама в профилях партнеров (приоритетное размещение)", если адрес в позиции "Реклама в профилях партнеров (адреса)" встречается в другом таком же заказе, должна выводиться ошибка.
+    /// "На адрес {{0}} фирмы {{1}} продано более одной позиции Premium в периоды: {0}"
     /// </summary>
     public sealed class PremiumPartnerProfileMustHaveSingleSale : ValidationResultAccessorBase
     {
@@ -40,17 +35,18 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
             var messages =
                 from sale in multipleSales
                 select new Version.ValidationResult
-                {
-                    MessageParams =
+                    {
+                        MessageParams =
                             new MessageParams(
+                                    new Dictionary<string, object> { { "begin", sale.Begin }, { "end", sale.End } },
                                     new Reference<EntityTypeFirm>(sale.FirmId),
-                                    new Reference<EntityTypeFirm>(sale.FirmAddressId))
+                                    new Reference<EntityTypeFirmAddress>(sale.FirmAddressId))
                                 .ToXDocument(),
 
-                    PeriodStart = sale.Begin,
-                    PeriodEnd = sale.End,
-                    OrderId = sale.OrderId,
-                };
+                        PeriodStart = sale.Begin,
+                        PeriodEnd = sale.End,
+                        OrderId = sale.OrderId,
+                    };
 
             return messages;
         }

@@ -341,6 +341,13 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale,
+                         single: RuleSeverityLevel.Error,
+                         singleForApprove: RuleSeverityLevel.Error,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error)
                 };
 
