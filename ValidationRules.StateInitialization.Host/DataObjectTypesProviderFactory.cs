@@ -140,8 +140,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 			    typeof(FirmAggregates::Order.InvalidFirm),
 			    typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
 			    typeof(FirmAggregates::Order.SelfAdvertisementPosition),
+                typeof(FirmAggregates::Order.PremiumPartnerProfilePosition),
 
-			    typeof(ProjectAggregates::Order),
+                typeof(ProjectAggregates::Order),
 			    typeof(ProjectAggregates::Order.AddressAdvertisementNonOnTheMap),
 			    typeof(ProjectAggregates::Order.CategoryAdvertisement),
 			    typeof(ProjectAggregates::Order.CostPerClickAdvertisement),
