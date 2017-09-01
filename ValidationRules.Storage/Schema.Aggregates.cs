@@ -88,6 +88,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<FirmAggregates::Order.SelfAdvertisementPosition>()
                    .HasSchemaName(FirmAggregatesSchema);
 
+            builder.Entity<FirmAggregates::Order.PremiumPartnerProfilePosition>()
+                   .HasSchemaName(FirmAggregatesSchema);
+
             return builder;
         }
 

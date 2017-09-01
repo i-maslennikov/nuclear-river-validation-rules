@@ -354,4 +354,7 @@
   <data name="TooManyCategorieForFirm" xml:space="preserve">
     <value>Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}.</value>
   </data>
+  <data name="MoreThanOnePremiumBuyHerePositionSoldForAddress" xml:space="preserve">
+    <value>На адрес "{{0}}" фирмы "{{1}}" продано более одной позиции Premium в периоды: {0}</value>
+  </data>
 </root>

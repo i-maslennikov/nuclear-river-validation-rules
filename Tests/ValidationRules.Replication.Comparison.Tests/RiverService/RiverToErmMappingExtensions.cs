@@ -77,6 +77,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderCouponPeriodMustNotBeLessFiveDays, 2 },
                             { MessageTypeCode.AdvertisementWebsiteShouldNotBeFirmWebsite, 27 },
                             { MessageTypeCode.OrderCouponPeriodMustBeInRelease, 2 },
+                            { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 50 },
                     }.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
 
         public static int ToErmRuleCode(this int riverMessageTypeCode)

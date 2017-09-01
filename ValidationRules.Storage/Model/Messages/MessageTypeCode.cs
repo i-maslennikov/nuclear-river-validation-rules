@@ -79,5 +79,7 @@
         OrderCouponPeriodMustNotBeLessFiveDays = 66,
         AdvertisementWebsiteShouldNotBeFirmWebsite = 67,
         OrderCouponPeriodMustBeInRelease = 69,
+
+        PremiumPartnerProfileMustHaveSingleSale = 71,
     }
 }
