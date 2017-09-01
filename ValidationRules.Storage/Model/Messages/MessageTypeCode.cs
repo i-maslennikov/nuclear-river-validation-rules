@@ -80,6 +80,6 @@
         AdvertisementWebsiteShouldNotBeFirmWebsite = 67,
         OrderCouponPeriodMustBeInRelease = 69,
 
-        PremiumPartnerProfileMustHaveSingleSale = 70,
+        PremiumPartnerProfileMustHaveSingleSale = 71,
     }
 }
