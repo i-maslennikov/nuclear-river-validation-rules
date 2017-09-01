@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                 projectReference,
                 string.Format(
                     Resources.AdvertisementAmountShortErrorMessage,
-                    dto.Name,
+                    dto.Name.ClearBrackets(),
                     dto.Min,
                     dto.Max,
                     dto.Month,

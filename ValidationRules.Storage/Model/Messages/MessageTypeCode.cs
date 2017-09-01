@@ -68,5 +68,7 @@
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
 
         FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder = 68,
+
+        PremiumPartnerProfileMustHaveSingleSale = 71,
     }
 }

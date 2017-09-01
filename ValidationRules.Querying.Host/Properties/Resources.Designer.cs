@@ -277,6 +277,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to На адрес &quot;{{0}}&quot; фирмы &quot;{{1}}&quot; продано более одной позиции Premium в периоды: {0}.
+        /// </summary>
+        internal static string MoreThanOnePremiumBuyHerePositionSoldForAddress {
+            get {
+                return ResourceManager.GetString("MoreThanOnePremiumBuyHerePositionSoldForAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to У юр. лица клиента отсутствует профиль..
         /// </summary>
         internal static string MustMakeLegalPersonProfile {

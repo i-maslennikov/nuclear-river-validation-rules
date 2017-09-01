@@ -23,19 +23,19 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<OrderPositionAdvertisement> GetSource() => _query
-            .For<Erm::OrderPositionAdvertisement>()
-            .Select(x => new OrderPositionAdvertisement
-            {
-                Id = x.Id,
-                OrderPositionId = x.OrderPositionId,
-                PositionId = x.PositionId,
+        public IQueryable<OrderPositionAdvertisement> GetSource()
+            => from opa in _query.For<Erm::OrderPositionAdvertisement>()
+               select new OrderPositionAdvertisement
+                   {
+                       Id = opa.Id,
+                       OrderPositionId = opa.OrderPositionId,
+                       PositionId = opa.PositionId,
 
-                FirmAddressId = x.FirmAddressId,
-                CategoryId = x.CategoryId,
-                AdvertisementId = x.AdvertisementId,
-                ThemeId = x.ThemeId,
-            });
+                       FirmAddressId = opa.FirmAddressId,
+                       CategoryId = opa.CategoryId,
+                       AdvertisementId = opa.AdvertisementId,
+                       ThemeId = opa.ThemeId,
+                   };
 
         public FindSpecification<OrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

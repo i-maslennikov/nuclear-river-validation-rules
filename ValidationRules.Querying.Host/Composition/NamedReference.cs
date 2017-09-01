@@ -30,7 +30,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         public string PositionPrefix
             => PackagePosition.Reference.Id == ItemPosition.Reference.Id
                 ? Resources.RichDefaultPositionTypeTemplate
-                : string.Format(Resources.RichChildPositionTypeTemplate, ItemPosition.Name);
+                : string.Format(Resources.RichChildPositionTypeTemplate, ItemPosition.Name.ClearBrackets());
 
         private NamedReference PackagePosition { get; }
         private NamedReference ItemPosition { get; }

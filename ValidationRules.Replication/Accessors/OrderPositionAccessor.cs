@@ -24,15 +24,14 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<OrderPosition> GetSource() => _query
-            .For<Erm::OrderPosition>()
-            .Where(Specs.Find.Erm.OrderPosition)
-            .Select(x => new OrderPosition
-            {
-                Id = x.Id,
-                OrderId = x.OrderId,
-                PricePositionId = x.PricePositionId,
-            });
+        public IQueryable<OrderPosition> GetSource()
+            => from x in _query.For<Erm::OrderPosition>().Where(Specs.Find.Erm.OrderPosition)
+               select new OrderPosition
+                   {
+                       Id = x.Id,
+                       OrderId = x.OrderId,
+                       PricePositionId = x.PricePositionId,
+                   };
 
         public FindSpecification<OrderPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 project,
-                string.Format(Resources.PricePositionHasNoMinAdvertisementAmount, extra["name"]));
+                string.Format(Resources.PricePositionHasNoMinAdvertisementAmount, extra["name"].ClearBrackets()));
         }
     }
 }
