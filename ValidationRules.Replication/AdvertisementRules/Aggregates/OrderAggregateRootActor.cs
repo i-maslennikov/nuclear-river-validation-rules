@@ -221,7 +221,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
-                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                        MessageTypeCode.AdvertisementMustPassReview,
                     };
 
             public IQueryable<Order.AdvertisementFailedReview> GetSource()
