@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                string.Format("На адрес {{0}} фирмы {{1}} продано более одной позиции Premium в периоды: {0}", string.Join(", ", extra.Keys)),
+                string.Format(Resources.MoreThanOnePremiumBuyHerePositionSoldForAddress, string.Join(", ", extra.Keys)),
                 addressReference,
                 firmReference);
         }
