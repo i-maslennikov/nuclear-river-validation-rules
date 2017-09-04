@@ -28,21 +28,4 @@ namespace NuClear.ValidationRules.Replication.Messages
             throw new NotSupportedException();
         }
     }
-
-    public sealed class AmsStateAccessor : IMemoryBasedDataObjectAccessor<Version.AmsState>
-    {
-        public AmsStateAccessor(IQuery query)
-        {
-        }
-
-        public IReadOnlyCollection<Version.AmsState> GetDataObjects(ICommand command)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FindSpecification<Version.AmsState> GetFindSpecification(ICommand command)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }
