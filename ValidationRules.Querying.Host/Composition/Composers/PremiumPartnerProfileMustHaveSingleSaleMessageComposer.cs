@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                         OrderId = group.Key.OrderId,
                         MessageType = group.Key.MessageType,
                         ProjectId = group.Key.ProjectId,
-                        References = new Reference[] { new Reference<EntityTypeFirmAddress>(group.Key.FirmAddressId), new Reference<EntityTypeFirm>(group.Key.FirmId) },
+                        References = new Reference[] { new Reference<EntityTypeFirmAddress>(group.Key.FirmAddressId), new Reference<EntityTypeFirm>(group.Key.FirmId), new Reference<EntityTypeOrder>(group.Key.OrderId.Value) },
                         Extra = group.SelectMany(x => MonthlySplit(DateTime.Parse(x.Extra["begin"]), DateTime.Parse(x.Extra["end"])))
                                      .Distinct()
                                      .OrderBy(x => x)
