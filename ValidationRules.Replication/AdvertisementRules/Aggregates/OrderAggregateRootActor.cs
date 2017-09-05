@@ -134,9 +134,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted && x.Id == op.PricePositionId)
                     from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
-                    from p in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.Id == positionChild.ChildPositionId)
+                    from p in _query.For<Facts::Position>().Where(x => x.Id == positionChild.ChildPositionId)
                     from template in _query.For<Facts::AdvertisementTemplate>().Where(x => x.IsAdvertisementRequired && x.Id == p.AdvertisementTemplateId)
-                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.AdvertisementId == null && x.OrderPositionId == op.Id && x.PositionId == p.Id)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
+                    where opa.AdvertisementId == null // шаблон IsAdvertisementRequired и не указан advertisementId
                     select new Order.MissingAdvertisementReference
                         {
                             OrderId = order.Id,
@@ -172,7 +173,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Order.MissingOrderPositionAdvertisement> GetSource()
             {
-                var positionChilds = from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted)
+                var positionChilds = from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && !x.IsCompositionOptional)
                                      from child in _query.For<Facts::PositionChild>().Where(x => x.MasterPositionId == position.Id).DefaultIfEmpty()
                                      select new
                                          {
@@ -185,10 +186,10 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                        from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                        from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted && x.Id == op.PricePositionId)
                        from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
-                       from p in _query.For<Facts::Position>().Where(x => !x.IsDeleted && !x.IsCompositionOptional && x.Id == positionChild.ChildPositionId)
+                       from p in _query.For<Facts::Position>().Where(x => x.Id == positionChild.ChildPositionId)
                        from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
                                          .DefaultIfEmpty()
-                       where opa == null // позиция не продана
+                       where opa == null // позиция не IsCompositionOptional и нет ни одной продажи
                        select new Order.MissingOrderPositionAdvertisement
                            {
                                OrderId = order.Id,
