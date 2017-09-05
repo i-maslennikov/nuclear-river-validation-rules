@@ -47,6 +47,13 @@ namespace NuClear.Messaging.Transports.Kafka
 
                     { "group.id", _settings.GroupId },
 
+                    // performance tricks from denis
+                    { "socket.blocking.max.ms", 1 },
+                    { "fetch.wait.max.ms", 5 },
+                    { "fetch.error.backoff.ms", 5 },
+                    { "fetch.message.max.bytes", 10240 },
+                    { "queued.min.messages", 1000 },
+
                     // manual commit
                     { "enable.auto.commit", false },
 
@@ -74,7 +81,7 @@ namespace NuClear.Messaging.Transports.Kafka
         {
             var currentMessage = (Message)null;
             var eof = false;
-            var idleCount = 2;
+            var idleCount = 3;
 
             try
             {

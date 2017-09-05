@@ -80,6 +80,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                         IReadOnlyCollection<Message> batch;
                         while ((batch = receiver.ReceiveBatch(_receiverSettings.BatchSize)).Count != 0)
                         {
+                            Console.WriteLine($"Received {batch.Count} messages, offset {batch.Last().Offset}");
+
                             // пока что хардкод для advertisement и heartbeat
                             var dtos = batch
                                 .Where(x => x.Value != null)
@@ -271,7 +273,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         {
             private readonly StringSetting _amsFactsTopics = ConfigFileSetting.String.Required("AmsFactsTopics");
             private readonly StringSetting _pollTimeout = ConfigFileSetting.String.Optional("AmsPollTimeout", "00:00:05");
-            private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 50);
+            private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 5000);
 
             public ReceiverSettings(IConnectionStringSettings connectionStringSettings)
             {
