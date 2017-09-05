@@ -36,10 +36,10 @@ function Get-DBHostMetadata($Context){
 			}
 		}
 		'Edu' {
-			$dbHost = 'uk-erm-edu01'
+			$dbHost = 'uk-erm-edu03'
 		}
 		'Business' {
-			$dbHost = 'uk-erm-edu02'
+			$dbHost = 'uk-erm-edu03'
 		}
 		'Production' {
 			$dbHost = 'uk-sql20\erm'
@@ -71,7 +71,8 @@ function Get-ValidationUrlMetadata($Context){
 					$riverValidationUrl = "https://validation.api.prod.erm.2gis.kz"
 				}
 				default {
-					throw "Unsupported country"
+					$ermValidationUrl = $null
+					$riverValidationUrl = $null
 				}
 			}
 		}

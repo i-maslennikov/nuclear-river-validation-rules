@@ -92,14 +92,14 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                              ChildPositionId = child != null ? child.ChildPositionId : position.Id
                                          };
 
-                // позиция IsContentSales и не указан advertisementId
                 var result =
                     from order in _query.For<Facts::Order>()
                     from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted && x.Id == op.PricePositionId)
+                    from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
                     from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
-                    from p in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.IsContentSales && x.Id == positionChild.ChildPositionId)
-                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.AdvertisementId == null && x.OrderPositionId == op.Id && x.PositionId == p.Id)
+                    from p in _query.For<Facts::Position>().Where(x => x.IsContentSales).Where(x => x.Id == positionChild.ChildPositionId)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
+                    where opa.AdvertisementId == null // позиция IsContentSales и не указан advertisementId
                     select new Order.MissingAdvertisementReference
                     {
                         OrderId = order.Id,
@@ -135,13 +135,21 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
             public IQueryable<Order.MissingOrderPositionAdvertisement> GetSource()
             {
+                var positionChilds = from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => !x.IsCompositionOptional)
+                                     from child in _query.For<Facts::PositionChild>().Where(x => x.MasterPositionId == position.Id).DefaultIfEmpty()
+                                     select new
+                                         {
+                                             PositionId = position.Id,
+                                             ChildPositionId = child != null ? child.ChildPositionId : position.Id
+                                         };
+
                 var result =
                        from order in _query.For<Facts::Order>()
                        from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                       from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted && x.Id == op.PricePositionId)
-                       from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && !x.IsCompositionOptional && x.Id == pp.PositionId)
-                       from childPosition in _query.For<Facts::PositionChild>().Where(x => x.MasterPositionId == position.Id)
-                       from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.ChildPositionId)
+                       from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
+                       from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
+                       from p in _query.For<Facts::Position>().Where(x => x.Id == positionChild.ChildPositionId)
+                       from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
                                          .DefaultIfEmpty()
                        where opa == null // позиция не IsCompositionOptional и нет ни одной продажи
                        select new Order.MissingOrderPositionAdvertisement
@@ -149,7 +157,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                                OrderId = order.Id,
                                OrderPositionId = op.Id,
                                CompositePositionId = pp.PositionId,
-                               PositionId = childPosition.ChildPositionId,
+                               PositionId = p.Id,
                            };
 
                 return result;
