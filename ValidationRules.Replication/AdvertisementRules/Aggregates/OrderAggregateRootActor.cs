@@ -72,12 +72,12 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                    let require = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                                  from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.Id == opa.AdvertisementId)
+                                  from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.AdvertisementId)
                                   from at in _query.For<Facts::AdvertisementTemplate>().Where(x => x.Id == a.AdvertisementTemplateId)
                                   select at.IsAllowedToWhiteList).Any(x => x)
                    let provide = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                                  from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.Id == opa.AdvertisementId)
+                                  from a in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted).Where(x => x.Id == opa.AdvertisementId)
                                   where a.IsSelectedToWhiteList
                                   select (long?)a.Id).FirstOrDefault()
                    select new Order
@@ -131,12 +131,13 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 
                 var result =
                     from order in _query.For<Facts::Order>()
-                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
-                    join pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on op.PricePositionId equals pp.Id
-                    join positionChild in positionChilds on pp.PositionId equals positionChild.PositionId
-                    join p in _query.For<Facts::Position>().Where(x => !x.IsDeleted) on positionChild.ChildPositionId equals p.Id
-                    join template in _query.For<Facts::AdvertisementTemplate>().Where(x => x.IsAdvertisementRequired) on p.AdvertisementTemplateId equals template.Id
-                    join opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.AdvertisementId == null) on new { OrderPositionId = op.Id, PositionId = p.Id } equals new { opa.OrderPositionId, opa.PositionId }
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                    from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
+                    from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
+                    from p in _query.For<Facts::Position>().Where(x => x.Id == positionChild.ChildPositionId)
+                    from template in _query.For<Facts::AdvertisementTemplate>().Where(x => x.IsAdvertisementRequired).Where(x => x.Id == p.AdvertisementTemplateId)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
+                    where opa.AdvertisementId == null // шаблон IsAdvertisementRequired и не указан advertisementId
                     select new Order.MissingAdvertisementReference
                         {
                             OrderId = order.Id,
@@ -171,20 +172,34 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     };
 
             public IQueryable<Order.MissingOrderPositionAdvertisement> GetSource()
-                => from order in _query.For<Facts::Order>()
-                   join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
-                   join pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted) on op.PricePositionId equals pp.Id
-                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && !x.IsCompositionOptional) on pp.PositionId equals position.Id
-                   join childPosition in _query.For<Facts::PositionChild>() on position.Id equals childPosition.MasterPositionId
-                   from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == childPosition.ChildPositionId).DefaultIfEmpty()
-                   where opa == null // позиция не продана
-                   select new Order.MissingOrderPositionAdvertisement
-                   {
-                       OrderId = order.Id,
-                       OrderPositionId = op.Id,
-                       CompositePositionId = pp.PositionId,
-                       PositionId = childPosition.ChildPositionId,
-                   };
+            {
+                var positionChilds = from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where(x => !x.IsCompositionOptional)
+                                     from child in _query.For<Facts::PositionChild>().Where(x => x.MasterPositionId == position.Id).DefaultIfEmpty()
+                                     select new
+                                         {
+                                             PositionId = position.Id,
+                                             ChildPositionId = child != null ? child.ChildPositionId : position.Id
+                                         };
+
+                var result =
+                       from order in _query.For<Facts::Order>()
+                       from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                       from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
+                       from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
+                       from p in _query.For<Facts::Position>().Where(x => x.Id == positionChild.ChildPositionId)
+                       from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
+                                         .DefaultIfEmpty()
+                       where opa == null // позиция не IsCompositionOptional и нет ни одной продажи
+                       select new Order.MissingOrderPositionAdvertisement
+                           {
+                               OrderId = order.Id,
+                               OrderPositionId = op.Id,
+                               CompositePositionId = pp.PositionId,
+                               PositionId = p.Id,
+                           };
+
+                return result;
+            }
 
             public FindSpecification<Order.MissingOrderPositionAdvertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -251,7 +266,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from order in _query.For<Facts::Order>()
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                   join advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted && x.FirmId.HasValue) on opa.AdvertisementId equals advertisement.Id
+                   join advertisement in _query.For<Facts::Advertisement>().Where(x => !x.IsDeleted).Where(x => x.FirmId.HasValue) on opa.AdvertisementId equals advertisement.Id
                    where advertisement.FirmId != order.FirmId // РМ не принадлежит фирме заказа
                    select new Order.AdvertisementMustBelongToFirm
                    {
@@ -324,7 +339,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => from order in GetOrdersFact().Union(GetOrdersPlan())
                    join op in _query.For<Facts::OrderPosition>() on order.Id equals op.OrderId
                    join opa in _query.For<Facts::OrderPositionAdvertisement>() on op.Id equals opa.OrderPositionId
-                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.CategoryCode == Facts::Position.CategoryCodeAdvantageousPurchaseWith2Gis) on opa.PositionId equals position.Id
+                   join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted).Where( x => x.CategoryCode == Facts::Position.CategoryCodeAdvantageousPurchaseWith2Gis) on opa.PositionId equals position.Id
                    join advertisement in _query.For<Facts::Advertisement>() on opa.AdvertisementId equals advertisement.Id
                    join template in _query.For<Facts::AdvertisementTemplate>() on advertisement.AdvertisementTemplateId equals template.Id
                    where opa.AdvertisementId != template.DummyAdvertisementId // РМ не является заглушкой
