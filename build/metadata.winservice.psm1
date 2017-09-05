@@ -27,12 +27,8 @@ function Get-QuartzConfigMetadata ($Context){
 			}
 		}
 		default {
-			switch ($Context.Country){
-				default {
-					$quartzConfigs = @("quartz.$($Context.EnvType).config")
-					$alterQuartzConfigs = @('Templates\quartz.Test.config')
-				}
-			}
+			$quartzConfigs = @("quartz.$($Context.EnvType).config")
+			$alterQuartzConfigs = @('Templates\quartz.Test.config')
 		}
 	}
 

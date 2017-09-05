@@ -19,10 +19,10 @@ function Get-TargetHostsMetadata ($Context) {
 			}
 		}
 		'Edu' {
-			return @{ 'TargetHosts' = @('uk-erm-edu01') }
+			return @{ 'TargetHosts' = @('uk-erm-edu03') }
 		}
 		'Business' {
-			return @{ 'TargetHosts' = @('uk-erm-edu02') }
+			return @{ 'TargetHosts' = @('uk-erm-edu03') }
 		}
 		'Production' {
 			return @{ 'TargetHosts' = @('uk-erm-iis03') }
