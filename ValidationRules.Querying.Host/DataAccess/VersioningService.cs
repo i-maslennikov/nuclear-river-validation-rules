@@ -22,6 +22,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         private const int ErmWaitAttempts = 36; // 3 mimutes
         private const int AmsWaitAttempts = 12; // 1 mimute
         private static readonly TimeSpan WaitInterval = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan AmsSyncInterval = TimeSpan.FromSeconds(20);
 
         private readonly DataConnectionFactory _factory;
 
@@ -32,7 +33,25 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         public async Task<long> WaitForVersion(Guid token)
         {
-            var offset = AmsHelper.GetLatestOffset();
+            long? amsVersion;
+            if (AmsHelper.TryGetLatestMessage(0, out var amsMessage))
+            {
+                var amsSyncInterval = (DateTime.UtcNow - amsMessage.Timestamp.UtcDateTime).Duration();
+                if (amsSyncInterval > AmsSyncInterval)
+                {
+                    throw new TimeoutException($"River clock and Ams clock differs more than {AmsSyncInterval}");
+                }
+
+                amsVersion = await WaitForAmsState(amsMessage.Offset, AmsWaitAttempts, WaitInterval);
+                if (amsVersion == null)
+                {
+                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state failed after {0} attempts", AmsWaitAttempts));
+                }
+            }
+            else
+            {
+                amsVersion = 0;
+            }
 
             var ermVersion = await WaitForErmState(token, ErmWaitAttempts, WaitInterval);
             if (ermVersion == null)
@@ -40,18 +59,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                 throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state failed after {0} attempts", ErmWaitAttempts));
             }
 
-            if (offset != 0)
-            {
-                var amsVersion = await WaitForAmsState(offset, AmsWaitAttempts, WaitInterval);
-                if (amsVersion == null)
-                {
-                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state failed after {0} attempts", AmsWaitAttempts));
-                }
-
-                return ermVersion.Value > amsVersion.Value ? ermVersion.Value : amsVersion.Value;
-            }
-
-            return ermVersion.Value;
+            return ermVersion.Value > amsVersion.Value ? ermVersion.Value : amsVersion.Value;
         }
 
         private async Task<long?> WaitForAmsState(long offset, int waitAttempts, TimeSpan waitInterval)
@@ -127,12 +135,16 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         {
             private static readonly AmsSettings Settings = new AmsSettings();
 
-            public static long GetLatestOffset(int partition = 0)
+            public static bool TryGetLatestMessage(int partition, out Message message)
             {
                 using (var consumer = new Consumer(Settings.Config))
                 {
-                    var offsets = consumer.QueryWatermarkOffsets(new TopicPartition(Settings.Topic, partition), Settings.QueryOffsetsTimeout);
-                    return offsets.High;
+                    var topicPartition = new TopicPartition(Settings.Topic, partition);
+
+                    var offsets = consumer.QueryWatermarkOffsets(topicPartition, Settings.Timeout);
+                    consumer.Assign(new[] { new TopicPartitionOffset(topicPartition, offsets.High - 1) });
+
+                    return consumer.Consume(out message, Settings.Timeout);
                 }
             }
 
@@ -155,7 +167,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
                 public Dictionary<string, object> Config { get; }
                 public string Topic { get; }
-                public TimeSpan QueryOffsetsTimeout { get; } = TimeSpan.FromSeconds(5);
+                public TimeSpan Timeout { get; } = TimeSpan.FromSeconds(5);
             }
         }
     }
