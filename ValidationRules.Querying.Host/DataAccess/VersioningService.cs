@@ -36,10 +36,11 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             long? amsVersion;
             if (AmsHelper.TryGetLatestMessage(0, out var amsMessage))
             {
-                var amsSyncInterval = (DateTime.UtcNow - amsMessage.Timestamp.UtcDateTime).Duration();
-                if (amsSyncInterval > AmsSyncInterval)
+                var utcNow = DateTime.UtcNow;
+                var amsUtcNow = amsMessage.Timestamp.UtcDateTime;
+                if ((utcNow - amsUtcNow).Duration() > AmsSyncInterval)
                 {
-                    throw new TimeoutException($"River clock and Ams clock differs more than {AmsSyncInterval}");
+                    throw new TimeoutException($"River clock {utcNow} and Ams clock {amsUtcNow} differs more than {AmsSyncInterval}");
                 }
 
                 amsVersion = await WaitForAmsState(amsMessage.Offset, AmsWaitAttempts, WaitInterval);
