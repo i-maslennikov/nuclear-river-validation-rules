@@ -37,7 +37,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
             var date = trackedUseCase.Context.Finished.UtcDateTime;
             commands.Add(new IncrementErmStateCommand(new[] { new ErmState(trackedUseCase.Id, date) }));
-            commands.Add(new LogDelayCommand(date));
 
             return new AggregatableMessage<ICommand>
             {

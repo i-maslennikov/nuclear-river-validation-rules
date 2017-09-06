@@ -56,9 +56,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                         var commands = lookup.SelectMany(x => x).ToList();
 
                         var syncEvents = Handle(commands.OfType<ISyncDataObjectCommand>().ToList()).Select(x => new FlowEvent(flow, x)).ToList();
-                        var stateEvents = Handle(commands.OfType<IncrementErmStateCommand>().ToList()).Concat(
-                                          Handle(commands.OfType<LogDelayCommand>().ToList()))
-                                          .Select(x => new FlowEvent(flow, x));
+                        var stateEvents = Handle(commands.OfType<IncrementErmStateCommand>().ToList()).Select(x => new FlowEvent(flow, x));
 
                         using (new TransactionScope(TransactionScopeOption.Suppress))
                             _eventLogger.Log<IEvent>(syncEvents);
@@ -79,27 +77,22 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             }
         }
 
-        private IEnumerable<IEvent> Handle(IReadOnlyCollection<LogDelayCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementErmStateCommand> commands)
         {
             if (!commands.Any())
             {
                 return Array.Empty<IEvent>();
             }
 
-            var eldestEventTime = commands.Min(x => x.EventTime);
+            var eldestEventTime = commands.SelectMany(x => x.States).Min(x => x.UtcDateTime);
             var delta = DateTime.UtcNow - eldestEventTime;
             _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
-            return new IEvent[] { new DelayLoggedEvent(DateTime.UtcNow) };
-        }
 
-        private static IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementErmStateCommand> commands)
-        {
-            if (!commands.Any())
+            return new IEvent[]
             {
-                return Array.Empty<IEvent>();
-            }
-
-            return new IEvent[] { new ErmStateIncrementedEvent(commands.SelectMany(x => x.States)) };
+                new ErmStateIncrementedEvent(commands.SelectMany(x => x.States)),
+                new DelayLoggedEvent(DateTime.UtcNow)
+            };
         }
 
         private IEnumerable<IEvent> Handle(IReadOnlyCollection<ISyncDataObjectCommand> commands)

@@ -23,17 +23,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
         private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
+        private readonly AmsFactsFlowTelemetryPublisher _telemetryPublisher;
         private readonly TransactionOptions _transactionOptions;
 
         public AmsFactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
             SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
+            AmsFactsFlowTelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
             _syncEntityNameActor = syncEntityNameActor;
             _eventLogger = eventLogger;
+            _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
             _transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
         }
@@ -72,15 +75,23 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
             }
         }
 
-        private static IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementAmsStateCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementAmsStateCommand> commands)
         {
             if (!commands.Any())
             {
                 return Array.Empty<IEvent>();
             }
 
+            var eldestEventTime = commands.Min(x => x.State.UtcDateTime);
+            var delta = DateTime.UtcNow - eldestEventTime;
+            _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
+
             var maxAmsState = commands.Select(x => x.State).OrderByDescending(x => x.Offset).First();
-            return new IEvent[] { new AmsStateIncrementedEvent(maxAmsState) };
+            return new IEvent[]
+            {
+                new AmsStateIncrementedEvent(maxAmsState),
+                new DelayLoggedEvent(DateTime.UtcNow)
+            };
         }
 
         private IEnumerable<IEvent> Handle(IReadOnlyCollection<IReplaceDataObjectCommand> commands)
