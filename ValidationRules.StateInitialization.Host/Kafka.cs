@@ -282,7 +282,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             }
 
             public string ClientId { get; } = "ValidationRules.StateInitialization.Host";
-            public string GroupId { get; } = "ValidationRules.StateInitialization.Host";
+
+            // state init не интерферируют друг с другом (можно внести EnvironmentName как альтернативу)
+            public string GroupId { get; } = "ValidationRules.StateInitialization.Host" + Guid.NewGuid();
             public Dictionary<string, object> Config { get; }
 
             public IEnumerable<string> Topics => _amsFactsTopics.Value.Split(',');
