@@ -59,12 +59,12 @@ function Get-AmsFactsTopicsMetadata($Context){
 	switch($Context.EnvType){
 		'Test' {
 			return @{
-				'AmsFactsTopics' = 'ams_okapi_integration.am.validity'
+				'AmsFactsTopics' = 'ams_okapi_migration_1.am.validity'
 			}
 		 }
 		 'Production' {
 			 return @{
-				 # TODO: заполнить
+				 'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
 			 }
 		}
 	}
