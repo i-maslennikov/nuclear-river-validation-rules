@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" is prohibited for: {1} "{{1}}"</value>
+    <value>{0} "{1}" is prohibited for: {2} "{3}"</value>
   </data>
-  <data name="OrderDescriptionTemplate" xml:space="preserve">
-    <value> in the order {{2}}</value>
+  <data name="ADPCheckModeSpecificOrder_MessageTemplate_Order" xml:space="preserve">
+    <value>{0} "{1}" is prohibited for: {2} "{3}" in the order {4}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} "{{0}}" of this Order is the main for the following items: {1} "{{1}}"</value>
+    <value>{0} "{1}" of this Order is the main for the following items: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Item {0} should be present in build in quantity from {1} up to {2}. A quantity of items that can be issued per month {3:MMMM} – {4}</value>
@@ -148,7 +148,7 @@
     <value>Advertising material {1} that does not belong to the company {2} is selected in the item {0}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" is an accompanying item, the main item is not found.</value>
+    <value>{1} "{0}" is an accompanying item, the main item is not found.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
     <value>The contract date cannot be later than the date of signing the order</value>
@@ -163,10 +163,13 @@
     <value>Item "{0}" cannot be sold into category "{1}" of project "{2}"</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" contains reference objects in conflict with reference objects of the following main item: {1} "{{1}}"</value>
+    <value>{0} "{1}" contains reference objects in conflict with reference objects of the following main item: {2} "{3}"</value>
+  </data>
+  <data name="ConflictingPrincipalPositionTemplate_Order" xml:space="preserve">
+    <value>{0} "{1}" contains reference objects in conflict with reference objects of the following main item: {2} "{3}" in the order {4}</value>
   </data>
   <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
-    <value>Discount coupon {{0}} is attached to several items: {0}</value>
+    <value>Discount coupon {0} is attached to several items: </value>
   </data>
   <data name="CpcIsMissing" xml:space="preserve">
     <value>No CPC for item {0} in category {1}</value>
@@ -190,7 +193,7 @@
     <value>For the subdivision {0}, default topic is not specified</value>
   </data>
   <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>For the company {{0}}, an advertising link {0} item {{1}} in the order {{2}} is ordered and it doubles contact of the company.</value>
+    <value>For the company {0}, an advertising link {3} item {1} in the order {2} is ordered and it doubles contact of the company.</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
     <value>Company {0} is deleted.</value>
@@ -208,7 +211,7 @@
     <value>Profile of client's legal entity</value>
   </data>
   <data name="LinkedObjectsMissedInPrincipals" xml:space="preserve">
-    <value>{0} "{{0}}" contains reference objects not available in main items.</value>
+    <value>{0} "{1}" contains reference objects not available in main items.</value>
   </data>
   <data name="MoreThanOneDefaultTheme" xml:space="preserve">
     <value>For the subdivision {0}, more than one default topic is specified</value>
@@ -220,10 +223,10 @@
     <value>The total amount of payments does not equal the planned amount of the order</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
-    <value>Advertising materials should be specified in the item {{0}} for subitem "{0}"</value>
+    <value>Advertising materials should be specified in the item {1} for subitem "{1}"</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
-    <value>At least one reference object should be specified in item {{0}} for subitem '{0}'</value>
+    <value>At least one reference object should be specified in item {0} for subitem '{1}'</value>
   </data>
   <data name="OrderCheckHasReleases" xml:space="preserve">
     <value>The order is prepared for the period for which a build is already made. Please specify different dates for order placement.</value>
@@ -307,7 +310,7 @@
     <value>There is not enough money to create order. You need: {0}. There are: {1}.</value>
   </data>
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
-    <value>In the item {{0}}, there are categories that are not referenced to the company division in the city of order destination: {0}</value>
+    <value>In the item {0}, there are categories that are not referenced to the company division in the city of order destination: </value>
   </data>
   <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
     <value>Advertising material {0} has unspecified required element {1}</value>
@@ -337,7 +340,7 @@
     <value>The order {0} cannot have sales in the topic {1}, since the topic is not valid for the whole period of placement</value>
   </data>
   <data name="ThemeSalesExceedsLimit" xml:space="preserve">
-    <value>Too many sales for the topic {{0}}. {0} items are sold instead of {1} possible.</value>
+    <value>Too many sales for the topic {0}. {1} items are sold instead of {2} possible.</value>
   </data>
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
     <value>The topic {0} uses the deleted category {1}.</value>
@@ -349,9 +352,9 @@
     <value>No work is specified for the order</value>
   </data>
   <data name="TooManyAdvertisementForCategory" xml:space="preserve">
-    <value>Too many advertisements ordered in the category {{0}}: Ordered {0}, permitted not more than {1}.</value>
+    <value>Too many advertisements ordered in the category {0}: Ordered {1}, permitted not more than {2}.</value>
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
-    <value>For the company {{0}}, too big number of categories is set - {0}. Maximum permitted number - {1}.</value>
+    <value>For the company {0}, too big number of categories is set - {1}. Maximum permitted number - {2}.</value>
   </data>
 </root>

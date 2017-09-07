@@ -18,9 +18,12 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             // todo: сортировки нет в требованиях, сделана для соответствия erm
             var orderPositionReferences = references.GetMany<EntityTypeOrderPosition>().OrderBy(x => x.Reference.Id);
 
+            var templateWithVariableParameterCount =
+                Resources.CouponIsBoundToMultiplePositionTemplate + string.Join(", ", orderPositionReferences.Select((x, i) => "{" + (i + 1) + "}"));
+
             return new MessageComposerResult(
                 orderReference,
-                string.Format(Resources.CouponIsBoundToMultiplePositionTemplate, string.Join(", ", orderPositionReferences.Select((x, i) => "{" + (i + 1) + "}"))),
+                templateWithVariableParameterCount,
                 new [] { advertisementReference }.Concat(orderPositionReferences).ToArray());
         }
 

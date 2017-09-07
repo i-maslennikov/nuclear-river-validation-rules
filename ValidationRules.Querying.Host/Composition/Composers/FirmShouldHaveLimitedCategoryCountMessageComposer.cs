@@ -18,8 +18,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 firmReference,
-                string.Format(Resources.TooManyCategorieForFirm, categoryCount.Actual, categoryCount.Allowed),
-                firmReference);
+                Resources.TooManyCategorieForFirm,
+                firmReference,
+                categoryCount.Actual,
+                categoryCount.Allowed);
         }
 
         // Может быть несколько разных сообщений

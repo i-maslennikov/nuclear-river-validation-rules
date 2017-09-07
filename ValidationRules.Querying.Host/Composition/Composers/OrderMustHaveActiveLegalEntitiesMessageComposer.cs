@@ -36,7 +36,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                string.Format(Resources.OrderReferencesInactiveEntities, string.Join(", ", parameters)));
+                Resources.OrderReferencesInactiveEntities,
+                string.Join(", ", parameters));
         }
     }
 }

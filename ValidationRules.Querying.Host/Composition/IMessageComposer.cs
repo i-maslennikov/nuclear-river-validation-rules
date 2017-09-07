@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -17,6 +19,22 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             MainReference = mainReference;
             Template = template;
             References = references;
+        }
+
+        public MessageComposerResult(NamedReference mainReference, string template, params object[] args)
+        {
+            var index = 0;
+            var templateParams = args.Select(x => x is NamedReference ? $"{{{index++}}}" : x).ToArray();
+            var references = args.OfType<NamedReference>().ToArray();
+
+            MainReference = mainReference;
+            Template = string.Format(template, templateParams);
+            References = references;
+        }
+
+        public MessageComposerResult(NamedReference mainReference, string template)
+            :this(mainReference, template, Array.Empty<NamedReference>())
+        {
         }
 
         public NamedReference MainReference { get; set; }

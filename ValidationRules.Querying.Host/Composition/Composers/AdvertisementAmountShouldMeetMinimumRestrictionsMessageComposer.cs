@@ -17,13 +17,12 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                string.Format(
-                    Resources.AdvertisementAmountShortErrorMessage,
-                    dto.Name.ClearBrackets(),
-                    dto.Min,
-                    dto.Max,
-                    dto.Month,
-                    dto.Count));
+                Resources.AdvertisementAmountShortErrorMessage,
+                dto.Name.ClearBrackets(),
+                dto.Min,
+                dto.Max,
+                dto.Month,
+                dto.Count);
         }
 
         public IEnumerable<Message> Distinct(IEnumerable<Message> messages)

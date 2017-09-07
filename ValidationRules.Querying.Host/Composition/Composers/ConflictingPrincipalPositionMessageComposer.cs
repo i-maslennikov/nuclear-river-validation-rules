@@ -18,8 +18,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             {
                 return new MessageComposerResult(
                     dependent.Order,
-                    string.Format(Resources.ConflictingPrincipalPositionTemplate + Resources.OrderDescriptionTemplate, dependent.PositionPrefix, principal.PositionPrefix),
+                    Resources.ConflictingPrincipalPositionTemplate_Order,
+                    dependent.PositionPrefix,
                     dependent,
+                    principal.PositionPrefix,
                     principal,
                     principal.Order);
             }
@@ -27,8 +29,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             {
                 return new MessageComposerResult(
                     dependent.Order,
-                    string.Format(Resources.ConflictingPrincipalPositionTemplate, dependent.PositionPrefix, principal.PositionPrefix),
+                    Resources.ConflictingPrincipalPositionTemplate,
+                    dependent.PositionPrefix,
                     dependent,
+                    principal.PositionPrefix,
                     principal);
             }
         }

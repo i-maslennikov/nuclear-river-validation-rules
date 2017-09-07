@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" je zakázána pro: {1} "{{1}}"</value>
+    <value>{0} "{1}" je zakázána pro: {2} "{3}"</value>
   </data>
-  <data name="OrderDescriptionTemplate" xml:space="preserve">
-    <value> v objednávce {{2}}</value>
+  <data name="ADPCheckModeSpecificOrder_MessageTemplate_Order" xml:space="preserve">
+    <value>{0} "{1}" je zakázána pro: {2} "{3}" v objednávce {4}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} "{{0}}" této objednávky je hlavní pro následující položky: {1} "{{1}}"</value>
+    <value>{0} "{1}" této objednávky je hlavní pro následující položky: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Potřebný počet pozice {0} ve sborce je od {1} do {2}. Povolený počet pozic ve vydání za měsíc je {3:MMMM} - {4}</value>
@@ -148,7 +148,7 @@
     <value>V položce {0} byl vybrán reklamní materiál {1}, který nenáleží firmě {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" je průvodní položka, hlavní položka nebyla nalezena.</value>
+    <value>{1} "{0}" je průvodní položka, hlavní položka nebyla nalezena.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
     <value>Smlouva nesmí být podepsána později než objednávka</value>
@@ -163,10 +163,13 @@
     <value>Pozici "{0}" nelze prodat do rubriky "{1}" v projektu "{2}"</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" obsahuje vázané objekty, které kolidují s vázanými objekty následující hlavní položky: {1} "{{1}}"</value>
+    <value>{0} "{{1}" obsahuje vázané objekty, které kolidují s vázanými objekty následující hlavní položky: {2} "{3}"</value>
+  </data>
+  <data name="ConflictingPrincipalPositionTemplate_Order" xml:space="preserve">
+    <value>{0} "{1}" obsahuje vázané objekty, které kolidují s vázanými objekty následující hlavní položky: {2} "{3}" v objednávce {4}</value>
   </data>
   <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
-    <value>Poukaz na slevu {{0}} je připojen k několika položkám: {0}</value>
+    <value>Poukaz na slevu {0} je připojen k několika položkám: </value>
   </data>
   <data name="CpcIsMissing" xml:space="preserve">
     <value>Pro pozici {0} do rubriky {1} nebyla uvedena Cena za kliknutí</value>
@@ -190,7 +193,7 @@
     <value>U pododdílu {0} není uvedeno výchozí téma</value>
   </data>
   <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>Společnost {{0}} má objednaný reklamní odkaz {0}, položka {{1}} v objednávce {{2}}, u kterého dochází k duplikaci firemního kontaktu.</value>
+    <value>Společnost {0} má objednaný reklamní odkaz {3}, položka {1} v objednávce {2}, u kterého dochází k duplikaci firemního kontaktu.</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
     <value>Firma {0} byla smazána.</value>
@@ -208,7 +211,7 @@
     <value>Profil pr. osoby klienta</value>
   </data>
   <data name="LinkedObjectsMissedInPrincipals" xml:space="preserve">
-    <value>{0} "{{0}}" obsahuje vázané objekty, které chybí v hlavních položkách.</value>
+    <value>{0} "{1}" obsahuje vázané objekty, které chybí v hlavních položkách.</value>
   </data>
   <data name="MoreThanOneDefaultTheme" xml:space="preserve">
     <value>U pododdílu {0} je nastaveno více než jedno výchozí téma</value>
@@ -220,10 +223,10 @@
     <value>Součet na fakturách neodpovídá plánované hodnotě objednávky</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
-    <value>V položce {{0}} je třeba uvést reklamní materiály pro podpoložku „{0}“</value>
+    <value>V položce {0} je třeba uvést reklamní materiály pro podpoložku „{1}“</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
-    <value>V položce {{0}} je třeba uvést alespoň jeden vázaný objekt pro podpoložku '{0}'</value>
+    <value>V položce {0} je třeba uvést alespoň jeden vázaný objekt pro podpoložku '{1}'</value>
   </data>
   <data name="OrderCheckHasReleases" xml:space="preserve">
     <value>Objednávka je zpracována na období, pro které je již utvořena tvorba sestavy. Je třeba uvést jiný termín zveřejnění objednávky.</value>
@@ -307,7 +310,7 @@
     <value>Nemáte dost prostředků k vytvoření objednávky. Je potřeba: {0}. Máte: {1}.</value>
   </data>
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
-    <value>V položce {{0}} jsou rubriky, které nejsou vázány na oddělení organizace cílového města objednávky: {0}</value>
+    <value>V položce {0} jsou rubriky, které nejsou vázány na oddělení organizace cílového města objednávky: </value>
   </data>
   <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
     <value>V reklamním materiálu {0} není vyplněn povinný prvek {1}</value>
@@ -337,7 +340,7 @@
     <value>Objednávka {0} nemůže obsahovat prodej k tématu {1}, protože téma neplatí po celou dobu zveřejnění objednávky</value>
   </data>
   <data name="ThemeSalesExceedsLimit" xml:space="preserve">
-    <value>Příliš mnoho prodejů k tématu {{0}}. Bylo prodáno {0} položek, je možné prodat {1}.</value>
+    <value>Příliš mnoho prodejů k tématu {0}. Bylo prodáno {1} položek, je možné prodat {2}.</value>
   </data>
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
     <value>Téma {0} využívá odstraněnou rubriku {1}.</value>
@@ -349,9 +352,9 @@
     <value>Pro objednávku nebyla zadána práce/úloha</value>
   </data>
   <data name="TooManyAdvertisementForCategory" xml:space="preserve">
-    <value>Do rubriky {{0}} je objednáno příliš mnoho inzerátů: Objednáno {0}, maximální počet {1}.</value>
+    <value>Do rubriky {0} je objednáno příliš mnoho inzerátů: Objednáno {1}, maximální počet {2}.</value>
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
-    <value>U firmy {{0}} bylo zadáno příliš mnoho rubrik - {0}. Maximální počet - {1}.</value>
+    <value>U firmy {0} bylo zadáno příliš mnoho rubrik - {1}. Maximální počet - {2}.</value>
   </data>
 </root>

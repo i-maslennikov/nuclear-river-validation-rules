@@ -19,10 +19,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                string.Format(Resources.FirmContactContainsSponsoredLinkError, website.ClearBrackets()),
+                Resources.FirmContactContainsSponsoredLinkError,
                 firmReference,
                 orderPositionReference,
-                orderReference);
+                orderReference,
+                website.ClearBrackets());
         }
     }
 }
