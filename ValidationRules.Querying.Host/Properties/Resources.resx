@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" является запрещённой для: {1} "{{1}}"</value>
+    <value>{0} "{1}" является запрещённой для: {2} "{3}"</value>
   </data>
-  <data name="OrderDescriptionTemplate" xml:space="preserve">
-    <value> в заказе {{2}}</value>
+  <data name="ADPCheckModeSpecificOrder_MessageTemplate_Order" xml:space="preserve">
+    <value>{0} "{1}" является запрещённой для: {2} "{3}" в заказе {4}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} "{{0}}" данного Заказа является основной для следующих позиций: {1} "{{1}}"</value>
+    <value>{0} "{1}" данного Заказа является основной для следующих позиций: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}</value>
@@ -148,7 +148,7 @@
     <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" является сопутствующей, основная позиция не найдена.</value>
+    <value>{1} "{0}" является сопутствующей, основная позиция не найдена.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
     <value>Договор не может иметь дату подписания позднее даты подписания заказа</value>
@@ -160,13 +160,16 @@
     <value>Юр. лицо исполнителя</value>
   </data>
   <data name="CategoryIsRestrictedForSpecifiedSalesModelError" xml:space="preserve">
-    <value>Позиция "{0}" не может быть продана в рубрику "{1}" проекта "{2}"</value>
+    <value>Позиция "{0}" не может быть продана в рубрику "{1}" проекта "{2}" в выпуск {3:MMMM yyy}</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} "{{1}}"</value>
+    <value>{0} "{1}" содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} "{3}"</value>
+  </data>
+  <data name="ConflictingPrincipalPositionTemplate_Order" xml:space="preserve">
+    <value>{0} "{1}" содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} "{3}" в заказе {4}</value>
   </data>
   <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
-    <value>Купон на скидку {{0}} прикреплён к нескольким позициям: {0}</value>
+    <value>Купон на скидку {0} прикреплён к нескольким позициям: </value>
   </data>
   <data name="CpcIsMissing" xml:space="preserve">
     <value>Для позиции {0} в рубрику {1} отсутствует CPC</value>
@@ -175,7 +178,7 @@
     <value>Для позиции {0} в рубрику {1} указан CPC меньше минимального</value>
   </data>
   <data name="CpcRestrictionIsMissing" xml:space="preserve">
-    <value>Для рубрики {0} в проекте {1} не указан минимальный CPC</value>
+    <value>Для рубрики {0} в проекте {1} в выпуск {2:MMMM yyy} не указан минимальный CPC</value>
   </data>
   <data name="Currency" xml:space="preserve">
     <value>Валюта</value>
@@ -190,7 +193,7 @@
     <value>Для подразделения {0} не указана тематика по умолчанию</value>
   </data>
   <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>Для фирмы {{0}} заказана рекламная ссылка {0} позиция {{1}} в заказе {{2}}, дублирующая контакт фирмы.</value>
+    <value>Для фирмы {0} заказана рекламная ссылка {3} позиция {1} в заказе {2} , дублирующая контакт фирмы.</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
     <value>Фирма {0} удалена.</value>
@@ -208,7 +211,7 @@
     <value>Профиль юр. лица заказчика</value>
   </data>
   <data name="LinkedObjectsMissedInPrincipals" xml:space="preserve">
-    <value>{0} "{{0}}" содержит объекты привязки, отсутствующие в основных позициях.</value>
+    <value>{0} "{1}" содержит объекты привязки, отсутствующие в основных позициях.</value>
   </data>
   <data name="MoreThanOneDefaultTheme" xml:space="preserve">
     <value>Для подразделения {0} установлено более одной тематики по умолчанию</value>
@@ -220,10 +223,10 @@
     <value>Сумма по счетам не совпадает с планируемой суммой заказа</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
-    <value>В позиции {{0}} необходимо указать рекламные материалы для подпозиции "{0}"</value>
+    <value>В позиции {0} необходимо указать рекламные материалы для подпозиции "{1}"</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
-    <value>В позиции {{0}} необходимо указать хотя бы один объект привязки для подпозиции '{0}'</value>
+    <value>В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции '{1}'</value>
   </data>
   <data name="OrderCheckHasReleases" xml:space="preserve">
     <value>Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа.</value>
@@ -307,7 +310,7 @@
     <value>Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}.</value>
   </data>
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
-    <value>В позиции {{0}} задействованы рубрики, не привязанные к отделению организации города назначения заказа: {0}</value>
+    <value>В позиции {0} задействованы рубрики, не привязанные к отделению организации города назначения заказа: </value>
   </data>
   <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
     <value>В рекламном материале {0} не заполнен обязательный элемент {1}</value>
@@ -337,7 +340,7 @@
     <value>Заказ {0} не может иметь продаж в тематику {1}, поскольку тематика действует не весь период размещения заказа</value>
   </data>
   <data name="ThemeSalesExceedsLimit" xml:space="preserve">
-    <value>Слишком много продаж в тематику {{0}}. Продано {0} позиций вместо {1} возможных.</value>
+    <value>Слишком много продаж в тематику {0}. Продано {1} позиций вместо {2} возможных.</value>
   </data>
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
     <value>Тематика {0} использует удаленную рубрику {1}.</value>
@@ -349,12 +352,12 @@
     <value>Для заказа не указана работа</value>
   </data>
   <data name="TooManyAdvertisementForCategory" xml:space="preserve">
-    <value>В рубрику {{0}} заказано слишком много объявлений: Заказано {0}, допустимо не более {1}.</value>
+    <value>В рубрику {0} заказано слишком много объявлений: Заказано {1}, допустимо не более {2}.</value>
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
-    <value>Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}.</value>
+    <value>Для фирмы {0} задано слишком большое число рубрик - {1}. Максимально допустимое - {2}.</value>
   </data>
   <data name="MoreThanOnePremiumBuyHerePositionSoldForAddress" xml:space="preserve">
-    <value>На адрес "{{0}}" фирмы "{{1}}" продано более одной позиции Premium в периоды: {0}</value>
+    <value>На адрес "{0}" фирмы "{1}" продано более одной позиции Premium в периоды: {2}</value>
   </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -11,12 +12,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.AdvertisementElementMustPassReview;
 
-        private static readonly Dictionary<Advertisement.ReviewStatus, string> Formats = new Dictionary<Advertisement.ReviewStatus, string>
-        {
-            { Advertisement.ReviewStatus.Invalid, Resources.OrdersCheckAdvertisementElementWasInvalidated},
-            { Advertisement.ReviewStatus.Draft, Resources.OrdersCheckAdvertisementElementIsDraft},
-        };
-
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
             var orderReference = references.Get<EntityTypeOrder>();
@@ -26,9 +21,22 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                Formats[advertisementElementStatus],
+                GetFormat(advertisementElementStatus),
                 advertisementReference,
                 advertisementElementReference);
+        }
+
+        private static string GetFormat(Advertisement.ReviewStatus reviewStatus)
+        {
+            switch (reviewStatus)
+            {
+                case Advertisement.ReviewStatus.Invalid:
+                    return Resources.OrdersCheckAdvertisementElementWasInvalidated;
+                case Advertisement.ReviewStatus.Draft:
+                    return Resources.OrdersCheckAdvertisementElementIsDraft;
+                default:
+                    throw new ArgumentException(nameof(reviewStatus));
+            }
         }
     }
 }

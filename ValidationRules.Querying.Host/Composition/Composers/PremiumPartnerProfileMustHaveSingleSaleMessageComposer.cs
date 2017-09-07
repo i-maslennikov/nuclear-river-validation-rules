@@ -20,9 +20,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                string.Format(Resources.MoreThanOnePremiumBuyHerePositionSoldForAddress, string.Join(", ", extra.Keys)),
+                Resources.MoreThanOnePremiumBuyHerePositionSoldForAddress,
                 addressReference,
-                firmReference);
+                firmReference,
+                string.Join(", ", extra.Keys));
         }
 
         public IEnumerable<Message> Distinct(IEnumerable<Message> messages)

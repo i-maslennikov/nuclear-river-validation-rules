@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -11,12 +12,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.OrderMustHaveActiveDeal;
 
-        private static readonly Dictionary<DealState, string> Formats = new Dictionary<DealState, string>
-        {
-            { DealState.Missing, Resources.ThereIsNoSpecifiedDealForOrder },
-            { DealState.Inactive, Resources.OrderDealIsInactive }
-        };
-
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
             var orderReference = references.Get<EntityTypeOrder>();
@@ -24,7 +19,20 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                Formats[dealState]);
+                GetFormat(dealState));
+        }
+
+        private static string GetFormat(DealState dealState)
+        {
+            switch (dealState)
+            {
+                case DealState.Missing:
+                    return Resources.ThereIsNoSpecifiedDealForOrder;
+                case DealState.Inactive:
+                    return Resources.OrderDealIsInactive;
+                default:
+                    throw new Exception(nameof(dealState));
+            }
         }
     }
 }

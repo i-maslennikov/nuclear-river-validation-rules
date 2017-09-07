@@ -143,7 +143,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="CheckModes\CheckModeDescriptorFactory.cs" />
     <Compile Include="CheckModes\CheckModeRegistry.cs" />
-    <Compile Include="Composition\StringExtensions.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMaximumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmAddressMustBeLocatedOnTheMapMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />

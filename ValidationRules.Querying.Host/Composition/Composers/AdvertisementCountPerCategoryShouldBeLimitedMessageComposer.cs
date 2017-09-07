@@ -18,8 +18,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 projectReference,
-                string.Format(Resources.TooManyAdvertisementForCategory, dto.Count, dto.Max),
-                categoryReference);
+                Resources.TooManyAdvertisementForCategory,
+                categoryReference,
+                dto.Count,
+                dto.Max);
         }
     }
 }
