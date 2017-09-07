@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -11,14 +12,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
     {
         public MessageTypeCode MessageType => MessageTypeCode.LinkedFirmAddressShouldBeValid;
 
-        private static readonly Dictionary<InvalidFirmAddressState, string> Formats = new Dictionary<InvalidFirmAddressState, string>
-        {
-            { InvalidFirmAddressState.Deleted, Resources.OrderPositionAddressDeleted },
-            { InvalidFirmAddressState.NotActive, Resources.OrderPositionAddressNotActive },
-            { InvalidFirmAddressState.ClosedForAscertainment, Resources.OrderPositionAddressHidden },
-            { InvalidFirmAddressState.NotBelongToFirm, Resources.OrderPositionAddressNotBelongToFirm }
-        };
-
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
             var orderReference = references.Get<EntityTypeOrder>();
@@ -29,9 +22,26 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                Formats[firmAddressState],
+                GetFormat(firmAddressState),
                 orderPositionReference,
                 firmAddressReference);
+        }
+
+        private static string GetFormat(InvalidFirmAddressState firmAddressState)
+        {
+            switch (firmAddressState)
+            {
+                case InvalidFirmAddressState.Deleted:
+                    return Resources.OrderPositionAddressDeleted;
+                case InvalidFirmAddressState.NotActive:
+                    return Resources.OrderPositionAddressNotActive;
+                case InvalidFirmAddressState.ClosedForAscertainment:
+                    return Resources.OrderPositionAddressHidden;
+                case InvalidFirmAddressState.NotBelongToFirm:
+                    return Resources.OrderPositionAddressNotBelongToFirm;
+                default:
+                    throw new Exception(nameof(firmAddressState));
+            }
         }
     }
 }
