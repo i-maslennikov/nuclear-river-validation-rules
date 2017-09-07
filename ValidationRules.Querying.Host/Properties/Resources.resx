@@ -160,7 +160,7 @@
     <value>Юр. лицо исполнителя</value>
   </data>
   <data name="CategoryIsRestrictedForSpecifiedSalesModelError" xml:space="preserve">
-    <value>Позиция "{0}" не может быть продана в рубрику "{1}" проекта "{2}"</value>
+    <value>Позиция "{0}" не может быть продана в рубрику "{1}" проекта "{2}" в выпуск {3:MMMM yyy}</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
     <value>{0} "{1}" содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} "{3}"</value>
@@ -178,7 +178,7 @@
     <value>Для позиции {0} в рубрику {1} указан CPC меньше минимального</value>
   </data>
   <data name="CpcRestrictionIsMissing" xml:space="preserve">
-    <value>Для рубрики {0} в проекте {1} не указан минимальный CPC</value>
+    <value>Для рубрики {0} в проекте {1} в выпуск {2:MMMM yyy} не указан минимальный CPC</value>
   </data>
   <data name="Currency" xml:space="preserve">
     <value>Валюта</value>

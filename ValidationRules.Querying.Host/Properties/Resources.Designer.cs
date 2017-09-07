@@ -187,7 +187,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция &quot;{0}&quot; не может быть продана в рубрику &quot;{1}&quot; проекта &quot;{2}&quot;.
+        ///   Looks up a localized string similar to Позиция &quot;{0}&quot; не может быть продана в рубрику &quot;{1}&quot; проекта &quot;{2}&quot; в выпуск {3:MMMM yyy}.
         /// </summary>
         internal static string CategoryIsRestrictedForSpecifiedSalesModelError {
             get {
@@ -241,7 +241,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для рубрики {0} в проекте {1} не указан минимальный CPC.
+        ///   Looks up a localized string similar to Для рубрики {0} в проекте {1} в выпуск {2:MMMM yyy} не указан минимальный CPC.
         /// </summary>
         internal static string CpcRestrictionIsMissing {
             get {

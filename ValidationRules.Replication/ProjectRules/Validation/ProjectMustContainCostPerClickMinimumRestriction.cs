@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -39,8 +40,9 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                     {
                         MessageParams =
                             new MessageParams(
-                                              new Reference<EntityTypeCategory>(req.CategoryId),
-                                              new Reference<EntityTypeProject>(req.ProjectId))
+                                    new Dictionary<string, object> { { "begin", req.Begin } },
+                                    new Reference<EntityTypeCategory>(req.CategoryId),
+                                    new Reference<EntityTypeProject>(req.ProjectId))
                                 .ToXDocument(),
 
                         PeriodStart = req.Begin,
