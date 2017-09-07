@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                 orderPosition.Order,
                 Resources.OrderCheckCompositePositionMustHaveAdvertisements,
                 orderPosition,
-                orderPositionAdvertisement.Name.ClearBrackets());
+                orderPositionAdvertisement.Name);
         }
     }
 }

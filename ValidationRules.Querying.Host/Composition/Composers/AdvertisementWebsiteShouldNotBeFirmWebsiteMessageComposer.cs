@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                 firmReference,
                 orderPositionReference,
                 orderReference,
-                website.ClearBrackets());
+                website);
         }
     }
 }

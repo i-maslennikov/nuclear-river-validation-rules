@@ -24,8 +24,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         public MessageComposerResult(NamedReference mainReference, string template, params object[] args)
         {
             var index = 0;
-            var templateParams = args.Select(x => x is NamedReference ? $"{{{index++}}}" : x).ToArray();
             var references = args.OfType<NamedReference>().ToArray();
+            var templateParams = args.Select(x => PrepareTemplateParameter(x, ref index)).ToArray();
 
             MainReference = mainReference;
             Template = string.Format(template, templateParams);
@@ -40,5 +40,18 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         public NamedReference MainReference { get; set; }
         public string Template { get; set; }
         public NamedReference[] References { get; set; }
+
+        private static object PrepareTemplateParameter(object p, ref int index)
+        {
+            switch (p)
+            {
+                case string str:
+                    return str.Replace("{", "{{").Replace("}", "}}");
+                case NamedReference reference:
+                    return $"{{{index++}}}";
+                default:
+                    return p;
+            }
+        }
     }
 }

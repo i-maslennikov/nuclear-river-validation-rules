@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             return new MessageComposerResult(
                 orderReference,
                 Resources.AdvertisementAmountShortErrorMessage,
-                dto.Name.ClearBrackets(),
+                dto.Name,
                 dto.Min,
                 dto.Max,
                 dto.Month,
