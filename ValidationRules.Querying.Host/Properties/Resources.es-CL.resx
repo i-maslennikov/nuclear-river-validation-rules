@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ADPCheckModeSpecificOrder_MessageTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" está prohibido para: {1} "{{1}}"</value>
+    <value>{0} "{1}" está prohibido para: {2} "{3}"</value>
   </data>
-  <data name="OrderDescriptionTemplate" xml:space="preserve">
-    <value> en la orden {{2}}</value>
+  <data name="ADPCheckModeSpecificOrder_MessageTemplate_Order" xml:space="preserve">
+    <value>{0} "{1}" está prohibido para: {2} "{3}" en la orden {4}</value>
   </data>
   <data name="ADPValidation_Template" xml:space="preserve">
-    <value>{0} "{{0}}" esta orden es la principal para las siguientes posiciones: {1} "{{1}}"</value>
+    <value>{0} "{1}" esta orden es la principal para las siguientes posiciones: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>La posición {0} debe estar presente en la compilación en cantidad desde {1} hasta {2}. La cantidad de las posiciones que pueden ser publicadas al mes {3:MMMM} - {4}</value>
@@ -133,7 +133,7 @@
     <value>La posición {0} se ha creado para una dirección en blanco {1}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" es una posición asociada, la posición principal no encontrada.</value>
+    <value>{1} "{0}" es una posición asociada, la posición principal no encontrada.</value>
   </data>
   <data name="BargainSignedLaterThanOrder" xml:space="preserve">
     <value>La fecha del contrato no puede ser posterior a la fecha de la firma del pedido</value>
@@ -148,7 +148,10 @@
     <value>Posición "{0}" no puede estar vendida en la categoría "{1}" del proyecto "{2}"</value>
   </data>
   <data name="ConflictingPrincipalPositionTemplate" xml:space="preserve">
-    <value>{0} "{{0}}" contiene un enlace con los objetos que entran en conflicto con el enlace de los objetos de la siguiente posición principal: {1} "{{1}}"</value>
+    <value>{0} "{1}" contiene un enlace con los objetos que entran en conflicto con el enlace de los objetos de la siguiente posición principal: {2} "{3}"</value>
+  </data>
+  <data name="ConflictingPrincipalPositionTemplate_Order" xml:space="preserve">
+    <value>{0} "{1}" contiene un enlace con los objetos que entran en conflicto con el enlace de los objetos de la siguiente posición principal: {2} "{3}" en la orden {4}</value>
   </data>
   <data name="CpcIsMissing" xml:space="preserve">
     <value>Para la posición {0} en la categoría {1} falta CPC</value>
@@ -187,7 +190,7 @@
     <value>Perfil de persona jurídica del cliente</value>
   </data>
   <data name="LinkedObjectsMissedInPrincipals" xml:space="preserve">
-    <value>{0} "{{0}}" contiene un enlace con los objetos que no están entre las posiciones principales.</value>
+    <value>{0} "{1}" contiene un enlace con los objetos que no están entre las posiciones principales.</value>
   </data>
   <data name="MoreThanOneDefaultTheme" xml:space="preserve">
     <value>Se ha especificado más de un tema predeterminado para la sucursal {0}</value>
@@ -199,10 +202,10 @@
     <value>El importe según las facturas no coincide con el importe de la orden planificado</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveAdvertisements" xml:space="preserve">
-    <value>En la posición {{0}} se deben especificar los materiales publicitarios para la subposición "{0}"</value>
+    <value>En la posición {0} se deben especificar los materiales publicitarios para la subposición "{1}"</value>
   </data>
   <data name="OrderCheckCompositePositionMustHaveLinkingObject" xml:space="preserve">
-    <value>En la posición {{0}} se deben especificar el enlace al menos con un objeto para la subposición {0}</value>
+    <value>En la posición {0} se deben especificar el enlace al menos con un objeto para la subposición {1}</value>
   </data>
   <data name="OrderCheckHasReleases" xml:space="preserve">
     <value>La orden se ha establecido para el periodo cuya compilación ya se ha realizado. Se requiere especificar otras fechas de publicación de la orden.</value>
@@ -277,7 +280,7 @@
     <value>No hay suficiente dinero para crear la orden. Necesitan: {0} Disponible: {1}.</value>
   </data>
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
-    <value>En la posición {{0}} están utilizadas las categorías que no están enlazadas con ninguna sucursal de la ciudad de destino de la orden: {0}</value>
+    <value>En la posición {0} están utilizadas las categorías que no están enlazadas con ninguna sucursal de la ciudad de destino de la orden: </value>
   </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
     <value>En la posición de la lista de precios {0} se deben especificar la cantidad mínima de publicidad en un lanzamiento.</value>
@@ -301,7 +304,7 @@
     <value>La orden {0} no puede tener ventas en el tema {1}, ya que el tema es vigente durante todo el periodo de publicación de la orden</value>
   </data>
   <data name="ThemeSalesExceedsLimit" xml:space="preserve">
-    <value>Demasiadas ventas en el tema {{0}}. Vendidas {0} posiciones en lugar de {1} posibles.</value>
+    <value>Demasiadas ventas en el tema {0}. Vendidas {1} posiciones en lugar de {2} posibles.</value>
   </data>
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
     <value>El tema {0} utiliza una categoría eliminada {1}.</value>
@@ -310,9 +313,9 @@
     <value>No está especificado ningún trabajo para el orden</value>
   </data>
   <data name="TooManyAdvertisementForCategory" xml:space="preserve">
-    <value>Se han contratado demasiados anuncios en la categoría {{0}}: Contratado {0}, permitido no más de {1}.</value>
+    <value>Se han contratado demasiados anuncios en la categoría {0}: Contratado {1}, permitido no más de {2}.</value>
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
-    <value>Para la empresa {{0}} se ha establecido un número demasiado elevado de categorías: {0}. Máximo permitido: {1}.</value>
+    <value>Para la empresa {0} se ha establecido un número demasiado elevado de categorías: {1}. Máximo permitido: {2}.</value>
   </data>
 </root>

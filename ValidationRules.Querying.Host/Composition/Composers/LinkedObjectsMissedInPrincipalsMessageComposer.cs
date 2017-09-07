@@ -16,7 +16,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderPosition.Order,
-                string.Format(Resources.LinkedObjectsMissedInPrincipals, orderPosition.PositionPrefix),
+                Resources.LinkedObjectsMissedInPrincipals,
+                orderPosition.PositionPrefix,
                 orderPosition);
         }
     }

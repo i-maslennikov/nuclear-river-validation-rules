@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -53,6 +54,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
+                                                new Dictionary<string, object> { { "begin", MonthStart(2) } },
                                                 new Reference<EntityTypeCategory>(13),
                                                 new Reference<EntityTypeProject>(0))
                                     .ToXDocument(),

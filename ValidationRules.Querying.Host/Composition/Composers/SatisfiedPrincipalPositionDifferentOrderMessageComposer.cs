@@ -16,13 +16,12 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 principal.Order,
-                string.Format(
-                    Resources.ADPValidation_Template,
-                    principal.PositionPrefix,
-                    dependent.PositionPrefix),
+                Resources.ADPValidation_Template,
+                principal.PositionPrefix,
                 principal,
+                dependent.PositionPrefix,
                 dependent,
-                dependent.Order);
+                dependent.Order); // todo: почему не используется последний параметр?
         }
     }
 }

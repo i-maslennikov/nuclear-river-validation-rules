@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
@@ -10,13 +11,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
     public sealed class LinkedFirmShouldBeValidMessageComposer : IMessageComposer, IDistinctor
     {
-        private static readonly Dictionary<InvalidFirmState, string> Formats = new Dictionary<InvalidFirmState, string>
-            {
-                { InvalidFirmState.Deleted, Resources.FirmIsDeleted },
-                { InvalidFirmState.ClosedForever, Resources.FirmIsPermanentlyClosed },
-                { InvalidFirmState.ClosedForAscertainment, Resources.OrderFirmHiddenForAscertainmentTemplate }
-            };
-
         public MessageTypeCode MessageType => MessageTypeCode.LinkedFirmShouldBeValid;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
@@ -27,7 +21,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                Formats[firmState],
+                GetFormat(firmState),
                 firmReference);
         }
 
@@ -37,6 +31,21 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             // Сейчас объект привязки - заказ, но Erm при массовой проверке выводит только первое сообщение для фирмы (даже если заказов несколько).
             // Этот distinct сделан только для соответствия поведению erm, от него можно будет отказаться.
             return messages.GroupBy(x => x.References.Get<EntityTypeFirm>().Id, x => x).Select(x => x.OrderBy(y => y.OrderId).First());
+        }
+
+        private static string GetFormat(InvalidFirmState firmState)
+        {
+            switch (firmState)
+            {
+                case InvalidFirmState.Deleted:
+                    return Resources.FirmIsDeleted;
+                case InvalidFirmState.ClosedForever:
+                    return Resources.FirmIsPermanentlyClosed;
+                case InvalidFirmState.ClosedForAscertainment:
+                    return Resources.OrderFirmHiddenForAscertainmentTemplate;
+                default:
+                    throw new Exception(nameof(firmState));
+            }
         }
     }
 }

@@ -15,7 +15,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             var projectReference = references.Get<EntityTypeProject>();
             var themeCount = extra.ReadProjectThemeCount();
 
-            var themeCountMessage = themeCount == 0 ? Resources.DefaultThemeIsNotSpecified : Resources.MoreThanOneDefaultTheme;
+            var themeCountMessage =
+                themeCount == 0 ? Resources.DefaultThemeIsNotSpecified : Resources.MoreThanOneDefaultTheme;
 
             return new MessageComposerResult(
                 projectReference,

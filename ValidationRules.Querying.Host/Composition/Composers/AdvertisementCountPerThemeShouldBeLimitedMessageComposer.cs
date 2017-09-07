@@ -18,8 +18,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 projectReference,
-                string.Format(Resources.ThemeSalesExceedsLimit, dto.Count, dto.Max),
-                themeReference);
+                Resources.ThemeSalesExceedsLimit,
+                themeReference,
+                dto.Count,
+                dto.Max);
         }
     }
 }
