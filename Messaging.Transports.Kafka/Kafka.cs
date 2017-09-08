@@ -81,7 +81,7 @@ namespace NuClear.Messaging.Transports.Kafka
         {
             var currentMessage = (Message)null;
             var eof = false;
-            var idleCount = 3;
+            var idleCount = 5;
 
             try
             {
