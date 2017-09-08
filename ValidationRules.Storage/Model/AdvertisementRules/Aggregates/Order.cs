@@ -46,5 +46,11 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
 
             public int ReviewState { get; set; }
         }
+
+        public enum AdvertisementReviewState
+        {
+            Draft = 1,
+            Invalid = 2,
+        }
     }
 }

@@ -318,4 +318,13 @@
   <data name="TooManyCategorieForFirm" xml:space="preserve">
     <value>Para la empresa {0} se ha establecido un número demasiado elevado de categorías: {1}. Máximo permitido: {2}.</value>
   </data>
+  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
+    <value>En la posición {0} se ha seleccionado el material {1} no perteneciente a la empresa {2}</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
+    <value>El material publicitario "{0}" está en estado de "Borrador"</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
+    <value>El material publicitario "{0}" contiene errores de validación</value>
+  </data>
 </root>
