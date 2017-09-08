@@ -67,6 +67,9 @@ function Get-AmsFactsTopicsMetadata($Context){
 				 'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
 			 }
 		}
+		default {
+			return @{}
+		}
 	}
 }
 
