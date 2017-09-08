@@ -96,6 +96,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             return DateTime.Parse(message["begin"]);
         }
 
+        public static int ReadAdvertisementReviewState(this IReadOnlyDictionary<string, string> message)
+        {
+            return int.Parse(message["reviewState"], CultureInfo.InvariantCulture);
+        }
+
         public sealed class CategoryCountDto
         {
             public int Allowed { get; set; }

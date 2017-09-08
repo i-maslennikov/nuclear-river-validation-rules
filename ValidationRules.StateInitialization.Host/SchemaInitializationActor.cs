@@ -85,10 +85,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 				new[] { "WebApp" });
 
 		public static SchemaInitializationCommand Facts { get; }
-			= new SchemaInitializationCommand(Schema.Facts, DataObjectTypesProviderFactory.FactTypes, FactsConnectionStringIdentity.Instance, 
+			= new SchemaInitializationCommand(Schema.Facts,
+                new HashSet<Type>(DataObjectTypesProviderFactory.FactTypes.Concat(DataObjectTypesProviderFactory.AmsFactTypes)), FactsConnectionStringIdentity.Instance,
 				new[] { "Facts" });
 
-		public static SchemaInitializationCommand Aggregates { get; }
+        public static SchemaInitializationCommand Aggregates { get; }
 			= new SchemaInitializationCommand(Schema.Aggregates, DataObjectTypesProviderFactory.AggregateTypes, FactsConnectionStringIdentity.Instance,
 				new[] { "AccountAggregates", "AdvertisementAggregates", "ConsistencyAggregates", "FirmAggregates", "PriceAggregates", "ProjectAggregates", "ThemeAggregates" });
 
@@ -96,5 +97,4 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 			= new SchemaInitializationCommand(Schema.Messages, DataObjectTypesProviderFactory.MessagesTypes, FactsConnectionStringIdentity.Instance, 
 				new[] { "Messages" });
 	}
-
 }

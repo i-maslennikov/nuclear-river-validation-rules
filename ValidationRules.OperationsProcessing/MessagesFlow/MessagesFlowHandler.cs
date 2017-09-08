@@ -35,7 +35,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 
         public IEnumerable<StageResult> Handle(IReadOnlyDictionary<Guid, List<IAggregatableMessage>> processingResultsMap)
         {
-
             try
             {
                 using (Probe.Create("ETL3 Transforming"))

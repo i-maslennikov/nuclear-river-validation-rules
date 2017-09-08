@@ -19,14 +19,18 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
         public OrderAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
-            IBulkRepository<Order> bulkRepository,
-            IBulkRepository<Order.MissingAdvertisementReference> missingAdvertisementReferenceBulkRepository,
-            IBulkRepository<Order.MissingOrderPositionAdvertisement> missingOrderPositionAdvertisementBulkRepository)
+            IBulkRepository<Order> repository,
+            IBulkRepository<Order.MissingAdvertisementReference> missingAdvertisementReferenceRepository,
+            IBulkRepository<Order.MissingOrderPositionAdvertisement> missingOrderPositionAdvertisementRepository,
+            IBulkRepository<Order.AdvertisementNotBelongToFirm> advertisementNotBelongToFirmRepository,
+            IBulkRepository<Order.AdvertisementFailedReview> advertisementFailedReviewRepository)
             : base(query, equalityComparerFactory)
         {
-            HasRootEntity(new OrderAccessor(query), bulkRepository,
-                HasValueObject(new MissingAdvertisementReferenceAccessor(query), missingAdvertisementReferenceBulkRepository),
-                HasValueObject(new MissingOrderPositionAdvertisementAccessor(query), missingOrderPositionAdvertisementBulkRepository));
+            HasRootEntity(new OrderAccessor(query), repository,
+                HasValueObject(new MissingAdvertisementReferenceAccessor(query), missingAdvertisementReferenceRepository),
+                HasValueObject(new MissingOrderPositionAdvertisementAccessor(query), missingOrderPositionAdvertisementRepository),
+                HasValueObject(new AdvertisementNotBelongToFirmAccessor(query), advertisementNotBelongToFirmRepository),
+                HasValueObject(new AdvertisementFailedReviewAccessor(query), advertisementFailedReviewRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -43,11 +47,12 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     {
                         MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
                         MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
+                        MessageTypeCode.AdvertisementMustPassReview,
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
                     };
 
             public IQueryable<Order> GetSource()
                 => from order in _query.For<Facts::Order>()
-                   from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                    select new Order
                        {
                            Id = order.Id,
@@ -167,6 +172,87 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.MissingOrderPositionAdvertisement>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class AdvertisementNotBelongToFirmAccessor : DataChangesHandler<Order.AdvertisementNotBelongToFirm>, IStorageBasedDataObjectAccessor<Order.AdvertisementNotBelongToFirm>
+        {
+            private readonly IQuery _query;
+
+            public AdvertisementNotBelongToFirmAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementMustBelongToFirm,
+                    };
+
+            public IQueryable<Order.AdvertisementNotBelongToFirm> GetSource()
+            {
+                var result =
+                    from order in _query.For<Facts::Order>()
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
+                    from advertisement in _query.For<Facts::Advertisement>().Where(x => x.Id == opa.AdvertisementId && x.FirmId != order.FirmId)
+                    select new Order.AdvertisementNotBelongToFirm
+                        {
+                            OrderId = order.Id,
+                            AdvertisementId = advertisement.Id,
+                            OrderPositionId = op.Id,
+                            PositionId = opa.PositionId,
+                            ExpectedFirmId = order.FirmId,
+                            ActualFirmId = advertisement.FirmId,
+                        };
+
+                return result;
+            }
+
+            public FindSpecification<Order.AdvertisementNotBelongToFirm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.AdvertisementNotBelongToFirm>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class AdvertisementFailedReviewAccessor : DataChangesHandler<Order.AdvertisementFailedReview>, IStorageBasedDataObjectAccessor<Order.AdvertisementFailedReview>
+        {
+            private readonly IQuery _query;
+
+            public AdvertisementFailedReviewAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AdvertisementMustPassReview,
+                    };
+
+            public IQueryable<Order.AdvertisementFailedReview> GetSource()
+            {
+                var result =
+                    from order in _query.For<Facts::Order>()
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
+                    from a in _query.For<Facts::Advertisement>().Where(x => x.StateCode != Facts::Advertisement.Ok).Where(x => x.Id == opa.AdvertisementId)
+                    select new Order.AdvertisementFailedReview
+                        {
+                            OrderId = order.Id,
+                            AdvertisementId = a.Id,
+                            ReviewState = a.StateCode,
+                        };
+
+                return result;
+            }
+
+            public FindSpecification<Order.AdvertisementFailedReview> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.AdvertisementFailedReview>(x => aggregateIds.Contains(x.OrderId));
             }
         }
     }

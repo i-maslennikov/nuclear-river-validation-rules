@@ -34,6 +34,10 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
                         ConfigurationManager.ConnectionStrings["Erm"].ConnectionString
                     },
                     {
+                        AmsConnectionStringIdentity.Instance,
+                        ConfigurationManager.ConnectionStrings["Ams"].ConnectionString
+                    },
+                    {
                         FactsConnectionStringIdentity.Instance,
                         ConfigurationManager.ConnectionStrings["Facts"].ConnectionString
                     },

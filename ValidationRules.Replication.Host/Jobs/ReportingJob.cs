@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using Confluent.Kafka;
 
 using Microsoft.ServiceBus;
 
@@ -11,8 +15,10 @@ using NuClear.Security.API.Context;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
+using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 
 using Quartz;
 
@@ -23,11 +29,14 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
     {
         private readonly ITelemetryPublisher _telemetry;
         private readonly IServiceBusSettingsFactory _serviceBusSettingsFactory;
+        private readonly IAmsSettingsFactory _amsSettingsFactory;
+
         private readonly ITracer _tracer;
 
         public ReportingJob(
             ITelemetryPublisher telemetry,
             IServiceBusSettingsFactory serviceBusSettingsFactory,
+            IAmsSettingsFactory amsSettingsFactory,
             IUserContextManager userContextManager,
             IUserAuthenticationService userAuthenticationService,
             IUserAuthorizationService userAuthorizationService,
@@ -35,6 +44,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             : base(userContextManager, userAuthenticationService, userAuthorizationService, tracer)
         {
             _tracer = tracer;
+            _amsSettingsFactory = amsSettingsFactory;
             _telemetry = telemetry;
             _serviceBusSettingsFactory = serviceBusSettingsFactory;
         }
@@ -42,9 +52,10 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         protected override void ExecuteInternal(IJobExecutionContext context)
         {
             WithinErrorLogging(ReportMemoryUsage);
-            WithinErrorLogging(ReportQueueLength<FactsFlow, PrimaryProcessingQueueLengthIdentity>);
-            WithinErrorLogging(ReportQueueLength<AggregatesFlow, FinalProcessingAggregateQueueLengthIdentity>);
-            WithinErrorLogging(ReportQueueLength<MessagesFlow, MessagesQueueLengthIdentity>);
+            WithinErrorLogging(ReportServiceBusQueueLength<FactsFlow, PrimaryProcessingQueueLengthIdentity>);
+            WithinErrorLogging(ReportServiceBusQueueLength<AggregatesFlow, FinalProcessingAggregateQueueLengthIdentity>);
+            WithinErrorLogging(ReportServiceBusQueueLength<MessagesFlow, MessagesQueueLengthIdentity>);
+            WithinErrorLogging(() => ReportKafkaOffset<AmsFactsFlow, AmsFactsQueueLengthIdentity>());
         }
 
         private void WithinErrorLogging(Action action)
@@ -66,7 +77,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             _telemetry.Publish<ProcessWorkingSetIdentity>(process.WorkingSet64);
         }
 
-        private void ReportQueueLength<TFlow, TTelemetryIdentity>()
+        private void ReportServiceBusQueueLength<TFlow, TTelemetryIdentity>()
             where TFlow : MessageFlowBase<TFlow>, new()
             where TTelemetryIdentity : TelemetryIdentityBase<TTelemetryIdentity>, new()
         {
@@ -77,10 +88,40 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             _telemetry.Publish<TTelemetryIdentity>(subscription.MessageCountDetails.ActiveMessageCount);
         }
 
-        private class MessagesQueueLengthIdentity : TelemetryIdentityBase<MessagesQueueLengthIdentity>
+        private void ReportKafkaOffset<TFlow, TTelemetryIdentity>(int partition = 0)
+            where TFlow : MessageFlowBase<TFlow>, new()
+            where TTelemetryIdentity : TelemetryIdentityBase<TTelemetryIdentity>, new()
+        {
+            var flow = MessageFlowBase<TFlow>.Instance;
+            var settings = _amsSettingsFactory.CreateReceiverSettings(flow);
+
+            var privateConfig = new Dictionary<string, object>(settings.Config)
+            {
+                {"client.id", settings.ClientId },
+                {"group.id", settings.GroupId }
+            };
+            using (var consumer = new Consumer(privateConfig))
+            {
+                var topicPartition = new TopicPartition(settings.Topics.First(), partition);
+                var topicOffsets = consumer.QueryWatermarkOffsets(topicPartition, settings.PollTimeout);
+                var consumerOffset = consumer.Committed(new[] { topicPartition }, settings.PollTimeout).First();
+
+                _telemetry.Publish<TTelemetryIdentity>(topicOffsets.High - consumerOffset.Offset);
+            }
+        }
+
+        private sealed class MessagesQueueLengthIdentity : TelemetryIdentityBase<MessagesQueueLengthIdentity>
         {
             public override int Id => 0;
             public override string Description => nameof(MessagesQueueLengthIdentity);
         }
+
+        private sealed class AmsFactsQueueLengthIdentity : TelemetryIdentityBase<AmsFactsQueueLengthIdentity>
+        {
+            public override int Id => 0;
+
+            public override string Description => nameof(AmsFactsQueueLengthIdentity);
+        }
+
     }
 }

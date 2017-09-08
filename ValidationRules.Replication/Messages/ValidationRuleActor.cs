@@ -31,6 +31,7 @@ namespace NuClear.ValidationRules.Replication.Messages
         private readonly IQuery _query;
         private readonly IRepository<Version> _versionRepository;
         private readonly IBulkRepository<Version.ErmState> _ermStatesRepository;
+        private readonly IRepository<Version.AmsState> _amsStatesRepository;
         private readonly IBulkRepository<Version.ValidationResult> _validationResultRepository;
         private readonly Dictionary<MessageTypeCode, IValidationResultAccessor> _accessors;
         private readonly IEqualityComparer<Version.ValidationResult> _equalityComparer;
@@ -40,6 +41,7 @@ namespace NuClear.ValidationRules.Replication.Messages
         public ValidationRuleActor(IQuery query,
                                    IRepository<Version> versionRepository,
                                    IBulkRepository<Version.ErmState> ermStatesRepository,
+                                   IRepository<Version.AmsState> amsStatesRepository,
                                    IBulkRepository<Version.ValidationResult> validationResultRepository,
                                    IEqualityComparerFactory equalityComparerFactory)
         {
@@ -47,6 +49,7 @@ namespace NuClear.ValidationRules.Replication.Messages
             _versionRepository = versionRepository;
             _ermStatesRepository = ermStatesRepository;
             _validationResultRepository = validationResultRepository;
+            _amsStatesRepository = amsStatesRepository;
             _accessors = new ValidationRuleRegistry(query).CreateAccessors().ToDictionary(x => (MessageTypeCode)x.MessageTypeId, x => x);
             _equalityComparer = equalityComparerFactory.CreateCompleteComparer<Version.ValidationResult>();
             _cache = ValidationResultCache.Instance;
@@ -92,12 +95,13 @@ namespace NuClear.ValidationRules.Replication.Messages
                 }
             }
 
-            var ermStates = commands.OfType<CreateNewVersionCommand>().SelectMany(x => x.States).Select(x => new Version.ErmState { Token = x });
+            var ermStates = commands.OfType<StoreErmStateCommand>().SelectMany(x => x.States).ToList();
+            var amsStates = commands.OfType<StoreAmsStateCommand>().Select(x => x.State).ToList();
             if (newValidationResults.Count > 0 || resolvedValidationResults.Count > 0)
             {
                 using (Probe.Create("Create New Version"))
                 {
-                    CreateVersion(currentVersion + 1, ermStates, newValidationResults.Concat(resolvedValidationResults.ApplyResolved()));
+                    CreateVersion(currentVersion + 1, newValidationResults.Concat(resolvedValidationResults.ApplyResolved()).ToList(), ermStates, amsStates);
                     _cache.ApplyPatch(newValidationResults, resolvedValidationResults);
                 }
             }
@@ -105,7 +109,7 @@ namespace NuClear.ValidationRules.Replication.Messages
             {
                 using (Probe.Create("Update Existing Version"))
                 {
-                    UpdateVersion(currentVersion, ermStates);
+                    UpdateVersion(currentVersion, ermStates, amsStates);
                 }
             }
 
@@ -140,7 +144,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                 List<Version.ValidationResult> sourceObjects;
 
                 using (Probe.Create("Query Source"))
-                using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, _transactionOptions))
+                using (new TransactionScope(TransactionScopeOption.RequiresNew, _transactionOptions))
                 {
                     // Запрос к данным посылаем вне транзакции, иначе будет DTC
                     var accessor = _accessors[ruleCode];
@@ -161,23 +165,45 @@ namespace NuClear.ValidationRules.Replication.Messages
             }
         }
 
-        private void CreateVersion(long id, IEnumerable<Version.ErmState> ermStates, IEnumerable<Version.ValidationResult> results)
+        private void CreateVersion(long id, IReadOnlyCollection<Version.ValidationResult> results, IReadOnlyCollection<ErmState> ermStates, IReadOnlyCollection<AmsState> amsStates)
         {
-            var version = new Version { Id = id, Date = DateTime.UtcNow };
-            _versionRepository.Add(version);
+            _versionRepository.Add(new Version { Id = id, UtcDateTime = DateTime.UtcNow });
             _versionRepository.Save();
 
-            _validationResultRepository.Create(results.ApplyVersionId(id));
-            _ermStatesRepository.Create(ermStates.ApplyVersionId(id));
+            if (results.Count != 0)
+            {
+                _validationResultRepository.Create(results.ApplyVersionId(id));
+            }
+
+            if (ermStates.Count != 0)
+            {
+                _ermStatesRepository.Create(ermStates.Select(x => new Version.ErmState { VersionId = id, Token = x.Token, UtcDateTime = x.UtcDateTime }));
+            }
+
+            if (amsStates.Count != 0)
+            {
+                var maxAmsState = amsStates.OrderByDescending(x => x.Offset).First();
+                _amsStatesRepository.Add(new Version.AmsState { VersionId = id, Offset = maxAmsState.Offset, UtcDateTime = maxAmsState.UtcDateTime });
+                _amsStatesRepository.Save();
+            }
         }
 
-        private void UpdateVersion(long id, IEnumerable<Version.ErmState> ermStates)
+        private void UpdateVersion(long id, IReadOnlyCollection<ErmState> ermStates, IReadOnlyCollection<AmsState> amsStates)
         {
-            var version = new Version { Id = id, Date = DateTime.UtcNow };
-            _versionRepository.Update(version);
+            _versionRepository.Update(new Version { Id = id, UtcDateTime = DateTime.UtcNow });
             _versionRepository.Save();
 
-            _ermStatesRepository.Create(ermStates.ApplyVersionId(id));
+            if (ermStates.Count != 0)
+            {
+                _ermStatesRepository.Create(ermStates.Select(x => new Version.ErmState { VersionId = id, Token = x.Token, UtcDateTime = x.UtcDateTime }));
+            }
+
+            if (amsStates.Count != 0)
+            {
+                var maxAmsState = amsStates.OrderByDescending(x => x.Offset).First();
+                _amsStatesRepository.Add(new Version.AmsState { VersionId = id, Offset = maxAmsState.Offset, UtcDateTime = maxAmsState.UtcDateTime });
+                _amsStatesRepository.Save();
+            }
         }
 
         private sealed class ValidationRuleRegistry
@@ -221,6 +247,8 @@ namespace NuClear.ValidationRules.Replication.Messages
                     // AdvertisementRules
                     new OrderPositionAdvertisementMustBeCreated(_query),
                     new OrderPositionAdvertisementMustHaveAdvertisement(_query),
+                    new AdvertisementMustBelongToFirm(_query),
+                    new AdvertisementMustPassReview(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),

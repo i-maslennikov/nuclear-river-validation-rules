@@ -33,6 +33,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 // AdvertisementAggregates
                 .Aggregate<AdvertisementAggregates::Order>(
                     x => x.Match<Facts::Order>()
+                          .DependOn<Facts::Advertisement>()
                           .DependOn<Facts::OrderPosition>()
                           .DependOn<Facts::OrderPositionAdvertisement>()
                           .DependOn<Facts::Position>()

@@ -24,24 +24,6 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             _factory = factory;
         }
 
-        public bool TryGetVersion(Guid state, out long versionId)
-        {
-            using (var connection = _factory.CreateDataConnection(ConfigurationString))
-            {
-                var stateReached = connection.GetTable<Version.ErmState>().SingleOrDefault(x => x.Token == state);
-                versionId = stateReached?.VersionId ?? 0;
-                return stateReached != null;
-            }
-        }
-
-        public long GetLatestVersion()
-        {
-            using (var connection = _factory.CreateDataConnection(ConfigurationString))
-            {
-                return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
-            }
-        }
-
         public IReadOnlyCollection<Version.ValidationResult> GetResults(long versionId, IReadOnlyCollection<long> orderIds, long? projectId, DateTime start, DateTime end, ICheckModeDescriptor checkModeDescriptor)
         {
             using (var connection = _factory.CreateDataConnection(ConfigurationString))

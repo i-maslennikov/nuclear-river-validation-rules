@@ -49,6 +49,7 @@ using NuClear.Messaging.DI.Factories.Unity.Stages;
 using NuClear.Messaging.DI.Factories.Unity.Transformers;
 using NuClear.Messaging.DI.Factories.Unity.Transformers.Resolvers;
 using NuClear.Messaging.DI.Factories.Unity.Validators;
+using NuClear.Messaging.Transports.Kafka;
 using NuClear.Messaging.Transports.ServiceBus;
 using NuClear.Messaging.Transports.ServiceBus.API;
 using NuClear.Messaging.Transports.ServiceBus.LockRenewer;
@@ -70,7 +71,6 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Replication.Core.Settings;
 using NuClear.Replication.OperationsProcessing.Metadata;
 using NuClear.Replication.OperationsProcessing.Transports;
-using NuClear.Replication.OperationsProcessing.Transports.CorporateBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.Replication.OperationsProcessing.Transports.SQLStore;
@@ -92,6 +92,7 @@ using NuClear.Storage.Readings;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
 using NuClear.ValidationRules.Replication.Host.Customs;
@@ -237,7 +238,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             // primary
             container.RegisterInstance(new EntityTypeMappingRegistryBuilder().Create<ErmSubDomain>(), Lifetime.Singleton)
                      .RegisterType<IOperationIdentityRegistry, EmptyOperationIdentityRegistry>(Lifetime.Singleton)
-                     .RegisterTypeWithDependencies(typeof(CorporateBusOperationsReceiver), Lifetime.PerScope, null)
                      .RegisterTypeWithDependencies(typeof(ServiceBusMessageReceiverTelemetryDecorator), Lifetime.PerScope, null)
                      .RegisterOne2ManyTypesPerTypeUniqueness<IRuntimeTypeModelConfigurator, ProtoBufTypeModelForTrackedUseCaseConfigurator<ErmSubDomain>>(Lifetime.Singleton)
                      .RegisterTypeWithDependencies(typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer), Lifetime.Singleton, null)
@@ -250,6 +250,12 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .RegisterType<IEvent2BrokeredMessageConverter<IEvent>, Event2BrokeredMessageConverter>()
                      .RegisterType<IEventLogger, SequentialEventLogger>()
                      .RegisterType<IServiceBusMessageSender, BatchingServiceBusMessageSender>();
+
+            // kafka receiver
+            container
+                .RegisterType<KafkaReceiver>(Lifetime.Singleton)
+                .RegisterType<IKafkaMessageFlowReceiverFactory, KafkaMessageFlowReceiverFactory>(Lifetime.Singleton)
+                .RegisterType<IAmsSettingsFactory, AmsSettingsFactory>(Lifetime.Singleton);
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(), Lifetime.Singleton)
                             .RegisterType(typeof(ServiceBusMessageFlowReceiver), Lifetime.Singleton)
@@ -355,6 +361,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<ThemeCategory, ThemeCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<ThemeOrganizationUnit, ThemeOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<UnlimitedOrder, UnlimitedOrderAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterMemoryAccessor<Advertisement, AdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
 
                 .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IAggregateActorFactory, UnityAggregateActorFactory>(entryPointSpecificLifetimeManagerFactory());
@@ -364,6 +371,12 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             where TAccessor : IStorageBasedDataObjectAccessor<TFact>, IDataChangesHandler<TFact>
             => container
                 .RegisterType<IStorageBasedDataObjectAccessor<TFact>, TAccessor>(entryPointSpecificLifetimeManagerFactory())
+                .RegisterType<IDataChangesHandler<TFact>, TAccessor>(entryPointSpecificLifetimeManagerFactory());
+
+        private static IUnityContainer RegisterMemoryAccessor<TFact, TAccessor>(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
+            where TAccessor : IMemoryBasedDataObjectAccessor<TFact>, IDataChangesHandler<TFact>
+            => container
+                .RegisterType<IMemoryBasedDataObjectAccessor<TFact>, TAccessor>(entryPointSpecificLifetimeManagerFactory())
                 .RegisterType<IDataChangesHandler<TFact>, TAccessor>(entryPointSpecificLifetimeManagerFactory());
 
         private static IUnityContainer ConfigureReadWriteModels(this IUnityContainer container)

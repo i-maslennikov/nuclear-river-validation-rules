@@ -46,6 +46,8 @@
 
         OrderPositionAdvertisementMustHaveAdvertisement = 41,
         OrderPositionAdvertisementMustBeCreated = 42,
+        AdvertisementMustBelongToFirm = 44,
+        AdvertisementMustPassReview = 47,
 
         ProjectMustContainCostPerClickMinimumRestriction = 13,
         OrderMustUseCategoriesOnlyAvailableInProject = 51,

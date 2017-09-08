@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Replication.Core;
@@ -12,51 +11,39 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 {
     public sealed class MessagesFlowAccumulator : MessageProcessingContextAccumulatorBase<MessagesFlow, EventMessage, AggregatableMessage<ICommand>>
     {
-        private readonly ICommandFactory _commandFactory;
-
-        public MessagesFlowAccumulator()
-        {
-            _commandFactory = new MessagesFlowCommandFactory();
-        }
-
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
         {
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = _commandFactory.CreateCommands(message.Event).ToList()
+                Commands = CommandFactory.CreateCommands(message.Event)
             };
         }
 
-        private sealed class MessagesFlowCommandFactory : ICommandFactory
+        private static class CommandFactory
         {
-            public IEnumerable<ICommand> CreateCommands(IEvent @event)
+            public static IReadOnlyCollection<ICommand> CreateCommands(IEvent @event)
             {
-                var stateIncrementedEvent = @event as AggregatesStateIncrementedEvent;
-                if (stateIncrementedEvent != null)
+                switch (@event)
                 {
-                    return new[] { new CreateNewVersionCommand(stateIncrementedEvent.IncludedTokens) };
-                }
+                    case AmsStateIncrementedEvent amsStateIncrementedEvent:
+                        return new[] { new StoreAmsStateCommand(amsStateIncrementedEvent.State) };
 
-                var aggregatesDelayLoggedEvent = @event as AggregatesDelayLoggedEvent;
-                if (aggregatesDelayLoggedEvent != null)
-                {
-                    return new[] { new LogDelayCommand(aggregatesDelayLoggedEvent.EventTime) };
-                }
+                    case ErmStateIncrementedEvent ermStateIncrementedEvent:
+                        return new[] { new StoreErmStateCommand(ermStateIncrementedEvent.States) };
 
-                var resultOutdatedEvent = @event as ResultOutdatedEvent;
-                if (resultOutdatedEvent != null)
-                {
-                    return new[] { new RecalculateValidationRuleCompleteCommand(resultOutdatedEvent.Rule) };
-                }
+                    case DelayLoggedEvent delayLoggedEvent:
+                        return new[] { new LogDelayCommand(delayLoggedEvent.EventTime) };
 
-                var resultPartiallyOutdatedEvent = @event as ResultPartiallyOutdatedEvent;
-                if (resultPartiallyOutdatedEvent != null)
-                {
-                    return new[] { new RecalculateValidationRulePartiallyCommand(resultPartiallyOutdatedEvent.Rule, resultPartiallyOutdatedEvent.OrderIds) };
-                }
+                    case ResultOutdatedEvent resultOutdatedEvent:
+                        return new[] { new RecalculateValidationRuleCompleteCommand(resultOutdatedEvent.Rule) };
 
-                throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                    case ResultPartiallyOutdatedEvent resultPartiallyOutdatedEvent:
+                        return new[] { new RecalculateValidationRulePartiallyCommand(resultPartiallyOutdatedEvent.Rule, resultPartiallyOutdatedEvent.OrderIds) };
+
+                    default:
+                        throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                }
             }
         }
     }

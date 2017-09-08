@@ -10,6 +10,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Storage.API.Readings;
 using NuClear.Tracing.API;
+using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Erm;
 
@@ -21,23 +22,21 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
         private readonly IQuery _query;
         private readonly ITracer _tracer;
-        private readonly ICommandFactory _commandFactory;
 
         public FactsFlowAccumulator(IQuery query, ITracer tracer)
         {
             _query = query;
             _tracer = tracer;
-            _commandFactory = new FactsFlowCommandFactory();
         }
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase trackedUseCase)
         {
             WaitForTucToBeCommitted(trackedUseCase.Id);
 
-            var commands = _commandFactory.CreateCommands(new TrackedUseCaseEvent(trackedUseCase)).ToList();
+            var commands = CommandFactory.CreateCommands(trackedUseCase).ToList();
 
-            commands.Add(new IncrementStateCommand(new[] { trackedUseCase.Id }));
-            commands.Add(new LogDelayCommand(trackedUseCase.Context.Finished.UtcDateTime));
+            var date = trackedUseCase.Context.Finished.UtcDateTime;
+            commands.Add(new IncrementErmStateCommand(new[] { new ErmState(trackedUseCase.Id, date) }));
 
             return new AggregatableMessage<ICommand>
             {
@@ -66,26 +65,19 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             _tracer.Warn($"Ignored TUC {id} after {TotalWaitMilliseconds}ms waiting");
         }
 
-        private sealed class FactsFlowCommandFactory : ICommandFactory
+        private static class CommandFactory
         {
-            public IEnumerable<ICommand> CreateCommands(IEvent @event)
+            public static IEnumerable<ICommand> CreateCommands(TrackedUseCase trackedUseCase)
             {
-                var importFactsFromErmEvent = @event as TrackedUseCaseEvent;
-                if (importFactsFromErmEvent != null)
-                {
-                    var changes = importFactsFromErmEvent.TrackedUseCase.Operations.SelectMany(x => x.AffectedEntities.Changes);
-                    return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys));
-                }
-
-                throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                var changes = trackedUseCase.Operations.SelectMany(x => x.AffectedEntities.Changes);
+                return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys));
             }
 
             private static IEnumerable<ICommand> CommandsForEntityType(int entityTypeId, IEnumerable<long> ids)
             {
                 var commands = Enumerable.Empty<ICommand>();
 
-                IReadOnlyCollection<Type> factTypes;
-                if (EntityTypeMap.TryGetFactTypes(entityTypeId, out factTypes))
+                if (EntityTypeMap.TryGetFactTypes(entityTypeId, out IReadOnlyCollection<Type> factTypes))
                 {
                     var syncDataObjectCommands = from factType in factTypes
                                                  from id in ids
@@ -96,16 +88,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
                 return commands;
             }
-        }
-
-        private sealed class TrackedUseCaseEvent : IEvent
-        {
-            public TrackedUseCaseEvent(TrackedUseCase trackedUseCase)
-            {
-                TrackedUseCase = trackedUseCase;
-            }
-
-            public TrackedUseCase TrackedUseCase { get; }
         }
     }
 }

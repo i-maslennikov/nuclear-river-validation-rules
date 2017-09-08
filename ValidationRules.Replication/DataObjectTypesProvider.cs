@@ -58,6 +58,14 @@ namespace NuClear.ValidationRules.Replication
                     };
             }
 
+            if (typeof(IReplaceDataObjectCommand).IsAssignableFrom(typeof(TCommand)))
+            {
+                return new[]
+                    {
+                        typeof(Advertisement)
+                    };
+            }
+
             throw new ArgumentException($"Unkown command type {typeof(TCommand).FullName}");
         }
     }

@@ -4,9 +4,9 @@ using NuClear.Replication.Core;
 
 namespace NuClear.ValidationRules.Replication.Events
 {
-    public sealed class AggregatesDelayLoggedEvent : IEvent
+    public sealed class DelayLoggedEvent : IEvent
     {
-        public AggregatesDelayLoggedEvent(DateTime eventTime)
+        public DelayLoggedEvent(DateTime eventTime)
         {
             EventTime = eventTime;
         }

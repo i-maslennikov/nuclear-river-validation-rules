@@ -321,4 +321,10 @@
   <data name="MoreThanOnePremiumBuyHerePositionSoldForAddress" xml:space="preserve">
     <value>На адрес "{0}" фирмы "{1}" продано более одной позиции Premium в периоды: {2}</value>
   </data>
+  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
+    <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
+  </data>
+  <data name="AdvertisementMustPassReview" xml:space="preserve">
+    <value>Рекламный материал {0} не прошёл модерацию</value>
+  </data>
 </root>
