@@ -50,7 +50,6 @@
         AdvertisementMustPassReview = 47,
 
         ProjectMustContainCostPerClickMinimumRestriction = 13,
-        ProjectMustContainCostPerClickMinimumRestrictionMass = 50,
         OrderMustUseCategoriesOnlyAvailableInProject = 51,
         OrderMustNotIncludeReleasedPeriod = 52,
         OrderPositionCostPerClickMustNotBeLessMinimum = 53,
@@ -71,5 +70,7 @@
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
 
         FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder = 68,
+
+        PremiumPartnerProfileMustHaveSingleSale = 71,
     }
 }

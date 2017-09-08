@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -26,10 +27,12 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                 from restriction in query.For<Project.SalesModelRestriction>().Where(x => x.End > order.Begin && order.End > x.Begin && x.ProjectId == order.ProjectId)
                 from adv in query.For<Order.CategoryAdvertisement>().Where(x => x.IsSalesModelRestrictionApplicable).Where(x => x.OrderId == order.Id && x.CategoryId == restriction.CategoryId)
                 where restriction.SalesModel != adv.SalesModel
+                let begin = order.Begin > restriction.Begin ? order.Begin : restriction.Begin
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
+                                    new Dictionary<string, object> { { "begin", begin } },
                                     new Reference<EntityTypeCategory>(adv.CategoryId),
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                         new Reference<EntityTypeOrderPosition>(adv.OrderPositionId),
@@ -38,7 +41,7 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
                                     new Reference<EntityTypeProject>(order.ProjectId))
                                 .ToXDocument(),
 
-                        PeriodStart = order.Begin > restriction.Begin ? order.Begin : restriction.Begin,
+                        PeriodStart = begin,
                         PeriodEnd = order.End < restriction.End ? order.End : restriction.End,
                         OrderId = order.Id,
                     };

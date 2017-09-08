@@ -12,6 +12,7 @@ using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
+using Order = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates.Order;
 
 namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 {
@@ -24,6 +25,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             IBulkRepository<Order.FirmOrganiationUnitMismatch> invalidFirmRepository,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
             IBulkRepository<Order.NotApplicapleForDesktopPosition> notApplicapleForDesktopPositionRepository,
+            IBulkRepository<Order.PremiumPartnerProfilePosition> premiumPartnerProfilePositionRepository,
             IBulkRepository<Order.SelfAdvertisementPosition> selfAdvertisementPositionRepository)
             : base(query, equalityComparerFactory)
         {
@@ -31,6 +33,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 HasValueObject(new OrderFirmOrganiationUnitMismatchAccessor(query), invalidFirmRepository),
                 HasValueObject(new OrderInvalidFirmAccessor(query), orderInvalidFirmRepository),
                 HasValueObject(new NotApplicapleForDesktopPositionAccessor(query), notApplicapleForDesktopPositionRepository),
+                HasValueObject(new PremiumPartnerProfilePositionAccessor(query), premiumPartnerProfilePositionRepository),
                 HasValueObject(new SelfAdvertisementPositionAccessor(query), selfAdvertisementPositionRepository));
         }
 
@@ -162,6 +165,47 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.FirmOrganiationUnitMismatch>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class PremiumPartnerProfilePositionAccessor : DataChangesHandler<Order.PremiumPartnerProfilePosition>, IStorageBasedDataObjectAccessor<Order.PremiumPartnerProfilePosition>
+        {
+            private readonly IQuery _query;
+
+            public PremiumPartnerProfilePositionAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale,
+                    };
+
+            public IQueryable<Order.PremiumPartnerProfilePosition> GetSource()
+            {
+                var premiumPositions =
+                    from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodePremiumAdvertising)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.PositionId == position.Id)
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
+                    select new { op.OrderId };
+
+                var addressPositions =
+                    from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodePremiumAdvertisingAddress)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.FirmAddressId.HasValue).Where(x => x.PositionId == position.Id)
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
+                    from fa in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId.Value) // Не хочется прописывать в зависимостях, поскольку FirmId не меняется, а на пересчётах можно сэкономить
+                    where premiumPositions.Any(x => x.OrderId == op.OrderId)
+                    select new Order.PremiumPartnerProfilePosition { OrderId = op.OrderId, FirmAddressId = opa.FirmAddressId.Value, FirmId = fa.FirmId };
+
+                return addressPositions;
+            }
+
+            public FindSpecification<Order.PremiumPartnerProfilePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.PremiumPartnerProfilePosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

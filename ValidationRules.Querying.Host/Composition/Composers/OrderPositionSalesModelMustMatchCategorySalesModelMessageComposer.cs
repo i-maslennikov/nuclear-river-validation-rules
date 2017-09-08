@@ -16,13 +16,15 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             var orderPositionReference = references.Get<EntityTypeOrderPosition>();
             var categoryReference = references.Get<EntityTypeCategory>();
             var projectReference = references.Get<EntityTypeProject>();
+            var begin = extra.ReadBeginDate();
 
             return new MessageComposerResult(
                 orderReference,
                 Resources.CategoryIsRestrictedForSpecifiedSalesModelError,
                 orderPositionReference,
                 categoryReference,
-                projectReference);
+                projectReference,
+                begin);
         }
     }
 }

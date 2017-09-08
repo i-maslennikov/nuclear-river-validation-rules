@@ -51,7 +51,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderPositionAdvertisementMustBeCreated, 22 },
                             { MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement, 22 },
                             { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 49 },
-                            { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass, 49 },
                             { MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject, 8 },
                             { MessageTypeCode.OrderMustNotIncludeReleasedPeriod, 17 },
                             { MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum, 48 },
@@ -67,6 +66,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
                             { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder, 29 },
+                            { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 50 },
                     }.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
 
         public static int ToErmRuleCode(this int riverMessageTypeCode)

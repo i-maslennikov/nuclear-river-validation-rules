@@ -61,7 +61,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; является запрещённой для: {1} &quot;{{1}}&quot;.
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; является запрещённой для: {2} &quot;{3}&quot;.
         /// </summary>
         internal static string ADPCheckModeSpecificOrder_MessageTemplate {
             get {
@@ -70,7 +70,16 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; данного Заказа является основной для следующих позиций: {1} &quot;{{1}}&quot;.
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; является запрещённой для: {2} &quot;{3}&quot; в заказе {4}.
+        /// </summary>
+        internal static string ADPCheckModeSpecificOrder_MessageTemplate_Order {
+            get {
+                return ResourceManager.GetString("ADPCheckModeSpecificOrder_MessageTemplate_Order", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; данного Заказа является основной для следующих позиций: {2} &quot;{3}&quot;.
         /// </summary>
         internal static string ADPValidation_Template {
             get {
@@ -151,7 +160,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция &quot;{0}&quot; не может быть продана в рубрику &quot;{1}&quot; проекта &quot;{2}&quot;.
+        ///   Looks up a localized string similar to Позиция &quot;{0}&quot; не может быть продана в рубрику &quot;{1}&quot; проекта &quot;{2}&quot; в выпуск {3:MMMM yyy}.
         /// </summary>
         internal static string CategoryIsRestrictedForSpecifiedSalesModelError {
             get {
@@ -160,11 +169,20 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {1} &quot;{{1}}&quot;.
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} &quot;{3}&quot;.
         /// </summary>
         internal static string ConflictingPrincipalPositionTemplate {
             get {
                 return ResourceManager.GetString("ConflictingPrincipalPositionTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} &quot;{3}&quot; в заказе {4}.
+        /// </summary>
+        internal static string ConflictingPrincipalPositionTemplate_Order {
+            get {
+                return ResourceManager.GetString("ConflictingPrincipalPositionTemplate_Order", resourceCulture);
             }
         }
         
@@ -187,7 +205,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для рубрики {0} в проекте {1} не указан минимальный CPC.
+        ///   Looks up a localized string similar to Для рубрики {0} в проекте {1} в выпуск {2:MMMM yyy} не указан минимальный CPC.
         /// </summary>
         internal static string CpcRestrictionIsMissing {
             get {
@@ -205,7 +223,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Не найден действующий для заказа прайс-лист.
+        ///   Looks up a localized string similar to Позиции не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа..
         /// </summary>
         internal static string CurrentPriceNotFound {
             get {
@@ -232,7 +250,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Фирма {0} удалена.
+        ///   Looks up a localized string similar to Фирма {0} удалена..
         /// </summary>
         internal static string FirmIsDeleted {
             get {
@@ -250,7 +268,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой.
+        ///   Looks up a localized string similar to В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой..
         /// </summary>
         internal static string InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions {
             get {
@@ -277,7 +295,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; содержит объекты привязки, отсутствующие в основных позициях..
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, отсутствующие в основных позициях..
         /// </summary>
         internal static string LinkedObjectsMissedInPrincipals {
             get {
@@ -295,7 +313,16 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to У юр. лица клиента отсутствует профиль.
+        ///   Looks up a localized string similar to На адрес &quot;{0}&quot; фирмы &quot;{1}&quot; продано более одной позиции Premium в периоды: {2}.
+        /// </summary>
+        internal static string MoreThanOnePremiumBuyHerePositionSoldForAddress {
+            get {
+                return ResourceManager.GetString("MoreThanOnePremiumBuyHerePositionSoldForAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to У юр. лица клиента отсутствует профиль..
         /// </summary>
         internal static string MustMakeLegalPersonProfile {
             get {
@@ -313,7 +340,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {{0}} необходимо указать рекламные материалы для подпозиции &quot;{0}&quot;.
+        ///   Looks up a localized string similar to В позиции {0} необходимо указать рекламные материалы для подпозиции &quot;{1}&quot;.
         /// </summary>
         internal static string OrderCheckCompositePositionMustHaveAdvertisements {
             get {
@@ -322,7 +349,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {{0}} необходимо указать хотя бы один объект привязки для подпозиции &apos;{0}&apos;.
+        ///   Looks up a localized string similar to В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции &apos;{1}&apos;.
         /// </summary>
         internal static string OrderCheckCompositePositionMustHaveLinkingObject {
             get {
@@ -331,7 +358,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа.
+        ///   Looks up a localized string similar to Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа..
         /// </summary>
         internal static string OrderCheckHasReleases {
             get {
@@ -340,7 +367,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Указана некорректная дата начала размещения.
+        ///   Looks up a localized string similar to Указана некорректная дата начала размещения..
         /// </summary>
         internal static string OrderCheckIncorrectBeginDistributionDate {
             get {
@@ -349,7 +376,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Указана некорректная дата окончания размещения.
+        ///   Looks up a localized string similar to Указана некорректная дата окончания размещения..
         /// </summary>
         internal static string OrderCheckIncorrectEndDistributionDate {
             get {
@@ -394,7 +421,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {{0}} задействованы рубрики, не привязанные к отделению организации города назначения заказа: {0}.
+        ///   Looks up a localized string similar to В позиции {0} задействованы рубрики, не привязанные к отделению организации города назначения заказа: .
         /// </summary>
         internal static string OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit {
             get {
@@ -435,15 +462,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrderDealIsInactive {
             get {
                 return ResourceManager.GetString("OrderDealIsInactive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to  в заказе {{2}}.
-        /// </summary>
-        internal static string OrderDescriptionTemplate {
-            get {
-                return ResourceManager.GetString("OrderDescriptionTemplate", resourceCulture);
             }
         }
         
@@ -547,7 +565,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Заказ не имеет привязки к лицевому счёту.
+        ///   Looks up a localized string similar to Заказ не имеет привязки к лицевому счёту..
         /// </summary>
         internal static string OrdersCheckOrderHasNoAccount {
             get {
@@ -565,7 +583,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск.
+        ///   Looks up a localized string similar to В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск..
         /// </summary>
         internal static string PricePositionHasNoMinAdvertisementAmount {
             get {
@@ -574,7 +592,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа.
+        ///   Looks up a localized string similar to У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа..
         /// </summary>
         internal static string ProfileBargainEndDateIsLessThanSignDate {
             get {
@@ -628,7 +646,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Слишком много продаж в тематику {{0}}. Продано {0} позиций вместо {1} возможных.
+        ///   Looks up a localized string similar to Слишком много продаж в тематику {0}. Продано {1} позиций вместо {2} возможных..
         /// </summary>
         internal static string ThemeSalesExceedsLimit {
             get {
@@ -637,7 +655,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Тематика {0} использует удаленную рубрику {1}.
+        ///   Looks up a localized string similar to Тематика {0} использует удаленную рубрику {1}..
         /// </summary>
         internal static string ThemeUsesInactiveCategory {
             get {
@@ -655,7 +673,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В рубрику {{0}} заказано слишком много объявлений: Заказано {0}, допустимо не более {1}.
+        ///   Looks up a localized string similar to В рубрику {0} заказано слишком много объявлений: Заказано {1}, допустимо не более {2}..
         /// </summary>
         internal static string TooManyAdvertisementForCategory {
             get {
@@ -664,7 +682,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для фирмы {{0}} задано слишком большое число рубрик - {0}. Максимально допустимое - {1}..
+        ///   Looks up a localized string similar to Для фирмы {0} задано слишком большое число рубрик - {1}. Максимально допустимое - {2}..
         /// </summary>
         internal static string TooManyCategorieForFirm {
             get {

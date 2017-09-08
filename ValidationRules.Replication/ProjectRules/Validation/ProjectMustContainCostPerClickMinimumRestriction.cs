@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -26,26 +27,28 @@ namespace NuClear.ValidationRules.Replication.ProjectRules.Validation
             var requiredRestrictions =
                 from order in query.For<Order>()
                 from bid in query.For<Order.CostPerClickAdvertisement>().Where(x => x.OrderId == order.Id)
-                select new { OrderId = order.Id, order.ProjectId, order.Begin, order.End, bid.CategoryId };
+                let nextRelease = query.For<Project.NextRelease>().FirstOrDefault(x => x.ProjectId == order.ProjectId).Date
+                let referenceDate = nextRelease > order.Begin ? nextRelease : order.Begin
+                where referenceDate < order.End
+                select new { OrderId = order.Id, order.ProjectId, Begin = referenceDate, order.End, bid.CategoryId };
 
             var ruleResults =
                 from req in requiredRestrictions
-                let restrictionExist = query.For<Project.CostPerClickRestriction>().Any(x => x.ProjectId == req.ProjectId &&
-                                                                                             x.CategoryId == req.CategoryId &&
-                                                                                             x.Begin <= req.Begin && req.Begin < x.End)
+                let restrictionExist = query.For<Project.CostPerClickRestriction>().Any(x => x.ProjectId == req.ProjectId && x.CategoryId == req.CategoryId && x.Begin <= req.Begin && x.End > req.Begin)
                 where !restrictionExist
                 select new Version.ValidationResult
-                {
-                    MessageParams =
+                    {
+                        MessageParams =
                             new MessageParams(
+                                    new Dictionary<string, object> { { "begin", req.Begin } },
                                     new Reference<EntityTypeCategory>(req.CategoryId),
                                     new Reference<EntityTypeProject>(req.ProjectId))
                                 .ToXDocument(),
 
-                    PeriodStart = req.Begin,
-                    PeriodEnd = req.End,
-                    OrderId = req.OrderId,
-                };
+                        PeriodStart = req.Begin,
+                        PeriodEnd = req.End,
+                        OrderId = req.OrderId,
+                    };
 
             return ruleResults;
         }

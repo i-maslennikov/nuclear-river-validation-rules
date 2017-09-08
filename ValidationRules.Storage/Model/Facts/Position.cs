@@ -7,6 +7,9 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public const long CategoryCodeSelfAdvertisementOnlyOnPc = 287; // Самореклама только для ПК
         public const long CategoryCodeAdvertisementInCategory = 38; // Объявление в рубрике(Объявление под списком выдачи)
 
+        public const long CategoryCodePremiumAdvertising = 809065011136692321; // Реклама в профилях партнеров (приоритетное размещение)
+        public const long CategoryCodePremiumAdvertisingAddress = 809065011136692326; // Реклама в профилях партнеров (адреса)
+
         public const int BindingObjectTypeCategoryMultipleAsterix = 1;
         public const int BindingObjectTypeAddressMultiple = 35;
 
@@ -20,6 +23,7 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
                 11, // Рекламная ссылка
                 14, // Выгодные покупки с 2ГИС
                 26, // Комментарий к адресу
+                809064675575595276, // Реклама в профилях партнеров (адрес)
             };
 
         /// <summary>

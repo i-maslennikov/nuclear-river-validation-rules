@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace NuClear.ValidationRules.SingleCheck
 {
@@ -6,7 +7,14 @@ namespace NuClear.ValidationRules.SingleCheck
     {
         public static T[] Execute<T>(this IQueryable<T> queryable, string name = null)
         {
-            return queryable.ToArray();
+            try
+            {
+                return queryable.ToArray();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Exception while querying for {typeof(T).FullName}\n{queryable}", ex);
+            }
         }
     }
 }

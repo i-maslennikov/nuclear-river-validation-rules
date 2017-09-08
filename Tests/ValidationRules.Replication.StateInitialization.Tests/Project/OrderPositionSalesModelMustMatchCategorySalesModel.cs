@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -77,6 +78,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
+                                        new Dictionary<string, object> { { "begin", MonthStart(1) } },
                                         new Reference<EntityTypeCategory>(12),
                                         new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                             new Reference<EntityTypeOrderPosition>(1),
@@ -93,6 +95,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
+                                        new Dictionary<string, object> { { "begin", MonthStart(4) } },
                                         new Reference<EntityTypeCategory>(12),
                                         new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                             new Reference<EntityTypeOrderPosition>(4),

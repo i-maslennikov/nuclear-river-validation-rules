@@ -196,6 +196,7 @@
     <Compile Include="Dto\AdvertisementDto.cs" />
     <Compile Include="Events\AmsStateIncrementedEvent.cs" />
     <Compile Include="Events\FlowEvent.cs" />
+    <Compile Include="FirmRules\Validation\PremiumPartnerProfileMustHaveSingleSale.cs" />
     <Compile Include="Messages\ValidationResultCache.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMaximumRestrictions.cs" />
@@ -247,7 +248,6 @@
     <Compile Include="ProjectRules\Validation\OrderMustUseCategoriesOnlyAvailableInProject.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionSalesModelMustMatchCategorySalesModel.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustBeSpecified.cs" />
-    <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestrictionMass.cs" />
     <Compile Include="ProjectRules\Validation\OrderPositionCostPerClickMustNotBeLessMinimum.cs" />
     <Compile Include="Settings\IArchiveVersionsSettings.cs" />
     <Compile Include="Specifications\Specs.Find.Erm.cs" />

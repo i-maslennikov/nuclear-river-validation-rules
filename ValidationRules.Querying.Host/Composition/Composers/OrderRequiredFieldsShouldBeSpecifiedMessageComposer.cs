@@ -36,7 +36,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                string.Format(Resources.OrderCheckOrderHasUnspecifiedFields, string.Join(", ", parameters)));
+                Resources.OrderCheckOrderHasUnspecifiedFields,
+                string.Join(", ", parameters));
         }
     }
 }

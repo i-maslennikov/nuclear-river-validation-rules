@@ -252,9 +252,7 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction,
-                         single: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.ProjectMustContainCostPerClickMinimumRestrictionMass,
+                         single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
@@ -277,6 +275,13 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
 
                     Rule(MessageTypeCode.ThemePeriodMustContainOrderPeriod,
                          single: RuleSeverityLevel.Error,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale,
+                         single: RuleSeverityLevel.Error,
+                         singleForApprove: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
