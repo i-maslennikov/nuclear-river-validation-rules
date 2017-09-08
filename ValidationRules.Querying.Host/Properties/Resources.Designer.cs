@@ -106,11 +106,20 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Рекламный материал {0} не прошёл модерацию.
+        ///   Looks up a localized string similar to Рекламный материал &quot;{0}&quot; находится в статусе &apos;Черновик&apos;.
         /// </summary>
-        internal static string AdvertisementMustPassReview {
+        internal static string AdvertisementMustPassReview_Draft {
             get {
-                return ResourceManager.GetString("AdvertisementMustPassReview", resourceCulture);
+                return ResourceManager.GetString("AdvertisementMustPassReview_Draft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Рекламный материал &quot;{0}&quot; содержит ошибки выверки.
+        /// </summary>
+        internal static string AdvertisementMustPassReview_Invalid {
+            get {
+                return ResourceManager.GetString("AdvertisementMustPassReview_Invalid", resourceCulture);
             }
         }
         
@@ -124,7 +133,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{{0}}&quot; является сопутствующей, основная позиция не найдена..
+        ///   Looks up a localized string similar to {1} &quot;{0}&quot; является сопутствующей, основная позиция не найдена..
         /// </summary>
         internal static string AssociatedPositionWithoutPrincipalTemplate {
             get {

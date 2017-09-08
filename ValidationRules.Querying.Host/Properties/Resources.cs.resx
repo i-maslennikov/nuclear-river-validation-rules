@@ -318,4 +318,16 @@
   <data name="TooManyCategorieForFirm" xml:space="preserve">
     <value>U firmy {0} bylo zadáno příliš mnoho rubrik - {1}. Maximální počet - {2}.</value>
   </data>
+  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
+    <value>V položce {0} byl vybrán reklamní materiál {1}, který nenáleží firmě {2}</value>
+    <comment>V položce {0} byl vybrán reklamní materiál {1}, který nenáleží firmě {2}</comment>
+  </data>
+  <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
+    <value>Reklamní materiál "{0}" má status 'Koncept'</value>
+    <comment>Reklamní materiál "{0}" obsahuje chyby ověření</comment>
+  </data>
+  <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
+    <value>Reklamní materiál "{0}" obsahuje chyby ověření</value>
+    <comment>Reklamní materiál "{0}" obsahuje chyby ověření</comment>
+  </data>
 </root>

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+
+using Order = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates.Order;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition
 {
@@ -96,9 +97,9 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             return DateTime.Parse(message["begin"]);
         }
 
-        public static int ReadAdvertisementReviewState(this IReadOnlyDictionary<string, string> message)
+        public static Order.AdvertisementReviewState ReadAdvertisementReviewState(this IReadOnlyDictionary<string, string> message)
         {
-            return int.Parse(message["reviewState"], CultureInfo.InvariantCulture);
+            return (Order.AdvertisementReviewState)int.Parse(message["reviewState"], CultureInfo.InvariantCulture);
         }
 
         public sealed class CategoryCountDto

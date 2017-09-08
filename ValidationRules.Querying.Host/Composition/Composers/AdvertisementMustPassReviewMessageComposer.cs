@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
@@ -14,14 +16,25 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         {
             var orderReference = references.Get<EntityTypeOrder>();
             var advertisementReference = references.Get<EntityTypeAdvertisement>();
-
-            // todo: для параметра advertisementElementState нужны описания кодов ошибок, пока выводится общее сообщение
             var advertisementElementState = extra.ReadAdvertisementReviewState();
 
             return new MessageComposerResult(
                 orderReference,
-                Resources.AdvertisementMustPassReview,
+                GetTemplate(advertisementElementState),
                 advertisementReference);
+        }
+
+        private string GetTemplate(Order.AdvertisementReviewState state)
+        {
+            switch (state)
+            {
+                case Order.AdvertisementReviewState.Draft:
+                    return Resources.AdvertisementMustPassReview_Draft;
+                case Order.AdvertisementReviewState.Invalid:
+                    return Resources.AdvertisementMustPassReview_Invalid;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
         }
     }
 }
