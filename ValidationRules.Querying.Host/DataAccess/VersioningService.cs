@@ -151,17 +151,11 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
             private sealed class AmsSettings
             {
-                private const string ClientId = "ValidationRules.Querying.Host";
-
                 public AmsSettings()
                 {
                     var connectionString = ConfigurationManager.ConnectionStrings["Ams"].ConnectionString;
                     Config = JsonConvert.DeserializeObject<Dictionary<string, object>>(connectionString);
-
-                    var environmentName = ConfigurationManager.AppSettings["TargetEnvironmentName"];
-
-                    Config.Add("client.id", ClientId + '-' + environmentName);
-                    Config.Add("group.id", ClientId + '-' + environmentName);
+                    Config.Add("group.id", Guid.NewGuid().ToString());
 
                     Topic = ConfigurationManager.AppSettings["AmsFactsTopics"].Split(',').First();
                 }
