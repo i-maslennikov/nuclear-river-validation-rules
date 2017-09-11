@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,8 +20,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
     {
         private const string ConfigurationString = "Messages";
 
-        private const int ErmWaitAttempts = 36; // 3 mimutes
-        private const int AmsWaitAttempts = 12; // 1 mimute
+        private static readonly TimeSpan WaitTimeout = TimeSpan.FromMinutes(6);
         private static readonly TimeSpan WaitInterval = TimeSpan.FromSeconds(5);
         private static readonly TimeSpan AmsSyncInterval = TimeSpan.FromSeconds(20);
 
@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         public async Task<long> WaitForVersion(Guid token)
         {
-            long? amsVersion;
+            Task<long> amsVersion;
             if (AmsHelper.TryGetLatestMessage(0, out var amsMessage))
             {
                 var utcNow = DateTime.UtcNow;
@@ -43,27 +43,21 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                     throw new TimeoutException($"River clock {utcNow} and Ams clock {amsUtcNow} (offset {amsMessage.Offset}) differs more than {AmsSyncInterval}");
                 }
 
-                amsVersion = await WaitForAmsState(amsMessage.Offset, AmsWaitAttempts, WaitInterval);
-                if (amsVersion == null)
-                {
-                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state failed after {0} attempts", AmsWaitAttempts));
-                }
+                amsVersion = WaitForAmsState(amsMessage.Offset, WaitInterval, WaitTimeout);
             }
             else
             {
-                amsVersion = 0;
+                amsVersion = Task.FromResult(0L);
             }
 
-            var ermVersion = await WaitForErmState(token, ErmWaitAttempts, WaitInterval);
-            if (ermVersion == null)
-            {
-                throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state failed after {0} attempts", ErmWaitAttempts));
-            }
+            var ermVersion = WaitForErmState(token, WaitInterval, WaitTimeout);
 
-            return ermVersion.Value > amsVersion.Value ? ermVersion.Value : amsVersion.Value;
+            var result = await Task.WhenAll(amsVersion, ermVersion);
+
+            return result.Max();
         }
 
-        private async Task<long?> WaitForAmsState(long offset, int waitAttempts, TimeSpan waitInterval)
+        private async Task<long> WaitForAmsState(long offset, TimeSpan interval, TimeSpan timeout)
         {
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
@@ -71,15 +65,21 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
                 var version = await Waiter(async () =>
                 {
-                    var amsState = await connectionLocal.GetTable<Version.AmsState>().SingleOrDefaultAsync(x => x.Offset == offset);
+                    var amsState = await connectionLocal.GetTable<Version.AmsState>().SingleOrDefaultAsync(x => x.Offset >= offset);
                     return amsState?.VersionId;
-                }, waitAttempts, waitInterval);
+                }, interval, timeout);
 
-                return version;
+
+                if (version == null)
+                {
+                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state {0} failed after {1}", offset, timeout));
+                }
+
+                return version.Value;
             }
         }
 
-        private async Task<long?> WaitForErmState(Guid token, int waitAttempts, TimeSpan waitInterval)
+        private async Task<long> WaitForErmState(Guid token, TimeSpan interval, TimeSpan timeout)
         {
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
@@ -89,36 +89,31 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                 {
                     var ermState = await connectionLocal.GetTable<Version.ErmState>().SingleOrDefaultAsync(x => x.Token == token);
                     return ermState?.VersionId;
-                }, waitAttempts, waitInterval);
+                }, interval, timeout);
 
-                return version;
+                if (version == null)
+                {
+                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state {0} failed after {1}", token, timeout));
+                }
+
+                return version.Value;
             }
         }
 
-        private static async Task<T?> Waiter<T>(Func<Task<T?>> func, int waitAttempts, TimeSpan waitInterval) where T: struct
+        private static async Task<T?> Waiter<T>(Func<Task<T?>> func, TimeSpan interval, TimeSpan timeout) where T : struct
         {
-            if (waitAttempts == 0)
+            var attemptCount = timeout.Ticks / interval.Ticks;
+            for (var i = 0; i < attemptCount; i++)
             {
-                return null;
-            }
-
-            var result = await func();
-            if (result != null)
-            {
-                return result;
-            }
-
-            var counter = 1;
-            while (counter < waitAttempts)
-            {
-                await Task.Delay(waitInterval);
-                result = await func();
+                var sw = Stopwatch.StartNew();
+                var result = await func();
                 if (result != null)
                 {
                     return result;
                 }
 
-                counter++;
+                sw.Stop();
+                await Task.Delay(sw.Elapsed < interval ? interval - sw.Elapsed : TimeSpan.Zero);
             }
 
             return null;
@@ -151,17 +146,11 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
             private sealed class AmsSettings
             {
-                private const string ClientId = "ValidationRules.Querying.Host";
-
                 public AmsSettings()
                 {
                     var connectionString = ConfigurationManager.ConnectionStrings["Ams"].ConnectionString;
                     Config = JsonConvert.DeserializeObject<Dictionary<string, object>>(connectionString);
-
-                    var environmentName = ConfigurationManager.AppSettings["TargetEnvironmentName"];
-
-                    Config.Add("client.id", ClientId + '-' + environmentName);
-                    Config.Add("group.id", ClientId + '-' + environmentName);
+                    Config.Add("group.id", Guid.NewGuid().ToString());
 
                     Topic = ConfigurationManager.AppSettings["AmsFactsTopics"].Split(',').First();
                 }
