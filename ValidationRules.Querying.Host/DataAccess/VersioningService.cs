@@ -72,7 +72,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
                 if (version == null)
                 {
-                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state failed after {0}", WaitTimeout));
+                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state {0} failed after {1}", offset, timeout));
                 }
 
                 return version.Value;
@@ -93,7 +93,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
                 if (version == null)
                 {
-                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state failed after {0}", WaitTimeout));
+                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state {0} failed after {1}", token, timeout));
                 }
 
                 return version.Value;
