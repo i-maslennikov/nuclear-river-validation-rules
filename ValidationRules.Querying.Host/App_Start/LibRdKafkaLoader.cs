@@ -13,8 +13,7 @@ namespace NuClear.ValidationRules.Querying.Host
 
         private enum LoadLibraryFlags : uint
         {
-            // ReSharper disable once InconsistentNaming
-            LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008
+            LoadWithAlteredSearchPath = 8
         }
 
         [DllImport("kernel32", SetLastError = true)]
@@ -32,7 +31,7 @@ namespace NuClear.ValidationRules.Querying.Host
             // ReSharper disable once AssignNullToNotNullAttribute
             var dllDirectory = Path.Combine(baseDirectory, Environment.Is64BitProcess ? "x64" : "x86");
 
-            _librdkafkaHandle = LoadLibraryEx(Path.Combine(dllDirectory, DllName), IntPtr.Zero, LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH);
+            _librdkafkaHandle = LoadLibraryEx(Path.Combine(dllDirectory, DllName), IntPtr.Zero, LoadLibraryFlags.LoadWithAlteredSearchPath);
             if (_librdkafkaHandle == IntPtr.Zero)
             {
                 var lastError = new Win32Exception();
