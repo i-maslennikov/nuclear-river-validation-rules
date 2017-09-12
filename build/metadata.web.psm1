@@ -112,16 +112,8 @@ function Get-IisAppPoolMetadata ($Context) {
 
 function Get-IisAppOfflineMetadata ($Context) {
 
-	switch ($Context.EnvType) {
-		{ @('Production', 'Load') -contains $_ } {
-			$takeOffline = $true
-		}
-		default {
-			$takeOffline = $false
-		}
-	}
-	
-	return @{ 'TakeOffline' = $takeOffline }
+	# should always use app_offline.htm to unload librdkafka.dll before deploy
+	return @{ 'TakeOffline' = $true }
 }
 
 function Get-IisMetadata ($Context) {
