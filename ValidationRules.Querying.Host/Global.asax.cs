@@ -8,6 +8,12 @@ namespace NuClear.ValidationRules.Querying.Host
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
             GlobalConfiguration.Configure(UnityConfig.Register);
+            LibRdKafkaLoader.LoadLibrary();
+        }
+
+        protected void Application_End()
+        {
+            LibRdKafkaLoader.FreeLibrary();
         }
     }
 }
