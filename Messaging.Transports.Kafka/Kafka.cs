@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using Confluent.Kafka;
@@ -69,57 +70,52 @@ namespace NuClear.Messaging.Transports.Kafka
                 };
 
             _consumer = new Consumer(privateConfig);
-
-            _consumer.OnPartitionsAssigned += OnPartitionsAssigned;
-            _consumer.OnPartitionsRevoked += OnPartitionsRevoked;
             _consumer.OnError += OnError;
-
-            _consumer.Subscribe(_settings.Topics);
+            _consumer.Assign(_settings.Topics.Select(x => new TopicPartitionOffset(x, 0, _settings.Offset)));
         }
 
         public IReadOnlyCollection<Message> ReceiveBatch(int batchSize)
         {
-            var currentMessage = (Message)null;
+            var messages = new HashSetLastWins();
             var eof = false;
-            var idleCount = 5;
+            Message errorMessage = null;
 
             try
             {
                 _consumer.OnMessage += OnMessage;
-                _consumer.OnConsumeError += OnMessage;
+                _consumer.OnConsumeError += OnErrorMessage;
                 _consumer.OnPartitionEOF += OnPartitionEof;
 
-                var messages = new HashSetLastWins();
-                while (messages.Count < batchSize)
+                var sw = Stopwatch.StartNew();
+                while (true)
                 {
-                    currentMessage = null;
-                    // Таймаут действует для каждого одного сообщения. Если в очередь будут добавляться сообщения с интервалом 4 секунды, то пройдёт полчаса, прежде чем пакет будет принят.
-                    _consumer.Poll(_settings.PollTimeout);
+                    if (messages.Count >= batchSize)
+                    {
+                        break;
+                    }
+
+                    if (errorMessage != null)
+                    {
+                        break;
+                    }
 
                     if (eof)
                     {
                         break;
                     }
 
-                    if (currentMessage == null)
+                    var timeLeft = _settings.PollTimeout - sw.Elapsed;
+                    if (timeLeft.Ticks <= 0)
                     {
-                        // иногда Poll вообще ничего не возвращает, тогда надо ещё раз вызвать Poll
-                        // может быть я неправильно готовлю, но пока вот такой вот workaround
-                        if (idleCount != 0)
-                        {
-                            idleCount--;
-                            continue;
-                        }
-
                         break;
                     }
 
-                    if (currentMessage.Error.HasError)
-                    {
-                        throw new KafkaException(currentMessage.Error);
-                    }
+                    _consumer.Poll(timeLeft);
+                }
 
-                    messages.Add(currentMessage);
+                if (errorMessage != null)
+                {
+                    throw new KafkaException(errorMessage.Error);
                 }
 
                 return messages.ToReadOlnyCollection();
@@ -127,11 +123,12 @@ namespace NuClear.Messaging.Transports.Kafka
             finally
             {
                 _consumer.OnMessage -= OnMessage;
-                _consumer.OnConsumeError -= OnMessage;
+                _consumer.OnConsumeError -= OnErrorMessage;
                 _consumer.OnPartitionEOF -= OnPartitionEof;
             }
 
-            void OnMessage(object sender, Message message) => currentMessage = message;
+            void OnMessage(object sender, Message message) => messages.Add(message);
+            void OnErrorMessage(object sender, Message message) => errorMessage = message;
             void OnPartitionEof(object sender, TopicPartitionOffset offset) => eof = true;
         }
 
@@ -145,25 +142,12 @@ namespace NuClear.Messaging.Transports.Kafka
             }
         }
 
-        private void OnPartitionsAssigned(object sender, List<TopicPartition> partitions)
-        {
-            var offests = partitions.Select(x => new TopicPartitionOffset(x, _settings.Offset)).ToList();
-            ((Consumer)sender).Assign(offests);
-        }
-
-        private static void OnPartitionsRevoked(object sender, List<TopicPartition> partitions) => ((Consumer)sender).Unassign();
-
         // kafka docs: errors should be seen as informational rather than catastrophic
         private void OnError(object sender, Error error) => _tracer?.Warn(error.Reason);
 
         public void Dispose()
         {
-            _consumer.Unsubscribe();
-
-            _consumer.OnPartitionsAssigned -= OnPartitionsAssigned;
-            _consumer.OnPartitionsRevoked -= OnPartitionsRevoked;
             _consumer.OnError -= OnError;
-
             _consumer.Dispose();
         }
 
