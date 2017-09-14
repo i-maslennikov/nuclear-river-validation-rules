@@ -85,6 +85,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             return _riverService.ValidateMassRelease(orderIds, projectId, releaseDate)
                                 .Messages
                                 .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => Tuple.Create(x.TargetEntityId, x.MessageText))
+                                .Where(x => x.Key != 0)
                                 .ToDictionary(x => x.Key, x => x.ToArray());
         }
 

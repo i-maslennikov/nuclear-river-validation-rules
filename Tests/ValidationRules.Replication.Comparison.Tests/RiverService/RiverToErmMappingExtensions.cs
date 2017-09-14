@@ -67,7 +67,9 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
                             { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder, 29 },
                             { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 50 },
-                    }.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
+                            { MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
+                            { MessageTypeCode.AdvertisementMustPassReview, 0 },
+                    }.ToDictionary(x => x.Key, x => x.Value);
 
         public static int ToErmRuleCode(this int riverMessageTypeCode)
             => RiverToErmRuleCodeMapping[(MessageTypeCode)riverMessageTypeCode];
