@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Messaging.API;
 using NuClear.Messaging.API.Receivers;
-using NuClear.Replication.Core;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
@@ -35,17 +33,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
         {
             using (Probe.Create("Complete Kafka messages"))
             {
-                foreach (var batch in successfullyProcessedMessages.CreateBatches(500))
-                {
-                    _receiver.Complete(batch, Array.Empty<IMessage>());
-                    _publisher.Completed(batch.Cast<KafkaMessage>().Sum(x => x.Messages.Count));
-                }
+                var succeeded = successfullyProcessedMessages.Cast<KafkaMessage>().ToList();
+                var failed = failedProcessedMessages.Cast<KafkaMessage>().ToList();
 
-                foreach (var batch in failedProcessedMessages.CreateBatches(500))
-                {
-                    _receiver.Complete(Array.Empty<IMessage>(), batch);
-                    _publisher.Failed(batch.Cast<KafkaMessage>().Sum(x => x.Messages.Count));
-                }
+                _receiver.Complete(succeeded, failed);
+
+                _publisher.Completed(succeeded.Sum(x => x.Messages.Count));
+                _publisher.Failed(failed.Sum(x => x.Messages.Count));
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Replication.Core;
@@ -11,18 +12,25 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 {
     public sealed class MessagesFlowAccumulator : MessageProcessingContextAccumulatorBase<MessagesFlow, EventMessage, AggregatableMessage<ICommand>>
     {
+        private readonly ICommandFactory _commandFactory;
+
+        public MessagesFlowAccumulator()
+        {
+            _commandFactory = new MessagesFlowCommandFactory();
+        }
+
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
         {
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = CommandFactory.CreateCommands(message.Event)
+                Commands = _commandFactory.CreateCommands(message.Event).ToList()
             };
         }
 
-        private static class CommandFactory
+        private sealed class MessagesFlowCommandFactory : ICommandFactory
         {
-            public static IReadOnlyCollection<ICommand> CreateCommands(IEvent @event)
+            public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
                 switch (@event)
                 {

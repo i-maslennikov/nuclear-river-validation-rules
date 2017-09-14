@@ -178,6 +178,7 @@
     <Compile Include="AmsFactsFlow\AmsFactsFlowAccumulator.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlowHandler.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlowTelemetryPublisher.cs" />
+    <Compile Include="ICommandFactory.cs" />
     <Compile Include="MessagesFlow\MessagesFlow.cs" />
     <Compile Include="MessagesFlow\MessagesFlowAccumulator.cs" />
     <Compile Include="Contexts\AggregateSubDomain.cs" />
@@ -200,8 +201,8 @@
     <Compile Include="FactsFlow\FactsFlowTelemetryPublisher.cs" />
     <Compile Include="MessagesFlow\MessagesFlowTelemetryPublisher.cs" />
     <Compile Include="IFlowTelemetryPublisher.cs" />
-    <Compile Include="Transports\Kafka\Kafka.cs" />
     <Compile Include="Transports\Kafka\BatchingKafkaReceiverTelemetryDecorator.cs" />
+    <Compile Include="Transports\Kafka\Kafka.cs" />
     <Compile Include="Transports\ServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\XmlEventSerializer.cs" />
   </ItemGroup>
