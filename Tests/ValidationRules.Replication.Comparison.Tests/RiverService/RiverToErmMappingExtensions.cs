@@ -65,7 +65,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderMustHaveActiveDeal, 51 },
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
-                            { MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchasesOrder, 29 },
                             { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 50 },
                             { MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
                             { MessageTypeCode.AdvertisementMustPassReview, 0 },
