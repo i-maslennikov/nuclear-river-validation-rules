@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
             PerformedOperations.Flows
                                .Primary(
                                         MessageFlowMetadata.Config.For<AmsFactsFlow.AmsFactsFlow>()
-                                                           .Receiver<BatchingKafkaReceiverTelemetryDecorator<AmsFactsFlowTelemetryPublisher>>()
+                                                           .Receiver<KafkaReceiver>()
                                                            .Accumulator<AmsFactsFlowAccumulator>()
                                                            .Handler<AmsFactsFlowHandler>()
                                                            .To.Primary().Flow<AmsFactsFlow.AmsFactsFlow>().Connect(),

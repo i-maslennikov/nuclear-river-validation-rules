@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-
-using Confluent.Kafka;
 
 using Newtonsoft.Json;
 
@@ -18,19 +17,28 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 {
     public sealed class AmsFactsFlowAccumulator : MessageProcessingContextAccumulatorBase<AmsFactsFlow, KafkaMessage, AggregatableMessage<ICommand>>
     {
+        private readonly ICommandFactory _commandFactory;
+
+        public AmsFactsFlowAccumulator()
+        {
+            _commandFactory = new AmsFactsCommandFactory();
+        }
+
         protected override AggregatableMessage<ICommand> Process(KafkaMessage message)
         {
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = CommandFactory.CreateCommands(message.Messages),
+                Commands = _commandFactory.CreateCommands(new KafkaMessageEvent(message)).ToList(),
             };
         }
 
-        private static class CommandFactory
+        private sealed class AmsFactsCommandFactory : ICommandFactory
         {
-            public static IReadOnlyCollection<ICommand> CreateCommands(IReadOnlyCollection<Message> messages)
+            public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
+                var messages = ((KafkaMessageEvent)@event).KafkaMessage.Messages;
+
                 var commands = new List<ICommand>();
 
                 // пока что хардкод для advertisement и heartbeat
@@ -49,6 +57,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 
                 return commands;
             }
+        }
+
+        private sealed class KafkaMessageEvent : IEvent
+        {
+            public KafkaMessageEvent(KafkaMessage kafkaMessage)
+            {
+                KafkaMessage = kafkaMessage;
+            }
+
+            public KafkaMessage KafkaMessage { get; }
         }
     }
 }

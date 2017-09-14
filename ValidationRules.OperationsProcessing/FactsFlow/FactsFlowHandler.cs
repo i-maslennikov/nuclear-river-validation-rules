@@ -49,23 +49,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                 using (Probe.Create("ETL1 Transforming"))
                 using (var transaction = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
                 {
-                    var lookups = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().ToLookup(x => x.TargetFlow, x => x.Commands);
-                    foreach (var lookup in lookups)
-                    {
-                        var flow = lookup.Key;
-                        var commands = lookup.SelectMany(x => x).ToList();
+                    var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
-                        var syncEvents = Handle(commands.OfType<ISyncDataObjectCommand>().ToList()).Select(x => new FlowEvent(flow, x)).ToList();
-                        var stateEvents = Handle(commands.OfType<IncrementErmStateCommand>().ToList()).Select(x => new FlowEvent(flow, x));
+                    var syncEvents = Handle(commands.OfType<ISyncDataObjectCommand>().ToList())
+                                     .Select(x => new FlowEvent(FactsFlow.Instance, x)).ToList();
+                    var stateEvents = Handle(commands.OfType<IncrementErmStateCommand>().ToList())
+                                      .Select(x => new FlowEvent(FactsFlow.Instance, x));
 
-                        using (new TransactionScope(TransactionScopeOption.Suppress))
-                            _eventLogger.Log<IEvent>(syncEvents);
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                        _eventLogger.Log<IEvent>(syncEvents);
 
-                        transaction.Complete();
+                    transaction.Complete();
 
-                        using (new TransactionScope(TransactionScopeOption.Suppress))
-                            _eventLogger.Log<IEvent>(syncEvents.Concat(stateEvents).ToList());
-                    }
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                        _eventLogger.Log<IEvent>(syncEvents.Concat(stateEvents).ToList());
                 }
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());

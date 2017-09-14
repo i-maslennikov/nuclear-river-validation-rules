@@ -10,6 +10,7 @@ using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
+using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
@@ -23,14 +24,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
         private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
-        private readonly AmsFactsFlowTelemetryPublisher _telemetryPublisher;
+        private readonly ITelemetryPublisher _telemetryPublisher;
         private readonly TransactionOptions _transactionOptions;
 
         public AmsFactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
             SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
-            AmsFactsFlowTelemetryPublisher telemetryPublisher,
+            ITelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
@@ -47,23 +48,19 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
             {
                 using (var transaction = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
                 {
-                    var lookups = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().ToLookup(x => x.TargetFlow, x => x.Commands);
-                    foreach (var lookup in lookups)
-                    {
-                        var flow = lookup.Key;
-                        var commands = lookup.SelectMany(x => x).ToList();
+                    var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
+                    var replaceEvents = Handle(commands.OfType<IReplaceDataObjectCommand>().ToList())
+                                        .Select(x => new FlowEvent(AmsFactsFlow.Instance, x)).ToList();
+                    var stateEvents = Handle(commands.OfType<IncrementAmsStateCommand>().ToList())
+                                      .Select(x => new FlowEvent(AmsFactsFlow.Instance, x));
 
-                        var replaceEvents = Handle(commands.OfType<IReplaceDataObjectCommand>().ToList()).Select(x => new FlowEvent(flow, x)).ToList();
-                        var stateEvents = Handle(commands.OfType<IncrementAmsStateCommand>().ToList()).Select(x => new FlowEvent(flow, x));
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                        _eventLogger.Log<IEvent>(replaceEvents);
 
-                        using (new TransactionScope(TransactionScopeOption.Suppress))
-                            _eventLogger.Log<IEvent>(replaceEvents);
+                    transaction.Complete();
 
-                        transaction.Complete();
-
-                        using (new TransactionScope(TransactionScopeOption.Suppress))
-                            _eventLogger.Log<IEvent>(replaceEvents.Concat(stateEvents).ToList());
-                    }
+                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                        _eventLogger.Log<IEvent>(replaceEvents.Concat(stateEvents).ToList());
                 }
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
@@ -84,7 +81,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 
             var eldestEventTime = commands.Min(x => x.State.UtcDateTime);
             var delta = DateTime.UtcNow - eldestEventTime;
-            _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
+            _telemetryPublisher.Publish<AmsFactsFlowDelayIdentity>((int)delta.TotalMilliseconds);
 
             var maxAmsState = commands.Select(x => x.State).OrderByDescending(x => x.Offset).First();
             return new IEvent[]
@@ -111,7 +108,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 
             _syncEntityNameActor.ExecuteCommands(commands);
 
+            _telemetryPublisher.Publish<AmsFactsFlowCompletedEventCountIdentity>(commands.Count);
             return events;
+        }
+
+        public sealed class AmsFactsFlowDelayIdentity : TelemetryIdentityBase<AmsFactsFlowDelayIdentity>
+        {
+            public override int Id => 0;
+            public override string Description => nameof(AmsFactsFlowDelayIdentity);
+        }
+
+        public sealed class AmsFactsFlowCompletedEventCountIdentity : TelemetryIdentityBase<AmsFactsFlowCompletedEventCountIdentity>
+        {
+            public override int Id => 0;
+            public override string Description => nameof(AmsFactsFlowCompletedEventCountIdentity);
         }
     }
 }

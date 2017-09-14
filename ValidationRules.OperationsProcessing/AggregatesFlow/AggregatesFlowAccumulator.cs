@@ -13,18 +13,25 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 {
     public sealed class AggregatesFlowAccumulator : MessageProcessingContextAccumulatorBase<AggregatesFlow, EventMessage, AggregatableMessage<ICommand>>
     {
+        private readonly ICommandFactory _commandFactory;
+
+        public AggregatesFlowAccumulator()
+        {
+            _commandFactory = new AggregatesCommandFactory();
+        }
+
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
         {
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = CommandFactory.CreateCommands(message.Event).ToList()
+                Commands = _commandFactory.CreateCommands(message.Event).ToList()
             };
         }
 
-        private static class CommandFactory
+        private sealed class AggregatesCommandFactory : ICommandFactory
         {
-            public static IEnumerable<ICommand> CreateCommands(IEvent @event)
+            public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
                 switch (@event)
                 {
@@ -64,8 +71,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             private static IEnumerable<Type> AggregateTypesFor<TEvent>(Type dataObjectType)
                 where TEvent : IEvent
             {
-                IReadOnlyCollection<Type> aggregateTypes;
-                if (!EntityTypeMap.TryGetAggregateTypes(dataObjectType, out aggregateTypes))
+                if (!EntityTypeMap.TryGetAggregateTypes(dataObjectType, out var aggregateTypes))
                 {
                     throw new ArgumentException($"No metadata for event {typeof(TEvent).Name}, DataObjectType={dataObjectType.Name}", nameof(dataObjectType));
                 }
@@ -76,8 +82,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             private static IEnumerable<Type> RelatedAggregateTypesFor<TEvent>(Type dataObjectType, Type relatedDataObjectType)
                 where TEvent : IEvent
             {
-                IReadOnlyCollection<Type> aggregateTypes;
-                if (!EntityTypeMap.TryGetRelatedAggregateTypes(dataObjectType, relatedDataObjectType, out aggregateTypes))
+                if (!EntityTypeMap.TryGetRelatedAggregateTypes(dataObjectType, relatedDataObjectType, out var aggregateTypes))
                 {
                     throw new ArgumentException($"No metadata for event {typeof(TEvent).GetFriendlyName() } ({dataObjectType.Name}, {relatedDataObjectType.Name})", nameof(dataObjectType));
                 }

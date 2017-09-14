@@ -22,18 +22,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
         private readonly IQuery _query;
         private readonly ITracer _tracer;
+        private readonly ICommandFactory _commandFactory;
 
         public FactsFlowAccumulator(IQuery query, ITracer tracer)
         {
             _query = query;
             _tracer = tracer;
+            _commandFactory = new FactsCommandFactory();
         }
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase trackedUseCase)
         {
             WaitForTucToBeCommitted(trackedUseCase.Id);
 
-            var commands = CommandFactory.CreateCommands(trackedUseCase).ToList();
+            var commands = _commandFactory.CreateCommands(new TrackedUseCaseEvent(trackedUseCase)).ToList();
 
             var date = trackedUseCase.Context.Finished.UtcDateTime;
             commands.Add(new IncrementErmStateCommand(new[] { new ErmState(trackedUseCase.Id, date) }));
@@ -65,10 +67,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             _tracer.Warn($"Ignored TUC {id} after {TotalWaitMilliseconds}ms waiting");
         }
 
-        private static class CommandFactory
+        private sealed class FactsCommandFactory : ICommandFactory
         {
-            public static IEnumerable<ICommand> CreateCommands(TrackedUseCase trackedUseCase)
+            public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
+                var trackedUseCase = ((TrackedUseCaseEvent)@event).TrackedUseCase;
                 var changes = trackedUseCase.Operations.SelectMany(x => x.AffectedEntities.Changes);
                 return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys));
             }
@@ -77,7 +80,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             {
                 var commands = Enumerable.Empty<ICommand>();
 
-                if (EntityTypeMap.TryGetFactTypes(entityTypeId, out IReadOnlyCollection<Type> factTypes))
+                if (EntityTypeMap.TryGetFactTypes(entityTypeId, out var factTypes))
                 {
                     var syncDataObjectCommands = from factType in factTypes
                                                  from id in ids
@@ -88,6 +91,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
                 return commands;
             }
+        }
+
+        private sealed class TrackedUseCaseEvent : IEvent
+        {
+            public TrackedUseCaseEvent(TrackedUseCase trackedUseCase)
+            {
+                TrackedUseCase = trackedUseCase;
+            }
+
+            public TrackedUseCase TrackedUseCase { get; }
         }
     }
 }

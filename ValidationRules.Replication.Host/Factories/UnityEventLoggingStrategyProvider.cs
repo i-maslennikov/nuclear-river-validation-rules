@@ -30,31 +30,25 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
 
         public IReadOnlyCollection<IEventLoggingStrategy<TEvent>> Get<TEvent>(IReadOnlyCollection<TEvent> events)
         {
-            var messageFlows = events.Cast<FlowEvent>().Select(x => x.Flow).Distinct();
+            var messageFlow = events.Cast<FlowEvent>().Select(x => x.Flow).Distinct().Single();
 
-            var strategies = messageFlows.Aggregate(new List<IEventLoggingStrategy<TEvent>>(),
-            (list, flow) =>
+            IEventLoggingStrategy<TEvent> strategy;
+
+            if (Equals(messageFlow, FactsFlow.Instance) ||
+                Equals(messageFlow, AmsFactsFlow.Instance))
             {
-                IEventLoggingStrategy<TEvent> strategy;
+                strategy = ResolveServiceBusStrategy<TEvent>(AggregatesFlow.Instance);
+            }
+            else if (Equals(messageFlow, AggregatesFlow.Instance))
+            {
+                strategy = ResolveServiceBusStrategy<TEvent>(MessagesFlow.Instance);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(messageFlow), messageFlow, "Unexpected flow");
+            }
 
-                if (Equals(flow, FactsFlow.Instance) ||
-                    Equals(flow, AmsFactsFlow.Instance))
-                {
-                    strategy = ResolveServiceBusStrategy<TEvent>(AggregatesFlow.Instance);
-                } else if (Equals(flow, AggregatesFlow.Instance))
-                {
-                    strategy = ResolveServiceBusStrategy<TEvent>(MessagesFlow.Instance);
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException(nameof(flow), flow, "Unexpected flow");
-                }
-
-                list.Add(strategy);
-                return list;
-            });
-
-            return strategies;
+            return new [] { strategy };
         }
 
         private IEventLoggingStrategy<TEvent> ResolveServiceBusStrategy<TEvent>(IMessageFlow flow)
