@@ -56,21 +56,7 @@ function Get-DBHostMetadata($Context){
 }
 
 function Get-AmsFactsTopicsMetadata($Context){
-	switch($Context.EnvType){
-		'Test' {
-			return @{
-				'AmsFactsTopics' = 'ams_okapi_migration_1.am.validity'
-			}
-		 }
-		 'Production' {
-			 return @{
-				 'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
-			 }
-		}
-		default {
-			return @{}
-		}
-	}
+	return @{'AmsFactsTopics' = 'ams_okapi_prod.am.validity' }
 }
 
 function Get-ValidationUrlMetadata($Context){

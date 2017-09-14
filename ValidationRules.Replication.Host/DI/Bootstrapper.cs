@@ -253,7 +253,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
             // kafka receiver
             container
-                .RegisterType<KafkaReceiver>(Lifetime.Singleton)
+                .RegisterType<KafkaReceiver>(Lifetime.PerScope)
                 .RegisterType<IKafkaMessageFlowReceiverFactory, KafkaMessageFlowReceiverFactory>(Lifetime.Singleton)
                 .RegisterType<IAmsSettingsFactory, AmsSettingsFactory>(Lifetime.Singleton);
 
