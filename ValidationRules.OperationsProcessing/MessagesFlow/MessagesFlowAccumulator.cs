@@ -32,31 +32,26 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
         {
             public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
-                var stateIncrementedEvent = @event as AggregatesStateIncrementedEvent;
-                if (stateIncrementedEvent != null)
+                switch (@event)
                 {
-                    return new[] { new CreateNewVersionCommand(stateIncrementedEvent.IncludedTokens) };
-                }
+                    case AmsStateIncrementedEvent amsStateIncrementedEvent:
+                        return new[] { new StoreAmsStateCommand(amsStateIncrementedEvent.State) };
 
-                var aggregatesDelayLoggedEvent = @event as AggregatesDelayLoggedEvent;
-                if (aggregatesDelayLoggedEvent != null)
-                {
-                    return new[] { new LogDelayCommand(aggregatesDelayLoggedEvent.EventTime) };
-                }
+                    case ErmStateIncrementedEvent ermStateIncrementedEvent:
+                        return new[] { new StoreErmStateCommand(ermStateIncrementedEvent.States) };
 
-                var resultOutdatedEvent = @event as ResultOutdatedEvent;
-                if (resultOutdatedEvent != null)
-                {
-                    return new[] { new RecalculateValidationRuleCompleteCommand(resultOutdatedEvent.Rule) };
-                }
+                    case DelayLoggedEvent delayLoggedEvent:
+                        return new[] { new LogDelayCommand(delayLoggedEvent.EventTime) };
 
-                var resultPartiallyOutdatedEvent = @event as ResultPartiallyOutdatedEvent;
-                if (resultPartiallyOutdatedEvent != null)
-                {
-                    return new[] { new RecalculateValidationRulePartiallyCommand(resultPartiallyOutdatedEvent.Rule, resultPartiallyOutdatedEvent.OrderIds) };
-                }
+                    case ResultOutdatedEvent resultOutdatedEvent:
+                        return new[] { new RecalculateValidationRuleCompleteCommand(resultOutdatedEvent.Rule) };
 
-                throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                    case ResultPartiallyOutdatedEvent resultPartiallyOutdatedEvent:
+                        return new[] { new RecalculateValidationRulePartiallyCommand(resultPartiallyOutdatedEvent.Rule, resultPartiallyOutdatedEvent.OrderIds) };
+
+                    default:
+                        throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                }
             }
         }
     }

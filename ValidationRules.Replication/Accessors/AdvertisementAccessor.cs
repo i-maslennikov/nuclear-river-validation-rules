@@ -1,19 +1,18 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
-using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Events;
-using NuClear.ValidationRules.Replication.Specifications;
+using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.Accessors
 {
-    public sealed class AdvertisementAccessor : IStorageBasedDataObjectAccessor<Advertisement>, IDataChangesHandler<Advertisement>
+    public sealed class AdvertisementAccessor : IMemoryBasedDataObjectAccessor<Advertisement>, IDataChangesHandler<Advertisement>
     {
         private readonly IQuery _query;
 
@@ -22,45 +21,40 @@ namespace NuClear.ValidationRules.Replication.Accessors
             _query = query;
         }
 
-        public IQueryable<Advertisement> GetSource() => _query
-            .For(Specs.Find.Erm.Advertisement)
-            .Select(x => new Advertisement
+        public IReadOnlyCollection<Advertisement> GetDataObjects(ICommand command)
+        {
+            var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<AdvertisementDto>();
+
+            return dtos.Select(x => new Advertisement
             {
                 Id = x.Id,
                 FirmId = x.FirmId,
-                AdvertisementTemplateId = x.AdvertisementTemplateId,
-                IsSelectedToWhiteList = x.IsSelectedToWhiteList,
-                IsDeleted = x.IsDeleted
-            });
-
-        public FindSpecification<Advertisement> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-        {
-            var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
-            return SpecificationFactory<Advertisement>.Contains(x => x.Id, ids);
+                StateCode = x.StateCode
+            }).ToList();
         }
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Advertisement), x.Id)).ToList();
+        public FindSpecification<Advertisement> GetFindSpecification(ICommand command)
+        {
+            var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<AdvertisementDto>();
+            var ids = dtos.Select(x => x.Id);
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Advertisement), x.Id)).ToList();
-
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Advertisement> dataObjects) => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Advertisement), x.Id)).ToList();
+            return new FindSpecification<Advertisement>(x => ids.Contains(x.Id));
+        }
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Advertisement> dataObjects)
         {
-            var dataObjectIds = dataObjects.Select(x => x.Id).ToList();
+            var advertisementIds = dataObjects.Select(x => x.Id);
 
             var orderIds =
-                from opa in _query.For<OrderPositionAdvertisement>().Where(x => dataObjectIds.Contains((long)x.AdvertisementId))
-                join op in _query.For<OrderPosition>() on opa.OrderPositionId equals op.Id
-                join order in _query.For<Order>() on op.OrderId equals order.Id
-                select order.Id;
+                from pricePosition in _query.For<OrderPositionAdvertisement>().Where(x => x.AdvertisementId != null && advertisementIds.Contains(x.AdvertisementId.Value))
+                from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == pricePosition.OrderPositionId)
+                select orderPosition.OrderId;
 
-            var firmIds =
-                from advertisement in _query.For<Advertisement>().Where(x => dataObjectIds.Contains(x.Id))
-                where advertisement.FirmId != null
-                select advertisement.FirmId.Value;
-
-            return new EventCollectionHelper<Advertisement> { { typeof(Order), orderIds }, {typeof(Firm), firmIds } };
+            return new EventCollectionHelper<Advertisement> { { typeof(Order), orderIds } };
         }
+
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Advertisement> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Advertisement> dataObjects) => throw new NotSupportedException();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Advertisement> dataObjects) => throw new NotSupportedException();
     }
 }

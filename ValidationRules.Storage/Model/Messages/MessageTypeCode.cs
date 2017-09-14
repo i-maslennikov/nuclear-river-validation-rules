@@ -43,17 +43,11 @@
 
         FirmAndOrderShouldBelongTheSameOrganizationUnit = 38,
         FirmShouldHaveLimitedCategoryCount = 39,
-        FirmWithSpecialCategoryShouldHaveSpecialPurchases = 40,
 
         OrderPositionAdvertisementMustHaveAdvertisement = 41,
         OrderPositionAdvertisementMustBeCreated = 42,
-        OrderPositionMustNotReferenceDeletedAdvertisement = 43,
         AdvertisementMustBelongToFirm = 44,
-        OrderMustNotContainDummyAdvertisement = 45,
-        OrderMustHaveAdvertisement = 46,
-        AdvertisementElementMustPassReview = 47,
-        WhiteListAdvertisementMustPresent = 48,
-        WhiteListAdvertisementMayPresent = 49,
+        AdvertisementMustPassReview = 47,
 
         ProjectMustContainCostPerClickMinimumRestriction = 13,
         OrderMustUseCategoriesOnlyAvailableInProject = 51,
@@ -74,11 +68,6 @@
         OrderMustHaveActiveDeal = 62,
         OrderMustHaveActiveLegalEntities = 63,
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
-
-        CouponMustBeSoldOnceAtTime = 65,
-        OrderCouponPeriodMustNotBeLessFiveDays = 66,
-        AdvertisementWebsiteShouldNotBeFirmWebsite = 67,
-        OrderCouponPeriodMustBeInRelease = 69,
 
         PremiumPartnerProfileMustHaveSingleSale = 71,
     }

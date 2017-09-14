@@ -1,12 +1,11 @@
-namespace NuClear.ValidationRules.Storage.Model.Facts
+﻿namespace NuClear.ValidationRules.Storage.Model.Facts
 {
     public sealed class Advertisement
     {
-        public long Id { get; set; }
-        public long? FirmId { get; set; }
-        public long AdvertisementTemplateId { get; set; }
+        public const int Ok = 0;
 
-        public bool IsSelectedToWhiteList { get; set; }
-        public bool IsDeleted { get; set; }
+        public long Id { get; set; }
+        public long FirmId { get; set; }
+        public int StateCode { get; set; }
     }
 }

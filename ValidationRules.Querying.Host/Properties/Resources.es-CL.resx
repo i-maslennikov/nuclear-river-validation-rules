@@ -129,23 +129,8 @@
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>La posición {0} debe estar presente en la compilación en cantidad desde {1} hasta {2}. La cantidad de las posiciones que pueden ser publicadas al mes {3:MMMM} - {4}</value>
   </data>
-  <data name="AdvertisementChoosenForWhitelist" xml:space="preserve">
-    <value>Para la empresa {0} se eligió el material publicitario {1} para la lista blanca.</value>
-  </data>
-  <data name="AdvertisementForWhitelistDoesNotSpecified" xml:space="preserve">
-    <value>Para la empresa {0} no se indicó el material publicitario para la lista blanca.</value>
-  </data>
   <data name="AdvertisementIsLinkedWithEmptyAddressError" xml:space="preserve">
     <value>La posición {0} se ha creado para una dirección en blanco {1}</value>
-  </data>
-  <data name="AdvertisementPeriodEndsBeforeReleasePeriodBegins" xml:space="preserve">
-    <value>El periodo de publicación del material publicitario {0} seleccionado en la posición {1} debe contener 5 días del mes actual de publicación</value>
-  </data>
-  <data name="AdvertisementPeriodError" xml:space="preserve">
-    <value>El periodo no puede ser menor de cinco días.</value>
-  </data>
-  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
-    <value>En la posición {0} se ha seleccionado el material {1} no perteneciente a la empresa {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
     <value>{1} "{0}" es una posición asociada, la posición principal no encontrada.</value>
@@ -168,9 +153,6 @@
   <data name="ConflictingPrincipalPositionTemplate_Order" xml:space="preserve">
     <value>{0} "{1}" contiene un enlace con los objetos que entran en conflicto con el enlace de los objetos de la siguiente posición principal: {2} "{3}" en la orden {4}</value>
   </data>
-  <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
-    <value>El cupón de descuento {0} está adjunto a varias posiciones: </value>
-  </data>
   <data name="CpcIsMissing" xml:space="preserve">
     <value>Para la posición {0} en la categoría {1} falta CPC</value>
   </data>
@@ -191,9 +173,6 @@
   </data>
   <data name="DefaultThemeIsNotSpecified" xml:space="preserve">
     <value>No se ha especificado el tema predeterminado para la sucursal {0}</value>
-  </data>
-  <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>Para la empresa {0} se ha encargado el enlace publicitario {3} la posición {1} en la orden {2}, que duplica el contacto de empresa.</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
     <value>La empresa {0} ha sido eliminada.</value>
@@ -258,9 +237,6 @@
   <data name="OrderCheckPositionMustHaveAdvertisements" xml:space="preserve">
     <value>En la posición {0} se deben especificar los materiales publicitarios</value>
   </data>
-  <data name="OrderContainsDummyAdvertisementError" xml:space="preserve">
-    <value>La posición {0} contiene un stub de material publicitario</value>
-  </data>
   <data name="OrderDealIsInactive" xml:space="preserve">
     <value>El trabajo inactivo está especificado para el orden</value>
   </data>
@@ -291,12 +267,6 @@
   <data name="OrderReferencesInactiveEntities" xml:space="preserve">
     <value>El objeto hace referencia a los objetos inactivos: {0}</value>
   </data>
-  <data name="OrdersCheckAdvertisementElementIsDraft" xml:space="preserve">
-    <value>En material publicitario "{0}", que está sujeto a varificación, elemento "{1}" está en estado de "Borrador"</value>
-  </data>
-  <data name="OrdersCheckAdvertisementElementWasInvalidated" xml:space="preserve">
-    <value>En el material publicitario "{0}" sujeto a validación, el elemento '{1}' contiene errores de validación</value>
-  </data>
   <data name="OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne" xml:space="preserve">
     <value>La sucursal de la entidad de destino de la orden no coincide con la sucursal de la entidad seleccionada</value>
   </data>
@@ -312,9 +282,6 @@
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
     <value>En la posición {0} están utilizadas las categorías que no están enlazadas con ninguna sucursal de la ciudad de destino de la orden: </value>
   </data>
-  <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
-    <value>En el material publicitario {0} no está completado el elemento obligatorio{1}</value>
-  </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
     <value>En la posición de la lista de precios {0} se deben especificar la cantidad mínima de publicidad en un lanzamiento.</value>
   </data>
@@ -323,9 +290,6 @@
   </data>
   <data name="ProfileWarrantyEndDateIsLessThanSignDate" xml:space="preserve">
     <value>En el perfil {0} de la persona jurídica del cliente está especificado un poder notarial con la fecha de vigencia anterior a la fecha de la firma de la orden</value>
-  </data>
-  <data name="RemovedAdvertisemendSpecifiedForPosition" xml:space="preserve">
-    <value>Se ha seleccionado el material publicitario eliminado {1} en la posición {0}</value>
   </data>
   <data name="RichChildPositionTypeTemplate" xml:space="preserve">
     <value>Subposición "{0}" de la posición</value>
@@ -345,9 +309,6 @@
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
     <value>El tema {0} utiliza una categoría eliminada {1}.</value>
   </data>
-  <data name="ThereIsNoAdvertisementForAdvantageousPurchasesCategory" xml:space="preserve">
-    <value>La empresa {0} con la categoría Compras rentables con 2GIS no tiene ventas según las posiciones Autopromoción sólo para PC o Compras rentables con 2GIS.</value>
-  </data>
   <data name="ThereIsNoSpecifiedDealForOrder" xml:space="preserve">
     <value>No está especificado ningún trabajo para el orden</value>
   </data>
@@ -356,5 +317,14 @@
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
     <value>Para la empresa {0} se ha establecido un número demasiado elevado de categorías: {1}. Máximo permitido: {2}.</value>
+  </data>
+  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
+    <value>En la posición {0} se ha seleccionado el material {1} no perteneciente a la empresa {2}</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
+    <value>El material publicitario "{0}" está en estado de "Borrador"</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
+    <value>El material publicitario "{0}" contiene errores de validación</value>
   </data>
 </root>

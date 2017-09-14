@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Transactions;
 
 using NuClear.Messaging.API.Processing;
@@ -52,16 +51,18 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
 
-                    var syncEvents = Handle(commands.OfType<ISyncDataObjectCommand>().ToList()).ToList();
-                    var stateEvents = Handle(commands.OfType<IncrementStateCommand>().ToList()).Concat(Handle(commands.OfType<LogDelayCommand>().ToList()));
+                    var syncEvents = Handle(commands.OfType<ISyncDataObjectCommand>().ToList())
+                                     .Select(x => new FlowEvent(FactsFlow.Instance, x)).ToList();
+                    var stateEvents = Handle(commands.OfType<IncrementErmStateCommand>().ToList())
+                                      .Select(x => new FlowEvent(FactsFlow.Instance, x));
 
                     using (new TransactionScope(TransactionScopeOption.Suppress))
-                        _eventLogger.Log(syncEvents);
+                        _eventLogger.Log<IEvent>(syncEvents);
 
                     transaction.Complete();
 
                     using (new TransactionScope(TransactionScopeOption.Suppress))
-                        _eventLogger.Log(syncEvents.Concat(stateEvents).ToList());
+                        _eventLogger.Log<IEvent>(syncEvents.Concat(stateEvents).ToList());
                 }
 
                 return processingResultsMap.Keys.Select(bucketId => MessageProcessingStage.Handling.ResultFor(bucketId).AsSucceeded());
@@ -73,28 +74,22 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             }
         }
 
-        private IEnumerable<IEvent> Handle(IReadOnlyCollection<LogDelayCommand> commands)
+        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementErmStateCommand> commands)
         {
             if (!commands.Any())
             {
                 return Array.Empty<IEvent>();
             }
 
-            var eldestEventTime = commands.Min(x => x.EventTime);
+            var eldestEventTime = commands.SelectMany(x => x.States).Min(x => x.UtcDateTime);
             var delta = DateTime.UtcNow - eldestEventTime;
             _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
-            return new IEvent[] { new FactsDelayLoggedEvent(DateTime.UtcNow) };
-        }
 
-        private IEnumerable<IEvent> Handle(IReadOnlyCollection<IncrementStateCommand> commands)
-        {
-            if (!commands.Any())
+            return new IEvent[]
             {
-                return Array.Empty<IEvent>();
-            }
-
-            var states = commands.SelectMany(command => command.States).ToArray();
-            return new IEvent[] { new FactsStateIncrementedEvent(states) };
+                new ErmStateIncrementedEvent(commands.SelectMany(x => x.States)),
+                new DelayLoggedEvent(DateTime.UtcNow)
+            };
         }
 
         private IEnumerable<IEvent> Handle(IReadOnlyCollection<ISyncDataObjectCommand> commands)

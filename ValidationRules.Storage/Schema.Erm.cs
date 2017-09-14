@@ -19,11 +19,6 @@ namespace NuClear.ValidationRules.Storage
                 var config = schema.GetFluentMappingBuilder();
 
                 config.Entity<Account>().HasSchemaName(BillingSchema).HasTableName("Accounts").HasPrimaryKey(x => x.Id);
-                config.Entity<Advertisement>().HasSchemaName(BillingSchema).HasTableName("Advertisements").HasPrimaryKey(x => x.Id);
-                config.Entity<AdvertisementTemplate>().HasSchemaName(BillingSchema).HasTableName("AdvertisementTemplates").HasPrimaryKey(x => x.Id);
-                config.Entity<AdvertisementElement>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElements").HasPrimaryKey(x => x.Id);
-                config.Entity<AdvertisementElementStatus>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElementStatuses").HasPrimaryKey(x => x.Id);
-                config.Entity<AdvertisementElementTemplate>().HasSchemaName(BillingSchema).HasTableName("AdvertisementElementTemplates").HasPrimaryKey(x => x.Id);
                 config.Entity<AssociatedPositionsGroup>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositionsGroups").HasPrimaryKey(x => x.Id);
                 config.Entity<AssociatedPosition>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<BranchOffice>().HasSchemaName(BillingSchema).HasTableName("BranchOffices").HasPrimaryKey(x => x.Id);
@@ -58,7 +53,6 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<Bill>().HasSchemaName(BillingSchema).HasTableName("Bills").HasPrimaryKey(x => x.Id);
                 config.Entity<Firm>().HasSchemaName(BusinessDirectorySchema).HasTableName("Firms").HasPrimaryKey(x => x.Id);
                 config.Entity<FirmAddress>().HasSchemaName(BusinessDirectorySchema).HasTableName("FirmAddresses").HasPrimaryKey(x => x.Id);
-                config.Entity<FirmContact>().HasSchemaName(BusinessDirectorySchema).HasTableName("FirmContacts").HasPrimaryKey(x => x.Id);
                 config.Entity<LegalPerson>().HasSchemaName(BillingSchema).HasTableName("LegalPersons").HasPrimaryKey(x => x.Id);
                 config.Entity<LegalPersonProfile>().HasSchemaName(BillingSchema).HasTableName("LegalPersonProfiles").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderFile>().HasSchemaName(BillingSchema).HasTableName("OrderFiles").HasPrimaryKey(x => x.Id);

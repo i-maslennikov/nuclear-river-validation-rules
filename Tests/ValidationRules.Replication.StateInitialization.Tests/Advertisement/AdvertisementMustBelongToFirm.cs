@@ -12,70 +12,43 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementMustBelongToFirmPositive
+        private static ArrangeMetadataElement AdvertisementMustBelongToFirm
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(AdvertisementMustBelongToFirmPositive))
+                .Name(nameof(AdvertisementMustBelongToFirm))
                 .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb, FirmId = 7},
-                    new Facts::Project {Id = 3, OrganizationUnitId = 2},
+                    new Facts::Order { Id = 1, FirmId = 2, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
 
-                    new Facts::OrderPosition { Id = 4, OrderId = 1, },
-                    new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
+                    new Facts::OrderPosition { Id = 3, OrderId = 1 },
+                    new Facts::OrderPositionAdvertisement { Id = 4, OrderPositionId = 3, AdvertisementId = 5, PositionId = 100 },
+                    new Facts::Advertisement { Id = 5, FirmId = 2 },
 
-                    new Facts::Position { Id = 5 },
-                    new Facts::Advertisement { Id = 6, FirmId = 8, AdvertisementTemplateId = 9 }, // Фирмы в РМ и в заказе не совпадают
-                    new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
-                    new Facts::Firm { Id = 7 }
+                    new Facts::OrderPosition { Id = 6, OrderId = 1 },
+                    new Facts::OrderPositionAdvertisement { Id = 7, OrderPositionId = 6, AdvertisementId = 8, PositionId = 101 },
+                    new Facts::Advertisement { Id = 8, FirmId = 9 }
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, FirmId = 7 },
-                    new Aggregates::Order.AdvertisementMustBelongToFirm { OrderId = 1, OrderPositionId = 4, PositionId = 5, AdvertisementId = 6, FirmId = 7 },
-
-                    new Aggregates::Advertisement { Id = 6, FirmId = 8 },
-                    new Aggregates::Firm { Id = 7 }
+                    new Aggregates::Order { Id = 1, BeginDistributionDate = MonthStart(1), EndDistributionDatePlan = MonthStart(2) },
+                    new Aggregates::Order.AdvertisementNotBelongToFirm { OrderId = 1, OrderPositionId = 6, AdvertisementId = 8, PositionId = 101, ExpectedFirmId = 2, ActualFirmId = 9 }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
-                    {
-                        MessageParams = new MessageParams(
-                                new Reference<EntityTypeOrder>(1),
-                                new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                    new Reference<EntityTypeOrderPosition>(4),
-                                    new Reference<EntityTypePosition>(5)),
-                                new Reference<EntityTypeAdvertisement>(6),
-                                new Reference<EntityTypeFirm>(7)).ToXDocument(),
-                        MessageType = (int)MessageTypeCode.AdvertisementMustBelongToFirm,
-                        PeriodStart = FirstDayJan,
-                        PeriodEnd = FirstDayFeb,
-                        OrderId = 1,
-                    }
-                );
+                        {
+                            MessageParams =
+                                new MessageParams(
+                                        new Reference<EntityTypeOrder>(1),
+                                        new Reference<EntityTypeOrderPosition>(6,
+                                            new Reference<EntityTypeOrder>(1),
+                                            new Reference<EntityTypePosition>(101)),
+                                        new Reference<EntityTypeAdvertisement>(8),
+                                        new Reference<EntityTypeFirm>(2))
+                                    .ToXDocument(),
 
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementMustBelongToFirmNegative
-            => ArrangeMetadataElement
-                .Config
-                .Name(nameof(AdvertisementMustBelongToFirmNegative))
-                .Fact(
-                    new Facts::Order { Id = 1, DestOrganizationUnitId = 2, BeginDistribution = FirstDayJan, EndDistributionPlan = FirstDayFeb, FirmId = 7 },
-                    new Facts::Project { Id = 3, OrganizationUnitId = 2 },
-
-                    new Facts::OrderPosition { Id = 4, OrderId = 1, },
-                    new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 6 },
-
-                    new Facts::Position { Id = 5 },
-                    new Facts::Advertisement { Id = 6, FirmId = 7, AdvertisementTemplateId = 9 },
-                    new Facts::AdvertisementTemplate { Id = 9, DummyAdvertisementId = -6 },
-                    new Facts::Firm { Id = 7 }
-                )
-                .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb, FirmId = 7 },
-
-                    new Aggregates::Advertisement { Id = 6, FirmId = 7 },
-                    new Aggregates::Firm { Id = 7 }
-                )
-                .Message(
+                            MessageType = (int)MessageTypeCode.AdvertisementMustBelongToFirm,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
+                            OrderId = 1,
+                        }
                 );
     }
 }

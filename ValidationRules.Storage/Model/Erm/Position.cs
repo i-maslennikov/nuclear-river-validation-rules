@@ -5,10 +5,9 @@
         public long Id { get; set; }
         public long CategoryCode { get; set; }
         public int SalesModel { get; set; }
-        public long? AdvertisementTemplateId { get; set; }
         public bool IsControlledByAmount { get; set; }
-        public bool IsComposite { get; set; }
         public bool IsCompositionOptional { get; set; }
+        public bool IsContentSales { get; set; }
         public int BindingObjectTypeEnum { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }

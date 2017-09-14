@@ -6,15 +6,28 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
     public sealed class Version
     {
         public long Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime UtcDateTime { get; set; }
 
         public sealed class ErmState
         {
             public long VersionId { get; set; }
             public Guid Token { get; set; }
+            public DateTime UtcDateTime { get; set; }
         }
 
         public sealed class ErmStateBulkDelete
+        {
+            public long VersionId { get; set; }
+        }
+
+        public sealed class AmsState
+        {
+            public long VersionId { get; set; }
+            public long Offset { get; set; }
+            public DateTime UtcDateTime { get; set; }
+        }
+
+        public sealed class AmsStateBulkDelete
         {
             public long VersionId { get; set; }
         }

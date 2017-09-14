@@ -129,23 +129,8 @@
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Item {0} should be present in build in quantity from {1} up to {2}. A quantity of items that can be issued per month {3:MMMM} – {4}</value>
   </data>
-  <data name="AdvertisementChoosenForWhitelist" xml:space="preserve">
-    <value>The advertising material {1} is selected to the white list for the company {0}</value>
-  </data>
-  <data name="AdvertisementForWhitelistDoesNotSpecified" xml:space="preserve">
-    <value>The advertising material is not specified in the white list for the company {0}</value>
-  </data>
   <data name="AdvertisementIsLinkedWithEmptyAddressError" xml:space="preserve">
     <value>The item {0} is issued for an empty address {1}</value>
-  </data>
-  <data name="AdvertisementPeriodEndsBeforeReleasePeriodBegins" xml:space="preserve">
-    <value>Placement period for the advertising material {0} selected in item {1} should cover 5 days in the current month of placement</value>
-  </data>
-  <data name="AdvertisementPeriodError" xml:space="preserve">
-    <value>The period cannot last less than five days.</value>
-  </data>
-  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
-    <value>Advertising material {1} that does not belong to the company {2} is selected in the item {0}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
     <value>{1} "{0}" is an accompanying item, the main item is not found.</value>
@@ -168,9 +153,6 @@
   <data name="ConflictingPrincipalPositionTemplate_Order" xml:space="preserve">
     <value>{0} "{1}" contains reference objects in conflict with reference objects of the following main item: {2} "{3}" in the order {4}</value>
   </data>
-  <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
-    <value>Discount coupon {0} is attached to several items: </value>
-  </data>
   <data name="CpcIsMissing" xml:space="preserve">
     <value>No CPC for item {0} in category {1}</value>
   </data>
@@ -191,9 +173,6 @@
   </data>
   <data name="DefaultThemeIsNotSpecified" xml:space="preserve">
     <value>For the subdivision {0}, default topic is not specified</value>
-  </data>
-  <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>For the company {0}, an advertising link {3} item {1} in the order {2} is ordered and it doubles contact of the company.</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
     <value>Company {0} is deleted.</value>
@@ -258,9 +237,6 @@
   <data name="OrderCheckPositionMustHaveAdvertisements" xml:space="preserve">
     <value>Please specify advertising materials in the item {0}</value>
   </data>
-  <data name="OrderContainsDummyAdvertisementError" xml:space="preserve">
-    <value>The item {0} contains an advertising material's parked page</value>
-  </data>
   <data name="OrderDealIsInactive" xml:space="preserve">
     <value>Inactive work is specified for an order</value>
   </data>
@@ -291,12 +267,6 @@
   <data name="OrderReferencesInactiveEntities" xml:space="preserve">
     <value>The order refers to inactive objects: {0}</value>
   </data>
-  <data name="OrdersCheckAdvertisementElementIsDraft" xml:space="preserve">
-    <value>The advertising material “{0}” to be verified contains an element “{1}” with the “Draft” status</value>
-  </data>
-  <data name="OrdersCheckAdvertisementElementWasInvalidated" xml:space="preserve">
-    <value>The element "{1}" in the advertising material "{0}" that is subject to verification contains verification errors</value>
-  </data>
   <data name="OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne" xml:space="preserve">
     <value>The company division of the order assignment does not correspond to the company division of the selected company</value>
   </data>
@@ -312,9 +282,6 @@
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
     <value>In the item {0}, there are categories that are not referenced to the company division in the city of order destination: </value>
   </data>
-  <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
-    <value>Advertising material {0} has unspecified required element {1}</value>
-  </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
     <value>In the price-list item {0}, it is necessary to specify minimum quantity of advertisements per issue.</value>
   </data>
@@ -323,9 +290,6 @@
   </data>
   <data name="ProfileWarrantyEndDateIsLessThanSignDate" xml:space="preserve">
     <value>Power of Attorney of the client's legal entity in the profile {0} has expiry date that is earlier than the signing date of the Invoice</value>
-  </data>
-  <data name="RemovedAdvertisemendSpecifiedForPosition" xml:space="preserve">
-    <value>The deleted advertising material {0} is selected in the item {1}</value>
   </data>
   <data name="RichChildPositionTypeTemplate" xml:space="preserve">
     <value>Subitem "{0}" of the item</value>
@@ -345,9 +309,6 @@
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
     <value>The topic {0} uses the deleted category {1}.</value>
   </data>
-  <data name="ThereIsNoAdvertisementForAdvantageousPurchasesCategory" xml:space="preserve">
-    <value>Firm {0} with "Best purchases with 2GIS" category has no sales on "Self-advertisement only for PC" or "Best purchases with 2GIS"</value>
-  </data>
   <data name="ThereIsNoSpecifiedDealForOrder" xml:space="preserve">
     <value>No work is specified for the order</value>
   </data>
@@ -356,5 +317,14 @@
   </data>
   <data name="TooManyCategorieForFirm" xml:space="preserve">
     <value>For the company {0}, too big number of categories is set - {1}. Maximum permitted number - {2}.</value>
+  </data>
+  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
+    <value>Advertising material {1} that does not belong to the company {2} is selected in the item {0}</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
+    <value>The advertising material “{0}” has the “Draft” status</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
+    <value>The advertising material “{0}” contains verification errors</value>
   </data>
 </root>

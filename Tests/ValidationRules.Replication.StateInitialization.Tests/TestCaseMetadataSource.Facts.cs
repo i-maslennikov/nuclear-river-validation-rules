@@ -31,17 +31,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new UnlimitedOrder { OrderId = 1, PeriodStart = MonthStart(1), PeriodEnd = MonthStart(2) });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement FirmContactsFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(FirmContactsFacts))
-            .Erm(
-                new Erm::FirmContact { Id = 1, FirmAddressId = 1, ContactType = 4, Contact = "http://localhost"},
-                new Erm::FirmContact { Id = 2, FirmAddressId = null, ContactType = 4, Contact = "http://localhost" },
-                new Erm::FirmContact { Id = 3, FirmAddressId = 1, ContactType = 3, Contact = "http://localhost" })
-            .Fact(
-                new FirmAddressWebsite { Id = 1, FirmAddressId = 1, Website = "http://localhost" });
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement ThemeOrganizationUnitFacts
         => ArrangeMetadataElement.Config
             .Name(nameof(ThemeOrganizationUnitFacts))
@@ -91,54 +80,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::SalesModelCategoryRestriction { ProjectId = 1, BeginningDate = MonthStart(1), CategoryId = 1, SalesModel = 2 })
             .Fact(
                 new SalesModelCategoryRestriction { ProjectId = 1, Begin = MonthStart(1), CategoryId = 1, SalesModel = 2 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AdvertisementFacts))
-            .Erm(
-                new Erm::Advertisement { Id = 1, IsDeleted = false },
-                new Erm::Advertisement { Id = 2, IsDeleted = true })
-            .Fact(
-                new Advertisement { Id = 1, IsDeleted = false },
-                new Advertisement { Id = 2, IsDeleted = true });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementTemplateFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AdvertisementTemplateFacts))
-            .Erm(
-                new Erm::AdvertisementTemplate { Id = 1, IsDeleted = false, IsPublished = true, DummyAdvertisementId = 1 },
-                new Erm::AdvertisementTemplate { Id = 2, IsDeleted = true },
-                new Erm::AdvertisementTemplate { Id = 3, IsPublished = false },
-                new Erm::AdvertisementTemplate { Id = 4, DummyAdvertisementId = null})
-            .Fact(
-                new AdvertisementTemplate { Id = 1, DummyAdvertisementId = 1 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementElementFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AdvertisementElementFacts))
-            .Erm(
-                new Erm::AdvertisementElement { Id = 1, IsDeleted = false },
-                new Erm::AdvertisementElementStatus { Id = 1, Status = 1 },
-
-                new Erm::AdvertisementElement { Id = 2, IsDeleted = false },
-
-                new Erm::AdvertisementElement { Id = 3, IsDeleted = true },
-                new Erm::AdvertisementElementStatus { Id = 3, Status = 3 })
-            .Fact(
-                new AdvertisementElement { Id = 1, IsEmpty = true, Status = 1 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AdvertisementElementTemplateFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AdvertisementElementTemplateFacts))
-            .Erm(
-                new Erm::AdvertisementElementTemplate { Id = 1, IsDeleted = false },
-                new Erm::AdvertisementElementTemplate { Id = 2, IsDeleted = true })
-            .Fact(
-                new AdvertisementElementTemplate { Id = 1 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement PositionChildFacts
@@ -368,7 +309,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Erm::Position { Id = 36, BindingObjectTypeEnum = 36 },
                 new Erm::Position { Id = 37, BindingObjectTypeEnum = 37 },
 
-                new Erm::Position { Id = 999, BindingObjectTypeEnum = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true },
+                new Erm::Position { Id = 999, BindingObjectTypeEnum = 999, CategoryCode = 1, IsControlledByAmount = true },
 
                 new Erm::Position { Id = 1000, IsDeleted = true })
             .Fact(
@@ -385,7 +326,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Position { Id = 36, BindingObjectType = 36 },
                 new Position { Id = 37, BindingObjectType = 37 },
 
-                new Position { Id = 999, BindingObjectType = 999, CategoryCode = 1, IsComposite = true, IsControlledByAmount = true },
+                new Position { Id = 999, BindingObjectType = 999, CategoryCode = 1, IsControlledByAmount = true },
                 new Position { Id = 1000, IsDeleted = true });
 
         // ReSharper disable once UnusedMember.Local

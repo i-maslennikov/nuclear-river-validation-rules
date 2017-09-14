@@ -9,7 +9,6 @@ using Microsoft.Practices.Unity;
 using NuClear.Model.Common.Entities;
 using NuClear.Tracing.API;
 using NuClear.Tracing.Environment;
-using NuClear.Tracing.Log4Net;
 using NuClear.Tracing.Log4Net.Config;
 using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.DataAccess;

@@ -164,7 +164,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                  .Where(x => usedPositionIds.Contains(x.Id))
                                  .Execute(); // Можно ограничиться проверямым заказов
             store.AddRange(positions);
-            var advertisementTemplateIds = positions.Where(x => x.AdvertisementTemplateId.HasValue).Select(x => x.AdvertisementTemplateId.Value).ToList();
 
             var positionChilds = query.GetTable<PositionChild>()
                                       .Where(x => usedPositionIds.Contains(x.MasterPositionId) || usedPositionIds.Contains(x.ChildPositionId))
@@ -230,36 +229,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                                       .Where(x => categoryIds.Contains(x.CategoryId))
                                                       .Execute(); // Можно ужесточить: рубрики из свзанных заказов нам на самом деле не нужны.
             store.AddRange(salesModelCategoryRestrictions);
-
-            //
-            var advertisements = query.GetTable<Advertisement>().Where(x => firmIds.Contains(x.FirmId.Value))
-                                      .Union(query.GetTable<Advertisement>().Where(x => adverisementIds.Contains(x.Id)))
-                                      .Execute();
-            store.AddRange(advertisements);
-            var advertisementIds = advertisements.Select(x => x.Id).ToList();
-            var usedAdvertisementTemplateIds = advertisements.Select(x => x.AdvertisementTemplateId).ToList();
-
-            var advertisementElements = query.GetTable<AdvertisementElement>()
-                                             .Where(x => advertisementIds.Contains(x.AdvertisementId))
-                                             .Execute();
-            store.AddRange(advertisementElements);
-            var advertisementElementIds = advertisementElements.Select(x => x.Id).ToList();
-            var advertisementElementTemplateIds = advertisementElements.Select(x => x.AdvertisementElementTemplateId).ToList();
-
-            var advertisementElementStatuses = query.GetTable<AdvertisementElementStatus>()
-                                                    .Where(x => advertisementElementIds.Contains(x.Id))
-                                                    .Execute();
-            store.AddRange(advertisementElementStatuses);
-
-            var advertisementElementTemplates = query.GetTable<AdvertisementElementTemplate>()
-                                                     .Where(x => advertisementElementTemplateIds.Contains(x.Id))
-                                                     .Execute();
-            store.AddRange(advertisementElementTemplates);
-
-            var advertisementTemplates = query.GetTable<AdvertisementTemplate>()
-                                              .Where(x => advertisementTemplateIds.Union(usedAdvertisementTemplateIds).Contains(x.Id))
-                                              .Execute();
-            store.AddRange(advertisementTemplates);
 
             LoadAmountControlledSales(query, order, usedPriceIds, store);
             LoadAssociatedDeniedRules(query, order, usedPriceIds, store);
@@ -346,12 +315,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                      .Where(x => firmAddressIds.Contains(x.FirmAddressId))
                      .Execute();
             store.AddRange(categoryFirmAddresses);
-
-            var contacts =
-                query.GetTable<FirmContact>()
-                     .Where(x => firmAddressIds.Contains(x.FirmAddressId.Value))
-                     .Execute();
-            store.AddRange(contacts);
         }
 
         private static void LoadAccount(DataConnection query, Order order, IStore store)

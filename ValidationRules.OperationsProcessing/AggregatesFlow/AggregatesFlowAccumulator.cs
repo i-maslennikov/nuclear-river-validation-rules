@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 
         public AggregatesFlowAccumulator()
         {
-            _commandFactory = new AggregatesFlowCommandFactory();
+            _commandFactory = new AggregatesCommandFactory();
         }
 
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
@@ -29,64 +29,49 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             };
         }
 
-        private sealed class AggregatesFlowCommandFactory : ICommandFactory
+        private sealed class AggregatesCommandFactory : ICommandFactory
         {
             public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
-                var createdEvent = @event as DataObjectCreatedEvent;
-                if (createdEvent != null)
+                switch (@event)
                 {
-                    return AggregateTypesFor<DataObjectCreatedEvent>(createdEvent.DataObjectType)
-                           .Select(x => new AggregateCommand.Recalculate(x, createdEvent.DataObjectId));
-                }
+                    case DataObjectCreatedEvent createdEvent:
+                        return AggregateTypesFor<DataObjectCreatedEvent>(createdEvent.DataObjectType)
+                            .Select(x => new AggregateCommand.Recalculate(x, createdEvent.DataObjectId));
 
-                var updatedEvent = @event as DataObjectUpdatedEvent;
-                if (updatedEvent != null)
-                {
-                    return AggregateTypesFor<DataObjectUpdatedEvent>(updatedEvent.DataObjectType)
-                           .Select(x => new AggregateCommand.Recalculate(x, updatedEvent.DataObjectId));
-                }
+                    case DataObjectUpdatedEvent updatedEvent:
+                        return AggregateTypesFor<DataObjectUpdatedEvent>(updatedEvent.DataObjectType)
+                            .Select(x => new AggregateCommand.Recalculate(x, updatedEvent.DataObjectId));
 
-                var deletedEvent = @event as DataObjectDeletedEvent;
-                if (deletedEvent != null)
-                {
-                    return AggregateTypesFor<DataObjectDeletedEvent>(deletedEvent.DataObjectType)
-                           .Select(x => new AggregateCommand.Recalculate(x, deletedEvent.DataObjectId));
-                }
+                    case DataObjectDeletedEvent deletedEvent:
+                        return AggregateTypesFor<DataObjectDeletedEvent>(deletedEvent.DataObjectType)
+                            .Select(x => new AggregateCommand.Recalculate(x, deletedEvent.DataObjectId));
 
-                var outdatedEvent = @event as RelatedDataObjectOutdatedEvent<long>;
-                if (outdatedEvent != null)
-                {
-                    return RelatedAggregateTypesFor<RelatedDataObjectOutdatedEvent<long>>(outdatedEvent.DataObjectType, outdatedEvent.RelatedDataObjectType)
-                           .Select(x => new AggregateCommand.Recalculate(x, outdatedEvent.RelatedDataObjectId));
-                }
+                    case RelatedDataObjectOutdatedEvent<long> outdatedEvent:
+                        return RelatedAggregateTypesFor<RelatedDataObjectOutdatedEvent<long>>(outdatedEvent.DataObjectType, outdatedEvent.RelatedDataObjectType)
+                            .Select(x => new AggregateCommand.Recalculate(x, outdatedEvent.RelatedDataObjectId));
 
-                var outdatedPeriodEvent = @event as RelatedDataObjectOutdatedEvent<PeriodKey>;
-                if (outdatedPeriodEvent != null)
-                {
-                    return new[] { new RecalculatePeriodCommand(outdatedPeriodEvent.RelatedDataObjectId) };
-                }
+                    case RelatedDataObjectOutdatedEvent<PeriodKey> outdatedPeriodEvent:
+                        return new[] { new RecalculatePeriodCommand(outdatedPeriodEvent.RelatedDataObjectId) };
 
-                var stateIncrementedEvent = @event as FactsStateIncrementedEvent;
-                if (stateIncrementedEvent != null)
-                {
-                    return new[] { new IncrementStateCommand(stateIncrementedEvent.IncludedTokens) };
-                }
+                    case AmsStateIncrementedEvent amsStateIncrementedEvent:
+                        return new[] { new IncrementAmsStateCommand(amsStateIncrementedEvent.State) };
 
-                var factsDelayLoggedEvent = @event as FactsDelayLoggedEvent;
-                if (factsDelayLoggedEvent != null)
-                {
-                    return new[] { new LogDelayCommand(factsDelayLoggedEvent.EventTime) };
-                }
+                    case ErmStateIncrementedEvent ermStateIncrementedEvent:
+                        return new[] { new IncrementErmStateCommand(ermStateIncrementedEvent.States) };
 
-                throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                    case DelayLoggedEvent delayLoggedEvent:
+                        return new[] { new LogDelayCommand(delayLoggedEvent.EventTime) };
+
+                    default:
+                        throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                }
             }
 
             private static IEnumerable<Type> AggregateTypesFor<TEvent>(Type dataObjectType)
                 where TEvent : IEvent
             {
-                IReadOnlyCollection<Type> aggregateTypes;
-                if (!EntityTypeMap.TryGetAggregateTypes(dataObjectType, out aggregateTypes))
+                if (!EntityTypeMap.TryGetAggregateTypes(dataObjectType, out var aggregateTypes))
                 {
                     throw new ArgumentException($"No metadata for event {typeof(TEvent).Name}, DataObjectType={dataObjectType.Name}", nameof(dataObjectType));
                 }
@@ -97,8 +82,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             private static IEnumerable<Type> RelatedAggregateTypesFor<TEvent>(Type dataObjectType, Type relatedDataObjectType)
                 where TEvent : IEvent
             {
-                IReadOnlyCollection<Type> aggregateTypes;
-                if (!EntityTypeMap.TryGetRelatedAggregateTypes(dataObjectType, relatedDataObjectType, out aggregateTypes))
+                if (!EntityTypeMap.TryGetRelatedAggregateTypes(dataObjectType, relatedDataObjectType, out var aggregateTypes))
                 {
                     throw new ArgumentException($"No metadata for event {typeof(TEvent).GetFriendlyName() } ({dataObjectType.Name}, {relatedDataObjectType.Name})", nameof(dataObjectType));
                 }

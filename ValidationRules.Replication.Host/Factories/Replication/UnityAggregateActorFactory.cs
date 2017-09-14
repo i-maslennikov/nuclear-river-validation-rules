@@ -39,8 +39,6 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(AccountAggregates::Order), typeof(AccountActors::OrderAggregateRootActor) },
                     { typeof(AccountAggregates::Account), typeof(AccountActors::AccountAggregateRootActor) },
 
-                    { typeof(AdvertisementAggregates::Advertisement), typeof(AdvertisementActors::AdvertisementAggregateRootActor) },
-                    { typeof(AdvertisementAggregates::Firm), typeof(AdvertisementActors::FirmAggregateRootActor) },
                     { typeof(AdvertisementAggregates::Order), typeof(AdvertisementActors::OrderAggregateRootActor) },
 
                     { typeof(ConsistencyAggregates::Order), typeof(ConsistencyActors::OrderAggregateRootActor) },

@@ -127,6 +127,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Advertisement\AdvertisementMustPassReview.cs" />
+    <Compile Include="Advertisement\AdvertisementMustBelongToFirm.cs" />
+    <Compile Include="Advertisement\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="Consistency\BargainScanShouldPresent.cs" />
     <Compile Include="Consistency\OrderScanShouldPresent.cs" />
     <Compile Include="Consistency\LegalPersonProfileWarrantyShouldNotBeExpired.cs" />
@@ -142,18 +145,7 @@
     <Compile Include="Consistency\BillsSumShouldMatchOrder.cs" />
     <Compile Include="Account\AccountShouldExist.cs" />
     <Compile Include="Account\AccountBalanceShouldBePositive.cs" />
-    <Compile Include="Advertisement\AdvertisementWebsiteShouldNotBeFirmWebsite.cs" />
-    <Compile Include="Advertisement\OrderCouponPeriodMustBeInRelease.cs" />
-    <Compile Include="Advertisement\OrderCouponPeriodMustNotBeLessFiveDays.cs" />
-    <Compile Include="Advertisement\CouponMustBeSoldOnceAtTime.cs" />
-    <Compile Include="Advertisement\WhiteListAdvertisementMustPresent.cs" />
-    <Compile Include="Advertisement\AdvertisementMustBelongToFirm.cs" />
-    <Compile Include="Advertisement\AdvertisementElementMustPassReview.cs" />
-    <Compile Include="Advertisement\OrderMustHaveAdvertisement.cs" />
-    <Compile Include="Advertisement\OrderMustNotContainDummyAdvertisement.cs" />
-    <Compile Include="Advertisement\OrderPositionMustNotReferenceDeletedAdvertisement.cs" />
     <Compile Include="Advertisement\OrderPositionAdvertisementMustBeCreated.cs" />
-    <Compile Include="Advertisement\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="ArrangeMetadataElementBuilderExtensions.cs" />
     <Compile Include="BulkReplicationAdapter.cs" />
     <Compile Include="ConnectionStringName.cs" />
@@ -166,7 +158,6 @@
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
     <Compile Include="Firm\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
-    <Compile Include="Firm\FirmWithSpecialCategoryShouldHaveSpecialPurchases.cs" />
     <Compile Include="Price\FirmAssociatedPositionMustHavePrincipal.cs" />
     <Compile Include="Price\FirmPositionMustNotHaveDeniedPositions.cs" />
     <Compile Include="Price\FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject.cs" />

@@ -55,6 +55,10 @@ function Get-DBHostMetadata($Context){
 	return @{ 'DBHost' = $dbHost }
 }
 
+function Get-AmsFactsTopicsMetadata($Context){
+	return @{'AmsFactsTopics' = 'ams_okapi_prod.am.validity' }
+}
+
 function Get-ValidationUrlMetadata($Context){
 
 	$domain = $DomainNames[$Context.Country]
@@ -168,9 +172,10 @@ function Get-RegexMetadata($Context){
 		}
 	}
 
-	$dbHostMetadata = Get-DBHostMetadata $Context
-	$validationUrlMetadata = Get-ValidationUrlMetadata $Context
-	$keyValuePairs = $dbHostMetadata + $validationUrlMetadata
+	$keyValuePairs = @{}
+	$keyValuePairs += Get-DBHostMetadata $Context
+	$keyValuePairs += Get-ValidationUrlMetadata $Context
+	$keyValuePairs += Get-AmsFactsTopicsMetadata $Context
 
 	foreach($keyValuePair in $keyValuePairs.GetEnumerator()){
 		$regex["{$($keyValuePair.Key)}"] = $keyValuePair.Value

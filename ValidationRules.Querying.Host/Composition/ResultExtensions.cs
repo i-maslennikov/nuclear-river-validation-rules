@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-using NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
+
+using Order = NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates.Order;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition
 {
@@ -59,11 +60,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             return (InvalidFirmState)int.Parse(message["invalidFirmState"], CultureInfo.InvariantCulture);
         }
 
-        public static Advertisement.ReviewStatus ReadAdvertisementElementStatus(this IReadOnlyDictionary<string, string> message)
-        {
-            return (Advertisement.ReviewStatus)int.Parse(message["advertisementElementStatus"], CultureInfo.InvariantCulture);
-        }
-
         public static OrderRequiredFieldsDto ReadOrderRequiredFieldsMessage(this IReadOnlyDictionary<string, string> message)
         {
             return new OrderRequiredFieldsDto
@@ -91,11 +87,6 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
             return int.Parse(message["themeCount"], CultureInfo.InvariantCulture);
         }
 
-        public static string ReadWebsite(this IReadOnlyDictionary<string, string> message)
-        {
-            return message["website"];
-        }
-
         public static DealState ReadDealState(this IReadOnlyDictionary<string, string> message)
         {
             return (DealState)int.Parse(message["state"]);
@@ -104,6 +95,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         public static DateTime ReadBeginDate(this IReadOnlyDictionary<string, string> message)
         {
             return DateTime.Parse(message["begin"]);
+        }
+
+        public static Order.AdvertisementReviewState ReadAdvertisementReviewState(this IReadOnlyDictionary<string, string> message)
+        {
+            return (Order.AdvertisementReviewState)int.Parse(message["reviewState"], CultureInfo.InvariantCulture);
         }
 
         public sealed class CategoryCountDto

@@ -23,17 +23,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                join fail in query.For<Order.AdvertisementMustBelongToFirm>() on order.Id equals fail.OrderId
+                from fail in query.For<Order.AdvertisementNotBelongToFirm>().Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
-                                    new Reference<EntityTypeOrder>(order.Id),
-                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                        new Reference<EntityTypeOrderPosition>(fail.OrderPositionId),
+                                    new Reference<EntityTypeOrder>(fail.OrderId),
+                                    new Reference<EntityTypeOrderPosition>(fail.OrderPositionId,
+                                        new Reference<EntityTypeOrder>(fail.OrderId),
                                         new Reference<EntityTypePosition>(fail.PositionId)),
                                     new Reference<EntityTypeAdvertisement>(fail.AdvertisementId),
-                                    new Reference<EntityTypeFirm>(fail.FirmId))
+                                    new Reference<EntityTypeFirm>(fail.ExpectedFirmId))
                                 .ToXDocument(),
 
                         PeriodStart = order.BeginDistributionDate,

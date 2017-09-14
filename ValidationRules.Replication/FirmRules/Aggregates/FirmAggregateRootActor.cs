@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Replication.Core;
@@ -22,12 +21,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
             IBulkRepository<Firm> bulkRepository,
-            IBulkRepository<Firm.AdvantageousPurchasePositionDistributionPeriod> advantageousPurchasePositionDistributionPeriodRepository,
             IBulkRepository<Firm.CategoryPurchase> categoryPurchaseRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new FirmAccessor(query), bulkRepository,
-                HasValueObject(new AdvantageousPurchasePositionDistributionPeriodAccessor(query), advantageousPurchasePositionDistributionPeriodRepository),
                 HasValueObject(new CategoryPurchaseAccessor(query), categoryPurchaseRepository));
         }
 
@@ -45,17 +42,13 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     {
                         MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
                         MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
-                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
                     };
 
             public IQueryable<Firm> GetSource()
-                => from firm in _query.For<Facts::Firm>()
-                   from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == firm.OrganizationUnitId)
-                   select new Firm
-                       {
-                           Id = firm.Id,
-                           ProjectId = project.Id,
-                       };
+                => _query.For<Facts::Firm>().Select(x => new Firm
+                    {
+                        Id = x.Id,
+                    });
 
             public FindSpecification<Firm> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
@@ -65,71 +58,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Firm>(x => aggregateIds.Contains(x.Id));
-            }
-        }
-
-        public sealed class AdvantageousPurchasePositionDistributionPeriodAccessor : DataChangesHandler<Firm.AdvantageousPurchasePositionDistributionPeriod>, IStorageBasedDataObjectAccessor<Firm.AdvantageousPurchasePositionDistributionPeriod>
-        {
-            private readonly IQuery _query;
-
-            public AdvantageousPurchasePositionDistributionPeriodAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.FirmWithSpecialCategoryShouldHaveSpecialPurchases,
-                    };
-
-            public IQueryable<Firm.AdvantageousPurchasePositionDistributionPeriod> GetSource()
-            {
-                var firmsWithCategory =
-                    from firmAddressCategory in _query.For<Facts::FirmAddressCategory>().Where(x => x.CategoryId == Facts::Category.AdvantageousPurchaseWith2Gis)
-                    from firmAddress in _query.For<Facts::FirmAddress>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == firmAddressCategory.FirmAddressId)
-                    from firm in _query.For<Facts::Firm>().Where(x => x.IsActive && !x.IsDeleted && !x.IsClosedForAscertainment).Where(x => x.Id == firmAddress.FirmId)
-                    select firm;
-
-                var periodsForAllFirms =
-                    from firm in _query.For<Facts::Firm>()
-                    select new { FirmId = firm.Id, Begin = DateTime.MinValue, End = DateTime.MaxValue, Has = false, Scope = Scope.ApprovedScope };
-
-                var specialPositions = _query.For<Facts::Position>().Where(x => !x.IsDeleted).Select(x => new
-                {
-                    x.Id,
-                    IsAdvantageousPurchaseOnPc = x.CategoryCode == Facts::Position.CategoryCodeAdvantageousPurchaseWith2Gis && x.Platform == Facts::Position.PlatformDesktop,
-                    IsSelfAdvertisementOnPc = x.CategoryCode == Facts::Position.CategoryCodeSelfAdvertisementOnlyOnPc,
-                });
-
-                var periodsForAllOrders =
-                    from order in _query.For<Facts::Order>()
-                    let has = (from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                               from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                               from specialPosition in specialPositions.Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                               select specialPosition).Any(x => x.IsAdvantageousPurchaseOnPc || x.IsSelfAdvertisementOnPc)
-                    let scope = Scope.Compute(order.WorkflowStep, order.Id)
-                    select new { order.FirmId, Begin = order.BeginDistribution, End = order.EndDistributionFact, Has = has, Scope = scope };
-
-                var periodsForFirmsWithCategory =
-                    from firm in firmsWithCategory.Distinct()
-                    from period in periodsForAllOrders.Union(periodsForAllFirms).Where(x => x.FirmId == firm.Id)
-                    select new Firm.AdvantageousPurchasePositionDistributionPeriod
-                        {
-                            FirmId = firm.Id,
-                            Scope = period.Scope,
-                            Begin = period.Begin,
-                            End = period.End,
-                            HasPosition = period.Has,
-                        };
-
-                return periodsForFirmsWithCategory;
-            }
-
-            public FindSpecification<Firm.AdvantageousPurchasePositionDistributionPeriod> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Firm.AdvantageousPurchasePositionDistributionPeriod>(x => aggregateIds.Contains(x.FirmId));
             }
         }
 

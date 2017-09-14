@@ -167,6 +167,7 @@
     <Compile Include="EntityTypeIds.cs" />
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
     <Compile Include="FieldComparer\XDocumentComparer.cs" />
+    <Compile Include="Identitites\Connections\AmsConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\ErmConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\AggregatesConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="LinqToDbPropertyProvider.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Order.cs" />
+    <Compile Include="Model\Facts\Advertisement.cs" />
     <Compile Include="Model\Facts\EntityName.cs" />
     <Compile Include="Model\Facts\Lock.cs" />
     <Compile Include="Model\Facts\Order.cs" />
@@ -222,16 +224,9 @@
     <Compile Include="Model\Facts\PositionChild.cs" />
     <Compile Include="Model\Facts\Project.cs" />
     <Compile Include="Model\Facts\ReleaseWithdrawal.cs" />
-    <Compile Include="Model\AdvertisementRules\Aggregates\Advertisement.cs" />
-    <Compile Include="Model\AdvertisementRules\Aggregates\Firm.cs" />
     <Compile Include="Model\AdvertisementRules\Aggregates\Order.cs" />
-    <Compile Include="Model\Facts\Advertisement.cs" />
-    <Compile Include="Model\Facts\AdvertisementElement.cs" />
-    <Compile Include="Model\Facts\AdvertisementTemplate.cs" />
-    <Compile Include="Model\Facts\AdvertisementElementTemplate.cs" />
     <Compile Include="Model\Facts\Firm.cs" />
     <Compile Include="Model\Facts\FirmAddress.cs" />
-    <Compile Include="Model\Facts\FirmAddressWebsite.cs" />
     <Compile Include="Model\Facts\Position.cs" />
     <Compile Include="Model\Facts\PricePosition.cs" />
     <Compile Include="Model\Facts\UnlimitedOrder.cs" />
@@ -245,11 +240,6 @@
     <Compile Include="Model\Facts\LegalPerson.cs" />
     <Compile Include="Model\Facts\LegalPersonProfile.cs" />
     <Compile Include="Model\Facts\OrderScanFile.cs" />
-    <Compile Include="Model\Erm\Advertisement.cs" />
-    <Compile Include="Model\Erm\AdvertisementElement.cs" />
-    <Compile Include="Model\Erm\AdvertisementElementStatus.cs" />
-    <Compile Include="Model\Erm\AdvertisementElementTemplate.cs" />
-    <Compile Include="Model\Erm\AdvertisementTemplate.cs" />
     <Compile Include="Model\Erm\Account.cs" />
     <Compile Include="Model\Erm\Bargain.cs" />
     <Compile Include="Model\Erm\BargainFile.cs" />
@@ -261,7 +251,6 @@
     <Compile Include="Model\Erm\CostPerClickCategoryRestriction.cs" />
     <Compile Include="Model\Erm\Deal.cs" />
     <Compile Include="Model\Erm\Firm.cs" />
-    <Compile Include="Model\Erm\FirmContact.cs" />
     <Compile Include="Model\Erm\FirmAddress.cs" />
     <Compile Include="Model\Erm\LegalPerson.cs" />
     <Compile Include="Model\Erm\LegalPersonProfile.cs" />

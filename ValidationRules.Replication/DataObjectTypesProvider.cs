@@ -17,10 +17,6 @@ namespace NuClear.ValidationRules.Replication
                 return new []
                     {
                             typeof(Account),
-                            typeof(Advertisement),
-                            typeof(AdvertisementElement),
-                            typeof(AdvertisementElementTemplate),
-                            typeof(AdvertisementTemplate),
                             typeof(AssociatedPosition),
                             typeof(AssociatedPositionsGroup),
                             typeof(Bargain),
@@ -36,7 +32,6 @@ namespace NuClear.ValidationRules.Replication
                             typeof(Firm),
                             typeof(FirmAddress),
                             typeof(FirmAddressCategory),
-                            typeof(FirmAddressWebsite),
                             typeof(LegalPerson),
                             typeof(LegalPersonProfile),
                             typeof(Lock),
@@ -60,6 +55,14 @@ namespace NuClear.ValidationRules.Replication
                             typeof(ThemeCategory),
                             typeof(ThemeOrganizationUnit),
                             typeof(UnlimitedOrder),
+                    };
+            }
+
+            if (typeof(IReplaceDataObjectCommand).IsAssignableFrom(typeof(TCommand)))
+            {
+                return new[]
+                    {
+                        typeof(Advertisement)
                     };
             }
 

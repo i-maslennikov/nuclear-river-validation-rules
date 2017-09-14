@@ -27,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                join fail in query.For<Order.MissingOrderPositionAdvertisement>() on order.Id equals fail.OrderId
+                from fail in query.For<Order.MissingOrderPositionAdvertisement>().Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
                     {
                         MessageParams =

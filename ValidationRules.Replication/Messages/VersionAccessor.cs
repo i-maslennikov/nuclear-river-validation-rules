@@ -21,7 +21,7 @@ namespace NuClear.ValidationRules.Replication.Messages
         }
 
         public IQueryable<Version> GetSource()
-            => new[] { new Version { Id = 0, Date = DateTime.UtcNow } }.AsQueryable();
+            => new[] { new Version { Id = 0, UtcDateTime = DateTime.UtcNow } }.AsQueryable();
 
         public FindSpecification<Version> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

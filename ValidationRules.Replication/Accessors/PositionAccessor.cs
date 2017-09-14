@@ -8,7 +8,6 @@ using NuClear.Replication.Core.Specs;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Events;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
@@ -29,13 +28,12 @@ namespace NuClear.ValidationRules.Replication.Accessors
             {
                 Id = x.Id,
 
-                AdvertisementTemplateId = x.AdvertisementTemplateId,
                 BindingObjectType = x.BindingObjectTypeEnum,
                 SalesModel = x.SalesModel,
                 PositionsGroup = x.PositionsGroup,
 
                 IsCompositionOptional = x.IsCompositionOptional,
-                IsComposite = x.IsComposite,
+                IsContentSales = x.IsContentSales,
                 IsControlledByAmount = x.IsControlledByAmount,
 
                 CategoryCode = x.CategoryCode,

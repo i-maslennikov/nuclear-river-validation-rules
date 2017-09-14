@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // no Facts::OrderPositionAdvertisement
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
+                    new Aggregates::Order { Id = 1, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
                     new Aggregates::Order.MissingOrderPositionAdvertisement { OrderId = 1, OrderPositionId = 4, CompositePositionId = 5, PositionId = 6 }
                 )
                 .Message(
@@ -68,7 +68,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     // no Facts::OrderPositionAdvertisement
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb }
+                    new Aggregates::Order { Id = 1, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb }
                 )
                 .Message();
 
@@ -90,7 +90,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 6, AdvertisementId = 7}
                 )
                 .Aggregate(
-                    new Aggregates::Order { Id = 1, ProjectId = 3, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb }
+                    new Aggregates::Order { Id = 1, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb }
                 )
                 .Message(
                 );

@@ -23,18 +23,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<Advertisement>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.IsDeleted }, x => new { x.Id });
-            builder.Entity<AdvertisementElement>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.AdvertisementElementTemplateId, x.IsEmpty }, x => new { x.Id, x.AdvertisementId })
-                   .HasIndex(x => new { x.AdvertisementElementTemplateId, x.Status }, x => new { x.Id, x.AdvertisementId });
-            builder.Entity<AdvertisementElementTemplate>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementTemplate>()
-                   .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<AssociatedPosition>()
                    .HasSchemaName(FactsSchema)
@@ -95,9 +83,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.CategoryId)
                    .HasIndex(x => new { x.CategoryId }, x => new { x.FirmAddressId })
                    .HasIndex(x => new { x.FirmAddressId, x.CategoryId });
-            builder.Entity<FirmAddressWebsite>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id);
             builder.Entity<LegalPerson>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -147,8 +132,7 @@ namespace NuClear.ValidationRules.Storage
                    .HasIndex(x => new { x.OrderId }, x => new { x.Id });
             builder.Entity<Position>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.IsComposite });
+                   .HasPrimaryKey(x => x.Id);
             builder.Entity<PositionChild>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.MasterPositionId)

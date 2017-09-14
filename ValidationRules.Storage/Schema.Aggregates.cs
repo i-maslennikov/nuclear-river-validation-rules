@@ -64,9 +64,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(FirmAggregatesSchema)
                    .HasPrimaryKey(x => x.Id);
 
-            builder.Entity<FirmAggregates::Firm.AdvantageousPurchasePositionDistributionPeriod>()
-                   .HasSchemaName(FirmAggregatesSchema);
-
             builder.Entity<FirmAggregates::Firm.CategoryPurchase>()
                    .HasSchemaName(FirmAggregatesSchema)
                    .HasIndex(x => new { x.FirmId, x.Begin, x.End, x.CategoryId }, x => new { x.Scope });
@@ -114,13 +111,13 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
 
-	        builder.Entity<PriceAggregates::Firm.FirmPosition>()
-	               .HasSchemaName(PriceAggregatesSchema)
-	               .HasIndex(x => new { x.FirmId, x.ItemPositionId, x.Begin },
-	                         x => new { x.OrderId, x.OrderPositionId, x.PackagePositionId, x.HasNoBinding, x.Category1Id, x.Category3Id, x.FirmAddressId, x.Scope, x.End })
-	               .HasIndex(x => new { x.OrderId }, x => new { x.FirmId, x.OrderPositionId, x.PackagePositionId, x.ItemPositionId, x.Scope, x.Begin, x.End });
+            builder.Entity<PriceAggregates::Firm.FirmPosition>()
+                   .HasSchemaName(PriceAggregatesSchema)
+                   .HasIndex(x => new { x.FirmId, x.ItemPositionId, x.Begin },
+                             x => new { x.OrderId, x.OrderPositionId, x.PackagePositionId, x.HasNoBinding, x.Category1Id, x.Category3Id, x.FirmAddressId, x.Scope, x.End })
+                   .HasIndex(x => new { x.OrderId }, x => new { x.FirmId, x.OrderPositionId, x.PackagePositionId, x.ItemPositionId, x.Scope, x.Begin, x.End });
 
-			builder.Entity<PriceAggregates::Firm.FirmAssociatedPosition>()
+            builder.Entity<PriceAggregates::Firm.FirmAssociatedPosition>()
                    .HasSchemaName(PriceAggregatesSchema)
                    .HasIndex(x => new { x.FirmId, x.OrderPositionId, x.ItemPositionId }, x => new { x.PrincipalPositionId, x.BindingType });
 
@@ -142,7 +139,7 @@ namespace NuClear.ValidationRules.Storage
                    .HasIndex(x => new { x.PriceId })
                    .HasIndex(x => new { x.IsActive });
 
-			builder.Entity<PriceAggregates::Order.OrderCategoryPosition>()
+            builder.Entity<PriceAggregates::Order.OrderCategoryPosition>()
                    .HasSchemaName(PriceAggregatesSchema);
 
             builder.Entity<PriceAggregates::Order.OrderThemePosition>()
@@ -151,9 +148,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceAggregates::Order.AmountControlledPosition>()
                   .HasSchemaName(PriceAggregatesSchema);
 
-	        builder.Entity<PriceAggregates::Order.ActualPrice>()
-	               .HasSchemaName(PriceAggregatesSchema)
-	               .HasIndex(x => new { x.OrderId, x.PriceId });
+            builder.Entity<PriceAggregates::Order.ActualPrice>()
+                   .HasSchemaName(PriceAggregatesSchema)
+                   .HasIndex(x => new { x.OrderId, x.PriceId });
 
             builder.Entity<PriceAggregates::Period>()
                   .HasSchemaName(PriceAggregatesSchema)
@@ -171,9 +168,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ProjectAggregates::Order.AddressAdvertisementNonOnTheMap>()
                    .HasSchemaName(ProjectAggregatesSchema);
 
-	        builder.Entity<ProjectAggregates::Order.CategoryAdvertisement>()
-	               .HasSchemaName(ProjectAggregatesSchema)
-	               .HasIndex(x => new { x.OrderId, x.IsSalesModelRestrictionApplicable }, x => new { x.OrderPositionId, x.PositionId, x.CategoryId, x.SalesModel });
+            builder.Entity<ProjectAggregates::Order.CategoryAdvertisement>()
+                   .HasSchemaName(ProjectAggregatesSchema)
+                   .HasIndex(x => new { x.OrderId, x.IsSalesModelRestrictionApplicable }, x => new { x.OrderPositionId, x.PositionId, x.CategoryId, x.SalesModel });
 
             builder.Entity<ProjectAggregates::Order.CostPerClickAdvertisement>()
                    .HasSchemaName(ProjectAggregatesSchema);
@@ -182,16 +179,16 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(ProjectAggregatesSchema)
                    .HasPrimaryKey(x => x.Id);
 
-			builder.Entity<ProjectAggregates::Project.Category>()
+            builder.Entity<ProjectAggregates::Project.Category>()
                    .HasSchemaName(ProjectAggregatesSchema)
                    .HasTableName("ProjectCategory");
 
             builder.Entity<ProjectAggregates::Project.CostPerClickRestriction>()
                    .HasSchemaName(ProjectAggregatesSchema);
 
-	        builder.Entity<ProjectAggregates::Project.SalesModelRestriction>()
-	               .HasSchemaName(ProjectAggregatesSchema)
-	               .HasIndex(x => new { x.ProjectId, x.CategoryId, x.Begin, x.End }, x => new { x.SalesModel });
+            builder.Entity<ProjectAggregates::Project.SalesModelRestriction>()
+                   .HasSchemaName(ProjectAggregatesSchema)
+                   .HasIndex(x => new { x.ProjectId, x.CategoryId, x.Begin, x.End }, x => new { x.SalesModel });
 
             builder.Entity<ProjectAggregates::Project.NextRelease>()
                    .HasSchemaName(ProjectAggregatesSchema);
@@ -227,36 +224,10 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(AdvertisementAggregatesSchema);
             builder.Entity<AdvertisementAggregates::Order.MissingOrderPositionAdvertisement>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementDeleted>()
+            builder.Entity<AdvertisementAggregates::Order.AdvertisementFailedReview>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementMustBelongToFirm>()
+            builder.Entity<AdvertisementAggregates::Order.AdvertisementNotBelongToFirm>()
                    .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.AdvertisementIsDummy>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.CouponDistributionPeriod>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Order.OrderPositionAdvertisement>()
-                   .HasSchemaName(AdvertisementAggregatesSchema);
-
-            builder.Entity<AdvertisementAggregates::Advertisement>()
-                  .HasSchemaName(AdvertisementAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementAggregates::Advertisement.AdvertisementWebsite>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.RequiredElementMissing>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.ElementNotPassedReview>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Advertisement.Coupon>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-
-            builder.Entity<AdvertisementAggregates::Firm>()
-                  .HasSchemaName(AdvertisementAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-            builder.Entity<AdvertisementAggregates::Firm.FirmWebsite>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
-            builder.Entity<AdvertisementAggregates::Firm.WhiteListDistributionPeriod>()
-                  .HasSchemaName(AdvertisementAggregatesSchema);
 
             return builder;
         }

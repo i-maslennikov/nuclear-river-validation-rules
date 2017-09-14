@@ -97,24 +97,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для фирмы {0} в белый список выбран рекламный материал {1}.
-        /// </summary>
-        internal static string AdvertisementChoosenForWhitelist {
-            get {
-                return ResourceManager.GetString("AdvertisementChoosenForWhitelist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Для фирмы {0} не указан рекламный материал в белый список.
-        /// </summary>
-        internal static string AdvertisementForWhitelistDoesNotSpecified {
-            get {
-                return ResourceManager.GetString("AdvertisementForWhitelistDoesNotSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Позиция {0} оформлена на пустой адрес {1}.
         /// </summary>
         internal static string AdvertisementIsLinkedWithEmptyAddressError {
@@ -124,20 +106,20 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Период размещения рекламного материала {0}, выбранного в позиции {1} должен захватывать 5 дней от текущего месяца размещения.
+        ///   Looks up a localized string similar to Рекламный материал &quot;{0}&quot; находится в статусе &apos;Черновик&apos;.
         /// </summary>
-        internal static string AdvertisementPeriodEndsBeforeReleasePeriodBegins {
+        internal static string AdvertisementMustPassReview_Draft {
             get {
-                return ResourceManager.GetString("AdvertisementPeriodEndsBeforeReleasePeriodBegins", resourceCulture);
+                return ResourceManager.GetString("AdvertisementMustPassReview_Draft", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Период не может быть менее пяти дней..
+        ///   Looks up a localized string similar to Рекламный материал &quot;{0}&quot; содержит ошибки выверки.
         /// </summary>
-        internal static string AdvertisementPeriodError {
+        internal static string AdvertisementMustPassReview_Invalid {
             get {
-                return ResourceManager.GetString("AdvertisementPeriodError", resourceCulture);
+                return ResourceManager.GetString("AdvertisementMustPassReview_Invalid", resourceCulture);
             }
         }
         
@@ -214,15 +196,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Купон на скидку {0} прикреплён к нескольким позициям: .
-        /// </summary>
-        internal static string CouponIsBoundToMultiplePositionTemplate {
-            get {
-                return ResourceManager.GetString("CouponIsBoundToMultiplePositionTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Для позиции {0} в рубрику {1} отсутствует CPC.
         /// </summary>
         internal static string CpcIsMissing {
@@ -282,15 +255,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string DefaultThemeIsNotSpecified {
             get {
                 return ResourceManager.GetString("DefaultThemeIsNotSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Для фирмы {0} заказана рекламная ссылка {3} позиция {1} в заказе {2} , дублирующая контакт фирмы..
-        /// </summary>
-        internal static string FirmContactContainsSponsoredLinkError {
-            get {
-                return ResourceManager.GetString("FirmContactContainsSponsoredLinkError", resourceCulture);
             }
         }
         
@@ -502,15 +466,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} содержит заглушку рекламного материала.
-        /// </summary>
-        internal static string OrderContainsDummyAdvertisementError {
-            get {
-                return ResourceManager.GetString("OrderContainsDummyAdvertisementError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Для заказа указана неактивная работа.
         /// </summary>
         internal static string OrderDealIsInactive {
@@ -601,24 +556,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В рекламном материале &quot;{0}&quot;, который подлежит выверке, элемент &quot;{1}&quot; находится в статусе &apos;Черновик&apos;.
-        /// </summary>
-        internal static string OrdersCheckAdvertisementElementIsDraft {
-            get {
-                return ResourceManager.GetString("OrdersCheckAdvertisementElementIsDraft", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В рекламном материале &quot;{0}&quot;, который подлежит выверке, элемент &quot;{1}&quot; содержит ошибки выверки.
-        /// </summary>
-        internal static string OrdersCheckAdvertisementElementWasInvalidated {
-            get {
-                return ResourceManager.GetString("OrdersCheckAdvertisementElementWasInvalidated", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы.
         /// </summary>
         internal static string OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne {
@@ -655,15 +592,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В рекламном материале {0} не заполнен обязательный элемент {1}.
-        /// </summary>
-        internal static string OrdersCheckPositionMustHaveAdvertisementElements {
-            get {
-                return ResourceManager.GetString("OrdersCheckPositionMustHaveAdvertisementElements", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск..
         /// </summary>
         internal static string PricePositionHasNoMinAdvertisementAmount {
@@ -687,15 +615,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string ProfileWarrantyEndDateIsLessThanSignDate {
             get {
                 return ResourceManager.GetString("ProfileWarrantyEndDateIsLessThanSignDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} выбран удалённый рекламный материал {1}.
-        /// </summary>
-        internal static string RemovedAdvertisemendSpecifiedForPosition {
-            get {
-                return ResourceManager.GetString("RemovedAdvertisemendSpecifiedForPosition", resourceCulture);
             }
         }
         
@@ -750,15 +669,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string ThemeUsesInactiveCategory {
             get {
                 return ResourceManager.GetString("ThemeUsesInactiveCategory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to У фирмы {0}, с рубрикой &quot;Выгодные покупки с 2ГИС&quot;, отсутствуют продажи по позициям &quot;Самореклама только для ПК&quot; или &quot;Выгодные покупки с 2ГИС&quot;..
-        /// </summary>
-        internal static string ThereIsNoAdvertisementForAdvantageousPurchasesCategory {
-            get {
-                return ResourceManager.GetString("ThereIsNoAdvertisementForAdvantageousPurchasesCategory", resourceCulture);
             }
         }
         

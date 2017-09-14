@@ -129,23 +129,8 @@
   <data name="AdvertisementAmountShortErrorMessage" xml:space="preserve">
     <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}</value>
   </data>
-  <data name="AdvertisementChoosenForWhitelist" xml:space="preserve">
-    <value>Для фирмы {0} в белый список выбран рекламный материал {1}</value>
-  </data>
-  <data name="AdvertisementForWhitelistDoesNotSpecified" xml:space="preserve">
-    <value>Для фирмы {0} не указан рекламный материал в белый список</value>
-  </data>
   <data name="AdvertisementIsLinkedWithEmptyAddressError" xml:space="preserve">
     <value>Позиция {0} оформлена на пустой адрес {1}</value>
-  </data>
-  <data name="AdvertisementPeriodEndsBeforeReleasePeriodBegins" xml:space="preserve">
-    <value>Период размещения рекламного материала {0}, выбранного в позиции {1} должен захватывать 5 дней от текущего месяца размещения</value>
-  </data>
-  <data name="AdvertisementPeriodError" xml:space="preserve">
-    <value>Период не может быть менее пяти дней.</value>
-  </data>
-  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
-    <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>
   <data name="AssociatedPositionWithoutPrincipalTemplate" xml:space="preserve">
     <value>{1} "{0}" является сопутствующей, основная позиция не найдена.</value>
@@ -168,9 +153,6 @@
   <data name="ConflictingPrincipalPositionTemplate_Order" xml:space="preserve">
     <value>{0} "{1}" содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} "{3}" в заказе {4}</value>
   </data>
-  <data name="CouponIsBoundToMultiplePositionTemplate" xml:space="preserve">
-    <value>Купон на скидку {0} прикреплён к нескольким позициям: </value>
-  </data>
   <data name="CpcIsMissing" xml:space="preserve">
     <value>Для позиции {0} в рубрику {1} отсутствует CPC</value>
   </data>
@@ -191,9 +173,6 @@
   </data>
   <data name="DefaultThemeIsNotSpecified" xml:space="preserve">
     <value>Для подразделения {0} не указана тематика по умолчанию</value>
-  </data>
-  <data name="FirmContactContainsSponsoredLinkError" xml:space="preserve">
-    <value>Для фирмы {0} заказана рекламная ссылка {3} позиция {1} в заказе {2} , дублирующая контакт фирмы.</value>
   </data>
   <data name="FirmIsDeleted" xml:space="preserve">
     <value>Фирма {0} удалена.</value>
@@ -258,9 +237,6 @@
   <data name="OrderCheckPositionMustHaveAdvertisements" xml:space="preserve">
     <value>В позиции {0} необходимо указать рекламные материалы</value>
   </data>
-  <data name="OrderContainsDummyAdvertisementError" xml:space="preserve">
-    <value>Позиция {0} содержит заглушку рекламного материала</value>
-  </data>
   <data name="OrderDealIsInactive" xml:space="preserve">
     <value>Для заказа указана неактивная работа</value>
   </data>
@@ -291,12 +267,6 @@
   <data name="OrderReferencesInactiveEntities" xml:space="preserve">
     <value>Заказ ссылается на неактивные объекты: {0}</value>
   </data>
-  <data name="OrdersCheckAdvertisementElementIsDraft" xml:space="preserve">
-    <value>В рекламном материале "{0}", который подлежит выверке, элемент "{1}" находится в статусе 'Черновик'</value>
-  </data>
-  <data name="OrdersCheckAdvertisementElementWasInvalidated" xml:space="preserve">
-    <value>В рекламном материале "{0}", который подлежит выверке, элемент "{1}" содержит ошибки выверки</value>
-  </data>
   <data name="OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne" xml:space="preserve">
     <value>Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы</value>
   </data>
@@ -312,9 +282,6 @@
   <data name="OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit" xml:space="preserve">
     <value>В позиции {0} задействованы рубрики, не привязанные к отделению организации города назначения заказа: </value>
   </data>
-  <data name="OrdersCheckPositionMustHaveAdvertisementElements" xml:space="preserve">
-    <value>В рекламном материале {0} не заполнен обязательный элемент {1}</value>
-  </data>
   <data name="PricePositionHasNoMinAdvertisementAmount" xml:space="preserve">
     <value>В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск.</value>
   </data>
@@ -323,9 +290,6 @@
   </data>
   <data name="ProfileWarrantyEndDateIsLessThanSignDate" xml:space="preserve">
     <value>У юр. лица клиента, в профиле {0} указана доверенность с датой окончания действия раньше даты подписания заказа</value>
-  </data>
-  <data name="RemovedAdvertisemendSpecifiedForPosition" xml:space="preserve">
-    <value>В позиции {0} выбран удалённый рекламный материал {1}</value>
   </data>
   <data name="RichChildPositionTypeTemplate" xml:space="preserve">
     <value>Подпозиция "{0}" позиции</value>
@@ -345,9 +309,6 @@
   <data name="ThemeUsesInactiveCategory" xml:space="preserve">
     <value>Тематика {0} использует удаленную рубрику {1}.</value>
   </data>
-  <data name="ThereIsNoAdvertisementForAdvantageousPurchasesCategory" xml:space="preserve">
-    <value>У фирмы {0}, с рубрикой "Выгодные покупки с 2ГИС", отсутствуют продажи по позициям "Самореклама только для ПК" или "Выгодные покупки с 2ГИС".</value>
-  </data>
   <data name="ThereIsNoSpecifiedDealForOrder" xml:space="preserve">
     <value>Для заказа не указана работа</value>
   </data>
@@ -359,5 +320,14 @@
   </data>
   <data name="MoreThanOnePremiumBuyHerePositionSoldForAddress" xml:space="preserve">
     <value>На адрес "{0}" фирмы "{1}" продано более одной позиции Premium в периоды: {2}</value>
+  </data>
+  <data name="AdvertisementSpecifiedForPositionDoesNotBelongToFirm" xml:space="preserve">
+    <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
+    <value>Рекламный материал "{0}" находится в статусе 'Черновик'</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
+    <value>Рекламный материал "{0}" содержит ошибки выверки</value>
   </data>
 </root>
