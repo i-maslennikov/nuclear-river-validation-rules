@@ -65,7 +65,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
                 var version = await Waiter(async () =>
                 {
-                    var amsState = await connectionLocal.GetTable<Version.AmsState>().SingleOrDefaultAsync(x => x.Offset >= offset);
+                    var amsState = await connectionLocal.GetTable<Version.AmsState>().OrderBy(x => x.VersionId).FirstOrDefaultAsync(x => x.Offset >= offset);
                     return amsState?.VersionId;
                 }, interval, timeout);
 
