@@ -24,14 +24,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
         private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
-        private readonly ITelemetryPublisher _telemetryPublisher;
+        private readonly AmsFactsFlowTelemetryPublisher _telemetryPublisher;
         private readonly TransactionOptions _transactionOptions;
 
         public AmsFactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
             SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
-            ITelemetryPublisher telemetryPublisher,
+            AmsFactsFlowTelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
@@ -81,7 +81,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 
             var eldestEventTime = commands.Min(x => x.State.UtcDateTime);
             var delta = DateTime.UtcNow - eldestEventTime;
-            _telemetryPublisher.Publish<AmsFactsFlowDelayIdentity>((int)delta.TotalMilliseconds);
+            _telemetryPublisher.Delay((int)delta.TotalMilliseconds);
 
             var maxAmsState = commands.Select(x => x.State).OrderByDescending(x => x.Offset).First();
             return new IEvent[]
@@ -108,20 +108,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 
             _syncEntityNameActor.ExecuteCommands(commands);
 
-            _telemetryPublisher.Publish<AmsFactsFlowCompletedEventCountIdentity>(commands.Count);
             return events;
-        }
-
-        public sealed class AmsFactsFlowDelayIdentity : TelemetryIdentityBase<AmsFactsFlowDelayIdentity>
-        {
-            public override int Id => 0;
-            public override string Description => nameof(AmsFactsFlowDelayIdentity);
-        }
-
-        public sealed class AmsFactsFlowCompletedEventCountIdentity : TelemetryIdentityBase<AmsFactsFlowCompletedEventCountIdentity>
-        {
-            public override int Id => 0;
-            public override string Description => nameof(AmsFactsFlowCompletedEventCountIdentity);
         }
     }
 }
