@@ -33,6 +33,7 @@ namespace ValidationRules.Replication.Comparison.Tests
                 var rules = Enum.GetValues(typeof(MessageTypeCode))
                                 .Cast<int>()
                                 .GroupBy(x => x.ToErmRuleCode())
+                                .Where(x => x.Key != 0)
                                 .ToDictionary(x => x.Key, x => x.ToArray());
 
                 var result = new List<TestCaseData>(rules.Count);
@@ -157,6 +158,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             => _riverService.ValidateSingle(orderId).Messages
                             .Where(x => rules == null || rules.Contains(x.RuleCode))
                             .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => x.MessageText.TrimEnd('.').Replace("\"", ""))
+                            .Where(x => x.Key != 0)
                             .ToDictionary(x => x.Key, x => x.OrderBy(y => y).ToArray());
 
         private IDictionary<int, string[]> InvokeErm(long orderId, int? rule = null)
