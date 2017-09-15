@@ -62,8 +62,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
             var sw = Stopwatch.StartNew();
             schemaInitializationActor.ExecuteCommands(commands);
+            bulkReplicationActor.ExecuteCommands(commands.Where(x => x == BulkReplicationCommands.ErmToFacts).ToList());
             kafkaReplicationActor.ExecuteCommands(commands);
-            bulkReplicationActor.ExecuteCommands(commands);
+            bulkReplicationActor.ExecuteCommands(commands.Where(x => x != BulkReplicationCommands.ErmToFacts).ToList());
 
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
