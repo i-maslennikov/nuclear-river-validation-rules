@@ -325,9 +325,9 @@
     <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>
   <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
-    <value>Рекламный материал "{0}" находится в статусе 'Черновик'</value>
+    <value>Рекламный материал {0} ожидает модерацию</value>
   </data>
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
-    <value>Рекламный материал "{0}" содержит ошибки выверки</value>
+    <value>Рекламный материал {0} не прошёл модерацию</value>
   </data>
 </root>
