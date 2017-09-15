@@ -82,20 +82,23 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                         {
                             Console.WriteLine($"Received {batch.Count} messages, offset {batch.Last().Offset}");
 
-                            // пока что хардкод для advertisement и heartbeat
+                            // filter heartbeat messages
                             var dtos = batch
                                 .Where(x => x.Value != null)
                                 .Select(x => JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value))).ToList();
 
-                            var bulkInsertCommands = new List<ICommand>
-                                {
-                                    new BulkInsertDataObjectsCommand(typeof(Advertisement), dtos),
-                                    new BulkInsertDataObjectsCommand(typeof(EntityName), dtos)
-                                };
-
-                            foreach (var actor in actors)
+                            if (dtos.Count != 0)
                             {
-                                actor.ExecuteCommands(bulkInsertCommands);
+                                var bulkInsertCommands = new List<ICommand>
+                                    {
+                                        new BulkInsertDataObjectsCommand(typeof(Advertisement), dtos),
+                                        new BulkInsertDataObjectsCommand(typeof(EntityName), dtos)
+                                    };
+
+                                foreach (var actor in actors)
+                                {
+                                    actor.ExecuteCommands(bulkInsertCommands);
+                                }
                             }
 
                             // state init имеет смысл прекращать когда мы вычитали все полные батчи

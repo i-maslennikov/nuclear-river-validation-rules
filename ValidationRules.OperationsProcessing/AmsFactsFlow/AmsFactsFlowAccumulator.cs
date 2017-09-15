@@ -37,23 +37,25 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
         {
             public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
-                var messages = ((KafkaMessageEvent)@event).KafkaMessage.Messages;
-
                 var commands = new List<ICommand>();
-
-                // пока что хардкод для advertisement и heartbeat
                 var dtos = new List<AdvertisementDto>();
+
+                var messages = ((KafkaMessageEvent)@event).KafkaMessage.Messages;
                 foreach (var message in messages)
                 {
+                    commands.Add(new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)));
+
+                    // filter heartbeat messages
                     if (message.Value != null)
                     {
                         dtos.Add(JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value)));
                     }
-
-                    commands.Add(new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)));
                 }
 
-                commands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), dtos));
+                if (dtos.Count != 0)
+                {
+                    commands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), dtos));
+                }
 
                 return commands;
             }
