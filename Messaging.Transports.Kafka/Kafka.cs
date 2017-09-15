@@ -147,6 +147,7 @@ namespace NuClear.Messaging.Transports.Kafka
 
         public void Dispose()
         {
+            _consumer.Unassign();
             _consumer.OnError -= OnError;
             _consumer.Dispose();
         }
