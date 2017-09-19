@@ -27,11 +27,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                     new Facts::OrderPosition { Id = 6, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 7, OrderPositionId = 6, AdvertisementId = 8 },
-                    new Facts::Advertisement { Id = 8, StateCode = 1 }
+                    new Facts::Advertisement { Id = 8, StateCode = 1 },
+
+                    new Facts::OrderPosition { Id = 9, OrderId = 1 },
+                    new Facts::OrderPositionAdvertisement { Id = 10, OrderPositionId = 9, AdvertisementId = 11 },
+                    new Facts::Advertisement { Id = 11, StateCode = 3 }
                 )
                 .Aggregate(
                     new Aggregates::Order { Id = 1, BeginDistributionDate = MonthStart(1), EndDistributionDatePlan = MonthStart(2) },
-                    new Aggregates::Order.AdvertisementFailedReview { OrderId = 1, AdvertisementId = 8, ReviewState = 1 }
+                    new Aggregates::Order.AdvertisementFailedReview { OrderId = 1, AdvertisementId = 8, ReviewState = 1 },
+                    new Aggregates::Order.AdvertisementFailedReview { OrderId = 1, AdvertisementId = 11, ReviewState = 3 }
                 )
                 .Message(
                     new Messages::Version.ValidationResult
@@ -47,7 +52,22 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(2),
                         OrderId = 1,
-                    }
+                    },
+                    new Messages::Version.ValidationResult
+                        {
+                            MessageParams =
+                                new MessageParams(
+                                                  new Dictionary<string, object> { { "reviewState", 3 } },
+                                                  new Reference<EntityTypeOrder>(1),
+                                                  new Reference<EntityTypeAdvertisement>(11))
+                                    .ToXDocument(),
+
+                            MessageType = (int)MessageTypeCode.AdvertisementShouldNotHaveComments,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
+                            OrderId = 1,
+                        }
+
                 );
     }
 }

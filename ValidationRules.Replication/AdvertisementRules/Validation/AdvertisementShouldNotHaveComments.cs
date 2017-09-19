@@ -9,12 +9,12 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Для заказов, в которых есть РМ с ошибками модерации, должна выводиться ошибка:
-    /// "Рекламный материал {0} не прошёл модерацию: {1}"
+    /// Для заказов, в которых есть РМ со state code = 3, должна выводиться ошибка
+    /// "Рекламный материал {0} одобрен с замечаниями"
     /// </summary>
-    public sealed class AdvertisementMustPassReview : ValidationResultAccessorBase
+    public sealed class AdvertisementShouldNotHaveComments : ValidationResultAccessorBase
     {
-        public AdvertisementMustPassReview(IQuery query) : base(query, MessageTypeCode.AdvertisementMustPassReview)
+        public AdvertisementShouldNotHaveComments(IQuery query) : base(query, MessageTypeCode.AdvertisementShouldNotHaveComments)
         {
         }
 
@@ -23,8 +23,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var ruleResults =
                 from order in query.For<Order>()
                 from fail in query.For<Order.AdvertisementFailedReview>()
-                                  .Where(x => x.ReviewState == (int)Order.AdvertisementReviewState.Draft ||
-                                              x.ReviewState == (int)Order.AdvertisementReviewState.Invalid)
+                                  .Where(x => x.ReviewState == (int)Order.AdvertisementReviewState.OkWithComment)
                                   .Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
                 {

@@ -68,6 +68,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 50 },
                             { MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
                             { MessageTypeCode.AdvertisementMustPassReview, 0 },
+                            { MessageTypeCode.AdvertisementShouldNotHaveComments, 0 },
                     }.ToDictionary(x => x.Key, x => x.Value);
 
         public static int ToErmRuleCode(this int riverMessageTypeCode)

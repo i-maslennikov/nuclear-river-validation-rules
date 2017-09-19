@@ -330,4 +330,7 @@
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
     <value>Рекламный материал {0} не прошёл модерацию</value>
   </data>
+  <data name="AdvertisementMustPassReview_OkWithComment" xml:space="preserve">
+    <value>Рекламный материал {0} одобрен с замечаниями</value>
+  </data>
 </root>
