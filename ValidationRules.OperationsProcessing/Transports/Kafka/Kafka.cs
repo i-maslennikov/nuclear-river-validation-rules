@@ -71,6 +71,15 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
             }
         }
 
+        protected override void OnDispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _messageFlowReceiver.Dispose();
+            }
+
+            base.OnDispose(disposing);
+        }
     }
 
     #endregion
