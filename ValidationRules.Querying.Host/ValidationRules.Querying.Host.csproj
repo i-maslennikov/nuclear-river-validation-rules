@@ -149,6 +149,7 @@
     <Compile Include="CheckModes\CheckModeDescriptorFactory.cs" />
     <Compile Include="CheckModes\CheckModeRegistry.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMaximumRestrictionsMessageComposer.cs" />
+    <Compile Include="Composition\Composers\AdvertisementShouldNotHaveCommentsMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementMustPassReviewMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementMustBelongToFirmMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmAddressMustBeLocatedOnTheMapMessageComposer.cs" />

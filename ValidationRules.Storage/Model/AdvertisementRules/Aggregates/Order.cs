@@ -51,6 +51,7 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
         {
             Draft = 1,
             Invalid = 2,
+            OkWithComment = 3,
         }
     }
 }

@@ -48,6 +48,7 @@
         OrderPositionAdvertisementMustBeCreated = 42,
         AdvertisementMustBelongToFirm = 44,
         AdvertisementMustPassReview = 47,
+        AdvertisementShouldNotHaveComments = 48,
 
         ProjectMustContainCostPerClickMinimumRestriction = 13,
         OrderMustUseCategoriesOnlyAvailableInProject = 51,

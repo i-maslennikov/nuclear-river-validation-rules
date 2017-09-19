@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -106,7 +106,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Рекламный материал &quot;{0}&quot; находится в статусе &apos;Черновик&apos;.
+        ///   Looks up a localized string similar to Рекламный материал {0} ожидает модерацию.
         /// </summary>
         internal static string AdvertisementMustPassReview_Draft {
             get {
@@ -115,11 +115,20 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Рекламный материал &quot;{0}&quot; содержит ошибки выверки.
+        ///   Looks up a localized string similar to Рекламный материал {0} не прошёл модерацию.
         /// </summary>
         internal static string AdvertisementMustPassReview_Invalid {
             get {
                 return ResourceManager.GetString("AdvertisementMustPassReview_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Рекламный материал {0} одобрен с замечаниями.
+        /// </summary>
+        internal static string AdvertisementMustPassReview_OkWithComment {
+            get {
+                return ResourceManager.GetString("AdvertisementMustPassReview_OkWithComment", resourceCulture);
             }
         }
         

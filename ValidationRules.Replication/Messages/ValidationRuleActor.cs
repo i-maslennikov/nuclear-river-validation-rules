@@ -249,6 +249,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new OrderPositionAdvertisementMustHaveAdvertisement(_query),
                     new AdvertisementMustBelongToFirm(_query),
                     new AdvertisementMustPassReview(_query),
+                    new AdvertisementShouldNotHaveComments(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),

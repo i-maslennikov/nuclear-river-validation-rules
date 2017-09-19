@@ -48,6 +48,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                         MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
                         MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
                         MessageTypeCode.AdvertisementMustPassReview,
+                        MessageTypeCode.AdvertisementShouldNotHaveComments,
                         MessageTypeCode.AdvertisementMustBelongToFirm,
                     };
 
@@ -230,6 +231,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.AdvertisementMustPassReview,
+                        MessageTypeCode.AdvertisementShouldNotHaveComments,
                     };
 
             public IQueryable<Order.AdvertisementFailedReview> GetSource()
