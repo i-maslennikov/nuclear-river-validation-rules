@@ -323,8 +323,14 @@
   </data>
   <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
     <value>The advertising material “{0}” has the “Draft” status</value>
+    <comment>Требуется корректный перевод</comment>
   </data>
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
     <value>The advertising material “{0}” contains verification errors</value>
+    <comment>Требуется корректный перевод</comment>
+  </data>
+  <data name="AdvertisementMustPassReview_OkWithComment" xml:space="preserve">
+    <value>The advertising material “{0}” has been approved with comments</value>
+    <comment>Требуется корректный перевод</comment>
   </data>
 </root>
