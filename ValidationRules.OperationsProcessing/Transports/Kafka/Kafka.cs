@@ -77,6 +77,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
             {
                 _messageFlowReceiver.Dispose();
             }
+
+            base.OnDispose(disposing);
         }
     }
 
