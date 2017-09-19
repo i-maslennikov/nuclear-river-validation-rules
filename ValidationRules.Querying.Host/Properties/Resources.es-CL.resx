@@ -323,8 +323,14 @@
   </data>
   <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
     <value>El material publicitario "{0}" está en estado de "Borrador"</value>
+    <comment>Требуется корректный перевод</comment>
   </data>
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
     <value>El material publicitario "{0}" contiene errores de validación</value>
+    <comment>Требуется корректный перевод</comment>
+  </data>
+  <data name="AdvertisementMustPassReview_OkWithComment" xml:space="preserve">
+    <value>El material publicitario "{0}" fue aprobado con comentarios</value>
+    <comment>Требуется корректный перевод</comment>
   </data>
 </root>
