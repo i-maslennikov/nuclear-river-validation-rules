@@ -302,6 +302,10 @@
       <Project>{1A28D9CC-C476-4D87-AABE-587041C18F92}</Project>
       <Name>Messaging.Transports.Kafka</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ValidationRules.Hosting.Common\ValidationRules.Hosting.Common.csproj">
+      <Project>{876cf585-d099-4c5a-949e-e76da08764d8}</Project>
+      <Name>ValidationRules.Hosting.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValidationRules.OperationsProcessing\ValidationRules.OperationsProcessing.csproj">
       <Project>{6C1F4B07-10E4-4072-929A-0FDCDF53BF1B}</Project>
       <Name>ValidationRules.OperationsProcessing</Name>
@@ -321,7 +325,6 @@
     <Compile Include="Customs\CachingTelemetryPublisherDecorator.cs" />
     <Compile Include="DI\ReplicationHostAssembly.cs" />
     <Compile Include="DI\ReplicationRoot.cs" />
-    <Compile Include="Factories\Kafka.cs" />
     <Compile Include="Security\TracerContextUserContextScopeChangesObserver.cs" />
     <Compile Include="Security\UserAuthorizationService.cs" />
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />
