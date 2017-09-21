@@ -98,7 +98,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
                 return Array.Empty<IEvent>();
             }
 
-            var actors = _dataObjectsActorFactory.Create();
+            var actors = _dataObjectsActorFactory.Create(new HashSet<Type>(commands.Select(x => x.DataObjectType)));
             var events = new HashSet<IEvent>();
 
             foreach (var actor in actors)

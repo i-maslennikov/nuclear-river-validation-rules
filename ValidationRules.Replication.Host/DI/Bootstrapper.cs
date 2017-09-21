@@ -329,8 +329,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         private static IUnityContainer ConfigureReplication(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
         {
             return container
-                .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
-
                 .RegisterAccessor<Account, AccountAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<AssociatedPosition, AssociatedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<AssociatedPositionsGroup, AssociatedPositionsGroupAccessor>(entryPointSpecificLifetimeManagerFactory)

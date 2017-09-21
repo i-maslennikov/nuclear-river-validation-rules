@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
+using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Commands;
-using NuClear.StateInitialization.Core.DataObjects;
-using NuClear.StateInitialization.Core.Factories;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
@@ -22,7 +21,7 @@ using WebApp = NuClear.ValidationRules.Storage.Model.WebApp;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
-    public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
+    public sealed class DataObjectTypesProvider : IDataObjectTypesProvider
     {
         public static readonly Type[] FactTypes =
             {
@@ -71,7 +70,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         public static readonly Type[] AmsFactTypes =
             {
                 typeof(Facts::Advertisement),
-                typeof(Facts::EntityName),
+            };
+
+        public static readonly Type[] AmsNamesFactTypes =
+            {
+                typeof(Facts::EntityName)
             };
 
         public static readonly Type[] AggregateTypes =
@@ -160,29 +163,39 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(WebApp::Lock),
             };
 
-        public IDataObjectTypesProvider Create(ReplicateInBulkCommand command)
+        public IReadOnlyCollection<Type> Get(ICommand command)
         {
-            if (command.TargetStorageDescriptor.ConnectionStringIdentity is FactsConnectionStringIdentity)
+            var replicateCommand = (ReplicateInBulkCommandBase)command;
+            switch (replicateCommand)
             {
-                if (command.SourceStorageDescriptor.ConnectionStringIdentity is AmsConnectionStringIdentity)
+                case ReplicateInBulkCommand replicateInBulkCommand:
                 {
-                    return new KafkaReplicationActor.DataObjectTypesProvider(AmsFactTypes);
+                    if (replicateInBulkCommand == BulkReplicationCommands.ErmToFacts ||
+                        replicateInBulkCommand == BulkReplicationCommands.ErmToFactsTest)
+                    {
+                        return FactTypes;
+                    }
+                    if (replicateInBulkCommand == BulkReplicationCommands.FactsToAggregates ||
+                        replicateInBulkCommand == BulkReplicationCommands.FactsToAggregatesTest)
+                    {
+                        return AggregateTypes;
+                    }
+                    if (replicateInBulkCommand == BulkReplicationCommands.AggregatesToMessages ||
+                        replicateInBulkCommand == BulkReplicationCommands.AggregatesToMessagesTest)
+                    {
+                        return MessagesTypes;
+                    }
+
+                    break;
                 }
 
-                return new CommandRegardlessDataObjectTypesProvider(FactTypes);
+                case MemoryReplicateInBulkCommand memoryReplicateInBulkCommand:
+                {
+                    return memoryReplicateInBulkCommand.DbManagementMode.HasFlag(DbManagementMode.TruncateTable) ? AmsFactTypes : AmsNamesFactTypes;
+                }
             }
 
-            if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
-            {
-                return new CommandRegardlessDataObjectTypesProvider(AggregateTypes);
-            }
-
-            if (command.TargetStorageDescriptor.ConnectionStringIdentity is MessagesConnectionStringIdentity)
-            {
-                return new CommandRegardlessDataObjectTypesProvider(MessagesTypes);
-            }
-
-            throw new ArgumentException($"Instance of type IDataObjectTypesProvider cannot be created for connection string name {command.TargetStorageDescriptor.MappingSchema}");
+            throw new ArgumentException($"Data object types cannot be created for connection string name {replicateCommand.TargetStorageDescriptor.MappingSchema}");
         }
     }
 }

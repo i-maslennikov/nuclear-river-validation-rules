@@ -69,8 +69,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 
         private AggregateActor CreateActorForAggregateRoot(Type aggregateRootType)
         {
-            Type aggregateRootActorType;
-            if (!AggregateRootActors.TryGetValue(aggregateRootType, out aggregateRootActorType))
+            if (!AggregateRootActors.TryGetValue(aggregateRootType, out var aggregateRootActorType))
             {
                 throw new ArgumentException($"Can't find aggregate actor for type {aggregateRootType.GetFriendlyName()}");
             }

@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
         public void Act()
         {
-            var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProviderFactory(), _connectionStringSettings);
+            var bulkReplicationActor = new BulkReplicationActor(new DataObjectTypesProvider(), _connectionStringSettings);
             bulkReplicationActor.ExecuteCommands(new[] { _key.Command });
         }
     }

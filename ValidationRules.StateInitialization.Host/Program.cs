@@ -8,7 +8,6 @@ using NuClear.Assembling.TypeProcessing;
 using NuClear.Replication.Core;
 using NuClear.StateInitialization.Core.Actors;
 using NuClear.Storage.API.ConnectionStrings;
-using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.StateInitialization.Host.Assembling;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
 
@@ -36,8 +35,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             if (args.Contains("-facts"))
             {
                 commands.Add(BulkReplicationCommands.ErmToFacts);
-                // Надо подумать о лишней обёртке
-                commands.Add(new KafkaReplicationCommand(AmsFactsFlow.Instance, BulkReplicationCommands.AmsToFacts));
+                commands.AddRange(BulkReplicationCommands.AmsToFacts(ConnectionStringSettings));
                 commands.Add(SchemaInitializationCommands.WebApp);
                 commands.Add(SchemaInitializationCommands.Facts);
             }
@@ -56,16 +54,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 commands.Add(SchemaInitializationCommands.Messages);
             }
 
-            var dataObjectTypesProviderFactory = new DataObjectTypesProviderFactory();
-            var bulkReplicationActor = new BulkReplicationActor(dataObjectTypesProviderFactory, ConnectionStringSettings);
-            var kafkaReplicationActor = new KafkaReplicationActor(dataObjectTypesProviderFactory, ConnectionStringSettings);
+            var dataObjectTypesProvider = new DataObjectTypesProvider();
+            var bulkReplicationActor = new BulkReplicationActor(dataObjectTypesProvider, ConnectionStringSettings);
             var schemaInitializationActor = new SchemaInitializationActor(ConnectionStringSettings);
 
             var sw = Stopwatch.StartNew();
             schemaInitializationActor.ExecuteCommands(commands);
-            bulkReplicationActor.ExecuteCommands(commands.Where(x => x == BulkReplicationCommands.ErmToFacts).ToList());
-            kafkaReplicationActor.ExecuteCommands(commands);
-            bulkReplicationActor.ExecuteCommands(commands.Where(x => x != BulkReplicationCommands.ErmToFacts).ToList());
+            bulkReplicationActor.ExecuteCommands(commands);
 
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }

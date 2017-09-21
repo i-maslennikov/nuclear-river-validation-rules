@@ -81,20 +81,22 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 	public static class SchemaInitializationCommands
 	{
 		public static SchemaInitializationCommand WebApp { get; }
-			= new SchemaInitializationCommand(Schema.WebApp, DataObjectTypesProviderFactory.WebAppTypes, FactsConnectionStringIdentity.Instance, 
+			= new SchemaInitializationCommand(Schema.WebApp, DataObjectTypesProvider.WebAppTypes, FactsConnectionStringIdentity.Instance, 
 				new[] { "WebApp" });
 
 		public static SchemaInitializationCommand Facts { get; }
 			= new SchemaInitializationCommand(Schema.Facts,
-                new HashSet<Type>(DataObjectTypesProviderFactory.FactTypes.Concat(DataObjectTypesProviderFactory.AmsFactTypes)), FactsConnectionStringIdentity.Instance,
+                new HashSet<Type>(DataObjectTypesProvider.FactTypes
+                                  .Concat(DataObjectTypesProvider.AmsFactTypes)
+                                  .Concat(DataObjectTypesProvider.AmsNamesFactTypes)), FactsConnectionStringIdentity.Instance,
 				new[] { "Facts" });
 
         public static SchemaInitializationCommand Aggregates { get; }
-			= new SchemaInitializationCommand(Schema.Aggregates, DataObjectTypesProviderFactory.AggregateTypes, FactsConnectionStringIdentity.Instance,
+			= new SchemaInitializationCommand(Schema.Aggregates, DataObjectTypesProvider.AggregateTypes, FactsConnectionStringIdentity.Instance,
 				new[] { "AccountAggregates", "AdvertisementAggregates", "ConsistencyAggregates", "FirmAggregates", "PriceAggregates", "ProjectAggregates", "ThemeAggregates" });
 
 		public static SchemaInitializationCommand Messages { get; }
-			= new SchemaInitializationCommand(Schema.Messages, DataObjectTypesProviderFactory.MessagesTypes, FactsConnectionStringIdentity.Instance, 
+			= new SchemaInitializationCommand(Schema.Messages, DataObjectTypesProvider.MessagesTypes, FactsConnectionStringIdentity.Instance, 
 				new[] { "Messages" });
 	}
 }

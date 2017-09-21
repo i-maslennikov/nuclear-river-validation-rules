@@ -312,7 +312,6 @@
     <Compile Include="Commands\DeleteDataObjectCommand.cs" />
     <Compile Include="Commands\LogDelayCommand.cs" />
     <Compile Include="Commands\ReplaceValueObjectCommand.cs" />
-    <Compile Include="DataObjectTypesProvider.cs" />
     <Compile Include="Events\DelayLoggedEvent.cs" />
     <Compile Include="Events\DataObjectCreatedEvent.cs" />
     <Compile Include="Events\DataObjectDeletedEvent.cs" />

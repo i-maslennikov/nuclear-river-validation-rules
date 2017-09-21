@@ -101,7 +101,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                 return Array.Empty<IEvent>();
             }
 
-            var actors = _dataObjectsActorFactory.Create();
+            var actors = _dataObjectsActorFactory.Create(new HashSet<Type>(commands.Select(x => x.DataObjectType)));
             var events = new HashSet<IEvent>(EqualityComparer);
 
             foreach (var actor in actors)
