@@ -80,7 +80,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                         IReadOnlyCollection<Message> batch;
                         while ((batch = receiver.ReceiveBatch(_receiverSettings.BatchSize)).Count != 0)
                         {
-                            Console.WriteLine($"Received {batch.Count} messages, offset {batch.Last().Offset}");
+                            Console.WriteLine($"Received {batch.Count} messages, offset {batch.Max(x => x.Offset.Value)}");
 
                             // filter heartbeat messages
                             var dtos = batch
@@ -275,7 +275,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         private sealed class ReceiverSettings : IKafkaMessageFlowReceiverSettings
         {
             private readonly StringSetting _amsFactsTopics = ConfigFileSetting.String.Required("AmsFactsTopics");
-            private readonly StringSetting _pollTimeout = ConfigFileSetting.String.Optional("AmsPollTimeout", "00:00:05");
+            private readonly StringSetting _pollTimeout = ConfigFileSetting.String.Optional("AmsPollTimeout", "00:00:30");
             private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 5000);
 
             public ReceiverSettings(IConnectionStringSettings connectionStringSettings)
