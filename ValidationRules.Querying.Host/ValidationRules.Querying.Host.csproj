@@ -163,6 +163,7 @@
     <Compile Include="Composition\Composers\OrderMustNotIncludeReleasedPeriodMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustUseCategoriesOnlyAvailableInProjectMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
+    <Compile Include="Composition\Composers\FirmAddressMayBeSharedWithPartnerMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
     <Compile Include="Composition\Composers\PremiumPartnerProfileMustHaveSingleSaleMessageComposer.cs" />
     <Compile Include="Composition\IDistinctor.cs" />

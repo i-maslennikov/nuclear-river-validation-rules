@@ -272,6 +272,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new FirmShouldHaveLimitedCategoryCount(_query),
                     new FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions(_query),
                     new PremiumPartnerProfileMustHaveSingleSale(_query),
+                    new FirmAddressMayBeSharedWithPartner(_query),
 
                     new FirmAddressMustBeLocatedOnTheMap(_query),
                     new OrderMustNotIncludeReleasedPeriod(_query),

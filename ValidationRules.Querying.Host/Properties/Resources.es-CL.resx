@@ -333,4 +333,8 @@
     <value>El material publicitario "{0}" fue aprobado con comentarios</value>
     <comment>Требуется корректный перевод</comment>
   </data>
+  <data name="FirmAddressMayBeSharedWithPartner" xml:space="preserve">
+    <value>Para la dirección "{0}" de la empresa "{1}" se ha vendido posición Publicidad en los Perfiles de los Asociados (PPA) en la orden {2}</value>
+    <comment>Требуется корректный перевод</comment>
+  </data>
 </root>

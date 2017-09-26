@@ -333,4 +333,8 @@
     <value>The advertising material “{0}” has been approved with comments</value>
     <comment>Требуется корректный перевод</comment>
   </data>
+  <data name="FirmAddressMayBeSharedWithPartner" xml:space="preserve">
+    <value>For the address "{0}" of the "{1}" company Advertisement in Partners' Profiles (APP) position has been sold in the order {2}</value>
+    <comment>Требуется корректный перевод</comment>
+  </data>
 </root>

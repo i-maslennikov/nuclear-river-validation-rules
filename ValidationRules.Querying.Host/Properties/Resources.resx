@@ -333,4 +333,7 @@
   <data name="AdvertisementMustPassReview_OkWithComment" xml:space="preserve">
     <value>Рекламный материал {0} одобрен с замечаниями</value>
   </data>
+  <data name="FirmAddressMayBeSharedWithPartner" xml:space="preserve">
+    <value>На адрес "{0}" фирмы "{1}" имеется позиция ЗМК в заказе {2}</value>
+  </data>
 </root>

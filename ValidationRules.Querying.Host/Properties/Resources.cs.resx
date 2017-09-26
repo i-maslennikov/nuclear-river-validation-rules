@@ -333,4 +333,8 @@
     <value>Reklamní materiál "{0}" byla schválena s komentáři</value>
     <comment>Требуется корректный перевод</comment>
   </data>
+  <data name="FirmAddressMayBeSharedWithPartner" xml:space="preserve">
+    <value>Firmě "{1}" umístěné na adrese "{0}" byla prodána pozice RPP (reklama v profilech partnerů) v objednávce {2}</value>
+    <comment>Требуется корректный перевод</comment>
+  </data>
 </root>

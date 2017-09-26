@@ -268,6 +268,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to На адрес &quot;{0}&quot; фирмы &quot;{1}&quot; имеется позиция ЗМК в заказе {2}.
+        /// </summary>
+        internal static string FirmAddressMayBeSharedWithPartner {
+            get {
+                return ResourceManager.GetString("FirmAddressMayBeSharedWithPartner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Фирма {0} удалена..
         /// </summary>
         internal static string FirmIsDeleted {

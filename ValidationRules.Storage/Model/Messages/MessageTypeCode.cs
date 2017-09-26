@@ -71,5 +71,6 @@
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
 
         PremiumPartnerProfileMustHaveSingleSale = 71,
+        FirmAddressMayBeSharedWithPartner = 72,
     }
 }

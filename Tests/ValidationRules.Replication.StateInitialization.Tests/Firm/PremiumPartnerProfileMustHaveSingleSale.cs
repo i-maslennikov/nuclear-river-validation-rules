@@ -61,18 +61,19 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::FirmAddress { Id = 2, FirmId = 2222 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1, FirmId = 1, Begin = MonthStart(1), End = MonthStart(2), Scope = 1 },
-                    new Aggregates::Order.PremiumPartnerProfilePosition { OrderId = 1, FirmAddressId = 1, FirmId = 1111 },
+                    new Aggregates::Order.PartnerProfilePosition { OrderId = 1, FirmAddressId = 1, FirmId = 1111, IsPremium = true },
 
                     new Aggregates::Order { Id = 2, FirmId = 2, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
-                    new Aggregates::Order.PremiumPartnerProfilePosition { OrderId = 2, FirmAddressId = 1, FirmId = 1111 },
+                    new Aggregates::Order.PartnerProfilePosition { OrderId = 2, FirmAddressId = 1, FirmId = 1111, IsPremium = true },
 
                     new Aggregates::Order { Id = 3, FirmId = 3, Begin = MonthStart(2), End = MonthStart(3), Scope = 0 },
-                    new Aggregates::Order.PremiumPartnerProfilePosition { OrderId = 3, FirmAddressId = 1, FirmId = 1111 },
+                    new Aggregates::Order.PartnerProfilePosition { OrderId = 3, FirmAddressId = 1, FirmId = 1111, IsPremium = true },
 
                     new Aggregates::Order { Id = 4, FirmId = 4, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
-                    new Aggregates::Order.PremiumPartnerProfilePosition { OrderId = 4, FirmAddressId = 2, FirmId = 2222 },
+                    new Aggregates::Order.PartnerProfilePosition { OrderId = 4, FirmAddressId = 2, FirmId = 2222, IsPremium = true },
 
-                    new Aggregates::Order { Id = 5, FirmId = 5, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 })
+                    new Aggregates::Order { Id = 5, FirmId = 5, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
+                    new Aggregates::Order.PartnerProfilePosition { OrderId = 5, FirmAddressId = 1, FirmId = 1111, IsPremium = false })
                 .Message(
                     new Version.ValidationResult
                     {
