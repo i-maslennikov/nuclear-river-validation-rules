@@ -112,7 +112,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                                 }
                             }
 
-                            receiver.Complete(maxOffsetMesasage);
+                            receiver.CompleteBatch(batch);
 
                             // state init имеет смысл прекращать когда мы вычитали все полные батчи
                             // а то нам могут до бесконечности подкидывать новых messages
