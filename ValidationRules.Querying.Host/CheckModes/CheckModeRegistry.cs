@@ -286,7 +286,7 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale,
+                    Rule(MessageTypeCode.FirmAddressMayBeSharedWithPartner,
                          manualReport: RuleSeverityLevel.Warning,
                          prerelease: RuleSeverityLevel.Warning,
                          release: RuleSeverityLevel.Warning),
