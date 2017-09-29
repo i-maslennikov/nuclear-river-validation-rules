@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             var categoryReferences = references.GetMany<EntityTypeCategory>().OrderBy(x => x.Name);
 
             var templateWithVariableParameterCount =
-                Resources.OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit + string.Join(", ", categoryReferences.Select((x, i) => "{" + (i + 1) + "}"));
+                Resources.OrderMustUseCategoriesOnlyAvailableInProject + string.Join(", ", categoryReferences.Select((x, i) => "{" + (i + 1) + "}"));
 
             return new MessageComposerResult(
                 orderReference,

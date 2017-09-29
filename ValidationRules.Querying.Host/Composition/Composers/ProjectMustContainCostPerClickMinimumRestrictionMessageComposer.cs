@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 projectReference,
-                Resources.CpcRestrictionIsMissing,
+                Resources.ProjectMustContainCostPerClickMinimumRestriction,
                 categoryReference,
                 projectReference,
                 begin);

@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 projectReference,
-                Resources.TooManyAdvertisementForCategory,
+                Resources.AdvertisementCountPerCategoryShouldBeLimited,
                 categoryReference,
                 dto.Count,
                 dto.Max);

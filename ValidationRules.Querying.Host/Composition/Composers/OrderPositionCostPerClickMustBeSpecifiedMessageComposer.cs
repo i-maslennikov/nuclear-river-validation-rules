@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                Resources.CpcIsMissing,
+                Resources.OrderPositionCostPerClickMustBeSpecified,
                 orderPositionReference,
                 categoryReference);
         }

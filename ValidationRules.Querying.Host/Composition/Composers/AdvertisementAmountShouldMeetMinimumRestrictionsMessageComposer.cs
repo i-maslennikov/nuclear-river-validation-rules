@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                Resources.AdvertisementAmountShortErrorMessage,
+                Resources.AdvertisementAmountShouldMeetMinimumRestrictions,
                 dto.Name,
                 dto.Min,
                 dto.Max,

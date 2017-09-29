@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                Resources.OrdersCheckOrderInsufficientFunds,
+                Resources.AccountBalanceShouldBePositive,
                 dto.Planned,
                 dto.Available);
         }

@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             switch (state)
             {
                 case Order.AdvertisementReviewState.OkWithComment:
-                    return Resources.AdvertisementMustPassReview_OkWithComment;
+                    return Resources.AdvertisementShouldNotHaveComments_OkWithComment;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }

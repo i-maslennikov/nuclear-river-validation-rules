@@ -38,11 +38,11 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             switch (firmState)
             {
                 case InvalidFirmState.Deleted:
-                    return Resources.FirmIsDeleted;
+                    return Resources.LinkedFirmShouldBeValid_Deleted;
                 case InvalidFirmState.ClosedForever:
-                    return Resources.FirmIsPermanentlyClosed;
+                    return Resources.LinkedFirmShouldBeValid_ClosedForever;
                 case InvalidFirmState.ClosedForAscertainment:
-                    return Resources.OrderFirmHiddenForAscertainmentTemplate;
+                    return Resources.LinkedFirmShouldBeValid_ClosedForAscertainment;
                 default:
                     throw new Exception(nameof(firmState));
             }

@@ -27,9 +27,9 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             switch (dealState)
             {
                 case DealState.Missing:
-                    return Resources.ThereIsNoSpecifiedDealForOrder;
+                    return Resources.OrderMustHaveActiveDeal_Missing;
                 case DealState.Inactive:
-                    return Resources.OrderDealIsInactive;
+                    return Resources.OrderMustHaveActiveDeal_Inactive;
                 default:
                     throw new Exception(nameof(dealState));
             }
