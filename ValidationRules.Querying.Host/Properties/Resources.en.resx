@@ -334,6 +334,6 @@
     <value>Рекламный материал {0} одобрен с замечаниями</value>
   </data>
   <data name="Test" xml:space="preserve">
-    <value>Тестровая строка</value>
+    <value>Test string</value>
   </data>
 </root>
