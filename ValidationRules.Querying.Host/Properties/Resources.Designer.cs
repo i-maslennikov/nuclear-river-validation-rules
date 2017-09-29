@@ -691,6 +691,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Тестровая строка.
+        /// </summary>
+        internal static string Test {
+            get {
+                return ResourceManager.GetString("Test", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Тематика {0} использует удаленную рубрику {1}..
         /// </summary>
         internal static string ThemeCategoryMustBeActiveAndNotDeleted {
