@@ -71,8 +71,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
             switch (result.Rule)
             {
                 case 39:
-                case 48:
-                case 49:
                     return result.References.Single(r => r.Type == "Firm").Id;
                 default:
                     return result.MainReference.Id;
