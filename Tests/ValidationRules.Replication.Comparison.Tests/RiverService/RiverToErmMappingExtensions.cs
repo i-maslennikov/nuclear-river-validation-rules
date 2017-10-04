@@ -50,7 +50,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.FirmShouldHaveLimitedCategoryCount, 32 },
                             { MessageTypeCode.OrderPositionAdvertisementMustBeCreated, 22 },
                             { MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement, 22 },
-                            { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 49 },
                             { MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject, 8 },
                             { MessageTypeCode.OrderMustNotIncludeReleasedPeriod, 17 },
                             { MessageTypeCode.OrderPositionCostPerClickMustNotBeLessMinimum, 48 },
@@ -60,18 +59,22 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.DefaultThemeMustHaveOnlySelfAds, 41 },
                             { MessageTypeCode.DefaultThemeMustBeExactlyOne, 40 },
                             { MessageTypeCode.OrderPositionCostPerClickMustBeSpecified, 46 },
-                            { MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel, 45 },
                             { MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions, 36 },
                             { MessageTypeCode.OrderMustHaveActiveDeal, 51 },
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
-                            { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 50 },
-                            { MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
-                            { MessageTypeCode.AdvertisementMustPassReview, 0 },
+							{ MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel, 0 },
+                            { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 0 },
+                            { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 0 },
+							{ MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
+							{ MessageTypeCode.AdvertisementMustPassReview, 0 },
                             { MessageTypeCode.AdvertisementShouldNotHaveComments, 0 },
                     }.ToDictionary(x => x.Key, x => x.Value);
 
-        public static int ToErmRuleCode(this int riverMessageTypeCode)
+		public static int ToErmRuleCode(this int riverMessageTypeCode)
             => RiverToErmRuleCodeMapping[(MessageTypeCode)riverMessageTypeCode];
-    }
+
+	    public static bool HasRiverRule(this int ermMessageTypeCode)
+		    => RiverToErmRuleCodeMapping.Any(x => x.Value == ermMessageTypeCode);
+	}
 }
