@@ -93,6 +93,9 @@
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NuClear.River.Replication.5.2.2-accessor-types-p0042\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
     </Reference>
+    <Reference Include="2GIS.NuClear.River.Hosting.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuClear.River.Hosting.Common.5.2.2-accessor-types-p0042\lib\net461\2GIS.NuClear.River.Hosting.Common.dll</HintPath>
+    </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
       <Private>True</Private>
@@ -229,6 +232,14 @@
     <ProjectReference Include="..\Messaging.Transports.Kafka\Messaging.Transports.Kafka.csproj">
       <Project>{1a28d9cc-c476-4d87-aabe-587041c18f92}</Project>
       <Name>Messaging.Transports.Kafka</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidationRules.Hosting.Common\ValidationRules.Hosting.Common.csproj">
+      <Project>{876cf585-d099-4c5a-949e-e76da08764d8}</Project>
+      <Name>ValidationRules.Hosting.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidationRules.OperationsProcessing\ValidationRules.OperationsProcessing.csproj">
+      <Project>{6C1F4B07-10E4-4072-929A-0FDCDF53BF1B}</Project>
+      <Name>ValidationRules.OperationsProcessing</Name>
     </ProjectReference>
     <ProjectReference Include="..\ValidationRules.Replication\ValidationRules.Replication.csproj">
       <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>

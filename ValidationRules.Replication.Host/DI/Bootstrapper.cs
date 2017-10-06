@@ -102,6 +102,8 @@ using NuClear.WCF.Client.Config;
 
 using Quartz.Spi;
 
+using ValidationRules.Hosting.Common;
+
 using Schema = NuClear.ValidationRules.Storage.Schema;
 
 namespace NuClear.ValidationRules.Replication.Host.DI

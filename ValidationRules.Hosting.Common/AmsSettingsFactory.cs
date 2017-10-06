@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 
 using Confluent.Kafka;
+
 using Newtonsoft.Json;
+
 using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.Transports.Kafka;
 using NuClear.River.Hosting.Common.Settings;
@@ -14,7 +16,7 @@ using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
 
-namespace NuClear.ValidationRules.Replication.Host.Factories
+namespace ValidationRules.Hosting.Common
 {
     public sealed class AmsSettingsFactory : IAmsSettingsFactory
     {

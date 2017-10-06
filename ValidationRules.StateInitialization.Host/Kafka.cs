@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -16,10 +15,12 @@ using LinqToDB.DataProvider.SqlServer;
 
 using Newtonsoft.Json;
 
+using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.Transports.Kafka;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
+using NuClear.River.Hosting.Common.Settings;
 using NuClear.Settings;
 using NuClear.Settings.API;
 using NuClear.StateInitialization.Core.Commands;
@@ -28,20 +29,25 @@ using NuClear.StateInitialization.Core.Storage;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
+using NuClear.Tracing.API;
+using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Dto;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
 using NuClear.ValidationRules.Storage.Model.Facts;
+
+using ValidationRules.Hosting.Common;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
     internal sealed class KafkaReplicationCommand : ICommand
     {
-        public KafkaReplicationCommand(ReplicateInBulkCommand replicateInBulkCommand)
+        public KafkaReplicationCommand(IMessageFlow messageFlow, ReplicateInBulkCommand replicateInBulkCommand)
         {
+            MessageFlow = messageFlow;
             ReplicateInBulkCommand = replicateInBulkCommand;
         }
 
+        public IMessageFlow MessageFlow { get; }
         public ReplicateInBulkCommand ReplicateInBulkCommand { get; }
     }
 
@@ -50,7 +56,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
         private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly IAccessorTypesProvider _accessorTypesProvider;
-        private readonly ReceiverSettings _receiverSettings;
+        private readonly AmsBatchSizeSettings _batchSizeSettings;
+        private readonly IKafkaMessageFlowReceiverFactory _receiverFactory;
 
         public KafkaReplicationActor(
             IDataObjectTypesProviderFactory dataObjectTypesProviderFactory,
@@ -58,8 +65,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         {
             _dataObjectTypesProviderFactory = dataObjectTypesProviderFactory;
             _connectionStringSettings = connectionStringSettings;
-            _receiverSettings = new ReceiverSettings(connectionStringSettings);
+            _batchSizeSettings = new AmsBatchSizeSettings();
             _accessorTypesProvider = new AccessorTypesProvider();
+
+            var amsSettingsFactory = new AmsSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect());
+            _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), amsSettingsFactory);
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -75,12 +85,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                     var bulkCopyOptions = new BulkCopyOptions { BulkCopyTimeout = (int)command.BulkCopyTimeout.TotalSeconds };
                     var actors = CreateActors(dataObjectTypes, dataConnection, bulkCopyOptions);
 
-                    using (var receiver = new KafkaMessageFlowReceiver(_receiverSettings))
+                    using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
                         IReadOnlyCollection<Message> batch;
-                        while ((batch = receiver.ReceiveBatch(_receiverSettings.BatchSize)).Count != 0)
+                        while ((batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize)).Count != 0)
                         {
-                            Console.WriteLine($"Received {batch.Count} messages, offset {batch.Max(x => x.Offset.Value)}");
+                            var maxOffsetMesasage = batch.OrderByDescending(x => x.Offset.Value).First();
+                            Console.WriteLine($"Received {batch.Count} messages, offset {maxOffsetMesasage.Offset}");
 
                             // filter heartbeat messages
                             var dtos = batch
@@ -101,9 +112,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                                 }
                             }
 
+                            receiver.Complete(maxOffsetMesasage);
+
                             // state init имеет смысл прекращать когда мы вычитали все полные батчи
                             // а то нам могут до бесконечности подкидывать новых messages
-                            if (batch.Count != _receiverSettings.BatchSize)
+                            if (batch.Count != _batchSizeSettings.BatchSize)
                             {
                                 break;
                             }
@@ -272,28 +285,10 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         #endregion
 
-        private sealed class ReceiverSettings : IKafkaMessageFlowReceiverSettings
+        private sealed class AmsBatchSizeSettings
         {
-            private readonly StringSetting _amsFactsTopics = ConfigFileSetting.String.Required("AmsFactsTopics");
-            private readonly StringSetting _pollTimeout = ConfigFileSetting.String.Optional("AmsPollTimeout", "00:00:30");
             private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 5000);
 
-            public ReceiverSettings(IConnectionStringSettings connectionStringSettings)
-            {
-                var connectionString = connectionStringSettings.GetConnectionString(AmsConnectionStringIdentity.Instance);
-                Config = JsonConvert.DeserializeObject<Dictionary<string, object>>(connectionString);
-            }
-
-            public string ClientId { get; } = "ValidationRules.StateInitialization.Host";
-
-            // state init не интерферируют друг с другом (можно внести EnvironmentName как альтернативу)
-            public string GroupId { get; } = "ValidationRules.StateInitialization.Host" + Guid.NewGuid();
-            public Dictionary<string, object> Config { get; }
-
-            public IEnumerable<string> Topics => _amsFactsTopics.Value.Split(',');
-            public TimeSpan PollTimeout => TimeSpan.Parse(_pollTimeout.Value, CultureInfo.InvariantCulture);
-
-            public Offset Offset { get; } = Offset.Beginning;
             public int BatchSize => _batchSize.Value;
         }
 
