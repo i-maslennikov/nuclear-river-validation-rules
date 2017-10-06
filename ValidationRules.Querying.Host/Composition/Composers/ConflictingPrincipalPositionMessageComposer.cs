@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             {
                 return new MessageComposerResult(
                     dependent.Order,
-                    Resources.ConflictingPrincipalPositionTemplate_Order,
+                    Resources.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject_Order,
                     dependent.PositionPrefix,
                     dependent,
                     principal.PositionPrefix,
@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             {
                 return new MessageComposerResult(
                     dependent.Order,
-                    Resources.ConflictingPrincipalPositionTemplate,
+                    Resources.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject,
                     dependent.PositionPrefix,
                     dependent,
                     principal.PositionPrefix,

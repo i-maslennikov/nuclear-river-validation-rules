@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 firmReference,
-                Resources.TooManyCategorieForFirm,
+                Resources.FirmShouldHaveLimitedCategoryCount,
                 firmReference,
                 categoryCount.Actual,
                 categoryCount.Allowed);

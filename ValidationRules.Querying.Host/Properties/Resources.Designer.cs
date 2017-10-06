@@ -61,47 +61,56 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{1}&quot; является запрещённой для: {2} &quot;{3}&quot;.
+        ///   Looks up a localized string similar to Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}..
         /// </summary>
-        internal static string ADPCheckModeSpecificOrder_MessageTemplate {
+        internal static string AccountBalanceShouldBePositive {
             get {
-                return ResourceManager.GetString("ADPCheckModeSpecificOrder_MessageTemplate", resourceCulture);
+                return ResourceManager.GetString("AccountBalanceShouldBePositive", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{1}&quot; является запрещённой для: {2} &quot;{3}&quot; в заказе {4}.
+        ///   Looks up a localized string similar to Заказ не имеет привязки к лицевому счёту..
         /// </summary>
-        internal static string ADPCheckModeSpecificOrder_MessageTemplate_Order {
+        internal static string AccountShouldExist {
             get {
-                return ResourceManager.GetString("ADPCheckModeSpecificOrder_MessageTemplate_Order", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{1}&quot; данного Заказа является основной для следующих позиций: {2} &quot;{3}&quot;.
-        /// </summary>
-        internal static string ADPValidation_Template {
-            get {
-                return ResourceManager.GetString("ADPValidation_Template", resourceCulture);
+                return ResourceManager.GetString("AccountShouldExist", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}.
         /// </summary>
-        internal static string AdvertisementAmountShortErrorMessage {
+        internal static string AdvertisementAmountShouldMeetMinimumRestrictions {
             get {
-                return ResourceManager.GetString("AdvertisementAmountShortErrorMessage", resourceCulture);
+                return ResourceManager.GetString("AdvertisementAmountShouldMeetMinimumRestrictions", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} оформлена на пустой адрес {1}.
+        ///   Looks up a localized string similar to В рубрику {0} заказано слишком много объявлений: Заказано {1}, допустимо не более {2}..
         /// </summary>
-        internal static string AdvertisementIsLinkedWithEmptyAddressError {
+        internal static string AdvertisementCountPerCategoryShouldBeLimited {
             get {
-                return ResourceManager.GetString("AdvertisementIsLinkedWithEmptyAddressError", resourceCulture);
+                return ResourceManager.GetString("AdvertisementCountPerCategoryShouldBeLimited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Слишком много продаж в тематику {0}. Продано {1} позиций вместо {2} возможных..
+        /// </summary>
+        internal static string AdvertisementCountPerThemeShouldBeLimited {
+            get {
+                return ResourceManager.GetString("AdvertisementCountPerThemeShouldBeLimited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}.
+        /// </summary>
+        internal static string AdvertisementMustBelongToFirm {
+            get {
+                return ResourceManager.GetString("AdvertisementMustBelongToFirm", resourceCulture);
             }
         }
         
@@ -126,36 +135,45 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Рекламный материал {0} одобрен с замечаниями.
         /// </summary>
-        internal static string AdvertisementMustPassReview_OkWithComment {
+        internal static string AdvertisementShouldNotHaveComments_OkWithComment {
             get {
-                return ResourceManager.GetString("AdvertisementMustPassReview_OkWithComment", resourceCulture);
+                return ResourceManager.GetString("AdvertisementShouldNotHaveComments_OkWithComment", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}.
+        ///   Looks up a localized string similar to В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой..
         /// </summary>
-        internal static string AdvertisementSpecifiedForPositionDoesNotBelongToFirm {
+        internal static string AssociatedPositionsGroupCount {
             get {
-                return ResourceManager.GetString("AdvertisementSpecifiedForPositionDoesNotBelongToFirm", resourceCulture);
+                return ResourceManager.GetString("AssociatedPositionsGroupCount", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1} &quot;{0}&quot; является сопутствующей, основная позиция не найдена..
+        ///   Looks up a localized string similar to Отсутствует сканированная копия договора.
         /// </summary>
-        internal static string AssociatedPositionWithoutPrincipalTemplate {
+        internal static string BargainScanShouldPresent {
             get {
-                return ResourceManager.GetString("AssociatedPositionWithoutPrincipalTemplate", resourceCulture);
+                return ResourceManager.GetString("BargainScanShouldPresent", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Договор не может иметь дату подписания позднее даты подписания заказа.
+        ///   Looks up a localized string similar to Для заказа необходимо сформировать счета.
         /// </summary>
-        internal static string BargainSignedLaterThanOrder {
+        internal static string BillsShouldBeCreated {
             get {
-                return ResourceManager.GetString("BargainSignedLaterThanOrder", resourceCulture);
+                return ResourceManager.GetString("BillsShouldBeCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Сумма по счетам не совпадает с планируемой суммой заказа.
+        /// </summary>
+        internal static string BillsSumShouldMatchOrder {
+            get {
+                return ResourceManager.GetString("BillsSumShouldMatchOrder", resourceCulture);
             }
         }
         
@@ -178,60 +196,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция &quot;{0}&quot; не может быть продана в рубрику &quot;{1}&quot; проекта &quot;{2}&quot; в выпуск {3:MMMM yyy}.
-        /// </summary>
-        internal static string CategoryIsRestrictedForSpecifiedSalesModelError {
-            get {
-                return ResourceManager.GetString("CategoryIsRestrictedForSpecifiedSalesModelError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} &quot;{3}&quot;.
-        /// </summary>
-        internal static string ConflictingPrincipalPositionTemplate {
-            get {
-                return ResourceManager.GetString("ConflictingPrincipalPositionTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} &quot;{3}&quot; в заказе {4}.
-        /// </summary>
-        internal static string ConflictingPrincipalPositionTemplate_Order {
-            get {
-                return ResourceManager.GetString("ConflictingPrincipalPositionTemplate_Order", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Для позиции {0} в рубрику {1} отсутствует CPC.
-        /// </summary>
-        internal static string CpcIsMissing {
-            get {
-                return ResourceManager.GetString("CpcIsMissing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Для позиции {0} в рубрику {1} указан CPC меньше минимального.
-        /// </summary>
-        internal static string CpcIsTooSmall {
-            get {
-                return ResourceManager.GetString("CpcIsTooSmall", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Для рубрики {0} в проекте {1} в выпуск {2:MMMM yyy} не указан минимальный CPC.
-        /// </summary>
-        internal static string CpcRestrictionIsMissing {
-            get {
-                return ResourceManager.GetString("CpcRestrictionIsMissing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Валюта.
         /// </summary>
         internal static string Currency {
@@ -241,56 +205,128 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиции не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа..
+        ///   Looks up a localized string similar to Для подразделения {0} установлено более одной тематики по умолчанию.
         /// </summary>
-        internal static string CurrentPriceNotFound {
+        internal static string DefaultThemeMustBeExactlyOne_Many {
             get {
-                return ResourceManager.GetString("CurrentPriceNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Установленная по умолчанию тематика {0} должна содержать только саморекламу.
-        /// </summary>
-        internal static string DeafaultThemeMustContainOnlySelfAds {
-            get {
-                return ResourceManager.GetString("DeafaultThemeMustContainOnlySelfAds", resourceCulture);
+                return ResourceManager.GetString("DefaultThemeMustBeExactlyOne_Many", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Для подразделения {0} не указана тематика по умолчанию.
         /// </summary>
-        internal static string DefaultThemeIsNotSpecified {
+        internal static string DefaultThemeMustBeExactlyOne_None {
             get {
-                return ResourceManager.GetString("DefaultThemeIsNotSpecified", resourceCulture);
+                return ResourceManager.GetString("DefaultThemeMustBeExactlyOne_None", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Фирма {0} удалена..
+        ///   Looks up a localized string similar to Установленная по умолчанию тематика {0} должна содержать только саморекламу.
         /// </summary>
-        internal static string FirmIsDeleted {
+        internal static string DefaultThemeMustHaveOnlySelfAds {
             get {
-                return ResourceManager.GetString("FirmIsDeleted", resourceCulture);
+                return ResourceManager.GetString("DefaultThemeMustHaveOnlySelfAds", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Фирма {0} скрыта навсегда.
+        ///   Looks up a localized string similar to Позиция {0} оформлена на пустой адрес {1}.
         /// </summary>
-        internal static string FirmIsPermanentlyClosed {
+        internal static string FirmAddressMustBeLocatedOnTheMap {
             get {
-                return ResourceManager.GetString("FirmIsPermanentlyClosed", resourceCulture);
+                return ResourceManager.GetString("FirmAddressMustBeLocatedOnTheMap", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой..
+        ///   Looks up a localized string similar to Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы.
         /// </summary>
-        internal static string InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions {
+        internal static string FirmAndOrderShouldBelongTheSameOrganizationUnit {
             get {
-                return ResourceManager.GetString("InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions", resourceCulture);
+                return ResourceManager.GetString("FirmAndOrderShouldBelongTheSameOrganizationUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1} &quot;{0}&quot; является сопутствующей, основная позиция не найдена..
+        /// </summary>
+        internal static string FirmAssociatedPositionMustHavePrincipal {
+            get {
+                return ResourceManager.GetString("FirmAssociatedPositionMustHavePrincipal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} &quot;{3}&quot;.
+        /// </summary>
+        internal static string FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject {
+            get {
+                return ResourceManager.GetString("FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, конфликтующие с объектами привязки следующей основной позиции: {2} &quot;{3}&quot; в заказе {4}.
+        /// </summary>
+        internal static string FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject_Order {
+            get {
+                return ResourceManager.GetString("FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject_Order", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, отсутствующие в основных позициях..
+        /// </summary>
+        internal static string FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject {
+            get {
+                return ResourceManager.GetString("FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; данного Заказа является основной для следующих позиций: {2} &quot;{3}&quot;.
+        /// </summary>
+        internal static string FirmAssociatedPositionShouldNotStayAlone {
+            get {
+                return ResourceManager.GetString("FirmAssociatedPositionShouldNotStayAlone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; является запрещённой для: {2} &quot;{3}&quot;.
+        /// </summary>
+        internal static string FirmPositionMustNotHaveDeniedPositions {
+            get {
+                return ResourceManager.GetString("FirmPositionMustNotHaveDeniedPositions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} &quot;{1}&quot; является запрещённой для: {2} &quot;{3}&quot; в заказе {4}.
+        /// </summary>
+        internal static string FirmPositionMustNotHaveDeniedPositions_Order {
+            get {
+                return ResourceManager.GetString("FirmPositionMustNotHaveDeniedPositions_Order", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Для фирмы {0} задано слишком большое число рубрик - {1}. Максимально допустимое - {2}..
+        /// </summary>
+        internal static string FirmShouldHaveLimitedCategoryCount {
+            get {
+                return ResourceManager.GetString("FirmShouldHaveLimitedCategoryCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Позиция &quot;Самореклама только для ПК&quot; продана одновременно с рекламой в другую платформу.
+        /// </summary>
+        internal static string FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions {
+            get {
+                return ResourceManager.GetString("FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions", resourceCulture);
             }
         }
         
@@ -313,155 +349,137 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} &quot;{1}&quot; содержит объекты привязки, отсутствующие в основных позициях..
+        ///   Looks up a localized string similar to У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа..
         /// </summary>
-        internal static string LinkedObjectsMissedInPrincipals {
+        internal static string LegalPersonProfileBargainShouldNotBeExpired {
             get {
-                return ResourceManager.GetString("LinkedObjectsMissedInPrincipals", resourceCulture);
+                return ResourceManager.GetString("LegalPersonProfileBargainShouldNotBeExpired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для подразделения {0} установлено более одной тематики по умолчанию.
+        ///   Looks up a localized string similar to У юр. лица клиента, в профиле {0} указана доверенность с датой окончания действия раньше даты подписания заказа.
         /// </summary>
-        internal static string MoreThanOneDefaultTheme {
+        internal static string LegalPersonProfileWarrantyShouldNotBeExpired {
             get {
-                return ResourceManager.GetString("MoreThanOneDefaultTheme", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to На адрес &quot;{0}&quot; фирмы &quot;{1}&quot; продано более одной позиции Premium в периоды: {2}.
-        /// </summary>
-        internal static string MoreThanOnePremiumBuyHerePositionSoldForAddress {
-            get {
-                return ResourceManager.GetString("MoreThanOnePremiumBuyHerePositionSoldForAddress", resourceCulture);
+                return ResourceManager.GetString("LegalPersonProfileWarrantyShouldNotBeExpired", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to У юр. лица клиента отсутствует профиль..
         /// </summary>
-        internal static string MustMakeLegalPersonProfile {
+        internal static string LegalPersonShouldHaveAtLeastOneProfile {
             get {
-                return ResourceManager.GetString("MustMakeLegalPersonProfile", resourceCulture);
+                return ResourceManager.GetString("LegalPersonShouldHaveAtLeastOneProfile", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Сумма по счетам не совпадает с планируемой суммой заказа.
+        ///   Looks up a localized string similar to В позиции {0} найдена рубрика {1}, не принадлежащая адресу {2}.
         /// </summary>
-        internal static string OrderApproval_BillsSumDoesntMatchWhenProcessingOrderOnApproval {
+        internal static string LinkedCategoryFirmAddressShouldBeValid {
             get {
-                return ResourceManager.GetString("OrderApproval_BillsSumDoesntMatchWhenProcessingOrderOnApproval", resourceCulture);
+                return ResourceManager.GetString("LinkedCategoryFirmAddressShouldBeValid", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} необходимо указать рекламные материалы для подпозиции &quot;{1}&quot;.
+        ///   Looks up a localized string similar to В позиции {0} найдена неактивная рубрика {1}.
         /// </summary>
-        internal static string OrderCheckCompositePositionMustHaveAdvertisements {
+        internal static string LinkedCategoryShouldBeActive {
             get {
-                return ResourceManager.GetString("OrderCheckCompositePositionMustHaveAdvertisements", resourceCulture);
+                return ResourceManager.GetString("LinkedCategoryShouldBeActive", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции &apos;{1}&apos;.
+        ///   Looks up a localized string similar to В позиции {0} найдена рубрика {1}, не принадлежащая фирме заказа.
         /// </summary>
-        internal static string OrderCheckCompositePositionMustHaveLinkingObject {
+        internal static string LinkedCategoryShouldBelongToFirm {
             get {
-                return ResourceManager.GetString("OrderCheckCompositePositionMustHaveLinkingObject", resourceCulture);
+                return ResourceManager.GetString("LinkedCategoryShouldBelongToFirm", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа..
+        ///   Looks up a localized string similar to В позиции {0} адрес фирмы {1} скрыт до выяснения.
         /// </summary>
-        internal static string OrderCheckHasReleases {
+        internal static string LinkedFirmAddressShouldBeValid_ClosedForAscertainment {
             get {
-                return ResourceManager.GetString("OrderCheckHasReleases", resourceCulture);
+                return ResourceManager.GetString("LinkedFirmAddressShouldBeValid_ClosedForAscertainment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} адрес фирмы {1} скрыт навсегда.
+        /// </summary>
+        internal static string LinkedFirmAddressShouldBeValid_Deleted {
+            get {
+                return ResourceManager.GetString("LinkedFirmAddressShouldBeValid_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} найден неактивный адрес {1}.
+        /// </summary>
+        internal static string LinkedFirmAddressShouldBeValid_NotActive {
+            get {
+                return ResourceManager.GetString("LinkedFirmAddressShouldBeValid_NotActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} найден адрес {1}, не принадлежащий фирме заказа.
+        /// </summary>
+        internal static string LinkedFirmAddressShouldBeValid_NotBelongToFirm {
+            get {
+                return ResourceManager.GetString("LinkedFirmAddressShouldBeValid_NotBelongToFirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фирма {0} скрыта до выяснения..
+        /// </summary>
+        internal static string LinkedFirmShouldBeValid_ClosedForAscertainment {
+            get {
+                return ResourceManager.GetString("LinkedFirmShouldBeValid_ClosedForAscertainment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фирма {0} скрыта навсегда.
+        /// </summary>
+        internal static string LinkedFirmShouldBeValid_ClosedForever {
+            get {
+                return ResourceManager.GetString("LinkedFirmShouldBeValid_ClosedForever", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Фирма {0} удалена..
+        /// </summary>
+        internal static string LinkedFirmShouldBeValid_Deleted {
+            get {
+                return ResourceManager.GetString("LinkedFirmShouldBeValid_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск..
+        /// </summary>
+        internal static string MinimalAdvertisementRestrictionShouldBeSpecified {
+            get {
+                return ResourceManager.GetString("MinimalAdvertisementRestrictionShouldBeSpecified", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Указана некорректная дата начала размещения..
         /// </summary>
-        internal static string OrderCheckIncorrectBeginDistributionDate {
+        internal static string OrderBeginDistrubutionShouldBeFirstDayOfMonth {
             get {
-                return ResourceManager.GetString("OrderCheckIncorrectBeginDistributionDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Указана некорректная дата окончания размещения..
-        /// </summary>
-        internal static string OrderCheckIncorrectEndDistributionDate {
-            get {
-                return ResourceManager.GetString("OrderCheckIncorrectEndDistributionDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Отсутствует сканированная копия договора.
-        /// </summary>
-        internal static string OrderCheckOrderHasNoBargainScans {
-            get {
-                return ResourceManager.GetString("OrderCheckOrderHasNoBargainScans", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Заказ не содержит ни одной позиции.
-        /// </summary>
-        internal static string OrderCheckOrderHasNoPositions {
-            get {
-                return ResourceManager.GetString("OrderCheckOrderHasNoPositions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Отсутствует сканированная копия Бланка заказа.
-        /// </summary>
-        internal static string OrderCheckOrderHasNoScans {
-            get {
-                return ResourceManager.GetString("OrderCheckOrderHasNoScans", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Необходимо заполнить все обязательные для заполнения поля: {0}.
-        /// </summary>
-        internal static string OrderCheckOrderHasUnspecifiedFields {
-            get {
-                return ResourceManager.GetString("OrderCheckOrderHasUnspecifiedFields", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} задействованы рубрики, не привязанные к отделению организации города назначения заказа: .
-        /// </summary>
-        internal static string OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit {
-            get {
-                return ResourceManager.GetString("OrderCheckOrderPositionContainsCategoriesFromWrongOrganizationUnit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа..
-        /// </summary>
-        internal static string OrderCheckOrderPositionCorrespontToInactivePosition {
-            get {
-                return ResourceManager.GetString("OrderCheckOrderPositionCorrespontToInactivePosition", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа..
-        /// </summary>
-        internal static string OrderCheckOrderPositionDoesntCorrespontToActualPrice {
-            get {
-                return ResourceManager.GetString("OrderCheckOrderPositionDoesntCorrespontToActualPrice", resourceCulture);
+                return ResourceManager.GetString("OrderBeginDistrubutionShouldBeFirstDayOfMonth", resourceCulture);
             }
         }
         
@@ -475,155 +493,182 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Указана некорректная дата окончания размещения..
+        /// </summary>
+        internal static string OrderEndDistrubutionShouldBeLastSecondOfMonth {
+            get {
+                return ResourceManager.GetString("OrderEndDistrubutionShouldBeLastSecondOfMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Для заказа указана неактивная работа.
         /// </summary>
-        internal static string OrderDealIsInactive {
+        internal static string OrderMustHaveActiveDeal_Inactive {
             get {
-                return ResourceManager.GetString("OrderDealIsInactive", resourceCulture);
+                return ResourceManager.GetString("OrderMustHaveActiveDeal_Inactive", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Фирма {0} скрыта до выяснения..
+        ///   Looks up a localized string similar to Для заказа не указана работа.
         /// </summary>
-        internal static string OrderFirmHiddenForAscertainmentTemplate {
+        internal static string OrderMustHaveActiveDeal_Missing {
             get {
-                return ResourceManager.GetString("OrderFirmHiddenForAscertainmentTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} адрес фирмы {1} скрыт навсегда.
-        /// </summary>
-        internal static string OrderPositionAddressDeleted {
-            get {
-                return ResourceManager.GetString("OrderPositionAddressDeleted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} адрес фирмы {1} скрыт до выяснения.
-        /// </summary>
-        internal static string OrderPositionAddressHidden {
-            get {
-                return ResourceManager.GetString("OrderPositionAddressHidden", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} найден неактивный адрес {1}.
-        /// </summary>
-        internal static string OrderPositionAddressNotActive {
-            get {
-                return ResourceManager.GetString("OrderPositionAddressNotActive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} найден адрес {1}, не принадлежащий фирме заказа.
-        /// </summary>
-        internal static string OrderPositionAddressNotBelongToFirm {
-            get {
-                return ResourceManager.GetString("OrderPositionAddressNotBelongToFirm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} найдена неактивная рубрика {1}.
-        /// </summary>
-        internal static string OrderPositionCategoryNotActive {
-            get {
-                return ResourceManager.GetString("OrderPositionCategoryNotActive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} найдена рубрика {1}, не принадлежащая адресу {2}.
-        /// </summary>
-        internal static string OrderPositionCategoryNotBelongsToAddress {
-            get {
-                return ResourceManager.GetString("OrderPositionCategoryNotBelongsToAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции {0} найдена рубрика {1}, не принадлежащая фирме заказа.
-        /// </summary>
-        internal static string OrderPositionCategoryNotBelongsToFirm {
-            get {
-                return ResourceManager.GetString("OrderPositionCategoryNotBelongsToFirm", resourceCulture);
+                return ResourceManager.GetString("OrderMustHaveActiveDeal_Missing", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Заказ ссылается на неактивные объекты: {0}.
         /// </summary>
-        internal static string OrderReferencesInactiveEntities {
+        internal static string OrderMustHaveActiveLegalEntities {
             get {
-                return ResourceManager.GetString("OrderReferencesInactiveEntities", resourceCulture);
+                return ResourceManager.GetString("OrderMustHaveActiveLegalEntities", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы.
+        ///   Looks up a localized string similar to Позиции не соответствуют актуальному прайс-листу. Необходимо указать позиции из текущего действующего прайс-листа..
         /// </summary>
-        internal static string OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne {
+        internal static string OrderMustHaveActualPrice {
             get {
-                return ResourceManager.GetString("OrdersCheckDestOrganizationUnitDoesntMatchFirmsOne", resourceCulture);
+                return ResourceManager.GetString("OrderMustHaveActualPrice", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для заказа необходимо сформировать счета.
+        ///   Looks up a localized string similar to Заказ оформлен на период, по которому уже сформирована сборка. Необходимо указать другие даты размещения заказа..
         /// </summary>
-        internal static string OrdersCheckNeedToCreateBills {
+        internal static string OrderMustNotIncludeReleasedPeriod {
             get {
-                return ResourceManager.GetString("OrdersCheckNeedToCreateBills", resourceCulture);
+                return ResourceManager.GetString("OrderMustNotIncludeReleasedPeriod", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Заказ не имеет привязки к лицевому счёту..
+        ///   Looks up a localized string similar to В позиции {0} задействованы рубрики, не привязанные к отделению организации города назначения заказа: .
         /// </summary>
-        internal static string OrdersCheckOrderHasNoAccount {
+        internal static string OrderMustUseCategoriesOnlyAvailableInProject {
             get {
-                return ResourceManager.GetString("OrdersCheckOrderHasNoAccount", resourceCulture);
+                return ResourceManager.GetString("OrderMustUseCategoriesOnlyAvailableInProject", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для оформления заказа недостаточно средств. Необходимо: {0}. Имеется: {1}..
+        ///   Looks up a localized string similar to В позиции {0} необходимо указать хотя бы один объект привязки для подпозиции &apos;{1}&apos;.
         /// </summary>
-        internal static string OrdersCheckOrderInsufficientFunds {
+        internal static string OrderPositionAdvertisementMustBeCreated {
             get {
-                return ResourceManager.GetString("OrdersCheckOrderInsufficientFunds", resourceCulture);
+                return ResourceManager.GetString("OrderPositionAdvertisementMustBeCreated", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск..
+        ///   Looks up a localized string similar to В позиции {0} необходимо указать рекламные материалы для подпозиции &quot;{1}&quot;.
         /// </summary>
-        internal static string PricePositionHasNoMinAdvertisementAmount {
+        internal static string OrderPositionAdvertisementMustHaveAdvertisement {
             get {
-                return ResourceManager.GetString("PricePositionHasNoMinAdvertisementAmount", resourceCulture);
+                return ResourceManager.GetString("OrderPositionAdvertisementMustHaveAdvertisement", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа..
+        ///   Looks up a localized string similar to Позиция {0} соответствует скрытой позиции прайс листа. Необходимо указать активную позицию из текущего действующего прайс-листа..
         /// </summary>
-        internal static string ProfileBargainEndDateIsLessThanSignDate {
+        internal static string OrderPositionCorrespontToInactivePosition {
             get {
-                return ResourceManager.GetString("ProfileBargainEndDateIsLessThanSignDate", resourceCulture);
+                return ResourceManager.GetString("OrderPositionCorrespontToInactivePosition", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to У юр. лица клиента, в профиле {0} указана доверенность с датой окончания действия раньше даты подписания заказа.
+        ///   Looks up a localized string similar to Для позиции {0} в рубрику {1} отсутствует CPC.
         /// </summary>
-        internal static string ProfileWarrantyEndDateIsLessThanSignDate {
+        internal static string OrderPositionCostPerClickMustBeSpecified {
             get {
-                return ResourceManager.GetString("ProfileWarrantyEndDateIsLessThanSignDate", resourceCulture);
+                return ResourceManager.GetString("OrderPositionCostPerClickMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Для позиции {0} в рубрику {1} указан CPC меньше минимального.
+        /// </summary>
+        internal static string OrderPositionCostPerClickMustNotBeLessMinimum {
+            get {
+                return ResourceManager.GetString("OrderPositionCostPerClickMustNotBeLessMinimum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Позиция {0} не соответствует актуальному прайс-листу. Необходимо указать позицию из текущего действующего прайс-листа..
+        /// </summary>
+        internal static string OrderPositionMustCorrespontToActualPrice {
+            get {
+                return ResourceManager.GetString("OrderPositionMustCorrespontToActualPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Позиция &quot;{0}&quot; не может быть продана в рубрику &quot;{1}&quot; проекта &quot;{2}&quot; в выпуск {3:MMMM yyy}.
+        /// </summary>
+        internal static string OrderPositionSalesModelMustMatchCategorySalesModel {
+            get {
+                return ResourceManager.GetString("OrderPositionSalesModelMustMatchCategorySalesModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Необходимо заполнить все обязательные для заполнения поля: {0}.
+        /// </summary>
+        internal static string OrderRequiredFieldsShouldBeSpecified {
+            get {
+                return ResourceManager.GetString("OrderRequiredFieldsShouldBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Отсутствует сканированная копия Бланка заказа.
+        /// </summary>
+        internal static string OrderScanShouldPresent {
+            get {
+                return ResourceManager.GetString("OrderScanShouldPresent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Заказ не содержит ни одной позиции.
+        /// </summary>
+        internal static string OrderShouldHaveAtLeastOnePosition {
+            get {
+                return ResourceManager.GetString("OrderShouldHaveAtLeastOnePosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Договор не может иметь дату подписания позднее даты подписания заказа.
+        /// </summary>
+        internal static string OrderShouldNotBeSignedBeforeBargain {
+            get {
+                return ResourceManager.GetString("OrderShouldNotBeSignedBeforeBargain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to На адрес &quot;{0}&quot; фирмы &quot;{1}&quot; продано более одной позиции Premium в периоды: {2}.
+        /// </summary>
+        internal static string PremiumPartnerProfileMustHaveSingleSale {
+            get {
+                return ResourceManager.GetString("PremiumPartnerProfileMustHaveSingleSale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Для рубрики {0} в проекте {1} в выпуск {2:MMMM yyy} не указан минимальный CPC.
+        /// </summary>
+        internal static string ProjectMustContainCostPerClickMinimumRestriction {
+            get {
+                return ResourceManager.GetString("ProjectMustContainCostPerClickMinimumRestriction", resourceCulture);
             }
         }
         
@@ -646,65 +691,29 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция &quot;Самореклама только для ПК&quot; продана одновременно с рекламой в другую платформу.
+        ///   Looks up a localized string similar to Тестровая строка.
         /// </summary>
-        internal static string SelfAdvertisementOrderValidationRuleMessage {
+        internal static string Test {
             get {
-                return ResourceManager.GetString("SelfAdvertisementOrderValidationRuleMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Заказ {0} не может иметь продаж в тематику {1}, поскольку тематика действует не весь период размещения заказа.
-        /// </summary>
-        internal static string ThemePeriodDoesNotOverlapOrderPeriod {
-            get {
-                return ResourceManager.GetString("ThemePeriodDoesNotOverlapOrderPeriod", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Слишком много продаж в тематику {0}. Продано {1} позиций вместо {2} возможных..
-        /// </summary>
-        internal static string ThemeSalesExceedsLimit {
-            get {
-                return ResourceManager.GetString("ThemeSalesExceedsLimit", resourceCulture);
+                return ResourceManager.GetString("Test", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Тематика {0} использует удаленную рубрику {1}..
         /// </summary>
-        internal static string ThemeUsesInactiveCategory {
+        internal static string ThemeCategoryMustBeActiveAndNotDeleted {
             get {
-                return ResourceManager.GetString("ThemeUsesInactiveCategory", resourceCulture);
+                return ResourceManager.GetString("ThemeCategoryMustBeActiveAndNotDeleted", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Для заказа не указана работа.
+        ///   Looks up a localized string similar to Заказ {0} не может иметь продаж в тематику {1}, поскольку тематика действует не весь период размещения заказа.
         /// </summary>
-        internal static string ThereIsNoSpecifiedDealForOrder {
+        internal static string ThemePeriodMustContainOrderPeriod {
             get {
-                return ResourceManager.GetString("ThereIsNoSpecifiedDealForOrder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В рубрику {0} заказано слишком много объявлений: Заказано {1}, допустимо не более {2}..
-        /// </summary>
-        internal static string TooManyAdvertisementForCategory {
-            get {
-                return ResourceManager.GetString("TooManyAdvertisementForCategory", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Для фирмы {0} задано слишком большое число рубрик - {1}. Максимально допустимое - {2}..
-        /// </summary>
-        internal static string TooManyCategorieForFirm {
-            get {
-                return ResourceManager.GetString("TooManyCategorieForFirm", resourceCulture);
+                return ResourceManager.GetString("ThemePeriodMustContainOrderPeriod", resourceCulture);
             }
         }
     }

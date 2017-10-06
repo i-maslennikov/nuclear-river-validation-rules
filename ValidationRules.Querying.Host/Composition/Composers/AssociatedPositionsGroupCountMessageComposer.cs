@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 project,
-                Resources.InPricePositionOf_Price_ContaiedMoreThanOneAssociatedPositions,
+                Resources.AssociatedPositionsGroupCount,
                 pricePosition);
         }
     }
