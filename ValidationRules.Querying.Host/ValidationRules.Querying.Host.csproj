@@ -149,6 +149,7 @@
     <Compile Include="CheckModes\CheckModeDescriptorFactory.cs" />
     <Compile Include="CheckModes\CheckModeRegistry.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMaximumRestrictionsMessageComposer.cs" />
+    <Compile Include="Composition\Composers\AmsMessagesShouldBeNewMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementShouldNotHaveCommentsMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementMustPassReviewMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementMustBelongToFirmMessageComposer.cs" />
@@ -247,6 +248,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ValidationRules.Hosting.Common\ValidationRules.Hosting.Common.csproj">
+      <Project>{876CF585-D099-4C5A-949E-E76DA08764D8}</Project>
+      <Name>ValidationRules.Hosting.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValidationRules.SingleCheck\ValidationRules.SingleCheck.csproj">
       <Project>{2aee5eb1-9f9f-49d3-8aa3-a9c9338aaf4b}</Project>
       <Name>ValidationRules.SingleCheck</Name>

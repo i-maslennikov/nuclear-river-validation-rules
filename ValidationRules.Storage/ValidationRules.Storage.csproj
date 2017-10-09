@@ -229,6 +229,7 @@
     <Compile Include="Model\Facts\FirmAddress.cs" />
     <Compile Include="Model\Facts\Position.cs" />
     <Compile Include="Model\Facts\PricePosition.cs" />
+    <Compile Include="Model\Facts\SystemStatus.cs" />
     <Compile Include="Model\Facts\UnlimitedOrder.cs" />
     <Compile Include="Model\ConsistencyRules\Aggregates\Order.cs" />
     <Compile Include="Model\Facts\Bargain.cs" />
@@ -304,6 +305,7 @@
     <Compile Include="Model\Facts\OrderPositionCostPerClick.cs" />
     <Compile Include="Model\Facts\ReleaseInfo.cs" />
     <Compile Include="Model\Facts\SalesModelCategoryRestriction.cs" />
+    <Compile Include="Model\SystemRules\Aggregates\SystemStatus.cs" />
     <Compile Include="Model\ThemeRules\Aggregates\Order.cs" />
     <Compile Include="Model\ThemeRules\Aggregates\Project.cs" />
     <Compile Include="Model\ThemeRules\Aggregates\Theme.cs" />

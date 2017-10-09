@@ -15,6 +15,7 @@ using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyR
 using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using PriceAggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
+using SystemAggregates = NuClear.ValidationRules.Storage.Model.SystemRules.Aggregates;
 
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 
@@ -62,6 +63,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(Facts::ReleaseWithdrawal),
                 typeof(Facts::RulesetRule),
                 typeof(Facts::SalesModelCategoryRestriction),
+                typeof(Facts::SystemStatus),
                 typeof(Facts::Theme),
                 typeof(Facts::ThemeCategory),
                 typeof(Facts::ThemeOrganizationUnit),
@@ -122,24 +124,24 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(ConsistencyAggregates::Order.MissingRequiredField),
                 typeof(ConsistencyAggregates::Order.MissingOrderScan),
 
-			    typeof(FirmAggregates::Firm),
-			    typeof(FirmAggregates::Firm.CategoryPurchase),
-			    typeof(FirmAggregates::Order),
-			    typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
-			    typeof(FirmAggregates::Order.InvalidFirm),
-			    typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
-			    typeof(FirmAggregates::Order.SelfAdvertisementPosition),
+                typeof(FirmAggregates::Firm),
+                typeof(FirmAggregates::Firm.CategoryPurchase),
+                typeof(FirmAggregates::Order),
+                typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
+                typeof(FirmAggregates::Order.InvalidFirm),
+                typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
+                typeof(FirmAggregates::Order.SelfAdvertisementPosition),
                 typeof(FirmAggregates::Order.PremiumPartnerProfilePosition),
 
                 typeof(ProjectAggregates::Order),
-			    typeof(ProjectAggregates::Order.AddressAdvertisementNonOnTheMap),
-			    typeof(ProjectAggregates::Order.CategoryAdvertisement),
-			    typeof(ProjectAggregates::Order.CostPerClickAdvertisement),
-			    typeof(ProjectAggregates::Project),
-			    typeof(ProjectAggregates::Project.Category),
-			    typeof(ProjectAggregates::Project.CostPerClickRestriction),
-			    typeof(ProjectAggregates::Project.SalesModelRestriction),
-			    typeof(ProjectAggregates::Project.NextRelease),
+                typeof(ProjectAggregates::Order.AddressAdvertisementNonOnTheMap),
+                typeof(ProjectAggregates::Order.CategoryAdvertisement),
+                typeof(ProjectAggregates::Order.CostPerClickAdvertisement),
+                typeof(ProjectAggregates::Project),
+                typeof(ProjectAggregates::Project.Category),
+                typeof(ProjectAggregates::Project.CostPerClickRestriction),
+                typeof(ProjectAggregates::Project.SalesModelRestriction),
+                typeof(ProjectAggregates::Project.NextRelease),
 
                 typeof(ThemeAggregates::Theme),
                 typeof(ThemeAggregates::Theme.InvalidCategory),
@@ -147,6 +149,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(ThemeAggregates::Order.OrderTheme),
                 typeof(ThemeAggregates::Project),
                 typeof(ThemeAggregates::Project.ProjectDefaultTheme),
+
+                typeof(SystemAggregates::SystemStatus),
             };
 
         public static readonly Type[] MessagesTypes =

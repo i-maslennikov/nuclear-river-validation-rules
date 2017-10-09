@@ -43,7 +43,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             => x => x.PeriodStart < end && start < x.PeriodEnd;
 
         private static Expression<Func<Version.ValidationResult, bool>> ForOrdersOrProject(ITable<Identity> orderIds, long? projectId)
-            => x => x.OrderId.HasValue && orderIds.Any(y => y.Id == x.OrderId.Value) || x.ProjectId.HasValue && x.ProjectId == projectId;
+            => x => x.OrderId == null && x.ProjectId == null || x.OrderId.HasValue && orderIds.Any(y => y.Id == x.OrderId.Value) || x.ProjectId.HasValue && x.ProjectId == projectId;
 
         private static Expression<Func<Version.ValidationResult, bool>> ForMode(ICheckModeDescriptor checkModeDescriptor)
             => x => checkModeDescriptor.Rules.Contains((MessageTypeCode)x.MessageType);

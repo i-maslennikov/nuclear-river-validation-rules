@@ -18,6 +18,7 @@ using NuClear.ValidationRules.Replication.ConsistencyRules.Validation;
 using NuClear.ValidationRules.Replication.FirmRules.Validation;
 using NuClear.ValidationRules.Replication.PriceRules.Validation;
 using NuClear.ValidationRules.Replication.ProjectRules.Validation;
+using NuClear.ValidationRules.Replication.SystemRules.Validation;
 using NuClear.ValidationRules.Replication.ThemeRules.Validation;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using NuClear.ValidationRules.Storage.Specifications;
@@ -71,14 +72,12 @@ namespace NuClear.ValidationRules.Replication.Messages
             var ruleGroups = commands.OfType<IRecalculateValidationRuleCommand>().GroupBy(x => x.Rule).ToList();
             if (ruleGroups.Count != 0)
             {
-                IReadOnlyCollection<Version.ValidationResult> targetValidationResults;
-
-                if (!_cache.TryGet(currentVersion, out targetValidationResults))
+                if (!_cache.TryGet(currentVersion, out var targetValidationResults))
                 {
                     using (Probe.Create("Query Target"))
                     {
                         targetValidationResults =
-                            _query.For<Version.ValidationResult>().ForVersion(currentVersion).ApplyVersionId(0).ToList();
+                            _query.For<Version.ValidationResult>().ForVersion(currentVersion).AsEnumerable().ApplyVersionId(0).ToList();
                         _cache.Put(currentVersion, targetValidationResults);
                     }
                 }
@@ -121,16 +120,14 @@ namespace NuClear.ValidationRules.Replication.Messages
             var ids = Enumerable.Empty<long>();
             foreach (var command in commands)
             {
-                var recalculateRuleCompleteCommand = command as RecalculateValidationRuleCompleteCommand;
-                if (recalculateRuleCompleteCommand != null)
+                switch (command)
                 {
-                    return x => true;
-                }
+                    case RecalculateValidationRuleCompleteCommand _:
+                        return x => true;
 
-                var recalculateRulePartiallyCommand = command as RecalculateValidationRulePartiallyCommand;
-                if (recalculateRulePartiallyCommand != null)
-                {
-                    ids = ids.Union(recalculateRulePartiallyCommand.Filter);
+                    case RecalculateValidationRulePartiallyCommand recalculateRulePartiallyCommand:
+                        ids = ids.Union(recalculateRulePartiallyCommand.Filter);
+                        break;
                 }
             }
 
@@ -250,6 +247,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                     new AdvertisementMustBelongToFirm(_query),
                     new AdvertisementMustPassReview(_query),
                     new AdvertisementShouldNotHaveComments(_query),
+                    new AmsMessagesShouldBeNew(_query),
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),

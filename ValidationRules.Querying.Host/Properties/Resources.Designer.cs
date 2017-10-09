@@ -142,6 +142,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Данные из системы AMS слишком старые, результаты проверок недостоверны.
+        /// </summary>
+        internal static string AmsMessagesShouldBeNew {
+            get {
+                return ResourceManager.GetString("AmsMessagesShouldBeNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой..
         /// </summary>
         internal static string AssociatedPositionsGroupCount {

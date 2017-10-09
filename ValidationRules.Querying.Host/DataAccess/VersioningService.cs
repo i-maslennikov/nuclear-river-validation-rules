@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -10,7 +8,7 @@ using Confluent.Kafka;
 
 using LinqToDB;
 
-using Newtonsoft.Json;
+using ValidationRules.Hosting.Common;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -22,7 +20,6 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         private static readonly TimeSpan WaitTimeout = TimeSpan.FromMinutes(6);
         private static readonly TimeSpan WaitInterval = TimeSpan.FromSeconds(5);
-        private static readonly TimeSpan AmsSyncInterval = TimeSpan.FromSeconds(20);
 
         private readonly DataConnectionFactory _factory;
 
@@ -34,20 +31,10 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         public async Task<long> WaitForVersion(Guid token)
         {
             Task<long> amsVersion;
-            if (AmsHelper.TryGetLatestMessage(0, out var amsMessage))
+            using (var consumer = new Consumer(ConsumerExtensions.Settings.Config))
             {
-                var utcNow = DateTime.UtcNow;
-                var amsUtcNow = amsMessage.Timestamp.UtcDateTime;
-                if ((utcNow - amsUtcNow).Duration() > AmsSyncInterval)
-                {
-                    throw new TimeoutException($"River clock {utcNow} and Ams clock {amsUtcNow} (offset {amsMessage.Offset}) differs more than {AmsSyncInterval}");
-                }
-
-                amsVersion = WaitForAmsState(amsMessage.Offset, WaitInterval, WaitTimeout);
-            }
-            else
-            {
-                amsVersion = Task.FromResult(0L);
+                var partitionSize = consumer.GetPartitionSize();
+                amsVersion = partitionSize != 0 ? WaitForAmsState(partitionSize - 1, WaitInterval, WaitTimeout) : Task.FromResult(0L);
             }
 
             var ermVersion = WaitForErmState(token, WaitInterval, WaitTimeout);
@@ -124,40 +111,6 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
                 return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
-            }
-        }
-
-        private static class AmsHelper
-        {
-            private static readonly AmsSettings Settings = new AmsSettings();
-
-            public static bool TryGetLatestMessage(int partition, out Message message)
-            {
-                using (var consumer = new Consumer(Settings.Config))
-                {
-                    var topicPartition = new TopicPartition(Settings.Topic, partition);
-
-                    var offsets = consumer.QueryWatermarkOffsets(topicPartition, Settings.Timeout);
-                    consumer.Assign(new[] { new TopicPartitionOffset(topicPartition, offsets.High - 1) });
-
-                    return consumer.Consume(out message, Settings.Timeout);
-                }
-            }
-
-            private sealed class AmsSettings
-            {
-                public AmsSettings()
-                {
-                    var connectionString = ConfigurationManager.ConnectionStrings["Ams"].ConnectionString;
-                    Config = JsonConvert.DeserializeObject<Dictionary<string, object>>(connectionString);
-                    Config.Add("group.id", Guid.NewGuid().ToString());
-
-                    Topic = ConfigurationManager.AppSettings["AmsFactsTopics"].Split(',').First();
-                }
-
-                public Dictionary<string, object> Config { get; }
-                public string Topic { get; }
-                public TimeSpan Timeout { get; } = TimeSpan.FromSeconds(5);
             }
         }
     }

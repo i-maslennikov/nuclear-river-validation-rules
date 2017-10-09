@@ -333,6 +333,9 @@
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
     <value>Рекламный материал {0} одобрен с замечаниями</value>
   </data>
+  <data name="AmsMessagesShouldBeNew" xml:space="preserve">
+    <value>Данные из системы AMS слишком старые, результаты проверок недостоверны</value>
+  </data>
   <data name="Test" xml:space="preserve">
     <value>Тестровая строка</value>
   </data>

@@ -71,5 +71,7 @@
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
 
         PremiumPartnerProfileMustHaveSingleSale = 71,
+
+        AmsMessagesShouldBeNew = 72,
     }
 }

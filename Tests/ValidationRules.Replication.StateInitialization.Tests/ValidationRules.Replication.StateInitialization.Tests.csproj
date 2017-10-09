@@ -182,6 +182,7 @@
     <Compile Include="DataTests.cs" />
     <Compile Include="RunnerConnectionStringSettings.cs" />
     <Compile Include="SchemaMetadataSource.cs" />
+    <Compile Include="System\AmsMessagesShouldBeNew.cs" />
     <Compile Include="TestCaseMetadataSource.cs" />
     <Compile Include="TestCaseMetadataSource.Version.cs" />
     <Compile Include="TestCaseMetadataSource.Facts.cs" />

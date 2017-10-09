@@ -299,7 +299,12 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                     Rule(MessageTypeCode.AdvertisementShouldNotHaveComments,
                     manualReport: RuleSeverityLevel.Info,
                     prerelease: RuleSeverityLevel.Info,
-                    release: RuleSeverityLevel.Info)
+                    release: RuleSeverityLevel.Info),
+
+                    Rule(MessageTypeCode.AmsMessagesShouldBeNew,
+                        manualReport: RuleSeverityLevel.Error,
+                        prerelease: RuleSeverityLevel.Error,
+                        release: RuleSeverityLevel.Error)
                 };
 
         private static Tuple<MessageTypeCode, IReadOnlyDictionary<CheckMode, RuleSeverityLevel>> Rule(
