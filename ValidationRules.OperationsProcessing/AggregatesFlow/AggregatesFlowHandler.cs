@@ -19,6 +19,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 {
     public sealed class AggregatesFlowHandler : IMessageProcessingHandler
     {
+        private static readonly EventEqualityComparer EqualityComparer = new EventEqualityComparer();
+
         private readonly IAggregateActorFactory _aggregateActorFactory;
         private readonly AggregatesFlowTelemetryPublisher _telemetryPublisher;
         private readonly IEventLogger _eventLogger;
@@ -110,7 +112,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             }
 
             var actors = _aggregateActorFactory.Create(new HashSet<Type>(commands.Select(x => x.AggregateRootType)));
-            var events = new HashSet<IEvent>();
+            var events = new HashSet<IEvent>(EqualityComparer);
 
             foreach (var actor in actors)
             {
@@ -118,6 +120,35 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             }
 
             return events;
+        }
+
+        private sealed class EventEqualityComparer : IEqualityComparer<IEvent>
+        {
+            public bool Equals(IEvent x, IEvent y)
+            {
+                switch (x)
+                {
+                    case ResultOutdatedEvent resultOutdatedEventX:
+                        return y is ResultOutdatedEvent resultOutdatedEventY && ResultOutdatedEvent.Comparer.Equals(resultOutdatedEventX, resultOutdatedEventY);
+                    case ResultPartiallyOutdatedEvent resultPartiallyOutdatedEventX:
+                        return y is ResultPartiallyOutdatedEvent resultPartiallyOutdatedEventY && ResultPartiallyOutdatedEvent.Comparer.Equals(resultPartiallyOutdatedEventX, resultPartiallyOutdatedEventY);
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(x));
+                }
+            }
+
+            public int GetHashCode(IEvent obj)
+            {
+                switch (obj)
+                {
+                    case ResultOutdatedEvent resultOutdatedEvent:
+                        return ResultOutdatedEvent.Comparer.GetHashCode(resultOutdatedEvent);
+                    case ResultPartiallyOutdatedEvent resultPartiallyOutdatedEvent:
+                        return ResultPartiallyOutdatedEvent.Comparer.GetHashCode(resultPartiallyOutdatedEvent);
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(obj));
+                }
+            }
         }
     }
 }

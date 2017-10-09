@@ -16,24 +16,26 @@ namespace NuClear.ValidationRules.Replication.Events
         public MessageTypeCode Rule { get; }
         public IReadOnlyCollection<long> OrderIds { get; }
 
-        private bool Equals(ResultPartiallyOutdatedEvent other)
+        private sealed class EqualityComparer : IEqualityComparer<ResultPartiallyOutdatedEvent>
         {
-            return Rule == other.Rule && OrderIds.Equals(other.OrderIds);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj is ResultPartiallyOutdatedEvent @event && Equals(@event);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
+            public bool Equals(ResultPartiallyOutdatedEvent x, ResultPartiallyOutdatedEvent y)
             {
-                return ((int)Rule * 397) ^ OrderIds.GetHashCode();
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return x.Rule == y.Rule && x.OrderIds.Equals(y.OrderIds);
+            }
+
+            public int GetHashCode(ResultPartiallyOutdatedEvent obj)
+            {
+                unchecked
+                {
+                    return ((int)obj.Rule * 397) ^ obj.OrderIds.GetHashCode();
+                }
             }
         }
+
+        public static IEqualityComparer<ResultPartiallyOutdatedEvent> Comparer { get; } = new EqualityComparer();
     }
 }
