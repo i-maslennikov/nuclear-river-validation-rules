@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using NuClear.Replication.Core;
 
@@ -18,30 +19,29 @@ namespace NuClear.ValidationRules.Replication.Events
             RelatedDataObjectId = relatedDataObjectId;
         }
 
-        private bool Equals(RelatedDataObjectOutdatedEvent<TDataObjectId> other)
+        private sealed class EqualityComparer : IEqualityComparer<RelatedDataObjectOutdatedEvent<TDataObjectId>>
         {
-            return DataObjectType == other.DataObjectType &&
-                   RelatedDataObjectType == other.RelatedDataObjectType &&
-                   RelatedDataObjectId.Equals(other.RelatedDataObjectId);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            var a = obj as RelatedDataObjectOutdatedEvent<TDataObjectId>;
-            return a != null && Equals(a);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
+            public bool Equals(RelatedDataObjectOutdatedEvent<TDataObjectId> x, RelatedDataObjectOutdatedEvent<TDataObjectId> y)
             {
-                var hashCode = DataObjectType.GetHashCode();
-                hashCode = (hashCode * 397) ^ RelatedDataObjectType.GetHashCode();
-                hashCode = (hashCode * 397) ^ RelatedDataObjectId.GetHashCode();
-                return hashCode;
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return x.DataObjectType == y.DataObjectType && x.RelatedDataObjectType == y.RelatedDataObjectType && x.RelatedDataObjectId.Equals(y.RelatedDataObjectId);
+            }
+
+            public int GetHashCode(RelatedDataObjectOutdatedEvent<TDataObjectId> obj)
+            {
+                unchecked
+                {
+                    var hashCode = obj.DataObjectType.GetHashCode();
+                    hashCode = (hashCode * 397) ^ obj.RelatedDataObjectType.GetHashCode();
+                    hashCode = (hashCode * 397) ^ obj.RelatedDataObjectId.GetHashCode();
+                    return hashCode;
+                }
             }
         }
+
+        public static IEqualityComparer<RelatedDataObjectOutdatedEvent<TDataObjectId>> Comparer { get; } = new EqualityComparer();
     }
 }
