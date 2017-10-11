@@ -32,7 +32,10 @@ function Get-DBSuffix($Context){
 	$countrySuffix = $DBSuffixes[$Context['Country']];
 
 	switch($Context.EnvType){
-		{ @('Business', 'Edu') -contains $_ } {
+		'Business' {
+			$envTypeSuffix = $Context.EnvType
+		}
+		'Edu' {
 			$envTypeSuffix = $Context.EnvType
 		}
 		default {
@@ -51,7 +54,10 @@ function Get-DBHostMetadata($Context){
 				default { $dbHost = 'uk-erm-sql02' }
 			}
 		}
-		{ @('Business', 'Edu') -contains $_ } {
+		'Business' {
+			$dbHost = 'uk-erm-edu03'
+		}
+		'Edu' {
 			$dbHost = 'uk-erm-edu03'
 		}
 		'Production' {
@@ -75,9 +81,12 @@ function Get-AmsFactsTopicsMetadata($Context){
 				'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
 			}
 		 }
-		 { @('Business', 'Edu') -contains $_ } {
-			 return @{ 'AmsFactsTopics' = "ams_okapi_$($Context.EnvType.ToLowerInvariant())$($Context['Index']).am.validity" }
-		 }
+		'Business' {
+			return @{ 'AmsFactsTopics' = "ams_okapi_business$($Context['Index']).am.validity" }
+		}
+		'Edu' {
+			return @{ 'AmsFactsTopics' = "ams_okapi_edu$($Context['Index']).am.validity" }
+		}
 		 'Production' {
 			 return @{
 				 'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
