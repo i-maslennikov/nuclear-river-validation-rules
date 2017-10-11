@@ -72,38 +72,32 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
             {
                 var releaseWithdrawalPeriods =
                     from order in _query.For<Facts::Order>().Where(x => !x.IsFreeOfCharge && Facts::Order.State.Payable.Contains(x.WorkflowStep))
+                    from account in _query.For<Facts::Account>()
+                                          .Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
                     from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from releaseWithdrawal in _query.For<Facts::ReleaseWithdrawal>()
                                                     .Where(x => x.OrderPositionId == orderPosition.Id)
                                                     .Where(x => x.Start < order.EndDistributionFact)
-                    from account in _query.For<Facts::Account>().Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
-                    select new { AccountId = account.Id, releaseWithdrawal.Start, releaseWithdrawal.Amount, Type = 1 };
-
-                var locks = _query.For<Facts::Lock>().Where(x => !x.IsOrderFreeOfCharge);
-
-                var lockPeriods =
-                    from @lock in locks
-                    from account in _query.For<Facts::Account>().Where(x => x.Id == @lock.AccountId)
-                    select new { AccountId = account.Id, @lock.Start, @lock.Amount, Type = 3 };
-
-                var lockSums =
-                    from @lock in locks.GroupBy(x => x.AccountId)
-                    select new { AccountId = @lock.Key, Sum = @lock.Select(x => x.Amount).Sum() };
+                    // фильтруем фактические списания, по ним ошибок быть уже не может
+                    where !_query.For<Facts::AccountDetail>().Any(x => x.AccountId == account.Id && x.OrderId == order.Id && x.PeriodStartDate == releaseWithdrawal.Start)
+                    select new
+                    {
+                        AccountId = account.Id,
+                        releaseWithdrawal.Start,
+                        releaseWithdrawal.Amount,
+                    };
 
                 var result =
-                    from item in releaseWithdrawalPeriods.Concat(lockPeriods).GroupBy(a => new { a.AccountId, a.Start })
+                    from item in releaseWithdrawalPeriods.GroupBy(x => new { x.AccountId, x.Start })
                     from account in _query.For<Facts::Account>().Where(x => x.Id == item.Key.AccountId)
-                    from sum in lockSums.Where(x => x.AccountId == item.Key.AccountId).DefaultIfEmpty()
                     select new Account.AccountPeriod
-                        {
-                            AccountId = item.Key.AccountId,
-                            Start = item.Key.Start,
-                            Balance = account.Balance,
-                            End = item.Key.Start.AddMonths(1),
-                            ReleaseAmount = item.Where(x => x.Type == 1).Select(x => x.Amount).Sum(),
-                            LockedAmount = item.Where(x => x.Type == 3).Select(x => x.Amount).Sum(),
-                            OwerallLockedAmount = sum != null ? sum.Sum : 0,
-                        };
+                    {
+                        AccountId = item.Key.AccountId,
+                        Start = item.Key.Start,
+                        End = item.Key.Start.AddMonths(1),
+                        Balance = account.Balance,
+                        ReleaseAmount = item.Select(x => x.Amount).Sum(),
+                    };
 
                 return result;
             }

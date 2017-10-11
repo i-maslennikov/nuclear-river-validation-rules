@@ -418,6 +418,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Account { Id = 1, Balance = 2, BranchOfficeOrganizationUnitId = 3, LegalPersonId = 4 });
 
         // ReSharper disable once UnusedMember.Local
+        private static ArrangeMetadataElement AccountDetailFacts
+            => ArrangeMetadataElement.Config
+                                     .Name(nameof(AccountDetailFacts))
+                                     .Erm(
+                                          new Erm::AccountDetail { Id = 1, IsDeleted = false, AccountId = 1, OrderId = 1, PeriodStartDate = MonthStart(1) },
+                                          new Erm::AccountDetail { Id = 2, IsDeleted = true  },
+                                          new Erm::AccountDetail { Id = 3, IsDeleted = false, AccountId = 1, OrderId = null })
+                                     .Fact(
+                                           new AccountDetail { Id = 1, AccountId = 1, OrderId = 1, PeriodStartDate = MonthStart(1)});
+
+        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement BranchOfficeFacts
             => ArrangeMetadataElement.Config
                 .Name(nameof(BranchOfficeFacts))
@@ -464,20 +475,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Erm::LegalPerson { Id = 4, IsActive = false, IsDeleted = true })
                 .Fact(
                     new LegalPerson { Id = 1 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement LockFacts
-            => ArrangeMetadataElement.Config
-                .Name(nameof(LockFacts))
-                .Erm(
-                    new Erm::Lock { Id = 1, IsActive = true, IsDeleted = false, AccountId = 2, OrderId = 3, PeriodStartDate = MonthStart(1), PlannedAmount = 4 },
-                    new Erm::Lock { Id = 2, IsActive = false, IsDeleted = false },
-                    new Erm::Lock { Id = 3, IsActive = true, IsDeleted = true },
-                    new Erm::Lock { Id = 4, IsActive = false, IsDeleted = true },
-
-                    new Erm::Order { Id = 3 })
-                .Fact(
-                    new Lock { Id = 1, AccountId = 2, Start = MonthStart(1), Amount = 4, IsOrderFreeOfCharge = false });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement ReleaseWithdrawalFacts

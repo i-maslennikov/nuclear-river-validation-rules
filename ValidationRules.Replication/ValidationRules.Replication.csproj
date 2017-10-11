@@ -165,6 +165,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accessors\AccountDetailAccessor.cs" />
     <Compile Include="Accessors\AdvertisementAccessor.cs" />
     <Compile Include="Accessors\NomenclatureCategoryAccessor.cs" />
     <Compile Include="Accessors\OrderItemAccessor.cs" />
@@ -174,7 +175,6 @@
     <Compile Include="Accessors\UnlimitedOrderAccessor.cs" />
     <Compile Include="Accessors\OrderPositionAccessor.cs" />
     <Compile Include="Accessors\ReleaseWithdrawalAccessor.cs" />
-    <Compile Include="Accessors\LockAccessor.cs" />
     <Compile Include="Accessors\ProjectAccessor.cs" />
     <Compile Include="Accessors\AccountAccessor.cs" />
     <Compile Include="Accessors\OrderAccessor.cs" />

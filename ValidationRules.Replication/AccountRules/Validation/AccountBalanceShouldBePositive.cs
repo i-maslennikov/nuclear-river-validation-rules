@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         {
             var ruleResults =
                 from accountPeriod in query.For<Account.AccountPeriod>()
-                                           .Where(x => x.ReleaseAmount > 0 && (x.Balance - x.ReleaseAmount - (x.OwerallLockedAmount - x.LockedAmount) <= -Epsilon))
+                                           .Where(x => x.ReleaseAmount > 0 && (x.Balance - x.ReleaseAmount <= -Epsilon))
                 from order in query.For<Order>()
                                    .Where(x => !x.IsFreeOfCharge)
                                    .Where(x => x.AccountId == accountPeriod.AccountId)
@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                             new MessageParams(
                                     new Dictionary<string, object>
                                         {
-                                            { "available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) },
+                                            { "available", accountPeriod.Balance },
                                             { "planned", accountPeriod.ReleaseAmount }
                                         },
                                     new Reference<EntityTypeAccount>(accountPeriod.AccountId),

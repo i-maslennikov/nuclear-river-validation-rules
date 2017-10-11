@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using LinqToDB.Data;
@@ -106,7 +105,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.AddRange(opas);
             var themeIds = opas.Where(x => x.ThemeId.HasValue).Select(x => x.ThemeId.Value).ToList();
             var categoryIds = opas.Where(x => x.CategoryId.HasValue).Select(x => x.CategoryId.Value).ToList();
-            var adverisementIds = opas.Where(x => x.AdvertisementId.HasValue).Select(x => x.AdvertisementId.Value).ToList();
             var firmAddressIds = opas.Where(x => x.FirmAddressId.HasValue).Select(x => x.FirmAddressId.Value).ToList(); // список привязанных адресов из-за ЗМК может превышать список адресов фирмы
 
             var costs = query.GetTable<OrderPositionCostPerClick>()
@@ -317,6 +315,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.AddRange(categoryFirmAddresses);
         }
 
+        // TODO: правила на Account они чисто массовые, м.б. и не надо это всё загружать
         private static void LoadAccount(DataConnection query, Order order, IStore store)
         {
             var accounts =
@@ -326,19 +325,13 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.AddRange(accounts);
             var accountIds = accounts.Select(x => x.Id);
 
-            var locks =
-                query.GetTable<Lock>()
-                     .Where(x => x.IsActive && !x.IsDeleted)
+            var accountDetails =
+                query.GetTable<AccountDetail>()
+                     .Where(x => !x.IsDeleted)
+                     .Where(x => x.OrderId == order.Id)
                      .Where(x => accountIds.Contains(x.AccountId))
                      .Execute();
-            store.AddRange(locks);
-            var orderIds = locks.Select(x => x.OrderId);
-
-            var orders =
-                query.GetTable<Order>()
-                     .Where(x => orderIds.Contains(x.Id))
-                     .Execute();
-            store.AddRange(orders);
+            store.AddRange(accountDetails);
         }
 
         private static void LoadReleaseWithdrawals(DataConnection query, Order order, IStore store)
