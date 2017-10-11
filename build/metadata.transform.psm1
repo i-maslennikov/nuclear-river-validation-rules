@@ -27,6 +27,25 @@ $DBSuffixes = @{
 	'Kyrgyzstan' = 'KG'
 }
 
+function Get-DBSuffix($Context){
+
+	$countrySuffix = $DBSuffixes[$Context['Country']];
+
+	switch($Context.EnvType){
+		'Business' {
+			$envTypeSuffix = $Context.EnvType
+		}
+		'Edu' {
+			$envTypeSuffix = $Context.EnvType
+		}
+		default {
+			$envTypeSuffix = $null
+		}
+	}
+
+	return $envTypeSuffix + $countrySuffix + $Context['Index']
+}
+
 function Get-DBHostMetadata($Context){
 	switch($Context.EnvType){
 		'Test' {
@@ -35,10 +54,10 @@ function Get-DBHostMetadata($Context){
 				default { $dbHost = 'uk-erm-sql02' }
 			}
 		}
-		'Edu' {
+		'Business' {
 			$dbHost = 'uk-erm-edu03'
 		}
-		'Business' {
+		'Edu' {
 			$dbHost = 'uk-erm-edu03'
 		}
 		'Production' {
@@ -56,7 +75,27 @@ function Get-DBHostMetadata($Context){
 }
 
 function Get-AmsFactsTopicsMetadata($Context){
-	return @{'AmsFactsTopics' = 'ams_okapi_prod.am.validity' }
+	switch($Context.EnvType){
+		'Test' {
+			return @{
+				'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
+			}
+		 }
+		'Business' {
+			return @{ 'AmsFactsTopics' = "ams_okapi_business$($Context['Index']).am.validity" }
+		}
+		'Edu' {
+			return @{ 'AmsFactsTopics' = "ams_okapi_edu$($Context['Index']).am.validity" }
+		}
+		 'Production' {
+			 return @{
+				 'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
+			 }
+		}
+		default {
+			return @{}
+		}
+	}
 }
 
 function Get-ValidationUrlMetadata($Context){
@@ -151,7 +190,7 @@ function Get-RegexMetadata($Context){
 	}
 	if ($Context['Country']){
 		$regex += @{ '{Country}' = $Context['Country'] }
-		$regex += @{ '{DBSuffix}' = $DBSuffixes[$Context['Country']] }
+		$regex += @{ '{DBSuffix}' = (Get-DBSuffix $Context) }
 	}
 	if ($Context['EnvType']){
 		$regex += @{ '{EnvType}' = $Context['EnvType'] }
