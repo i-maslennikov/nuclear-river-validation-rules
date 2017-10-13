@@ -68,7 +68,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             _batchSizeSettings = new AmsBatchSizeSettings();
             _accessorTypesProvider = new AccessorTypesProvider();
 
-            var amsSettingsFactory = new AmsSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect());
+            var amsSettingsFactory = new AmsSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
             _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), amsSettingsFactory);
         }
 
