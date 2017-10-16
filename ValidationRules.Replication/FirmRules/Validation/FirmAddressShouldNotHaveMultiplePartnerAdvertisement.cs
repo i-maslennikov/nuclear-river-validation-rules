@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NuClear.Storage.API.Readings;
@@ -7,15 +8,17 @@ using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
+using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
+
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
-    /// Для заказов с позицией "Реклама в профилях партнеров (приоритетное размещение)", если адрес в позиции "Реклама в профилях партнеров (адреса)" встречается в другом таком же заказе, должна выводиться ошибка.
-    /// "На адрес {{0}} фирмы {{1}} продано более одной позиции Premium в периоды: {0}"
+    /// Для заказов, размещающих рекламу в карточке другой фирмы, если для одного адреса есть более одной продажи, должно выводиться предупреждение.
+    /// "На адрес {0} фирмы {1} продано более одной позиции 'Реклама в профилях партнёров' в периоды: {2}"
     /// </summary>
-    public sealed class PremiumPartnerProfileMustHaveSingleSale : ValidationResultAccessorBase
+    public sealed class FirmAddressShouldNotHaveMultiplePartnerAdvertisement : ValidationResultAccessorBase
     {
-        public PremiumPartnerProfileMustHaveSingleSale(IQuery query) : base(query, MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale)
+        public FirmAddressShouldNotHaveMultiplePartnerAdvertisement(IQuery query) : base(query, MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement)
         {
         }
 
@@ -23,8 +26,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
         {
             var sales =
                 from order in query.For<Order>()
-                from fa in query.For<Order.PartnerProfilePosition>().Where(x => x.IsPremium).Where(x => x.OrderId == order.Id)
-                select new { fa.OrderId, fa.FirmAddressId, fa.FirmId, order.Scope, order.Begin, order.End };
+                from fa in query.For<Order.PartnerPosition>().Where(x => x.OrderId == order.Id)
+                select new { fa.OrderId, FirmAddressId = fa.DestinationFirmAddressId, FirmId = fa.DestinationFirmId, order.Scope, order.Begin, order.End };
 
             var multipleSales =
                 from sale in sales
@@ -32,21 +35,26 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                 where sale.Begin < conflict.End && conflict.Begin < sale.End && Scope.CanSee(sale.Scope, conflict.Scope)
                 select new { sale.OrderId, sale.FirmAddressId, sale.FirmId, Begin = sale.Begin < conflict.Begin ? conflict.Begin : sale.Begin, End = sale.End < conflict.End ? sale.End : conflict.End };
 
+            multipleSales =
+                multipleSales.GroupBy(x => new { x.OrderId, x.FirmAddressId, x.FirmId })
+                             .Select(x => new { x.Key.OrderId, x.Key.FirmAddressId, x.Key.FirmId, Begin = x.Min(y => y.Begin), End = x.Max(y => y.End) });
+
             var messages =
                 from sale in multipleSales
                 select new Version.ValidationResult
-                    {
-                        MessageParams =
+                {
+                    MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "begin", sale.Begin }, { "end", sale.End } },
+                                    new Reference<EntityTypeOrder>(sale.OrderId),
                                     new Reference<EntityTypeFirm>(sale.FirmId),
                                     new Reference<EntityTypeFirmAddress>(sale.FirmAddressId))
                                 .ToXDocument(),
 
-                        PeriodStart = sale.Begin,
-                        PeriodEnd = sale.End,
-                        OrderId = sale.OrderId,
-                    };
+                    PeriodStart = sale.Begin,
+                    PeriodEnd = sale.End,
+                    OrderId = sale.OrderId,
+                };
 
             return messages;
         }

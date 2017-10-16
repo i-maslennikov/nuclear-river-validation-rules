@@ -42,10 +42,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::FirmAddress { Id = 2, FirmId = 3 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1, FirmId = 1, Begin = MonthStart(1), End = MonthStart(3), Scope = 1 },
-                    new Aggregates::Order.PartnerProfilePosition { OrderId = 1, FirmAddressId = 1, FirmId = 3, IsPremium = true },
+                    new Aggregates::Order.CallToActionPosition { OrderId = 1, DestinationFirmAddressId = 1, DestinationFirmId = 3 },
+                    new Aggregates::Order.PartnerPosition { OrderId = 1, DestinationFirmAddressId = 1, DestinationFirmId = 3 },
 
                     new Aggregates::Order { Id = 2, FirmId = 2, Begin = MonthStart(1), End = MonthStart(3), Scope = 0 },
-                    new Aggregates::Order.PartnerProfilePosition { OrderId = 2, FirmAddressId = 2, FirmId = 3, IsPremium = true },
+                    new Aggregates::Order.CallToActionPosition { OrderId = 2, DestinationFirmAddressId = 2, DestinationFirmId = 3 },
+                    new Aggregates::Order.PartnerPosition { OrderId = 2, DestinationFirmAddressId = 2, DestinationFirmId = 3 },
 
                     new Aggregates::Order { Id = 3, FirmId = 3, Begin = MonthStart(2), End = MonthStart(4), Scope = 0 })
                 .Message(
@@ -59,7 +61,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                   new Reference<EntityTypeFirmAddress>(1))
                                     .ToXDocument(),
 
-                            MessageType = (int)MessageTypeCode.FirmAddressMayBeSharedWithPartner,
+                            MessageType = (int)MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 3,
@@ -75,7 +77,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                                   new Reference<EntityTypeFirmAddress>(2))
                                     .ToXDocument(),
 
-                            MessageType = (int)MessageTypeCode.FirmAddressMayBeSharedWithPartner,
+                            MessageType = (int)MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
                             PeriodStart = MonthStart(2),
                             PeriodEnd = MonthStart(3),
                             OrderId = 3,

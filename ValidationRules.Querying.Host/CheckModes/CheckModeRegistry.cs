@@ -279,14 +279,24 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale,
+                    Rule(MessageTypeCode.FirmAddressMustNotHaveMultipleCallToAction,
                          single: RuleSeverityLevel.Error,
                          singleForApprove: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.FirmAddressMayBeSharedWithPartner,
+                    Rule(MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
+                         manualReport: RuleSeverityLevel.Warning,
+                         prerelease: RuleSeverityLevel.Warning,
+                         release: RuleSeverityLevel.Warning),
+
+                    Rule(MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
+                         manualReport: RuleSeverityLevel.Warning,
+                         prerelease: RuleSeverityLevel.Warning,
+                         release: RuleSeverityLevel.Warning),
+
+                    Rule(MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
                          manualReport: RuleSeverityLevel.Warning,
                          prerelease: RuleSeverityLevel.Warning,
                          release: RuleSeverityLevel.Warning),

@@ -61,19 +61,24 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::FirmAddress { Id = 2, FirmId = 2222 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1, FirmId = 1, Begin = MonthStart(1), End = MonthStart(2), Scope = 1 },
-                    new Aggregates::Order.PartnerProfilePosition { OrderId = 1, FirmAddressId = 1, FirmId = 1111, IsPremium = true },
+                    new Aggregates::Order.CallToActionPosition { OrderId = 1, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
+                    new Aggregates::Order.PartnerPosition { OrderId = 1, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
 
                     new Aggregates::Order { Id = 2, FirmId = 2, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
-                    new Aggregates::Order.PartnerProfilePosition { OrderId = 2, FirmAddressId = 1, FirmId = 1111, IsPremium = true },
+                    new Aggregates::Order.CallToActionPosition { OrderId = 2, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
+                    new Aggregates::Order.PartnerPosition { OrderId = 2, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
 
                     new Aggregates::Order { Id = 3, FirmId = 3, Begin = MonthStart(2), End = MonthStart(3), Scope = 0 },
-                    new Aggregates::Order.PartnerProfilePosition { OrderId = 3, FirmAddressId = 1, FirmId = 1111, IsPremium = true },
+                    new Aggregates::Order.CallToActionPosition { OrderId = 3, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
+                    new Aggregates::Order.PartnerPosition { OrderId = 3, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
 
                     new Aggregates::Order { Id = 4, FirmId = 4, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
-                    new Aggregates::Order.PartnerProfilePosition { OrderId = 4, FirmAddressId = 2, FirmId = 2222, IsPremium = true },
+                    new Aggregates::Order.CallToActionPosition { OrderId = 4, DestinationFirmAddressId = 2, DestinationFirmId = 2222 },
+                    new Aggregates::Order.PartnerPosition { OrderId = 4, DestinationFirmAddressId = 2, DestinationFirmId = 2222 },
 
                     new Aggregates::Order { Id = 5, FirmId = 5, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
-                    new Aggregates::Order.PartnerProfilePosition { OrderId = 5, FirmAddressId = 1, FirmId = 1111, IsPremium = false })
+                    new Aggregates::Order.CallToActionPosition { OrderId = 5, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
+                    new Aggregates::Order.PartnerPosition { OrderId = 5, DestinationFirmAddressId = 1, DestinationFirmId = 1111 })
                 .Message(
                     new Version.ValidationResult
                     {
@@ -84,7 +89,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     new Reference<EntityTypeFirmAddress>(1))
                                 .ToXDocument(),
 
-                        MessageType = (int)MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale,
+                        MessageType = (int)MessageTypeCode.FirmAddressMustNotHaveMultipleCallToAction,
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(2),
                         OrderId = 1,

@@ -153,6 +153,7 @@
     <Compile Include="Composition\Composers\AdvertisementMustPassReviewMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementMustBelongToFirmMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmAddressMustBeLocatedOnTheMapMessageComposer.cs" />
+    <Compile Include="Composition\Composers\FirmAddressShouldNotHaveMultiplePartnerAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveDealMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveAdvertisementMessageComposer.cs" />
@@ -163,9 +164,10 @@
     <Compile Include="Composition\Composers\OrderMustNotIncludeReleasedPeriodMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustUseCategoriesOnlyAvailableInProjectMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
-    <Compile Include="Composition\Composers\FirmAddressMayBeSharedWithPartnerMessageComposer.cs" />
+    <Compile Include="Composition\Composers\AdvertiserMustBeNotifiedAboutPartnerAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
-    <Compile Include="Composition\Composers\PremiumPartnerProfileMustHaveSingleSaleMessageComposer.cs" />
+    <Compile Include="Composition\Composers\FirmAddressMustNotHaveMultipleCallToActionMessageComposer.cs" />
+    <Compile Include="Composition\Composers\Utils\PeriodUtils.cs" />
     <Compile Include="Composition\IDistinctor.cs" />
     <Compile Include="Composition\ReferenceExtensions.cs" />
     <Compile Include="DataAccess\NameResolvingService.cs" />

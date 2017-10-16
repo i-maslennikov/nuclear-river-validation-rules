@@ -65,11 +65,13 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderMustHaveActiveDeal, 51 },
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
-                            { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 50 },
+                            { MessageTypeCode.FirmAddressMustNotHaveMultipleCallToAction, 50 },
+                            { MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement, 0 },
                             { MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
                             { MessageTypeCode.AdvertisementMustPassReview, 0 },
                             { MessageTypeCode.AdvertisementShouldNotHaveComments, 0 },
-                            { MessageTypeCode.FirmAddressMayBeSharedWithPartner, 0 },
+                            { MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement, 0 },
+                            { MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser, 0 },
                     }.ToDictionary(x => x.Key, x => x.Value);
 
         public static int ToErmRuleCode(this int riverMessageTypeCode)

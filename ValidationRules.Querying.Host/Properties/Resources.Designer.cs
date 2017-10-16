@@ -142,6 +142,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to На адрес {0} есть продажа из заказа {1} фирмы {2}.
+        /// </summary>
+        internal static string AdvertiserMustBeNotifiedAboutPartnerAdvertisement {
+            get {
+                return ResourceManager.GetString("AdvertiserMustBeNotifiedAboutPartnerAdvertisement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {1} &quot;{0}&quot; является сопутствующей, основная позиция не найдена..
         /// </summary>
         internal static string AssociatedPositionWithoutPrincipalTemplate {
@@ -268,11 +277,20 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to На адрес &quot;{0}&quot; фирмы &quot;{1}&quot; имеется позиция ЗМК в заказе {2}.
+        ///   Looks up a localized string similar to На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}.
         /// </summary>
-        internal static string FirmAddressMayBeSharedWithPartner {
+        internal static string FirmAddressMustNotHaveMultipleCallToAction {
             get {
-                return ResourceManager.GetString("FirmAddressMayBeSharedWithPartner", resourceCulture);
+                return ResourceManager.GetString("FirmAddressMustNotHaveMultipleCallToAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to На адрес {0} фирмы {1} продано более одной позиции &apos;Реклама в профилях партнёров&apos; в периоды: {2}.
+        /// </summary>
+        internal static string FirmAddressShouldNotHaveMultiplePartnerAdvertisement {
+            get {
+                return ResourceManager.GetString("FirmAddressShouldNotHaveMultiplePartnerAdvertisement", resourceCulture);
             }
         }
         
@@ -336,15 +354,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string MoreThanOneDefaultTheme {
             get {
                 return ResourceManager.GetString("MoreThanOneDefaultTheme", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to На адрес &quot;{0}&quot; фирмы &quot;{1}&quot; продано более одной позиции Premium в периоды: {2}.
-        /// </summary>
-        internal static string MoreThanOnePremiumBuyHerePositionSoldForAddress {
-            get {
-                return ResourceManager.GetString("MoreThanOnePremiumBuyHerePositionSoldForAddress", resourceCulture);
             }
         }
         
@@ -606,6 +615,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrdersCheckOrderInsufficientFunds {
             get {
                 return ResourceManager.GetString("OrdersCheckOrderInsufficientFunds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}.
+        /// </summary>
+        internal static string PartnerAdvertisementShouldNotBeSoldToAdvertiser {
+            get {
+                return ResourceManager.GetString("PartnerAdvertisementShouldNotBeSoldToAdvertiser", resourceCulture);
             }
         }
         
