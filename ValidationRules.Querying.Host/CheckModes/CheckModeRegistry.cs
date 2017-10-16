@@ -287,17 +287,17 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
-                         manualReport: RuleSeverityLevel.Warning,
+                         manualReport: RuleSeverityLevel.Info,
                          prerelease: RuleSeverityLevel.Warning,
                          release: RuleSeverityLevel.Warning),
 
                     Rule(MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
-                         manualReport: RuleSeverityLevel.Warning,
+                         manualReport: RuleSeverityLevel.Info,
                          prerelease: RuleSeverityLevel.Warning,
                          release: RuleSeverityLevel.Warning),
 
                     Rule(MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
-                         manualReport: RuleSeverityLevel.Warning,
+                         manualReport: RuleSeverityLevel.Info,
                          prerelease: RuleSeverityLevel.Warning,
                          release: RuleSeverityLevel.Warning),
 
