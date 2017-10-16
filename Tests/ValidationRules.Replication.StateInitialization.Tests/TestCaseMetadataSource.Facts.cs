@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Model.Facts;
@@ -481,9 +482,9 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             => ArrangeMetadataElement.Config
                 .Name(nameof(ReleaseWithdrawalFacts))
                 .Erm(
-                    new Erm::ReleaseWithdrawal { Id = 1, AmountToWithdraw = 2, OrderPositionId = 3, ReleaseBeginDate = MonthStart(1) })
+                    new Erm::ReleaseWithdrawal { Id = 1, AmountToWithdraw = 2, OrderPositionId = 3, ReleaseBeginDate = MonthStart(1), ReleaseEndDate = MonthStart(2).AddSeconds(-1) })
                 .Fact(
-                    new ReleaseWithdrawal { OrderPositionId = 3, Amount = 2, Start = MonthStart(1) });
+                    new ReleaseWithdrawal { OrderPositionId = 3, Amount = 2, Start = MonthStart(1), End = MonthStart(2) });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement ThemeFacts

@@ -8,6 +8,7 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
 
         public long OrderPositionId { get; set; }
         public DateTime ReleaseBeginDate { get; set; }
+        public DateTime ReleaseEndDate { get; set; }
         public decimal AmountToWithdraw { get; set; }
     }
 }
