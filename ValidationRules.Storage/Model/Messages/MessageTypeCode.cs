@@ -72,6 +72,6 @@
 
         PremiumPartnerProfileMustHaveSingleSale = 71,
 
-        AmsMessagesShouldBeNew = 72,
+        AmsMessagesShouldBeNew = 80,
     }
 }
