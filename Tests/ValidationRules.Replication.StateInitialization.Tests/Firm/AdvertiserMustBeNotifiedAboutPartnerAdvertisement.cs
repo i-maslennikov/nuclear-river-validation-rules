@@ -13,41 +13,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     public sealed partial class TestCaseMetadataSource
     {
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement FirmAddressMayBeSharedWithPartner
+        private static ArrangeMetadataElement AdvertiserMustBeNotifiedAboutPartnerAdvertisement
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(FirmAddressMayBeSharedWithPartner))
+                .Name(nameof(AdvertiserMustBeNotifiedAboutPartnerAdvertisement))
                 .Fact(
-                    // Первый из заказов ЗМК (на оформлении)
+                    // Заказ ЗМК
                     new Facts::Order { Id = 1, FirmId = 1, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(3), WorkflowStep = 1 },
-                    new Facts::OrderPosition { Id = 11, OrderId = 1 },
-                    new Facts::OrderPositionAdvertisement { Id = 111, OrderPositionId = 11, PositionId = 1 },
                     new Facts::OrderPosition { Id = 21, OrderId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 121, OrderPositionId = 21, PositionId = 2, FirmAddressId = 1 },
-
-                    // Второй из заказов ЗМК (одобрен)
-                    new Facts::Order { Id = 2, FirmId = 2, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(3), WorkflowStep = 5 },
-                    new Facts::OrderPosition { Id = 12, OrderId = 2 },
-                    new Facts::OrderPositionAdvertisement { Id = 112, OrderPositionId = 12, PositionId = 1 },
-                    new Facts::OrderPosition { Id = 22, OrderId = 2 },
-                    new Facts::OrderPositionAdvertisement { Id = 122, OrderPositionId = 22, PositionId = 2, FirmAddressId = 2 },
 
                     // Заказ фирмы, на адрес которой подкинули рекламу
                     new Facts::Order { Id = 3, FirmId = 3, BeginDistribution = MonthStart(2), EndDistributionFact = MonthStart(4), WorkflowStep = 5 },
 
-                    new Facts::Position { Id = 1, CategoryCode = CategoryCodePremiumAdvertising },
                     new Facts::Position { Id = 2, CategoryCode = CategoryCodePremiumAdvertisingAddress },
 
-                    new Facts::FirmAddress { Id = 1, FirmId = 3 },
-                    new Facts::FirmAddress { Id = 2, FirmId = 3 })
+                    new Facts::FirmAddress { Id = 1, FirmId = 3 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1, FirmId = 1, Begin = MonthStart(1), End = MonthStart(3), Scope = 1 },
-                    new Aggregates::Order.CallToActionPosition { OrderId = 1, DestinationFirmAddressId = 1, DestinationFirmId = 3 },
                     new Aggregates::Order.PartnerPosition { OrderId = 1, DestinationFirmAddressId = 1, DestinationFirmId = 3 },
-
-                    new Aggregates::Order { Id = 2, FirmId = 2, Begin = MonthStart(1), End = MonthStart(3), Scope = 0 },
-                    new Aggregates::Order.CallToActionPosition { OrderId = 2, DestinationFirmAddressId = 2, DestinationFirmId = 3 },
-                    new Aggregates::Order.PartnerPosition { OrderId = 2, DestinationFirmAddressId = 2, DestinationFirmId = 3 },
 
                     new Aggregates::Order { Id = 3, FirmId = 3, Begin = MonthStart(2), End = MonthStart(4), Scope = 0 })
                 .Message(
@@ -63,7 +47,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                             MessageType = (int)MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
                             PeriodStart = MonthStart(2),
-                            PeriodEnd = MonthStart(3),
+                            PeriodEnd = MonthStart(4),
                             OrderId = 3,
                         },
 
@@ -72,15 +56,15 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                             MessageParams =
                                 new MessageParams(
                                                   new Reference<EntityTypeOrder>(3),
-                                                  new Reference<EntityTypeOrder>(2),
+                                                  new Reference<EntityTypeOrder>(1),
                                                   new Reference<EntityTypeFirm>(3),
-                                                  new Reference<EntityTypeFirmAddress>(2))
+                                                  new Reference<EntityTypeFirmAddress>(1))
                                     .ToXDocument(),
 
-                            MessageType = (int)MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
-                            PeriodStart = MonthStart(2),
+                            MessageType = (int)MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
+                            PeriodStart = MonthStart(1),
                             PeriodEnd = MonthStart(3),
-                            OrderId = 3,
+                            OrderId = 1,
                         });
     }
 }

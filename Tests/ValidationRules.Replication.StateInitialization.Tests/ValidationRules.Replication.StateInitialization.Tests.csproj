@@ -153,8 +153,9 @@
     <Compile Include="Consistency\OrderMustHaveActiveLegalEntities.cs" />
     <Compile Include="Consistency\OrderMustHaveActiveDeal.cs" />
     <Compile Include="DI\StateInitializationTestsRoot.cs" />
-    <Compile Include="Firm\FirmAddressMayBeSharedWithPartner.cs" />
-    <Compile Include="Firm\PremiumPartnerProfileMustHaveSingleSale.cs" />
+    <Compile Include="Firm\FirmAddressShouldNotHaveMultiplePartnerAdvertisement.cs" />
+    <Compile Include="Firm\AdvertiserMustBeNotifiedAboutPartnerAdvertisement.cs" />
+    <Compile Include="Firm\FirmAddressMustNotHaveMultipleCallToAction.cs" />
     <Compile Include="Firm\LinkedFirmShouldBeValid.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />

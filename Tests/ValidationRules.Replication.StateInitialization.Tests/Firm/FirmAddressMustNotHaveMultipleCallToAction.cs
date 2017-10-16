@@ -14,12 +14,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
     {
         const long CategoryCodePremiumAdvertising = 809065011136692321; // Реклама в профилях партнеров (приоритетное размещение)
         const long CategoryCodePremiumAdvertisingAddress = 809065011136692326; // Реклама в профилях партнеров (адреса)
+        const long CategoryCodeCallToAction = 809065011136692314; // Кнопка-действие
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement PremiumPartnerProfileMustHaveSingleSale
+        private static ArrangeMetadataElement FirmAddressMustNotHaveMultipleCallToAction
             => ArrangeMetadataElement
                 .Config
-                .Name(nameof(PremiumPartnerProfileMustHaveSingleSale))
+                .Name(nameof(FirmAddressMustNotHaveMultipleCallToAction))
                 .Fact(
                     // Первый из конфликтующих заказов (на оформлении, не может быть одобрен)
                     new Facts::Order { Id = 1, FirmId = 1, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), WorkflowStep = 1 },
@@ -54,37 +55,41 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPosition { Id = 25, OrderId = 5 },
                     new Facts::OrderPositionAdvertisement { Id = 125, OrderPositionId = 25, PositionId = 2, FirmAddressId = 1 },
 
+                    // Заказ с позицией Call-To-Action (не может быть одобрен, конфликтует с #1)
+                    new Facts::Order { Id = 6, FirmId = 1111, BeginDistribution = MonthStart(1), EndDistributionFact = MonthStart(2), WorkflowStep = 1 },
+                    new Facts::OrderPosition { Id = 16, OrderId = 6 },
+                    new Facts::OrderPositionAdvertisement { Id = 116, OrderPositionId = 16, PositionId = 3, FirmAddressId = 1 },
+
                     new Facts::Position { Id = 1, CategoryCode = CategoryCodePremiumAdvertising },
                     new Facts::Position { Id = 2, CategoryCode = CategoryCodePremiumAdvertisingAddress },
+                    new Facts::Position { Id = 3, CategoryCode = CategoryCodeCallToAction },
 
                     new Facts::FirmAddress { Id = 1, FirmId = 1111 },
                     new Facts::FirmAddress { Id = 2, FirmId = 2222 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1, FirmId = 1, Begin = MonthStart(1), End = MonthStart(2), Scope = 1 },
                     new Aggregates::Order.CallToActionPosition { OrderId = 1, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
-                    new Aggregates::Order.PartnerPosition { OrderId = 1, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
 
                     new Aggregates::Order { Id = 2, FirmId = 2, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
                     new Aggregates::Order.CallToActionPosition { OrderId = 2, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
-                    new Aggregates::Order.PartnerPosition { OrderId = 2, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
 
                     new Aggregates::Order { Id = 3, FirmId = 3, Begin = MonthStart(2), End = MonthStart(3), Scope = 0 },
                     new Aggregates::Order.CallToActionPosition { OrderId = 3, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
-                    new Aggregates::Order.PartnerPosition { OrderId = 3, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
 
                     new Aggregates::Order { Id = 4, FirmId = 4, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
                     new Aggregates::Order.CallToActionPosition { OrderId = 4, DestinationFirmAddressId = 2, DestinationFirmId = 2222 },
-                    new Aggregates::Order.PartnerPosition { OrderId = 4, DestinationFirmAddressId = 2, DestinationFirmId = 2222 },
 
                     new Aggregates::Order { Id = 5, FirmId = 5, Begin = MonthStart(1), End = MonthStart(2), Scope = 0 },
-                    new Aggregates::Order.CallToActionPosition { OrderId = 5, DestinationFirmAddressId = 1, DestinationFirmId = 1111 },
-                    new Aggregates::Order.PartnerPosition { OrderId = 5, DestinationFirmAddressId = 1, DestinationFirmId = 1111 })
+
+                    new Aggregates::Order { Id = 6, FirmId = 1111, Begin = MonthStart(1), End = MonthStart(2), Scope = 6 },
+                    new Aggregates::Order.CallToActionPosition { OrderId = 6, DestinationFirmAddressId = 1, DestinationFirmId = 1111 })
                 .Message(
                     new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "begin", MonthStart(1) }, { "end", MonthStart(2) } },
+                                    new Reference<EntityTypeOrder>(1),
                                     new Reference<EntityTypeFirm>(1111),
                                     new Reference<EntityTypeFirmAddress>(1))
                                 .ToXDocument(),
@@ -93,6 +98,22 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         PeriodStart = MonthStart(1),
                         PeriodEnd = MonthStart(2),
                         OrderId = 1,
+                    },
+
+                    new Version.ValidationResult
+                    {
+                        MessageParams =
+                            new MessageParams(
+                                    new Dictionary<string, object> { { "begin", MonthStart(1) }, { "end", MonthStart(2) } },
+                                    new Reference<EntityTypeOrder>(6),
+                                    new Reference<EntityTypeFirm>(1111),
+                                    new Reference<EntityTypeFirmAddress>(1))
+                                .ToXDocument(),
+
+                        MessageType = (int)MessageTypeCode.FirmAddressMustNotHaveMultipleCallToAction,
+                        PeriodStart = MonthStart(1),
+                        PeriodEnd = MonthStart(2),
+                        OrderId = 6,
                     });
     }
 }
