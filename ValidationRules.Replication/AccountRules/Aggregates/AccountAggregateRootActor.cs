@@ -55,6 +55,9 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
 
         public sealed class AccountPeriodAccessor : DataChangesHandler<Account.AccountPeriod>, IStorageBasedDataObjectAccessor<Account.AccountPeriod>
         {
+            // todo: завести настройку SignificantDigitsNumber и вообще решить вопрос с настройками проверок
+            private static readonly decimal Epsilon = 0.01m;
+
             private readonly IQuery _query;
 
             public AccountPeriodAccessor(IQuery query) : base(CreateInvalidator())
@@ -95,6 +98,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     into @group
                     let amountSum = releaseWithdrawalPeriods.Where(x => x.AccountId == @group.Key.AccountId && x.Start <= @group.Key.Start).Sum(x => x.Amount)
                     from account in _query.For<Facts::Account>().Where(x => x.Id == @group.Key.AccountId)
+                    where amountSum > 0 && account.Balance + Epsilon <= amountSum
                     select new Account.AccountPeriod
                     {
                         AccountId = @group.Key.AccountId,

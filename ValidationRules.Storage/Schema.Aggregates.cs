@@ -209,8 +209,7 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(AccountAggregatesSchema);
 
             builder.Entity<AccountAggregates::Account.AccountPeriod>()
-                   .HasSchemaName(AccountAggregatesSchema)
-                   .HasIndex(x => new { x.AccountId, x.Start, x.End }, x => new { x.Balance, x.ReleaseAmount });
+                   .HasSchemaName(AccountAggregatesSchema);
 
             return builder;
         }
