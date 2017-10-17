@@ -19,6 +19,9 @@ namespace ValidationRules.Hosting.Common
 {
     public sealed class AmsSettingsFactory : IAmsSettingsFactory
     {
+        private static readonly IEnumerable<string> Topics = ConfigFileSetting.String.Required("AmsFactsTopics").Value.Split(',');
+        private static readonly TimeSpan PollTimeout = TimeSpan.Parse(ConfigFileSetting.String.Optional("AmsPollTimeout", "00:00:05").Value, CultureInfo.InvariantCulture);
+
         private readonly Dictionary<string, object> _config;
         private readonly IEnvironmentSettings _environmentSettings;
         private readonly Offset _offset;
@@ -41,7 +44,9 @@ namespace ValidationRules.Hosting.Common
                     ClientId = _environmentSettings.EntryPointName + '-' + _environmentSettings.EnvironmentName,
                     GroupId = messageFlow.Id.ToString() + '-' + _environmentSettings.EnvironmentName,
                     Config = _config,
-                    Offset = _offset
+                    Offset = _offset,
+                    Topics = Topics,
+                    PollTimeout = PollTimeout
                 };
             }
 
@@ -55,8 +60,8 @@ namespace ValidationRules.Hosting.Common
             public Dictionary<string, object> Config { get; set; }
             public Offset Offset { get; set; }
 
-            public IEnumerable<string> Topics { get; } = ConfigFileSetting.String.Required("AmsFactsTopics").Value.Split(',');
-            public TimeSpan PollTimeout { get; } = TimeSpan.Parse(ConfigFileSetting.String.Optional("AmsPollTimeout", "00:00:05").Value, CultureInfo.InvariantCulture);
+            public IEnumerable<string> Topics { get; set; }
+            public TimeSpan PollTimeout { get; set; }
         }
     }
 }
