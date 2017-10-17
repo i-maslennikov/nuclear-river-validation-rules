@@ -88,7 +88,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             _telemetry.Publish<TTelemetryIdentity>(subscription.MessageCountDetails.ActiveMessageCount);
         }
 
-        private void ReportKafkaOffset<TFlow, TTelemetryIdentity>(int partition = 0)
+        private void ReportKafkaOffset<TFlow, TTelemetryIdentity>()
             where TFlow : MessageFlowBase<TFlow>, new()
             where TTelemetryIdentity : TelemetryIdentityBase<TTelemetryIdentity>, new()
         {
@@ -97,12 +97,11 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
             var privateConfig = new Dictionary<string, object>(settings.Config)
             {
-                {"client.id", settings.ClientId },
                 {"group.id", settings.GroupId }
             };
             using (var consumer = new Consumer(privateConfig))
             {
-                var topicPartition = new TopicPartition(settings.Topics.First(), partition);
+                var topicPartition = new TopicPartition(settings.Topics.First(), settings.Partition);
                 var topicOffsets = consumer.QueryWatermarkOffsets(topicPartition, settings.PollTimeout);
                 var consumerOffset = consumer.Committed(new[] { topicPartition }, settings.PollTimeout).First();
 

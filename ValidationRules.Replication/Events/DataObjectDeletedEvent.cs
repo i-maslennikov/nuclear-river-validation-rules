@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using NuClear.Replication.Core;
 
@@ -15,37 +16,26 @@ namespace NuClear.ValidationRules.Replication.Events
         public Type DataObjectType { get; }
         public long DataObjectId { get; }
 
-        public override bool Equals(object obj)
+        private sealed class EqualityComparer : IEqualityComparer<DataObjectDeletedEvent>
         {
-            if (ReferenceEquals(null, obj))
+            public bool Equals(DataObjectDeletedEvent x, DataObjectDeletedEvent y)
             {
-                return false;
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return x.DataObjectType == y.DataObjectType && x.DataObjectId == y.DataObjectId;
             }
 
-            if (ReferenceEquals(this, obj))
+            public int GetHashCode(DataObjectDeletedEvent obj)
             {
-                return true;
-            }
-
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-
-            return Equals((DataObjectDeletedEvent)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((DataObjectType?.GetHashCode() ?? 0) * 397) ^ DataObjectId.GetHashCode();
+                unchecked
+                {
+                    return (obj.DataObjectType.GetHashCode() * 397) ^ obj.DataObjectId.GetHashCode();
+                }
             }
         }
 
-        private bool Equals(DataObjectDeletedEvent other)
-        {
-            return DataObjectType == other.DataObjectType && DataObjectId == other.DataObjectId;
-        }
+        public static IEqualityComparer<DataObjectDeletedEvent> Comparer { get; } = new EqualityComparer();
     }
 }

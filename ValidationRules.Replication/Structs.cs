@@ -27,7 +27,7 @@ namespace NuClear.ValidationRules.Replication
             UtcDateTime = utcDateTime;
         }
 
-        public long Offset { get; set; }
-        public DateTime UtcDateTime { get; set; }
+        public long Offset { get; }
+        public DateTime UtcDateTime { get; }
     }
 }
