@@ -93,14 +93,13 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     from period in releaseWithdrawalPeriods
                     group period by new { period.AccountId, period.Start, period.End }
                     into @group
-                    let amount = from temp in releaseWithdrawalPeriods.Where(x => x.AccountId == @group.Key.AccountId && x.Start <= @group.Key.Start)
-                                 select temp.Amount
+                    let amountSum = releaseWithdrawalPeriods.Where(x => x.AccountId == @group.Key.AccountId && x.Start <= @group.Key.Start).Sum(x => x.Amount)
                     from account in _query.For<Facts::Account>().Where(x => x.Id == @group.Key.AccountId)
                     select new Account.AccountPeriod
                     {
                         AccountId = @group.Key.AccountId,
                         Balance = account.Balance,
-                        ReleaseAmount = amount.Sum(),
+                        ReleaseAmount = amountSum,
                         Start = @group.Key.Start,
                         End = @group.Key.End,
                     };
