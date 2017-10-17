@@ -32,7 +32,16 @@ namespace ValidationRules.Hosting.Common
             _offset = offset;
 
             var connectionString = connectionStringSettings.GetConnectionString(AmsConnectionStringIdentity.Instance);
-            _config = JsonConvert.DeserializeObject<Dictionary<string, object>>(connectionString);
+            var baseConfig = JsonConvert.DeserializeObject<Dictionary<string, object>>(connectionString);
+            _config = new Dictionary<string, object>(baseConfig)
+            {
+                // performance tricks from denis
+                { "socket.blocking.max.ms", 1 },
+                { "fetch.wait.max.ms", 5 },
+                { "fetch.error.backoff.ms", 5 },
+                { "fetch.message.max.bytes", 10240 },
+                { "queued.min.messages", 1000 },
+            };
         }
 
         public IKafkaMessageFlowReceiverSettings CreateReceiverSettings(IMessageFlow messageFlow)
@@ -41,11 +50,11 @@ namespace ValidationRules.Hosting.Common
             {
                 return new KafkaMessageFlowReceiverSettings
                 {
-                    ClientId = _environmentSettings.EntryPointName + '-' + _environmentSettings.EnvironmentName,
                     GroupId = messageFlow.Id.ToString() + '-' + _environmentSettings.EnvironmentName,
                     Config = _config,
                     Offset = _offset,
                     Topics = Topics,
+                    Partition = 0,
                     PollTimeout = PollTimeout
                 };
             }
@@ -55,12 +64,12 @@ namespace ValidationRules.Hosting.Common
 
         private sealed class KafkaMessageFlowReceiverSettings : IKafkaMessageFlowReceiverSettings
         {
-            public string ClientId { get; set; }
             public string GroupId { get; set; }
             public Dictionary<string, object> Config { get; set; }
             public Offset Offset { get; set; }
 
             public IEnumerable<string> Topics { get; set; }
+            public int Partition { get; set; }
             public TimeSpan PollTimeout { get; set; }
         }
     }

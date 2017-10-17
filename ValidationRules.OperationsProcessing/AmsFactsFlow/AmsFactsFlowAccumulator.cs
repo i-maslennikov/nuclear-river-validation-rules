@@ -5,9 +5,9 @@ using System.Text;
 using Newtonsoft.Json;
 
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
+using NuClear.OperationsProcessing.Transports.Kafka;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Dto;
@@ -38,22 +38,14 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
             public IEnumerable<ICommand> CreateCommands(IEvent @event)
             {
                 var commands = new List<ICommand>();
-                var dtos = new List<AdvertisementDto>();
 
-                var messages = ((KafkaMessageEvent)@event).KafkaMessage.Messages;
-                foreach (var message in messages)
+                var message = ((KafkaMessageEvent)@event).KafkaMessage.Message;
+                commands.Add(new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)));
+
+                // filter heartbeat messages
+                if (message.Value != null)
                 {
-                    commands.Add(new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)));
-
-                    // filter heartbeat messages
-                    if (message.Value != null)
-                    {
-                        dtos.Add(JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value)));
-                    }
-                }
-
-                if (dtos.Count != 0)
-                {
+                    var dtos = new List<AdvertisementDto> { JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value)) };
                     commands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), dtos));
                 }
 

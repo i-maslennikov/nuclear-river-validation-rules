@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="2GIS.NuClear.Assembling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Assembling.1.0.4\lib\portable-net451+win81+wpa81\2GIS.NuClear.Assembling.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.DataTest.Engine, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.DataTest.0.22.0-linq2db0004\lib\net46\2GIS.NuClear.DataTest.Engine.dll</HintPath>
@@ -46,25 +45,21 @@
     </Reference>
     <Reference Include="2GIS.NuClear.Model.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuClear.River.StateInitialization.5.2.2-accessor-types-p0042\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuClear.River.StateInitialization.7.0.0\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Settings.API.1.2.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.StateInitialization.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuClear.River.StateInitialization.5.2.2-accessor-types-p0042\lib\net461\2GIS.NuClear.StateInitialization.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuClear.River.StateInitialization.7.0.0\lib\net461\2GIS.NuClear.StateInitialization.Core.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Storage.API.2.0.3-fix-collection-q0001\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\2GIS.NuClear.Storage.API.2.1.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Utils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Utils.1.1.13\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
@@ -77,15 +72,12 @@
     </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Unofficial.Microsoft.SQLServer.SMO.2014.12.0.2000.8\lib\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
@@ -117,7 +109,6 @@
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -197,9 +188,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ValidationRules.Replication\ValidationRules.Replication.csproj">
