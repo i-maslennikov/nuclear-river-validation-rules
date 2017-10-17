@@ -54,13 +54,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.DebtPermission { OrderId = 2, Start = FirstDayFeb, End = FirstDayMar },
                     new Aggregates::Order { Id = 3, AccountId = 1, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true },
                     new Aggregates::Order { Id = 4, AccountId = 2, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayMar },
-                    new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 11, ReleaseAmount = 23, Start = FirstDayFeb, End = FirstDayMar }
+                    new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 11, ReleaseAmount = 12, Start = FirstDayFeb, End = FirstDayMar }
                     )
                 .Message(
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                new Dictionary<string, object> { { "available", 11.0000m }, { "planned", 23.0000m } },
+                                new Dictionary<string, object> { { "available", 11.0000m }, { "planned", 12.0000m } },
                                 new Reference<EntityTypeAccount>(1),
                                 new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,

@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         {
             var ruleResults =
                 from accountPeriod in query.For<Account.AccountPeriod>()
-                                           .Where(x => x.ReleaseAmount > 0 && (x.Balance - x.ReleaseAmount <= -Epsilon))
+                                           .Where(x => x.ReleaseAmount > 0 && x.Balance + Epsilon <= x.ReleaseAmount)
                 from order in query.For<Order>()
                                    .Where(x => !x.IsFreeOfCharge)
                                    .Where(x => x.AccountId == accountPeriod.AccountId)
