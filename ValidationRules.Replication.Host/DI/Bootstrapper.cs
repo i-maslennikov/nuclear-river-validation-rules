@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
+using Confluent.Kafka;
+
 using Jobs.RemoteControl.PortResolver;
 using Jobs.RemoteControl.Provider;
 using Jobs.RemoteControl.Registrar;
@@ -257,7 +259,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             container
                 .RegisterType<KafkaReceiver>(Lifetime.PerScope)
                 .RegisterType<IKafkaMessageFlowReceiverFactory, KafkaMessageFlowReceiverFactory>(Lifetime.Singleton)
-                .RegisterType<IAmsSettingsFactory, AmsSettingsFactory>(Lifetime.Singleton);
+                .RegisterType<IAmsSettingsFactory, AmsSettingsFactory>(Lifetime.Singleton,
+                            new InjectionConstructor(typeof(IConnectionStringSettings), typeof(IEnvironmentSettings), Offset.Invalid));
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(), Lifetime.Singleton)
                             .RegisterType(typeof(ServiceBusMessageFlowReceiver), Lifetime.Singleton)
