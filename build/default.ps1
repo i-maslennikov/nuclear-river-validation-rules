@@ -54,7 +54,7 @@ function QueueBuild-Tests {
 	}
 }
 
-Task Stop-ReplicationHost -Precondition { $Metadata['ValidationRules.Replication.Host'] } {
+Task Stop-ReplicationHost -Precondition { $Metadata['ValidationRules.Replication.Host'] -or $Metadata['ValidationRules.StateInitialization.Host']} {
 	Load-WinServiceModule 'ValidationRules.Replication.Host'
 	Take-WinServiceOffline 'ValidationRules.Replication.Host'
 }

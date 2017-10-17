@@ -32,13 +32,13 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             switch (firmAddressState)
             {
                 case InvalidFirmAddressState.Deleted:
-                    return Resources.OrderPositionAddressDeleted;
+                    return Resources.LinkedFirmAddressShouldBeValid_Deleted;
                 case InvalidFirmAddressState.NotActive:
-                    return Resources.OrderPositionAddressNotActive;
+                    return Resources.LinkedFirmAddressShouldBeValid_NotActive;
                 case InvalidFirmAddressState.ClosedForAscertainment:
-                    return Resources.OrderPositionAddressHidden;
+                    return Resources.LinkedFirmAddressShouldBeValid_ClosedForAscertainment;
                 case InvalidFirmAddressState.NotBelongToFirm:
-                    return Resources.OrderPositionAddressNotBelongToFirm;
+                    return Resources.LinkedFirmAddressShouldBeValid_NotBelongToFirm;
                 default:
                     throw new Exception(nameof(firmAddressState));
             }

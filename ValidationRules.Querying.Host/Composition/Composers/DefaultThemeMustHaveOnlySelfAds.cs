@@ -16,7 +16,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 themeReference,
-                Resources.DeafaultThemeMustContainOnlySelfAds,
+                Resources.DefaultThemeMustHaveOnlySelfAds,
                 themeReference);
         }
     }

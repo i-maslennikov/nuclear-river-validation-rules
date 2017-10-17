@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 orderReference,
-                Resources.CategoryIsRestrictedForSpecifiedSalesModelError,
+                Resources.OrderPositionSalesModelMustMatchCategorySalesModel,
                 orderPositionReference,
                 categoryReference,
                 projectReference,

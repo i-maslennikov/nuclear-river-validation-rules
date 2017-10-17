@@ -8,6 +8,7 @@ using NuClear.Assembling.TypeProcessing;
 using NuClear.Replication.Core;
 using NuClear.StateInitialization.Core.Actors;
 using NuClear.Storage.API.ConnectionStrings;
+using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.StateInitialization.Host.Assembling;
 using NuClear.ValidationRules.Storage.Identitites.Connections;
 
@@ -36,7 +37,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             {
                 commands.Add(BulkReplicationCommands.ErmToFacts);
                 // Надо подумать о лишней обёртке
-                commands.Add(new KafkaReplicationCommand(BulkReplicationCommands.AmsToFacts));
+                commands.Add(new KafkaReplicationCommand(AmsFactsFlow.Instance, BulkReplicationCommands.AmsToFacts));
                 commands.Add(SchemaInitializationCommands.WebApp);
                 commands.Add(SchemaInitializationCommands.Facts);
             }

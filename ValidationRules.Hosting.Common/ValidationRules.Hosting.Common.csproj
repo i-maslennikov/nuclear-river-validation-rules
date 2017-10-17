@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1A28D9CC-C476-4D87-AABE-587041C18F92}</ProjectGuid>
+    <ProjectGuid>{876CF585-D099-4C5A-949E-E76DA08764D8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuClear.Messaging.Transports.Kafka</RootNamespace>
-    <AssemblyName>2GIS.NuClear.Messaging.Transports.Kafka</AssemblyName>
+    <RootNamespace>ValidationRules.Hosting.Common</RootNamespace>
+    <AssemblyName>ValidationRules.Hosting.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -39,8 +39,20 @@
     <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Metamodeling.2.1.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Metamodeling.dll</HintPath>
     </Reference>
+    <Reference Include="2GIS.NuClear.Model.Common, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="2GIS.NuClear.River.Hosting.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuClear.River.Hosting.Common.5.2.2-accessor-types-p0042\lib\net461\2GIS.NuClear.River.Hosting.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
+    </Reference>
     <Reference Include="2GIS.NuClear.Settings.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Settings.API.1.2.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
+    </Reference>
+    <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Storage.API.2.0.3-fix-collection-q0001\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Tracing.API.2.0.1\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
@@ -50,6 +62,9 @@
     </Reference>
     <Reference Include="Confluent.Kafka, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Confluent.Kafka.0.11.0\lib\net46\Confluent.Kafka.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,8 +76,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Kafka.cs" />
+    <Compile Include="AmsSettingsFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messaging.Transports.Kafka\Messaging.Transports.Kafka.csproj">
+      <Project>{1a28d9cc-c476-4d87-aabe-587041c18f92}</Project>
+      <Name>Messaging.Transports.Kafka</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidationRules.OperationsProcessing\ValidationRules.OperationsProcessing.csproj">
+      <Project>{6C1F4B07-10E4-4072-929A-0FDCDF53BF1B}</Project>
+      <Name>ValidationRules.OperationsProcessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValidationRules.Storage\ValidationRules.Storage.csproj">
+      <Project>{e799a2ee-408f-467a-8b50-fc729e92d3f3}</Project>
+      <Name>ValidationRules.Storage</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 
             return new MessageComposerResult(
                 order,
-                Resources.AdvertisementIsLinkedWithEmptyAddressError,
+                Resources.FirmAddressMustBeLocatedOnTheMap,
                 orderPosition,
                 firmAddress);
         }

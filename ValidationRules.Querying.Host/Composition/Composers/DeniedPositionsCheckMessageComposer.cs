@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             {
                 return new MessageComposerResult(
                     dependent.Order,
-                    Resources.ADPCheckModeSpecificOrder_MessageTemplate_Order,
+                    Resources.FirmPositionMustNotHaveDeniedPositions_Order,
                     dependent.PositionPrefix,
                     dependent,
                     principal.PositionPrefix,
@@ -29,7 +29,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             {
                 return new MessageComposerResult(
                     dependent.Order,
-                    Resources.ADPCheckModeSpecificOrder_MessageTemplate,
+                    Resources.FirmPositionMustNotHaveDeniedPositions,
                     dependent.PositionPrefix,
                     dependent,
                     principal.PositionPrefix,
