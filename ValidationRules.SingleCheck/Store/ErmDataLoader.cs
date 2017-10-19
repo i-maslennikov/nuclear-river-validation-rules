@@ -21,7 +21,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.Add(order);
 
             LoadReleaseWithdrawals(query, order, store);
-            LoadAccount(query, order, store);
 
             var bargainIds = new[] { order.BargainId };
             var dealIds = new[] { order.DealId };
@@ -313,25 +312,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                      .Where(x => firmAddressIds.Contains(x.FirmAddressId))
                      .Execute();
             store.AddRange(categoryFirmAddresses);
-        }
-
-        // TODO: правила на Account они чисто массовые, м.б. и не надо это всё загружать
-        private static void LoadAccount(DataConnection query, Order order, IStore store)
-        {
-            var accounts =
-                query.GetTable<Account>()
-                     .Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
-                     .Execute();
-            store.AddRange(accounts);
-            var accountIds = accounts.Select(x => x.Id);
-
-            var accountDetails =
-                query.GetTable<AccountDetail>()
-                     .Where(x => !x.IsDeleted)
-                     .Where(x => x.OrderId == order.Id)
-                     .Where(x => accountIds.Contains(x.AccountId))
-                     .Execute();
-            store.AddRange(accountDetails);
         }
 
         private static void LoadReleaseWithdrawals(DataConnection query, Order order, IStore store)
