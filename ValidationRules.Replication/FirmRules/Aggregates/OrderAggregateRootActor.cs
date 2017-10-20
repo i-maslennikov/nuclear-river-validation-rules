@@ -199,7 +199,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
                 var addressPositionsInOrdersWithPremium =
                     from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodePartnerAdvertisingAddress)
-                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.FirmAddressId.HasValue).Where(x => x.PositionId == position.Id)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.PositionId == position.Id)
                     from op in _query.For<Facts::OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
                     from fa in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId.Value)
                     where ordersWithPremium.Contains(op.OrderId)
