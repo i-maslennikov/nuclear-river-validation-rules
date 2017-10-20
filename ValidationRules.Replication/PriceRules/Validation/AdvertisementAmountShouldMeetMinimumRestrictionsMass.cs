@@ -57,7 +57,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Validation
                                             { "max", violation.Max },
                                             { "count", violation.Count },
                                             { "name", violation.CategoryName },
-                                            { "month", violation.Start },
+                                            { "begin", violation.Start },
+                                            { "end", violation.End },
                                         },
                                     new Reference<EntityTypeProject>(violation.ProjectId))
                                 .ToXDocument(),

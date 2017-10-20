@@ -46,7 +46,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                         new MessageParams(
-                                            new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "month", MonthStart(1) } },
+                                            new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "begin", MonthStart(1) }, { "end", MonthStart(2) } },
                                             new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                             PeriodStart = MonthStart(1),
@@ -57,7 +57,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
-                                                  new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "month", MonthStart(2) } },
+                                                  new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "begin", MonthStart(2) }, { "end", MonthStart(3) } },
                                                   new Reference<EntityTypeOrder>(1)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                             PeriodStart = MonthStart(2),
@@ -70,7 +70,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
-                                                  new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "month", MonthStart(1) } },
+                                                  new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "begin", MonthStart(1) }, { "end", MonthStart(2) } },
                                                   new Reference<EntityTypeProject>(13)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                             PeriodStart = MonthStart(1),
@@ -81,7 +81,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
-                                                  new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "month", MonthStart(2) } },
+                                                  new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 1 }, { "name", "Category" }, { "begin", MonthStart(2) }, { "end", MonthStart(3) } },
                                                   new Reference<EntityTypeProject>(13)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                             PeriodStart = MonthStart(2),
@@ -92,7 +92,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         {
                             MessageParams =
                                 new MessageParams(
-                                                  new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 0 }, { "name", "Category" }, { "month", MonthStart(3) } },
+                                                  new Dictionary<string, object> { { "min", 2 }, { "max", 9 }, { "count", 0 }, { "name", "Category" }, { "begin", MonthStart(3) }, { "end", DateTime.MaxValue } },
                                                   new Reference<EntityTypeProject>(13)).ToXDocument(),
                             MessageType = (int)MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
                             PeriodStart = MonthStart(3),

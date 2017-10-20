@@ -127,7 +127,7 @@
     <value>{0} "{1}" esta orden es la principal para las siguientes posiciones: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShouldMeetMinimumRestrictions" xml:space="preserve">
-    <value>La posición {0} debe estar presente en la compilación en cantidad desde {1} hasta {2}. La cantidad de las posiciones que pueden ser publicadas al mes {3:MMMM} - {4}</value>
+    <value>La posición {0} debe estar presente en la compilación en cantidad desde {1} hasta {2}. La cantidad de las posiciones que pueden ser publicadas al mes {3} - {4}</value>
   </data>
   <data name="FirmAddressMustBeLocatedOnTheMap" xml:space="preserve">
     <value>La posición {0} se ha creado para una dirección en blanco {1}</value>
