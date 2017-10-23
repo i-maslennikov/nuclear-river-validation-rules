@@ -47,7 +47,7 @@
       <HintPath>..\..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuClear.River.StateInitialization.7.0.0\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuClear.River.StateInitialization.7.0.1-stateinint-refac0002\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
@@ -56,7 +56,7 @@
       <HintPath>..\..\packages\2GIS.NuClear.Settings.API.1.2.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Settings.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.StateInitialization.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NuClear.River.StateInitialization.7.0.0\lib\net461\2GIS.NuClear.StateInitialization.Core.dll</HintPath>
+      <HintPath>..\..\packages\NuClear.River.StateInitialization.7.0.1-stateinint-refac0002\lib\net461\2GIS.NuClear.StateInitialization.Core.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Storage.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=28ae40ac5f6ca219, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Storage.API.2.1.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Storage.API.dll</HintPath>
@@ -187,7 +187,9 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ValidationRules.Replication\ValidationRules.Replication.csproj">
