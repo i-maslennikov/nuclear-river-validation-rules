@@ -127,12 +127,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          manualReport: RuleSeverityLevel.Warning,
                          prerelease: RuleSeverityLevel.Warning),
 
-                    Rule(MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                         single: RuleSeverityLevel.Error,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
                     Rule(MessageTypeCode.LinkedFirmShouldBeValid,
                          single: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,

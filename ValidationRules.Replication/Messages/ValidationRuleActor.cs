@@ -270,7 +270,6 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                     new FirmAndOrderShouldBelongTheSameOrganizationUnit(_query),
                     new FirmShouldHaveLimitedCategoryCount(_query),
-                    new FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions(_query),
                     new PremiumPartnerProfileMustHaveSingleSale(_query),
 
                     new FirmAddressMustBeLocatedOnTheMap(_query),

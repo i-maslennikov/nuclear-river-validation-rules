@@ -322,15 +322,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция &quot;Самореклама только для ПК&quot; продана одновременно с рекламой в другую платформу.
-        /// </summary>
-        internal static string FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions {
-            get {
-                return ResourceManager.GetString("FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Юр. лицо заказчика.
         /// </summary>
         internal static string LegalPerson {

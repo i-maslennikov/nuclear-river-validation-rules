@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
+using Confluent.Kafka;
+
 using Jobs.RemoteControl.PortResolver;
 using Jobs.RemoteControl.Provider;
 using Jobs.RemoteControl.Registrar;
@@ -35,6 +37,7 @@ using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Actors.Transformers;
 using NuClear.Messaging.API.Processing.Actors.Validators;
+using NuClear.Messaging.API.Processing.Audit;
 using NuClear.Messaging.API.Processing.Processors;
 using NuClear.Messaging.API.Processing.Stages;
 using NuClear.Messaging.API.Receivers;
@@ -64,6 +67,7 @@ using NuClear.OperationsLogging;
 using NuClear.OperationsLogging.API;
 using NuClear.OperationsLogging.Transports.ServiceBus;
 using NuClear.OperationsLogging.Transports.ServiceBus.Serialization.ProtoBuf;
+using NuClear.OperationsProcessing.Transports.Kafka;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
@@ -257,7 +261,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             container
                 .RegisterType<KafkaReceiver>(Lifetime.PerScope)
                 .RegisterType<IKafkaMessageFlowReceiverFactory, KafkaMessageFlowReceiverFactory>(Lifetime.Singleton)
-                .RegisterType<IAmsSettingsFactory, AmsSettingsFactory>(Lifetime.Singleton);
+                .RegisterType<IAmsSettingsFactory, AmsSettingsFactory>(Lifetime.Singleton,
+                            new InjectionConstructor(typeof(IConnectionStringSettings), typeof(IEnvironmentSettings), Offset.Invalid));
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(), Lifetime.Singleton)
                             .RegisterType(typeof(ServiceBusMessageFlowReceiver), Lifetime.Singleton)
@@ -278,7 +283,9 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
                             .RegisterOne2ManyTypesPerTypeUniqueness<IMessageTransformerResolveStrategy, PrimaryMessageTransformerResolveStrategy>(Lifetime.PerScope)
                             .RegisterType<IMessageProcessingHandlerFactory, UnityMessageProcessingHandlerFactory>(Lifetime.PerScope)
-                            .RegisterType<IMessageProcessingContextAccumulatorFactory, UnityMessageProcessingContextAccumulatorFactory>(Lifetime.PerScope);
+                            .RegisterType<IMessageProcessingContextAccumulatorFactory, UnityMessageProcessingContextAccumulatorFactory>(Lifetime.PerScope)
+
+                            .RegisterType<IMessageFlowProcessingObserver, NullMessageFlowProcessingObserver>(Lifetime.Singleton);
         }
 
         private static IUnityContainer ConfigureStorage(this IUnityContainer container, ISqlStoreSettingsAspect storageSettings, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
