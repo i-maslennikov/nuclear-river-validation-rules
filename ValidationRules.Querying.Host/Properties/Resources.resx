@@ -297,9 +297,6 @@
   <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
     <value>Позиция</value>
   </data>
-  <data name="FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions" xml:space="preserve">
-    <value>Позиция "Самореклама только для ПК" продана одновременно с рекламой в другую платформу</value>
-  </data>
   <data name="ThemePeriodMustContainOrderPeriod" xml:space="preserve">
     <value>Заказ {0} не может иметь продаж в тематику {1}, поскольку тематика действует не весь период размещения заказа</value>
   </data>

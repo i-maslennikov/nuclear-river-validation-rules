@@ -147,7 +147,6 @@
     <Compile Include="Composition\Composers\AdvertisementMustPassReviewMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementMustBelongToFirmMessageComposer.cs" />
     <Compile Include="Composition\Composers\FirmAddressMustBeLocatedOnTheMapMessageComposer.cs" />
-    <Compile Include="Composition\Composers\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveDealMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveAdvertisementMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionMustCorrespontToActualPriceMessageComposer.cs" />

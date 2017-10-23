@@ -230,7 +230,6 @@
     <Compile Include="Accessors\FirmAddressCategoryAccessor.cs" />
     <Compile Include="FirmRules\Validation\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="FirmRules\Validation\FirmShouldHaveLimitedCategoryCount.cs" />
-    <Compile Include="FirmRules\Validation\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
     <Compile Include="Messages\ArchiveVersionsService.cs" />
     <Compile Include="Messages\VersionAccessor.cs" />
     <Compile Include="ProjectRules\Aggregates\ProjectAggregateRootActor.cs" />
