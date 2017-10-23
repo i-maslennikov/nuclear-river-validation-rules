@@ -3,6 +3,7 @@ using System.Linq;
 
 using NuClear.Messaging.API;
 using NuClear.Messaging.API.Receivers;
+using NuClear.OperationsProcessing.Transports.Kafka;
 using NuClear.Telemetry.Probing;
 
 namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
@@ -24,7 +25,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
             using (Probe.Create("Peek messages from Kafka"))
             {
                 var messages = _receiver.Peek();
-                _publisher.Peeked(messages.Cast<KafkaMessage>().Sum(x => x.Messages.Count));
+                _publisher.Peeked(messages.Count);
                 return messages;
             }
         }
@@ -38,8 +39,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.Transports.Kafka
 
                 _receiver.Complete(succeeded, failed);
 
-                _publisher.Completed(succeeded.Sum(x => x.Messages.Count));
-                _publisher.Failed(failed.Sum(x => x.Messages.Count));
+                _publisher.Completed(succeeded.Count);
+                _publisher.Failed(failed.Count);
             }
         }
     }

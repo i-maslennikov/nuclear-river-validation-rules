@@ -297,9 +297,6 @@
   <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
     <value>Posición</value>
   </data>
-  <data name="FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions" xml:space="preserve">
-    <value>La posición Autopromoción sólo para PC se ha vendido junto con la publicidad a otra plataforma</value>
-  </data>
   <data name="ThemePeriodMustContainOrderPeriod" xml:space="preserve">
     <value>La orden {0} no puede tener ventas en el tema {1}, ya que el tema es vigente durante todo el periodo de publicación de la orden</value>
   </data>

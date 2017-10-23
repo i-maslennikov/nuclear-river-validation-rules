@@ -24,19 +24,16 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.FirmOrganiationUnitMismatch> invalidFirmRepository,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
-            IBulkRepository<Order.NotApplicapleForDesktopPosition> notApplicapleForDesktopPositionRepository,
             IBulkRepository<Order.CallToActionPosition> callToActionPositionRepository,
-            IBulkRepository<Order.PartnerPosition> premiumProfilePositionRepository,
-            IBulkRepository<Order.SelfAdvertisementPosition> selfAdvertisementPositionRepository)
+            IBulkRepository<Order.PartnerPosition> premiumProfilePositionRepository)
             : base(query, equalityComparerFactory)
         {
-            HasRootEntity(new OrderAccessor(query), bulkRepository,
-                HasValueObject(new OrderFirmOrganiationUnitMismatchAccessor(query), invalidFirmRepository),
-                HasValueObject(new OrderInvalidFirmAccessor(query), orderInvalidFirmRepository),
-                HasValueObject(new NotApplicapleForDesktopPositionAccessor(query), notApplicapleForDesktopPositionRepository),
-                HasValueObject(new CallToActionPositionAccessor(query), callToActionPositionRepository),
-                HasValueObject(new PartnerPositionAccessor(query), premiumProfilePositionRepository),
-                HasValueObject(new SelfAdvertisementPositionAccessor(query), selfAdvertisementPositionRepository));
+            HasRootEntity(new OrderAccessor(query),
+                          bulkRepository,
+                          HasValueObject(new OrderFirmOrganiationUnitMismatchAccessor(query), invalidFirmRepository),
+                          HasValueObject(new OrderInvalidFirmAccessor(query), orderInvalidFirmRepository),
+                          HasValueObject(new CallToActionPositionAccessor(query), callToActionPositionRepository),
+                          HasValueObject(new PartnerPositionAccessor(query), premiumProfilePositionRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -53,7 +50,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     {
                         MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
                         MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
-                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
                         MessageTypeCode.LinkedFirmShouldBeValid,
                     };
 
@@ -76,69 +72,6 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                                            .Distinct()
                                            .ToArray();
                 return new FindSpecification<Order>(x => aggregateIds.Contains(x.Id));
-            }
-        }
-
-        public sealed class NotApplicapleForDesktopPositionAccessor : DataChangesHandler<Order.NotApplicapleForDesktopPosition>, IStorageBasedDataObjectAccessor<Order.NotApplicapleForDesktopPosition>
-        {
-            private readonly IQuery _query;
-
-            public NotApplicapleForDesktopPositionAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                    };
-
-            public IQueryable<Order.NotApplicapleForDesktopPosition> GetSource()
-                => (from order in _query.For<Facts::Order>()
-                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>()
-                        .Where(x => !x.IsDeleted)
-                        .Where(x => x.Platform != Facts::Position.PlatformDesktop && x.Platform != Facts::Position.PlatformIndependent)
-                        .Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                    select new Order.NotApplicapleForDesktopPosition { OrderId = orderPosition.OrderId }).Distinct();
-
-            public FindSpecification<Order.NotApplicapleForDesktopPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.NotApplicapleForDesktopPosition>(x => aggregateIds.Contains(x.OrderId));
-            }
-        }
-
-        public sealed class SelfAdvertisementPositionAccessor : DataChangesHandler<Order.SelfAdvertisementPosition>, IStorageBasedDataObjectAccessor<Order.SelfAdvertisementPosition>
-        {
-            private readonly IQuery _query;
-
-            public SelfAdvertisementPositionAccessor(IQuery query) : base(CreateInvalidator())
-            {
-                _query = query;
-            }
-
-            private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                    {
-                        MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                    };
-
-            public IQueryable<Order.SelfAdvertisementPosition> GetSource()
-                => (from order in _query.For<Facts::Order>()
-                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from orderPositionAdvertisement in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>()
-                        .Where(x => !x.IsDeleted && x.CategoryCode == Facts::Position.CategoryCodeSelfAdvertisementOnlyOnPc)
-                        .Where(x => x.Id == orderPositionAdvertisement.PositionId)
-                    select new Order.SelfAdvertisementPosition { OrderId = orderPosition.OrderId }).Distinct();
-
-            public FindSpecification<Order.SelfAdvertisementPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-            {
-                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.SelfAdvertisementPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

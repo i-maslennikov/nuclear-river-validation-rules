@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         public async Task<long> WaitForVersion(Guid token)
         {
             Task<long> amsVersion;
-            if (AmsHelper.TryGetLatestMessage(0, out var amsMessage))
+            if (AmsHelper.TryGetLatestMessage(out var amsMessage))
             {
                 var utcNow = DateTime.UtcNow;
                 var amsUtcNow = amsMessage.Timestamp.UtcDateTime;
@@ -131,11 +131,11 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         {
             private static readonly AmsSettings Settings = new AmsSettings();
 
-            public static bool TryGetLatestMessage(int partition, out Message message)
+            public static bool TryGetLatestMessage(out Message message)
             {
                 using (var consumer = new Consumer(Settings.Config))
                 {
-                    var topicPartition = new TopicPartition(Settings.Topic, partition);
+                    var topicPartition = new TopicPartition(Settings.Topic, Settings.Partition);
 
                     var offsets = consumer.QueryWatermarkOffsets(topicPartition, Settings.Timeout);
                     consumer.Assign(new[] { new TopicPartitionOffset(topicPartition, offsets.High - 1) });
@@ -156,7 +156,10 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                 }
 
                 public Dictionary<string, object> Config { get; }
+
                 public string Topic { get; }
+                public int Partition { get; } = 0;
+
                 public TimeSpan Timeout { get; } = TimeSpan.FromSeconds(5);
             }
         }

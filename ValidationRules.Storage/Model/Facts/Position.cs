@@ -14,9 +14,6 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public const int BindingObjectTypeCategoryMultipleAsterix = 1;
         public const int BindingObjectTypeAddressMultiple = 35;
 
-        public const int PlatformIndependent = 0;
-        public const int PlatformDesktop = 1;
-
         public const int PositionsGroupMedia = 1;
 
         public static readonly IReadOnlyCollection<long> CategoryCodesAllowNotLocatedOnTheMap = new long[]
@@ -50,7 +47,6 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public bool IsControlledByAmount { get; set; }
 
         public long CategoryCode { get; set; }
-        public int Platform { get; set; }
 
         public bool IsDeleted { get; set; }
     }

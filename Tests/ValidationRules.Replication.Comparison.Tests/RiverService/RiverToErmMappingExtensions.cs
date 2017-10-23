@@ -59,7 +59,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.DefaultThemeMustHaveOnlySelfAds, 41 },
                             { MessageTypeCode.DefaultThemeMustBeExactlyOne, 40 },
                             { MessageTypeCode.OrderPositionCostPerClickMustBeSpecified, 46 },
-                            { MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions, 36 },
                             { MessageTypeCode.OrderMustHaveActiveDeal, 51 },
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },

@@ -68,7 +68,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             _batchSizeSettings = new AmsBatchSizeSettings();
             _accessorTypesProvider = new AccessorTypesProvider();
 
-            var amsSettingsFactory = new AmsSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect());
+            var amsSettingsFactory = new AmsSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
             _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), amsSettingsFactory);
         }
 
@@ -112,7 +112,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                                 }
                             }
 
-                            receiver.Complete(maxOffsetMesasage);
+                            receiver.CompleteBatch(batch);
 
                             // state init имеет смысл прекращать когда мы вычитали все полные батчи
                             // а то нам могут до бесконечности подкидывать новых messages
