@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Confluent.Kafka;
-
 using NuClear.Jobs;
 using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
@@ -24,6 +22,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
     {
         private static readonly TimeSpan AmsSyncInterval = TimeSpan.FromSeconds(20);
 
+        private readonly KafkaMessageFlowInfoProvider _kafkaMessageFlowInfoProvider;
         private readonly IRepository<SystemStatus> _repository;
         private readonly IEventLogger _eventLogger;
 
@@ -31,10 +30,12 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
                             IUserAuthenticationService userAuthenticationService,
                             IUserAuthorizationService userAuthorizationService,
                             ITracer tracer,
+                            KafkaMessageFlowInfoProvider kafkaMessageFlowInfoProvider,
                             IRepository<SystemStatus> repository,
                             IEventLogger eventLogger)
             : base(userContextManager, userAuthenticationService, userAuthorizationService, tracer)
         {
+            _kafkaMessageFlowInfoProvider = kafkaMessageFlowInfoProvider;
             _repository = repository;
             _eventLogger = eventLogger;
         }
@@ -46,20 +47,19 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
         private void SendAmsHeartbeat()
         {
-            using (var consumer = new Consumer(ConsumerExtensions.Settings.Config))
+            if (!_kafkaMessageFlowInfoProvider.TryGetFlowLastMessage(AmsFactsFlow.Instance, out var amsLastMessage))
             {
-                if (consumer.TryGetLatestMessage(0, out var amsMessage))
-                {
-                    var utcNow = DateTime.UtcNow;
-                    var amsUtcNow = amsMessage.Timestamp.UtcDateTime;
-                    var amsIsDown = (utcNow - amsUtcNow).Duration() > AmsSyncInterval;
-
-                    _repository.Update(new SystemStatus { Id = SystemStatus.SystemId.Ams, SystemIsDown = amsIsDown });
-                    _repository.Save();
-
-                    _eventLogger.Log<IEvent>(new[] { new FlowEvent(AmsFactsFlow.Instance, new DataObjectUpdatedEvent(typeof(SystemStatus), SystemStatus.SystemId.Ams)) });
-                }
+                return;
             }
+
+            var utcNow = DateTime.UtcNow;
+            var amsUtcNow = amsLastMessage.Timestamp.UtcDateTime;
+            var amsIsDown = (utcNow - amsUtcNow).Duration() > AmsSyncInterval;
+
+            _repository.Update(new SystemStatus { Id = SystemStatus.SystemId.Ams, SystemIsDown = amsIsDown });
+            _repository.Save();
+
+            _eventLogger.Log<IEvent>(new[] { new FlowEvent(AmsFactsFlow.Instance, new DataObjectUpdatedEvent(typeof(SystemStatus), SystemStatus.SystemId.Ams)) });
         }
     }
 }

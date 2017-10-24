@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 
-using Confluent.Kafka;
-
 using Jobs.RemoteControl.PortResolver;
 using Jobs.RemoteControl.Provider;
 using Jobs.RemoteControl.Registrar;
@@ -96,7 +94,6 @@ using NuClear.Storage.Readings;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
-using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
 using NuClear.ValidationRules.Replication.Host.Customs;
@@ -261,8 +258,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             container
                 .RegisterType<KafkaReceiver>(Lifetime.PerScope)
                 .RegisterType<IKafkaMessageFlowReceiverFactory, KafkaMessageFlowReceiverFactory>(Lifetime.Singleton)
-                .RegisterType<IAmsSettingsFactory, AmsSettingsFactory>(Lifetime.Singleton,
-                            new InjectionConstructor(typeof(IConnectionStringSettings), typeof(IEnvironmentSettings), Offset.Invalid));
+                .RegisterType<IKafkaSettingsFactory, KafkaSettingsFactory>(Lifetime.Singleton, new InjectionConstructor(typeof(IConnectionStringSettings), typeof(IEnvironmentSettings)))
+                .RegisterType<KafkaMessageFlowInfoProvider>(Lifetime.Singleton);
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(), Lifetime.Singleton)
                             .RegisterType(typeof(ServiceBusMessageFlowReceiver), Lifetime.Singleton)

@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Confluent.Kafka;
-
 using LinqToDB;
+
+using NuClear.Messaging.API.Flows;
 
 using ValidationRules.Hosting.Common;
 
@@ -22,25 +22,21 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         private static readonly TimeSpan WaitInterval = TimeSpan.FromSeconds(5);
 
         private readonly DataConnectionFactory _factory;
+        private readonly KafkaMessageFlowInfoProvider _kafkaMessageFlowInfoProvider;
 
-        public VersioningService(DataConnectionFactory factory)
+        public VersioningService(DataConnectionFactory factory, KafkaMessageFlowInfoProvider kafkaMessageFlowInfoProvider)
         {
             _factory = factory;
+            _kafkaMessageFlowInfoProvider = kafkaMessageFlowInfoProvider;
         }
 
         public async Task<long> WaitForVersion(Guid token)
         {
-            Task<long> amsVersion;
-            using (var consumer = new Consumer(ConsumerExtensions.Settings.Config))
-            {
-                var partitionSize = consumer.GetPartitionSize();
-                amsVersion = partitionSize != 0 ? WaitForAmsState(partitionSize - 1, WaitInterval, WaitTimeout) : Task.FromResult(0L);
-            }
-
+            var flowSize = _kafkaMessageFlowInfoProvider.GetFlowSize(AmsFactsFlow.Instance);
+            var amsVersion = flowSize != 0 ? WaitForAmsState(flowSize - 1, WaitInterval, WaitTimeout) : Task.FromResult(0L);
             var ermVersion = WaitForErmState(token, WaitInterval, WaitTimeout);
 
             var result = await Task.WhenAll(amsVersion, ermVersion);
-
             return result.Max();
         }
 
@@ -112,6 +108,14 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             {
                 return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
             }
+        }
+
+        // не хочется референсить на OperationProcessing, поэтому копипаст
+        private sealed class AmsFactsFlow : MessageFlowBase<AmsFactsFlow>
+        {
+            public override Guid Id => new Guid("A2878E80-992A-4602-8FD6-B10AE85BBFFE");
+
+            public override string Description => nameof(AmsFactsFlow);
         }
     }
 }

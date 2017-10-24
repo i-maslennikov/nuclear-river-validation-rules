@@ -40,13 +40,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Messaging.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Messaging.API.2.3.3\lib\net461\2GIS.NuClear.Messaging.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Messaging.API.2.3.4\lib\net461\2GIS.NuClear.Messaging.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Messaging.Transports.CorporateBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Messaging.Transports.CorporateBus.2.3.3\lib\net461\2GIS.NuClear.Messaging.Transports.CorporateBus.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Messaging.Transports.CorporateBus.2.3.4\lib\net461\2GIS.NuClear.Messaging.Transports.CorporateBus.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Messaging.Transports.ServiceBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b3354850e43ac257, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.Messaging.Transports.ServiceBus.2.3.3\lib\net461\2GIS.NuClear.Messaging.Transports.ServiceBus.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.Messaging.Transports.ServiceBus.2.3.4\lib\net461\2GIS.NuClear.Messaging.Transports.ServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Metamodeling, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3ad4d1ee93087517, processorArchitecture=MSIL">
       <HintPath>..\..\packages\2GIS.NuClear.Metamodeling.2.1.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Metamodeling.dll</HintPath>
@@ -56,28 +56,28 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsLogging.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.API.5.5.3\lib\net461\2GIS.NuClear.OperationsLogging.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.API.5.5.4\lib\net461\2GIS.NuClear.OperationsLogging.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsLogging.Transports.ServiceBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.Transports.ServiceBus.5.5.3\lib\net461\2GIS.NuClear.OperationsLogging.Transports.ServiceBus.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.Transports.ServiceBus.5.5.4\lib\net461\2GIS.NuClear.OperationsLogging.Transports.ServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsLogging.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.Transports.SQLStore.5.5.3\lib\net461\2GIS.NuClear.OperationsLogging.Transports.SQLStore.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsLogging.Transports.SQLStore.5.5.4\lib\net461\2GIS.NuClear.OperationsLogging.Transports.SQLStore.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.5.5.3\lib\net461\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.5.5.4\lib\net461\2GIS.NuClear.OperationsProcessing.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.ServiceBus, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.5.5.3\lib\net461\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.5.5.4\lib\net461\2GIS.NuClear.OperationsProcessing.Transports.ServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsProcessing.Transports.SQLStore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.5.5.3\lib\net461\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.5.5.4\lib\net461\2GIS.NuClear.OperationsProcessing.Transports.SQLStore.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsTracking, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsTracking.5.5.3\lib\net461\2GIS.NuClear.OperationsTracking.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsTracking.5.5.4\lib\net461\2GIS.NuClear.OperationsTracking.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.OperationsTracking.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2c187db36f8b5f72, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\2GIS.NuClear.OperationsTracking.API.5.5.3\lib\net461\2GIS.NuClear.OperationsTracking.API.dll</HintPath>
+      <HintPath>..\..\packages\2GIS.NuClear.OperationsTracking.API.5.5.4\lib\net461\2GIS.NuClear.OperationsTracking.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NuClear.River.Replication.7.0.0\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
