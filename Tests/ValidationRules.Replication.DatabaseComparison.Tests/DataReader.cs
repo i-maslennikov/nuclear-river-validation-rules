@@ -6,13 +6,15 @@ using LinqToDB.Data;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Storage;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Storage.Specifications;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
-namespace ValidationRules.Replication.DatabaseComparison
+namespace ValidationRules.Replication.DatabaseComparison.Tests
 {
-    internal interface IDataObjectReader<T>
+    internal interface IDataObjectReader<out T>
     {
         IEnumerable<T> ReadDest(DataConnection db);
         IEnumerable<T> ReadSource(DataConnection db, IEnumerable<Type> accessorTypes);
@@ -28,6 +30,24 @@ namespace ValidationRules.Replication.DatabaseComparison
             => accessorTypes.Select(x => Activator.CreateInstance(x, new LinqToDbQuery(db)))
                             .Cast<IStorageBasedDataObjectAccessor<T>>()
                             .SelectMany(x => x.GetSource());
+    }
+
+    // исключаем из сравнения имена сущностей, импортированных из AMS
+    internal sealed class EntityNameDataObjectReader : IDataObjectReader<EntityName>
+    {
+        private readonly DefaultDataObjectReader<EntityName> _dataObjectReader = new DefaultDataObjectReader<EntityName>();
+
+        public IEnumerable<EntityName> ReadDest(DataConnection db)
+            => db.GetTable<EntityName>().Where(x => x.EntityType != EntityTypeAdvertisement.Instance.Id);
+
+        public IEnumerable<EntityName> ReadSource(DataConnection db, IEnumerable<Type> accessorTypes)
+            => _dataObjectReader.ReadSource(db, accessorTypes);
+    }
+
+    internal sealed class VersionDataObjectReader : IDataObjectReader<Version>
+    {
+        public IEnumerable<Version> ReadDest(DataConnection db) => Array.Empty<Version>();
+        public IEnumerable<Version> ReadSource(DataConnection db, IEnumerable<Type> accessorTypes) => Array.Empty<Version>();
     }
 
     internal sealed class ValidationResultDataObjectReader : IDataObjectReader<Version.ValidationResult>
