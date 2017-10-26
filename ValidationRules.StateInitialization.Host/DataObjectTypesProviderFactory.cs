@@ -153,6 +153,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(Messages::Version.ValidationResult),
                 typeof(Messages::Version.ErmState),
                 typeof(Messages::Version.AmsState),
+                typeof(Messages::Cache.ValidationResult),
             };
 
         public static readonly Type[] WebAppTypes =
