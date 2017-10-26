@@ -118,7 +118,7 @@ namespace NuClear.ValidationRules.Replication.Messages
 
         private static Expression<Func<Version.ValidationResult, bool>> CreateFilter(IEnumerable<IRecalculateValidationRuleCommand> commands)
         {
-            var ids = Enumerable.Empty<long>();
+            var ids = new HashSet<long>();
             foreach (var command in commands)
             {
                 var recalculateRuleCompleteCommand = command as RecalculateValidationRuleCompleteCommand;
@@ -130,7 +130,7 @@ namespace NuClear.ValidationRules.Replication.Messages
                 var recalculateRulePartiallyCommand = command as RecalculateValidationRulePartiallyCommand;
                 if (recalculateRulePartiallyCommand != null)
                 {
-                    ids = ids.Union(recalculateRulePartiallyCommand.Filter);
+                    ids.UnionWith(recalculateRulePartiallyCommand.Filter);
                 }
             }
 
