@@ -13,6 +13,7 @@ namespace NuClear.ValidationRules.Storage
     public static partial class Schema
     {
         private const string MessagesSchema = "Messages";
+        private const string CacheSchema = "MessagesCache";
 
         public static MappingSchema Messages
             => new MappingSchema(nameof(Messages), new SqlServerMappingSchema())
@@ -51,6 +52,11 @@ namespace NuClear.ValidationRules.Storage
                    .HasTableName(nameof(Version.ValidationResult))
                    .HasSchemaName(MessagesSchema);
 
+            builder.Entity<Cache.ValidationResult>()
+                   .HasTableName(nameof(Cache.ValidationResult))
+                   .HasSchemaName(CacheSchema)
+                   .HasPrimaryKey(x => x.MessageType);
+
             return builder;
         }
 
@@ -59,6 +65,7 @@ namespace NuClear.ValidationRules.Storage
             schema.SetDataType(typeof(decimal), new SqlDataType(DataType.Decimal, 19, 4));
             schema.SetDataType(typeof(decimal?), new SqlDataType(DataType.Decimal, 19, 4));
             schema.SetDataType(typeof(string), new SqlDataType(DataType.NVarChar, int.MaxValue));
+            schema.SetDataType(typeof(byte[]), new SqlDataType(DataType.VarBinary, int.MaxValue));
 
             // XDocument mapping to nvarchar
             schema.SetDataType(typeof(XDocument), new SqlDataType(DataType.NVarChar, 4000));
