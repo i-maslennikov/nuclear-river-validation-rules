@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
         private readonly IQuery _query;
         private readonly ITracer _tracer;
-        private readonly ICommandFactory _commandFactory;
+        private readonly ICommandFactory<TrackedUseCase> _commandFactory;
 
         public FactsFlowAccumulator(IQuery query, ITracer tracer)
         {
@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
         {
             WaitForTucToBeCommitted(trackedUseCase.Id);
 
-            var commands = _commandFactory.CreateCommands(new TrackedUseCaseEvent(trackedUseCase)).ToList();
+            var commands = _commandFactory.CreateCommands(trackedUseCase);
 
             var date = trackedUseCase.Context.Finished.UtcDateTime;
             commands.Add(new IncrementErmStateCommand(new[] { new ErmState(trackedUseCase.Id, date) }));
@@ -67,13 +67,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             _tracer.Warn($"Ignored TUC {id} after {TotalWaitMilliseconds}ms waiting");
         }
 
-        private sealed class FactsCommandFactory : ICommandFactory
+        private sealed class FactsCommandFactory : ICommandFactory<TrackedUseCase>
         {
-            public IEnumerable<ICommand> CreateCommands(IEvent @event)
+            public IReadOnlyCollection<ICommand> CreateCommands(TrackedUseCase message)
             {
-                var trackedUseCase = ((TrackedUseCaseEvent)@event).TrackedUseCase;
-                var changes = trackedUseCase.Operations.SelectMany(x => x.AffectedEntities.Changes);
-                return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys));
+                var changes = message.Operations.SelectMany(x => x.AffectedEntities.Changes);
+                return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys)).ToList();
             }
 
             private static IEnumerable<ICommand> CommandsForEntityType(int entityTypeId, IEnumerable<long> ids)
@@ -91,16 +90,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
                 return commands;
             }
-        }
-
-        private sealed class TrackedUseCaseEvent : IEvent
-        {
-            public TrackedUseCaseEvent(TrackedUseCase trackedUseCase)
-            {
-                TrackedUseCase = trackedUseCase;
-            }
-
-            public TrackedUseCase TrackedUseCase { get; }
         }
     }
 }

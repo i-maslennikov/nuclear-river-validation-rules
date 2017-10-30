@@ -12,7 +12,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
 {
     public sealed class MessagesFlowAccumulator : MessageProcessingContextAccumulatorBase<MessagesFlow, EventMessage, AggregatableMessage<ICommand>>
     {
-        private readonly ICommandFactory _commandFactory;
+        private readonly ICommandFactory<EventMessage> _commandFactory;
 
         public MessagesFlowAccumulator()
         {
@@ -24,15 +24,15 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = _commandFactory.CreateCommands(message.Event).ToList()
+                Commands = _commandFactory.CreateCommands(message)
             };
         }
 
-        private sealed class MessagesFlowCommandFactory : ICommandFactory
+        private sealed class MessagesFlowCommandFactory : ICommandFactory<EventMessage>
         {
-            public IEnumerable<ICommand> CreateCommands(IEvent @event)
+            public IReadOnlyCollection<ICommand> CreateCommands(EventMessage message)
             {
-                switch (@event)
+                switch (message.Event)
                 {
                     case AmsStateIncrementedEvent amsStateIncrementedEvent:
                         return new[] { new StoreAmsStateCommand(amsStateIncrementedEvent.State) };
@@ -50,7 +50,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.MessagesFlow
                         return new[] { new RecalculateValidationRulePartiallyCommand(resultPartiallyOutdatedEvent.Rule, resultPartiallyOutdatedEvent.OrderIds) };
 
                     default:
-                        throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                        throw new ArgumentException($"Unexpected event '{message}'", nameof(message));
                 }
             }
         }

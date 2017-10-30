@@ -13,7 +13,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 {
     public sealed class AggregatesFlowAccumulator : MessageProcessingContextAccumulatorBase<AggregatesFlow, EventMessage, AggregatableMessage<ICommand>>
     {
-        private readonly ICommandFactory _commandFactory;
+        private readonly ICommandFactory<EventMessage> _commandFactory;
 
         public AggregatesFlowAccumulator()
         {
@@ -25,31 +25,35 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = _commandFactory.CreateCommands(message.Event).ToList()
+                Commands = _commandFactory.CreateCommands(message)
             };
         }
 
-        private sealed class AggregatesCommandFactory : ICommandFactory
+        private sealed class AggregatesCommandFactory : ICommandFactory<EventMessage>
         {
-            public IEnumerable<ICommand> CreateCommands(IEvent @event)
+            public IReadOnlyCollection<ICommand> CreateCommands(EventMessage message)
             {
-                switch (@event)
+                switch (message.Event)
                 {
                     case DataObjectCreatedEvent createdEvent:
                         return AggregateTypesFor<DataObjectCreatedEvent>(createdEvent.DataObjectType)
-                            .Select(x => new AggregateCommand.Recalculate(x, createdEvent.DataObjectId));
+                            .Select(x => new AggregateCommand.Recalculate(x, createdEvent.DataObjectId))
+                            .ToList();
 
                     case DataObjectUpdatedEvent updatedEvent:
                         return AggregateTypesFor<DataObjectUpdatedEvent>(updatedEvent.DataObjectType)
-                            .Select(x => new AggregateCommand.Recalculate(x, updatedEvent.DataObjectId));
+                            .Select(x => new AggregateCommand.Recalculate(x, updatedEvent.DataObjectId))
+                            .ToList();
 
                     case DataObjectDeletedEvent deletedEvent:
                         return AggregateTypesFor<DataObjectDeletedEvent>(deletedEvent.DataObjectType)
-                            .Select(x => new AggregateCommand.Recalculate(x, deletedEvent.DataObjectId));
+                            .Select(x => new AggregateCommand.Recalculate(x, deletedEvent.DataObjectId))
+                            .ToList();
 
                     case RelatedDataObjectOutdatedEvent<long> outdatedEvent:
                         return RelatedAggregateTypesFor<RelatedDataObjectOutdatedEvent<long>>(outdatedEvent.DataObjectType, outdatedEvent.RelatedDataObjectType)
-                            .Select(x => new AggregateCommand.Recalculate(x, outdatedEvent.RelatedDataObjectId));
+                            .Select(x => new AggregateCommand.Recalculate(x, outdatedEvent.RelatedDataObjectId))
+                            .ToList();
 
                     case RelatedDataObjectOutdatedEvent<PeriodKey> outdatedPeriodEvent:
                         return new[] { new RecalculatePeriodCommand(outdatedPeriodEvent.RelatedDataObjectId) };
@@ -64,7 +68,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
                         return new[] { new LogDelayCommand(delayLoggedEvent.EventTime) };
 
                     default:
-                        throw new ArgumentException($"Unexpected event '{@event}'", nameof(@event));
+                        throw new ArgumentException($"Unexpected event '{message}'", nameof(message));
                 }
             }
 
