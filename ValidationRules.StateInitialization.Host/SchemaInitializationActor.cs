@@ -16,67 +16,67 @@ using NuClear.ValidationRules.Storage.SchemaInitializer;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
-	public sealed class SchemaInitializationActor : IActor
-	{
-		private readonly IConnectionStringSettings _connectionStringSettings;
+    public sealed class SchemaInitializationActor : IActor
+    {
+        private readonly IConnectionStringSettings _connectionStringSettings;
 
-		public SchemaInitializationActor(IConnectionStringSettings connectionStringSettings)
-		{
-			_connectionStringSettings = connectionStringSettings;
-		}
+        public SchemaInitializationActor(IConnectionStringSettings connectionStringSettings)
+        {
+            _connectionStringSettings = connectionStringSettings;
+        }
 
-		public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
-		{
-			var schemaInitializationCommands = commands.OfType<SchemaInitializationCommand>().Distinct();
+        public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
+        {
+            var schemaInitializationCommands = commands.OfType<SchemaInitializationCommand>().Distinct();
 
-			foreach (var cmd in schemaInitializationCommands)
-			{
-				ExecuteCommand(cmd);
-			}
+            foreach (var cmd in schemaInitializationCommands)
+            {
+                ExecuteCommand(cmd);
+            }
 
-			return Array.Empty<IEvent>();
-		}
+            return Array.Empty<IEvent>();
+        }
 
-		private void ExecuteCommand(SchemaInitializationCommand cmd)
-		{
-			using (var db = CreateDataConnection(cmd))
-			using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
-			{
-				var service = new SqlSchemaService(db);
-				foreach (var schema in cmd.SqlSchemas)
-				{
-					service.DeleteAllTablesInSchema(schema);
-				}
+        private void ExecuteCommand(SchemaInitializationCommand cmd)
+        {
+            using (var db = CreateDataConnection(cmd))
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            {
+                var service = new SqlSchemaService(db);
+                foreach (var schema in cmd.SqlSchemas)
+                {
+                    service.DeleteAllTablesInSchema(schema);
+                }
 
-				service.CreateTablesWithIndices(cmd.MappingSchema, cmd.DataTypes);
-				scope.Complete();
-			}
-		}
+                service.CreateTablesWithIndices(cmd.MappingSchema, cmd.DataTypes);
+                scope.Complete();
+            }
+        }
 
-		private DataConnection CreateDataConnection(SchemaInitializationCommand command)
-		{
-			var connectionString = _connectionStringSettings.GetConnectionString(command.ConnectionStringIdentity);
-			var connection = SqlServerTools.CreateDataConnection(connectionString);
-			connection.AddMappingSchema(command.MappingSchema);
-			return connection;
-		}
-	}
+        private DataConnection CreateDataConnection(SchemaInitializationCommand command)
+        {
+            var connectionString = _connectionStringSettings.GetConnectionString(command.ConnectionStringIdentity);
+            var connection = SqlServerTools.CreateDataConnection(connectionString);
+            connection.AddMappingSchema(command.MappingSchema);
+            return connection;
+        }
+    }
 
-	public sealed class SchemaInitializationCommand : ICommand
-	{
-		public SchemaInitializationCommand(MappingSchema mappingSchema, IReadOnlyCollection<Type> dataTypes, IConnectionStringIdentity connectionStringIdentity, IReadOnlyCollection<string> sqlSchemas)
-		{
-			MappingSchema = mappingSchema;
-			DataTypes = dataTypes;
-			SqlSchemas = sqlSchemas;
-			ConnectionStringIdentity = connectionStringIdentity;
-		}
+    public sealed class SchemaInitializationCommand : ICommand
+    {
+        public SchemaInitializationCommand(MappingSchema mappingSchema, IReadOnlyCollection<Type> dataTypes, IConnectionStringIdentity connectionStringIdentity, IReadOnlyCollection<string> sqlSchemas)
+        {
+            MappingSchema = mappingSchema;
+            DataTypes = dataTypes;
+            SqlSchemas = sqlSchemas;
+            ConnectionStringIdentity = connectionStringIdentity;
+        }
 
-		public MappingSchema MappingSchema { get; }
-		public IReadOnlyCollection<string> SqlSchemas { get; }
-		public IReadOnlyCollection<Type> DataTypes { get; }
-		public IConnectionStringIdentity ConnectionStringIdentity { get; }
-	}
+        public MappingSchema MappingSchema { get; }
+        public IReadOnlyCollection<string> SqlSchemas { get; }
+        public IReadOnlyCollection<Type> DataTypes { get; }
+        public IConnectionStringIdentity ConnectionStringIdentity { get; }
+    }
 
 	public static class SchemaInitializationCommands
 	{
@@ -97,6 +97,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
 		public static SchemaInitializationCommand Messages { get; }
 			= new SchemaInitializationCommand(Schema.Messages, DataObjectTypesProvider.MessagesTypes, FactsConnectionStringIdentity.Instance, 
-				new[] { "Messages" });
+				new[] { "Messages", "MessagesCache" });
 	}
 }
