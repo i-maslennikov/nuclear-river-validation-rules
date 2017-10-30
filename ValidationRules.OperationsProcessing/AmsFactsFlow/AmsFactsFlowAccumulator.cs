@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+
+using Confluent.Kafka;
 
 using Newtonsoft.Json;
 
@@ -37,19 +38,24 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
         {
             public IReadOnlyCollection<ICommand> CreateCommands(KafkaMessage @event)
             {
-                var commands = new List<ICommand>();
-
                 var message = @event.Message;
-                commands.Add(new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)));
 
-                // filter heartbeat messages
-                if (message.Value != null)
-                {
-                    var dtos = new List<AdvertisementDto> { JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value)) }; // List не оптимален: массив из одного элемента.
-                    commands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), dtos));
-                }
+                return message.Value == null
+                           ? CreateCommandFromHeartBeat(message)
+                           : CreateCommandFromStateChange(message);
+            }
 
-                return commands;
+            private IReadOnlyCollection<ICommand> CreateCommandFromHeartBeat(Message message)
+                => new [] { new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)) };
+
+            private IReadOnlyCollection<ICommand> CreateCommandFromStateChange(Message message)
+            {
+                var dtos = new[] { JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value)) };
+                return new ICommand[]
+                    {
+                        new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)),
+                        new ReplaceDataObjectCommand(typeof(Advertisement), dtos),
+                    };
             }
         }
     }
