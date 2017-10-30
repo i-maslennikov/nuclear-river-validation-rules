@@ -35,15 +35,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
         {
             WaitForTucToBeCommitted(trackedUseCase.Id);
 
-            var commands = _commandFactory.CreateCommands(trackedUseCase);
-
-            var date = trackedUseCase.Context.Finished.UtcDateTime;
-            commands.Add(new IncrementErmStateCommand(new[] { new ErmState(trackedUseCase.Id, date) }));
-
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = commands,
+                Commands = _commandFactory.CreateCommands(trackedUseCase),
             };
         }
 
@@ -72,7 +67,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             public IReadOnlyCollection<ICommand> CreateCommands(TrackedUseCase message)
             {
                 var changes = message.Operations.SelectMany(x => x.AffectedEntities.Changes);
-                return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys)).ToList();
+                return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys)).Concat(CreateIncrementErmStateCommand(message)).ToList();
+            }
+
+            private static IEnumerable<ICommand> CreateIncrementErmStateCommand(TrackedUseCase message)
+            {
+                return new[] { new IncrementErmStateCommand(new[] { new ErmState(message.Id, message.Context.Finished.UtcDateTime) }) };
             }
 
             private static IEnumerable<ICommand> CommandsForEntityType(int entityTypeId, IEnumerable<long> ids)
