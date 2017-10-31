@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.Replication.Accessors.EntityNames
         {
             switch (command)
             {
-                case ReplaceDataObjectCommand<Advertisement> replaceCommand:
+                case ReplaceDataObjectCommand<EntityName> replaceCommand:
                     var ids = replaceCommand.DataObjects.Select(x => x.Id);
                     return new FindSpecification<EntityName>(x => x.EntityType == EntityTypeIds.Advertisement && ids.Contains(x.Id));
                 default:
