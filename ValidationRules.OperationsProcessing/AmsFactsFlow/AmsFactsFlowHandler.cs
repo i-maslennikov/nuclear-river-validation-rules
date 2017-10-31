@@ -10,9 +10,7 @@ using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.Telemetry;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
 
@@ -21,7 +19,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
     public sealed class AmsFactsFlowHandler : IMessageProcessingHandler
     {
         private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
-        private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
         private readonly AmsFactsFlowTelemetryPublisher _telemetryPublisher;
@@ -29,13 +26,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 
         public AmsFactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
-            SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
             AmsFactsFlowTelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
-            _syncEntityNameActor = syncEntityNameActor;
             _eventLogger = eventLogger;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -50,9 +45,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
                     var replaceEvents = Handle(commands.OfType<IReplaceDataObjectCommand>().ToList())
-                                        .Select(x => new FlowEvent(AmsFactsFlow.Instance, x)).ToList();
+                        .Select(x => new FlowEvent(AmsFactsFlow.Instance, x)).ToList();
                     var stateEvents = Handle(commands.OfType<IncrementAmsStateCommand>().ToList())
-                                      .Select(x => new FlowEvent(AmsFactsFlow.Instance, x));
+                        .Select(x => new FlowEvent(AmsFactsFlow.Instance, x));
 
                     using (new TransactionScope(TransactionScopeOption.Suppress))
                         _eventLogger.Log<IEvent>(replaceEvents);
@@ -105,8 +100,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
             {
                 events.UnionWith(actor.ExecuteCommands(commands));
             }
-
-            _syncEntityNameActor.ExecuteCommands(commands);
 
             return events;
         }
