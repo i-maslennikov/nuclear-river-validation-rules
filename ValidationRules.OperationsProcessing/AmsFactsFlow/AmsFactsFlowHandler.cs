@@ -13,6 +13,7 @@ using NuClear.Replication.OperationsProcessing;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 {
@@ -93,6 +94,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
                 return Array.Empty<IEvent>();
             }
 
+            commands = GroupCommandsOfType<Advertisement>(commands)
+                .Concat(GroupCommandsOfType<EntityName>(commands))
+                .ToList();
+
             var actors = _dataObjectsActorFactory.Create(new HashSet<Type>(commands.Select(x => x.DataObjectType)));
             var events = new HashSet<IEvent>();
 
@@ -103,5 +108,18 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 
             return events;
         }
+
+        /// <summary>
+        /// Группирует команды, содержащие одинаковый тип сущности.
+        /// Группировку нужно делать из-за того, что решили установить соотношение один к одному между сообщениями kafka и событиями.
+        /// Это приводит к тому, что команды создаются на каждый РМ,
+        /// а реализация ReplaceDataObjectsActor такова, что на одну команду приходится одна транзакция.
+        /// </summary>
+        /// <returns>Возвращает перечисление из нуля или одного элемента</returns>
+        private IEnumerable<IReplaceDataObjectCommand> GroupCommandsOfType<T>(IEnumerable<IReplaceDataObjectCommand> commands)
+            => commands
+                .OfType<ReplaceDataObjectCommand<T>>()
+                .GroupBy(x => x.DataObjectType)
+                .Select(x => new ReplaceDataObjectCommand<T>(typeof(T), x.SelectMany(y => y.DataObjects).ToList()));
     }
 }
