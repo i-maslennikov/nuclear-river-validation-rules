@@ -264,6 +264,7 @@
     <Compile Include="Model\FirmRules\Aggregates\Firm.cs" />
     <Compile Include="Model\FirmRules\Aggregates\Order.cs" />
     <Compile Include="Model\Facts\FirmAddressCategory.cs" />
+    <Compile Include="Model\Messages\Cache.cs" />
     <Compile Include="Model\Messages\ICheckModeDescriptor.cs" />
     <Compile Include="Model\Messages\Reference.cs" />
     <Compile Include="Model\Messages\MessageParams.cs" />
