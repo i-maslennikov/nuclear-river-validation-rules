@@ -176,10 +176,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregatesFlow\AggregatesCommandFactory.cs" />
+    <Compile Include="AmsFactsFlow\AmsFactsCommandFactory.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlow.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlowAccumulator.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlowHandler.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlowTelemetryPublisher.cs" />
+    <Compile Include="FactsFlow\FactsCommandFactory.cs" />
     <Compile Include="ICommandFactory.cs" />
     <Compile Include="MessagesFlow\MessagesFlow.cs" />
     <Compile Include="MessagesFlow\MessagesFlowAccumulator.cs" />
@@ -190,6 +193,7 @@
     <Compile Include="EntityTypeMap.Aggregates.cs" />
     <Compile Include="EntityTypeMap.Facts.cs" />
     <Compile Include="AggregatesFlow\AggregatesFlowAccumulator.cs" />
+    <Compile Include="MessagesFlow\MessagesFlowCommandFactory.cs" />
     <Compile Include="MessagesFlow\MessagesFlowHandler.cs" />
     <Compile Include="AggregatesFlow\AggregatesFlowHandler.cs" />
     <Compile Include="AggregatesFlow\AggregatesFlow.cs" />
