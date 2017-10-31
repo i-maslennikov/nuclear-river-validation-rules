@@ -38,12 +38,12 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 
             if (IsRegistered(typeof(IStorageBasedEntityNameAccessor<>), dataObjectType))
             {
-                yield return typeof(SyncDataObjectsActor<>).MakeGenericType(dataObjectType);
+                yield return typeof(SyncEntityNameActor<>).MakeGenericType(dataObjectType);
             }
 
             if (IsRegistered(typeof(IMemoryBasedDataObjectAccessor<>), dataObjectType))
             {
-                yield return typeof(SyncEntityNameActor<>).MakeGenericType(dataObjectType);
+                yield return typeof(ReplaceDataObjectsActor<>).MakeGenericType(dataObjectType);
             }
         }
 
