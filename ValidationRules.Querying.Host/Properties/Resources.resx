@@ -127,7 +127,7 @@
     <value>{0} "{1}" данного Заказа является основной для следующих позиций: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShouldMeetMinimumRestrictions" xml:space="preserve">
-    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}</value>
+    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3} - {4}</value>
   </data>
   <data name="FirmAddressMustBeLocatedOnTheMap" xml:space="preserve">
     <value>Позиция {0} оформлена на пустой адрес {1}</value>
