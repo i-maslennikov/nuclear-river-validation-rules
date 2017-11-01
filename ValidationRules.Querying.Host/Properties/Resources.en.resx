@@ -319,19 +319,19 @@
     <value>For the company {0}, too big number of categories is set - {1}. Maximum permitted number - {2}.</value>
   </data>
   <data name="PremiumPartnerProfileMustHaveSingleSale" xml:space="preserve">
-    <value>На адрес "{0}" фирмы "{1}" продано более одной позиции Premium в периоды: {2}</value>
+    <value>For the address "{0}" of the company "{1}" more than one Premium position has been sold in the following periods: {2}</value>
   </data>
   <data name="AdvertisementMustBelongToFirm" xml:space="preserve">
     <value>Advertising material {1} that does not belong to the company {2} is selected in the item {0}</value>
   </data>
   <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
-    <value>Рекламный материал {0} ожидает модерацию</value>
+    <value>Advertising material {0} is waiting for moderation</value>
   </data>
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
-    <value>Рекламный материал {0} не прошёл модерацию</value>
+    <value>Advertising material {0} has not passed moderation</value>
   </data>
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
-    <value>Рекламный материал {0} одобрен с замечаниями</value>
+    <value>Advertising material {0} has been approved with comments</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Test string</value>
