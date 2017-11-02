@@ -48,9 +48,13 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
+                        MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
+                        MessageTypeCode.FirmAddressMustNotHaveMultipleCallToAction,
+                        MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
                         MessageTypeCode.FirmAndOrderShouldBelongTheSameOrganizationUnit,
                         MessageTypeCode.FirmShouldHaveLimitedCategoryCount,
                         MessageTypeCode.LinkedFirmShouldBeValid,
+                        MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
                     };
 
             public IQueryable<Order> GetSource()
