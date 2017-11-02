@@ -318,4 +318,25 @@
   <data name="AdvertisementMustBelongToFirm" xml:space="preserve">
     <value>En la posición {0} se ha seleccionado el material {1} no perteneciente a la empresa {2}</value>
   </data>
+  <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
+    <value>Рекламный материал {0} ожидает модерацию</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
+    <value>Рекламный материал {0} не прошёл модерацию</value>
+  </data>
+  <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
+    <value>Рекламный материал {0} одобрен с замечаниями</value>
+  </data>
+  <data name="FirmAddressMustNotHaveMultipleCallToAction" xml:space="preserve">
+    <value>На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}</value>
+  </data>
+  <data name="FirmAddressShouldNotHaveMultiplePartnerAdvertisement" xml:space="preserve">
+    <value>На адрес {0} фирмы {1} продано более одной позиции 'Реклама в профилях партнёров' в периоды: {2}</value>
+  </data>
+  <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
+    <value>Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}</value>
+  </data>
+  <data name="AdvertiserMustBeNotifiedAboutPartnerAdvertisement" xml:space="preserve">
+    <value>На адрес {0} есть продажа из заказа {1} фирмы {2}</value>
+  </data>
 </root>
