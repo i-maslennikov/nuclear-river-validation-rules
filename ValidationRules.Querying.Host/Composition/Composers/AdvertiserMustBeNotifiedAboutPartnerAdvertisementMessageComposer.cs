@@ -22,8 +22,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                 orderReferences[0],
                 Resources.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
                 addressReference,
-                firmReference,
-                orderReferences[1]);
+                orderReferences[1],
+                firmReference);
         }
     }
 
