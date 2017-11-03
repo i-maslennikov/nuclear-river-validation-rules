@@ -41,7 +41,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                 new MessageParams(
                                                   new Reference<EntityTypeOrder>(3),
                                                   new Reference<EntityTypeOrder>(1),
-                                                  new Reference<EntityTypeFirm>(3),
+                                                  new Reference<EntityTypeFirm>(1),
                                                   new Reference<EntityTypeFirmAddress>(1))
                                     .ToXDocument(),
 
