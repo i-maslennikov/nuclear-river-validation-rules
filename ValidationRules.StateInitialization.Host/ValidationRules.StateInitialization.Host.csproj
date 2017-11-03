@@ -214,7 +214,7 @@
     <Compile Include="BulkReplicationCommands.cs" />
     <Compile Include="ConnectionStringName.cs" />
     <Compile Include="DataObjectTypesProvider.cs" />
-    <Compile Include="AmsStateInit.cs" />
+    <Compile Include="AmsInitializationFlow.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaInitializationActor.cs" />

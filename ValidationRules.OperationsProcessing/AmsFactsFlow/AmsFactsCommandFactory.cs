@@ -16,14 +16,13 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 {
     public sealed class AmsFactsCommandFactory : ICommandFactory<KafkaMessage>
     {
-        public IReadOnlyCollection<ICommand> CreateCommands(KafkaMessage @event)
-        {
-            var message = @event.Message;
+        IReadOnlyCollection<ICommand> ICommandFactory<KafkaMessage>.CreateCommands(KafkaMessage message)
+            => CreateCommands(message.Message);
 
-            return message.Value == null
-                       ? CreateCommandFromHeartBeat(message)
-                       : CreateCommandFromStateChange(message);
-        }
+        public IReadOnlyCollection<ICommand> CreateCommands(Message message)
+            => message.Value == null
+                ? CreateCommandFromHeartBeat(message)
+                : CreateCommandFromStateChange(message);
 
         private IReadOnlyCollection<ICommand> CreateCommandFromHeartBeat(Message message)
             => new[] { new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)) };

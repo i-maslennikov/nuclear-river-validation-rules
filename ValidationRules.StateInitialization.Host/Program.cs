@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             if (args.Contains("-facts"))
             {
                 commands.Add(BulkReplicationCommands.ErmToFacts);
-                commands.AddRange(BulkReplicationCommands.AmsToFacts(ConnectionStringSettings));
+                commands.Add(BulkReplicationCommands.AmsToFacts);
                 commands.Add(SchemaInitializationCommands.WebApp);
                 commands.Add(SchemaInitializationCommands.Facts);
             }
