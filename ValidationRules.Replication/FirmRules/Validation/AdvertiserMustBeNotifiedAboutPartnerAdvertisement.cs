@@ -14,6 +14,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// "На адрес {0} продана позиция 'Реклама в профилях партнёров' из заказа {1} фирмы {2}"
     /// 
     /// Является зеркальным отражением проверки <see cref="PartnerAdvertisementShouldNotBeSoldToAdvertiser"/>
+    /// 
+    /// * Не выводить это сообщение в заказе, который размещает ЗМК в карточке своей-же фирмы.
     /// </summary>
     public sealed class AdvertiserMustBeNotifiedAboutPartnerAdvertisement : ValidationResultAccessorBase
     {
@@ -25,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
         {
             var messages =
                 from order in query.For<Order>()
-                from partnerPosition in query.For<Order.PartnerPosition>().Where(x => x.DestinationFirmId == order.FirmId)
+                from partnerPosition in query.For<Order.PartnerPosition>().Where(x => x.DestinationFirmId == order.FirmId && x.OrderId != order.Id)
                 select new Version.ValidationResult
                     {
                         MessageParams =
