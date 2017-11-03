@@ -27,14 +27,15 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
         {
             var messages =
                 from order in query.For<Order>()
-                from partnerPosition in query.For<Order.PartnerPosition>().Where(x => x.DestinationFirmId == order.FirmId && x.OrderId != order.Id)
+                from partnerPosition in query.For<Order.PartnerPosition>().Where(x => x.DestinationFirmId == order.FirmId)
+                from partnerOrder in query.For<Order>().Where(x => x.Id == partnerPosition.OrderId && x.Id != order.Id)
                 select new Version.ValidationResult
                     {
                         MessageParams =
                             new MessageParams(
                                               new Reference<EntityTypeOrder>(order.Id), // Заказ фирмы-рекламодателя (хоста)
                                               new Reference<EntityTypeOrder>(partnerPosition.OrderId), // Заказ, размещающий ссылку
-                                              new Reference<EntityTypeFirm>(partnerPosition.DestinationFirmId),
+                                              new Reference<EntityTypeFirm>(partnerOrder.FirmId),
                                               new Reference<EntityTypeFirmAddress>(partnerPosition.DestinationFirmAddressId))
                                 .ToXDocument(),
 
