@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.Accessors.EntityNames
                 case ReplaceDataObjectCommand<EntityName> replaceCommand:
                     return replaceCommand.DataObjects;
                 default:
-                    throw new ArgumentException($"Expected only command of type {typeof(ReplaceDataObjectCommand<EntityName>)}, but received {command.GetType()}", nameof(command));
+                    return Array.Empty<EntityName>();
             }
         }
 
