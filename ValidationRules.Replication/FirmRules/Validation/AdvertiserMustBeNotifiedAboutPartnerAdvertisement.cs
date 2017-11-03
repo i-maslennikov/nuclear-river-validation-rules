@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                         MessageParams =
                             new MessageParams(
                                               new Reference<EntityTypeOrder>(order.Id), // Заказ фирмы-рекламодателя (хоста)
-                                              new Reference<EntityTypeOrder>(partnerPosition.OrderId), // Заказ, размещающий ссылку
+                                              new Reference<EntityTypeOrder>(partnerOrder.Id), // Заказ, размещающий ссылку
                                               new Reference<EntityTypeFirm>(partnerOrder.FirmId),
                                               new Reference<EntityTypeFirmAddress>(partnerPosition.DestinationFirmAddressId))
                                 .ToXDocument(),
