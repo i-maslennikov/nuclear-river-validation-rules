@@ -13,6 +13,8 @@ using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
+using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Storage.Model.Facts;
 
 using ValidationRules.Hosting.Common;
 
@@ -29,34 +31,48 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             var amsSettingsFactory = new AmsSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
             _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), amsSettingsFactory);
             _commandFactory = new AmsFactsCommandFactory();
-            _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 5000).Value;
+            _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 100000).Value;
         }
 
         public IEnumerator<ICommand> GetEnumerator()
         {
             using (var receiver = _receiverFactory.Create(AmsFactsFlow.Instance))
             {
-                // state init имеет смысл прекращать когда мы вычитали все полные батчи
-                // а то нам могут до бесконечности подкидывать новых messages
-                IReadOnlyCollection<Message> batch;
-                while ((batch = receiver.ReceiveBatch(_batchSize)).Count == _batchSize)
+                while(true)
                 {
+                    var batch = receiver.ReceiveBatch(_batchSize);
                     var maxOffsetMesasage = batch.OrderByDescending(x => x.Offset.Value).First();
                     Console.WriteLine($"Received {batch.Count} messages, offset {maxOffsetMesasage.Offset}");
 
                     var commands = batch
                         .Where(x => x.Value != null)
                         .SelectMany(_commandFactory.CreateCommands)
-                        .OfType<IReplaceDataObjectCommand>();
+                        .OfType<IReplaceDataObjectCommand>()
+                        .GroupBy(x => x.DataObjectType);
 
-                    // todo: рекомендую сделать группировку
-
-                    foreach (var command in commands)
+                    foreach (var commandGroup in commands)
                     {
-                        yield return command;
+                        if (commandGroup.Key == typeof(Advertisement))
+                        {
+                            yield return new ReplaceDataObjectCommand<Advertisement>(typeof(Advertisement),
+                                commandGroup.Cast<ReplaceDataObjectCommand<Advertisement>>().SelectMany(x => x.DataObjects).ToList());
+                        }
+
+                        if (commandGroup.Key == typeof(EntityName))
+                        {
+                            yield return new ReplaceDataObjectCommand<EntityName>(typeof(EntityName),
+                                commandGroup.Cast<ReplaceDataObjectCommand<EntityName>>().SelectMany(x => x.DataObjects).ToList());
+                        }
                     }
 
                     receiver.CompleteBatch(batch);
+
+                    // state init имеет смысл прекращать когда мы вычитали все полные батчи
+                    // а то нам могут до бесконечности подкидывать новых messages
+                    if (batch.Count != _batchSize)
+                    {
+                        break;
+                    }
                 }
             }
         }
