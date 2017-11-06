@@ -325,13 +325,13 @@
     <value>V položce {0} byl vybrán reklamní materiál {1}, který nenáleží firmě {2}</value>
   </data>
   <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
-    <value>Рекламный материал {0} ожидает модерацию</value>
+    <value>Reklamní materiál {0} čeká na moderaci</value>
   </data>
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
-    <value>Рекламный материал {0} не прошёл модерацию</value>
+    <value>Reklamní materiál {0} neprošel moderací</value>
   </data>
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
-    <value>Рекламный материал {0} одобрен с замечаниями</value>
+    <value>Reklamní materiál {0} byl schválen s poznámkami</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Testrovaja čára</value>
