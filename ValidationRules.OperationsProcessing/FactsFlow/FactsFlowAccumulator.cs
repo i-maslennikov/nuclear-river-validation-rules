@@ -30,33 +30,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase trackedUseCase)
         {
-            WaitForTucToBeCommitted(trackedUseCase.Id);
-
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
                 Commands = _commandFactory.CreateCommands(trackedUseCase),
             };
-        }
-
-        private void WaitForTucToBeCommitted(Guid id)
-        {
-            for (var i = 0; i < TotalWaitMilliseconds / 100; i++, Task.Delay(100).Wait())
-            {
-                var transactionOptions = new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.Zero };
-                using (var transaction = new TransactionScope(TransactionScopeOption.Required, transactionOptions))
-                {
-                    var completed = _query.For<UseCaseTrackingEvent>().Where(x => x.UseCaseId == id).Any(x => x.EventType == 3 || x.EventType == 4);
-                    transaction.Complete();
-
-                    if (completed)
-                    {
-                        return;
-                    }
-                }
-            }
-
-            _tracer.Warn($"Ignored TUC {id} after {TotalWaitMilliseconds}ms waiting");
         }
     }
 }
