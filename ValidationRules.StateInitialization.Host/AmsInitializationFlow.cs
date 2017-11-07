@@ -23,6 +23,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
     internal sealed class AmsInitializationFlow : IEnumerable<ICommand>
     {
         private readonly int _batchSize;
+        private readonly int _minBatchSize;
         private readonly IKafkaMessageFlowReceiverFactory _receiverFactory;
         private readonly AmsFactsCommandFactory _commandFactory;
 
@@ -31,7 +32,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             var amsSettingsFactory = new AmsSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
             _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), amsSettingsFactory);
             _commandFactory = new AmsFactsCommandFactory();
-            _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 100000).Value;
+            _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 50000).Value;
+            _minBatchSize = 1000;
         }
 
         public IEnumerator<ICommand> GetEnumerator()
@@ -69,7 +71,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                     // state init имеет смысл прекращать когда мы вычитали все полные батчи
                     // а то нам могут до бесконечности подкидывать новых messages
-                    if (batch.Count != _batchSize)
+                    if (batch.Count < _minBatchSize)
                     {
                         break;
                     }
