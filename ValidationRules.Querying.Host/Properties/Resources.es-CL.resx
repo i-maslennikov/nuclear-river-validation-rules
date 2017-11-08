@@ -328,10 +328,10 @@
     <value>El material publicitario {0} está esperando la moderación</value>
   </data>
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
-    <value>Рекламный материал {0} не прошёл модерацию</value>
+    <value>El material publicitario {0} no pasó la moderación</value>
   </data>
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
-    <value>Рекламный материал {0} одобрен с замечаниями</value>
+    <value>El material publicitario {0} fue aprobado con observaciones</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Línea Testrovaja</value>
