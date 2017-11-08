@@ -325,7 +325,7 @@
     <value>En la posición {0} se ha seleccionado el material {1} no perteneciente a la empresa {2}</value>
   </data>
   <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
-    <value>Рекламный материал {0} ожидает модерацию</value>
+    <value>El material publicitario {0} está esperando la moderación</value>
   </data>
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
     <value>Рекламный материал {0} не прошёл модерацию</value>
