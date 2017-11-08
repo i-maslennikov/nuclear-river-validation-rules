@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}.
+        ///   Looks up a localized string similar to Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3} - {4}.
         /// </summary>
         internal static string AdvertisementAmountShouldMeetMinimumRestrictions {
             get {

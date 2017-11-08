@@ -14,6 +14,7 @@ Include "$BuildToolsRoot\psake\unittests.ps1"
 Include 'servicebus.ps1'
 Include 'convertusecases.ps1'
 Include 'bulktool.ps1'
+Include 'unittests.ps1'
 
 # Querying.Host
 function QueueBuild-QueryingHost {

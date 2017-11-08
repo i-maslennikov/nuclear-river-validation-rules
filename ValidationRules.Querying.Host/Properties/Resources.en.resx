@@ -127,7 +127,7 @@
     <value>{0} "{1}" of this Order is the main for the following items: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShouldMeetMinimumRestrictions" xml:space="preserve">
-    <value>Item {0} should be present in build in quantity from {1} up to {2}. A quantity of items that can be issued per month {3:MMMM} – {4}</value>
+    <value>Item {0} should be present in build in quantity from {1} up to {2}. A quantity of items that can be issued per month {3} – {4}</value>
   </data>
   <data name="FirmAddressMustBeLocatedOnTheMap" xml:space="preserve">
     <value>The item {0} is issued for an empty address {1}</value>
