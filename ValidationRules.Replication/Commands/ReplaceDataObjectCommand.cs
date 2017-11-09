@@ -5,15 +5,15 @@ using NuClear.Replication.Core.Commands;
 
 namespace NuClear.ValidationRules.Replication.Commands
 {
-    public sealed class ReplaceDataObjectCommand : IReplaceDataObjectCommand
+    public sealed class ReplaceDataObjectCommand<T> : IReplaceDataObjectCommand
     {
-        public Type DataObjectType { get; }
-        public IEnumerable<object> Dtos { get; }
-
-        public ReplaceDataObjectCommand(Type dataObjectType, IEnumerable<object> dtos)
+        public ReplaceDataObjectCommand(Type dataObjectType, IReadOnlyCollection<T> dataObjects)
         {
             DataObjectType = dataObjectType;
-            Dtos = dtos;
+            DataObjects = dataObjects;
         }
+
+        public Type DataObjectType { get; }
+        public IReadOnlyCollection<T> DataObjects { get; }
     }
 }

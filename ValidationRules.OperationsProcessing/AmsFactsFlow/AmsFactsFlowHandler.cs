@@ -10,18 +10,16 @@ using NuClear.OperationsLogging.API;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.Telemetry;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
+using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 {
     public sealed class AmsFactsFlowHandler : IMessageProcessingHandler
     {
         private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
-        private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
         private readonly AmsFactsFlowTelemetryPublisher _telemetryPublisher;
@@ -29,13 +27,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 
         public AmsFactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
-            SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
             AmsFactsFlowTelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
-            _syncEntityNameActor = syncEntityNameActor;
             _eventLogger = eventLogger;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -50,9 +46,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
                 {
                     var commands = processingResultsMap.SelectMany(x => x.Value).Cast<AggregatableMessage<ICommand>>().SelectMany(x => x.Commands).ToList();
                     var replaceEvents = Handle(commands.OfType<IReplaceDataObjectCommand>().ToList())
-                                        .Select(x => new FlowEvent(AmsFactsFlow.Instance, x)).ToList();
+                        .Select(x => new FlowEvent(AmsFactsFlow.Instance, x)).ToList();
                     var stateEvents = Handle(commands.OfType<IncrementAmsStateCommand>().ToList())
-                                      .Select(x => new FlowEvent(AmsFactsFlow.Instance, x));
+                        .Select(x => new FlowEvent(AmsFactsFlow.Instance, x));
 
                     using (new TransactionScope(TransactionScopeOption.Suppress))
                         _eventLogger.Log<IEvent>(replaceEvents);
@@ -98,6 +94,10 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
                 return Array.Empty<IEvent>();
             }
 
+            commands = GroupCommandsOfType<Advertisement>(commands)
+                .Concat(GroupCommandsOfType<EntityName>(commands))
+                .ToList();
+
             var actors = _dataObjectsActorFactory.Create(new HashSet<Type>(commands.Select(x => x.DataObjectType)));
             var events = new HashSet<IEvent>();
 
@@ -106,9 +106,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
                 events.UnionWith(actor.ExecuteCommands(commands));
             }
 
-            _syncEntityNameActor.ExecuteCommands(commands);
-
             return events;
         }
+
+        /// <summary>
+        /// Группирует команды, содержащие одинаковый тип сущности.
+        /// Группировку нужно делать из-за того, что решили установить соотношение один к одному между сообщениями kafka и событиями.
+        /// Это приводит к тому, что команды создаются на каждый РМ,
+        /// а реализация ReplaceDataObjectsActor такова, что на одну команду приходится одна транзакция.
+        /// </summary>
+        /// <returns>Возвращает перечисление из нуля или одного элемента</returns>
+        private IEnumerable<IReplaceDataObjectCommand> GroupCommandsOfType<T>(IEnumerable<IReplaceDataObjectCommand> commands)
+            => commands
+                .OfType<ReplaceDataObjectCommand<T>>()
+                .GroupBy(x => x.DataObjectType)
+                .Select(x => new ReplaceDataObjectCommand<T>(typeof(T), x.SelectMany(y => y.DataObjects).ToList()));
     }
 }

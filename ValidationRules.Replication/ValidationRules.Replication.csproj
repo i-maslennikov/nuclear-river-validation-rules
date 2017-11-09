@@ -80,10 +80,10 @@
       <HintPath>..\packages\2GIS.NuClear.OperationsTracking.API.5.5.3\lib\net461\2GIS.NuClear.OperationsTracking.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.7.0.1-stateinint-refac0002\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.7.0.1-review0004\lib\net461\2GIS.NuClear.Replication.Core.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Replication.7.0.1-stateinint-refac0002\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Replication.7.0.1-review0004\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
@@ -162,6 +162,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accessors\AdvertisementAccessor.cs" />
+    <Compile Include="Accessors\EntityNames\CommandExtensions.cs" />
+    <Compile Include="IStorageBasedEntityNameAccessor.cs" />
     <Compile Include="Accessors\NomenclatureCategoryAccessor.cs" />
     <Compile Include="Accessors\OrderItemAccessor.cs" />
     <Compile Include="Accessors\PositionChildAccessor.cs" />
@@ -176,6 +178,7 @@
     <Compile Include="Accessors\OrderAccessor.cs" />
     <Compile Include="AccountRules\Validation\AccountBalanceShouldBePositive.cs" />
     <Compile Include="AccountRules\Validation\AccountShouldExist.cs" />
+    <Compile Include="Accessors\EntityNames\AdvertisementNameAccessor.cs" />
     <Compile Include="AdvertisementRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="Accessors\FirmAddressAccessor.cs" />
     <Compile Include="Accessors\FirmAccessor.cs" />
@@ -186,20 +189,26 @@
     <Compile Include="AdvertisementRules\Validation\AdvertisementMustBelongToFirm.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
+    <Compile Include="Accessors\EntityNames\CategoryNameAccessor.cs" />
     <Compile Include="Commands\IncrementAmsStateCommand.cs" />
     <Compile Include="Commands\ReplaceDataObjectCommand.cs" />
     <Compile Include="Commands\StoreAmsStateCommand.cs" />
     <Compile Include="Commands\SyncPeriodCommand.cs" />
-    <Compile Include="Dto\AdvertisementDto.cs" />
     <Compile Include="Events\AmsStateIncrementedEvent.cs" />
     <Compile Include="Events\FlowEvent.cs" />
+    <Compile Include="Accessors\EntityNames\FirmAddressNameAccessor.cs" />
+    <Compile Include="Accessors\EntityNames\FirmNameAccessor.cs" />
     <Compile Include="FirmRules\Validation\PremiumPartnerProfileMustHaveSingleSale.cs" />
+    <Compile Include="Accessors\EntityNames\LegalPersonProfileNameAccessor.cs" />
     <Compile Include="Messages\ValidationResultCache.cs" />
+    <Compile Include="Accessors\EntityNames\OrderNameAccessor.cs" />
+    <Compile Include="Accessors\EntityNames\PositionNameAccessor.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMaximumRestrictions.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictionsMass.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMustCorrespontToActualPrice.cs" />
     <Compile Include="Commands\RecalculatePeriodCommand.cs" />
+    <Compile Include="Accessors\EntityNames\ProjectNameAccessor.cs" />
     <Compile Include="ProjectRules\Validation\ProjectMustContainCostPerClickMinimumRestriction.cs" />
     <Compile Include="SyncEntityNameActor.cs" />
     <Compile Include="Commands\IRecalculateValidationRuleCommand.cs" />
@@ -248,6 +257,7 @@
     <Compile Include="Settings\IArchiveVersionsSettings.cs" />
     <Compile Include="Specifications\Specs.Find.Erm.cs" />
     <Compile Include="Specifications\Scope.cs" />
+    <Compile Include="Accessors\EntityNames\ThemeNameAccessor.cs" />
     <Compile Include="ThemeRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\ProjectAggregateRootActor.cs" />
     <Compile Include="ThemeRules\Aggregates\ThemeAggregateRootActor.cs" />

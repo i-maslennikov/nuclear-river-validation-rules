@@ -23,7 +23,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
         private static readonly EventEqualityComparer EqualityComparer = new EventEqualityComparer();
 
         private readonly IDataObjectsActorFactory _dataObjectsActorFactory;
-        private readonly SyncEntityNameActor _syncEntityNameActor;
         private readonly IEventLogger _eventLogger;
         private readonly ITracer _tracer;
         private readonly FactsFlowTelemetryPublisher _telemetryPublisher;
@@ -31,13 +30,11 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
         public FactsFlowHandler(
             IDataObjectsActorFactory dataObjectsActorFactory,
-            SyncEntityNameActor syncEntityNameActor,
             IEventLogger eventLogger,
             FactsFlowTelemetryPublisher telemetryPublisher,
             ITracer tracer)
         {
             _dataObjectsActorFactory = dataObjectsActorFactory;
-            _syncEntityNameActor = syncEntityNameActor;
             _eventLogger = eventLogger;
             _telemetryPublisher = telemetryPublisher;
             _tracer = tracer;
@@ -112,8 +109,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
                     events.UnionWith(actor.ExecuteCommands(commands));
                 }
             }
-
-            _syncEntityNameActor.ExecuteCommands(commands);
 
             return events;
         }

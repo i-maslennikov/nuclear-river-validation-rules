@@ -7,7 +7,6 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.Accessors
@@ -23,22 +22,25 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<Advertisement> GetDataObjects(ICommand command)
         {
-            var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<AdvertisementDto>();
-
-            return dtos.Select(x => new Advertisement
+            switch (command)
             {
-                Id = x.Id,
-                FirmId = x.FirmId,
-                StateCode = x.StateCode
-            }).ToList();
+                case ReplaceDataObjectCommand<Advertisement> replaceCommand:
+                    return replaceCommand.DataObjects;
+                default:
+                    return Array.Empty<Advertisement>();
+            }
         }
 
         public FindSpecification<Advertisement> GetFindSpecification(ICommand command)
         {
-            var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<AdvertisementDto>();
-            var ids = dtos.Select(x => x.Id);
-
-            return new FindSpecification<Advertisement>(x => ids.Contains(x.Id));
+            switch (command)
+            {
+                case ReplaceDataObjectCommand<Advertisement> replaceCommand:
+                    var ids = replaceCommand.DataObjects.Select(x => x.Id);
+                    return new FindSpecification<Advertisement>(x => ids.Contains(x.Id));
+                default:
+                    throw new ArgumentException($"Expected only command of type {typeof(ReplaceDataObjectCommand<Advertisement>)}, but received {command.GetType()}", nameof(command));
+            }
         }
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Advertisement> dataObjects)

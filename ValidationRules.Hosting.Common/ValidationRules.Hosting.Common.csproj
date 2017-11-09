@@ -46,7 +46,7 @@
       <HintPath>..\packages\2GIS.NuClear.Model.Common.2.0.0\lib\portable-net451+win81+wpa81\2GIS.NuClear.Model.Common.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.River.Hosting.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NuClear.River.Hosting.Common.7.0.1-stateinint-refac0002\lib\net461\2GIS.NuClear.River.Hosting.Common.dll</HintPath>
+      <HintPath>..\packages\NuClear.River.Hosting.Common.7.0.1-review0004\lib\net461\2GIS.NuClear.River.Hosting.Common.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>

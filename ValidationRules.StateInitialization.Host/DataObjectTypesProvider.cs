@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
-using NuClear.StateInitialization.Core.Commands;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
@@ -70,11 +69,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         public static readonly Type[] AmsFactTypes =
             {
                 typeof(Facts::Advertisement),
-            };
-
-        public static readonly Type[] AmsNamesFactTypes =
-            {
-                typeof(Facts::EntityName)
+                typeof(Facts::EntityName),
             };
 
         public static readonly Type[] AggregateTypes =
@@ -166,37 +161,30 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         public IReadOnlyCollection<Type> Get(ICommand command)
         {
-            var replicateCommand = (ReplicateInBulkCommandBase)command;
-            switch (replicateCommand)
+            if (ReferenceEquals(command, BulkReplicationCommands.ErmToFacts) ||
+                ReferenceEquals(command, BulkReplicationCommands.ErmToFactsTest))
             {
-                case ReplicateInBulkCommand replicateInBulkCommand:
-                {
-                    if (replicateInBulkCommand == BulkReplicationCommands.ErmToFacts ||
-                        replicateInBulkCommand == BulkReplicationCommands.ErmToFactsTest)
-                    {
-                        return FactTypes;
-                    }
-                    if (replicateInBulkCommand == BulkReplicationCommands.FactsToAggregates ||
-                        replicateInBulkCommand == BulkReplicationCommands.FactsToAggregatesTest)
-                    {
-                        return AggregateTypes;
-                    }
-                    if (replicateInBulkCommand == BulkReplicationCommands.AggregatesToMessages ||
-                        replicateInBulkCommand == BulkReplicationCommands.AggregatesToMessagesTest)
-                    {
-                        return MessagesTypes;
-                    }
-
-                    break;
-                }
-
-                case MemoryReplicateInBulkCommand memoryReplicateInBulkCommand:
-                {
-                    return memoryReplicateInBulkCommand.DbManagementMode.HasFlag(DbManagementMode.TruncateTable) ? AmsFactTypes : AmsNamesFactTypes;
-                }
+                return FactTypes;
             }
 
-            throw new ArgumentException($"Data object types cannot be created for connection string name {replicateCommand.TargetStorageDescriptor.MappingSchema}");
+            if (ReferenceEquals(command, BulkReplicationCommands.FactsToAggregates) ||
+                ReferenceEquals(command, BulkReplicationCommands.FactsToAggregatesTest))
+            {
+                return AggregateTypes;
+            }
+
+            if (ReferenceEquals(command, BulkReplicationCommands.AggregatesToMessages) ||
+                ReferenceEquals(command, BulkReplicationCommands.AggregatesToMessagesTest))
+            {
+                return MessagesTypes;
+            }
+
+            if (ReferenceEquals(command, BulkReplicationCommands.AmsToFacts))
+            {
+                return AmsFactTypes;
+            }
+
+            throw new ArgumentException($"Data object types cannot be found for command {command}");
         }
     }
 }
