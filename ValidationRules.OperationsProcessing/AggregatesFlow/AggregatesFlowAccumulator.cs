@@ -7,12 +7,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AggregatesFlow
 {
     public sealed class AggregatesFlowAccumulator : MessageProcessingContextAccumulatorBase<AggregatesFlow, EventMessage, AggregatableMessage<ICommand>>
     {
-        private readonly ICommandFactory<EventMessage> _commandFactory;
-
-        public AggregatesFlowAccumulator()
-        {
-            _commandFactory = new AggregatesCommandFactory();
-        }
+        private readonly ICommandFactory<EventMessage> _commandFactory
+            = new AggregatesCommandFactory();
 
         protected override AggregatableMessage<ICommand> Process(EventMessage message)
         {

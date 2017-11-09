@@ -8,12 +8,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 {
     public sealed class AmsFactsFlowAccumulator : MessageProcessingContextAccumulatorBase<AmsFactsFlow, KafkaMessage, AggregatableMessage<ICommand>>
     {
-        private readonly ICommandFactory<KafkaMessage> _commandFactory;
-
-        public AmsFactsFlowAccumulator()
-        {
-            _commandFactory = new AmsFactsCommandFactory();
-        }
+        private readonly ICommandFactory<KafkaMessage> _commandFactory
+            = new AmsFactsCommandFactory();
 
         protected override AggregatableMessage<ICommand> Process(KafkaMessage message)
         {

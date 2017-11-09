@@ -7,12 +7,8 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 {
     public sealed class FactsFlowAccumulator : MessageProcessingContextAccumulatorBase<FactsFlow, TrackedUseCase, AggregatableMessage<ICommand>>
     {
-        private readonly ICommandFactory<TrackedUseCase> _commandFactory;
-
-        public FactsFlowAccumulator()
-        {
-            _commandFactory = new FactsCommandFactory();
-        }
+        private readonly ICommandFactory<TrackedUseCase> _commandFactory
+            = new FactsCommandFactory();
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase trackedUseCase)
         {
