@@ -316,19 +316,19 @@
     <value>Para la empresa {0} se ha establecido un número demasiado elevado de categorías: {1}. Máximo permitido: {2}.</value>
   </data>
   <data name="PremiumPartnerProfileMustHaveSingleSale" xml:space="preserve">
-    <value>На адрес "{0}" фирмы "{1}" продано более одной позиции Premium в периоды: {2}</value>
+    <value>Para la dirección "{0}" de la empresa "{1}" fue vendida más de una posición Premium en los siguientes períodos: {2}</value>
   </data>
   <data name="AdvertisementMustBelongToFirm" xml:space="preserve">
     <value>En la posición {0} se ha seleccionado el material {1} no perteneciente a la empresa {2}</value>
   </data>
   <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
-    <value>Рекламный материал {0} ожидает модерацию</value>
+    <value>El material publicitario {0} está esperando la moderación</value>
   </data>
   <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
-    <value>Рекламный материал {0} не прошёл модерацию</value>
+    <value>El material publicitario {0} no pasó la moderación</value>
   </data>
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
-    <value>Рекламный материал {0} одобрен с замечаниями</value>
+    <value>El material publicitario {0} fue aprobado con observaciones</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Línea Testrovaja</value>
