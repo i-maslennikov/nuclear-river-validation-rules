@@ -328,15 +328,15 @@
     <value>Advertising material {0} has been approved with comments</value>
   </data>
   <data name="FirmAddressMustNotHaveMultipleCallToAction" xml:space="preserve">
-    <value>На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}</value>
+    <value>More than one button in the title of a card has been sold for the following address {0} of the company {1} during the following periods: {2}</value>
   </data>
   <data name="FirmAddressShouldNotHaveMultiplePartnerAdvertisement" xml:space="preserve">
-    <value>На адрес {0} фирмы {1} продано более одной позиции 'Реклама в профилях партнёров' в периоды: {2}</value>
+    <value>More than one Advertisement in Partners' Profiles position has been sold for the following address {0} of the company {1} during the following periods: {2}</value>
   </data>
   <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
-    <value>Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}</value>
+    <value>The address {0} belongs to the company advertiser {1} with the order {2}</value>
   </data>
   <data name="AdvertiserMustBeNotifiedAboutPartnerAdvertisement" xml:space="preserve">
-    <value>На адрес {0} есть продажа из заказа {1} фирмы {2}</value>
+    <value>For the address {0} there is a sale from the order {1} of the company {2}</value>
   </data>
 </root>
