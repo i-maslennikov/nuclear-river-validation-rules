@@ -318,4 +318,25 @@
   <data name="AdvertisementMustBelongToFirm" xml:space="preserve">
     <value>V položce {0} byl vybrán reklamní materiál {1}, který nenáleží firmě {2}</value>
   </data>
+  <data name="AdvertisementMustPassReview_Draft" xml:space="preserve">
+    <value>Reklamní materiál {0} čeká na moderaci</value>
+  </data>
+  <data name="AdvertisementMustPassReview_Invalid" xml:space="preserve">
+    <value>Reklamní materiál {0} neprošel moderací</value>
+  </data>
+  <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
+    <value>Reklamní materiál {0} byl schválen s poznámkami</value>
+  </data>
+  <data name="FirmAddressMustNotHaveMultipleCallToAction" xml:space="preserve">
+    <value>Firmě „{1}“ umístěné na adrese „{0}“ bylo prodáno více než jedno akční tlačítko v záhlaví kartičky, za období: {2}</value>
+  </data>
+  <data name="FirmAddressShouldNotHaveMultiplePartnerAdvertisement" xml:space="preserve">
+    <value>Firmě „{1}“ umístěné na adrese „{0}“ byla prodána více než jedna pozice „Reklama v profilech partnerů“ za období: {2}</value>
+  </data>
+  <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
+    <value>Adresa {0} patří firmě-zadavateli reklamy {1} s objednávkou {2}</value>
+  </data>
+  <data name="AdvertiserMustBeNotifiedAboutPartnerAdvertisement" xml:space="preserve">
+    <value>U firmy {2} umístěné na adrese {0} byl evidován prodej dle objednávky {1}</value>
+  </data>
 </root>
