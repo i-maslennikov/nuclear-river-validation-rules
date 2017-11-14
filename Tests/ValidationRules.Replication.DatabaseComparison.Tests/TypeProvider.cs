@@ -6,24 +6,23 @@ using LinqToDB.Mapping;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.ValidationRules.Replication;
-using NuClear.ValidationRules.Storage;
 
-namespace ValidationRules.Replication.DatabaseComparison
+namespace ValidationRules.Replication.DatabaseComparison.Tests
 {
     internal static class TypeProvider
     {
-        public static readonly MappingSchema Erm = Schema.Erm;
-        public static readonly MappingSchema Facts = Schema.Facts;
-        public static readonly MappingSchema Aggregates = Schema.Aggregates;
-        public static readonly MappingSchema Messages = Schema.Messages;
-
         private static readonly Lazy<IReadOnlyDictionary<MappingSchema, Dictionary<Type, List<Type>>>> AccessorTypes =
-            new Lazy<IReadOnlyDictionary<MappingSchema, Dictionary<Type, List<Type>>>>(() => ScanForAccessors(new[] { Facts, Aggregates, Messages }));
+            new Lazy<IReadOnlyDictionary<MappingSchema, Dictionary<Type, List<Type>>>>(() => ScanForAccessors(new[]
+                {
+                    StorageDescriptor.Facts.MappingSchema,
+                    StorageDescriptor.Aggregates.MappingSchema,
+                    StorageDescriptor.Messages.MappingSchema,
+                }));
 
         public static IEnumerable<Type> GetDataObjectTypes(MappingSchema schema)
             => AccessorTypes.Value[schema].Keys;
 
-        public static IEnumerable<Type> GetAccessors(MappingSchema schema, Type dataObjectType)
+        public static IEnumerable<Type> GetAccessorTypes(MappingSchema schema, Type dataObjectType)
             => AccessorTypes.Value[schema][dataObjectType];
 
         private static IReadOnlyDictionary<MappingSchema, Dictionary<Type, List<Type>>> ScanForAccessors(IReadOnlyCollection<MappingSchema> schemata)
@@ -41,8 +40,7 @@ namespace ValidationRules.Replication.DatabaseComparison
                 {
                     if (schema.GetAttribute<TableAttribute>(dataObjectType) != null)
                     {
-                        List<Type> accessors;
-                        if (!result[schema].TryGetValue(dataObjectType, out accessors))
+                        if (!result[schema].TryGetValue(dataObjectType, out var accessors))
                         {
                             accessors = new List<Type>();
                             result[schema].Add(dataObjectType, accessors);

@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}.
+        ///   Looks up a localized string similar to Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3} - {4}.
         /// </summary>
         internal static string AdvertisementAmountShouldMeetMinimumRestrictions {
             get {
@@ -327,15 +327,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string FirmShouldHaveLimitedCategoryCount {
             get {
                 return ResourceManager.GetString("FirmShouldHaveLimitedCategoryCount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Позиция &quot;Самореклама только для ПК&quot; продана одновременно с рекламой в другую платформу.
-        /// </summary>
-        internal static string FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions {
-            get {
-                return ResourceManager.GetString("FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions", resourceCulture);
             }
         }
         

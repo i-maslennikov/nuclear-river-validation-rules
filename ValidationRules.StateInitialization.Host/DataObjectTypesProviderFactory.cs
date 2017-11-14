@@ -124,13 +124,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(ConsistencyAggregates::Order.MissingRequiredField),
                 typeof(ConsistencyAggregates::Order.MissingOrderScan),
 
-                typeof(FirmAggregates::Firm),
-                typeof(FirmAggregates::Firm.CategoryPurchase),
-                typeof(FirmAggregates::Order),
-                typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
-                typeof(FirmAggregates::Order.InvalidFirm),
-                typeof(FirmAggregates::Order.NotApplicapleForDesktopPosition),
-                typeof(FirmAggregates::Order.SelfAdvertisementPosition),
+			    typeof(FirmAggregates::Firm),
+			    typeof(FirmAggregates::Firm.CategoryPurchase),
+			    typeof(FirmAggregates::Order),
+			    typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
+			    typeof(FirmAggregates::Order.InvalidFirm),
                 typeof(FirmAggregates::Order.PremiumPartnerProfilePosition),
 
                 typeof(ProjectAggregates::Order),
@@ -159,6 +157,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(Messages::Version.ValidationResult),
                 typeof(Messages::Version.ErmState),
                 typeof(Messages::Version.AmsState),
+                typeof(Messages::Cache.ValidationResult),
             };
 
         public static readonly Type[] WebAppTypes =

@@ -90,12 +90,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<FirmAggregates::Order.InvalidFirm>()
                   .HasSchemaName(FirmAggregatesSchema);
 
-            builder.Entity<FirmAggregates::Order.NotApplicapleForDesktopPosition>()
-                   .HasSchemaName(FirmAggregatesSchema);
-
-            builder.Entity<FirmAggregates::Order.SelfAdvertisementPosition>()
-                   .HasSchemaName(FirmAggregatesSchema);
-
             builder.Entity<FirmAggregates::Order.PremiumPartnerProfilePosition>()
                    .HasSchemaName(FirmAggregatesSchema);
 

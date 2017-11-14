@@ -127,7 +127,7 @@
     <value>{0} "{1}" данного Заказа является основной для следующих позиций: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShouldMeetMinimumRestrictions" xml:space="preserve">
-    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3:MMMM} - {4}</value>
+    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3} - {4}</value>
   </data>
   <data name="FirmAddressMustBeLocatedOnTheMap" xml:space="preserve">
     <value>Позиция {0} оформлена на пустой адрес {1}</value>
@@ -296,9 +296,6 @@
   </data>
   <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
     <value>Позиция</value>
-  </data>
-  <data name="FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions" xml:space="preserve">
-    <value>Позиция "Самореклама только для ПК" продана одновременно с рекламой в другую платформу</value>
   </data>
   <data name="ThemePeriodMustContainOrderPeriod" xml:space="preserve">
     <value>Заказ {0} не может иметь продаж в тематику {1}, поскольку тематика действует не весь период размещения заказа</value>

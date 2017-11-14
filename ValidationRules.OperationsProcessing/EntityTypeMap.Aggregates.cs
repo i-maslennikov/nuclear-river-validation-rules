@@ -75,6 +75,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .Aggregate<FirmAggregates::Order>(
                     x => x.Match<Facts::Order>()
                           .DependOn<Facts::Firm>()
+                          .DependOn<Facts::FirmAddress>()
                           .DependOn<Facts::OrderPosition>()
                           .DependOn<Facts::OrderPositionAdvertisement>()
                           .DependOn<Facts::Position>())

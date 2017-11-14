@@ -37,7 +37,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 IsControlledByAmount = x.IsControlledByAmount,
 
                 CategoryCode = x.CategoryCode,
-                Platform = x.Platform,
                 IsDeleted = x.IsDeleted,
             });
 
