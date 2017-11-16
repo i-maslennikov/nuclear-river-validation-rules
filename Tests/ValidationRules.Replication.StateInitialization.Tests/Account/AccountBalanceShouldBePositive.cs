@@ -116,14 +116,14 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                       // Заказ выходил в выпуск 1раз, у него нет списания за прошлый месяц: задолжность = RW за текущий месяц + RW за прошлый месяц (баланс 0, задолжность 3)
                       new Facts::Account { Id = 7, Balance = 0, BranchOfficeOrganizationUnitId = 7, LegalPersonId = 7 },
                       new Facts::Order
-                      {
-                          Id = 7,
-                          BranchOfficeOrganizationUnitId = 7,
-                          LegalPersonId = 7,
-                          BeginDistribution = FirstDayJan,
-                          EndDistributionFact = FirstDayMar,
-                          WorkflowStep = 5
-                      },
+                          {
+                              Id = 7,
+                              BranchOfficeOrganizationUnitId = 7,
+                              LegalPersonId = 7,
+                              BeginDistribution = FirstDayJan,
+                              EndDistributionFact = FirstDayMar,
+                              WorkflowStep = 5
+                          },
                       new Facts::OrderPosition { Id = 7, OrderId = 7 },
                       new Facts::ReleaseWithdrawal { OrderPositionId = 7, Amount = 1, Start = FirstDayJan, End = FirstDayFeb },
                       new Facts::ReleaseWithdrawal { OrderPositionId = 7, Amount = 2, Start = FirstDayFeb, End = FirstDayMar },
@@ -216,17 +216,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                            new Aggregates::Order { Id = 10, AccountId = 10, BeginDistributionDate = FirstDayJan, EndDistributionDate = FirstDayApr },
                            new Aggregates::Order { Id = 11, AccountId = 11, BeginDistributionDate = FirstDayFeb, EndDistributionDate = FirstDayMar, IsFreeOfCharge = true },
 
-                           new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 11, ReleaseAmount = 20, Start = FirstDayMar, End = FirstDayApr },
+                           new Aggregates::Account.AccountPeriod { AccountId = 1, Balance = 1, ReleaseAmount = 10, Start = FirstDayMar, End = FirstDayApr },
                            new Aggregates::Account.AccountPeriod { AccountId = 4, Balance = -500, ReleaseAmount = 105000, Start = FirstDayFeb, End = FirstDayMar },
                            new Aggregates::Account.AccountPeriod { AccountId = 5, Balance = 0, ReleaseAmount = 105000, Start = FirstDayFeb, End = FirstDayMar },
                            new Aggregates::Account.AccountPeriod { AccountId = 6, Balance = -1, ReleaseAmount = 2, Start = FirstDayFeb, End = FirstDayMar },
-                           new Aggregates::Account.AccountPeriod { AccountId = 6, Balance = -1, ReleaseAmount = 5, Start = FirstDayMar, End = FirstDayApr },
-                           new Aggregates::Account.AccountPeriod { AccountId = 6, Balance = -1, ReleaseAmount = 9, Start = FirstDayApr, End = FirstDayMay },
+                           new Aggregates::Account.AccountPeriod { AccountId = 6, Balance = -3, ReleaseAmount = 3, Start = FirstDayMar, End = FirstDayApr },
+                           new Aggregates::Account.AccountPeriod { AccountId = 6, Balance = -6, ReleaseAmount = 4, Start = FirstDayApr, End = FirstDayMay },
                            new Aggregates::Account.AccountPeriod { AccountId = 7, Balance = 0, ReleaseAmount = 1, Start = FirstDayJan, End = FirstDayFeb },
-                           new Aggregates::Account.AccountPeriod { AccountId = 7, Balance = 0, ReleaseAmount = 3, Start = FirstDayFeb, End = FirstDayMar },
+                           new Aggregates::Account.AccountPeriod { AccountId = 7, Balance = -1, ReleaseAmount = 2, Start = FirstDayFeb, End = FirstDayMar },
                            new Aggregates::Account.AccountPeriod { AccountId = 10, Balance = 0, ReleaseAmount = 1, Start = FirstDayJan, End = FirstDayFeb },
-                           new Aggregates::Account.AccountPeriod { AccountId = 10, Balance = 0, ReleaseAmount = 3, Start = FirstDayFeb, End = FirstDayMar },
-                           new Aggregates::Account.AccountPeriod { AccountId = 10, Balance = 0, ReleaseAmount = 6, Start = FirstDayMar, End = FirstDayApr },
+                           new Aggregates::Account.AccountPeriod { AccountId = 10, Balance = -1, ReleaseAmount = 2, Start = FirstDayFeb, End = FirstDayMar },
+                           new Aggregates::Account.AccountPeriod { AccountId = 10, Balance = -3, ReleaseAmount = 3, Start = FirstDayMar, End = FirstDayApr },
 
                            new Aggregates::Order.DebtPermission { OrderId = 4, Start = FirstDayFeb, End = FirstDayMar }
                 )
@@ -234,7 +234,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                          new Messages::Version.ValidationResult
                          {
                              MessageParams = new MessageParams(
-                             new Dictionary<string, object> { { "available", 11.0000m }, { "planned", 20.0000m } },
+                             new Dictionary<string, object> { { "available", 1.0000m }, { "planned", 10.0000m } },
                              new Reference<EntityTypeAccount>(1),
                              new Reference<EntityTypeOrder>(1)).ToXDocument(),
                              MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
@@ -267,7 +267,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                          new Messages::Version.ValidationResult
                          {
                              MessageParams = new MessageParams(
-                             new Dictionary<string, object> { { "available", -1.0000m }, { "planned", 5.0000m } },
+                             new Dictionary<string, object> { { "available", -3.0000m }, { "planned", 3.0000m } },
                              new Reference<EntityTypeAccount>(6),
                              new Reference<EntityTypeOrder>(6)).ToXDocument(),
                              MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
@@ -278,7 +278,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                          new Messages::Version.ValidationResult
                          {
                              MessageParams = new MessageParams(
-                             new Dictionary<string, object> { { "available", -1.0000m }, { "planned", 9.0000m } },
+                             new Dictionary<string, object> { { "available", -6.0000m }, { "planned", 4.0000m } },
                              new Reference<EntityTypeAccount>(6),
                              new Reference<EntityTypeOrder>(6)).ToXDocument(),
                              MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
@@ -300,7 +300,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                          new Messages::Version.ValidationResult
                          {
                              MessageParams = new MessageParams(
-                             new Dictionary<string, object> { { "available", 0.0000m }, { "planned", 3.0000m } },
+                             new Dictionary<string, object> { { "available", -1.0000m }, { "planned", 2.0000m } },
                              new Reference<EntityTypeAccount>(7),
                              new Reference<EntityTypeOrder>(7)).ToXDocument(),
                              MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
@@ -322,7 +322,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                          new Messages::Version.ValidationResult
                          {
                              MessageParams = new MessageParams(
-                             new Dictionary<string, object> { { "available", 0.0000m }, { "planned", 3.0000m } },
+                             new Dictionary<string, object> { { "available", -1.0000m }, { "planned", 2.0000m } },
                              new Reference<EntityTypeAccount>(10),
                              new Reference<EntityTypeOrder>(10)).ToXDocument(),
                              MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,
@@ -333,7 +333,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                          new Messages::Version.ValidationResult
                          {
                              MessageParams = new MessageParams(
-                             new Dictionary<string, object> { { "available", 0.0000m }, { "planned", 6.0000m } },
+                             new Dictionary<string, object> { { "available", -3.0000m }, { "planned", 3.0000m } },
                              new Reference<EntityTypeAccount>(10),
                              new Reference<EntityTypeOrder>(10)).ToXDocument(),
                              MessageType = (int)MessageTypeCode.AccountBalanceShouldBePositive,

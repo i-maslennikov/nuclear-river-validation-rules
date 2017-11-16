@@ -86,9 +86,9 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     select new
                     {
                         AccountId = account.Id,
-                        releaseWithdrawal.Amount,
                         releaseWithdrawal.Start,
                         releaseWithdrawal.End,
+                        releaseWithdrawal.Amount,
                     };
 
                 // накапливаем суммы по периодам: если 3 периода по 100$, то накопленная сумма будет 100$, 200$, 300$
@@ -96,14 +96,15 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                     from period in releaseWithdrawalPeriods
                     group period by new { period.AccountId, period.Start, period.End }
                     into @group
-                    let amountSum = releaseWithdrawalPeriods.Where(x => x.AccountId == @group.Key.AccountId && x.Start <= @group.Key.Start).Sum(x => x.Amount)
+                    let periodAmount = @group.Sum(x => x.Amount)
+                    let lockedAmount = releaseWithdrawalPeriods.Where(x => x.AccountId == @group.Key.AccountId && x.Start <= @group.Key.Start).Sum(x => x.Amount)
                     from account in _query.For<Facts::Account>().Where(x => x.Id == @group.Key.AccountId)
-                    where amountSum > 0 && account.Balance + Epsilon <= amountSum
+                    where periodAmount > 0 && account.Balance + Epsilon <= lockedAmount
                     select new Account.AccountPeriod
                     {
                         AccountId = @group.Key.AccountId,
-                        Balance = account.Balance,
-                        ReleaseAmount = amountSum,
+                        Balance = account.Balance - lockedAmount + periodAmount,
+                        ReleaseAmount = periodAmount,
                         Start = @group.Key.Start,
                         End = @group.Key.End,
                     };
