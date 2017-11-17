@@ -41,8 +41,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Price { Id = 1 },
 
                     // ограничения
-                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 102, PriceId = 1, Min = 1, Max = 2, CategoryName = "empty" },
-                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 103, PriceId = 1, Max = 2147483647, CategoryName = "empty", MissingMinimalRestriction = true }, // null for max means "unlimited", null for min means error
+                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 102, PriceId = 1, Min = 1, Max = 2, CategoryName = "CategoryCode = 102" },
+                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 103, PriceId = 1, Max = 2147483647, CategoryName = "CategoryCode = 103", MissingMinimalRestriction = true }, // null for max means "unlimited", null for min means error
 
                     // сопутствующий хлам
                     new Aggregates::Period { Start = DateTime.Parse("2012-12-12"), End = DateTime.MaxValue },
