@@ -15,9 +15,9 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// 
     /// * Не выводить это сообщение в заказе, который размещает ЗМК в карточке своей-же фирмы.
     /// </summary>
-    public sealed class PartnerAdvertisementShouldNotBeSoldToAdvertiser : ValidationResultAccessorBase
+    public sealed class PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser : ValidationResultAccessorBase
     {
-        public PartnerAdvertisementShouldNotBeSoldToAdvertiser(IQuery query) : base(query, MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser)
+        public PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser(IQuery query) : base(query, MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser)
         {
         }
 
@@ -25,12 +25,12 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
         {
             var messages =
                 from order in query.For<Order>()
-                from partnerPosition in query.For<Order.PartnerPosition>().Where(x => !x.IsPremium).Where(x => x.DestinationFirmId == order.FirmId)
+                from partnerPosition in query.For<Order.PartnerPosition>().Where(x => x.IsPremium).Where(x => x.DestinationFirmId == order.FirmId)
                 from partnerOrder in query.For<Order>().Where(x => x.Id == partnerPosition.OrderId)
                 where partnerOrder.FirmId != partnerPosition.DestinationFirmId // о позициях в карточках своей фирмы не предупреждаем
                 select new Version.ValidationResult
-                {
-                    MessageParams =
+                    {
+                        MessageParams =
                             new MessageParams(
                                               new Reference<EntityTypeOrder>(partnerOrder.Id), // Заказ, размещающий ссылку
                                               new Reference<EntityTypeOrder>(order.Id), // Заказ фирмы-рекламодателя (хоста)
@@ -38,10 +38,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                                               new Reference<EntityTypeFirmAddress>(partnerPosition.DestinationFirmAddressId))
                                 .ToXDocument(),
 
-                    PeriodStart = partnerOrder.Begin,
-                    PeriodEnd = partnerOrder.End,
-                    OrderId = partnerOrder.Id,
-                };
+                        PeriodStart = partnerOrder.Begin,
+                        PeriodEnd = partnerOrder.End,
+                        OrderId = partnerOrder.Id,
+                    };
 
             return messages;
         }

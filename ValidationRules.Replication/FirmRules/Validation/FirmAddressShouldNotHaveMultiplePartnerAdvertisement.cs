@@ -27,12 +27,13 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
             var sales =
                 from order in query.For<Order>()
                 from fa in query.For<Order.PartnerPosition>().Where(x => x.OrderId == order.Id)
-                select new { fa.OrderId, FirmAddressId = fa.DestinationFirmAddressId, FirmId = fa.DestinationFirmId, order.Scope, order.Begin, order.End };
+                select new { fa.OrderId, FirmAddressId = fa.DestinationFirmAddressId, FirmId = fa.DestinationFirmId, fa.IsPremium, order.Scope, order.Begin, order.End };
 
             var multipleSales =
                 from sale in sales
                 from conflict in sales.Where(x => x.FirmAddressId == sale.FirmAddressId && x.OrderId != sale.OrderId)
                 where sale.Begin < conflict.End && conflict.Begin < sale.End && Scope.CanSee(sale.Scope, conflict.Scope)
+                    && (!sale.IsPremium || !conflict.IsPremium) // Если обе премиум-позиции - то это уже ответственность другой проверки
                 select new { sale.OrderId, sale.FirmAddressId, sale.FirmId, Begin = sale.Begin < conflict.Begin ? conflict.Begin : sale.Begin, End = sale.End < conflict.End ? sale.End : conflict.End };
 
             multipleSales =

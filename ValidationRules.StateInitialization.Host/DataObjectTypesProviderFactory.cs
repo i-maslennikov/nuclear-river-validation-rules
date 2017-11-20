@@ -127,7 +127,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(FirmAggregates::Order),
                 typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
                 typeof(FirmAggregates::Order.InvalidFirm),
-                typeof(FirmAggregates::Order.CallToActionPosition),
                 typeof(FirmAggregates::Order.PartnerPosition),
 
                 typeof(ProjectAggregates::Order),

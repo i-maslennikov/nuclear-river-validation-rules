@@ -157,9 +157,8 @@
     <Compile Include="Composition\Composers\OrderMustNotIncludeReleasedPeriodMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustUseCategoriesOnlyAvailableInProjectMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderMustHaveActiveLegalEntitiesMessageComposer.cs" />
-    <Compile Include="Composition\Composers\AdvertiserMustBeNotifiedAboutPartnerAdvertisementMessageComposer.cs" />
+    <Compile Include="Composition\Composers\PartnerAdvertisementShouldNotBeSoldToAdvertiserMessageComposer.cs" />
     <Compile Include="Composition\Composers\ProjectMustContainCostPerClickMinimumRestrictionMessageComposer.cs" />
-    <Compile Include="Composition\Composers\FirmAddressMustNotHaveMultipleCallToActionMessageComposer.cs" />
     <Compile Include="Composition\Composers\Utils\PeriodUtils.cs" />
     <Compile Include="Composition\IDistinctor.cs" />
     <Compile Include="Composition\ReferenceExtensions.cs" />

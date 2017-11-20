@@ -336,7 +336,4 @@
   <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
     <value>La dirección {0} pertenece a la empresa anunciante {1} con el pedido {2}</value>
   </data>
-  <data name="AdvertiserMustBeNotifiedAboutPartnerAdvertisement" xml:space="preserve">
-    <value>Para la dirección {0} hay una venta desde pedido {1} de la empresa {2}</value>
-  </data>
 </root>

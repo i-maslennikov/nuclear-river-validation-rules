@@ -7,44 +7,42 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
-    public sealed class AdvertiserMustBeNotifiedAboutPartnerAdvertisementMessageComposer : IMessageComposer
-    {
-        public MessageTypeCode MessageType => MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement;
-
-        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
-        {
-            // два заказа: в первом выводим предупреждение (это заказ фирмы, чей адрес), второй - подкидывает рекламу этой фирме
-            var orderReferences = references.GetMany<EntityTypeOrder>().ToArray();
-            var firmReference = references.Get<EntityTypeFirm>();
-            var addressReference = references.Get<EntityTypeFirmAddress>();
-
-            return new MessageComposerResult(
-                orderReferences[0],
-                Resources.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
-                addressReference,
-                orderReferences[1],
-                firmReference);
-        }
-    }
-
-    // Тип нарочно здесь, поскольку связан с первым.
     public sealed class PartnerAdvertisementShouldNotBeSoldToAdvertiserMessageComposer : IMessageComposer
     {
         public MessageTypeCode MessageType => MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
-            // два заказа: в первом выводим предупреждение (это заказ фирмы, чей адрес), второй - подкидывает рекламу этой фирме
             var orderReferences = references.GetMany<EntityTypeOrder>().ToArray();
             var firmReference = references.Get<EntityTypeFirm>();
             var addressReference = references.Get<EntityTypeFirmAddress>();
 
             return new MessageComposerResult(
-                orderReferences[1],
+                orderReferences[0],
                 Resources.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
                 addressReference,
                 firmReference,
-                orderReferences[0]);
+                orderReferences[1]);
+        }
+    }
+
+    // Тип нарочно здесь, поскольку связан с первым.
+    public sealed class PremiumPartnerAdvertisementMustNotBeSoldToAdvertiserMessageComposer : IMessageComposer
+    {
+        public MessageTypeCode MessageType => MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser;
+
+        public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
+        {
+            var orderReferences = references.GetMany<EntityTypeOrder>().ToArray();
+            var firmReference = references.Get<EntityTypeFirm>();
+            var addressReference = references.Get<EntityTypeFirmAddress>();
+
+            return new MessageComposerResult(
+                orderReferences[0],
+                Resources.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
+                addressReference,
+                firmReference,
+                orderReferences[1]);
         }
     }
 

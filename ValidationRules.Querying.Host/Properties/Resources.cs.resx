@@ -336,7 +336,4 @@
   <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
     <value>Adresa {0} patří firmě-zadavateli reklamy {1} s objednávkou {2}</value>
   </data>
-  <data name="AdvertiserMustBeNotifiedAboutPartnerAdvertisement" xml:space="preserve">
-    <value>U firmy {2} umístěné na adrese {0} byl evidován prodej dle objednávky {1}</value>
-  </data>
 </root>

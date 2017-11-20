@@ -142,15 +142,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to На адрес {0} есть продажа из заказа {1} фирмы {2}.
-        /// </summary>
-        internal static string AdvertiserMustBeNotifiedAboutPartnerAdvertisement {
-            get {
-                return ResourceManager.GetString("AdvertiserMustBeNotifiedAboutPartnerAdvertisement", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой..
         /// </summary>
         internal static string AssociatedPositionsGroupCount {

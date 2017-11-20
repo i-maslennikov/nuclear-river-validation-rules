@@ -273,7 +273,14 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.FirmAddressMustNotHaveMultipleCallToAction,
+                    Rule(MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement,
+                         single: RuleSeverityLevel.Error,
+                         singleForApprove: RuleSeverityLevel.Error,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser,
                          single: RuleSeverityLevel.Error,
                          singleForApprove: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
@@ -282,18 +289,13 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
 
                     Rule(MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
                          manualReport: RuleSeverityLevel.Info,
-                         prerelease: RuleSeverityLevel.Warning,
-                         release: RuleSeverityLevel.Warning),
-
-                    Rule(MessageTypeCode.AdvertiserMustBeNotifiedAboutPartnerAdvertisement,
-                         manualReport: RuleSeverityLevel.Info,
-                         prerelease: RuleSeverityLevel.Warning,
-                         release: RuleSeverityLevel.Warning),
+                         prerelease: RuleSeverityLevel.Info,
+                         release: RuleSeverityLevel.Info),
 
                     Rule(MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
                          manualReport: RuleSeverityLevel.Info,
-                         prerelease: RuleSeverityLevel.Warning,
-                         release: RuleSeverityLevel.Warning),
+                         prerelease: RuleSeverityLevel.Info,
+                         release: RuleSeverityLevel.Info),
 
                     Rule(MessageTypeCode.AdvertisementMustBelongToFirm,
                          manualReport: RuleSeverityLevel.Error,

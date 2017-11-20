@@ -336,7 +336,4 @@
   <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
     <value>Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}</value>
   </data>
-  <data name="AdvertiserMustBeNotifiedAboutPartnerAdvertisement" xml:space="preserve">
-    <value>На адрес {0} есть продажа из заказа {1} фирмы {2}</value>
-  </data>
 </root>

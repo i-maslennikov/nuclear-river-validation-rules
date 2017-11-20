@@ -23,18 +23,12 @@ namespace NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates
             public long OrderId { get; set; }
         }
 
-        public sealed class CallToActionPosition
-        {
-            public long OrderId { get; set; }
-            public long DestinationFirmId { get; set; }
-            public long DestinationFirmAddressId { get; set; }
-        }
-
         public sealed class PartnerPosition
         {
             public long OrderId { get; set; }
             public long DestinationFirmId { get; set; }
             public long DestinationFirmAddressId { get; set; }
+            public bool IsPremium { get; set; }
         }
 
         public class InvalidFirm

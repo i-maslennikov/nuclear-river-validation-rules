@@ -193,10 +193,10 @@
     <Compile Include="Dto\AdvertisementDto.cs" />
     <Compile Include="Events\AmsStateIncrementedEvent.cs" />
     <Compile Include="Events\FlowEvent.cs" />
-    <Compile Include="FirmRules\Validation\AdvertiserMustBeNotifiedAboutPartnerAdvertisement.cs" />
     <Compile Include="FirmRules\Validation\PartnerAdvertisementShouldNotBeSoldToAdvertiser.cs" />
+    <Compile Include="FirmRules\Validation\PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser.cs" />
     <Compile Include="FirmRules\Validation\FirmAddressShouldNotHaveMultiplePartnerAdvertisement.cs" />
-    <Compile Include="FirmRules\Validation\FirmAddressMustNotHaveMultipleCallToAction.cs" />
+    <Compile Include="FirmRules\Validation\FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement.cs" />
     <Compile Include="Messages\ValidationResultCache.cs" />
     <Compile Include="PriceRules\Aggregates\FirmAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMaximumRestrictions.cs" />

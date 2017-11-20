@@ -311,9 +311,9 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                     new FirmAndOrderShouldBelongTheSameOrganizationUnit(_query),
                     new FirmShouldHaveLimitedCategoryCount(_query),
-                    new AdvertiserMustBeNotifiedAboutPartnerAdvertisement(_query),
+                    new PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser(_query),
                     new PartnerAdvertisementShouldNotBeSoldToAdvertiser(_query),
-                    new FirmAddressMustNotHaveMultipleCallToAction(_query),
+                    new FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement(_query),
                     new FirmAddressShouldNotHaveMultiplePartnerAdvertisement(_query),
 
                     new FirmAddressMustBeLocatedOnTheMap(_query),

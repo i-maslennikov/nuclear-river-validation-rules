@@ -13,9 +13,9 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
     /// Для заказов, размещающих кнопку в заголовке карточки (кнопка-действие, ЗМК-Premium), если для одного адреса есть более одной продажи, должна выводиться ошибка.
     /// "На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}"
     /// </summary>
-    public sealed class FirmAddressMustNotHaveMultipleCallToAction : ValidationResultAccessorBase
+    public sealed class FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement : ValidationResultAccessorBase
     {
-        public FirmAddressMustNotHaveMultipleCallToAction(IQuery query) : base(query, MessageTypeCode.FirmAddressMustNotHaveMultipleCallToAction)
+        public FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement(IQuery query) : base(query, MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement)
         {
         }
 
@@ -23,7 +23,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
         {
             var sales =
                 from order in query.For<Order>()
-                from fa in query.For<Order.CallToActionPosition>().Where(x => x.OrderId == order.Id)
+                from fa in query.For<Order.PartnerPosition>().Where(x => x.IsPremium).Where(x => x.OrderId == order.Id)
                 select new { fa.OrderId, FirmAddressId = fa.DestinationFirmAddressId, FirmId = fa.DestinationFirmId, order.Scope, order.Begin, order.End };
 
             var multipleSales =
