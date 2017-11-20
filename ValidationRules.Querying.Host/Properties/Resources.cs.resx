@@ -127,7 +127,7 @@
     <value>{0} "{1}" této objednávky je hlavní pro následující položky: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShouldMeetMinimumRestrictions" xml:space="preserve">
-    <value>Potřebný počet pozice {0} ve sborce je od {1} do {2}. Povolený počet pozic ve vydání za měsíc je {3} - {4}</value>
+    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3} - {4}</value>
   </data>
   <data name="FirmAddressMustBeLocatedOnTheMap" xml:space="preserve">
     <value>Položka {0} je vytvořena s prázdnou adresou {1}</value>
@@ -329,6 +329,9 @@
   </data>
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
     <value>Reklamní materiál {0} byl schválen s poznámkami</value>
+  </data>
+  <data name="AmsMessagesShouldBeNew" xml:space="preserve">
+    <value>Данные из системы AMS слишком старые, результаты проверок недостоверны</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Testrovaja čára</value>
