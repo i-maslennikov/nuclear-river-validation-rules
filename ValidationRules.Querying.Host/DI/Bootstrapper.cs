@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+
 using System.Linq;
 using System.Web.Http.ExceptionHandling;
 
 using Microsoft.Practices.Unity;
 
 using NuClear.Model.Common.Entities;
+using NuClear.River.Hosting.Common.Identities.Connections;
+using NuClear.River.Hosting.Common.Settings;
+using NuClear.Settings.API;
+using NuClear.Settings.Unity;
 using NuClear.Tracing.API;
 using NuClear.Tracing.Environment;
 using NuClear.Tracing.Log4Net.Config;
@@ -15,34 +19,43 @@ using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.SingleCheck;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 
+using ValidationRules.Hosting.Common;
+
+using IConnectionStringSettings = NuClear.Storage.API.ConnectionStrings.IConnectionStringSettings;
+
 namespace NuClear.ValidationRules.Querying.Host.DI
 {
     public static class Bootstrapper
     {
         public static IUnityContainer ConfigureUnity()
         {
+            var settings = new QueryingServiceSettings();
+
             return new UnityContainer()
-                .ConfigureTracer()
+                .ConfigureTracer(settings.AsSettings<IEnvironmentSettings>(),
+                                 settings.AsSettings<IConnectionStringSettings>())
+                .ConfigureSettingsAspects(settings)
                 .ConfigureDataAccess()
                 .ConfigureComposers()
                 .ConfigureDistinctors()
                 .ConfigureNameResolvingService()
-                .ConfigureSingleCheck();
+                .ConfigureSingleCheck()
+                .ConfigureOperationsProcessing();
         }
 
         private static IUnityContainer ConfigureTracer(
-            this IUnityContainer container)
+            this IUnityContainer container,
+            IEnvironmentSettings environmentSettings,
+            IConnectionStringSettings connectionStringSettings)
         {
-            var environmentName = ConfigurationManager.AppSettings["TargetEnvironmentName"];
-            var entryPointName = ConfigurationManager.AppSettings["EntryPointName"];
 
-            var logstashUrl = new Uri(ConfigurationManager.ConnectionStrings["Logging"].ConnectionString);
+            var logstashUrl = new Uri(connectionStringSettings.GetConnectionString(LoggingConnectionStringIdentity.Instance));
 
             var tracer = Log4NetTracerBuilder.Use
                                              .ApplicationXmlConfig
                                              .WithGlobalProperties(x =>
-                                                x.Property(TracerContextKeys.Tenant, environmentName)
-                                                .Property(TracerContextKeys.EntryPoint, entryPointName)
+                                                x.Property(TracerContextKeys.Tenant, environmentSettings.EnvironmentName)
+                                                .Property(TracerContextKeys.EntryPoint, environmentSettings.EntryPointName)
                                                 .Property(TracerContextKeys.EntryPointHost, NetworkInfo.ComputerFQDN)
                                                 .Property(TracerContextKeys.EntryPointInstanceId, Guid.NewGuid().ToString()))
                                              .Logstash(logstashUrl)
@@ -104,6 +117,13 @@ namespace NuClear.ValidationRules.Querying.Host.DI
             container.RegisterType<PipelineFactory>();
 
             return container;
+        }
+
+        private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
+        {
+            return container
+                .RegisterType<IKafkaSettingsFactory, KafkaSettingsFactory>(new ContainerControlledLifetimeManager(), new InjectionConstructor(typeof(IConnectionStringSettings), typeof(IEnvironmentSettings)))
+                .RegisterType<KafkaMessageFlowInfoProvider>(new ContainerControlledLifetimeManager());
         }
     }
 }

@@ -23,6 +23,8 @@ using AdvertisementAggregates = NuClear.ValidationRules.Storage.Model.Advertisem
 using AdvertisementActors = NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates;
 using ThemeAggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
 using ThemeActors = NuClear.ValidationRules.Replication.ThemeRules.Aggregates;
+using SystemAggregates = NuClear.ValidationRules.Storage.Model.SystemRules.Aggregates;
+using SystemActors = NuClear.ValidationRules.Replication.SystemRules.Aggregates;
 
 using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Aggregates;
 using ProjectActors = NuClear.ValidationRules.Replication.ProjectRules.Aggregates;
@@ -57,6 +59,8 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
                     { typeof(ThemeAggregates::Order), typeof(ThemeActors::OrderAggregateRootActor) },
                     { typeof(ThemeAggregates::Project), typeof(ThemeActors::ProjectAggregateRootActor) },
                     { typeof(ThemeAggregates::Theme), typeof(ThemeActors::ThemeAggregateRootActor) },
+
+                    { typeof(SystemAggregates::SystemStatus), typeof(SystemActors::SystemStatusAggregateRootActor) },
                 };
 
         public UnityAggregateActorFactory(IUnityContainer unityContainer)
@@ -69,8 +73,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 
         private AggregateActor CreateActorForAggregateRoot(Type aggregateRootType)
         {
-            Type aggregateRootActorType;
-            if (!AggregateRootActors.TryGetValue(aggregateRootType, out aggregateRootActorType))
+            if (!AggregateRootActors.TryGetValue(aggregateRootType, out var aggregateRootActorType))
             {
                 throw new ArgumentException($"Can't find aggregate actor for type {aggregateRootType.GetFriendlyName()}");
             }

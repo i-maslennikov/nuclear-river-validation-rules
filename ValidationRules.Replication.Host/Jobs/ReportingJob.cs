@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Confluent.Kafka;
 
 using Microsoft.ServiceBus;
 
@@ -18,9 +14,10 @@ using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
-using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 
 using Quartz;
+
+using ValidationRules.Hosting.Common;
 
 namespace NuClear.ValidationRules.Replication.Host.Jobs
 {
@@ -29,14 +26,14 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
     {
         private readonly ITelemetryPublisher _telemetry;
         private readonly IServiceBusSettingsFactory _serviceBusSettingsFactory;
-        private readonly IAmsSettingsFactory _amsSettingsFactory;
+        private readonly KafkaMessageFlowInfoProvider _kafkaMessageFlowInfoProvider;
 
         private readonly ITracer _tracer;
 
         public ReportingJob(
             ITelemetryPublisher telemetry,
             IServiceBusSettingsFactory serviceBusSettingsFactory,
-            IAmsSettingsFactory amsSettingsFactory,
+            KafkaMessageFlowInfoProvider kafkaMessageFlowInfoProvider,
             IUserContextManager userContextManager,
             IUserAuthenticationService userAuthenticationService,
             IUserAuthorizationService userAuthorizationService,
@@ -44,7 +41,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             : base(userContextManager, userAuthenticationService, userAuthorizationService, tracer)
         {
             _tracer = tracer;
-            _amsSettingsFactory = amsSettingsFactory;
+            _kafkaMessageFlowInfoProvider = kafkaMessageFlowInfoProvider;
             _telemetry = telemetry;
             _serviceBusSettingsFactory = serviceBusSettingsFactory;
         }
@@ -55,7 +52,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             WithinErrorLogging(ReportServiceBusQueueLength<FactsFlow, PrimaryProcessingQueueLengthIdentity>);
             WithinErrorLogging(ReportServiceBusQueueLength<AggregatesFlow, FinalProcessingAggregateQueueLengthIdentity>);
             WithinErrorLogging(ReportServiceBusQueueLength<MessagesFlow, MessagesQueueLengthIdentity>);
-            WithinErrorLogging(() => ReportKafkaOffset<AmsFactsFlow, AmsFactsQueueLengthIdentity>());
+            WithinErrorLogging(ReportKafkaOffset<AmsFactsFlow, AmsFactsQueueLengthIdentity>);
         }
 
         private void WithinErrorLogging(Action action)
@@ -93,20 +90,11 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             where TTelemetryIdentity : TelemetryIdentityBase<TTelemetryIdentity>, new()
         {
             var flow = MessageFlowBase<TFlow>.Instance;
-            var settings = _amsSettingsFactory.CreateReceiverSettings(flow);
 
-            var privateConfig = new Dictionary<string, object>(settings.Config)
-            {
-                {"group.id", settings.GroupId }
-            };
-            using (var consumer = new Consumer(privateConfig))
-            {
-                var topicPartition = new TopicPartition(settings.Topics.First(), settings.Partition);
-                var topicOffsets = consumer.QueryWatermarkOffsets(topicPartition, settings.PollTimeout);
-                var consumerOffset = consumer.Committed(new[] { topicPartition }, settings.PollTimeout).First();
+            var size = _kafkaMessageFlowInfoProvider.GetFlowSize(flow);
+            var processedSize = _kafkaMessageFlowInfoProvider.GetFlowProcessedSize(flow);
 
-                _telemetry.Publish<TTelemetryIdentity>(topicOffsets.High - consumerOffset.Offset);
-            }
+            _telemetry.Publish<TTelemetryIdentity>(size - processedSize);
         }
 
         private sealed class MessagesQueueLengthIdentity : TelemetryIdentityBase<MessagesQueueLengthIdentity>

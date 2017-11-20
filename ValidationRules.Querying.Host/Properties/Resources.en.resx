@@ -127,7 +127,7 @@
     <value>{0} "{1}" of this Order is the main for the following items: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShouldMeetMinimumRestrictions" xml:space="preserve">
-    <value>Item {0} should be present in build in quantity from {1} up to {2}. A quantity of items that can be issued per month {3:MMMM} – {4}</value>
+    <value>Item {0} should be present in build in quantity from {1} up to {2}. A quantity of items that can be issued per month {3} – {4}</value>
   </data>
   <data name="FirmAddressMustBeLocatedOnTheMap" xml:space="preserve">
     <value>The item {0} is issued for an empty address {1}</value>
@@ -296,9 +296,6 @@
   </data>
   <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
     <value>Item</value>
-  </data>
-  <data name="FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions" xml:space="preserve">
-    <value>Item "Self-advertisement only for PC" is sold with ads to another platform</value>
   </data>
   <data name="ThemePeriodMustContainOrderPeriod" xml:space="preserve">
     <value>The order {0} cannot have sales in the topic {1}, since the topic is not valid for the whole period of placement</value>

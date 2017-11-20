@@ -11,6 +11,7 @@ using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Agg
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using ThemeAggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
+using SystemAggregates = NuClear.ValidationRules.Storage.Model.SystemRules.Aggregates;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -74,6 +75,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .Aggregate<FirmAggregates::Order>(
                     x => x.Match<Facts::Order>()
                           .DependOn<Facts::Firm>()
+                          .DependOn<Facts::FirmAddress>()
                           .DependOn<Facts::OrderPosition>()
                           .DependOn<Facts::OrderPositionAdvertisement>()
                           .DependOn<Facts::Position>())
@@ -140,6 +142,11 @@ namespace NuClear.ValidationRules.OperationsProcessing
                     x => x.Match<Facts::Theme>()
                           .DependOn<Facts::Category>()
                           .DependOn<Facts::ThemeCategory>())
+
+                // SystemAggregates
+                .Aggregate<SystemAggregates::SystemStatus>(
+                    x => x.Match<Facts::SystemStatus>())
+
                 .ToDictionary(x => x.Key, x => (IReadOnlyCollection<Type>)x.Value);
 
         public static bool TryGetAggregateTypes(Type factType, out IReadOnlyCollection<Type> aggregateTypes)
@@ -173,8 +180,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
 
         private static void Append<TKey, TValue>(this Dictionary<TKey, IList<TValue>> dictionary, TKey key, TValue value)
         {
-            IList<TValue> list;
-            if (!dictionary.TryGetValue(key, out list))
+            if (!dictionary.TryGetValue(key, out var list))
             {
                 list = new List<TValue>();
                 dictionary.Add(key, list);
@@ -185,7 +191,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
 
         private sealed class FluentDictionaryBuilder
         {
-            public Type Matched { get; private set; } = null;
+            public Type Matched { get; private set; }
 
             public IList<Type> Depended { get; } = new List<Type>();
 
@@ -193,7 +199,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
             {
                 if (Matched != null)
                 {
-                    throw new InvalidOperationException($"Matched has already been set");
+                    throw new InvalidOperationException("Matched has already been set");
                 }
 
                 Matched = typeof(T);

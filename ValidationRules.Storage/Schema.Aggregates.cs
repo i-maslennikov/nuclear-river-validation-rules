@@ -8,7 +8,7 @@ using ProjectAggregates = NuClear.ValidationRules.Storage.Model.ProjectRules.Agg
 using ConsistencyAggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
 using FirmAggregates = NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using ThemeAggregates = NuClear.ValidationRules.Storage.Model.ThemeRules.Aggregates;
-
+using SystemAggregates = NuClear.ValidationRules.Storage.Model.SystemRules.Aggregates;
 
 namespace NuClear.ValidationRules.Storage
 {
@@ -21,6 +21,7 @@ namespace NuClear.ValidationRules.Storage
         private const string ConsistencyAggregatesSchema = "ConsistencyAggregates";
         private const string FirmAggregatesSchema = "FirmAggregates";
         private const string ThemeAggregatesSchema = "ThemeAggregates";
+        private const string SystemAggregatesSchema = "SystemAggregates";
 
         public static MappingSchema Aggregates
             => new MappingSchema(nameof(Aggregates), new SqlServerMappingSchema())
@@ -33,7 +34,17 @@ namespace NuClear.ValidationRules.Storage
                 .RegisterConsistencyAggregates()
                 .RegisterFirmAggregates()
                 .RegisterThemeAggregates()
+                .RegisterSystemAggregates()
                 .MappingSchema;
+
+        private static FluentMappingBuilder RegisterSystemAggregates(this FluentMappingBuilder builder)
+        {
+            builder.Entity<SystemAggregates::SystemStatus>()
+                   .HasSchemaName(SystemAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            return builder;
+        }
 
         private static FluentMappingBuilder RegisterThemeAggregates(this FluentMappingBuilder builder)
         {
@@ -78,12 +89,6 @@ namespace NuClear.ValidationRules.Storage
 
             builder.Entity<FirmAggregates::Order.InvalidFirm>()
                   .HasSchemaName(FirmAggregatesSchema);
-
-            builder.Entity<FirmAggregates::Order.NotApplicapleForDesktopPosition>()
-                   .HasSchemaName(FirmAggregatesSchema);
-
-            builder.Entity<FirmAggregates::Order.SelfAdvertisementPosition>()
-                   .HasSchemaName(FirmAggregatesSchema);
 
             builder.Entity<FirmAggregates::Order.PremiumPartnerProfilePosition>()
                    .HasSchemaName(FirmAggregatesSchema);

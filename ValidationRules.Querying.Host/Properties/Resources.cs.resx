@@ -127,7 +127,7 @@
     <value>{0} "{1}" této objednávky je hlavní pro následující položky: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShouldMeetMinimumRestrictions" xml:space="preserve">
-    <value>Potřebný počet pozice {0} ve sborce je od {1} do {2}. Povolený počet pozic ve vydání za měsíc je {3:MMMM} - {4}</value>
+    <value>Potřebný počet pozice {0} ve sborce je od {1} do {2}. Povolený počet pozic ve vydání za měsíc je {3} - {4}</value>
   </data>
   <data name="FirmAddressMustBeLocatedOnTheMap" xml:space="preserve">
     <value>Položka {0} je vytvořena s prázdnou adresou {1}</value>
@@ -296,9 +296,6 @@
   </data>
   <data name="RichDefaultPositionTypeTemplate" xml:space="preserve">
     <value>Položka</value>
-  </data>
-  <data name="FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions" xml:space="preserve">
-    <value>Položka „Sebepropagace pro PC“ byla prodána současně s reklamou určenou pro jinou platformu</value>
   </data>
   <data name="ThemePeriodMustContainOrderPeriod" xml:space="preserve">
     <value>Objednávka {0} nemůže obsahovat prodej k tématu {1}, protože téma neplatí po celou dobu zveřejnění objednávky</value>

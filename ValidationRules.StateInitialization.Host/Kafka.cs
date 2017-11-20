@@ -30,7 +30,6 @@ using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Storage.Model.Facts;
@@ -68,7 +67,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             _batchSizeSettings = new AmsBatchSizeSettings();
             _accessorTypesProvider = new AccessorTypesProvider();
 
-            var amsSettingsFactory = new AmsSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
+            var amsSettingsFactory = new KafkaSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
             _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), amsSettingsFactory);
         }
 

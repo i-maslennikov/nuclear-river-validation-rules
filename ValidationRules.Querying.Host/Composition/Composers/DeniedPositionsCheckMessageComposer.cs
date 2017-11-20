@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.ValidationRules.Querying.Host.Properties;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
-    public sealed class DeniedPositionsCheckMessageComposer : IMessageComposer
+    public sealed class DeniedPositionsCheckMessageComposer : IMessageComposer, IDistinctor
     {
         public MessageTypeCode MessageType => MessageTypeCode.FirmPositionMustNotHaveDeniedPositions;
 
@@ -34,6 +35,31 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                     dependent,
                     principal.PositionPrefix,
                     principal);
+            }
+        }
+
+        public IEnumerable<Message> Distinct(IEnumerable<Message> messages)
+            => messages.Distinct(RuleMessageEqualityComparer.Instance);
+
+        internal sealed class RuleMessageEqualityComparer : IEqualityComparer<Message>
+        {
+            public static readonly IEqualityComparer<Message> Instance = new RuleMessageEqualityComparer();
+
+            public bool Equals(Message x, Message y)
+            {
+                if (x.OrderId != y.OrderId)
+                {
+                    return false;
+                }
+
+                var uniqueReferenceCount = x.References.Concat(y.References).Distinct(Reference.Comparer).Count();
+                return uniqueReferenceCount == x.References.Count;
+            }
+
+            public int GetHashCode(Message obj)
+            {
+                // должен позволять перестановку ссылок в сообщении, т.е. (a, b, c) == (c, a, b)
+                return obj.References.Aggregate(0, (code, reference) => code ^ Reference.Comparer.GetHashCode(reference));
             }
         }
     }

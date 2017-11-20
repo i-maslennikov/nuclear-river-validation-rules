@@ -11,7 +11,6 @@ using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 using NuClear.ValidationRules.OperationsProcessing.Transports;
-using NuClear.ValidationRules.OperationsProcessing.Transports.Kafka;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {

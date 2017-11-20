@@ -59,7 +59,6 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.DefaultThemeMustHaveOnlySelfAds, 41 },
                             { MessageTypeCode.DefaultThemeMustBeExactlyOne, 40 },
                             { MessageTypeCode.OrderPositionCostPerClickMustBeSpecified, 46 },
-                            { MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions, 36 },
                             { MessageTypeCode.OrderMustHaveActiveDeal, 51 },
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
@@ -69,6 +68,7 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
 							{ MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
 							{ MessageTypeCode.AdvertisementMustPassReview, 0 },
                             { MessageTypeCode.AdvertisementShouldNotHaveComments, 0 },
+                            { MessageTypeCode.AmsMessagesShouldBeNew, 0 },
                     }.ToDictionary(x => x.Key, x => x.Value);
 
 		public static int ToErmRuleCode(this int riverMessageTypeCode)

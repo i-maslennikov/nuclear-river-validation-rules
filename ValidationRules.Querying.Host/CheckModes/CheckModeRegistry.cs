@@ -126,12 +126,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          manualReport: RuleSeverityLevel.Warning,
                          prerelease: RuleSeverityLevel.Warning),
 
-                    Rule(MessageTypeCode.FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions,
-                         single: RuleSeverityLevel.Error,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
                     Rule(MessageTypeCode.LinkedFirmShouldBeValid,
                          single: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
@@ -299,7 +293,12 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                     Rule(MessageTypeCode.AdvertisementShouldNotHaveComments,
                     manualReport: RuleSeverityLevel.Info,
                     prerelease: RuleSeverityLevel.Info,
-                    release: RuleSeverityLevel.Info)
+                    release: RuleSeverityLevel.Info),
+
+                    Rule(MessageTypeCode.AmsMessagesShouldBeNew,
+                        manualReport: RuleSeverityLevel.Error,
+                        prerelease: RuleSeverityLevel.Error,
+                        release: RuleSeverityLevel.Error)
                 };
 
         private static Tuple<MessageTypeCode, IReadOnlyDictionary<CheckMode, RuleSeverityLevel>> Rule(

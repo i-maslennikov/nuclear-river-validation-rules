@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Confluent.Kafka;
-
 using LinqToDB;
 
-using Newtonsoft.Json;
+using NuClear.Messaging.API.Flows;
+
+using ValidationRules.Hosting.Common;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 
@@ -22,38 +20,23 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
         private static readonly TimeSpan WaitTimeout = TimeSpan.FromMinutes(6);
         private static readonly TimeSpan WaitInterval = TimeSpan.FromSeconds(5);
-        private static readonly TimeSpan AmsSyncInterval = TimeSpan.FromSeconds(20);
 
         private readonly DataConnectionFactory _factory;
+        private readonly KafkaMessageFlowInfoProvider _kafkaMessageFlowInfoProvider;
 
-        public VersioningService(DataConnectionFactory factory)
+        public VersioningService(DataConnectionFactory factory, KafkaMessageFlowInfoProvider kafkaMessageFlowInfoProvider)
         {
             _factory = factory;
+            _kafkaMessageFlowInfoProvider = kafkaMessageFlowInfoProvider;
         }
 
         public async Task<long> WaitForVersion(Guid token)
         {
-            Task<long> amsVersion;
-            if (AmsHelper.TryGetLatestMessage(out var amsMessage))
-            {
-                var utcNow = DateTime.UtcNow;
-                var amsUtcNow = amsMessage.Timestamp.UtcDateTime;
-                if ((utcNow - amsUtcNow).Duration() > AmsSyncInterval)
-                {
-                    throw new TimeoutException($"River clock {utcNow} and Ams clock {amsUtcNow} (offset {amsMessage.Offset}) differs more than {AmsSyncInterval}");
-                }
-
-                amsVersion = WaitForAmsState(amsMessage.Offset, WaitInterval, WaitTimeout);
-            }
-            else
-            {
-                amsVersion = Task.FromResult(0L);
-            }
-
+            var flowSize = _kafkaMessageFlowInfoProvider.GetFlowSize(AmsFactsFlow.Instance);
+            var amsVersion = flowSize != 0 ? WaitForAmsState(flowSize - 1, WaitInterval, WaitTimeout) : Task.FromResult(0L);
             var ermVersion = WaitForErmState(token, WaitInterval, WaitTimeout);
 
             var result = await Task.WhenAll(amsVersion, ermVersion);
-
             return result.Max();
         }
 
@@ -127,41 +110,12 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             }
         }
 
-        private static class AmsHelper
+        // не хочется референсить на OperationProcessing, поэтому копипаст
+        private sealed class AmsFactsFlow : MessageFlowBase<AmsFactsFlow>
         {
-            private static readonly AmsSettings Settings = new AmsSettings();
+            public override Guid Id => new Guid("A2878E80-992A-4602-8FD6-B10AE85BBFFE");
 
-            public static bool TryGetLatestMessage(out Message message)
-            {
-                using (var consumer = new Consumer(Settings.Config))
-                {
-                    var topicPartition = new TopicPartition(Settings.Topic, Settings.Partition);
-
-                    var offsets = consumer.QueryWatermarkOffsets(topicPartition, Settings.Timeout);
-                    consumer.Assign(new[] { new TopicPartitionOffset(topicPartition, offsets.High - 1) });
-
-                    return consumer.Consume(out message, Settings.Timeout);
-                }
-            }
-
-            private sealed class AmsSettings
-            {
-                public AmsSettings()
-                {
-                    var connectionString = ConfigurationManager.ConnectionStrings["Ams"].ConnectionString;
-                    Config = JsonConvert.DeserializeObject<Dictionary<string, object>>(connectionString);
-                    Config.Add("group.id", Guid.NewGuid().ToString());
-
-                    Topic = ConfigurationManager.AppSettings["AmsFactsTopics"].Split(',').First();
-                }
-
-                public Dictionary<string, object> Config { get; }
-
-                public string Topic { get; }
-                public int Partition { get; } = 0;
-
-                public TimeSpan Timeout { get; } = TimeSpan.FromSeconds(5);
-            }
+            public override string Description => nameof(AmsFactsFlow);
         }
     }
 }

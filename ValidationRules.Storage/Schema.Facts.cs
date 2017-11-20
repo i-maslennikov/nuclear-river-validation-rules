@@ -165,6 +165,9 @@ namespace NuClear.ValidationRules.Storage
                    .HasPrimaryKey(x => x.ProjectId)
                    .HasPrimaryKey(x => x.CategoryId)
                    .HasPrimaryKey(x => x.Begin);
+            builder.Entity<SystemStatus>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.Id);
             builder.Entity<Theme>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);

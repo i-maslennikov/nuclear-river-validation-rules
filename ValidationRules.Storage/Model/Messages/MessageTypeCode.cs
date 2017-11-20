@@ -64,12 +64,12 @@
         OrderPositionCostPerClickMustBeSpecified = 59,
         OrderPositionSalesModelMustMatchCategorySalesModel = 60,
 
-        FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions = 61,
-
         OrderMustHaveActiveDeal = 62,
         OrderMustHaveActiveLegalEntities = 63,
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
 
         PremiumPartnerProfileMustHaveSingleSale = 71,
+
+        AmsMessagesShouldBeNew = 80,
     }
 }

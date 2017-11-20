@@ -148,7 +148,6 @@
     <Compile Include="Firm\LinkedFirmShouldBeValid.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
-    <Compile Include="Firm\FirmWithSelfAdvMustHaveOnlyDesktopOrIndependentPositions.cs" />
     <Compile Include="Price\FirmAssociatedPositionMustHavePrincipal.cs" />
     <Compile Include="Price\FirmPositionMustNotHaveDeniedPositions.cs" />
     <Compile Include="Price\FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject.cs" />
@@ -173,6 +172,7 @@
     <Compile Include="DataTests.cs" />
     <Compile Include="RunnerConnectionStringSettings.cs" />
     <Compile Include="SchemaMetadataSource.cs" />
+    <Compile Include="System\AmsMessagesShouldBeNew.cs" />
     <Compile Include="TestCaseMetadataSource.cs" />
     <Compile Include="TestCaseMetadataSource.Version.cs" />
     <Compile Include="TestCaseMetadataSource.Facts.cs" />

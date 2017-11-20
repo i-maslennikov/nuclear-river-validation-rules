@@ -44,6 +44,7 @@
     <None Include="project.json" />
     <None Include="run-build.ps1" />
     <None Include="metadata.servicebus.psm1" />
+    <None Include="unittests.ps1" />
     <None Include="servicebus.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

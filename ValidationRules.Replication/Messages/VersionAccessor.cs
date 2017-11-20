@@ -16,6 +16,7 @@ namespace NuClear.ValidationRules.Replication.Messages
     /// </summary>
     public sealed class VersionAccessor : IStorageBasedDataObjectAccessor<Version>
     {
+        // ReSharper disable once UnusedParameter.Local
         public VersionAccessor(IQuery query)
         {
         }
@@ -23,9 +24,6 @@ namespace NuClear.ValidationRules.Replication.Messages
         public IQueryable<Version> GetSource()
             => new[] { new Version { Id = 0, UtcDateTime = DateTime.UtcNow } }.AsQueryable();
 
-        public FindSpecification<Version> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
-        {
-            throw new NotSupportedException();
-        }
+        public FindSpecification<Version> GetFindSpecification(IReadOnlyCollection<ICommand> commands) => throw new NotSupportedException();
     }
 }
