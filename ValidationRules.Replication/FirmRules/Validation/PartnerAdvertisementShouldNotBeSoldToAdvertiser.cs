@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 using NuClear.ValidationRules.Storage.Model.Messages;
@@ -26,7 +27,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
             var messages =
                 from order in query.For<Order>()
                 from partnerPosition in query.For<Order.PartnerPosition>().Where(x => !x.IsPremium).Where(x => x.DestinationFirmId == order.FirmId)
-                from partnerOrder in query.For<Order>().Where(x => x.Id == partnerPosition.OrderId)
+                from partnerOrder in query.For<Order>().Where(x => x.Id == partnerPosition.OrderId).Where(x => Scope.CanSee(x.Scope, order.Scope))
                 where partnerOrder.FirmId != partnerPosition.DestinationFirmId // о позициях в карточках своей фирмы не предупреждаем
                 select new Version.ValidationResult
                 {
