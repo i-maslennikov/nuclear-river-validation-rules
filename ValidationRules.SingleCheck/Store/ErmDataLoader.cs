@@ -146,8 +146,11 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                    .OrderByDescending(x => x.BeginDate)
                                    .Take(1)
                                    .Execute()
-                                   .Single();
-            store.Add(actualPrice);
+                                   .SingleOrDefault();
+            if (actualPrice != null)
+            {
+                store.Add(actualPrice);
+            }
 
             var usedPricePositions = query.GetTable<PricePosition>()
                                           .Where(x => usedPricePositionIds.Contains(x.Id))
@@ -157,7 +160,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                          .Where(x => x.ProjectId == project.Id && x.BeginDate >= order.BeginDistributionDate && x.BeginDate <= order.EndDistributionDatePlan)
                                          .Execute();
             store.AddRange(monthlyUsedPrices);
-            var usedPriceIds = usedPricePositions.Select(x => x.PriceId).Union(new[] { actualPrice.Id }).Union(monthlyUsedPrices.Select(x => x.Id)).ToList();
+            var usedPriceIds = usedPricePositions.Select(x => x.PriceId).Union(actualPrice != null ? new[] { actualPrice.Id } : Array.Empty<long>()).Union(monthlyUsedPrices.Select(x => x.Id)).ToList();
             var usedPositionIds = usedPricePositions.Select(x => x.PositionId).Union(opas.Select(y => y.PositionId)).ToList();
 
             var positions = query.GetTable<Position>()
