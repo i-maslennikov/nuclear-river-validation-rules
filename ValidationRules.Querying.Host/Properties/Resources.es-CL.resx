@@ -127,7 +127,7 @@
     <value>{0} "{1}" esta orden es la principal para las siguientes posiciones: {2} "{3}"</value>
   </data>
   <data name="AdvertisementAmountShouldMeetMinimumRestrictions" xml:space="preserve">
-    <value>Позиция {0} должна присутствовать в сборке в количестве от {1} до {2}. Может быть выпущено количество позиций в месяц {3} - {4}</value>
+    <value>La posición {0} debe estar presente en la compilación en cantidad desde {1} hasta {2}. La cantidad de las posiciones que pueden ser publicadas al mes {3} - {4}</value>
   </data>
   <data name="FirmAddressMustBeLocatedOnTheMap" xml:space="preserve">
     <value>La posición {0} se ha creado para una dirección en blanco {1}</value>
@@ -331,7 +331,7 @@
     <value>El material publicitario {0} fue aprobado con observaciones</value>
   </data>
   <data name="AmsMessagesShouldBeNew" xml:space="preserve">
-    <value>Данные из системы AMS слишком старые, результаты проверок недостоверны</value>
+    <value>Los datos desde el sistema de AMS son demasiado viejos, los resultados de las validaciones no son confiables</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Línea Testrovaja</value>
