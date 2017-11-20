@@ -17,9 +17,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
     /// </summary>
     public sealed class AccountBalanceShouldBePositive : ValidationResultAccessorBase
     {
-        // todo: завести настройку SignificantDigitsNumber и вообще решить вопрос с настройками проверок
-        private static readonly decimal Epsilon = 0.01m;
-
         public AccountBalanceShouldBePositive(IQuery query) : base(query, MessageTypeCode.AccountBalanceShouldBePositive)
         {
         }
@@ -28,7 +25,6 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
         {
             var ruleResults =
                 from accountPeriod in query.For<Account.AccountPeriod>()
-                                           .Where(x => x.ReleaseAmount > 0 && (x.Balance - x.ReleaseAmount - (x.OwerallLockedAmount - x.LockedAmount) <= -Epsilon))
                 from order in query.For<Order>()
                                    .Where(x => !x.IsFreeOfCharge)
                                    .Where(x => x.AccountId == accountPeriod.AccountId)
@@ -40,7 +36,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Validation
                             new MessageParams(
                                     new Dictionary<string, object>
                                         {
-                                            { "available", accountPeriod.Balance - (accountPeriod.OwerallLockedAmount - accountPeriod.LockedAmount) },
+                                            { "available", accountPeriod.Balance },
                                             { "planned", accountPeriod.ReleaseAmount }
                                         },
                                     new Reference<EntityTypeAccount>(accountPeriod.AccountId),

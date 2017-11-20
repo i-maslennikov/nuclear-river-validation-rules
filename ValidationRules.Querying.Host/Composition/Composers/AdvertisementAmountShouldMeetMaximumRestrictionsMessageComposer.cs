@@ -14,6 +14,9 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
         {
             var orderReference = references.Get<EntityTypeOrder>();
             var dto = extra.ReadAdvertisementCountMessage();
+            var period = dto.Begin.AddMonths(1) == dto.End
+                ? dto.Begin.ToString("MMMM")
+                : $"{dto.Begin:MMMM} - {dto.End:MMMM}";
 
             return new MessageComposerResult(
                 orderReference,
@@ -21,7 +24,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                 dto.Name,
                 dto.Min,
                 dto.Max,
-                dto.Month,
+                period,
                 dto.Count);
         }
 

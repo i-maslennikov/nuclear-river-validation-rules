@@ -95,13 +95,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         public static SchemaInitializationCommand Aggregates { get; }
             = new SchemaInitializationCommand(Schema.Aggregates,
                 DataObjectTypesProvider.AggregateTypes,
-                FactsConnectionStringIdentity.Instance,
+                AggregatesConnectionStringIdentity.Instance,
                 new[] { "AccountAggregates", "AdvertisementAggregates", "ConsistencyAggregates", "FirmAggregates", "PriceAggregates", "ProjectAggregates", "ThemeAggregates" });
 
         public static SchemaInitializationCommand Messages { get; }
             = new SchemaInitializationCommand(Schema.Messages,
                 DataObjectTypesProvider.MessagesTypes,
-                FactsConnectionStringIdentity.Instance,
+                MessagesConnectionStringIdentity.Instance,
                 new[] { "Messages", "MessagesCache" });
     }
 }

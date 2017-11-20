@@ -331,6 +331,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         {
             return container
                 .RegisterAccessor<Account, AccountAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<AccountDetail, AccountDetailAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<AssociatedPosition, AssociatedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<AssociatedPositionsGroup, AssociatedPositionsGroupAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<Bargain, BargainAccessor>(entryPointSpecificLifetimeManagerFactory)
@@ -348,7 +349,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<FirmAddressCategory, FirmAddressCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<LegalPerson, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<LegalPersonProfile, LegalPersonProfileAccessor, LegalPersonProfileNameAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Lock, LockAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<NomenclatureCategory, NomenclatureCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<Order, OrderAccessor, OrderNameAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<OrderItem, OrderItemAccessor>(entryPointSpecificLifetimeManagerFactory)

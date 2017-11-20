@@ -16,16 +16,6 @@ namespace NuClear.ValidationRules.Storage.Model.AccountRules.Aggregates
             public decimal Balance { get; set; }
 
             /// <summary>
-            /// Сумма блокировок по счёту за период.
-            /// </summary>
-            public decimal LockedAmount { get; set; }
-
-            /// <summary>
-            /// Сумма блокировок по счёту за всё время.
-            /// </summary>
-            public decimal OwerallLockedAmount { get; set; }
-
-            /// <summary>
             /// Сумма, ожидаемая к списанию со счёта за период. Формируется по всем заказам, привязанным ко счёту.
             /// </summary>
             public decimal ReleaseAmount { get; set; }

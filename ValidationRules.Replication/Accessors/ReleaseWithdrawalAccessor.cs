@@ -16,6 +16,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
 {
     public sealed class ReleaseWithdrawalAccessor : IStorageBasedDataObjectAccessor<ReleaseWithdrawal>, IDataChangesHandler<ReleaseWithdrawal>
     {
+        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
         private readonly IQuery _query;
 
         public ReleaseWithdrawalAccessor(IQuery query)
@@ -30,7 +31,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
                     OrderPositionId = x.OrderPositionId,
                     Amount = x.AmountToWithdraw,
                     Start = x.ReleaseBeginDate,
-                });
+                    End = x.ReleaseEndDate + OneSecond
+            });
 
         public FindSpecification<ReleaseWithdrawal> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {

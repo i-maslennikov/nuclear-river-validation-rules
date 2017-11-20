@@ -25,6 +25,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         public static readonly Type[] FactTypes =
             {
                 typeof(Facts::Account),
+                typeof(Facts::AccountDetail),
                 typeof(Facts::AssociatedPosition),
                 typeof(Facts::AssociatedPositionsGroup),
                 typeof(Facts::Bargain),
@@ -43,7 +44,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(Facts::FirmAddressCategory),
                 typeof(Facts::LegalPerson),
                 typeof(Facts::LegalPersonProfile),
-                typeof(Facts::Lock),
                 typeof(Facts::NomenclatureCategory),
                 typeof(Facts::Order),
                 typeof(Facts::OrderItem),

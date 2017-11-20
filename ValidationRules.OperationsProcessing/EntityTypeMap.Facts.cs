@@ -13,6 +13,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
     {
         private static readonly Dictionary<int, IReadOnlyCollection<Type>> FactsTypeMap = new Dictionary<int, IReadOnlyCollection<Type>>()
             .AddMapping<EntityTypeAccount>(typeof(Facts::Account))
+            .AddMapping<EntityTypeAccountDetail>(typeof(Facts::AccountDetail))
             .AddMapping<EntityTypeAssociatedPosition>(typeof(Facts::AssociatedPosition))
             .AddMapping<EntityTypeAssociatedPositionsGroup>(typeof(Facts::AssociatedPositionsGroup))
             .AddMapping<EntityTypeBargain>(typeof(Facts::Bargain))
@@ -29,7 +30,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
             .AddMapping<EntityTypeCategoryFirmAddress>(typeof(Facts::FirmAddressCategory))
             .AddMapping<EntityTypeLegalPerson>(typeof(Facts::LegalPerson))
             .AddMapping<EntityTypeLegalPersonProfile>(typeof(Facts::LegalPersonProfile))
-            .AddMapping<EntityTypeLock>(typeof(Facts::Lock))
             .AddMapping<EntityTypeOrder>(typeof(Facts::Order),
                                          typeof(Facts::UnlimitedOrder))
             .AddMapping<EntityTypeOrderPosition>(typeof(Facts::OrderPosition),
