@@ -196,6 +196,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <Compile Include="Store\ErmDataLoader.LoadBuyHere.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ValidationRules.Replication\ValidationRules.Replication.csproj">
