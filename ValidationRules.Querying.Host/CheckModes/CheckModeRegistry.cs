@@ -6,6 +6,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.CheckModes
 {
+    // Если хочешь включить single-режим у проверки, то проверь загружены ли в ErmDataLoader все нужные данные
     internal static class CheckModeRegistry
     {
         public static readonly IReadOnlyCollection<Tuple<MessageTypeCode, IReadOnlyDictionary<CheckMode, RuleSeverityLevel>>> Map =

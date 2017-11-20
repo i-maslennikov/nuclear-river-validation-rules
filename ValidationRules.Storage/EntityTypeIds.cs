@@ -3,6 +3,7 @@
     public static class EntityTypeIds
     {
         public const int Account = 142;
+        public const int AccountDetail = 141;
         public const int Advertisement = 186;
         public const int AdvertisementElement = 187;
         public const int AdvertisementElementStatus = 316;
@@ -25,7 +26,6 @@
         public const int FirmContact = 165;
         public const int LegalPerson = 147;
         public const int LegalPersonProfile = 219;
-        public const int Lock = 159;
         public const int Order = 151;
         public const int OrderPosition = 150;
         public const int OrderPositionAdvertisement = 216;

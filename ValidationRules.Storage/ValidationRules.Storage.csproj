@@ -169,6 +169,7 @@
     <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
     <Compile Include="Identitites\Connections\MessagesConnectionStringIdentity.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAccount.cs" />
+    <Compile Include="Identitites\EntityTypes\EntityTypeAccountDetail.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisement.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisementElement.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisementElementStatus.cs" />
@@ -191,7 +192,6 @@
     <Compile Include="Identitites\EntityTypes\EntityTypeFirmContact.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeLegalPerson.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeLegalPersonProfile.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeLock.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrder.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrderFile.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrderPosition.cs" />
@@ -209,9 +209,10 @@
     <Compile Include="LinqToDbPropertyProvider.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Order.cs" />
+    <Compile Include="Model\Erm\AccountDetail.cs" />
+    <Compile Include="Model\Facts\AccountDetail.cs" />
     <Compile Include="Model\Facts\Advertisement.cs" />
     <Compile Include="Model\Facts\EntityName.cs" />
-    <Compile Include="Model\Facts\Lock.cs" />
     <Compile Include="Model\Facts\Order.cs" />
     <Compile Include="Model\Facts\Account.cs" />
     <Compile Include="Model\Facts\OrderItem.cs" />
@@ -250,7 +251,6 @@
     <Compile Include="Model\Erm\FirmAddress.cs" />
     <Compile Include="Model\Erm\LegalPerson.cs" />
     <Compile Include="Model\Erm\LegalPersonProfile.cs" />
-    <Compile Include="Model\Erm\Lock.cs" />
     <Compile Include="Model\Erm\OrderFile.cs" />
     <Compile Include="Model\Erm\OrderPositionCostPerClick.cs" />
     <Compile Include="Model\Erm\PositionChild.cs" />
