@@ -315,9 +315,6 @@
   <data name="FirmShouldHaveLimitedCategoryCount" xml:space="preserve">
     <value>Для фирмы {0} задано слишком большое число рубрик - {1}. Максимально допустимое - {2}.</value>
   </data>
-  <data name="PremiumPartnerProfileMustHaveSingleSale" xml:space="preserve">
-    <value>На адрес "{0}" фирмы "{1}" продано более одной позиции Premium в периоды: {2}</value>
-  </data>
   <data name="AdvertisementMustBelongToFirm" xml:space="preserve">
     <value>В позиции {0} выбран рекламный материал {1}, не принадлежащий фирме {2}</value>
   </data>
@@ -330,7 +327,13 @@
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
     <value>Рекламный материал {0} одобрен с замечаниями</value>
   </data>
-  <data name="Test" xml:space="preserve">
-    <value>Тестровая строка</value>
+  <data name="FirmAddressMustNotHaveMultipleCallToAction" xml:space="preserve">
+    <value>На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}</value>
+  </data>
+  <data name="FirmAddressShouldNotHaveMultiplePartnerAdvertisement" xml:space="preserve">
+    <value>На адрес {0} фирмы {1} продано более одной позиции 'Реклама в профилях партнёров' в периоды: {2}</value>
+  </data>
+  <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
+    <value>Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}</value>
   </data>
 </root>

@@ -315,9 +315,6 @@
   <data name="FirmShouldHaveLimitedCategoryCount" xml:space="preserve">
     <value>U firmy {0} bylo zadáno příliš mnoho rubrik - {1}. Maximální počet - {2}.</value>
   </data>
-  <data name="PremiumPartnerProfileMustHaveSingleSale" xml:space="preserve">
-    <value>Firmě „{1}“ umístěné na adrese „{0}“ byla prodána více než jedna pozice Premium za období: {2}</value>
-  </data>
   <data name="AdvertisementMustBelongToFirm" xml:space="preserve">
     <value>V položce {0} byl vybrán reklamní materiál {1}, který nenáleží firmě {2}</value>
   </data>
@@ -330,7 +327,13 @@
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
     <value>Reklamní materiál {0} byl schválen s poznámkami</value>
   </data>
-  <data name="Test" xml:space="preserve">
-    <value>Testrovaja čára</value>
+  <data name="FirmAddressMustNotHaveMultipleCallToAction" xml:space="preserve">
+    <value>Firmě „{1}“ umístěné na adrese „{0}“ bylo prodáno více než jedno akční tlačítko v záhlaví kartičky, za období: {2}</value>
+  </data>
+  <data name="FirmAddressShouldNotHaveMultiplePartnerAdvertisement" xml:space="preserve">
+    <value>Firmě „{1}“ umístěné na adrese „{0}“ byla prodána více než jedna pozice „Reklama v profilech partnerů“ za období: {2}</value>
+  </data>
+  <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
+    <value>Adresa {0} patří firmě-zadavateli reklamy {1} s objednávkou {2}</value>
   </data>
 </root>

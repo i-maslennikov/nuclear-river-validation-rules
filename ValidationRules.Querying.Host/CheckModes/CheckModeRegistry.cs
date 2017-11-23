@@ -274,12 +274,29 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale,
+                    Rule(MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement,
                          single: RuleSeverityLevel.Error,
                          singleForApprove: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser,
+                         single: RuleSeverityLevel.Error,
+                         singleForApprove: RuleSeverityLevel.Error,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
+                         manualReport: RuleSeverityLevel.Info,
+                         prerelease: RuleSeverityLevel.Info,
+                         release: RuleSeverityLevel.Info),
+
+                    Rule(MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
+                         manualReport: RuleSeverityLevel.Info,
+                         prerelease: RuleSeverityLevel.Info,
+                         release: RuleSeverityLevel.Info),
 
                     Rule(MessageTypeCode.AdvertisementMustBelongToFirm,
                          manualReport: RuleSeverityLevel.Error,
@@ -292,9 +309,9 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.AdvertisementShouldNotHaveComments,
-                    manualReport: RuleSeverityLevel.Info,
-                    prerelease: RuleSeverityLevel.Info,
-                    release: RuleSeverityLevel.Info)
+                        manualReport: RuleSeverityLevel.Info,
+                        prerelease: RuleSeverityLevel.Info,
+                        release: RuleSeverityLevel.Info)
                 };
 
         private static Tuple<MessageTypeCode, IReadOnlyDictionary<CheckMode, RuleSeverityLevel>> Rule(

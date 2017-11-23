@@ -315,9 +315,6 @@
   <data name="FirmShouldHaveLimitedCategoryCount" xml:space="preserve">
     <value>For the company {0}, too big number of categories is set - {1}. Maximum permitted number - {2}.</value>
   </data>
-  <data name="PremiumPartnerProfileMustHaveSingleSale" xml:space="preserve">
-    <value>For the address "{0}" of the company "{1}" more than one Premium position has been sold in the following periods: {2}</value>
-  </data>
   <data name="AdvertisementMustBelongToFirm" xml:space="preserve">
     <value>Advertising material {1} that does not belong to the company {2} is selected in the item {0}</value>
   </data>
@@ -330,7 +327,13 @@
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
     <value>Advertising material {0} has been approved with comments</value>
   </data>
-  <data name="Test" xml:space="preserve">
-    <value>Test string</value>
+  <data name="FirmAddressMustNotHaveMultipleCallToAction" xml:space="preserve">
+    <value>More than one button in the title of a card has been sold for the following address {0} of the company {1} during the following periods: {2}</value>
+  </data>
+  <data name="FirmAddressShouldNotHaveMultiplePartnerAdvertisement" xml:space="preserve">
+    <value>More than one Advertisement in Partners' Profiles position has been sold for the following address {0} of the company {1} during the following periods: {2}</value>
+  </data>
+  <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
+    <value>The address {0} belongs to the company advertiser {1} with the order {2}</value>
   </data>
 </root>

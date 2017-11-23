@@ -241,6 +241,24 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}.
+        /// </summary>
+        internal static string FirmAddressMustNotHaveMultipleCallToAction {
+            get {
+                return ResourceManager.GetString("FirmAddressMustNotHaveMultipleCallToAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to На адрес {0} фирмы {1} продано более одной позиции &apos;Реклама в профилях партнёров&apos; в периоды: {2}.
+        /// </summary>
+        internal static string FirmAddressShouldNotHaveMultiplePartnerAdvertisement {
+            get {
+                return ResourceManager.GetString("FirmAddressShouldNotHaveMultiplePartnerAdvertisement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Отделение организации назначения заказа не соответствует отделению организации выбранной фирмы.
         /// </summary>
         internal static string FirmAndOrderShouldBelongTheSameOrganizationUnit {
@@ -646,11 +664,11 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to На адрес &quot;{0}&quot; фирмы &quot;{1}&quot; продано более одной позиции Premium в периоды: {2}.
+        ///   Looks up a localized string similar to Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}.
         /// </summary>
-        internal static string PremiumPartnerProfileMustHaveSingleSale {
+        internal static string PartnerAdvertisementShouldNotBeSoldToAdvertiser {
             get {
-                return ResourceManager.GetString("PremiumPartnerProfileMustHaveSingleSale", resourceCulture);
+                return ResourceManager.GetString("PartnerAdvertisementShouldNotBeSoldToAdvertiser", resourceCulture);
             }
         }
         
@@ -678,15 +696,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string RichDefaultPositionTypeTemplate {
             get {
                 return ResourceManager.GetString("RichDefaultPositionTypeTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Тестровая строка.
-        /// </summary>
-        internal static string Test {
-            get {
-                return ResourceManager.GetString("Test", resourceCulture);
             }
         }
         

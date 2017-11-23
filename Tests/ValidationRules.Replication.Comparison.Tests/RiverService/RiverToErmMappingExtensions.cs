@@ -62,18 +62,21 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OrderMustHaveActiveDeal, 51 },
                             { MessageTypeCode.OrderMustHaveActiveLegalEntities, 52 },
                             { MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory, 38 },
-							{ MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel, 0 },
+                            { MessageTypeCode.OrderPositionSalesModelMustMatchCategorySalesModel, 0 },
                             { MessageTypeCode.ProjectMustContainCostPerClickMinimumRestriction, 0 },
-                            { MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale, 0 },
-							{ MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
-							{ MessageTypeCode.AdvertisementMustPassReview, 0 },
+                            { MessageTypeCode.AdvertisementMustBelongToFirm, 0 },
+                            { MessageTypeCode.AdvertisementMustPassReview, 0 },
                             { MessageTypeCode.AdvertisementShouldNotHaveComments, 0 },
+                            { MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement, 0 },
+                            { MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement, 0 },
+                            { MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser, 0 },
+                            { MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser, 0 },
                     }.ToDictionary(x => x.Key, x => x.Value);
 
-		public static int ToErmRuleCode(this int riverMessageTypeCode)
+        public static int ToErmRuleCode(this int riverMessageTypeCode)
             => RiverToErmRuleCodeMapping[(MessageTypeCode)riverMessageTypeCode];
 
-	    public static bool HasRiverRule(this int ermMessageTypeCode)
-		    => RiverToErmRuleCodeMapping.Any(x => x.Value == ermMessageTypeCode);
-	}
+        public static bool HasRiverRule(this int ermMessageTypeCode)
+            => RiverToErmRuleCodeMapping.Any(x => x.Value == ermMessageTypeCode);
+    }
 }
