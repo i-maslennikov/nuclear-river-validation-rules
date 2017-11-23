@@ -10,7 +10,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
-    /// Для заказов, размещающих кнопку в заголовке карточки (кнопка-действие, ЗМК-Premium), если для одного адреса есть более одной продажи, должна выводиться ошибка.
+    /// Для заказов, при наличии нескольких позиций премиумной партнёрской рекламы (ЗМК-Premium подобные, FMCG) на один адрес, должна выводиться ошибка.
     /// "На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}"
     /// </summary>
     public sealed class FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement : ValidationResultAccessorBase

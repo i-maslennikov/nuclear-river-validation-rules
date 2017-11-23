@@ -13,7 +13,7 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
-    /// Для заказов, размещающих рекламу в карточке другой фирмы, если для одного адреса есть более одной продажи, должно выводиться предупреждение.
+    /// Для заказов, размещающих рекламу в карточке другой фирмы (исключая премиум), если для одного адреса есть более одной продажи, должно выводиться предупреждение.
     /// "На адрес {0} фирмы {1} продано более одной позиции 'Реклама в профилях партнёров' в периоды: {2}"
     /// </summary>
     public sealed class FirmAddressShouldNotHaveMultiplePartnerAdvertisement : ValidationResultAccessorBase
