@@ -330,6 +330,9 @@
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
     <value>El material publicitario {0} fue aprobado con observaciones</value>
   </data>
+  <data name="AmsMessagesShouldBeNew" xml:space="preserve">
+    <value>Los datos desde el sistema de AMS son demasiado viejos, los resultados de las validaciones no son confiables</value>
+  </data>
   <data name="Test" xml:space="preserve">
     <value>Línea Testrovaja</value>
   </data>

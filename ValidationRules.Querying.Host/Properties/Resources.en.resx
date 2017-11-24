@@ -330,6 +330,9 @@
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
     <value>Advertising material {0} has been approved with comments</value>
   </data>
+  <data name="AmsMessagesShouldBeNew" xml:space="preserve">
+    <value>Data from AMS system are too old, audit results are unreliable</value>
+  </data>
   <data name="Test" xml:space="preserve">
     <value>Test string</value>
   </data>
