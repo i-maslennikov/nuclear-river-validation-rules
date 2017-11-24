@@ -315,9 +315,6 @@
   <data name="FirmShouldHaveLimitedCategoryCount" xml:space="preserve">
     <value>Para la empresa {0} se ha establecido un número demasiado elevado de categorías: {1}. Máximo permitido: {2}.</value>
   </data>
-  <data name="PremiumPartnerProfileMustHaveSingleSale" xml:space="preserve">
-    <value>Para la dirección "{0}" de la empresa "{1}" fue vendida más de una posición Premium en los siguientes períodos: {2}</value>
-  </data>
   <data name="AdvertisementMustBelongToFirm" xml:space="preserve">
     <value>En la posición {0} se ha seleccionado el material {1} no perteneciente a la empresa {2}</value>
   </data>
@@ -330,10 +327,16 @@
   <data name="AdvertisementShouldNotHaveComments_OkWithComment" xml:space="preserve">
     <value>El material publicitario {0} fue aprobado con observaciones</value>
   </data>
+  <data name="FirmAddressMustNotHaveMultipleCallToAction" xml:space="preserve">
+    <value>Para la dirección {0} de la empresa {1} se ha vendido más de un botón en el título de la ficha en los siguientes períodos: {2}</value>
+  </data>
+  <data name="FirmAddressShouldNotHaveMultiplePartnerAdvertisement" xml:space="preserve">
+    <value>Para la dirección {0} de la empresa {1} se ha vendido más de una posición de la Publicidad en los Perfiles de los Asociados en los siguientes períodos: {2}</value>
+  </data>
+  <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
+    <value>La dirección {0} pertenece a la empresa anunciante {1} con el pedido {2}</value>
+  </data>
   <data name="AmsMessagesShouldBeNew" xml:space="preserve">
     <value>Los datos desde el sistema de AMS son demasiado viejos, los resultados de las validaciones no son confiables</value>
-  </data>
-  <data name="Test" xml:space="preserve">
-    <value>Línea Testrovaja</value>
   </data>
 </root>
