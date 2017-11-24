@@ -87,7 +87,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                        {
                            PriceId = groups.Key.PriceId,
                            CategoryCode = groups.Key.CategoryCode,
-                           CategoryName = nomencalure == null ? "empty" : nomencalure.Name,
+                           CategoryName = nomencalure == null ? ("CategoryCode = " + groups.Key.CategoryCode) : nomencalure.Name,
                            Max = groups.Min(x => x.MaxAdvertisementAmount) ?? int.MaxValue,
                            Min = groups.Max(x => x.MinAdvertisementAmount) ?? 0,
                            MissingMinimalRestriction = groups.Max(x => x.MinAdvertisementAmount) == null

@@ -28,6 +28,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         public static readonly Type[] FactTypes =
             {
                 typeof(Facts::Account),
+                typeof(Facts::AccountDetail),
                 typeof(Facts::AssociatedPosition),
                 typeof(Facts::AssociatedPositionsGroup),
                 typeof(Facts::Bargain),
@@ -46,7 +47,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(Facts::FirmAddressCategory),
                 typeof(Facts::LegalPerson),
                 typeof(Facts::LegalPersonProfile),
-                typeof(Facts::Lock),
                 typeof(Facts::NomenclatureCategory),
                 typeof(Facts::Order),
                 typeof(Facts::OrderItem),
@@ -124,12 +124,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(ConsistencyAggregates::Order.MissingRequiredField),
                 typeof(ConsistencyAggregates::Order.MissingOrderScan),
 
-			    typeof(FirmAggregates::Firm),
-			    typeof(FirmAggregates::Firm.CategoryPurchase),
-			    typeof(FirmAggregates::Order),
-			    typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
-			    typeof(FirmAggregates::Order.InvalidFirm),
-                typeof(FirmAggregates::Order.PremiumPartnerProfilePosition),
+                typeof(FirmAggregates::Firm),
+                typeof(FirmAggregates::Firm.CategoryPurchase),
+                typeof(FirmAggregates::Order),
+                typeof(FirmAggregates::Order.FirmOrganiationUnitMismatch),
+                typeof(FirmAggregates::Order.InvalidFirm),
+                typeof(FirmAggregates::Order.PartnerPosition),
 
                 typeof(ProjectAggregates::Order),
                 typeof(ProjectAggregates::Order.AddressAdvertisementNonOnTheMap),

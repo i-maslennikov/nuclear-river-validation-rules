@@ -68,7 +68,11 @@
         OrderMustHaveActiveLegalEntities = 63,
         AdvantageousPurchasesBannerMustBeSoldInTheSameCategory = 64,
 
-        PremiumPartnerProfileMustHaveSingleSale = 71,
+        FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement = 71,
+        FirmAddressShouldNotHaveMultiplePartnerAdvertisement = 72,
+
+        PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser = 73,
+        PartnerAdvertisementShouldNotBeSoldToAdvertiser = 74,
 
         AmsMessagesShouldBeNew = 80,
     }

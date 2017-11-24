@@ -6,6 +6,7 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
     {
         public long OrderPositionId { get; set; }
         public DateTime Start { get; set; }
+        public DateTime End { get; set; }
         public decimal Amount { get; set; }
     }
 }

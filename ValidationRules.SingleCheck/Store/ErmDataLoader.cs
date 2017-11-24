@@ -8,7 +8,7 @@ using NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.SingleCheck.Store
 {
-    public static class ErmDataLoader
+    public static partial class ErmDataLoader
     {
         public static void Load(long orderId, DataConnection query, IStore store)
         {
@@ -22,7 +22,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.Add(order);
 
             LoadReleaseWithdrawals(query, order, store);
-            LoadAccount(query, order, store);
 
             var bargainIds = new[] { order.BargainId };
             var dealIds = new[] { order.DealId };
@@ -106,7 +105,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.AddRange(opas);
             var themeIds = opas.Where(x => x.ThemeId.HasValue).Select(x => x.ThemeId.Value).ToList();
             var categoryIds = opas.Where(x => x.CategoryId.HasValue).Select(x => x.CategoryId.Value).ToList();
-            var adverisementIds = opas.Where(x => x.AdvertisementId.HasValue).Select(x => x.AdvertisementId.Value).ToList();
             var firmAddressIds = opas.Where(x => x.FirmAddressId.HasValue).Select(x => x.FirmAddressId.Value).ToList(); // список привязанных адресов из-за ЗМК может превышать список адресов фирмы
 
             var costs = query.GetTable<OrderPositionCostPerClick>()
@@ -146,8 +144,11 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                    .OrderByDescending(x => x.BeginDate)
                                    .Take(1)
                                    .Execute()
-                                   .Single();
-            store.Add(actualPrice);
+                                   .SingleOrDefault();
+            if (actualPrice != null)
+            {
+                store.Add(actualPrice);
+            }
 
             var usedPricePositions = query.GetTable<PricePosition>()
                                           .Where(x => usedPricePositionIds.Contains(x.Id))
@@ -157,7 +158,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                          .Where(x => x.ProjectId == project.Id && x.BeginDate >= order.BeginDistributionDate && x.BeginDate <= order.EndDistributionDatePlan)
                                          .Execute();
             store.AddRange(monthlyUsedPrices);
-            var usedPriceIds = usedPricePositions.Select(x => x.PriceId).Union(new[] { actualPrice.Id }).Union(monthlyUsedPrices.Select(x => x.Id)).ToList();
+            var usedPriceIds = usedPricePositions.Select(x => x.PriceId).Union(actualPrice != null ? new[] { actualPrice.Id } : Array.Empty<long>()).Union(monthlyUsedPrices.Select(x => x.Id)).ToList();
             var usedPositionIds = usedPricePositions.Select(x => x.PositionId).Union(opas.Select(y => y.PositionId)).ToList();
 
             var positions = query.GetTable<Position>()
@@ -236,64 +237,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             LoadBuyHere(query, order, store);
         }
 
-        private static void LoadBuyHere(DataConnection query, Order order, IStore store)
-        {
-            const long CategoryCodePremiumAdvertising = 809065011136692321; // Реклама в профилях партнеров (приоритетное размещение)
-            const long CategoryCodePremiumAdvertisingAddress = 809065011136692326; // Реклама в профилях партнеров (адреса)
-            var categoryCodes = new[] { CategoryCodePremiumAdvertising, CategoryCodePremiumAdvertisingAddress };
-
-            var firmAddresses = (
-                from op in query.GetTable<OrderPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.OrderId == order.Id)
-                from opa in query.GetTable<OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
-                from position in query.GetTable<Position>().Where(x => x.CategoryCode == CategoryCodePremiumAdvertisingAddress).Where(x => x.Id == opa.PositionId)
-                from address in query.GetTable<FirmAddress>().Where(x => x.Id == opa.FirmAddressId)
-                select address
-            ).Execute();
-            store.AddRange(firmAddresses);
-            var firmAddressIds = firmAddresses.Select(x => x.Id).ToList();
-
-            if (!firmAddresses.Any())
-            {
-                return;
-            }
-
-            var positions =
-                query.GetTable<Position>()
-                    .Where(x => categoryCodes.Contains(x.CategoryCode))
-                    .Execute();
-            store.AddRange(positions);
-
-            var template =
-                from op in query.GetTable<OrderPosition>().Where(x => x.IsActive && !x.IsDeleted)
-                from opa in query.GetTable<OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
-                from p in query.GetTable<Position>().Where(x => x.Id == opa.PositionId)
-                select new { op.OrderId, p.CategoryCode, opa.FirmAddressId };
-
-            var orders =
-                query.GetTable<Order>()
-                    .Where(o => o.BeginDistributionDate < order.EndDistributionDatePlan
-                               && order.BeginDistributionDate < o.EndDistributionDatePlan
-                               && new [] {2, 4, 5}.Contains(o.WorkflowStepId) // заказы "на оформлении" не нужны - проверяемый их в любом лучае не видит
-                               && template.Any(x => x.OrderId == o.Id && x.CategoryCode == CategoryCodePremiumAdvertising)
-                               && template.Any(x => x.OrderId == o.Id && x.CategoryCode == CategoryCodePremiumAdvertisingAddress && firmAddressIds.Contains(x.FirmAddressId.Value)))
-                    .Execute();
-            store.AddRange(orders);
-            var orderIds = orders.Select(x => x.Id);
-
-            var orderPositions =
-                query.GetTable<OrderPosition>()
-                    .Where(x => x.IsActive && !x.IsDeleted && orderIds.Contains(x.OrderId))
-                    .Execute();
-            store.AddRange(orderPositions);
-            var orderPositionIds = orderPositions.Select(x => x.Id);
-
-            var orderPositionAdvertisements =
-                query.GetTable<OrderPositionAdvertisement>()
-                    .Where(x => orderPositionIds.Contains(x.OrderPositionId))
-                    .Execute();
-            store.AddRange(orderPositionAdvertisements);
-        }
-
         private static void LoadFirm(DataConnection query, Order order, IReadOnlyCollection<long> additionalFirmIds, IStore store)
         {
             var firms =
@@ -315,30 +258,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                      .Where(x => firmAddressIds.Contains(x.FirmAddressId))
                      .Execute();
             store.AddRange(categoryFirmAddresses);
-        }
-
-        private static void LoadAccount(DataConnection query, Order order, IStore store)
-        {
-            var accounts =
-                query.GetTable<Account>()
-                     .Where(x => x.LegalPersonId == order.LegalPersonId && x.BranchOfficeOrganizationUnitId == order.BranchOfficeOrganizationUnitId)
-                     .Execute();
-            store.AddRange(accounts);
-            var accountIds = accounts.Select(x => x.Id);
-
-            var locks =
-                query.GetTable<Lock>()
-                     .Where(x => x.IsActive && !x.IsDeleted)
-                     .Where(x => accountIds.Contains(x.AccountId))
-                     .Execute();
-            store.AddRange(locks);
-            var orderIds = locks.Select(x => x.OrderId);
-
-            var orders =
-                query.GetTable<Order>()
-                     .Where(x => orderIds.Contains(x.Id))
-                     .Execute();
-            store.AddRange(orders);
         }
 
         private static void LoadReleaseWithdrawals(DataConnection query, Order order, IStore store)

@@ -90,11 +90,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 new[] { "Facts" });
 
         public static SchemaInitializationCommand Aggregates { get; }
-			= new SchemaInitializationCommand(Schema.Aggregates, DataObjectTypesProviderFactory.AggregateTypes, FactsConnectionStringIdentity.Instance,
+			= new SchemaInitializationCommand(Schema.Aggregates, DataObjectTypesProviderFactory.AggregateTypes, AggregatesConnectionStringIdentity.Instance,
 				new[] { "AccountAggregates", "AdvertisementAggregates", "ConsistencyAggregates", "FirmAggregates", "PriceAggregates", "ProjectAggregates", "ThemeAggregates", "SystemAggregates" });
 
         public static SchemaInitializationCommand Messages { get; }
-            = new SchemaInitializationCommand(Schema.Messages, DataObjectTypesProviderFactory.MessagesTypes, FactsConnectionStringIdentity.Instance,
+            = new SchemaInitializationCommand(Schema.Messages, DataObjectTypesProviderFactory.MessagesTypes, MessagesConnectionStringIdentity.Instance,
                 new[] { "Messages", "MessagesCache" });
     }
 }

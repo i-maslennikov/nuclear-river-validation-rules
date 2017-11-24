@@ -17,6 +17,7 @@ namespace NuClear.ValidationRules.Replication
                 return new []
                     {
                             typeof(Account),
+                            typeof(AccountDetail),
                             typeof(AssociatedPosition),
                             typeof(AssociatedPositionsGroup),
                             typeof(Bargain),
@@ -34,7 +35,6 @@ namespace NuClear.ValidationRules.Replication
                             typeof(FirmAddressCategory),
                             typeof(LegalPerson),
                             typeof(LegalPersonProfile),
-                            typeof(Lock),
                             typeof(NomenclatureCategory),
                             typeof(Order),
                             typeof(OrderItem),

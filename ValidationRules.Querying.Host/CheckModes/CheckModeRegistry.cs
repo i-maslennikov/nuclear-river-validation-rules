@@ -6,6 +6,7 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.CheckModes
 {
+    // Если хочешь включить single-режим у проверки, то проверь загружены ли в ErmDataLoader все нужные данные
     internal static class CheckModeRegistry
     {
         public static readonly IReadOnlyCollection<Tuple<MessageTypeCode, IReadOnlyDictionary<CheckMode, RuleSeverityLevel>>> Map =
@@ -273,12 +274,29 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale,
+                    Rule(MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement,
                          single: RuleSeverityLevel.Error,
                          singleForApprove: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser,
+                         single: RuleSeverityLevel.Error,
+                         singleForApprove: RuleSeverityLevel.Error,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
+                         manualReport: RuleSeverityLevel.Info,
+                         prerelease: RuleSeverityLevel.Info,
+                         release: RuleSeverityLevel.Info),
+
+                    Rule(MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
+                         manualReport: RuleSeverityLevel.Info,
+                         prerelease: RuleSeverityLevel.Info,
+                         release: RuleSeverityLevel.Info),
 
                     Rule(MessageTypeCode.AdvertisementMustBelongToFirm,
                          manualReport: RuleSeverityLevel.Error,

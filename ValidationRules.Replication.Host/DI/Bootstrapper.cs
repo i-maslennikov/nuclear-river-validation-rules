@@ -329,6 +329,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
 
                 .RegisterAccessor<Account, AccountAccessor>(entryPointSpecificLifetimeManagerFactory)
+                .RegisterAccessor<AccountDetail, AccountDetailAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<AssociatedPosition, AssociatedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<AssociatedPositionsGroup, AssociatedPositionsGroupAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<Bargain, BargainAccessor>(entryPointSpecificLifetimeManagerFactory)
@@ -346,7 +347,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterAccessor<FirmAddressCategory, FirmAddressCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<LegalPerson, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<LegalPersonProfile, LegalPersonProfileAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Lock, LockAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<NomenclatureCategory, NomenclatureCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<Order, OrderAccessor>(entryPointSpecificLifetimeManagerFactory)
                 .RegisterAccessor<OrderItem, OrderItemAccessor>(entryPointSpecificLifetimeManagerFactory)

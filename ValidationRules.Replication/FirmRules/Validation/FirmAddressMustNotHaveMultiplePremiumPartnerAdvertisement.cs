@@ -10,12 +10,12 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
-    /// Для заказов с позицией "Реклама в профилях партнеров (приоритетное размещение)", если адрес в позиции "Реклама в профилях партнеров (адреса)" встречается в другом таком же заказе, должна выводиться ошибка.
-    /// "На адрес {{0}} фирмы {{1}} продано более одной позиции Premium в периоды: {0}"
+    /// Для заказов, при наличии нескольких позиций премиумной партнёрской рекламы (ЗМК-Premium подобные, FMCG) на один адрес, должна выводиться ошибка.
+    /// "На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}"
     /// </summary>
-    public sealed class PremiumPartnerProfileMustHaveSingleSale : ValidationResultAccessorBase
+    public sealed class FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement : ValidationResultAccessorBase
     {
-        public PremiumPartnerProfileMustHaveSingleSale(IQuery query) : base(query, MessageTypeCode.PremiumPartnerProfileMustHaveSingleSale)
+        public FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement(IQuery query) : base(query, MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement)
         {
         }
 
@@ -23,8 +23,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
         {
             var sales =
                 from order in query.For<Order>()
-                from fa in query.For<Order.PremiumPartnerProfilePosition>().Where(x => x.OrderId == order.Id)
-                select new { fa.OrderId, fa.FirmAddressId, fa.FirmId, order.Scope, order.Begin, order.End };
+                from fa in query.For<Order.PartnerPosition>().Where(x => x.IsPremium).Where(x => x.OrderId == order.Id)
+                select new { fa.OrderId, FirmAddressId = fa.DestinationFirmAddressId, FirmId = fa.DestinationFirmId, order.Scope, order.Begin, order.End };
 
             var multipleSales =
                 from sale in sales
@@ -39,6 +39,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                         MessageParams =
                             new MessageParams(
                                     new Dictionary<string, object> { { "begin", sale.Begin }, { "end", sale.End } },
+                                    new Reference<EntityTypeOrder>(sale.OrderId),
                                     new Reference<EntityTypeFirm>(sale.FirmId),
                                     new Reference<EntityTypeFirmAddress>(sale.FirmAddressId))
                                 .ToXDocument(),
