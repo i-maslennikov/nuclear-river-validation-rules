@@ -282,11 +282,11 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser,
-                         single: RuleSeverityLevel.Error,
-                         singleForApprove: RuleSeverityLevel.Error,
-                         manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
+                         single: RuleSeverityLevel.Info,
+                         singleForApprove: RuleSeverityLevel.Info,
+                         manualReport: RuleSeverityLevel.Info,
+                         prerelease: RuleSeverityLevel.Info,
+                         release: RuleSeverityLevel.Info),
 
                     Rule(MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
                          manualReport: RuleSeverityLevel.Info,
