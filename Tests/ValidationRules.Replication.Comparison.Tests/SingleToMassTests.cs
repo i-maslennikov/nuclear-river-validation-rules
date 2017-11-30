@@ -9,6 +9,7 @@ using LinqToDB.Data;
 
 using NuClear.ValidationRules.SingleCheck;
 using NuClear.ValidationRules.Storage;
+using NuClear.ValidationRules.Storage.Model.Erm;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 using NUnit.Framework;
@@ -140,6 +141,9 @@ namespace ValidationRules.Replication.Comparison.Tests
 
             public RuleSeverityLevel GetRuleSeverityLevel(MessageTypeCode rule)
                 => RuleSeverityLevel.None;
+
+            public DateTime GetValidationPeriodStart(Order order)
+                => DateTime.MinValue;
 
             public static TestCheckMode SingleRule(MessageTypeCode rule)
                 => new TestCheckMode { Rules = new[] { rule } };

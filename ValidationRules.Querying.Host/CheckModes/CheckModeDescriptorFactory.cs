@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using NuClear.ValidationRules.Storage.Model.Erm;
 using NuClear.ValidationRules.Storage.Model.Messages;
 using System.Linq;
 
@@ -48,6 +49,17 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                 }
 
                 return level;
+            }
+
+            public DateTime GetValidationPeriodStart(Order order)
+            {
+                const int OrderStateOnTermination = 4;
+                if (_checkMode == CheckMode.SingleForApprove && order.WorkflowStepId == OrderStateOnTermination)
+                {
+                    return order.EndDistributionDateFact.AddSeconds(1);
+                }
+
+                return order.BeginDistributionDate;
             }
         }
     }
