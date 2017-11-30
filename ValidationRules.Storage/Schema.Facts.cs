@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<AccountDetail>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.AccountId, x.OrderId, x.PeriodStartDate });
+                   .HasIndex(x => new { x.OrderId, x.PeriodStartDate });
             builder.Entity<Advertisement>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
