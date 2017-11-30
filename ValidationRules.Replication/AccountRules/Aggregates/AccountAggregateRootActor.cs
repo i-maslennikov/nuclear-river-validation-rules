@@ -82,7 +82,7 @@ namespace NuClear.ValidationRules.Replication.AccountRules.Aggregates
                                                     .Where(x => x.OrderPositionId == orderPosition.Id)
                                                     .Where(x => x.Start < order.EndDistributionFact)
                     // фильтруем фактические списания, по ним ошибок быть уже не может
-                    where !_query.For<Facts::AccountDetail>().Any(x => x.AccountId == account.Id && x.OrderId == order.Id && x.PeriodStartDate == releaseWithdrawal.Start)
+                    where !_query.For<Facts::AccountDetail>().Any(x => x.OrderId == order.Id && x.PeriodStartDate == releaseWithdrawal.Start)
                     select new
                     {
                         AccountId = account.Id,
