@@ -11,6 +11,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Telemetry.Probing;
 using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage;
+using NuClear.ValidationRules.Storage.Model.Erm;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -74,8 +75,12 @@ namespace NuClear.ValidationRules.SingleCheck
                 using (Probe.Create("Aggregates -> Messages"))
                     _strategy.ProcessMessages(messageReplicators, optimization);
 
+                var validationPeriodStart = GetValidationPeriodStart(erm.CreateQuery(), orderId, checkModeDescriptor);
+
                 using (Probe.Create("Query result"))
-                    return messages.CreateQuery().For<Version.ValidationResult>().Where(x => x.OrderId == orderId && checkModeDescriptor.Rules.Contains((MessageTypeCode)x.MessageType)).ToArray();
+                    return messages.CreateQuery().For<Version.ValidationResult>()
+                        .Where(x => x.OrderId == orderId && checkModeDescriptor.Rules.Contains((MessageTypeCode)x.MessageType) && x.PeriodEnd >= validationPeriodStart)
+                        .ToArray();
             }
         }
 
@@ -86,6 +91,12 @@ namespace NuClear.ValidationRules.SingleCheck
             {
                 ErmDataLoader.Load(orderId, connection, store);
             }
+        }
+
+        private static DateTime GetValidationPeriodStart(IQuery query, long orderId, ICheckModeDescriptor checkModeDescriptor)
+        {
+            var order  = query.For<Order>().Single(x => x.Id == orderId);
+            return checkModeDescriptor.GetValidationPeriodStart(order);
         }
 
         private static IReadOnlyCollection<Replicator> CreateReplicators(IReadOnlyCollection<Type> accessorTypes, IQuery source, IStore target)
