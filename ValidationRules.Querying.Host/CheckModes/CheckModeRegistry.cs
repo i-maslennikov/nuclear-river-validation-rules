@@ -221,7 +221,7 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.OrderMustNotIncludeReleasedPeriod,
-                         single: RuleSeverityLevel.Error),
+                         single: RuleSeverityLevel.Warning),
 
                     Rule(MessageTypeCode.OrderMustUseCategoriesOnlyAvailableInProject,
                          single: RuleSeverityLevel.Error,
