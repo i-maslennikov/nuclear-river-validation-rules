@@ -45,8 +45,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
                 // filter heartbeat messages
                 if (message.Value != null)
                 {
-                    var dtos = new List<AdvertisementDto> { JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value)) };
-                    commands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), dtos));
+                    var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value));
+                    dto.Offset = message.Offset;
+                    commands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), new List<AdvertisementDto> { dto }));
                 }
 
                 return commands;

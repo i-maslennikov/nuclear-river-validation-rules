@@ -95,7 +95,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             // filter heartbeat messages
                             var dtos = batch
                                 .Where(x => x.Value != null)
-                                .Select(x => JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value))).ToList();
+                                .Select(x =>
+                                            {
+                                                var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value));
+                                                dto.Offset = x.Offset;
+                                                return dto;
+                                            }).ToList();
 
                             if (dtos.Count != 0)
                             {
