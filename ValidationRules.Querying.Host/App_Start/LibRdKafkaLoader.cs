@@ -27,7 +27,8 @@ namespace NuClear.ValidationRules.Querying.Host
         public static void LoadLibrary()
         {
             var baseUri = new Uri(Assembly.GetExecutingAssembly().GetName().EscapedCodeBase);
-            var baseDirectory = Path.GetDirectoryName(baseUri.LocalPath);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            var baseDirectory = Path.Combine(Path.GetDirectoryName(baseUri.LocalPath), Path.GetFileNameWithoutExtension(DllName));
             // ReSharper disable once AssignNullToNotNullAttribute
             var dllDirectory = Path.Combine(baseDirectory, Environment.Is64BitProcess ? "x64" : "x86");
 
