@@ -25,7 +25,7 @@ function Get-TargetHostsMetadata ($Context) {
 			return @{ 'TargetHosts' = @('uk-erm-edu03') }
 		}
 		'Production' {
-			return @{ 'TargetHosts' = @('uk-erm-iis03') }
+			return @{ 'TargetHosts' = @('uk-erm-iis03', 'uk-erm-iis01', 'uk-erm-iis02', 'uk-erm-iis04') }
 		}
 		'Int' {
 			switch ($Context.Country) {
@@ -38,7 +38,7 @@ function Get-TargetHostsMetadata ($Context) {
 			}
 		}
 		'Load' {
-			return @{ 'TargetHosts' = @('uk-erm-iis12') }
+			return @{ 'TargetHosts' = @('uk-erm-iis12', 'uk-erm-iis11', 'uk-erm-iis10') }
 		}
 		'Appveyor' {
 			return @{ 'TargetHosts' = @() }
