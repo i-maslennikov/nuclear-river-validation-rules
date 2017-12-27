@@ -162,6 +162,17 @@ namespace ValidationRules.Hosting.Common
                 {
                     throw new KafkaException(committedOffsets.Error);
                 }
+
+                var fail = committedOffsets.Offsets.FirstOrDefault(x => x.Error.HasError);
+                if (fail != null)
+                {
+                    throw new KafkaException(fail.Error);
+                }
+
+                foreach (var committedOffset in committedOffsets.Offsets)
+                {
+                    _tracer.Info($"KafkaAudit - committed offset {committedOffset.Offset.Value}");
+                }
             }
 
             // kafka docs: errors should be seen as informational rather than catastrophic
