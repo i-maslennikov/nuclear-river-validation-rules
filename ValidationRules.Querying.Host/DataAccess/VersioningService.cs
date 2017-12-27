@@ -18,7 +18,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
     {
         private const string ConfigurationString = "Messages";
 
-        private static readonly TimeSpan WaitTimeout = TimeSpan.FromMinutes(6);
+        private static readonly TimeSpan WaitTimeout = TimeSpan.FromMinutes(15);
         private static readonly TimeSpan WaitInterval = TimeSpan.FromSeconds(5);
 
         private readonly DataConnectionFactory _factory;
