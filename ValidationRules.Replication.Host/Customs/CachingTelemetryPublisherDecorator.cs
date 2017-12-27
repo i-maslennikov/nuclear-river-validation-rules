@@ -72,7 +72,7 @@ namespace NuClear.ValidationRules.Replication.Host.Customs
             }
             catch (Exception ex)
             {
-                _tracer.Error(ex, "Ошибка завершения асинхронной отправке телеметрии");
+                _tracer.Error(ex, "Ошибка завершения асинхронной отправки телеметрии");
             }
         }
     }

@@ -63,7 +63,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             }
             catch (Exception ex)
             {
-                _tracer.Error(ex, "Eception in ReportingJob");
+                _tracer.Error(ex, "Exception in ReportingJob");
             }
         }
 
