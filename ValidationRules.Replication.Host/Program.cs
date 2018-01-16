@@ -49,10 +49,13 @@ namespace NuClear.ValidationRules.Replication.Host
             try
             {
                 container = Bootstrapper.ConfigureUnity(settingsContainer, tracer);
-                var schedulerManager = container.Resolve<ISchedulerManager>();
+                var schedulerManagers = container.ResolveAll<ISchedulerManager>().ToList();
                 if (IsConsoleMode(args))
                 {
-                    schedulerManager.Start();
+                    foreach (var schedulerManager in schedulerManagers)
+                    {
+                        schedulerManager.Start();
+                    }
 
                     Console.WriteLine("Advanced Search Replication service successfully started.");
                     Console.WriteLine("Press ENTER to stop...");
@@ -61,14 +64,17 @@ namespace NuClear.ValidationRules.Replication.Host
 
                     Console.WriteLine("Advanced Search Replication service is stopping...");
 
-                    schedulerManager.Stop();
+                    foreach (var schedulerManager in schedulerManagers)
+                    {
+                        schedulerManager.Stop();
+                    }
 
                     Console.WriteLine("Advanced Search Replication service stopped successfully. Press ENTER to exit...");
                     Console.ReadLine();
                 }
                 else
                 {
-                    using (var replicationService = new ReplicationService(schedulerManager))
+                    using (var replicationService = new ReplicationService(schedulerManagers))
                     {
                         ServiceBase.Run(replicationService);
                     }
@@ -76,10 +82,7 @@ namespace NuClear.ValidationRules.Replication.Host
             }
             finally
             {
-                if (container != null)
-                {
-                    container.Dispose();
-                }
+                container?.Dispose();
             }
         }
 

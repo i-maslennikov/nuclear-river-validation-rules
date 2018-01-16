@@ -22,9 +22,9 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
         protected override void ExecuteInternal(IJobExecutionContext context)
         {
-            Console.WriteLine("Enter DebugTestJob, time: {0}", DateTime.UtcNow);
+            Tracer.InfoFormat("Enter DebugTestJob, time: {0}", DateTime.UtcNow);
             Task.Delay(5000);
-            Console.WriteLine("Exit DebugTestJob, time: {0}", DateTime.UtcNow);
+            Tracer.InfoFormat("Exit DebugTestJob, time: {0}", DateTime.UtcNow);
         }
     }
 }

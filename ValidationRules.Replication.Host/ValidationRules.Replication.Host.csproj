@@ -287,6 +287,10 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="quartz.ams_config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="quartz.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -317,6 +321,7 @@
     <Compile Include="DI\ReplicationHostAssembly.cs" />
     <Compile Include="DI\ReplicationRoot.cs" />
     <Compile Include="Jobs\HeartbeatJob.cs" />
+    <Compile Include="Jobs\AmsFactsShedulerManager.cs" />
     <Compile Include="Security\TracerContextUserContextScopeChangesObserver.cs" />
     <Compile Include="Security\UserAuthorizationService.cs" />
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />

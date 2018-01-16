@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Transactions;
 
 using Confluent.Kafka;
@@ -86,6 +87,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
+                        // sleep чтобы успел прогрузиться poll loop
+                        // как альтернативу можно убрать проверку batch.Count != 0
+                        // но тогда state init из пустой Kafka будет невозможен
+                        Thread.Sleep(TimeSpan.FromSeconds(10));
+
                         IReadOnlyCollection<Message> batch;
                         while ((batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize)).Count != 0)
                         {
