@@ -36,7 +36,7 @@ namespace ValidationRules.Hosting.Common
             private readonly PollLoop _pollLoop;
 
             public KafkaMessageFlowReceiver2(IKafkaMessageFlowReceiverSettings settings)
-                : this(settings, null) { }
+                : this(settings, new NullTracer()) { }
 
             public KafkaMessageFlowReceiver2(IKafkaMessageFlowReceiverSettings settings, ITracer tracer)
             {
@@ -101,7 +101,7 @@ namespace ValidationRules.Hosting.Common
                 }
 
                 // kafka docs: errors should be seen as informational rather than catastrophic
-                private void OnError(object sender, Error error) => _tracer?.Warn(error.Reason);
+                private void OnError(object sender, Error error) => _tracer.Warn(error.Reason);
 
                 private void OnPartitionsAssigned(object sender, List<TopicPartition> list)
                 {
@@ -169,7 +169,7 @@ namespace ValidationRules.Hosting.Common
                     }
                     catch (Exception ex)
                     {
-                        _tracer?.Warn(ex, "Kafka audit - exception in poll loop");
+                        _tracer.Warn(ex, "Kafka audit - exception in poll loop");
                         StartNew();
                     }
                     finally
@@ -193,7 +193,7 @@ namespace ValidationRules.Hosting.Common
                     lock (_messages)
                     {
                         var batch = _messages.OrderByOffset().Take(batchSize).ToList();
-                        _tracer?.Debug(batch.Count != 0 ? $"KafkaAudit - receive batch [{batch.First().Offset.Value} - {batch.Last().Offset.Value}]" : "KafkaAudit - empty batch");
+                        _tracer.Debug(batch.Count != 0 ? $"KafkaAudit - receive batch [{batch.First().Offset.Value} - {batch.Last().Offset.Value}]" : "KafkaAudit - empty batch");
 
                         return batch;
                     }
@@ -228,7 +228,7 @@ namespace ValidationRules.Hosting.Common
 
                     foreach (var committedOffset in committedOffsets.Offsets)
                     {
-                        _tracer?.Debug($"KafkaAudit - committed offset {committedOffset.Offset.Value}");
+                        _tracer.Debug($"KafkaAudit - committed offset {committedOffset.Offset.Value}");
                     }
                 }
 
