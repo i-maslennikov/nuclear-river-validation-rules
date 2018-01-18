@@ -60,7 +60,8 @@ namespace ValidationRules.Hosting.Common
                 var consumer = new Consumer(privateConfig);
 
                 _consumerWrapper = new ConsumerWrapper(consumer, settings.TopicPartitionOffsets, tracer);
-                _pollLoop = new PollLoop(consumer, settings.PollTimeout, tracer).StartNew();
+                _pollLoop = new PollLoop(consumer, settings.PollTimeout, tracer);
+                _pollLoop.StartNew();
             }
 
             public IReadOnlyCollection<Message> ReceiveBatch(int batchSize)
@@ -71,7 +72,7 @@ namespace ValidationRules.Hosting.Common
 
             public void CompleteBatch(IEnumerable<Message> batch)
             {
-                _consumerWrapper.CompleteBatch(batch);
+                _pollLoop.CompleteBatch(batch);
             }
 
             public void Dispose()
@@ -97,32 +98,6 @@ namespace ValidationRules.Hosting.Common
                     _consumer.OnPartitionsRevoked += OnPartitionsRevoked;
 
                     _consumer.Subscribe(_topicPartitionOffsets.Select(x => x.Topic));
-                }
-
-                public void CompleteBatch(IEnumerable<Message> batch)
-                {
-                    var maxOffsetMessage = batch.OrderByDescending(x => x.Offset.Value).FirstOrDefault();
-                    if (maxOffsetMessage == null)
-                    {
-                        return;
-                    }
-
-                    var committedOffsets = _consumer.CommitAsync(maxOffsetMessage).GetAwaiter().GetResult();
-                    if (committedOffsets.Error.HasError)
-                    {
-                        throw new KafkaException(committedOffsets.Error);
-                    }
-
-                    var fail = committedOffsets.Offsets.FirstOrDefault(x => x.Error.HasError);
-                    if (fail != null)
-                    {
-                        throw new KafkaException(fail.Error);
-                    }
-
-                    foreach (var committedOffset in committedOffsets.Offsets)
-                    {
-                        _tracer?.Debug($"KafkaAudit - committed offset {committedOffset.Offset.Value}");
-                    }
                 }
 
                 // kafka docs: errors should be seen as informational rather than catastrophic
@@ -157,13 +132,13 @@ namespace ValidationRules.Hosting.Common
             // Чтобы от этого не было разных side effects, вынес метод poll в отльный poll loop
             private sealed class PollLoop : IDisposable
             {
-                private static readonly object SyncRoot = new object();
-
                 private readonly Consumer _consumer;
                 private readonly TimeSpan _pollTimeout;
                 private readonly ITracer _tracer;
                 private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
                 private readonly HashSetLastWins _messages = new HashSetLastWins();
+
+                private Task _task;
 
                 public PollLoop(Consumer consumer, TimeSpan pollTimeout, ITracer tracer)
                 {
@@ -172,69 +147,96 @@ namespace ValidationRules.Hosting.Common
                     _tracer = tracer;
                 }
 
-                public PollLoop StartNew()
+                public void StartNew()
                 {
                     var cancellationToken = _cancellationTokenSource.Token;
+                    _task = Task.Factory.StartNew(TaskFunc, cancellationToken, cancellationToken);
+                }
 
-                    Task.Factory.StartNew(() =>
+                private void TaskFunc(object state)
+                {
+                    var cancellationToken = (CancellationToken)state;
+
+                    try
                     {
-                        try
-                        {
-                            _consumer.OnMessage += OnMessage;
+                        _consumer.OnMessage += OnMessage;
 
-                            // loop
-                            while (!cancellationToken.IsCancellationRequested)
-                            {
-                                _consumer.Poll(_pollTimeout);
-                            }
-                        }
-                        catch(Exception ex)
+                        // loop
+                        while (!cancellationToken.IsCancellationRequested)
                         {
-                            _tracer?.Warn(ex, "Kafka audit - exception in poll loop");
-                            StartNew();
+                            _consumer.Poll(_pollTimeout);
                         }
-                        finally
+                    }
+                    catch (Exception ex)
+                    {
+                        _tracer?.Warn(ex, "Kafka audit - exception in poll loop");
+                        StartNew();
+                    }
+                    finally
+                    {
+                        _consumer.OnMessage -= OnMessage;
+                    }
+
+                    void OnMessage(object sender, Message message)
+                    {
+                        lock (_messages)
                         {
-                            _consumer.OnMessage -= OnMessage;
+                            _messages.Add(message);
                         }
 
-                        void OnMessage(object sender, Message message)
-                        {
-                            lock (SyncRoot)
-                            {
-                                _messages.Add(message);
-                            }
-
-                            _tracer.Debug($"KafkaAudit - fetch message {message.Offset}");
-                        }
-                    }, cancellationToken);
-
-                    return this;
+                        _tracer.Debug($"KafkaAudit - fetch message {message.Offset}");
+                    }
                 }
 
                 public IReadOnlyCollection<Message> ReceiveBatch(int batchSize)
                 {
-                    lock (SyncRoot)
+                    lock (_messages)
                     {
                         var batch = _messages.OrderByOffset().Take(batchSize).ToList();
-                        if (batch.Count != 0)
-                        {
-                            _messages.RemoveRange(batch);
-
-                            _tracer?.Debug($"KafkaAudit - receive batch [{batch.First().Offset.Value} - {batch.Last().Offset.Value}]");
-                        }
-                        else
-                        {
-                            _tracer?.Debug("KafkaAudit - empty batch");
-                        }
+                        _tracer?.Debug(batch.Count != 0 ? $"KafkaAudit - receive batch [{batch.First().Offset.Value} - {batch.Last().Offset.Value}]" : "KafkaAudit - empty batch");
 
                         return batch;
+                    }
+                }
+
+                public void CompleteBatch(IEnumerable<Message> batch)
+                {
+                    // ReSharper disable once PossibleMultipleEnumeration
+                    var maxOffsetMessage = batch.OrderBy(x => x.Offset.Value).LastOrDefault();
+                    if (maxOffsetMessage == null)
+                    {
+                        return;
+                    }
+
+                    var committedOffsets = _consumer.CommitAsync(maxOffsetMessage).GetAwaiter().GetResult();
+                    if (committedOffsets.Error.HasError)
+                    {
+                        throw new KafkaException(committedOffsets.Error);
+                    }
+
+                    var fail = committedOffsets.Offsets.FirstOrDefault(x => x.Error.HasError);
+                    if (fail != null)
+                    {
+                        throw new KafkaException(fail.Error);
+                    }
+
+                    lock (_messages)
+                    {
+                        // ReSharper disable once PossibleMultipleEnumeration
+                        _messages.RemoveRange(batch);
+                    }
+
+                    foreach (var committedOffset in committedOffsets.Offsets)
+                    {
+                        _tracer?.Debug($"KafkaAudit - committed offset {committedOffset.Offset.Value}");
                     }
                 }
 
                 public void Dispose()
                 {
                     _cancellationTokenSource.Cancel();
+                    _task?.Wait();
+
                     _cancellationTokenSource.Dispose();
                 }
 
