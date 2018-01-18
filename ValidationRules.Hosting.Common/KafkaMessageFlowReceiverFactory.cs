@@ -35,9 +35,6 @@ namespace ValidationRules.Hosting.Common
             private readonly ConsumerWrapper _consumerWrapper;
             private readonly PollLoop _pollLoop;
 
-            public KafkaMessageFlowReceiver2(IKafkaMessageFlowReceiverSettings settings)
-                : this(settings, new NullTracer()) { }
-
             public KafkaMessageFlowReceiver2(IKafkaMessageFlowReceiverSettings settings, ITracer tracer)
             {
                 var privateConfig = new Dictionary<string, object>(settings.Config)
@@ -184,7 +181,7 @@ namespace ValidationRules.Hosting.Common
                             _messages.Add(message);
                         }
 
-                        _tracer.Debug($"KafkaAudit - fetch message {message.Offset}");
+                        _tracer.Info($"KafkaAudit - fetch message {message.Offset}");
                     }
                 }
 
@@ -193,7 +190,7 @@ namespace ValidationRules.Hosting.Common
                     lock (_messages)
                     {
                         var batch = _messages.OrderByOffset().Take(batchSize).ToList();
-                        _tracer.Debug(batch.Count != 0 ? $"KafkaAudit - receive batch [{batch.First().Offset.Value} - {batch.Last().Offset.Value}]" : "KafkaAudit - empty batch");
+                        _tracer.Info(batch.Count != 0 ? $"KafkaAudit - receive batch [{batch.First().Offset.Value} - {batch.Last().Offset.Value}]" : "KafkaAudit - empty batch");
 
                         return batch;
                     }
@@ -228,7 +225,7 @@ namespace ValidationRules.Hosting.Common
 
                     foreach (var committedOffset in committedOffsets.Offsets)
                     {
-                        _tracer.Debug($"KafkaAudit - committed offset {committedOffset.Offset.Value}");
+                        _tracer.Info($"KafkaAudit - committed offset {committedOffset.Offset.Value}");
                     }
                 }
 
