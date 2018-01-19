@@ -42,7 +42,8 @@ namespace NuClear.ValidationRules.Replication.Host
                                                 .Property(TracerContextKeys.EntryPoint, environmentSettings.EntryPointName)
                                                 .Property(TracerContextKeys.EntryPointHost, NetworkInfo.ComputerFQDN)
                                                 .Property(TracerContextKeys.EntryPointInstanceId, Guid.NewGuid().ToString()))
-                                             .Logstash(new Uri(connectionStringSettings.GetConnectionString(LoggingConnectionStringIdentity.Instance)))
+                                             .Logstash(new Uri(connectionStringSettings.GetConnectionString(LoggingConnectionStringIdentity.Instance)),
+                                                appender => { appender.LogstashLayout.IncrementalCounter = true; } )
                                              .Build;
 
             IUnityContainer container = null;
