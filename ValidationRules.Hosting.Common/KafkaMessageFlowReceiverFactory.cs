@@ -248,7 +248,11 @@ namespace ValidationRules.Hosting.Common
                     {
                         foreach (var message in messages)
                         {
-                            _dictionary.Remove(message.Key);
+                            var existingMessage = _dictionary[message.Key];
+                            if (existingMessage.Offset == message.Offset)
+                            {
+                                _dictionary.Remove(message.Key);
+                            }
                         }
                     }
 
