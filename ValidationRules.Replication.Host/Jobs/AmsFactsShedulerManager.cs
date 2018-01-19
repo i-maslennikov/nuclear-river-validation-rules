@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
         public void Start()
         {
-            var threadPool = new SimpleThreadPool(1, ThreadPriority.Normal);
+            var threadPool = new SimpleThreadPool(1, ThreadPriority.Normal) { InstanceName = SchedulerName };
             threadPool.Initialize();
 
             var baseUri = new Uri(Assembly.GetExecutingAssembly().GetName().EscapedCodeBase);
