@@ -76,13 +76,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.API, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Tracing.API.2.2.2\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Tracing.API.2.2.3\lib\portable-net451+win81+wpa81\2GIS.NuClear.Tracing.API.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.Environment, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Tracing.Environment.2.2.2\lib\net461\2GIS.NuClear.Tracing.Environment.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Tracing.Environment.2.2.3\lib\net461\2GIS.NuClear.Tracing.Environment.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Tracing.Log4Net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
-      <HintPath>..\packages\2GIS.NuClear.Tracing.Log4Net.2.2.2\lib\net461\2GIS.NuClear.Tracing.Log4Net.dll</HintPath>
+      <HintPath>..\packages\2GIS.NuClear.Tracing.Log4Net.2.2.3\lib\net461\2GIS.NuClear.Tracing.Log4Net.dll</HintPath>
     </Reference>
     <Reference Include="2GIS.NuClear.Utils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Utils.1.1.13\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
