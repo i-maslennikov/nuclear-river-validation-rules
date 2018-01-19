@@ -87,14 +87,16 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
-                        // sleep чтобы успел прогрузиться poll loop
-                        // как альтернативу можно убрать проверку batch.Count != 0
-                        // но тогда state init из пустой Kafka будет невозможен
-                        Thread.Sleep(TimeSpan.FromSeconds(10));
-
-                        IReadOnlyCollection<Message> batch;
-                        while ((batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize)).Count != 0)
+                        for(;;)
                         {
+                            var batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize);
+
+                            // крутим цикл пока не получим сообщения от kafka
+                            if (batch.Count == 0)
+                            {
+                                continue;
+                            }
+
                             var maxOffsetMesasage = batch.OrderByDescending(x => x.Offset.Value).First();
                             Console.WriteLine($"Received {batch.Count} messages, offset {maxOffsetMesasage.Offset}");
 
@@ -102,11 +104,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                             var dtos = batch
                                 .Where(x => x.Value != null)
                                 .Select(x =>
-                                            {
-                                                var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value));
-                                                dto.Offset = x.Offset;
-                                                return dto;
-                                            }).ToList();
+                                {
+                                    var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value));
+                                    dto.Offset = x.Offset;
+                                    return dto;
+                                }).ToList();
 
                             if (dtos.Count != 0)
                             {
