@@ -6,6 +6,7 @@ using System.Threading;
 
 using NuClear.Jobs.Schedulers;
 
+using Quartz;
 using Quartz.Impl;
 using Quartz.Plugin.Xml;
 using Quartz.Simpl;
@@ -34,14 +35,22 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
         public void Start()
         {
+            var instanceId = new SimpleInstanceIdGenerator().GenerateInstanceId();
+
             var threadPool = new SimpleThreadPool(1, ThreadPriority.Normal) { InstanceName = SchedulerName };
             threadPool.Initialize();
+
+            var jobstore = new RAMJobStore
+            {
+                InstanceName = SchedulerName,
+                InstanceId = instanceId,
+            };
 
             var baseUri = new Uri(Assembly.GetExecutingAssembly().GetName().EscapedCodeBase);
             // ReSharper disable once AssignNullToNotNullAttribute
             var fileName = Path.Combine(Path.GetDirectoryName(baseUri.LocalPath), ConfigName);
 
-            var jobInitializationPlugin = new XMLSchedulingDataProcessorPlugin
+            var jobInitializationPlugin = new ConfigFileProcessorPlugin
             {
                 FileNames = fileName,
                 ScanInterval = QuartzConfigFileScanInterval.DisableScanning
@@ -49,9 +58,9 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
             DirectSchedulerFactory.Instance.CreateScheduler(
                 SchedulerName,
-                SchedulerName,
+                instanceId,
                 threadPool,
-                new RAMJobStore(),
+                jobstore,
                 new Dictionary<string, ISchedulerPlugin>
                 {
                     { SchedulerName, jobInitializationPlugin }
@@ -69,6 +78,16 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         {
             var scheduler = DirectSchedulerFactory.Instance.GetScheduler(SchedulerName);
             scheduler.Shutdown(true);
+        }
+
+        // copy\paste from 'jobs' repo
+        private sealed class ConfigFileProcessorPlugin : XMLSchedulingDataProcessorPlugin
+        {
+            public override void Initialize(string pluginName, IScheduler sched)
+            {
+                sched.Clear();
+                base.Initialize(pluginName, sched);
+            }
         }
     }
 }
