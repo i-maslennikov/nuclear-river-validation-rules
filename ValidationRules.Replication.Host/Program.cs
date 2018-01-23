@@ -42,17 +42,21 @@ namespace NuClear.ValidationRules.Replication.Host
                                                 .Property(TracerContextKeys.EntryPoint, environmentSettings.EntryPointName)
                                                 .Property(TracerContextKeys.EntryPointHost, NetworkInfo.ComputerFQDN)
                                                 .Property(TracerContextKeys.EntryPointInstanceId, Guid.NewGuid().ToString()))
-                                             .Logstash(new Uri(connectionStringSettings.GetConnectionString(LoggingConnectionStringIdentity.Instance)))
+                                             .Logstash(new Uri(connectionStringSettings.GetConnectionString(LoggingConnectionStringIdentity.Instance)),
+                                                appender => { appender.LogstashLayout.IncrementalCounter = true; } )
                                              .Build;
 
             IUnityContainer container = null;
             try
             {
                 container = Bootstrapper.ConfigureUnity(settingsContainer, tracer);
-                var schedulerManager = container.Resolve<ISchedulerManager>();
+                var schedulerManagers = container.ResolveAll<ISchedulerManager>().ToList();
                 if (IsConsoleMode(args))
                 {
-                    schedulerManager.Start();
+                    foreach (var schedulerManager in schedulerManagers)
+                    {
+                        schedulerManager.Start();
+                    }
 
                     Console.WriteLine("Advanced Search Replication service successfully started.");
                     Console.WriteLine("Press ENTER to stop...");
@@ -61,14 +65,17 @@ namespace NuClear.ValidationRules.Replication.Host
 
                     Console.WriteLine("Advanced Search Replication service is stopping...");
 
-                    schedulerManager.Stop();
+                    foreach (var schedulerManager in schedulerManagers)
+                    {
+                        schedulerManager.Stop();
+                    }
 
                     Console.WriteLine("Advanced Search Replication service stopped successfully. Press ENTER to exit...");
                     Console.ReadLine();
                 }
                 else
                 {
-                    using (var replicationService = new ReplicationService(schedulerManager))
+                    using (var replicationService = new ReplicationService(schedulerManagers))
                     {
                         ServiceBase.Run(replicationService);
                     }
@@ -76,10 +83,7 @@ namespace NuClear.ValidationRules.Replication.Host
             }
             finally
             {
-                if (container != null)
-                {
-                    container.Dispose();
-                }
+                container?.Dispose();
             }
         }
 

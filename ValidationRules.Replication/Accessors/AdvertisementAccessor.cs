@@ -29,7 +29,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
             {
                 Id = x.Id,
                 FirmId = x.FirmId,
-                StateCode = x.StateCode
+                StateCode = x.StateCode,
+                Offset = x.Offset,
             }).ToList();
         }
 

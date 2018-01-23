@@ -97,6 +97,7 @@ using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
 using NuClear.ValidationRules.Replication.Host.Customs;
+using NuClear.ValidationRules.Replication.Host.Jobs;
 using NuClear.ValidationRules.Storage.FieldComparer;
 using NuClear.WCF.Client;
 using NuClear.WCF.Client.Config;
@@ -183,7 +184,8 @@ namespace NuClear.ValidationRules.Replication.Host.DI
             return container
                 .RegisterType<IJobFactory, JobFactory>(Lifetime.Singleton, new InjectionConstructor(container.Resolve<UnityJobFactory>(), container.Resolve<ITracer>()))
                 .RegisterType<IJobStoreFactory, JobStoreFactory>(Lifetime.Singleton)
-                .RegisterType<ISchedulerManager, SchedulerManager>(Lifetime.Singleton);
+                .RegisterType<ISchedulerManager, SchedulerManager>("default", Lifetime.Singleton)
+                .RegisterType<ISchedulerManager, AmsFactsShedulerManager>("ams", Lifetime.Singleton);
         }
 
         private static IUnityContainer ConfigureQuartzRemoteControl(
@@ -256,7 +258,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
             // kafka receiver
             container
-                .RegisterType<KafkaReceiver>(Lifetime.PerScope)
+                .RegisterType<KafkaReceiver>(Lifetime.Singleton)
                 .RegisterType<IKafkaMessageFlowReceiverFactory, KafkaMessageFlowReceiverFactory>(Lifetime.Singleton)
                 .RegisterType<IKafkaSettingsFactory, KafkaSettingsFactory>(Lifetime.Singleton, new InjectionConstructor(typeof(IConnectionStringSettings), typeof(IEnvironmentSettings)))
                 .RegisterType<KafkaMessageFlowInfoProvider>(Lifetime.Singleton);

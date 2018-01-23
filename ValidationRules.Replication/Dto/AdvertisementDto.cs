@@ -6,5 +6,7 @@ namespace NuClear.ValidationRules.Replication.Dto
         public long FirmId { get; set; }
         public string Name { get; set ; }
         public int StateCode { get; set; }
+
+        public long Offset { get; set; }
     }
 }

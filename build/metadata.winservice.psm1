@@ -9,26 +9,27 @@ Import-Module "$PSScriptRoot\metadata.servicebus.psm1" -DisableNameChecking
 
 function Get-QuartzConfigMetadata ($Context){
 
+	$quartzConfigs = @()
+	$alterQuartzConfigs = @()
+
 	switch ($Context.EnvType){
 		'Test' {
 			switch ($Context.Country){
 				default {
-					$quartzConfigs = @('Templates\quartz.Test.config')
-					$alterQuartzConfigs = @()
+					$quartzConfigs += @('Templates\quartz.Test.config')
 				}
 			}
 		}
 		'Production' {
 			switch ($Context.Country){
 				default {
-					$quartzConfigs = @('quartz.Production.config')
-					$alterQuartzConfigs = @()
+					$quartzConfigs += @('quartz.Production.config')
 				}
 			}
 		}
 		default {
-			$quartzConfigs = @("quartz.$($Context.EnvType).config")
-			$alterQuartzConfigs = @('Templates\quartz.Test.config')
+			$quartzConfigs += @("quartz.$($Context.EnvType).config")
+			$alterQuartzConfigs += @('Templates\quartz.Test.config')
 		}
 	}
 

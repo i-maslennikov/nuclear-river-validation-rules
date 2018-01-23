@@ -13,7 +13,6 @@ using NuClear.Security.API.Auth;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.Telemetry.Probing;
-using NuClear.Utils;
 
 using Quartz;
 
@@ -21,7 +20,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 {
     [DisallowConcurrentExecution]
     [PersistJobDataAfterExecution]
-    public class ProcessingJob : TaskServiceJobBase
+    public sealed class ProcessingJob : TaskServiceJobBase
     {
         private readonly IMetadataProvider _metadataProvider;
         private readonly IMessageFlowProcessorFactory _messageFlowProcessorFactory;
@@ -53,7 +52,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         {
             if (string.IsNullOrEmpty(Flow))
             {
-                string msg = string.Format("Required job arg {0} is not specified, check job config", StaticReflection.GetMemberName(() => Flow));
+                var msg = $"Required job arg {nameof(Flow)} is not specified, check job config";
                 Tracer.Fatal(msg);
                 throw new InvalidOperationException(msg);
             }
@@ -67,7 +66,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
                 DecrementFailCount(context);
             }
-            catch (Exception)
+            catch
             {
                 IncrementFailCount(context);
             }
@@ -93,10 +92,9 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 
         private void ProcessFlow()
         {
-            MessageFlowMetadata messageFlowMetadata;
-            if (!_metadataProvider.TryGetMetadata(Flow.AsPrimaryProcessingFlowId(), out messageFlowMetadata))
+            if (!_metadataProvider.TryGetMetadata(Flow.AsPrimaryProcessingFlowId(), out MessageFlowMetadata messageFlowMetadata))
             {
-                string msg = "Unsupported flow specified for processing: " + Flow;
+                var msg = "Unsupported flow specified for processing: " + Flow;
                 Tracer.Fatal(msg);
                 throw new InvalidOperationException(msg);
             }
@@ -140,10 +138,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
             }
             finally
             {
-                if (messageFlowProcessor != null)
-                {
-                    messageFlowProcessor.Dispose();
-                }
+                messageFlowProcessor?.Dispose();
             }
         }
     }
