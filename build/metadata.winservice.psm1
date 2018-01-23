@@ -9,7 +9,7 @@ Import-Module "$PSScriptRoot\metadata.servicebus.psm1" -DisableNameChecking
 
 function Get-QuartzConfigMetadata ($Context){
 
-	$quartzConfigs = @('quartz.ams_config')
+	$quartzConfigs = @()
 	$alterQuartzConfigs = @()
 
 	switch ($Context.EnvType){

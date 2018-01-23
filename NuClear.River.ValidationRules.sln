@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C1C7C6AC-4AAC-45E4-94AC-DEC47A72F447}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,7 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environments", "Environment
 		Environments\Erm.config = Environments\Erm.config
 		Environments\Erm.Load.config = Environments\Erm.Load.config
 		Environments\Erm.Production.config = Environments\Erm.Production.config
-		Environments\quartz.ams_config = Environments\quartz.ams_config
 		Environments\quartz.Production.config = Environments\quartz.Production.config
 	EndProjectSection
 EndProject
@@ -146,7 +145,7 @@ Global
 		{3E0D8363-B4B7-475A-975E-6A2FDAB8831E} = {D5758A2D-BB93-47E5-A13B-4EEC203D4371}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.ServiceBus.6.0.1304.0\lib\NET45
 		SolutionGuid = {E2E29DCD-1A76-42B9-A70B-05333BA3C557}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.ServiceBus.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal
