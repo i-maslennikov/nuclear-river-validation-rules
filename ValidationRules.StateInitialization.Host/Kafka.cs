@@ -53,6 +53,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
     internal sealed class KafkaReplicationActor : IActor
     {
+        // сколько неполных батчей мы запроцессим перед тем как выйти
+        private const int NonMaxBatchCounter = 5;
+
         private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
         private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly IAccessorTypesProvider _accessorTypesProvider;
@@ -87,6 +90,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
+                        var nonMaxBatchCounter = 0;
+
                         for(;;)
                         {
                             var batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize);
@@ -128,7 +133,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
                             // state init имеет смысл прекращать когда мы вычитали все полные батчи
                             // а то нам могут до бесконечности подкидывать новых messages
+                            // 1 неполный batch ещё ничего не значит, это может быть начальный batch когда kafka разогревается
+                            // выходим из цикла если вычитали NonMaxBatchCounter неполных батчей
                             if (batch.Count != _batchSizeSettings.BatchSize)
+                            {
+                                nonMaxBatchCounter++;
+                            }
+                            if (nonMaxBatchCounter == NonMaxBatchCounter)
                             {
                                 break;
                             }
