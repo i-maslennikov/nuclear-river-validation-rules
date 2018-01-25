@@ -39,6 +39,9 @@ namespace ValidationRules.Hosting.Common
             {
                 var privateConfig = new Dictionary<string, object>(settings.Config)
                 {
+                    // help kafka server logs to identify node
+                    { "client.id", Environment.MachineName },
+
                     // manual commit
                     { "enable.auto.commit", false },
 
@@ -98,7 +101,7 @@ namespace ValidationRules.Hosting.Common
                 }
 
                 // kafka docs: errors should be seen as informational rather than catastrophic
-                private void OnError(object sender, Error error) => _tracer.Warn(error.Reason);
+                private void OnError(object sender, Error error) => _tracer.Warn($"KafkaAudit - error {error.Reason}");
 
                 private void OnPartitionsAssigned(object sender, List<TopicPartition> list)
                 {
@@ -158,16 +161,18 @@ namespace ValidationRules.Hosting.Common
                     {
                         _consumer.OnMessage += OnMessage;
 
-                        // loop
+                        // retryable poll loop
                         while (!cancellationToken.IsCancellationRequested)
                         {
-                            _consumer.Poll(_pollTimeout);
+                            try
+                            {
+                                _consumer.Poll(_pollTimeout);
+                            }
+                            catch (Exception ex)
+                            {
+                                _tracer.Warn(ex, "KafkaAudit - error in poll loop, retrying");
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        _tracer.Warn(ex, "Kafka audit - exception in poll loop");
-                        StartNew();
                     }
                     finally
                     {
@@ -181,7 +186,7 @@ namespace ValidationRules.Hosting.Common
                             _messages.Add(message);
                         }
 
-                        _tracer.Info($"KafkaAudit - fetch message {message.Offset}");
+                        _tracer.Info($"KafkaAudit - fetch message {message.TopicPartitionOffset}");
                     }
                 }
 
@@ -190,7 +195,7 @@ namespace ValidationRules.Hosting.Common
                     lock (_messages)
                     {
                         var batch = _messages.OrderByOffset().Take(batchSize).ToList();
-                        _tracer.Info(batch.Count != 0 ? $"KafkaAudit - receive batch [{batch.First().Offset.Value} - {batch.Last().Offset.Value}]" : "KafkaAudit - empty batch");
+                        _tracer.Info(batch.Count != 0 ? $"KafkaAudit - receive batch { batch.First().TopicPartition } @{batch.First().Offset.Value}-{batch.Last().Offset.Value}" : "KafkaAudit - empty batch");
 
                         return batch;
                     }
@@ -208,13 +213,15 @@ namespace ValidationRules.Hosting.Common
                     var committedOffsets = _consumer.CommitAsync(maxOffsetMessage).GetAwaiter().GetResult();
                     if (committedOffsets.Error.HasError)
                     {
+                        _tracer.Warn($"KafkaAudit - error occured while committing offsets {committedOffsets.Error}");
                         throw new KafkaException(committedOffsets.Error);
                     }
 
-                    var fail = committedOffsets.Offsets.FirstOrDefault(x => x.Error.HasError);
-                    if (fail != null)
+                    var failOffset = committedOffsets.Offsets.FirstOrDefault(x => x.Error.HasError);
+                    if (failOffset != null)
                     {
-                        throw new KafkaException(fail.Error);
+                        _tracer.Warn($"KafkaAudit - error occured while committing offset {failOffset}");
+                        throw new KafkaException(failOffset.Error);
                     }
 
                     lock (_messages)
@@ -225,7 +232,7 @@ namespace ValidationRules.Hosting.Common
 
                     foreach (var committedOffset in committedOffsets.Offsets)
                     {
-                        _tracer.Info($"KafkaAudit - committed offset {committedOffset.Offset.Value}");
+                        _tracer.Info($"KafkaAudit - committed offset {committedOffset}");
                     }
                 }
 
