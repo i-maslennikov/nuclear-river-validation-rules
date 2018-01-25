@@ -161,17 +161,12 @@ namespace ValidationRules.Hosting.Common
                     {
                         _consumer.OnMessage += OnMessage;
 
-                        // retry loop
+                        // retryable poll loop
                         while (!cancellationToken.IsCancellationRequested)
                         {
                             try
                             {
-                                // poll loop
-                                while (!cancellationToken.IsCancellationRequested)
-                                {
-                                    _consumer.Poll(_pollTimeout);
-                                }
-
+                                _consumer.Poll(_pollTimeout);
                             }
                             catch (Exception ex)
                             {
