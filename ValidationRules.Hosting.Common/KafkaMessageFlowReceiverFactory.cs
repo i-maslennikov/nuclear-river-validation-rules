@@ -32,7 +32,7 @@ namespace ValidationRules.Hosting.Common
         // TODO: move to 'messagging' repo after successful testing
         public sealed class KafkaMessageFlowReceiver2 : IKafkaMessageFlowReceiver
         {
-            private readonly ConsumerWrapper _consumerWrapper;
+            private readonly Consumer _consumer;
             private readonly PollLoop _pollLoop;
 
             public KafkaMessageFlowReceiver2(IKafkaMessageFlowReceiverSettings settings, ITracer tracer)
@@ -57,10 +57,9 @@ namespace ValidationRules.Hosting.Common
                     { "api.version.request", true },
                 };
 
-                var consumer = new Consumer(privateConfig);
+                _consumer = new Consumer(privateConfig);
 
-                _consumerWrapper = new ConsumerWrapper(consumer, settings.TopicPartitionOffsets, tracer);
-                _pollLoop = new PollLoop(consumer, settings.PollTimeout, tracer);
+                _pollLoop = new PollLoop(_consumer, settings.TopicPartitionOffsets, settings.PollTimeout, tracer);
                 _pollLoop.StartNew();
             }
 
@@ -78,54 +77,7 @@ namespace ValidationRules.Hosting.Common
             public void Dispose()
             {
                 _pollLoop.Dispose();
-                _consumerWrapper.Dispose();
-            }
-
-            private sealed class ConsumerWrapper : IDisposable
-            {
-                private readonly Consumer _consumer;
-                private readonly IEnumerable<TopicPartitionOffset> _topicPartitionOffsets;
-                private readonly ITracer _tracer;
-
-                public ConsumerWrapper(Consumer consumer, IEnumerable<TopicPartitionOffset> topicPartitionOffsets, ITracer tracer)
-                {
-                    _consumer = consumer;
-                    _topicPartitionOffsets = topicPartitionOffsets;
-                    _tracer = tracer;
-
-                    _consumer.OnError += OnError;
-                    _consumer.OnPartitionsAssigned += OnPartitionsAssigned;
-                    _consumer.OnPartitionsRevoked += OnPartitionsRevoked;
-
-                    _consumer.Subscribe(_topicPartitionOffsets.Select(x => x.Topic));
-                }
-
-                // kafka docs: errors should be seen as informational rather than catastrophic
-                private void OnError(object sender, Error error) => _tracer.Warn($"KafkaAudit - error {error.Reason}");
-
-                private void OnPartitionsAssigned(object sender, List<TopicPartition> list)
-                {
-                    var assignList = list.Select(x =>
-                    {
-                        var newOffset = _topicPartitionOffsets.Single(y => y.Topic.Equals(x.Topic, StringComparison.OrdinalIgnoreCase)).Offset;
-                        return new TopicPartitionOffset(x, newOffset);
-                    });
-
-                    ((Consumer)sender).Assign(assignList);
-                }
-
-                private static void OnPartitionsRevoked(object sender, List<TopicPartition> list) => ((Consumer)sender).Unassign();
-
-                public void Dispose()
-                {
-                    _consumer.Unsubscribe();
-
-                    _consumer.OnError -= OnError;
-                    _consumer.OnPartitionsAssigned -= OnPartitionsAssigned;
-                    _consumer.OnPartitionsRevoked -= OnPartitionsRevoked;
-
-                    _consumer.Dispose();
-                }
+                _consumer.Dispose();
             }
 
             // Когда Kafka делает consumer неактивным, то тупо блокируется thread на методе Poll
@@ -133,24 +85,36 @@ namespace ValidationRules.Hosting.Common
             private sealed class PollLoop : IDisposable
             {
                 private readonly Consumer _consumer;
+                private readonly IEnumerable<TopicPartitionOffset> _topicPartitionOffsets;
                 private readonly TimeSpan _pollTimeout;
                 private readonly ITracer _tracer;
                 private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
                 private readonly HashSetLastWins _messages = new HashSetLastWins();
 
                 private Task _task;
+                private volatile bool _partitionsAssigned;
 
-                public PollLoop(Consumer consumer, TimeSpan pollTimeout, ITracer tracer)
+                public PollLoop(Consumer consumer, IEnumerable<TopicPartitionOffset> topicPartitionOffsets, TimeSpan pollTimeout, ITracer tracer)
                 {
                     _consumer = consumer;
+                    _topicPartitionOffsets = topicPartitionOffsets;
                     _pollTimeout = pollTimeout;
                     _tracer = tracer;
+
+                    _consumer.OnError += OnError;
+                    _consumer.OnPartitionsAssigned += OnPartitionsAssigned;
+                    _consumer.OnPartitionsRevoked += OnPartitionsRevoked;
+                    _consumer.Subscribe(_topicPartitionOffsets.Select(x => x.Topic));
+
+                    _tracer.Info("KafkaAudit - poll loop created");
                 }
 
                 public void StartNew()
                 {
                     var cancellationToken = _cancellationTokenSource.Token;
                     _task = Task.Factory.StartNew(TaskFunc, cancellationToken, cancellationToken);
+
+                    _tracer.Info("KafkaAudit - poll loop started");
                 }
 
                 private void TaskFunc(object state)
@@ -179,7 +143,7 @@ namespace ValidationRules.Hosting.Common
                         _consumer.OnMessage -= OnMessage;
                     }
 
-                    void OnMessage(object sender, Message message)
+                    void OnMessage(object _, Message message)
                     {
                         lock (_messages)
                         {
@@ -210,6 +174,11 @@ namespace ValidationRules.Hosting.Common
                         return;
                     }
 
+                    if (!_partitionsAssigned)
+                    {
+                        throw new KafkaException(new Error(ErrorCode.RebalanceInProgress, "Kafka partition not assigned, cannot commit right now"));
+                    }
+
                     var committedOffsets = _consumer.CommitAsync(maxOffsetMessage).GetAwaiter().GetResult();
                     if (committedOffsets.Error.HasError)
                     {
@@ -236,12 +205,45 @@ namespace ValidationRules.Hosting.Common
                     }
                 }
 
+
+                private void OnPartitionsAssigned(object _, List<TopicPartition> list)
+                {
+                    var assignList = list.Select(x =>
+                    {
+                        var newOffset = _topicPartitionOffsets.Single(y => y.Topic.Equals(x.Topic, StringComparison.OrdinalIgnoreCase)).Offset;
+                        return new TopicPartitionOffset(x, newOffset);
+                    }).ToList();
+
+                    _consumer.Assign(assignList);
+                    _partitionsAssigned = true;
+
+                    _tracer.Info($"KafkaAudit - assigned partitions: {string.Join(",", assignList)}");
+                }
+
+                private void OnPartitionsRevoked(object _, List<TopicPartition> list)
+                {
+                    _consumer.Unassign();
+                    _partitionsAssigned = false;
+
+                    _tracer.Info($"KafkaAudit - revoked partitions: {string.Join(", ", list)}");
+                }
+
+                // kafka docs: errors should be seen as informational rather than catastrophic
+                private void OnError(object _, Error error) => _tracer.Warn($"KafkaAudit - error {error.Reason}");
+
                 public void Dispose()
                 {
                     _cancellationTokenSource.Cancel();
                     _task?.Wait();
 
+                    _consumer.Unsubscribe();
+                    _consumer.OnPartitionsAssigned -= OnPartitionsAssigned;
+                    _consumer.OnPartitionsRevoked -= OnPartitionsRevoked;
+                    _consumer.OnError -= OnError;
+
                     _cancellationTokenSource.Dispose();
+
+                    _tracer.Info("KafkaAudit - poll loop disposed");
                 }
 
                 // дедупликация по ключу
