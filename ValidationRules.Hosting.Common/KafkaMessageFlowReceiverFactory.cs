@@ -92,7 +92,6 @@ namespace ValidationRules.Hosting.Common
                 private readonly HashSetLastWins _messages = new HashSetLastWins();
 
                 private Task _task;
-                private volatile bool _partitionsAssigned;
 
                 public PollLoop(Consumer consumer, IEnumerable<TopicPartitionOffset> topicPartitionOffsets, TimeSpan pollTimeout, ITracer tracer)
                 {
@@ -120,6 +119,8 @@ namespace ValidationRules.Hosting.Common
                 private void TaskFunc(object state)
                 {
                     var cancellationToken = (CancellationToken)state;
+
+                    Monitor.Enter(_consumer);
 
                     try
                     {
@@ -174,34 +175,45 @@ namespace ValidationRules.Hosting.Common
                         return;
                     }
 
-                    if (!_partitionsAssigned)
+                    // Нельзя вызывать Commit если сработал OnPartitionRevoked
+                    // от этого librdkafka сильно плохеет и на Poll больше ничего никогда не возвращает
+                    // поэтому мы сами обрабатываем эту ситуацию
+                    if (!Monitor.TryEnter(_consumer, TimeSpan.FromSeconds(10)))
                     {
                         throw new KafkaException(new Error(ErrorCode.RebalanceInProgress, "Kafka partition not assigned, cannot commit right now"));
                     }
 
-                    var committedOffsets = _consumer.CommitAsync(maxOffsetMessage).GetAwaiter().GetResult();
-                    if (committedOffsets.Error.HasError)
+                    try
                     {
-                        _tracer.Warn($"KafkaAudit - error occured while committing offsets {committedOffsets.Error}");
-                        throw new KafkaException(committedOffsets.Error);
-                    }
+                        var committedOffsets = _consumer.CommitAsync(maxOffsetMessage).GetAwaiter().GetResult();
+                        if (committedOffsets.Error.HasError)
+                        {
+                            _tracer.Warn($"KafkaAudit - error occured while committing offsets {committedOffsets.Error}");
+                            throw new KafkaException(committedOffsets.Error);
+                        }
 
-                    var failOffset = committedOffsets.Offsets.FirstOrDefault(x => x.Error.HasError);
-                    if (failOffset != null)
+                        var failOffset = committedOffsets.Offsets.FirstOrDefault(x => x.Error.HasError);
+                        if (failOffset != null)
+                        {
+                            _tracer.Warn($"KafkaAudit - error occured while committing offset {failOffset}");
+                            throw new KafkaException(failOffset.Error);
+                        }
+
+                        // logging
+                        foreach (var committedOffset in committedOffsets.Offsets)
+                        {
+                            _tracer.Info($"KafkaAudit - committed offset {committedOffset}");
+                        }
+                    }
+                    finally
                     {
-                        _tracer.Warn($"KafkaAudit - error occured while committing offset {failOffset}");
-                        throw new KafkaException(failOffset.Error);
+                        Monitor.Exit(_consumer);
                     }
 
                     lock (_messages)
                     {
                         // ReSharper disable once PossibleMultipleEnumeration
                         _messages.RemoveRange(batch);
-                    }
-
-                    foreach (var committedOffset in committedOffsets.Offsets)
-                    {
-                        _tracer.Info($"KafkaAudit - committed offset {committedOffset}");
                     }
                 }
 
@@ -215,15 +227,15 @@ namespace ValidationRules.Hosting.Common
                     }).ToList();
 
                     _consumer.Assign(assignList);
-                    _partitionsAssigned = true;
+                    Monitor.Exit(_consumer);
 
                     _tracer.Info($"KafkaAudit - assigned partitions: {string.Join(",", assignList)}");
                 }
 
                 private void OnPartitionsRevoked(object _, List<TopicPartition> list)
                 {
+                    Monitor.Enter(_consumer);
                     _consumer.Unassign();
-                    _partitionsAssigned = false;
 
                     _tracer.Info($"KafkaAudit - revoked partitions: {string.Join(", ", list)}");
                 }
