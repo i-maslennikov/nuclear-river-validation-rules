@@ -8,12 +8,9 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Для заказов, у которых хотя бы один шаблон РМ обязательный, и для этого шаблона не указан РМ, должна выводиться ошибка:
+    /// Для заказов, у которых хотя бы одна номенклатура имеет ContentSales=ContentIsRequired, и для этой номенклатуры не указан РМ, должна выводиться ошибка:
     /// "В позиции {0} необходимо указать рекламные материалы"
-    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckPositionMustHaveAdvertisements
-    /// 
     /// "В позиции {0} необходимо указать рекламные материалы для подпозиции '{1}'"
-    /// Source: AdvertisementsWithoutWhiteListOrderValidationRule/OrderCheckCompositePositionMustHaveAdvertisements
     /// </summary>
     public sealed class OrderPositionAdvertisementMustHaveAdvertisement : ValidationResultAccessorBase
     {
@@ -25,7 +22,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
         {
             var ruleResults =
                 from order in query.For<Order>()
-                from fail in query.For<Order.MissingAdvertisementReference>().Where(x => x.OrderId == order.Id)
+                from fail in query.For<Order.MissingAdvertisementReference>().Where(x => x.OrderId == order.Id && !x.AdvertisementIsOptional)
                 select new Version.ValidationResult
                     {
                         MessageParams =

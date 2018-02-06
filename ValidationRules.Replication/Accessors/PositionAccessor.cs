@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 PositionsGroup = x.PositionsGroup,
 
                 IsCompositionOptional = x.IsCompositionOptional,
-                IsContentSales = x.IsContentSales,
+                ContentSales = x.ContentSales,
                 IsControlledByAmount = x.IsControlledByAmount,
 
                 CategoryCode = x.CategoryCode,

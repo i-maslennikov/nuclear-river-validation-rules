@@ -160,6 +160,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="CheckModes\CheckModeDescriptorFactory.cs" />
     <Compile Include="CheckModes\CheckModeRegistry.cs" />
+    <Compile Include="Composition\Composers\OptionalAdvertisementMustPassReviewMessageComposer.cs" />
+    <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveOptionalAdvertisementMessageComposer.cs" />
     <Compile Include="QueryingServiceSettings.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMaximumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\AmsMessagesShouldBeNewMessageComposer.cs" />

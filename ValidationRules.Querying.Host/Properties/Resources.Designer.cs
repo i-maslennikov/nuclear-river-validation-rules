@@ -493,6 +493,24 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Рекламный материал {0} (наличие необязательно) ожидает модерацию.
+        /// </summary>
+        internal static string OptionalAdvertisementMustPassReview_Draft {
+            get {
+                return ResourceManager.GetString("OptionalAdvertisementMustPassReview_Draft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Рекламный материал {0} (наличие необязательно) не прошёл модерацию.
+        /// </summary>
+        internal static string OptionalAdvertisementMustPassReview_Invalid {
+            get {
+                return ResourceManager.GetString("OptionalAdvertisementMustPassReview_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Указана некорректная дата начала размещения..
         /// </summary>
         internal static string OrderBeginDistrubutionShouldBeFirstDayOfMonth {
@@ -507,6 +525,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrderCheckPositionMustHaveAdvertisements {
             get {
                 return ResourceManager.GetString("OrderCheckPositionMustHaveAdvertisements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} есть возможность указать рекламные материалы.
+        /// </summary>
+        internal static string OrderCheckPositionMustHaveOptionalAdvertisements {
+            get {
+                return ResourceManager.GetString("OrderCheckPositionMustHaveOptionalAdvertisements", resourceCulture);
             }
         }
         
@@ -588,6 +615,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string OrderPositionAdvertisementMustHaveAdvertisement {
             get {
                 return ResourceManager.GetString("OrderPositionAdvertisementMustHaveAdvertisement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} есть возможность указать рекламные материалы для подпозиции &quot;{1}&quot;.
+        /// </summary>
+        internal static string OrderPositionAdvertisementMustHaveOptionalAdvertisement {
+            get {
+                return ResourceManager.GetString("OrderPositionAdvertisementMustHaveOptionalAdvertisement", resourceCulture);
             }
         }
         

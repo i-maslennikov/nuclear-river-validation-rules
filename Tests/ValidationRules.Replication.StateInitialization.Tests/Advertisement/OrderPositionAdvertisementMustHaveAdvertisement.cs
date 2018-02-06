@@ -22,13 +22,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                       new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
                       new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = true },
-                      new Facts::Position { Id = 5, IsContentSales = true },
+                      new Facts::Position { Id = 5, ContentSales = 3 },
 
                       new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = null }
                      )
                 .Aggregate(
                            new Aggregates::Order { Id = 1, BeginDistributionDate = FirstDayJan, EndDistributionDatePlan = FirstDayFeb },
-                           new Aggregates::Order.MissingAdvertisementReference { OrderId = 1, OrderPositionId = 4, CompositePositionId = 5, PositionId = 5 }
+                           new Aggregates::Order.MissingAdvertisementReference { OrderId = 1, OrderPositionId = 4, CompositePositionId = 5, PositionId = 5, AdvertisementIsOptional = false}
                           )
                 .Message(
                          new Messages::Version.ValidationResult
@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                       new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
                       // price position not active
                       new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = false },
-                      new Facts::Position { Id = 5, IsContentSales = true },
+                      new Facts::Position { Id = 5, ContentSales = 3 },
 
                       new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = null }
                      )
@@ -79,7 +79,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 
                       new Facts::OrderPosition { Id = 4, OrderId = 1, PricePositionId = 4 },
                       new Facts::PricePosition { Id = 4, PositionId = 5, IsActiveNotDeleted = true },
-                      new Facts::Position { Id = 5, IsContentSales = true },
+                      new Facts::Position { Id = 5, ContentSales = 3 },
 
                       new Facts::OrderPositionAdvertisement { OrderPositionId = 4, PositionId = 5, AdvertisementId = 13 }
                      )

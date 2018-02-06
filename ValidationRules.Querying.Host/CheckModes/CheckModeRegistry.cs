@@ -32,6 +32,12 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Warning,
                          release: RuleSeverityLevel.Error),
 
+                    Rule(MessageTypeCode.OrderPositionAdvertisementMustHaveOptionalAdvertisement,
+                         single: RuleSeverityLevel.Info,
+                         manualReport: RuleSeverityLevel.Warning,
+                         prerelease: RuleSeverityLevel.Warning,
+                         release: RuleSeverityLevel.Warning),
+
                     Rule(MessageTypeCode.AdvantageousPurchasesBannerMustBeSoldInTheSameCategory,
                          single: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
@@ -309,9 +315,14 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.AdvertisementShouldNotHaveComments,
-                    manualReport: RuleSeverityLevel.Info,
-                    prerelease: RuleSeverityLevel.Info,
-                    release: RuleSeverityLevel.Info),
+                         manualReport: RuleSeverityLevel.Info,
+                         prerelease: RuleSeverityLevel.Info,
+                         release: RuleSeverityLevel.Info),
+
+                    Rule(MessageTypeCode.OptionalAdvertisementMustPassReview,
+                         manualReport: RuleSeverityLevel.Warning,
+                         prerelease: RuleSeverityLevel.Warning,
+                         release: RuleSeverityLevel.Warning),
 
                     Rule(MessageTypeCode.AmsMessagesShouldBeNew,
                         manualReport: RuleSeverityLevel.Error,

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NuClear.ValidationRules.Storage.Model.Facts
 {
@@ -15,6 +16,9 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public const int BindingObjectTypeAddressMultiple = 35;
 
         public const int PositionsGroupMedia = 1;
+
+        public const int ContentSalesWithoutContent = 1;
+        public const int ContentSalesContentIsNotRequired = 2;
 
         public static readonly IReadOnlyCollection<long> CategoryCodesAllowNotLocatedOnTheMap = new long[]
             {
@@ -43,7 +47,8 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public bool IsFirmMismatchAllowed { get; set; }
 
         public bool IsCompositionOptional { get; set; }
-        public bool IsContentSales { get; set; }
+        public int ContentSales { get; set; }
+
         public bool IsControlledByAmount { get; set; }
 
         public long CategoryCode { get; set; }

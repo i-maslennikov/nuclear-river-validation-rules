@@ -16,6 +16,8 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long CompositePositionId { get; set; }
 
             public long PositionId { get; set; }
+
+            public bool AdvertisementIsOptional { get; set; }
         }
 
         public sealed class MissingOrderPositionAdvertisement
@@ -45,6 +47,8 @@ namespace NuClear.ValidationRules.Storage.Model.AdvertisementRules.Aggregates
             public long AdvertisementId { get; set; }
 
             public int ReviewState { get; set; }
+
+            public bool AdvertisementIsOptional { get; set; }
         }
 
         public enum AdvertisementReviewState

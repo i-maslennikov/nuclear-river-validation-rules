@@ -287,8 +287,10 @@ namespace NuClear.ValidationRules.Replication.Messages
                     // AdvertisementRules
                     new OrderPositionAdvertisementMustBeCreated(_query),
                     new OrderPositionAdvertisementMustHaveAdvertisement(_query),
+                    new OrderPositionAdvertisementMustHaveOptionalAdvertisement(_query),
                     new AdvertisementMustBelongToFirm(_query),
                     new AdvertisementMustPassReview(_query),
+                    new OptionalAdvertisementMustPassReview(_query),
                     new AdvertisementShouldNotHaveComments(_query),
                     new AmsMessagesShouldBeNew(_query),
 

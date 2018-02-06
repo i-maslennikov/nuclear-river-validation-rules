@@ -16,6 +16,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
 {
     public sealed class OrderAggregateRootActor : AggregateRootActor<Order>
     {
+
         public OrderAggregateRootActor(
             IQuery query,
             IEqualityComparerFactory equalityComparerFactory,
@@ -47,7 +48,9 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     {
                         MessageTypeCode.OrderPositionAdvertisementMustBeCreated,
                         MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
+                        MessageTypeCode.OrderPositionAdvertisementMustHaveOptionalAdvertisement,
                         MessageTypeCode.AdvertisementMustPassReview,
+                        MessageTypeCode.OptionalAdvertisementMustPassReview,
                         MessageTypeCode.AdvertisementShouldNotHaveComments,
                         MessageTypeCode.AdvertisementMustBelongToFirm,
                     };
@@ -86,6 +89,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.OrderPositionAdvertisementMustHaveAdvertisement,
+                        MessageTypeCode.OrderPositionAdvertisementMustHaveOptionalAdvertisement
                     };
 
             public IQueryable<Order.MissingAdvertisementReference> GetSource()
@@ -103,16 +107,17 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from pp in _query.For<Facts::PricePosition>().Where(x => x.IsActiveNotDeleted).Where(x => x.Id == op.PricePositionId)
                     from positionChild in positionChilds.Where(x => x.PositionId == pp.PositionId)
-                    from p in _query.For<Facts::Position>().Where(x => x.IsContentSales).Where(x => x.Id == positionChild.ChildPositionId)
+                    from p in _query.For<Facts::Position>().Where(x => x.ContentSales != Facts::Position.ContentSalesWithoutContent).Where(x => x.Id == positionChild.ChildPositionId)
                     from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id && x.PositionId == p.Id)
                     where opa.AdvertisementId == null // позиция IsContentSales и не указан advertisementId
                     select new Order.MissingAdvertisementReference
-                    {
-                        OrderId = order.Id,
-                        OrderPositionId = op.Id,
-                        CompositePositionId = pp.PositionId,
-                        PositionId = p.Id,
-                    };
+                        {
+                            OrderId = order.Id,
+                            OrderPositionId = op.Id,
+                            CompositePositionId = pp.PositionId,
+                            PositionId = p.Id,
+                            AdvertisementIsOptional = p.ContentSales == Facts::Position.ContentSalesContentIsNotRequired
+                        };
 
                 return result.Distinct();
             }
@@ -232,6 +237,7 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     {
                         MessageTypeCode.AdvertisementMustPassReview,
                         MessageTypeCode.AdvertisementShouldNotHaveComments,
+                        MessageTypeCode.OptionalAdvertisementMustPassReview,
                     };
 
             public IQueryable<Order.AdvertisementFailedReview> GetSource()
@@ -240,12 +246,15 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Aggregates
                     from order in _query.For<Facts::Order>()
                     from op in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
                     from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == op.Id)
+                    from p in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
                     from a in _query.For<Facts::Advertisement>().Where(x => x.StateCode != Facts::Advertisement.Ok).Where(x => x.Id == opa.AdvertisementId)
                     select new Order.AdvertisementFailedReview
                         {
                             OrderId = order.Id,
                             AdvertisementId = a.Id,
                             ReviewState = a.StateCode,
+
+                            AdvertisementIsOptional = p.ContentSales == Facts::Position.ContentSalesContentIsNotRequired
                         };
 
                 return result;

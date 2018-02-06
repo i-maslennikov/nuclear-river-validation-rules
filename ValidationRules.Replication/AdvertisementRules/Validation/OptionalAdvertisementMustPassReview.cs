@@ -9,12 +9,12 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
 {
     /// <summary>
-    /// Для заказов, в которых есть РМ с ошибками модерации для номенклатур с ContentSales=ContentIsRequired, должна выводиться ошибка:
+    /// Для заказов, в которых есть РМ с ошибками модерации для номенклатур с ContentSales=ContentIsOptional, должна выводиться информационная ошибка:
     /// "Рекламный материал {0} не прошёл модерацию: {1}"
     /// </summary>
-    public sealed class AdvertisementMustPassReview : ValidationResultAccessorBase
+    public sealed class OptionalAdvertisementMustPassReview : ValidationResultAccessorBase
     {
-        public AdvertisementMustPassReview(IQuery query) : base(query, MessageTypeCode.AdvertisementMustPassReview)
+        public OptionalAdvertisementMustPassReview(IQuery query) : base(query, MessageTypeCode.OptionalAdvertisementMustPassReview)
         {
         }
 
@@ -23,23 +23,23 @@ namespace NuClear.ValidationRules.Replication.AdvertisementRules.Validation
             var ruleResults =
                 from order in query.For<Order>()
                 from fail in query.For<Order.AdvertisementFailedReview>()
-                                  .Where(x => !x.AdvertisementIsOptional)
+                                  .Where(x => x.AdvertisementIsOptional)
                                   .Where(x => x.ReviewState == (int)Order.AdvertisementReviewState.Draft ||
                                               x.ReviewState == (int)Order.AdvertisementReviewState.Invalid)
                                   .Where(x => x.OrderId == order.Id)
                 select new Version.ValidationResult
-                {
-                    MessageParams =
+                    {
+                        MessageParams =
                             new MessageParams(
-                                    new Dictionary<string, object> { { "reviewState", fail.ReviewState} },
-                                    new Reference<EntityTypeOrder>(order.Id),
-                                    new Reference<EntityTypeAdvertisement>(fail.AdvertisementId))
+                                              new Dictionary<string, object> { { "reviewState", fail.ReviewState} },
+                                              new Reference<EntityTypeOrder>(order.Id),
+                                              new Reference<EntityTypeAdvertisement>(fail.AdvertisementId))
                                 .ToXDocument(),
 
-                    PeriodStart = order.BeginDistributionDate,
-                    PeriodEnd = order.EndDistributionDatePlan,
-                    OrderId = order.Id
-                };
+                        PeriodStart = order.BeginDistributionDate,
+                        PeriodEnd = order.EndDistributionDatePlan,
+                        OrderId = order.Id,
+                    };
 
             return ruleResults;
         }
