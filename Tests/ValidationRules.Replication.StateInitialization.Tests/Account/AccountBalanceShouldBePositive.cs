@@ -19,7 +19,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(AccountBalanceShouldBePositive))
                 .Fact(
-                      // Новый заказ, до этого не выходил ниразу на счете достаточно средств: ошибки нет
+                      // Новый заказ, до этого не выходил ни разу на счете достаточно средств: ошибки нет
                       new Facts::Account { Id = 1, Balance = 11, BranchOfficeOrganizationUnitId = 1, LegalPersonId = 1 },
 
                       new Facts::Order
@@ -35,7 +35,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                       new Facts::ReleaseWithdrawal { OrderPositionId = 1, Amount = 10, Start = FirstDayFeb, End = FirstDayMar },
                       new Facts::ReleaseWithdrawal { OrderPositionId = 1, Amount = 10, Start = FirstDayMar, End = FirstDayApr },
 
-                      // Новый заказ, до этого не выходил ниразу с бесплатным типом: ошибки нет
+                      // Новый заказ, до этого не выходил ни разу с бесплатным типом: ошибки нет
                       new Facts::Account { Id = 2, Balance = 0, BranchOfficeOrganizationUnitId = 2, LegalPersonId = 2 },
                       new Facts::Order
                       {
@@ -52,7 +52,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                       new Facts::ReleaseWithdrawal { OrderPositionId = 2, Amount = 2, Start = FirstDayMar, End = FirstDayApr },
                       new Facts::ReleaseWithdrawal { OrderPositionId = 2, Amount = 2, Start = FirstDayApr, End = FirstDayMay },
 
-                      // Новый заказ, до этого не выходил ниразу со скидкой 100 %: ошибки нет
+                      // Новый заказ, до этого не выходил ни разу со скидкой 100 %: ошибки нет
                       new Facts::Account { Id = 3, Balance = 0, BranchOfficeOrganizationUnitId = 3, LegalPersonId = 3 },
                       new Facts::Order
                       {
@@ -66,7 +66,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                       new Facts::OrderPosition { Id = 3, OrderId = 3 },
                       new Facts::ReleaseWithdrawal { OrderPositionId = 3, Amount = 0, Start = FirstDayFeb, End = FirstDayMar },
 
-                      // Новый заказ, до этого не выходил ниразу, у него есть UnlimitedOrder за это период: ошибки нет
+                      // Новый заказ, до этого не выходил ни разу, у него есть UnlimitedOrder за это период: ошибки нет
                       new Facts::Account { Id = 4, Balance = -500, BranchOfficeOrganizationUnitId = 4, LegalPersonId = 4 },
                       new Facts::Order
                       {
@@ -81,7 +81,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                       new Facts::ReleaseWithdrawal { OrderPositionId = 4, Amount = 105000, Start = FirstDayFeb, End = FirstDayMar },
                       new Facts::UnlimitedOrder { OrderId = 4, PeriodStart = FirstDayFeb, PeriodEnd = FirstDayMar },
 
-                      // Новый заказ, до этого не выходил ниразу: задолжность = RW за текущий месяц (баланс 0, задолжность 105000)
+                      // Новый заказ, до этого не выходил ни разу: задолжность = RW за текущий месяц (баланс 0, задолжность 105000)
                       new Facts::Account { Id = 5, Balance = 0, BranchOfficeOrganizationUnitId = 5, LegalPersonId = 5 },
                       new Facts::Order
                       {
@@ -144,7 +144,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                       new Facts::ReleaseWithdrawal { OrderPositionId = 8, Amount = 0, Start = FirstDayFeb, End = FirstDayMar },
                       new Facts::AccountDetail { Id = 8, AccountId = 8, PeriodStartDate = FirstDayJan, OrderId = 8 },
 
-                      // Новый заказ, до этого не выходил ниразу со скидкой 100 %, баланс счета отрицательный: ошибки нет
+                      // Новый заказ, до этого не выходил ни разу со скидкой 100 %, баланс счета отрицательный: ошибки нет
                       new Facts::Account { Id = 9, Balance = -1, BranchOfficeOrganizationUnitId = 9, LegalPersonId = 9 },
                       new Facts::Order
                       {
@@ -174,7 +174,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                       new Facts::ReleaseWithdrawal { OrderPositionId = 10, Amount = 2, Start = FirstDayFeb, End = FirstDayMar },
                       new Facts::ReleaseWithdrawal { OrderPositionId = 10, Amount = 3, Start = FirstDayMar, End = FirstDayApr },
 
-                      // Новый заказ, до этого не выходил ниразу с бесплатным типом, баланс счета отрицательный: ошибки нет
+                      // Новый заказ, до этого не выходил ни разу с бесплатным типом, баланс счета отрицательный: ошибки нет
                       new Facts::Account { Id = 11, Balance = -1, BranchOfficeOrganizationUnitId = 11, LegalPersonId = 11 },
                       new Facts::Order
                       {

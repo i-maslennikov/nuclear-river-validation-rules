@@ -9,8 +9,17 @@ namespace NuClear.ValidationRules.Storage.Model.Erm
         public const int OrderTypeCompensation = 9;
         public const int OrderTypeInternational = 10;
         public const int OrderTypeService = 11;
+        public const int OrderTypeSpecialProject = 12;
 
-        public static readonly int[] FreeOfChargeTypes = { OrderTypeSelfAds, OrderTypeSocialAds, OrderTypeCompensation, OrderTypeInternational, OrderTypeService };
+        public static readonly int[] FreeOfChargeTypes =
+            {
+                OrderTypeSelfAds,
+                OrderTypeSocialAds,
+                OrderTypeCompensation,
+                OrderTypeInternational,
+                OrderTypeService,
+                OrderTypeSpecialProject
+            };
 
         private const int OrderStateArchive = 6;
         private const int OrderStateRejected = 3;
