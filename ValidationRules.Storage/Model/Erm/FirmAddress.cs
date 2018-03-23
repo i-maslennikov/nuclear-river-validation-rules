@@ -9,5 +9,7 @@
         public bool IsDeleted { get; set; }
         public string Address { get; set; }
         public bool IsLocatedOnTheMap { get; set; }
+        public long? EntranceCode { get; set; }
+        public int? BuildingPurposeCode { get; set; }
     }
 }

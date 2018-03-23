@@ -36,6 +36,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 IsActive = x.IsActive,
                 IsDeleted = x.IsDeleted,
                 IsClosedForAscertainment = x.ClosedForAscertainment,
+                EntranceCode = x.EntranceCode,
+                BuildingPurposeCode = x.BuildingPurposeCode
             });
 
         public FindSpecification<FirmAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

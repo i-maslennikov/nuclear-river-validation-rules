@@ -254,6 +254,12 @@
   </data>
   <data name="LinkedFirmAddressShouldBeValid_NotBelongToFirm" xml:space="preserve">
     <value>В позиции {0} найден адрес {1}, не принадлежащий фирме заказа</value>
+  </data>  
+  <data name="LinkedFirmAddressShouldBeValid_InvalidBuildingPurpose" xml:space="preserve">
+    <value>В позиции {0} найден адрес {1}, привязанный к зданию со специальным назначением</value>
+  </data>  
+  <data name="LinkedFirmAddressShouldBeValid_MissingEntrance" xml:space="preserve">
+    <value>В позиции {0} найден адрес {1}, не привязанный ко входу</value>
   </data>
   <data name="LinkedCategoryShouldBeActive" xml:space="preserve">
     <value>В позиции {0} найдена неактивная рубрика {1}</value>

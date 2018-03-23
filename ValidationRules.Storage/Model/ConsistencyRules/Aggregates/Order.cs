@@ -8,7 +8,9 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
         Deleted,
         NotActive,
         ClosedForAscertainment,
-        NotBelongToFirm
+        NotBelongToFirm,
+        MissingEntrance,
+        InvalidBuildingPurpose
     }
 
     public enum InvalidCategoryState

@@ -39,6 +39,10 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
                     return Resources.LinkedFirmAddressShouldBeValid_ClosedForAscertainment;
                 case InvalidFirmAddressState.NotBelongToFirm:
                     return Resources.LinkedFirmAddressShouldBeValid_NotBelongToFirm;
+                case InvalidFirmAddressState.InvalidBuildingPurpose:
+                    return Resources.LinkedFirmAddressShouldBeValid_InvalidBuildingPurpose;
+                case InvalidFirmAddressState.MissingEntrance:
+                    return Resources.LinkedFirmAddressShouldBeValid_MissingEntrance;
                 default:
                     throw new Exception(nameof(firmAddressState));
             }

@@ -439,6 +439,24 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} найден адрес {1}, привязанный к зданию со специальным назначением.
+        /// </summary>
+        internal static string LinkedFirmAddressShouldBeValid_InvalidBuildingPurpose {
+            get {
+                return ResourceManager.GetString("LinkedFirmAddressShouldBeValid_InvalidBuildingPurpose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} найден адрес {1}, не привязанный ко входу.
+        /// </summary>
+        internal static string LinkedFirmAddressShouldBeValid_MissingEntrance {
+            get {
+                return ResourceManager.GetString("LinkedFirmAddressShouldBeValid_MissingEntrance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to В позиции {0} найден неактивный адрес {1}.
         /// </summary>
         internal static string LinkedFirmAddressShouldBeValid_NotActive {

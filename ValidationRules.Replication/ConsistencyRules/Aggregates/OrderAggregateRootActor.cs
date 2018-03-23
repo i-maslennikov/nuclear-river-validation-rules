@@ -133,11 +133,14 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
                    from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId)
+                   let checkPOI = Facts.Position.CategoryCodesPOIAddressCheck.Contains(position.CategoryCode)
                    let isFirmMismatchAllowed = Facts.Position.CategoryCodesAllowFirmMismatch.Contains(position.CategoryCode) && position.BindingObjectType == Facts.Position.BindingObjectTypeAddressMultiple
                    let state = address.FirmId != order.FirmId && !isFirmMismatchAllowed ? InvalidFirmAddressState.NotBelongToFirm
                                 : address.IsDeleted ? InvalidFirmAddressState.Deleted
                                 : !address.IsActive ? InvalidFirmAddressState.NotActive
                                 : address.IsClosedForAscertainment ? InvalidFirmAddressState.ClosedForAscertainment
+                                : checkPOI && address.BuildingPurposeCode.HasValue && Facts.FirmAddress.InvalidBuildingPurposeCodesForPOI.Contains(address.BuildingPurposeCode.Value) ? InvalidFirmAddressState.InvalidBuildingPurpose
+                                : checkPOI && !address.EntranceCode.HasValue ? InvalidFirmAddressState.MissingEntrance
                                 : InvalidFirmAddressState.NotSet
                    where state != InvalidFirmAddressState.NotSet // todo: интересно было бы глянуть на сгенерированный sql
                    select new Order.InvalidFirmAddress
@@ -146,7 +149,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                            FirmAddressId = address.Id,
                            OrderPositionId = orderPosition.Id,
                            PositionId = opa.PositionId,
-                           State = state,
+                           State = state
                        };
 
             public FindSpecification<Order.InvalidFirmAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

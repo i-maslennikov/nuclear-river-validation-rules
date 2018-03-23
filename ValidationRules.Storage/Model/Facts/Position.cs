@@ -31,11 +31,17 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         /// <summary>
         /// Категории номенклатуры, для которых допускается несовпадение фирмы заказа и фирмы адреса привязки (продажи в чужие карточки)
         /// </summary>
-        public static readonly IReadOnlyCollection<long> CategoryCodesAllowFirmMismatch = new long[]
+        public static readonly IReadOnlyCollection<long> CategoryCodesAllowFirmMismatch = new[]
             {
                 809065011136692320, // Реклама в профилях партнеров (партнеры)
                 809065011136692321, // Реклама в профилях партнеров (приоритетное размещение)
                 809065011136692326, // Реклама в профилях партнеров (адрес)
+            };
+
+        public static readonly IReadOnlyCollection<long> CategoryCodesPOIAddressCheck = new[]
+            {
+                448239782219049217, // Poi_Online_old
+                809065011136692327  // Poi_Online
             };
 
         public long Id { get; set; }

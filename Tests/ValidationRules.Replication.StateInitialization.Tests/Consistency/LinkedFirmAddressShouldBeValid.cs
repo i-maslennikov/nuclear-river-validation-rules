@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
+using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Aggregates = NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates;
@@ -34,13 +36,25 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPositionAdvertisement { Id = 4, OrderPositionId = 1, FirmAddressId = 4, PositionId = 1 },
                     new Facts::FirmAddress { Id = 4, FirmId = 1, IsActive = true, IsClosedForAscertainment = true },
 
-                    new Facts::Position {Id = 1})
+                    new Facts::OrderPositionAdvertisement { Id = 5, OrderPositionId = 1, FirmAddressId = 5, PositionId = 2 },
+                    new Facts::FirmAddress { Id = 5, FirmId = 1, IsActive = true, EntranceCode = 1, BuildingPurposeCode = 1},
+
+                    new Facts::OrderPositionAdvertisement { Id = 6, OrderPositionId = 1, FirmAddressId = 6, PositionId = 2 },
+                    new Facts::FirmAddress { Id = 6, FirmId = 1, IsActive = true, EntranceCode = null, BuildingPurposeCode = null },
+
+                    new Facts::OrderPositionAdvertisement { Id = 7, OrderPositionId = 1, FirmAddressId = 7, PositionId = 2 },
+                    new Facts::FirmAddress { Id = 7, FirmId = 1, IsActive = true, EntranceCode = 1, BuildingPurposeCode = FirmAddress.InvalidBuildingPurposeCodesForPOI.First()},
+
+                    new Facts::Position {Id = 1},
+                    new Facts::Position {Id = 2, CategoryCode = Position.CategoryCodesPOIAddressCheck.First()})
                 .Aggregate(
                     new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 1, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.NotBelongToFirm },
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 2, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.Deleted },
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 3, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.NotActive },
-                    new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 4, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.ClosedForAscertainment })
+                    new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 4, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.ClosedForAscertainment },
+                    new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 6, OrderPositionId = 1, PositionId = 2, State = Aggregates::InvalidFirmAddressState.MissingEntrance },
+                    new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 7, OrderPositionId = 1, PositionId = 2, State = Aggregates::InvalidFirmAddressState.InvalidBuildingPurpose })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
@@ -98,6 +112,36 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                         new Reference<EntityTypeOrderPosition>(1),
                                         new Reference<EntityTypePosition>(1)))
+                                .ToXDocument(),
+                            MessageType = (int)MessageTypeCode.LinkedFirmAddressShouldBeValid,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
+                            OrderId = 1,
+                        },
+                    new Messages::Version.ValidationResult
+                        {
+                            MessageParams = new MessageParams(
+                                                            new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.MissingEntrance } },
+                                                            new Reference<EntityTypeFirmAddress>(6),
+                                                            new Reference<EntityTypeOrder>(1),
+                                                            new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                                                                                                new Reference<EntityTypeOrderPosition>(1),
+                                                                                                                new Reference<EntityTypePosition>(2)))
+                                .ToXDocument(),
+                            MessageType = (int)MessageTypeCode.LinkedFirmAddressShouldBeValid,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
+                            OrderId = 1,
+                        },
+                    new Messages::Version.ValidationResult
+                        {
+                            MessageParams = new MessageParams(
+                                                            new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.InvalidBuildingPurpose } },
+                                                            new Reference<EntityTypeFirmAddress>(7),
+                                                            new Reference<EntityTypeOrder>(1),
+                                                            new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                                                                                                new Reference<EntityTypeOrderPosition>(1),
+                                                                                                                new Reference<EntityTypePosition>(2)))
                                 .ToXDocument(),
                             MessageType = (int)MessageTypeCode.LinkedFirmAddressShouldBeValid,
                             PeriodStart = MonthStart(1),
