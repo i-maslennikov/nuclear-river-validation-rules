@@ -7,7 +7,7 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         /// <summary>
         /// https://confluence.2gis.ru/pages/viewpage.action?pageId=245956763
         /// </summary>
-        public static readonly IReadOnlyCollection<int> InvalidBuildingPurposeCodesForPOI = new[]
+        public static readonly IReadOnlyCollection<int> InvalidBuildingPurposeCodesForPoi = new[]
             {
                 54,     // Метро (Россия, Украина, Казахстан, Кыргызстан)
                 69,     // Наружная реклама (Россия, Украина, Казахстан, Кыргызстан)

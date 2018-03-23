@@ -43,10 +43,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::FirmAddress { Id = 6, FirmId = 1, IsActive = true, EntranceCode = null, BuildingPurposeCode = null },
 
                     new Facts::OrderPositionAdvertisement { Id = 7, OrderPositionId = 1, FirmAddressId = 7, PositionId = 2 },
-                    new Facts::FirmAddress { Id = 7, FirmId = 1, IsActive = true, EntranceCode = 1, BuildingPurposeCode = FirmAddress.InvalidBuildingPurposeCodesForPOI.First()},
+                    new Facts::FirmAddress { Id = 7, FirmId = 1, IsActive = true, EntranceCode = 1, BuildingPurposeCode = FirmAddress.InvalidBuildingPurposeCodesForPoi.First()},
 
                     new Facts::Position {Id = 1},
-                    new Facts::Position {Id = 2, CategoryCode = Position.CategoryCodesPOIAddressCheck.First()})
+                    new Facts::Position {Id = 2, CategoryCode = Position.CategoryCodesPoiAddressCheck.First()})
                 .Aggregate(
                     new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 1, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.NotBelongToFirm },

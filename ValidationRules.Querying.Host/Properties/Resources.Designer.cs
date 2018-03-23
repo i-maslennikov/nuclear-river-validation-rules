@@ -736,6 +736,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Превышено допустимое количество POI на вход: {0}. Месяц: {1}. Адрес: {2}. Вход: {3}. Конфликтующие заказы: {4}.
+        /// </summary>
+        internal static string PoiLimitExceededForTheEntrance {
+            get {
+                return ResourceManager.GetString("PoiLimitExceededForTheEntrance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Для рубрики {0} в проекте {1} в выпуск {2:MMMM yyy} не указан минимальный CPC.
         /// </summary>
         internal static string ProjectMustContainCostPerClickMinimumRestriction {

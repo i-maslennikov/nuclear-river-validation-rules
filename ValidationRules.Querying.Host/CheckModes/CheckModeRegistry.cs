@@ -327,7 +327,14 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                     Rule(MessageTypeCode.AmsMessagesShouldBeNew,
                         manualReport: RuleSeverityLevel.Error,
                         prerelease: RuleSeverityLevel.Error,
-                        release: RuleSeverityLevel.Error)
+                        release: RuleSeverityLevel.Error),
+
+                    Rule(MessageTypeCode.PoiAmountForEntranceShouldMeetMaximumRestrictions,
+                         single: RuleSeverityLevel.Warning,
+                         singleForApprove: RuleSeverityLevel.Warning,
+                         manualReport: RuleSeverityLevel.Warning,
+                         prerelease: RuleSeverityLevel.Warning,
+                         release: RuleSeverityLevel.Warning)
                 };
 
         private static Tuple<MessageTypeCode, IReadOnlyDictionary<CheckMode, RuleSeverityLevel>> Rule(

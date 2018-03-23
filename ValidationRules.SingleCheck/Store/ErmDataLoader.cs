@@ -235,6 +235,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             LoadAssociatedDeniedRules(query, order, usedPriceIds, store);
             LoadFirm(query, order, firmAddressIds, store);
             LoadBuyHere(query, order, store);
+            LoadPoi(query, order, store);
         }
 
         private static void LoadFirm(DataConnection query, Order order, IReadOnlyCollection<long> additionalFirmIds, IStore store)

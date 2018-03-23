@@ -26,7 +26,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             IBulkRepository<Order.OrderCategoryPosition> orderCategoryPositionBulkRepository,
             IBulkRepository<Order.OrderThemePosition> orderThemePositionBulkRepository,
             IBulkRepository<Order.AmountControlledPosition> amountControlledPositionBulkRepository,
-            IBulkRepository<Order.ActualPrice> actualPriceBulkRepository)
+            IBulkRepository<Order.ActualPrice> actualPriceBulkRepository,
+            IBulkRepository<Order.EntranceControlledPosition> entranceControlledPositionBulkRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
@@ -35,7 +36,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 HasValueObject(new OrderCategoryPositionAccessor(query), orderCategoryPositionBulkRepository),
                 HasValueObject(new OrderThemePositionAccessor(query), orderThemePositionBulkRepository),
                 HasValueObject(new AmountControlledPositionAccessor(query), amountControlledPositionBulkRepository),
-                HasValueObject(new ActualPriceAccessor(query), actualPriceBulkRepository));
+                HasValueObject(new ActualPriceAccessor(query), actualPriceBulkRepository),
+                HasValueObject(new EntranceControlledPositionAccessor(query), entranceControlledPositionBulkRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -94,6 +96,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
+                        MessageTypeCode.PoiAmountForEntranceShouldMeetMaximumRestrictions
                     };
 
             public IQueryable<Order.OrderPeriod> GetSource()
@@ -270,6 +273,41 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.AmountControlledPosition>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class EntranceControlledPositionAccessor : DataChangesHandler<Order.EntranceControlledPosition>, IStorageBasedDataObjectAccessor<Order.EntranceControlledPosition>
+        {
+            private readonly IQuery _query;
+
+            public EntranceControlledPositionAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.PoiAmountForEntranceShouldMeetMaximumRestrictions
+                    };
+
+            public IQueryable<Order.EntranceControlledPosition> GetSource()
+                => (from order in _query.For<Facts::Order>()
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    join adv in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals adv.OrderPositionId
+                    join position in _query.For<Facts::Position>().Where(x => Facts.Position.CategoryCodesPoiAddressCheck.Contains(x.CategoryCode)) on adv.PositionId equals position.Id
+                    join address in _query.For<Facts::FirmAddress>().Where(x => x.EntranceCode != null) on adv.FirmAddressId equals address.Id
+                    select new Order.EntranceControlledPosition
+                        {
+                            OrderId = orderPosition.OrderId,
+                            EntranceCode = address.EntranceCode.Value,
+                            FirmAddressId = address.Id,
+                        }).Distinct();
+
+            public FindSpecification<Order.EntranceControlledPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.EntranceControlledPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

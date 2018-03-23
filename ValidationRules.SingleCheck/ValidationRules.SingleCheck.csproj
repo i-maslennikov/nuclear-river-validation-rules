@@ -179,6 +179,7 @@
     <Compile Include="Optimization\PredicateVisitor.cs" />
     <Compile Include="Optimization\SkipCheckVisitor.cs" />
     <Compile Include="Replicator.cs" />
+    <Compile Include="Store\ErmDataLoader.LoadPoi.cs" />
     <Compile Include="Store\PersistentTableStoreFactory.cs" />
     <Compile Include="Store\LockManager.cs" />
     <Compile Include="Store\SchemaManager.cs" />

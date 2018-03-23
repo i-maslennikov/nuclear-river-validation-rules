@@ -176,6 +176,5 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                 return new FindSpecification<Price.PricePeriod>(x => aggregateIds.Contains(x.PriceId));
             }
         }
-
     }
 }

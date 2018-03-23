@@ -10,7 +10,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 {
     public static partial class ErmDataLoader
     {
-
         private static void LoadBuyHere(DataConnection query, Order order, IStore store)
         {
             const long CategoryCodePremiumAdvertising = 809065011136692321; // Реклама в профилях партнеров (приоритетное размещение)

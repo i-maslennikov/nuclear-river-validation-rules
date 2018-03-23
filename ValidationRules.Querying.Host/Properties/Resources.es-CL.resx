@@ -351,4 +351,13 @@
   <data name="OrderPositionAdvertisementMustHaveOptionalAdvertisement" xml:space="preserve">
     <value>En la posición {0} es posible especificar los materiales publicitarios para la subposición "{1}"</value>
   </data>
+  <data name="LinkedFirmAddressShouldBeValid_InvalidBuildingPurpose" xml:space="preserve">
+    <value>En la posición {0} se ha encontrado la dirección {1}, enlazada al edificio con destino especial</value>
+  </data>
+  <data name="LinkedFirmAddressShouldBeValid_MissingEntrance" xml:space="preserve">
+    <value>En la posición {0} se ha encontrado la dirección {1}, no enlazada a la entrada</value>
+  </data>
+  <data name="PoiLimitExceededForTheEntrance" xml:space="preserve">
+    <value>Se ha excedido el número permitido de POI para la entrada: {0}. Mes: {1}. Dirección: {2}. Entrada: {3}. Pedidos en conflicto: {4}</value>
+  </data>
 </root>

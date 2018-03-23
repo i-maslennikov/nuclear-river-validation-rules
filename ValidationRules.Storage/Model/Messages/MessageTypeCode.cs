@@ -77,5 +77,7 @@
         PartnerAdvertisementShouldNotBeSoldToAdvertiser = 74,
 
         AmsMessagesShouldBeNew = 80,
+
+        PoiAmountForEntranceShouldMeetMaximumRestrictions = 100
     }
 }

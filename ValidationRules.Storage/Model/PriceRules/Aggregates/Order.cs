@@ -76,5 +76,12 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public DateTime End { get; set; }
             public long Scope { get; set; }
         }
+
+        public sealed class EntranceControlledPosition
+        {
+            public long OrderId { get; set; }
+            public long EntranceCode { get; set; }
+            public long FirmAddressId { get; set; }
+        }
     }
 }

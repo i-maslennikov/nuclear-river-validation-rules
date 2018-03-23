@@ -351,4 +351,13 @@
   <data name="OrderPositionAdvertisementMustHaveOptionalAdvertisement" xml:space="preserve">
     <value>In position {0} it is possible to specify advertising materials for subposition {1}</value>
   </data>
+  <data name="LinkedFirmAddressShouldBeValid_InvalidBuildingPurpose" xml:space="preserve">
+    <value>In the position {0} address {1} linked to the building with special purpose has been found</value>
+  </data>
+  <data name="LinkedFirmAddressShouldBeValid_MissingEntrance" xml:space="preserve">
+    <value>In the position {0} address {1}, not linked to the entrance has been found</value>
+  </data>
+  <data name="PoiLimitExceededForTheEntrance" xml:space="preserve">
+    <value>You have exceeded the allowed number of POI for the entrance: {0}. Month: {1}. Address: {2}. Entrance: {3}. Conflicting orders: {4}</value>
+  </data>
 </root>

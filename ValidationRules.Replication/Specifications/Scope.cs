@@ -37,6 +37,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
 
         private const long ApprovedScope = 0;
         private const long OnApprovalScope = -1;
+
         private const long UndefinedScope = -2;
     }
 

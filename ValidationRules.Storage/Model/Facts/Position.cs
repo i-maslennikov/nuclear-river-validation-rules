@@ -38,7 +38,7 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
                 809065011136692326, // Реклама в профилях партнеров (адрес)
             };
 
-        public static readonly IReadOnlyCollection<long> CategoryCodesPOIAddressCheck = new[]
+        public static readonly IReadOnlyCollection<long> CategoryCodesPoiAddressCheck = new[]
             {
                 448239782219049217, // Poi_Online_old
                 809065011136692327  // Poi_Online

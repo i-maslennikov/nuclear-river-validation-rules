@@ -351,4 +351,13 @@
   <data name="OrderPositionAdvertisementMustHaveOptionalAdvertisement" xml:space="preserve">
     <value>U položky {0} lze uvést reklamní materiály pro podpoložku "{1}"</value>
   </data>
+  <data name="LinkedFirmAddressShouldBeValid_InvalidBuildingPurpose" xml:space="preserve">
+    <value>U pozici {0} byla nalezena adresa {1} spojená s budovou se speciálním účelem</value>
+  </data>
+  <data name="LinkedFirmAddressShouldBeValid_MissingEntrance" xml:space="preserve">
+    <value>U pozici {0} byla nalezena adresa {1} nespojená se vstupem</value>
+  </data>
+  <data name="PoiLimitExceededForTheEntrance" xml:space="preserve">
+    <value>Byl převýšen povolený počet POI na vstup: {0}. Měsíc: {1}. Adresa: {2}. Vstup: {3}. Objednávky v rozporu: {4}</value>
+  </data>
 </root>

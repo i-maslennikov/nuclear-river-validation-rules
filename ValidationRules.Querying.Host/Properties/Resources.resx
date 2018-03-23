@@ -357,4 +357,7 @@
   <data name="OrderPositionAdvertisementMustHaveOptionalAdvertisement" xml:space="preserve">
     <value>В позиции {0} есть возможность указать рекламные материалы для подпозиции "{1}"</value>
   </data>
+  <data name="PoiLimitExceededForTheEntrance" xml:space="preserve">
+    <value>Превышено допустимое количество POI на вход: {0}. Месяц: {1}. Адрес: {2}. Вход: {3}. Конфликтующие заказы: {4}</value>
+  </data>
 </root>

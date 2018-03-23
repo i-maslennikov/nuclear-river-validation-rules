@@ -162,6 +162,7 @@
     <Compile Include="CheckModes\CheckModeRegistry.cs" />
     <Compile Include="Composition\Composers\OptionalAdvertisementMustPassReviewMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveOptionalAdvertisementMessageComposer.cs" />
+    <Compile Include="Composition\Composers\PoiAmountForEntranceShouldMeetMaximumRestrictionsComposer.cs" />
     <Compile Include="QueryingServiceSettings.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMaximumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\AmsMessagesShouldBeNewMessageComposer.cs" />

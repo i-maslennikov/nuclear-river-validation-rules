@@ -187,6 +187,7 @@
     <Compile Include="AdvertisementRules\Validation\AdvertisementMustBelongToFirm.cs" />
     <Compile Include="AdvertisementRules\Validation\OptionalAdvertisementMustPassReview.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveOptionalAdvertisement.cs" />
+    <Compile Include="PriceRules\Validation\PoiAmountForEntranceShouldMeetMaximumRestrictions.cs" />
     <Compile Include="SystemRules\Validation\AmsMessagesShouldBeNew.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />

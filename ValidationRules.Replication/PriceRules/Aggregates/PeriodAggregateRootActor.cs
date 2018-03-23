@@ -43,6 +43,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions,
                         MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass,
+                        MessageTypeCode.PoiAmountForEntranceShouldMeetMaximumRestrictions,
                     };
 
             public IQueryable<Period> GetSource()

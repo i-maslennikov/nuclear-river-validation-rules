@@ -145,6 +145,7 @@
     <Compile Include="Consistency\LinkedCategoryAsterixMayBelongToFirm.cs" />
     <Compile Include="Consistency\OrderMustHaveActiveLegalEntities.cs" />
     <Compile Include="Consistency\OrderMustHaveActiveDeal.cs" />
+    <Compile Include="Consistency\POIAmountForEntranceShouldMeetMaximumRestrictions.cs" />
     <Compile Include="DI\StateInitializationTestsRoot.cs" />
     <Compile Include="Firm\PartnerAdvertisement.cs" />
     <Compile Include="Firm\LinkedFirmShouldBeValid.cs" />
