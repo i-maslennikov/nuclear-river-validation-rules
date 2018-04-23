@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\librdkafka.redist.0.11.3\build\librdkafka.redist.props" Condition="Exists('..\packages\librdkafka.redist.0.11.3\build\librdkafka.redist.props')" />
+  <Import Project="..\packages\librdkafka.redist.0.11.4\build\librdkafka.redist.props" Condition="Exists('..\packages\librdkafka.redist.0.11.4\build\librdkafka.redist.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -212,8 +212,8 @@
       <HintPath>..\packages\Common.Logging.Log4Net1213.3.1.0\lib\net40\Common.Logging.Log4Net1213.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Confluent.Kafka.StrongName, Version=0.11.3.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Confluent.Kafka.StrongName.0.11.3\lib\net46\Confluent.Kafka.StrongName.dll</HintPath>
+    <Reference Include="Confluent.Kafka.StrongName, Version=0.11.4.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Confluent.Kafka.StrongName.0.11.4\lib\net46\Confluent.Kafka.StrongName.dll</HintPath>
     </Reference>
     <Reference Include="Dapper.StrongName, Version=1.50.2.0, Culture=neutral, PublicKeyToken=e3e8412083d25dd3, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.StrongName.1.50.2\lib\net451\Dapper.StrongName.dll</HintPath>
@@ -270,6 +270,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.0.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
@@ -354,7 +357,7 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\librdkafka.redist.0.11.3\build\librdkafka.redist.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\librdkafka.redist.0.11.3\build\librdkafka.redist.props'))" />
+    <Error Condition="!Exists('..\packages\librdkafka.redist.0.11.4\build\librdkafka.redist.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\librdkafka.redist.0.11.4\build\librdkafka.redist.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
