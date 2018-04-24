@@ -20,7 +20,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
 {
     public sealed class HeartbeatJob : TaskServiceJobBase
     {
-        private static readonly TimeSpan AmsSyncInterval = TimeSpan.FromSeconds(20);
+        private static readonly TimeSpan AmsSyncInterval = TimeSpan.FromMinutes(1);
 
         private readonly KafkaMessageFlowInfoProvider _kafkaMessageFlowInfoProvider;
         private readonly IRepository<SystemStatus> _repository;
