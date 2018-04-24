@@ -30,76 +30,78 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             _kafkaMessageFlowInfoProvider = kafkaMessageFlowInfoProvider;
         }
 
-        public async Task<long> WaitForVersion(Guid token)
+        public Task<long> WaitForVersion(Guid ermToken)
         {
-            var flowSize = _kafkaMessageFlowInfoProvider.GetFlowSize(AmsFactsFlow.Instance);
-            var amsVersion = flowSize != 0 ? WaitForAmsState(flowSize - 1, WaitInterval, WaitTimeout) : Task.FromResult(0L);
-            var ermVersion = WaitForErmState(token, WaitInterval, WaitTimeout);
+            var amsCount = _kafkaMessageFlowInfoProvider.GetFlowSize(AmsFactsFlow.Instance);
 
-            var result = await Task.WhenAll(amsVersion, ermVersion);
-            return result.Max();
+            return WaitForVersion(ermToken, amsCount, WaitInterval, WaitTimeout);
         }
 
-        private async Task<long> WaitForAmsState(long offset, TimeSpan interval, TimeSpan timeout)
+        private async Task<long> WaitForVersion(Guid ermToken, long amsCount, TimeSpan interval, TimeSpan timeout)
         {
+            var ermVersion = (long?)null;
+            var amsVersion = (long?)null;
+
+            // don't wait for ams if kafka is empty
+            if (amsCount == 0)
+            {
+                amsVersion = 0;
+            }
+            var amsOffset = amsCount - 1;
+
             using (var connection = _factory.CreateDataConnection(ConfigurationString))
             {
                 var connectionLocal = connection;
 
-                var version = await Waiter(async () =>
+                await Waiter(async () =>
                 {
-                    var amsState = await connectionLocal.GetTable<Version.AmsState>().OrderBy(x => x.VersionId).FirstOrDefaultAsync(x => x.Offset >= offset);
-                    return amsState?.VersionId;
+                    if (ermVersion == null)
+                    {
+                        ermVersion = (await connectionLocal.GetTable<Version.ErmState>().SingleOrDefaultAsync(x => x.Token == ermToken))?.VersionId;
+                    }
+
+                    if (amsVersion == null)
+                    {
+                        amsVersion = (await connectionLocal.GetTable<Version.AmsState>().OrderBy(x => x.VersionId).FirstOrDefaultAsync(x => x.Offset >= amsOffset))?.VersionId;
+                    }
+
+                    if (ermVersion != null && amsVersion != null)
+                    {
+                        return true;
+                    }
+
+                    return false;
                 }, interval, timeout);
-
-
-                if (version == null)
-                {
-                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state {0} failed after {1}", offset, timeout));
-                }
-
-                return version.Value;
             }
-        }
 
-        private async Task<long> WaitForErmState(Guid token, TimeSpan interval, TimeSpan timeout)
-        {
-            using (var connection = _factory.CreateDataConnection(ConfigurationString))
+            if (ermVersion == null)
             {
-                var connectionLocal = connection;
-
-                var version = await Waiter(async () =>
-                {
-                    var ermState = await connectionLocal.GetTable<Version.ErmState>().SingleOrDefaultAsync(x => x.Token == token);
-                    return ermState?.VersionId;
-                }, interval, timeout);
-
-                if (version == null)
-                {
-                    throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state {0} failed after {1}", token, timeout));
-                }
-
-                return version.Value;
+                throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for ERM state {0} failed after {1}", ermToken, timeout));
             }
+
+            if (amsVersion == null)
+            {
+                throw new TimeoutException(string.Format(CultureInfo.InvariantCulture, "Wait for AMS state {0} failed after {1}", amsOffset, timeout));
+            }
+
+            return Math.Max(ermVersion.Value, amsVersion.Value);
         }
 
-        private static async Task<T?> Waiter<T>(Func<Task<T?>> func, TimeSpan interval, TimeSpan timeout) where T : struct
+        private static async Task Waiter(Func<Task<bool>> func, TimeSpan interval, TimeSpan timeout)
         {
             var attemptCount = timeout.Ticks / interval.Ticks;
             for (var i = 0; i < attemptCount; i++)
             {
                 var sw = Stopwatch.StartNew();
                 var result = await func();
-                if (result != null)
+                if (result)
                 {
-                    return result;
+                    return;
                 }
 
                 sw.Stop();
                 await Task.Delay(sw.Elapsed < interval ? interval - sw.Elapsed : TimeSpan.Zero);
             }
-
-            return null;
         }
 
         public long GetLatestVersion()
