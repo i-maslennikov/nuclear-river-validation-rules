@@ -36,7 +36,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             IBulkRepository<Order.MissingBargainScan> orderMissingBargainScanRepository,
             IBulkRepository<Order.MissingBills> orderMissingBillsRepository,
             IBulkRepository<Order.MissingRequiredField> orderMissingRequiredFieldRepository,
-            IBulkRepository<Order.MissingOrderScan> orderMissingOrderScanRepository)
+            IBulkRepository<Order.MissingOrderScan> orderMissingOrderScanRepository,
+            IBulkRepository<Order.MissingValidPartnerFirmAddresses> missingValidPartnerFirmAddressesRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query), bulkRepository,
@@ -55,7 +56,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 HasValueObject(new OrderMissingBargainScanAccessor(query), orderMissingBargainScanRepository),
                 HasValueObject(new OrderMissingBillsAccessor(query), orderMissingBillsRepository),
                 HasValueObject(new MissingRequiredFieldAccessor(query), orderMissingRequiredFieldRepository),
-                HasValueObject(new OrderMissingOrderScanAccessor(query), orderMissingOrderScanRepository));
+                HasValueObject(new OrderMissingOrderScanAccessor(query), orderMissingOrderScanRepository),
+                HasValueObject(new MissingValidPartnerFirmAddressesAccessor(query), missingValidPartnerFirmAddressesRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -125,6 +127,7 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                 => new RuleInvalidator
                     {
                         MessageTypeCode.LinkedFirmAddressShouldBeValid,
+                        MessageTypeCode.AtLeastOneLinkedPartnerFirmAddressShouldBeValid
                     };
 
             public IQueryable<Order.InvalidFirmAddress> GetSource()
@@ -134,8 +137,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                    from position in _query.For<Facts::Position>().Where(x => x.Id == opa.PositionId)
                    from address in _query.For<Facts::FirmAddress>().Where(x => x.Id == opa.FirmAddressId)
                    let checkPoi = Facts.Position.CategoryCodesPoiAddressCheck.Contains(position.CategoryCode)
-                   let isFirmMismatchAllowed = Facts.Position.CategoryCodesAllowFirmMismatch.Contains(position.CategoryCode) && position.BindingObjectType == Facts.Position.BindingObjectTypeAddressMultiple
-                   let state = address.FirmId != order.FirmId && !isFirmMismatchAllowed ? InvalidFirmAddressState.NotBelongToFirm
+                   let isPartnerAddress = Facts.Position.CategoryCodesAllowFirmMismatch.Contains(position.CategoryCode) && position.BindingObjectType == Facts.Position.BindingObjectTypeAddressMultiple
+                   let state = address.FirmId != order.FirmId && !isPartnerAddress ? InvalidFirmAddressState.NotBelongToFirm
                                 : address.IsDeleted ? InvalidFirmAddressState.Deleted
                                 : !address.IsActive ? InvalidFirmAddressState.NotActive
                                 : address.IsClosedForAscertainment ? InvalidFirmAddressState.ClosedForAscertainment
@@ -149,7 +152,8 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
                            FirmAddressId = address.Id,
                            OrderPositionId = orderPosition.Id,
                            PositionId = opa.PositionId,
-                           State = state
+                           State = state,
+                           IsPartnerAddress = isPartnerAddress
                        };
 
             public FindSpecification<Order.InvalidFirmAddress> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -643,6 +647,51 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Aggregates
             {
                 var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.MissingRequiredField>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class MissingValidPartnerFirmAddressesAccessor : DataChangesHandler<Order.MissingValidPartnerFirmAddresses>, IStorageBasedDataObjectAccessor<Order.MissingValidPartnerFirmAddresses>
+        {
+            private readonly IQuery _query;
+
+            public MissingValidPartnerFirmAddressesAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.AtLeastOneLinkedPartnerFirmAddressShouldBeValid
+                    };
+
+            public IQueryable<Order.MissingValidPartnerFirmAddresses> GetSource()
+            {
+                var partnerAddresses = from opa in _query.For<Facts::OrderPositionAdvertisement>()
+                                       join p in _query.For<Facts::Position>() on opa.PositionId equals p.Id
+                                       join fa in _query.For<Facts::FirmAddress>() on opa.FirmAddressId equals fa.Id
+                                       where p.CategoryCode == Facts::Position.CategoryCodePartnerAdvertisingAddress
+                                       select new { opa.OrderPositionId, FirmAddress = fa };
+
+                return from o in _query.For<Facts::Order>()
+                       join op in _query.For<Facts::OrderPosition>() on o.Id equals op.OrderId
+                       join pp in _query.For<Facts::PricePosition>() on op.PricePositionId equals pp.Id
+                       where partnerAddresses.Any(pa => pa.OrderPositionId == op.Id) &&
+                             !partnerAddresses.Where(pa => pa.OrderPositionId == op.Id)
+                                              .Select(pa => pa.FirmAddress)
+                                              .Any(fa => fa.IsActive && !fa.IsDeleted && !fa.IsClosedForAscertainment)
+                       select new Order.MissingValidPartnerFirmAddresses
+                           {
+                               OrderId = o.Id,
+                               OrderPositionId = op.Id,
+                               PositionId = pp.PositionId
+                           };
+            }
+
+            public FindSpecification<Order.MissingValidPartnerFirmAddresses> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.Cast<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.MissingValidPartnerFirmAddresses>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

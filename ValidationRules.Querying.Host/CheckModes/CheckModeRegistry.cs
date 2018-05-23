@@ -334,7 +334,14 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          singleForApprove: RuleSeverityLevel.Warning,
                          manualReport: RuleSeverityLevel.Warning,
                          prerelease: RuleSeverityLevel.Warning,
-                         release: RuleSeverityLevel.Warning)
+                         release: RuleSeverityLevel.Warning),
+
+                    Rule(MessageTypeCode.AtLeastOneLinkedPartnerFirmAddressShouldBeValid,
+                         single: RuleSeverityLevel.Error,
+                         singleForApprove: RuleSeverityLevel.Error,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error)
                 };
 
         private static Tuple<MessageTypeCode, IReadOnlyDictionary<CheckMode, RuleSeverityLevel>> Rule(

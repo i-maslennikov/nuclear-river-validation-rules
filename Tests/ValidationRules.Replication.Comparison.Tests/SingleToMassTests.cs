@@ -137,19 +137,16 @@ namespace ValidationRules.Replication.Comparison.Tests
 
         private class TestCheckMode : ICheckModeDescriptor
         {
-            public IReadOnlyCollection<MessageTypeCode> Rules { get; set; }
-
-            public RuleSeverityLevel GetRuleSeverityLevel(MessageTypeCode rule)
-                => RuleSeverityLevel.None;
+            public IReadOnlyDictionary<MessageTypeCode, RuleSeverityLevel> Rules { get; set; }
 
             public DateTime GetValidationPeriodStart(Order order)
                 => DateTime.MinValue;
 
             public static TestCheckMode SingleRule(MessageTypeCode rule)
-                => new TestCheckMode { Rules = new[] { rule } };
+                => new TestCheckMode { Rules = new[] { rule }.ToDictionary(x => x, x => RuleSeverityLevel.None) };
 
             public static TestCheckMode AllRules()
-                => new TestCheckMode { Rules = Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>().ToList() };
+                => new TestCheckMode { Rules = Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>().ToDictionary(x => x, x => RuleSeverityLevel.None) };
         }
     }
 }

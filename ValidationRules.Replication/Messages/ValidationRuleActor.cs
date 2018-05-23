@@ -283,6 +283,7 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                     new AccountShouldExist(_query),
                     new AccountBalanceShouldBePositive(_query),
+                    new AtLeastOneLinkedPartnerFirmAddressShouldBeValid(_query),
 
                     // AdvertisementRules
                     new OrderPositionAdvertisementMustBeCreated(_query),

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace NuClear.ValidationRules.Querying.Host.CheckModes
 {
-    public class CheckModeDescriptorFactory
+    public sealed class CheckModeDescriptorFactory
     {
         private static readonly IReadOnlyDictionary<CheckMode, Dictionary<MessageTypeCode, RuleSeverityLevel>> CheckModes =
             CheckModeRegistry.Map.SelectMany(x => x.Item2.Select(y => new { MessageTypeCode = x.Item1, CheckMode = y.Key, RuleSeverityLevel = y.Value }))
@@ -16,8 +16,7 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
 
         public ICheckModeDescriptor GetDescriptorFor(CheckMode checkMode)
         {
-            Dictionary<MessageTypeCode, RuleSeverityLevel> checkModeRules;
-            if (!CheckModes.TryGetValue(checkMode, out checkModeRules))
+            if (!CheckModes.TryGetValue(checkMode, out var checkModeRules))
             {
                 throw new ArgumentException($"Check mode {checkMode} nas no one rule", nameof(checkModeRules));
             }
@@ -28,28 +27,14 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
         private sealed class CheckModeDescriptor : ICheckModeDescriptor
         {
             private readonly CheckMode _checkMode;
-            private readonly IReadOnlyDictionary<MessageTypeCode, RuleSeverityLevel> _checkModeRules;
-            private readonly HashSet<MessageTypeCode> _rules;
 
             public CheckModeDescriptor(CheckMode checkMode, IReadOnlyDictionary<MessageTypeCode, RuleSeverityLevel> checkModeRules)
             {
                 _checkMode = checkMode;
-                _checkModeRules = checkModeRules;
-                _rules = new HashSet<MessageTypeCode>(checkModeRules.Keys);
+                Rules = checkModeRules;
             }
 
-            public IReadOnlyCollection<MessageTypeCode> Rules => _rules;
-
-            public RuleSeverityLevel GetRuleSeverityLevel(MessageTypeCode rule)
-            {
-                RuleSeverityLevel level;
-                if (!_checkModeRules.TryGetValue(rule, out level))
-                {
-                    throw new ArgumentException($"Rule {rule} is not defined for check mode {_checkMode}", nameof(rule));
-                }
-
-                return level;
-            }
+            public IReadOnlyDictionary<MessageTypeCode, RuleSeverityLevel> Rules { get; }
 
             public DateTime GetValidationPeriodStart(Order order)
             {

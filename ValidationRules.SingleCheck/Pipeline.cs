@@ -57,30 +57,40 @@ namespace NuClear.ValidationRules.SingleCheck
                     factReplicators = CreateReplicators(_factAccessorTypes, erm.CreateQuery(), wrap(store.CreateStore()));
                     aggregateReplicators = CreateReplicators(_aggregateAccessorTypes, store.CreateQuery(), wrap(store.CreateStore()));
                     messageReplicators = CreateReplicators(_messageAccessorTypes, store.CreateQuery(), wrap(messages.CreateStore()))
-                        .Where(x => x.DataObjectType == typeof(Version.ValidationResult) && checkModeDescriptor.Rules.Contains(x.Rule)).ToArray();
+                        .Where(x => x.DataObjectType == typeof(Version.ValidationResult) && checkModeDescriptor.Rules.ContainsKey(x.Rule)).ToArray();
 
                     var predicates = factReplicators.Concat(aggregateReplicators).Concat(messageReplicators).SelectMany(x => x.DependencyPredicates);
                     optimization.PrepareToUse(predicates.Distinct());
                 }
 
                 using (Probe.Create("Erm -> Erm slice"))
+                {
                     ReadErmSlice(orderId, wrap(erm.CreateStore()));
+                }
 
                 using (Probe.Create("Erm slice -> Facts"))
+                {
                     _strategy.ProcessFacts(factReplicators, aggregateReplicators, messageReplicators, optimization);
+                }
 
                 using (Probe.Create("Facts -> Aggregates"))
+                {
                     _strategy.ProcessAggregates(aggregateReplicators, messageReplicators, optimization);
+                }
 
                 using (Probe.Create("Aggregates -> Messages"))
+                {
                     _strategy.ProcessMessages(messageReplicators, optimization);
+                }
 
                 var validationPeriodStart = GetValidationPeriodStart(erm.CreateQuery(), orderId, checkModeDescriptor);
-
                 using (Probe.Create("Query result"))
-                    return messages.CreateQuery().For<Version.ValidationResult>()
-                        .Where(x => x.OrderId == orderId && checkModeDescriptor.Rules.Contains((MessageTypeCode)x.MessageType) && x.PeriodEnd >= validationPeriodStart)
-                        .ToArray();
+                {
+                    return messages.CreateQuery()
+                                   .For<Version.ValidationResult>()
+                                   .Where(x => x.OrderId == orderId && checkModeDescriptor.Rules.Keys.Contains((MessageTypeCode)x.MessageType) && x.PeriodEnd >= validationPeriodStart)
+                                   .ToArray();
+                }
             }
         }
 

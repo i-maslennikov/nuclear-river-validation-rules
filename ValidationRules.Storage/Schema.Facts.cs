@@ -113,7 +113,7 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<OrderPosition>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.OrderId }, x => new { x.Id })
+                   .HasIndex(x => new { x.OrderId }, x => new { x.Id, x.PricePositionId })
                    .HasIndex(x => new { x.PricePositionId }, x => new { x.Id, x.OrderId });
             builder.Entity<OrderPositionAdvertisement>()
                    .HasSchemaName(FactsSchema)

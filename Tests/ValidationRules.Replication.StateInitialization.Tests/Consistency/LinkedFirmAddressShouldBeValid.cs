@@ -45,8 +45,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::OrderPositionAdvertisement { Id = 7, OrderPositionId = 1, FirmAddressId = 7, PositionId = 2 },
                     new Facts::FirmAddress { Id = 7, FirmId = 1, IsActive = true, EntranceCode = 1, BuildingPurposeCode = FirmAddress.InvalidBuildingPurposeCodesForPoi.First()},
 
-                    new Facts::Position {Id = 1},
-                    new Facts::Position {Id = 2, CategoryCode = Position.CategoryCodesPoiAddressCheck.First()})
+                    new Facts::OrderPositionAdvertisement {Id = 8, OrderPositionId = 1, FirmAddressId = 8, PositionId = 3},
+                    new Facts::FirmAddress { Id = 8, IsActive = false, FirmId = 2 },
+
+                    new Facts::Position { Id = 1 },
+                    new Facts::Position { Id = 2, CategoryCode = Position.CategoryCodesPoiAddressCheck.First() },
+                    new Facts::Position { Id = 3, CategoryCode = Position.CategoryCodePartnerAdvertisingAddress, BindingObjectType = Position.BindingObjectTypeAddressMultiple })
                 .Aggregate(
                     new Aggregates::Order { Id = 1, BeginDistribution = MonthStart(1), EndDistributionPlan = MonthStart(2) },
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 1, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.NotBelongToFirm },
@@ -54,12 +58,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 3, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.NotActive },
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 4, OrderPositionId = 1, PositionId = 1, State = Aggregates::InvalidFirmAddressState.ClosedForAscertainment },
                     new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 6, OrderPositionId = 1, PositionId = 2, State = Aggregates::InvalidFirmAddressState.MissingEntrance },
-                    new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 7, OrderPositionId = 1, PositionId = 2, State = Aggregates::InvalidFirmAddressState.InvalidBuildingPurpose })
+                    new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 7, OrderPositionId = 1, PositionId = 2, State = Aggregates::InvalidFirmAddressState.InvalidBuildingPurpose },
+                    new Aggregates::Order.InvalidFirmAddress { OrderId = 1, FirmAddressId = 8, OrderPositionId = 1, PositionId = 3, State = Aggregates::InvalidFirmAddressState.NotActive, IsPartnerAddress = true })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.NotBelongToFirm } },
+                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.NotBelongToFirm }, {"isPartnerAddress", false} },
                                     new Reference<EntityTypeFirmAddress>(1),
                                     new Reference<EntityTypeOrder>(1),
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
@@ -74,7 +79,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.Deleted } },
+                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.Deleted }, {"isPartnerAddress", false} },
                                     new Reference<EntityTypeFirmAddress>(2),
                                     new Reference<EntityTypeOrder>(1),
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
@@ -90,7 +95,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.NotActive } },
+                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.NotActive }, {"isPartnerAddress", false} },
                                     new Reference<EntityTypeFirmAddress>(3),
                                     new Reference<EntityTypeOrder>(1),
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
@@ -106,7 +111,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.ClosedForAscertainment } },
+                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.ClosedForAscertainment }, {"isPartnerAddress", false} },
                                     new Reference<EntityTypeFirmAddress>(4),
                                     new Reference<EntityTypeOrder>(1),
                                     new Reference<EntityTypeOrderPositionAdvertisement>(0,
@@ -121,7 +126,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                                            new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.MissingEntrance } },
+                                                            new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.MissingEntrance }, {"isPartnerAddress", false} },
                                                             new Reference<EntityTypeFirmAddress>(6),
                                                             new Reference<EntityTypeOrder>(1),
                                                             new Reference<EntityTypeOrderPositionAdvertisement>(0,
@@ -136,12 +141,27 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Messages::Version.ValidationResult
                         {
                             MessageParams = new MessageParams(
-                                                            new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.InvalidBuildingPurpose } },
+                                                            new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.InvalidBuildingPurpose }, {"isPartnerAddress", false} },
                                                             new Reference<EntityTypeFirmAddress>(7),
                                                             new Reference<EntityTypeOrder>(1),
                                                             new Reference<EntityTypeOrderPositionAdvertisement>(0,
                                                                                                                 new Reference<EntityTypeOrderPosition>(1),
                                                                                                                 new Reference<EntityTypePosition>(2)))
+                                .ToXDocument(),
+                            MessageType = (int)MessageTypeCode.LinkedFirmAddressShouldBeValid,
+                            PeriodStart = MonthStart(1),
+                            PeriodEnd = MonthStart(2),
+                            OrderId = 1,
+                        },
+                    new Messages::Version.ValidationResult
+                        {
+                            MessageParams = new MessageParams(
+                                                            new Dictionary<string, object> { { "invalidFirmAddressState", (int)Aggregates::InvalidFirmAddressState.NotActive }, {"isPartnerAddress", true} },
+                                                            new Reference<EntityTypeFirmAddress>(8),
+                                                            new Reference<EntityTypeOrder>(1),
+                                                            new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                                                                                                new Reference<EntityTypeOrderPosition>(1),
+                                                                                                                new Reference<EntityTypePosition>(3)))
                                 .ToXDocument(),
                             MessageType = (int)MessageTypeCode.LinkedFirmAddressShouldBeValid,
                             PeriodStart = MonthStart(1),

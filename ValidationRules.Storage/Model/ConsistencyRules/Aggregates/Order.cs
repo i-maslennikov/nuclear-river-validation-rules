@@ -51,6 +51,7 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public long OrderPositionId { get; set; }
             public long PositionId { get; set; }
             public InvalidFirmAddressState State { get; set; }
+            public bool IsPartnerAddress { get; set; }
         }
 
         public class CategoryNotBelongsToAddress
@@ -138,6 +139,13 @@ namespace NuClear.ValidationRules.Storage.Model.ConsistencyRules.Aggregates
             public bool BranchOfficeOrganizationUnit { get; set; }
             public bool Currency { get; set; }
             public bool Deal { get; set; }
+        }
+
+        public class MissingValidPartnerFirmAddresses
+        {
+            public long OrderId { get; set; }
+            public long OrderPositionId { get; set; }
+            public long PositionId { get; set; }
         }
     }
 }

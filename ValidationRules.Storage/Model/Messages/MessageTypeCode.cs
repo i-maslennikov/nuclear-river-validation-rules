@@ -78,6 +78,8 @@
 
         AmsMessagesShouldBeNew = 80,
 
-        PoiAmountForEntranceShouldMeetMaximumRestrictions = 100
+        PoiAmountForEntranceShouldMeetMaximumRestrictions = 100,
+
+        AtLeastOneLinkedPartnerFirmAddressShouldBeValid = 101
     }
 }

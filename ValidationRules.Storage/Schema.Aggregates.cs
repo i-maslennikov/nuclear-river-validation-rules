@@ -296,6 +296,10 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<ConsistencyAggregates::Order.MissingOrderScan>()
                   .HasSchemaName(ConsistencyAggregatesSchema);
 
+            builder.Entity<ConsistencyAggregates::Order.MissingValidPartnerFirmAddresses>()
+                   .HasSchemaName(ConsistencyAggregatesSchema)
+                   .HasIndex(x => new { x.OrderId });
+
             return builder;
         }
     }

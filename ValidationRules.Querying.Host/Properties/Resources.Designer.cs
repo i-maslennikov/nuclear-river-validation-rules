@@ -160,6 +160,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to В позиции {0} необходимо указать хотя бы один валидный адрес.
+        /// </summary>
+        internal static string AtLeastOneLinkedPartnerFirmAddressShouldBeValid {
+            get {
+                return ResourceManager.GetString("AtLeastOneLinkedPartnerFirmAddressShouldBeValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Отсутствует сканированная копия договора.
         /// </summary>
         internal static string BargainScanShouldPresent {

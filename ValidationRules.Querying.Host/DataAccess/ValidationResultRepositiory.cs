@@ -46,7 +46,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             => x => x.OrderId == null && x.ProjectId == null || x.OrderId.HasValue && orderIds.Any(y => y.Id == x.OrderId.Value) || x.ProjectId.HasValue && x.ProjectId == projectId;
 
         private static Expression<Func<Version.ValidationResult, bool>> ForMode(ICheckModeDescriptor checkModeDescriptor)
-            => x => checkModeDescriptor.Rules.Contains((MessageTypeCode)x.MessageType);
+            => x => checkModeDescriptor.Rules.Keys.Contains((MessageTypeCode)x.MessageType);
 
         private static ITable<Identity> ToTemporaryTable(DataConnection connection, IEnumerable<long> ids)
         {

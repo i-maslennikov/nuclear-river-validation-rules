@@ -15,6 +15,7 @@ using NuClear.Tracing.API;
 using NuClear.Tracing.Environment;
 using NuClear.Tracing.Log4Net.Config;
 using NuClear.ValidationRules.Querying.Host.Composition;
+using NuClear.ValidationRules.Querying.Host.Composition.Composers;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.SingleCheck;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
@@ -32,15 +33,16 @@ namespace NuClear.ValidationRules.Querying.Host.DI
             var settings = new QueryingServiceSettings();
 
             return new UnityContainer()
-                .ConfigureTracer(settings.AsSettings<IEnvironmentSettings>(),
-                                 settings.AsSettings<IConnectionStringSettings>())
-                .ConfigureSettingsAspects(settings)
-                .ConfigureDataAccess()
-                .ConfigureComposers()
-                .ConfigureDistinctors()
-                .ConfigureNameResolvingService()
-                .ConfigureSingleCheck()
-                .ConfigureOperationsProcessing();
+                   .ConfigureTracer(settings.AsSettings<IEnvironmentSettings>(),
+                                    settings.AsSettings<IConnectionStringSettings>())
+                   .ConfigureSettingsAspects(settings)
+                   .ConfigureDataAccess()
+                   .RegisterImplementersCollection<IMessageComposer>()
+                   .RegisterImplementersCollection<IDistinctor>()
+                   .ConfigureSeverityProvider()
+                   .ConfigureNameResolvingService()
+                   .ConfigureSingleCheck()
+                   .ConfigureOperationsProcessing();
         }
 
         private static IUnityContainer ConfigureTracer(
@@ -72,31 +74,21 @@ namespace NuClear.ValidationRules.Querying.Host.DI
                 .RegisterType<ValidationResultRepositiory>(new PerResolveLifetimeManager());
         }
 
-        private static IUnityContainer ConfigureComposers(this IUnityContainer container)
+        private static IUnityContainer RegisterImplementersCollection<TContract>(this IUnityContainer container) where TContract : class
         {
-            var interfaceType = typeof(IMessageComposer);
-            var serializerTypes = interfaceType.Assembly.GetTypes()
-                                               .Where(x => interfaceType.IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
-                                               .ToArray();
+            var interfaceType = typeof(TContract);
+            var implementerTypes = interfaceType.Assembly.GetTypes()
+                                                .Where(x => interfaceType.IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
+                                                .ToArray();
 
-            container.RegisterType(typeof(IReadOnlyCollection<IMessageComposer>),
-                                   new InjectionFactory(c => serializerTypes.Select(t => c.Resolve(t)).Cast<IMessageComposer>().ToArray()));
+            container.RegisterType(typeof(IReadOnlyCollection<TContract>),
+                                   new InjectionFactory(c => implementerTypes.Select(t => c.Resolve(t)).Cast<TContract>().ToArray()));
 
             return container;
         }
 
-        private static IUnityContainer ConfigureDistinctors(this IUnityContainer container)
-        {
-            var interfaceType = typeof(IDistinctor);
-            var serializerTypes = interfaceType.Assembly.GetTypes()
-                                               .Where(x => interfaceType.IsAssignableFrom(x) && x.IsClass && !x.IsAbstract)
-                                               .ToArray();
-
-            container.RegisterType(typeof(IReadOnlyCollection<IDistinctor>),
-                                   new InjectionFactory(c => serializerTypes.Select(t => c.Resolve(t)).Cast<IDistinctor>().ToArray()));
-
-            return container;
-        }
+        private static IUnityContainer ConfigureSeverityProvider(this IUnityContainer container) =>
+            container.RegisterType<IMessageSeverityProvider, MessageSeverityProvider>(new ContainerControlledLifetimeManager());
 
         private static IUnityContainer ConfigureNameResolvingService(this IUnityContainer container)
         {

@@ -123,6 +123,7 @@
     <Compile Include="Advertisement\OptionalAdvertisementMustPassReview.cs" />
     <Compile Include="Advertisement\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
     <Compile Include="Advertisement\OrderPositionAdvertisementMustHaveOptionalAdvertisement.cs" />
+    <Compile Include="Consistency\AtLeastOneLinkedPartnerFirmAddressShouldBeValid.cs" />
     <Compile Include="Consistency\BargainScanShouldPresent.cs" />
     <Compile Include="Consistency\OrderScanShouldPresent.cs" />
     <Compile Include="Consistency\LegalPersonProfileWarrantyShouldNotBeExpired.cs" />

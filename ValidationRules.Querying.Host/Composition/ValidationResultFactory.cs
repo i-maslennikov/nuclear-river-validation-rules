@@ -18,19 +18,22 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
         private readonly IReadOnlyDictionary<MessageTypeCode, IMessageComposer> _composers;
         private readonly IReadOnlyDictionary<MessageTypeCode, IDistinctor> _distinctors;
+        private readonly IMessageSeverityProvider _messageSeverityProvider;
         private readonly IReadOnlyDictionary<int, string> _knownEntityTypes;
         private readonly NameResolvingService _nameResolvingService;
 
         public ValidationResultFactory(
             IReadOnlyCollection<IMessageComposer> composers,
             IReadOnlyCollection<IDistinctor> distinctors,
+            IMessageSeverityProvider messageSeverityProvider,
             IReadOnlyCollection<IEntityType> knownEntityTypes,
             NameResolvingService nameResolvingService)
         {
             _knownEntityTypes = knownEntityTypes.ToDictionary(x => x.Id, x => x.Description);
             _nameResolvingService = nameResolvingService;
-            _composers = composers.ToDictionary(x => x.MessageType, x => x);
-            _distinctors = distinctors.ToDictionary(x => x.MessageType, x => x);
+            _messageSeverityProvider = messageSeverityProvider;
+            _composers = composers.ToDictionary(x => x.MessageType);
+            _distinctors = distinctors.ToDictionary(x => x.MessageType);
         }
 
         public IReadOnlyCollection<ValidationResult> GetValidationResult(IReadOnlyCollection<Version.ValidationResult> validationResults, ICheckModeDescriptor checkModeDescriptor)
@@ -45,8 +48,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
         {
             try
             {
-                IMessageComposer composer;
-                if (!_composers.TryGetValue(message.MessageType, out composer))
+                if (!_composers.TryGetValue(message.MessageType, out var composer))
                 {
                     throw new ArgumentException($"Не найден сериализатор '{message.MessageType}'", nameof(message));
                 }
@@ -58,8 +60,8 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
                         MainReference = ConvertReference(composerResult.MainReference),
                         References = composerResult.References.Select(ConvertReference).ToList(),
                         Template = composerResult.Template,
-                        Result = checkModeDescriptor.GetRuleSeverityLevel(message.MessageType),
-                        Rule = message.MessageType,
+                        Result = _messageSeverityProvider.GetLevel(message, checkModeDescriptor),
+                        Rule = message.MessageType
                     };
             }
             catch (Exception ex)
@@ -77,8 +79,7 @@ namespace NuClear.ValidationRules.Querying.Host.Composition
 
         private IDistinctor DistinctorForMessageType(MessageTypeCode messageType)
         {
-            IDistinctor distinctor;
-            return _distinctors.TryGetValue(messageType, out distinctor) ? distinctor : Default;
+            return _distinctors.TryGetValue(messageType, out var distinctor) ? distinctor : Default;
         }
 
         private static Message ToMessage(Version.ValidationResult x)

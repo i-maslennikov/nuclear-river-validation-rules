@@ -33,13 +33,16 @@ namespace NuClear.ValidationRules.Replication.ConsistencyRules.Validation
                 select new Version.ValidationResult
                     {
                         MessageParams =
-                            new MessageParams(
-                                    new Dictionary<string, object> { { "invalidFirmAddressState", (int)firmAddress.State } },
-                                    new Reference<EntityTypeFirmAddress>(firmAddress.FirmAddressId),
-                                    new Reference<EntityTypeOrder>(order.Id),
-                                    new Reference<EntityTypeOrderPositionAdvertisement>(0,
-                                        new Reference<EntityTypeOrderPosition>(firmAddress.OrderPositionId),
-                                        new Reference<EntityTypePosition>(firmAddress.PositionId)))
+                            new MessageParams(new Dictionary<string, object>
+                                                  {
+                                                      { "invalidFirmAddressState", (int)firmAddress.State },
+                                                      { "isPartnerAddress", firmAddress.IsPartnerAddress }
+                                                  },
+                                              new Reference<EntityTypeFirmAddress>(firmAddress.FirmAddressId),
+                                              new Reference<EntityTypeOrder>(order.Id),
+                                              new Reference<EntityTypeOrderPositionAdvertisement>(0,
+                                                                                                  new Reference<EntityTypeOrderPosition>(firmAddress.OrderPositionId),
+                                                                                                  new Reference<EntityTypePosition>(firmAddress.PositionId)))
                                 .ToXDocument(),
 
                         PeriodStart = order.BeginDistribution,
