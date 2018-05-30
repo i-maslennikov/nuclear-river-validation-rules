@@ -360,4 +360,7 @@
   <data name="PoiLimitExceededForTheEntrance" xml:space="preserve">
     <value>Se ha excedido el número permitido de POI para la entrada: {0}. Mes: {1}. Dirección: {2}. Entrada: {3}. Pedidos en conflicto: {4}</value>
   </data>
+  <data name="AtLeastOneLinkedPartnerFirmAddressShouldBeValid" xml:space="preserve">
+    <value>En la posición {0} se debe especificar al menos una dirección válida</value>
+  </data>
 </root>

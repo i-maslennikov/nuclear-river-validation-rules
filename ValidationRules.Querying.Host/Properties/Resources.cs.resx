@@ -360,4 +360,7 @@
   <data name="PoiLimitExceededForTheEntrance" xml:space="preserve">
     <value>Byl převýšen povolený počet POI na vstup: {0}. Měsíc: {1}. Adresa: {2}. Vstup: {3}. Objednávky v rozporu: {4}</value>
   </data>
+  <data name="AtLeastOneLinkedPartnerFirmAddressShouldBeValid" xml:space="preserve">
+    <value>U pozici {0} je potřeba uvést alespoň jednu validní adresu</value>
+  </data>
 </root>
