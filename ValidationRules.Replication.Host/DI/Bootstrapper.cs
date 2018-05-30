@@ -96,6 +96,7 @@ using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
+using NuClear.ValidationRules.Replication.Accessors.Rulesets;
 using NuClear.ValidationRules.Replication.Host.Customs;
 using NuClear.ValidationRules.Replication.Host.Jobs;
 using NuClear.ValidationRules.Storage.FieldComparer;
@@ -185,7 +186,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                 .RegisterType<IJobFactory, JobFactory>(Lifetime.Singleton, new InjectionConstructor(container.Resolve<UnityJobFactory>(), container.Resolve<ITracer>()))
                 .RegisterType<IJobStoreFactory, JobStoreFactory>(Lifetime.Singleton)
                 .RegisterType<ISchedulerManager, SchedulerManager>("default", Lifetime.Singleton)
-                .RegisterType<ISchedulerManager, AmsFactsShedulerManager>("ams", Lifetime.Singleton);
+                .RegisterType<ISchedulerManager, KafkaFactsImportShedulerManager>("kafka", Lifetime.Singleton);
         }
 
         private static IUnityContainer ConfigureQuartzRemoteControl(
@@ -328,51 +329,56 @@ namespace NuClear.ValidationRules.Replication.Host.DI
         private static IUnityContainer ConfigureReplication(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)
         {
             return container
-                .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
+                   .RegisterType<IDataObjectTypesProvider, DataObjectTypesProvider>(Lifetime.Singleton)
 
-                .RegisterAccessor<Account, AccountAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<AccountDetail, AccountDetailAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<AssociatedPosition, AssociatedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<AssociatedPositionsGroup, AssociatedPositionsGroupAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Bargain, BargainAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<BargainScanFile, BargainScanFileAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Bill, BillAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<BranchOffice, BranchOfficeAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<BranchOfficeOrganizationUnit, BranchOfficeOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Category, CategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<CategoryOrganizationUnit, CategoryOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<CostPerClickCategoryRestriction, CostPerClickCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Deal, DealAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<DeniedPosition, DeniedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Firm, FirmAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<FirmAddress, FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<FirmAddressCategory, FirmAddressCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<LegalPerson, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<LegalPersonProfile, LegalPersonProfileAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<NomenclatureCategory, NomenclatureCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Order, OrderAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<OrderItem, OrderItemAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<OrderPosition, OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<OrderPositionAdvertisement, OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<OrderPositionCostPerClick, OrderPositionCostPerClickAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<OrderScanFile, OrderScanFileAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Position, PositionAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<PositionChild, PositionChildAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Price, PriceAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<PricePosition, PricePositionAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Project, ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<ReleaseInfo, ReleaseInfoAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<ReleaseWithdrawal, ReleaseWithdrawalAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<RulesetRule, RulesetRuleAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<SalesModelCategoryRestriction, SalesModelCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<Theme, ThemeAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<ThemeCategory, ThemeCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<ThemeOrganizationUnit, ThemeOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterAccessor<UnlimitedOrder, UnlimitedOrderAccessor>(entryPointSpecificLifetimeManagerFactory)
-                .RegisterMemoryAccessor<Advertisement, AdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Account, AccountAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<AccountDetail, AccountDetailAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<AssociatedPosition, AssociatedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<AssociatedPositionsGroup, AssociatedPositionsGroupAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Bargain, BargainAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<BargainScanFile, BargainScanFileAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Bill, BillAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<BranchOffice, BranchOfficeAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<BranchOfficeOrganizationUnit, BranchOfficeOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Category, CategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<CategoryOrganizationUnit, CategoryOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<CostPerClickCategoryRestriction, CostPerClickCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Deal, DealAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<DeniedPosition, DeniedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Firm, FirmAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<FirmAddress, FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<FirmAddressCategory, FirmAddressCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<LegalPerson, LegalPersonAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<LegalPersonProfile, LegalPersonProfileAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<NomenclatureCategory, NomenclatureCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Order, OrderAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<OrderItem, OrderItemAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<OrderPosition, OrderPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<OrderPositionAdvertisement, OrderPositionAdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<OrderPositionCostPerClick, OrderPositionCostPerClickAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<OrderScanFile, OrderScanFileAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Position, PositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<PositionChild, PositionChildAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Price, PriceAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<PricePosition, PricePositionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Project, ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<ReleaseInfo, ReleaseInfoAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<ReleaseWithdrawal, ReleaseWithdrawalAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<RulesetRule, RulesetRuleAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<SalesModelCategoryRestriction, SalesModelCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<Theme, ThemeAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<ThemeCategory, ThemeCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<ThemeOrganizationUnit, ThemeOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterAccessor<UnlimitedOrder, UnlimitedOrderAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterMemoryAccessor<Advertisement, AdvertisementAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterMemoryAccessor<Ruleset, RulesetAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterMemoryAccessor<Ruleset.AssociatedRule, RulesetAssociatedRuleAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterMemoryAccessor<Ruleset.DeniedRule, RulesetDeniedRuleAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterMemoryAccessor<Ruleset.QuantitativeRule, RulesetQuantitativeRuleAccessor>(entryPointSpecificLifetimeManagerFactory)
+                   .RegisterMemoryAccessor<Ruleset.RulesetProject, RulesetProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
 
-                .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
-                .RegisterType<IAggregateActorFactory, UnityAggregateActorFactory>(entryPointSpecificLifetimeManagerFactory());
+                   .RegisterType<IDataObjectsActorFactory, UnityDataObjectsActorFactory>(entryPointSpecificLifetimeManagerFactory())
+                   .RegisterType<IAggregateActorFactory, UnityAggregateActorFactory>(entryPointSpecificLifetimeManagerFactory());
         }
 
         private static IUnityContainer RegisterAccessor<TFact, TAccessor>(this IUnityContainer container, Func<LifetimeManager> entryPointSpecificLifetimeManagerFactory)

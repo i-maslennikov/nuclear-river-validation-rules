@@ -42,5 +42,41 @@
       </simple>
     </trigger>
 
+    <job>
+      <name>RulesetFactsFlow</name>
+      <group>ValidationRules</group>
+      <description>RulesetFactsFlow</description>
+      <job-type>NuClear.ValidationRules.Replication.Host.Jobs.ProcessingJob, 2GIS.NuClear.ValidationRules.Replication.Host</job-type>
+
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+
+    <trigger>
+      <simple>
+        <name>RulesetFactsFlow</name>
+        <group>ValidationRules</group>
+
+        <job-name>RulesetFactsFlow</job-name>
+        <job-group>ValidationRules</job-group>
+
+        <job-data-map>
+          <entry>
+            <key>BatchSize</key>
+            <value>5000</value>
+          </entry>
+          <entry>
+            <key>Flow</key>
+            <value>RulesetFactsFlow</value>
+          </entry>
+        </job-data-map>
+
+        <misfire-instruction>RescheduleNowWithExistingRepeatCount</misfire-instruction>
+        <repeat-count>-1</repeat-count>
+        <repeat-interval>2000</repeat-interval>
+
+      </simple>
+    </trigger>
+
   </schedule>
 </job-scheduling-data>

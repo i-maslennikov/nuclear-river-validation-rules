@@ -62,7 +62,12 @@ namespace NuClear.ValidationRules.Replication
             {
                 return new[]
                     {
-                        typeof(Advertisement)
+                        typeof(Advertisement),
+                        typeof(Ruleset),
+                        typeof(Ruleset.AssociatedRule),
+                        typeof(Ruleset.DeniedRule),
+                        typeof(Ruleset.QuantitativeRule),
+                        typeof(Ruleset.RulesetProject)
                     };
             }
 

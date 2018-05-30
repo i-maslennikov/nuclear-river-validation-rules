@@ -22,7 +22,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
         private readonly IQuery _query;
         private readonly ITracer _tracer;
-        private readonly ICommandFactory _commandFactory;
+        private readonly ICommandFactory<TrackedUseCase> _commandFactory;
 
         public FactsFlowAccumulator(IQuery query, ITracer tracer)
         {
@@ -33,11 +33,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
         protected override AggregatableMessage<ICommand> Process(TrackedUseCase trackedUseCase)
         {
-            var commands = _commandFactory.CreateCommands(new TrackedUseCaseEvent(trackedUseCase)).ToList();
-
-            var date = trackedUseCase.Context.Finished.UtcDateTime;
-            commands.Add(new IncrementErmStateCommand(new[] { new ErmState(trackedUseCase.Id, date) }));
-
+            var commands = _commandFactory.CreateCommands(trackedUseCase);
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
@@ -45,13 +41,21 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             };
         }
 
-        private sealed class FactsCommandFactory : ICommandFactory
+        private sealed class FactsCommandFactory : ICommandFactory<TrackedUseCase>
         {
-            public IEnumerable<ICommand> CreateCommands(IEvent @event)
+            public IReadOnlyCollection<ICommand> CreateCommands(TrackedUseCase trackedUseCase)
             {
-                var trackedUseCase = ((TrackedUseCaseEvent)@event).TrackedUseCase;
                 var changes = trackedUseCase.Operations.SelectMany(x => x.AffectedEntities.Changes);
-                return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys));
+                return changes.SelectMany(x => CommandsForEntityType(x.Key.Id, x.Value.Keys))
+                              .Concat(new[]
+                                  {
+                                      new IncrementErmStateCommand(new[]
+                                          {
+                                              new ErmState(trackedUseCase.Id,
+                                                           trackedUseCase.Context.Finished.UtcDateTime)
+                                          })
+                                  })
+                              .ToList();
             }
 
             private static IEnumerable<ICommand> CommandsForEntityType(int entityTypeId, IEnumerable<long> ids)
@@ -69,16 +73,6 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
 
                 return commands;
             }
-        }
-
-        private sealed class TrackedUseCaseEvent : IEvent
-        {
-            public TrackedUseCaseEvent(TrackedUseCase trackedUseCase)
-            {
-                TrackedUseCase = trackedUseCase;
-            }
-
-            public TrackedUseCase TrackedUseCase { get; }
         }
     }
 }

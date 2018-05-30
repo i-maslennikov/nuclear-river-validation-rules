@@ -162,6 +162,11 @@
   <ItemGroup>
     <Compile Include="Accessors\AccountDetailAccessor.cs" />
     <Compile Include="Accessors\AdvertisementAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetAssociatedRuleAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetDeniedRuleAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetProjectAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetQuantitativeRuleAccessor.cs" />
     <Compile Include="Accessors\SystemStatusAccessor.cs" />
     <Compile Include="Accessors\NomenclatureCategoryAccessor.cs" />
     <Compile Include="Accessors\OrderItemAccessor.cs" />
@@ -187,6 +192,8 @@
     <Compile Include="AdvertisementRules\Validation\OptionalAdvertisementMustPassReview.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveOptionalAdvertisement.cs" />
     <Compile Include="ConsistencyRules\Validation\AtLeastOneLinkedPartnerFirmAddressShouldBeValid.cs" />
+    <Compile Include="Dto\RulesetDto.cs" />
+    <Compile Include="PriceRules\Aggregates\RulesetAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\PoiAmountForEntranceShouldMeetMaximumRestrictions.cs" />
     <Compile Include="SystemRules\Validation\AmsMessagesShouldBeNew.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />

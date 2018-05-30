@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 using Newtonsoft.Json;
@@ -17,51 +16,40 @@ namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
 {
     public sealed class AmsFactsFlowAccumulator : MessageProcessingContextAccumulatorBase<AmsFactsFlow, KafkaMessage, AggregatableMessage<ICommand>>
     {
-        private readonly ICommandFactory _commandFactory;
+        private readonly ICommandFactory<KafkaMessage> _commandFactory;
 
         public AmsFactsFlowAccumulator()
         {
             _commandFactory = new AmsFactsCommandFactory();
         }
 
-        protected override AggregatableMessage<ICommand> Process(KafkaMessage message)
+        protected override AggregatableMessage<ICommand> Process(KafkaMessage kafkaMessage)
         {
             return new AggregatableMessage<ICommand>
             {
                 TargetFlow = MessageFlow,
-                Commands = _commandFactory.CreateCommands(new KafkaMessageEvent(message)).ToList(),
+                Commands = _commandFactory.CreateCommands(kafkaMessage),
             };
         }
 
-        private sealed class AmsFactsCommandFactory : ICommandFactory
+        private sealed class AmsFactsCommandFactory : ICommandFactory<KafkaMessage>
         {
-            public IEnumerable<ICommand> CreateCommands(IEvent @event)
+            public IReadOnlyCollection<ICommand> CreateCommands(KafkaMessage kafkaMessage)
             {
-                var commands = new List<ICommand>();
+                var commands = new List<ICommand>
+                    { new IncrementAmsStateCommand(new AmsState(kafkaMessage.Message.Offset, kafkaMessage.Message.Timestamp.UtcDateTime)) };
 
-                var message = ((KafkaMessageEvent)@event).KafkaMessage.Message;
-                commands.Add(new IncrementAmsStateCommand(new AmsState(message.Offset, message.Timestamp.UtcDateTime)));
-
-                // filter heartbeat messages
-                if (message.Value != null)
+                // filter heartbeat & tombstone messages
+                var messagePayload = kafkaMessage.Message.Value;
+                if (messagePayload != null)
                 {
-                    var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(message.Value));
-                    dto.Offset = message.Offset;
+                    var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(messagePayload));
+                    dto.Offset = kafkaMessage.Message.Offset;
                     commands.Add(new ReplaceDataObjectCommand(typeof(Advertisement), new List<AdvertisementDto> { dto }));
                 }
 
                 return commands;
             }
-        }
-
-        private sealed class KafkaMessageEvent : IEvent
-        {
-            public KafkaMessageEvent(KafkaMessage kafkaMessage)
-            {
-                KafkaMessage = kafkaMessage;
-            }
-
-            public KafkaMessage KafkaMessage { get; }
         }
     }
 }

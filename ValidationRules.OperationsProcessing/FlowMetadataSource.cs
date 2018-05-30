@@ -6,11 +6,13 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
+using NuClear.OperationsProcessing.Transports.Kafka;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 using NuClear.ValidationRules.OperationsProcessing.Transports;
+using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 
 namespace NuClear.ValidationRules.OperationsProcessing
 {
@@ -24,6 +26,12 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                                            .Accumulator<AmsFactsFlowAccumulator>()
                                                            .Handler<AmsFactsFlowHandler>()
                                                            .To.Primary().Flow<AmsFactsFlow.AmsFactsFlow>().Connect(),
+
+                                        MessageFlowMetadata.Config.For<RulesetFactsFlow.RulesetFactsFlow>()
+                                                           .Receiver<KafkaReceiver>()
+                                                           .Accumulator<RulesetFactsFlowAccumulator>()
+                                                           .Handler<RulesetFactsFlowHandler>()
+                                                           .To.Primary().Flow<RulesetFactsFlow.RulesetFactsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<FactsFlow.FactsFlow>()
                                                            .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<FactsFlowTelemetryPublisher>>()

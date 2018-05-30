@@ -225,6 +225,7 @@
     <Compile Include="Model\Facts\FirmAddress.cs" />
     <Compile Include="Model\Facts\Position.cs" />
     <Compile Include="Model\Facts\PricePosition.cs" />
+    <Compile Include="Model\Facts\Ruleset.cs" />
     <Compile Include="Model\Facts\SystemStatus.cs" />
     <Compile Include="Model\Facts\UnlimitedOrder.cs" />
     <Compile Include="Model\ConsistencyRules\Aggregates\Order.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Model\Messages\RuleSeverityLevel.cs" />
     <Compile Include="Model\Messages\CheckMode.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Firm.cs" />
+    <Compile Include="Model\PriceRules\Aggregates\Ruleset.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Order.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Project.cs" />
     <Compile Include="Model\Facts\CategoryOrganizationUnit.cs" />

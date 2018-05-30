@@ -166,6 +166,14 @@ namespace NuClear.ValidationRules.Storage
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Start);
 
+            builder.Entity<PriceAggregates::Ruleset>()
+                   .HasSchemaName(PriceAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<PriceAggregates::Ruleset.AdvertisementAmountRestriction>()
+                   .HasSchemaName(PriceAggregatesSchema)
+                   .HasPrimaryKey(x => new { x.RulesetId, x.CategoryCode });
+
             return builder;
         }
 

@@ -182,6 +182,19 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.OrderId)
                    .HasPrimaryKey(x => x.PeriodStart);
+
+            builder.Entity<Ruleset>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.Id);
+            builder.Entity<Ruleset.AssociatedRule>()
+                   .HasSchemaName(FactsSchema);
+            builder.Entity<Ruleset.DeniedRule>()
+                   .HasSchemaName(FactsSchema);
+            builder.Entity<Ruleset.QuantitativeRule>()
+                   .HasSchemaName(FactsSchema);
+            builder.Entity<Ruleset.RulesetProject>()
+                   .HasSchemaName(FactsSchema);
+
             return builder;
         }
     }
