@@ -214,7 +214,6 @@
   <ItemGroup>
     <Compile Include="Assembling\StateInitializationRoot.cs" />
     <Compile Include="BulkReplicationCommands.cs" />
-    <Compile Include="ConnectionStringName.cs" />
     <Compile Include="DataObjectTypesProviderFactory.cs" />
     <Compile Include="Kafka.cs" />
     <Compile Include="Program.cs" />

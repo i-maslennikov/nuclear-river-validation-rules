@@ -13,22 +13,12 @@ using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 using NuClear.ValidationRules.StateInitialization.Host.Assembling;
 using NuClear.ValidationRules.Storage.Connections;
 
+using ValidationRules.Hosting.Common.Settings.Connections;
+
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public sealed class Program
     {
-        private static readonly IConnectionStringSettings ConnectionStringSettings =
-            new ConnectionStringSettingsAspect(
-                                               new Dictionary<IConnectionStringIdentity, string>
-                                                   {
-                                                       [ErmConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Erm),
-                                                       [AmsConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Ams),
-                                                       [FactsConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Facts),
-                                                       [AggregatesConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Aggregates),
-                                                       [MessagesConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Messages),
-                                                       [RulesetConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Rulesets)
-                                                   });
-
         public static void Main(string[] args)
         {
             StateInitializationRoot.Instance.PerformTypesMassProcessing(Array.Empty<IMassProcessor>(), true, typeof(object));
@@ -59,10 +49,18 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 commands.Add(SchemaInitializationCommands.Messages);
             }
 
+            var connectionStrings = ConnectionStrings.For(ErmConnectionStringIdentity.Instance,
+                                                          AmsConnectionStringIdentity.Instance,
+                                                          FactsConnectionStringIdentity.Instance,
+                                                          AggregatesConnectionStringIdentity.Instance,
+                                                          MessagesConnectionStringIdentity.Instance,
+                                                          RulesetConnectionStringIdentity.Instance);
+            var connectionStringSettings = new ConnectionStringSettingsAspect(connectionStrings);
+
             var dataObjectTypesProviderFactory = new DataObjectTypesProviderFactory();
-            var bulkReplicationActor = new BulkReplicationActor(dataObjectTypesProviderFactory, ConnectionStringSettings);
-            var kafkaReplicationActor = new KafkaReplicationActor(dataObjectTypesProviderFactory, ConnectionStringSettings);
-            var schemaInitializationActor = new SchemaInitializationActor(ConnectionStringSettings);
+            var bulkReplicationActor = new BulkReplicationActor(dataObjectTypesProviderFactory, connectionStringSettings);
+            var kafkaReplicationActor = new KafkaReplicationActor(dataObjectTypesProviderFactory, connectionStringSettings);
+            var schemaInitializationActor = new SchemaInitializationActor(connectionStringSettings);
 
             var sw = Stopwatch.StartNew();
             schemaInitializationActor.ExecuteCommands(commands);
@@ -72,8 +70,5 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
-
-        private static string GetConnectionString(string connectionStringName)
-            => ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
     }
 }

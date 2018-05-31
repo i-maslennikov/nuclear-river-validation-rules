@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Configuration;
 
 using Jobs.RemoteControl.Settings;
@@ -17,6 +16,8 @@ using NuClear.ValidationRules.Storage.Connections;
 
 using Quartz.Impl;
 
+using ValidationRules.Hosting.Common.Settings.Connections;
+
 namespace NuClear.ValidationRules.Replication.Host.Settings
 {
     public sealed class ReplicationServiceSettings : SettingsContainerBase, IReplicationSettings, ISqlStoreSettingsAspect
@@ -26,19 +27,16 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
 
         public ReplicationServiceSettings()
         {
-            var connectionStringSettings = new ConnectionStringSettingsAspect(
-                new Dictionary<IConnectionStringIdentity, string>
-                {
-                    [ErmConnectionStringIdentity.Instance] = GetConnectionString("Erm"),
-                    [AmsConnectionStringIdentity.Instance] = GetConnectionString("Ams"),
-                    [RulesetConnectionStringIdentity.Instance] = GetConnectionString("Ams"),
-                    [FactsConnectionStringIdentity.Instance] = GetConnectionString("Facts"),
-                    [AggregatesConnectionStringIdentity.Instance] = GetConnectionString("Aggregates"),
-                    [MessagesConnectionStringIdentity.Instance] = GetConnectionString("Messages"),
-                    [ServiceBusConnectionStringIdentity.Instance] = GetConnectionString("ServiceBus"),
-                    [InfrastructureConnectionStringIdentity.Instance] = GetConnectionString("Infrastructure"),
-                    [LoggingConnectionStringIdentity.Instance] = GetConnectionString("Logging")
-                });
+            var connectionStrings = ConnectionStrings.For(ErmConnectionStringIdentity.Instance,
+                                                          AmsConnectionStringIdentity.Instance,
+                                                          RulesetConnectionStringIdentity.Instance,
+                                                          FactsConnectionStringIdentity.Instance,
+                                                          AggregatesConnectionStringIdentity.Instance,
+                                                          MessagesConnectionStringIdentity.Instance,
+                                                          ServiceBusConnectionStringIdentity.Instance,
+                                                          InfrastructureConnectionStringIdentity.Instance,
+                                                          LoggingConnectionStringIdentity.Instance);
+            var connectionStringSettings = new ConnectionStringSettingsAspect(connectionStrings);
 
             var quartzProperties = (NameValueCollection)ConfigurationManager.GetSection(StdSchedulerFactory.ConfigurationSectionName);
 
@@ -53,19 +51,8 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
                    .Use(new TaskServiceRemoteControlSettings(quartzProperties));
         }
 
-        public int ReplicationBatchSize
-        {
-            get { return _replicationBatchSize.Value; }
-        }
+        public int ReplicationBatchSize => _replicationBatchSize.Value;
 
-        public int SqlCommandTimeout
-        {
-            get { return _sqlCommandTimeout.Value; }
-        }
-
-        private static string GetConnectionString(string connnectionStringKey)
-        {
-            return ConfigurationManager.ConnectionStrings[connnectionStringKey].ConnectionString;
-        }
+        public int SqlCommandTimeout => _sqlCommandTimeout.Value;
     }
 }

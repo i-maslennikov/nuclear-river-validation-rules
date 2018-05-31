@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
-
-using NuClear.River.Hosting.Common.Identities.Connections;
+﻿using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.River.Hosting.Common.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.ValidationRules.Storage.Connections;
+
+using ValidationRules.Hosting.Common.Settings.Connections;
 
 namespace NuClear.ValidationRules.Querying.Host
 {
@@ -13,32 +12,14 @@ namespace NuClear.ValidationRules.Querying.Host
     {
         public QueryingServiceSettings()
         {
-            var connectionStringSettings = new ConnectionStringSettingsAspect(new Dictionary<IConnectionStringIdentity, string>
-            {
-                {
-                    ErmConnectionStringIdentity.Instance,
-                    ConfigurationManager.ConnectionStrings["Erm"].ConnectionString
-                },
-                {
-                    AmsConnectionStringIdentity.Instance,
-                    ConfigurationManager.ConnectionStrings["Ams"].ConnectionString
-                },
-                {
-                    FactsConnectionStringIdentity.Instance,
-                    ConfigurationManager.ConnectionStrings["Facts"].ConnectionString
-                },
-                {
-                    MessagesConnectionStringIdentity.Instance,
-                    ConfigurationManager.ConnectionStrings["Messages"].ConnectionString
-                },
-                {
-                    LoggingConnectionStringIdentity.Instance,
-                    ConfigurationManager.ConnectionStrings["Logging"].ConnectionString
-                }
-            });
+            var connectionString = ConnectionStrings.For(ErmConnectionStringIdentity.Instance,
+                                                         AmsConnectionStringIdentity.Instance,
+                                                         FactsConnectionStringIdentity.Instance,
+                                                         MessagesConnectionStringIdentity.Instance,
+                                                         LoggingConnectionStringIdentity.Instance);
 
             Aspects
-                .Use(connectionStringSettings)
+                .Use(new ConnectionStringSettingsAspect(connectionString))
                 .Use<EnvironmentSettingsAspect>();
         }
     }

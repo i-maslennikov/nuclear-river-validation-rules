@@ -195,6 +195,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ValidationRules.Hosting.Common\ValidationRules.Hosting.Common.csproj">
+      <Project>{876CF585-D099-4C5A-949E-E76DA08764D8}</Project>
+      <Name>ValidationRules.Hosting.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ValidationRules.Replication\ValidationRules.Replication.csproj">
       <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
       <Name>ValidationRules.Replication</Name>
