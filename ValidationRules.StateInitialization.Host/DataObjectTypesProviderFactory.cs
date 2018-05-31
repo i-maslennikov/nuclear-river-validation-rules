@@ -4,7 +4,7 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.DataObjects;
 using NuClear.StateInitialization.Core.Factories;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
@@ -73,7 +73,16 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         public static readonly Type[] AmsFactTypes =
             {
                 typeof(Facts::Advertisement),
-                typeof(Facts::EntityName),
+                typeof(Facts::EntityName)
+            };
+
+        public static readonly Type[] RulesetFactTypes =
+            {
+                typeof(Facts::Ruleset),
+                typeof(Facts::Ruleset.AssociatedRule),
+                typeof(Facts::Ruleset.DeniedRule),
+                typeof(Facts::Ruleset.QuantitativeRule),
+                typeof(Facts::Ruleset.RulesetProject)
             };
 
         public static readonly Type[] AggregateTypes =
@@ -95,6 +104,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(PriceAggregates::Price.PricePeriod),
                 typeof(PriceAggregates::Price.AdvertisementAmountRestriction),
                 typeof(PriceAggregates::Price.AssociatedPositionGroupOvercount),
+                typeof(PriceAggregates::Ruleset),
+                typeof(PriceAggregates::Ruleset.AdvertisementAmountRestriction),
 
                 typeof(AccountAggregates::Order),
                 typeof(AccountAggregates::Order.DebtPermission),
@@ -174,6 +185,10 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 if (command.SourceStorageDescriptor.ConnectionStringIdentity is AmsConnectionStringIdentity)
                 {
                     return new KafkaReplicationActor.DataObjectTypesProvider(AmsFactTypes);
+                }
+                else if (command.SourceStorageDescriptor.ConnectionStringIdentity is RulesetConnectionStringIdentity)
+                {
+                    return new KafkaReplicationActor.DataObjectTypesProvider(RulesetFactTypes);
                 }
 
                 return new CommandRegardlessDataObjectTypesProvider(FactTypes);

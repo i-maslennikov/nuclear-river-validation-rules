@@ -9,8 +9,9 @@ using NuClear.Replication.Core;
 using NuClear.StateInitialization.Core.Actors;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 using NuClear.ValidationRules.StateInitialization.Host.Assembling;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
@@ -20,11 +21,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             new ConnectionStringSettingsAspect(
                                                new Dictionary<IConnectionStringIdentity, string>
                                                    {
-                                                       { ErmConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Erm) },
-                                                       { AmsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Ams) },
-                                                       { FactsConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Facts) },
-                                                       { AggregatesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Aggregates) },
-                                                       { MessagesConnectionStringIdentity.Instance, GetConnectionString(ConnectionStringName.Messages) },
+                                                       [ErmConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Erm),
+                                                       [AmsConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Ams),
+                                                       [FactsConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Facts),
+                                                       [AggregatesConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Aggregates),
+                                                       [MessagesConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Messages),
+                                                       [RulesetConnectionStringIdentity.Instance] = GetConnectionString(ConnectionStringName.Rulesets)
                                                    });
 
         public static void Main(string[] args)
@@ -38,6 +40,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 commands.Add(BulkReplicationCommands.ErmToFacts);
                 // Надо подумать о лишней обёртке
                 commands.Add(new KafkaReplicationCommand(AmsFactsFlow.Instance, BulkReplicationCommands.AmsToFacts));
+                commands.Add(new KafkaReplicationCommand(RulesetFactsFlow.Instance, BulkReplicationCommands.RulesetsToFacts));
                 commands.Add(SchemaInitializationCommands.WebApp);
                 commands.Add(SchemaInitializationCommands.Facts);
             }

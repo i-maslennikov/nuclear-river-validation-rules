@@ -5,7 +5,7 @@ using NuClear.DataTest.Metamodel;
 using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.ValidationRules.Storage;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {

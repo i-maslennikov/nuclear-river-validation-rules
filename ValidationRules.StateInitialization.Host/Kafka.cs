@@ -59,7 +59,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
         private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly IAccessorTypesProvider _accessorTypesProvider;
-        private readonly AmsBatchSizeSettings _batchSizeSettings;
+        private readonly DefaultKafkaBatchSizeSettings _batchSizeSettings;
         private readonly IKafkaMessageFlowReceiverFactory _receiverFactory;
 
         public KafkaReplicationActor(
@@ -68,11 +68,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         {
             _dataObjectTypesProviderFactory = dataObjectTypesProviderFactory;
             _connectionStringSettings = connectionStringSettings;
-            _batchSizeSettings = new AmsBatchSizeSettings();
+            _batchSizeSettings = new DefaultKafkaBatchSizeSettings();
             _accessorTypesProvider = new AccessorTypesProvider();
 
-            var amsSettingsFactory = new KafkaSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
-            _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), amsSettingsFactory);
+            var kafkaSettingsFactory = new KafkaSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
+            _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), kafkaSettingsFactory);
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -308,9 +308,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         #endregion
 
-        private sealed class AmsBatchSizeSettings
+        private sealed class DefaultKafkaBatchSizeSettings
         {
-            private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("AmsBatchSize", 5000);
+            private readonly IntSetting _batchSize = ConfigFileSetting.Int.Optional("DefaultKafkaBatchSize", 5000);
 
             public int BatchSize => _batchSize.Value;
         }

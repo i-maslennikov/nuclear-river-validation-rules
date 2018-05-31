@@ -13,7 +13,7 @@ using NuClear.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Telemetry.Logstash;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 using Quartz.Impl;
 
@@ -29,38 +29,15 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
             var connectionStringSettings = new ConnectionStringSettingsAspect(
                 new Dictionary<IConnectionStringIdentity, string>
                 {
-                    {
-                        ErmConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Erm"].ConnectionString
-                    },
-                    {
-                        AmsConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Ams"].ConnectionString
-                    },
-                    {
-                        FactsConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Facts"].ConnectionString
-                    },
-                    {
-                        AggregatesConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Aggregates"].ConnectionString
-                    },
-                    {
-                        MessagesConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Messages"].ConnectionString
-                    },
-                    {
-                        ServiceBusConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["ServiceBus"].ConnectionString
-                    },
-                    {
-                        InfrastructureConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Infrastructure"].ConnectionString
-                    },
-                    {
-                        LoggingConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Logging"].ConnectionString
-                    }
+                    [ErmConnectionStringIdentity.Instance] = GetConnectionString("Erm"),
+                    [AmsConnectionStringIdentity.Instance] = GetConnectionString("Ams"),
+                    [RulesetConnectionStringIdentity.Instance] = GetConnectionString("Ams"),
+                    [FactsConnectionStringIdentity.Instance] = GetConnectionString("Facts"),
+                    [AggregatesConnectionStringIdentity.Instance] = GetConnectionString("Aggregates"),
+                    [MessagesConnectionStringIdentity.Instance] = GetConnectionString("Messages"),
+                    [ServiceBusConnectionStringIdentity.Instance] = GetConnectionString("ServiceBus"),
+                    [InfrastructureConnectionStringIdentity.Instance] = GetConnectionString("Infrastructure"),
+                    [LoggingConnectionStringIdentity.Instance] = GetConnectionString("Logging")
                 });
 
             var quartzProperties = (NameValueCollection)ConfigurationManager.GetSection(StdSchedulerFactory.ConfigurationSectionName);
@@ -84,6 +61,11 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
         public int SqlCommandTimeout
         {
             get { return _sqlCommandTimeout.Value; }
+        }
+
+        private static string GetConnectionString(string connnectionStringKey)
+        {
+            return ConfigurationManager.ConnectionStrings[connnectionStringKey].ConnectionString;
         }
     }
 }

@@ -162,11 +162,12 @@
     <Compile Include="EntityTypeIds.cs" />
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
     <Compile Include="FieldComparer\XDocumentComparer.cs" />
-    <Compile Include="Identitites\Connections\AmsConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\ErmConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\AggregatesConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\MessagesConnectionStringIdentity.cs" />
+    <Compile Include="Connections\AmsConnectionStringIdentity.cs" />
+    <Compile Include="Connections\ErmConnectionStringIdentity.cs" />
+    <Compile Include="Connections\AggregatesConnectionStringIdentity.cs" />
+    <Compile Include="Connections\FactsConnectionStringIdentity.cs" />
+    <Compile Include="Connections\MessagesConnectionStringIdentity.cs" />
+    <Compile Include="Connections\RulesetConnectionStringIdentity.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAccount.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAccountDetail.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisement.cs" />

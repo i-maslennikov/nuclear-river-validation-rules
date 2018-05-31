@@ -1,7 +1,7 @@
 ﻿using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.Storage;
 using NuClear.ValidationRules.Storage;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
@@ -28,6 +28,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 executionMode: ParallelReplication);
 
         public static ReplicateInBulkCommand AmsToFacts { get; } =
+            new ReplicateInBulkCommand(
+                                       new StorageDescriptor(AmsConnectionStringIdentity.Instance, null),
+                                       new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
+
+        public static ReplicateInBulkCommand RulesetsToFacts { get; } =
             new ReplicateInBulkCommand(
                                        new StorageDescriptor(AmsConnectionStringIdentity.Instance, null),
                                        new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));

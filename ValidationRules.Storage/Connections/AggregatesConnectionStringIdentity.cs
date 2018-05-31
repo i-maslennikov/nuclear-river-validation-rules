@@ -1,7 +1,7 @@
 ﻿using NuClear.Model.Common;
 using NuClear.Storage.API.ConnectionStrings;
 
-namespace NuClear.ValidationRules.Storage.Identitites.Connections
+namespace NuClear.ValidationRules.Storage.Connections
 {
     public sealed class AggregatesConnectionStringIdentity : IdentityBase<AggregatesConnectionStringIdentity>, IConnectionStringIdentity
     {

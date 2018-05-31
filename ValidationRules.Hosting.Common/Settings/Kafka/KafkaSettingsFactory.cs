@@ -12,7 +12,7 @@ using NuClear.Messaging.Transports.Kafka;
 using NuClear.River.Hosting.Common.Settings;
 using NuClear.Settings;
 using NuClear.Storage.API.ConnectionStrings;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 namespace ValidationRules.Hosting.Common
 {

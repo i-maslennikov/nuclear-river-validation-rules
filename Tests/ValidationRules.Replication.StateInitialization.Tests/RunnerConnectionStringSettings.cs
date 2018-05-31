@@ -2,7 +2,7 @@
 using System.Configuration;
 
 using NuClear.Storage.API.ConnectionStrings;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {

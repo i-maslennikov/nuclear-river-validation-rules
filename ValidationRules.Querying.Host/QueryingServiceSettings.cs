@@ -5,7 +5,7 @@ using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.River.Hosting.Common.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 namespace NuClear.ValidationRules.Querying.Host
 {

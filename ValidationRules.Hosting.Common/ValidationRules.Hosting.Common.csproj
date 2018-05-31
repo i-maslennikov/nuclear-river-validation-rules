@@ -83,11 +83,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IKafkaMessageFlowInfoSettings.cs" />
-    <Compile Include="IKafkaSettingsFactory.cs" />
-    <Compile Include="KafkaMessageFlowInfoSettings.cs" />
+    <Compile Include="Settings\Kafka\IKafkaMessageFlowInfoSettings.cs" />
+    <Compile Include="Settings\Kafka\IKafkaSettingsFactory.cs" />
+    <Compile Include="Settings\Kafka\KafkaMessageFlowInfoSettings.cs" />
     <Compile Include="KafkaMessageFlowReceiverFactory.cs" />
-    <Compile Include="KafkaSettingsFactory.cs" />
+    <Compile Include="Settings\Kafka\KafkaSettingsFactory.cs" />
     <Compile Include="KafkaMessageFlowInfoProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -102,6 +102,9 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Settings\Connections\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

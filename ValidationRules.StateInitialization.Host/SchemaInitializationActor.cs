@@ -11,7 +11,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.ValidationRules.Storage;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 using NuClear.ValidationRules.Storage.SchemaInitializer;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
