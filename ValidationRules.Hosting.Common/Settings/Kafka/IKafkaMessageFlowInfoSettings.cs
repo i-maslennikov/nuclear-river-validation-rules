@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Confluent.Kafka;
 
-namespace ValidationRules.Hosting.Common
+namespace ValidationRules.Hosting.Common.Settings.Kafka
 {
     public interface IKafkaMessageFlowInfoSettings
     {

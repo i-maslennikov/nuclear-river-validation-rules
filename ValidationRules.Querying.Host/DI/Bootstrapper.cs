@@ -6,6 +6,7 @@ using System.Web.Http.ExceptionHandling;
 
 using Microsoft.Practices.Unity;
 
+using NuClear.Messaging.API.Flows;
 using NuClear.Model.Common.Entities;
 using NuClear.River.Hosting.Common.Identities.Connections;
 using NuClear.River.Hosting.Common.Settings;
@@ -18,9 +19,11 @@ using NuClear.ValidationRules.Querying.Host.Composition;
 using NuClear.ValidationRules.Querying.Host.Composition.Composers;
 using NuClear.ValidationRules.Querying.Host.DataAccess;
 using NuClear.ValidationRules.SingleCheck;
+using NuClear.ValidationRules.Storage.Connections;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 
 using ValidationRules.Hosting.Common;
+using ValidationRules.Hosting.Common.Settings.Kafka;
 
 using IConnectionStringSettings = NuClear.Storage.API.ConnectionStrings.IConnectionStringSettings;
 
@@ -32,9 +35,11 @@ namespace NuClear.ValidationRules.Querying.Host.DI
         {
             var settings = new QueryingServiceSettings();
 
+            var environmentSettings = settings.AsSettings<IEnvironmentSettings>();
+            var connectionStringSettings = settings.AsSettings<IConnectionStringSettings>();
+
             return new UnityContainer()
-                   .ConfigureTracer(settings.AsSettings<IEnvironmentSettings>(),
-                                    settings.AsSettings<IConnectionStringSettings>())
+                   .ConfigureTracer(environmentSettings, connectionStringSettings)
                    .ConfigureSettingsAspects(settings)
                    .ConfigureDataAccess()
                    .RegisterImplementersCollection<IMessageComposer>()
@@ -42,7 +47,7 @@ namespace NuClear.ValidationRules.Querying.Host.DI
                    .ConfigureSeverityProvider()
                    .ConfigureNameResolvingService()
                    .ConfigureSingleCheck()
-                   .ConfigureOperationsProcessing();
+                   .ConfigureOperationsProcessing(environmentSettings, connectionStringSettings);
         }
 
         private static IUnityContainer ConfigureTracer(
@@ -111,11 +116,19 @@ namespace NuClear.ValidationRules.Querying.Host.DI
             return container;
         }
 
-        private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
+        private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container,
+                                                                     IEnvironmentSettings environmentSettings,
+                                                                     IConnectionStringSettings connectionStringSettings)
         {
-            return container
-                .RegisterType<IKafkaSettingsFactory, KafkaSettingsFactory>(new ContainerControlledLifetimeManager(), new InjectionConstructor(typeof(IConnectionStringSettings), typeof(IEnvironmentSettings)))
-                .RegisterType<KafkaMessageFlowInfoProvider>(new ContainerControlledLifetimeManager());
+            var kafkaSettingsFactory =
+                new KafkaSettingsFactory(new Dictionary<IMessageFlow, string>
+                                             {
+                                                 [VersioningService.AmsFactsFlow.Instance] = connectionStringSettings.GetConnectionString(AmsConnectionStringIdentity.Instance)
+                                             },
+                                         environmentSettings);
+
+            return container.RegisterInstance<IKafkaSettingsFactory>(kafkaSettingsFactory)
+                            .RegisterType<KafkaMessageFlowInfoProvider>(new ContainerControlledLifetimeManager());
         }
     }
 }

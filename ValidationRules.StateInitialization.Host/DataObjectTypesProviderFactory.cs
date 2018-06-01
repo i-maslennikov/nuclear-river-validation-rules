@@ -4,6 +4,7 @@ using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.DataObjects;
 using NuClear.StateInitialization.Core.Factories;
+using NuClear.ValidationRules.StateInitialization.Host.Kafka;
 using NuClear.ValidationRules.Storage.Connections;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;

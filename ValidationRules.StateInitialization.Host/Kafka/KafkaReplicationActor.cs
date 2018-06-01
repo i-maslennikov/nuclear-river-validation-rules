@@ -7,20 +7,15 @@ using System.Reflection;
 using System.Text;
 using System.Transactions;
 
-using Confluent.Kafka;
-
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 
 using Newtonsoft.Json;
-
-using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.Transports.Kafka;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Replication.Core.DataObjects;
-using NuClear.River.Hosting.Common.Settings;
 using NuClear.Settings;
 using NuClear.Settings.API;
 using NuClear.StateInitialization.Core.Commands;
@@ -29,49 +24,32 @@ using NuClear.StateInitialization.Core.Storage;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
-using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
-using ValidationRules.Hosting.Common;
-
-namespace NuClear.ValidationRules.StateInitialization.Host
+namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
 {
-    internal sealed class KafkaReplicationCommand : ICommand
-    {
-        public KafkaReplicationCommand(IMessageFlow messageFlow, ReplicateInBulkCommand replicateInBulkCommand)
-        {
-            MessageFlow = messageFlow;
-            ReplicateInBulkCommand = replicateInBulkCommand;
-        }
-
-        public IMessageFlow MessageFlow { get; }
-        public ReplicateInBulkCommand ReplicateInBulkCommand { get; }
-    }
-
     internal sealed class KafkaReplicationActor : IActor
     {
         // сколько неполных батчей мы запроцессим перед тем как выйти
         private const int NonMaxBatchCounter = 5;
 
-        private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
         private readonly IConnectionStringSettings _connectionStringSettings;
-        private readonly IAccessorTypesProvider _accessorTypesProvider;
-        private readonly DefaultKafkaBatchSizeSettings _batchSizeSettings;
+        private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
         private readonly IKafkaMessageFlowReceiverFactory _receiverFactory;
 
-        public KafkaReplicationActor(
-            IDataObjectTypesProviderFactory dataObjectTypesProviderFactory,
-            IConnectionStringSettings connectionStringSettings)
-        {
-            _dataObjectTypesProviderFactory = dataObjectTypesProviderFactory;
-            _connectionStringSettings = connectionStringSettings;
-            _batchSizeSettings = new DefaultKafkaBatchSizeSettings();
-            _accessorTypesProvider = new AccessorTypesProvider();
+        private readonly IAccessorTypesProvider _accessorTypesProvider = new AccessorTypesProvider();
+        private readonly DefaultKafkaBatchSizeSettings _batchSizeSettings = new DefaultKafkaBatchSizeSettings();
 
-            var kafkaSettingsFactory = new KafkaSettingsFactory(connectionStringSettings, new EnvironmentSettingsAspect(), Offset.Beginning);
-            _receiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), kafkaSettingsFactory);
+        public KafkaReplicationActor(
+            IConnectionStringSettings connectionStringSettings,
+            IDataObjectTypesProviderFactory dataObjectTypesProviderFactory,
+            IKafkaMessageFlowReceiverFactory kafkaMessageFlowReceiverFactory)
+        {
+            _connectionStringSettings = connectionStringSettings;
+            _dataObjectTypesProviderFactory = dataObjectTypesProviderFactory;
+            _receiverFactory = kafkaMessageFlowReceiverFactory;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)

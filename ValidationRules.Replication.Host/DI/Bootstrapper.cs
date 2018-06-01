@@ -30,6 +30,7 @@ using NuClear.IdentityService.Client.Interaction;
 using NuClear.Jobs.Schedulers;
 using NuClear.Jobs.Schedulers.Exporter;
 using NuClear.Jobs.Unity;
+using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.Messaging.API.Processing.Actors.Handlers;
 using NuClear.Messaging.API.Processing.Actors.Transformers;
@@ -93,6 +94,8 @@ using NuClear.Storage.Readings;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 using NuClear.ValidationRules.Storage.Model.Facts;
 using NuClear.ValidationRules.Replication.Accessors;
 using NuClear.ValidationRules.Replication.Accessors.Rulesets;
@@ -106,6 +109,7 @@ using NuClear.WCF.Client.Config;
 using Quartz.Spi;
 
 using ValidationRules.Hosting.Common;
+using ValidationRules.Hosting.Common.Settings.Kafka;
 
 using Schema = NuClear.ValidationRules.Storage.Schema;
 
@@ -122,6 +126,9 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                                  };
             var storageSettings = settingsContainer.AsSettings<ISqlStoreSettingsAspect>();
 
+            var connectionStringSettings = settingsContainer.AsSettings<IConnectionStringSettings>();
+            var environmentSettings = settingsContainer.AsSettings<IEnvironmentSettings>();
+
             container.AttachQueryableContainerExtension()
                      .UseParameterResolvers(ParameterResolvers.Defaults)
                      .ConfigureMetadata()
@@ -132,7 +139,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .ConfigureQuartz()
                      .ConfigureIdentityInfrastructure()
                      .ConfigureWcf()
-                     .ConfigureOperationsProcessing()
+                     .ConfigureOperationsProcessing(connectionStringSettings, environmentSettings)
                      .ConfigureStorage(storageSettings, EntryPointSpecificLifetimeManagerFactory)
                      .ConfigureReplication(EntryPointSpecificLifetimeManagerFactory);
 
@@ -232,7 +239,10 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                             .RegisterType<IIdentityServiceClient, IdentityServiceClient>(Lifetime.Singleton);
         }
 
-        private static IUnityContainer ConfigureOperationsProcessing(this IUnityContainer container)
+        private static IUnityContainer ConfigureOperationsProcessing(
+            this IUnityContainer container,
+            IConnectionStringSettings connectionStringSettings,
+            IEnvironmentSettings environmentSettings)
         {
 
 #if DEBUG
@@ -257,11 +267,22 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                      .RegisterType<IEventLogger, SequentialEventLogger>()
                      .RegisterType<IServiceBusMessageSender, BatchingServiceBusMessageSender>();
 
+            var kafkaSettingsFactory =
+                new KafkaSettingsFactory(new Dictionary<IMessageFlow, string>
+                                             {
+                                                 [AmsFactsFlow.Instance] =
+                                                     connectionStringSettings.GetConnectionString(AmsConnectionStringIdentity.Instance),
+                                                 [RulesetFactsFlow.Instance] =
+                                                     connectionStringSettings.GetConnectionString(RulesetConnectionStringIdentity.Instance)
+                                             },
+                                         environmentSettings
+                                        );
+
             // kafka receiver
             container
                 .RegisterType<KafkaReceiver>(Lifetime.Singleton)
                 .RegisterType<IKafkaMessageFlowReceiverFactory, KafkaMessageFlowReceiverFactory>(Lifetime.Singleton)
-                .RegisterType<IKafkaSettingsFactory, KafkaSettingsFactory>(Lifetime.Singleton, new InjectionConstructor(typeof(IConnectionStringSettings), typeof(IEnvironmentSettings)))
+                .RegisterInstance<IKafkaSettingsFactory>(kafkaSettingsFactory)
                 .RegisterType<KafkaMessageFlowInfoProvider>(Lifetime.Singleton);
 
             return container.RegisterInstance<IParentContainerUsedRegistrationsContainer>(new ParentContainerUsedRegistrationsContainer(), Lifetime.Singleton)

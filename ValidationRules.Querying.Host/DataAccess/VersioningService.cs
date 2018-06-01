@@ -113,7 +113,7 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
         }
 
         // не хочется референсить на OperationProcessing, поэтому копипаст
-        private sealed class AmsFactsFlow : MessageFlowBase<AmsFactsFlow>
+        internal sealed class AmsFactsFlow : MessageFlowBase<AmsFactsFlow>
         {
             public override Guid Id => new Guid("A2878E80-992A-4602-8FD6-B10AE85BBFFE");
 

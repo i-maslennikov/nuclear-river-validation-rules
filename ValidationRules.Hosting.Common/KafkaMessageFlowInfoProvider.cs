@@ -4,6 +4,8 @@ using Confluent.Kafka;
 
 using NuClear.Messaging.API.Flows;
 
+using ValidationRules.Hosting.Common.Settings.Kafka;
+
 namespace ValidationRules.Hosting.Common
 {
     public sealed class KafkaMessageFlowInfoProvider

@@ -74,22 +74,46 @@ function Get-DBHostMetadata($Context){
 	return @{ 'DBHost' = $dbHost }
 }
 
-function Get-AmsFactsTopicsMetadata($Context){
+function Get-AmsFactsTopicMetadata($Context){
 	switch($Context.EnvType){
 		'Test' {
 			return @{
-				'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
+				'AmsFactsTopic' = 'ams_okapi_prod.am.validity'
 			}
 		 }
 		'Business' {
-			return @{ 'AmsFactsTopics' = "ams_okapi_business$($Context['Index']).am.validity" }
+			return @{ 'AmsFactsTopic' = "ams_okapi_business$($Context['Index']).am.validity" }
 		}
 		'Edu' {
-			return @{ 'AmsFactsTopics' = "ams_okapi_edu$($Context['Index']).am.validity" }
+			return @{ 'AmsFactsTopic' = "ams_okapi_edu$($Context['Index']).am.validity" }
 		}
 		 'Production' {
 			 return @{
-				 'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
+				 'AmsFactsTopic' = 'ams_okapi_prod.am.validity'
+			 }
+		}
+		default {
+			return @{}
+		}
+	}
+}
+
+function Get-RulesetsFactsTopicsMetadata($Context){
+	switch($Context.EnvType){
+		'Test' {
+			return @{
+				'RulesetsFactsTopic' = 'rulesets_prod'
+			}
+		 }
+		'Business' {
+			return @{ 'RulesetsFactsTopic' = "rulesets_business$($Context['Index'])" }
+		}
+		'Edu' {
+			return @{ 'RulesetsFactsTopic' = "rulesets_edu$($Context['Index'])" }
+		}
+		 'Production' {
+			 return @{
+				 'RulesetsFactsTopic' = 'rulesets_prod'
 			 }
 		}
 		default {
@@ -214,7 +238,8 @@ function Get-RegexMetadata($Context){
 	$keyValuePairs = @{}
 	$keyValuePairs += Get-DBHostMetadata $Context
 	$keyValuePairs += Get-ValidationUrlMetadata $Context
-	$keyValuePairs += Get-AmsFactsTopicsMetadata $Context
+	$keyValuePairs += Get-AmsFactsTopicMetadata $Context
+	$keyValuePairs += Get-RulesetsFactsTopicMetadata $Context
 
 	foreach($keyValuePair in $keyValuePairs.GetEnumerator()){
 		$regex["{$($keyValuePair.Key)}"] = $keyValuePair.Value

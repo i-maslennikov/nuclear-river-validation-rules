@@ -88,6 +88,7 @@
     <Compile Include="Settings\Kafka\IKafkaSettingsFactory.cs" />
     <Compile Include="Settings\Kafka\KafkaMessageFlowInfoSettings.cs" />
     <Compile Include="KafkaMessageFlowReceiverFactory.cs" />
+    <Compile Include="Settings\Kafka\KafkaMessageFlowReceiverSettings.cs" />
     <Compile Include="Settings\Kafka\KafkaSettingsFactory.cs" />
     <Compile Include="KafkaMessageFlowInfoProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

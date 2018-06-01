@@ -10,6 +10,8 @@ using NuClear.Messaging.API.Flows;
 using NuClear.Messaging.Transports.Kafka;
 using NuClear.Tracing.API;
 
+using ValidationRules.Hosting.Common.Settings.Kafka;
+
 namespace ValidationRules.Hosting.Common
 {
     public sealed class KafkaMessageFlowReceiverFactory : IKafkaMessageFlowReceiverFactory

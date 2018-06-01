@@ -18,9 +18,8 @@ namespace NuClear.ValidationRules.Querying.Host
                                                          MessagesConnectionStringIdentity.Instance,
                                                          LoggingConnectionStringIdentity.Instance);
 
-            Aspects
-                .Use(new ConnectionStringSettingsAspect(connectionString))
-                .Use<EnvironmentSettingsAspect>();
+            Aspects.Use(new ConnectionStringSettingsAspect(connectionString))
+                   .Use<EnvironmentSettingsAspect>();
         }
     }
 }

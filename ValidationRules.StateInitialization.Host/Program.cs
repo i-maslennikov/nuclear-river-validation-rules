@@ -4,16 +4,24 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 
+using Confluent.Kafka;
+
 using NuClear.Assembling.TypeProcessing;
+using NuClear.Messaging.API.Flows;
 using NuClear.Replication.Core;
+using NuClear.River.Hosting.Common.Settings;
 using NuClear.StateInitialization.Core.Actors;
 using NuClear.Storage.API.ConnectionStrings;
+using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 using NuClear.ValidationRules.StateInitialization.Host.Assembling;
+using NuClear.ValidationRules.StateInitialization.Host.Kafka;
 using NuClear.ValidationRules.Storage.Connections;
 
+using ValidationRules.Hosting.Common;
 using ValidationRules.Hosting.Common.Settings.Connections;
+using ValidationRules.Hosting.Common.Settings.Kafka;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
 {
@@ -56,10 +64,24 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                                                           MessagesConnectionStringIdentity.Instance,
                                                           RulesetConnectionStringIdentity.Instance);
             var connectionStringSettings = new ConnectionStringSettingsAspect(connectionStrings);
+            var environmentSettings = new EnvironmentSettingsAspect();
+
+            var kafkaSettingsFactory =
+                new KafkaSettingsFactory(new Dictionary<IMessageFlow, string>
+                                             {
+                                                 [AmsFactsFlow.Instance] =
+                                                     connectionStringSettings.GetConnectionString(AmsConnectionStringIdentity.Instance),
+                                                 [RulesetFactsFlow.Instance] =
+                                                     connectionStringSettings.GetConnectionString(RulesetConnectionStringIdentity.Instance)
+                                             },
+                                         environmentSettings,
+                                         Offset.Beginning);
+
+            var kafkaMessageFlowReceiverFactory = new KafkaMessageFlowReceiverFactory(new NullTracer(), kafkaSettingsFactory);
 
             var dataObjectTypesProviderFactory = new DataObjectTypesProviderFactory();
             var bulkReplicationActor = new BulkReplicationActor(dataObjectTypesProviderFactory, connectionStringSettings);
-            var kafkaReplicationActor = new KafkaReplicationActor(dataObjectTypesProviderFactory, connectionStringSettings);
+            var kafkaReplicationActor = new KafkaReplicationActor(connectionStringSettings, dataObjectTypesProviderFactory, kafkaMessageFlowReceiverFactory);
             var schemaInitializationActor = new SchemaInitializationActor(connectionStringSettings);
 
             var sw = Stopwatch.StartNew();
