@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 
@@ -17,6 +16,8 @@ using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 using NuClear.ValidationRules.StateInitialization.Host.Assembling;
 using NuClear.ValidationRules.StateInitialization.Host.Kafka;
+using NuClear.ValidationRules.StateInitialization.Host.Kafka.Ams;
+using NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets;
 using NuClear.ValidationRules.Storage.Connections;
 
 using ValidationRules.Hosting.Common;
@@ -81,7 +82,15 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
             var dataObjectTypesProviderFactory = new DataObjectTypesProviderFactory();
             var bulkReplicationActor = new BulkReplicationActor(dataObjectTypesProviderFactory, connectionStringSettings);
-            var kafkaReplicationActor = new KafkaReplicationActor(connectionStringSettings, dataObjectTypesProviderFactory, kafkaMessageFlowReceiverFactory);
+            var kafkaReplicationActor = new KafkaReplicationActor(connectionStringSettings,
+                                                                  dataObjectTypesProviderFactory,
+                                                                  kafkaMessageFlowReceiverFactory,
+                                                                  new IBulkCommandFactory<Message>[]
+                                                                      {
+                                                                          new AmsFactsBulkCommandFactory(),
+                                                                          new RulesetFactsBulkCommandFactory(environmentSettings)
+                                                                      });
+
             var schemaInitializationActor = new SchemaInitializationActor(connectionStringSettings);
 
             var sw = Stopwatch.StartNew();

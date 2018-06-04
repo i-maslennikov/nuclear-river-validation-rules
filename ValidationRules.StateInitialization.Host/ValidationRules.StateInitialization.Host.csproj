@@ -215,8 +215,11 @@
     <Compile Include="Assembling\StateInitializationRoot.cs" />
     <Compile Include="BulkReplicationCommands.cs" />
     <Compile Include="DataObjectTypesProviderFactory.cs" />
+    <Compile Include="Kafka\Ams\AmsFactsBulkCommandFactory.cs" />
+    <Compile Include="Kafka\IBulkCommandFactory.cs" />
     <Compile Include="Kafka\KafkaReplicationActor.cs" />
     <Compile Include="Kafka\KafkaReplicationCommand.cs" />
+    <Compile Include="Kafka\Rulesets\RulesetFactsBulkCommandFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaInitializationActor.cs" />
@@ -247,6 +250,7 @@
       <Name>ValidationRules.Storage</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

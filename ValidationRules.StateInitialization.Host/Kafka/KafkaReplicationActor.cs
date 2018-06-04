@@ -4,14 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using System.Transactions;
 
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SqlServer;
 
-using Newtonsoft.Json;
 using NuClear.Messaging.Transports.Kafka;
 using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
@@ -25,8 +23,6 @@ using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Replication.Dto;
-using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
 {
@@ -38,6 +34,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
         private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
         private readonly IKafkaMessageFlowReceiverFactory _receiverFactory;
+        private readonly IReadOnlyCollection<IBulkCommandFactory<Confluent.Kafka.Message>> _commandFactories;
 
         private readonly IAccessorTypesProvider _accessorTypesProvider = new AccessorTypesProvider();
         private readonly DefaultKafkaBatchSizeSettings _batchSizeSettings = new DefaultKafkaBatchSizeSettings();
@@ -45,11 +42,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
         public KafkaReplicationActor(
             IConnectionStringSettings connectionStringSettings,
             IDataObjectTypesProviderFactory dataObjectTypesProviderFactory,
-            IKafkaMessageFlowReceiverFactory kafkaMessageFlowReceiverFactory)
+            IKafkaMessageFlowReceiverFactory kafkaMessageFlowReceiverFactory,
+            IReadOnlyCollection<IBulkCommandFactory<Confluent.Kafka.Message>> commandFactories)
         {
             _connectionStringSettings = connectionStringSettings;
             _dataObjectTypesProviderFactory = dataObjectTypesProviderFactory;
             _receiverFactory = kafkaMessageFlowReceiverFactory;
+            _commandFactories = commandFactories;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -59,17 +58,22 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                 var command = kafkaCommand.ReplicateInBulkCommand;
                 var dataObjectTypes = GetDataObjectTypes(command);
 
-                ExecuteInTransactionScope(command,
-                dataConnection =>
+                using (var transation = new TransactionScope(TransactionScopeOption.RequiresNew, TransactionOptions))
+                using (var targetConnection = CreateDataConnection(command.TargetStorageDescriptor))
                 {
-                    var bulkCopyOptions = new BulkCopyOptions { BulkCopyTimeout = (int)command.BulkCopyTimeout.TotalSeconds };
-                    var actors = CreateActors(dataObjectTypes, dataConnection, bulkCopyOptions);
+                    var resolvedCommandFactories = _commandFactories.Where(f => f.AppropriateFlows.Contains(kafkaCommand.MessageFlow));
+                    var actors = CreateActors(dataObjectTypes,
+                                              targetConnection,
+                                              new BulkCopyOptions
+                                              {
+                                                  BulkCopyTimeout = (int)command.BulkCopyTimeout.TotalSeconds
+                                              });
 
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
                         var nonMaxBatchCounter = 0;
 
-                        for(;;)
+                        for (;;)
                         {
                             var batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize);
 
@@ -80,29 +84,16 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                             }
 
                             var maxOffsetMesasage = batch.OrderByDescending(x => x.Offset.Value).First();
-                            Console.WriteLine($"Received {batch.Count} messages, offset {maxOffsetMesasage.Offset}");
+                            Console.WriteLine($"Flow: {kafkaCommand.MessageFlow.GetType().Name}. Received messages: {batch.Count}. Offset: {maxOffsetMesasage.Offset}");
 
-                            // filter heartbeat messages
-                            var dtos = batch
-                                .Where(x => x.Value != null)
-                                .Select(x =>
-                                {
-                                    var dto = JsonConvert.DeserializeObject<AdvertisementDto>(Encoding.UTF8.GetString(x.Value));
-                                    dto.Offset = x.Offset;
-                                    return dto;
-                                }).ToList();
+                            var bulkCommands = batch.SelectMany(message => resolvedCommandFactories.SelectMany(cf => cf.CreateCommands(message)))
+                                                    .ToList();
 
-                            if (dtos.Count != 0)
+                            if (bulkCommands.Count > 0)
                             {
-                                var bulkInsertCommands = new List<ICommand>
-                                    {
-                                        new BulkInsertDataObjectsCommand(typeof(Advertisement), dtos),
-                                        new BulkInsertDataObjectsCommand(typeof(EntityName), dtos)
-                                    };
-
                                 foreach (var actor in actors)
                                 {
-                                    actor.ExecuteCommands(bulkInsertCommands);
+                                    actor.ExecuteCommands(bulkCommands);
                                 }
                             }
 
@@ -122,7 +113,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                             }
                         }
                     }
-                });
+
+                    transation.Complete();
+                }
             }
 
             return Array.Empty<IEvent>();
@@ -162,18 +155,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                     IsolationLevel = System.Transactions.IsolationLevel.Serializable,
                     Timeout = TimeSpan.Zero
                 };
-
-        private void ExecuteInTransactionScope(ReplicateInBulkCommand command, Action<DataConnection> action)
-        {
-            using (var transation = new TransactionScope(TransactionScopeOption.RequiresNew, TransactionOptions))
-            {
-                using (var targetConnection = CreateDataConnection(command.TargetStorageDescriptor))
-                {
-                    action(targetConnection);
-                    transation.Complete();
-                }
-            }
-        }
 
         private DataConnection CreateDataConnection(StorageDescriptor storageDescriptor)
         {

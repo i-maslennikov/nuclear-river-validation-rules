@@ -94,6 +94,9 @@
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NuClear.River.Replication.7.0.0\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
     </Reference>
+    <Reference Include="2GIS.NuClear.River.Hosting.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuClear.River.Hosting.Common.7.0.0\lib\net461\2GIS.NuClear.River.Hosting.Common.dll</HintPath>
+    </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
       <Private>True</Private>
@@ -178,11 +181,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmsFactsFlow\AdvertisementDtoDeserializer.cs" />
+    <Compile Include="AmsFactsFlow\AmsFactsCommandFactory.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlow.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlowAccumulator.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlowHandler.cs" />
     <Compile Include="AmsFactsFlow\AmsFactsFlowTelemetryPublisher.cs" />
     <Compile Include="ICommandFactory.cs" />
+    <Compile Include="IDeserializer.cs" />
+    <Compile Include="RulesetFactsFlow\RulesetDtoDeserializer.cs" />
+    <Compile Include="RulesetFactsFlow\RulesetFactsCommandFactory.cs" />
     <Compile Include="RulesetFactsFlow\RulesetFactsFlowAccumulator.cs" />
     <Compile Include="MessagesFlow\MessagesFlow.cs" />
     <Compile Include="MessagesFlow\MessagesFlowAccumulator.cs" />
