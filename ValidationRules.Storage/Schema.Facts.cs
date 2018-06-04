@@ -28,14 +28,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Advertisement>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
-            builder.Entity<AssociatedPosition>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.AssociatedPositionsGroupId });
-            builder.Entity<AssociatedPositionsGroup>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.PricePositionId });
             builder.Entity<Bargain>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -65,10 +57,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Deal>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
-            builder.Entity<DeniedPosition>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.PriceId });
             builder.Entity<EntityName>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
@@ -96,8 +84,7 @@ namespace NuClear.ValidationRules.Storage
                    .HasIndex(x => new { x.LegalPersonId }, x => new { x.Id });
             builder.Entity<NomenclatureCategory>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasPrimaryKey(x => x.PriceId);
+                   .HasPrimaryKey(x => x.Id);
             builder.Entity<Order>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
@@ -156,11 +143,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.OrderPositionId)
                    .HasPrimaryKey(x => x.Start);
-            builder.Entity<RulesetRule>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.RuleType)
-                   .HasPrimaryKey(x => x.DependentPositionId)
-                   .HasPrimaryKey(x => x.PrincipalPositionId);
             builder.Entity<SalesModelCategoryRestriction>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.ProjectId)

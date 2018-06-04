@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Model.Facts;
@@ -57,21 +56,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         => ArrangeMetadataElement.Config
             .Name(nameof(NomenclatureCategoryFacts))
             .Erm(
-                new Erm::Position { Id = 1, CategoryCode = 1, Name = "one", IsControlledByAmount = true },
-                new Erm::Position { Id = 2, CategoryCode = 1, Name = "two", IsControlledByAmount = true },
-                new Erm::Position { Id = 3, CategoryCode = 1, Name = "three", IsControlledByAmount = true },
-                new Erm::Position { Id = 4, CategoryCode = 1, Name = "four", IsControlledByAmount = true },
-
-                new Erm::PricePosition { Id = 1, PriceId = 1, IsActive = true, PositionId = 1 },
-                new Erm::PricePosition { Id = 2, PriceId = 1, IsActive = true, PositionId = 2 },
-                new Erm::PricePosition { Id = 3, PriceId = 1, IsActive = true, PositionId = 3 },
-
-                new Erm::PricePosition { Id = 4, PriceId = 2, IsActive = true, PositionId = 2 },
-                new Erm::PricePosition { Id = 5, PriceId = 2, IsActive = true, PositionId = 3 },
-                new Erm::PricePosition { Id = 6, PriceId = 2, IsActive = true, PositionId = 4 })
+                 new Erm::NomenclatureCategory { Id = 1, Name = "one" },
+                 new Erm::NomenclatureCategory { Id = 2, Name = "two" })
             .Fact(
-                new NomenclatureCategory { Id = 1, Name = "one", PriceId = 1 },
-                new NomenclatureCategory { Id = 1, Name = "two", PriceId = 2 });
+                new NomenclatureCategory { Id = 1, Name = "one" },
+                new NomenclatureCategory { Id = 2, Name = "two" });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement SalesModelCategoryRestrictions

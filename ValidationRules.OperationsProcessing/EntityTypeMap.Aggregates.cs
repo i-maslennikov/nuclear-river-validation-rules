@@ -117,7 +117,8 @@ namespace NuClear.ValidationRules.OperationsProcessing
                 .Aggregate<PriceAggregates::Ruleset>(
                     x => x.Match<Facts::Ruleset>()
                            .DependOn<Facts::Ruleset.QuantitativeRule>()
-                          .DependOn<Facts::Ruleset.RulesetProject>())
+                          .DependOn<Facts::Ruleset.RulesetProject>()
+                          .DependOn<Facts::NomenclatureCategory>())
 
                 // ProjectAggregates
                 .Aggregate<ProjectAggregates::Order>(

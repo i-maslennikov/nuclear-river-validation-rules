@@ -3,7 +3,6 @@
     public enum MessageTypeCode
     {
         AdvertisementAmountShouldMeetMaximumRestrictions = 1,
-        MinimalAdvertisementRestrictionShouldBeSpecified = 2,
         OrderMustHaveActualPrice = 3,
         OrderPositionCorrespontToInactivePosition = 4,
         OrderPositionMayCorrespontToActualPrice = 5,

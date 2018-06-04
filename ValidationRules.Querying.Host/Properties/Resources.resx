@@ -180,9 +180,6 @@
   <data name="LinkedFirmShouldBeValid_ClosedForever" xml:space="preserve">
     <value>Фирма {0} скрыта навсегда</value>
   </data>
-  <data name="AssociatedPositionsGroupCount" xml:space="preserve">
-    <value>В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой.</value>
-  </data>
   <data name="LegalPerson" xml:space="preserve">
     <value>Юр. лицо заказчика</value>
   </data>
@@ -287,9 +284,6 @@
   </data>
   <data name="OrderMustUseCategoriesOnlyAvailableInProject" xml:space="preserve">
     <value>В позиции {0} задействованы рубрики, не привязанные к отделению организации города назначения заказа: </value>
-  </data>
-  <data name="MinimalAdvertisementRestrictionShouldBeSpecified" xml:space="preserve">
-    <value>В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск.</value>
   </data>
   <data name="LegalPersonProfileBargainShouldNotBeExpired" xml:space="preserve">
     <value>У юр. лица клиента, в профиле {0} указан договор с датой окончания действия раньше даты подписания заказа.</value>

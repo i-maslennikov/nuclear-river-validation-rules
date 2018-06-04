@@ -14,8 +14,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
         private static readonly Dictionary<int, IReadOnlyCollection<Type>> FactsTypeMap = new Dictionary<int, IReadOnlyCollection<Type>>()
             .AddMapping<EntityTypeAccount>(typeof(Facts::Account))
             .AddMapping<EntityTypeAccountDetail>(typeof(Facts::AccountDetail))
-            .AddMapping<EntityTypeAssociatedPosition>(typeof(Facts::AssociatedPosition))
-            .AddMapping<EntityTypeAssociatedPositionsGroup>(typeof(Facts::AssociatedPositionsGroup))
             .AddMapping<EntityTypeBargain>(typeof(Facts::Bargain))
             .AddMapping<EntityTypeBargainFile>(typeof(Facts::BargainScanFile))
             .AddMapping<EntityTypeBill>(typeof(Facts::Bill))
@@ -24,7 +22,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
             .AddMapping<EntityTypeCategory>(typeof(Facts::Category))
             .AddMapping<EntityTypeCategoryOrganizationUnit>(typeof(Facts::CategoryOrganizationUnit))
             .AddMapping<EntityTypeDeal>(typeof(Facts::Deal))
-            .AddMapping<EntityTypeDeniedPosition>(typeof(Facts::DeniedPosition))
             .AddMapping<EntityTypeFirm>(typeof(Facts::Firm))
             .AddMapping<EntityTypeFirmAddress>(typeof(Facts::FirmAddress))
             .AddMapping<EntityTypeCategoryFirmAddress>(typeof(Facts::FirmAddressCategory))
@@ -47,7 +44,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                            typeof(Facts::CostPerClickCategoryRestriction),
                                            typeof(Facts::SalesModelCategoryRestriction))
             .AddMapping<EntityTypeReleaseInfo>(typeof(Facts::ReleaseInfo))
-            .AddMapping<EntityTypeRuleset>(typeof(Facts::RulesetRule))
             .AddMapping<EntityTypeTheme>(typeof(Facts::Theme))
             .AddMapping<EntityTypeThemeCategory>(typeof(Facts::ThemeCategory))
             .AddMapping<EntityTypeThemeOrganizationUnit>(typeof(Facts::ThemeOrganizationUnit));

@@ -205,8 +205,7 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
             if (taskServiceRemoteControlSettings.RemoteControlEnabled)
             {
-                string quartzStoreConnectionString = null;
-                connectionStringSettings.AllConnectionStrings.TryGetValue(InfrastructureConnectionStringIdentity.Instance, out quartzStoreConnectionString);
+                connectionStringSettings.AllConnectionStrings.TryGetValue(InfrastructureConnectionStringIdentity.Instance, out var quartzStoreConnectionString);
 
                 container.RegisterType<ISchedulerExporterProvider, SchedulerExporterProvider>(Lifetime.Singleton,
                              new InjectionConstructor(environmentSettings.EnvironmentName,
@@ -354,8 +353,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
                    .RegisterAccessor<Account, AccountAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<AccountDetail, AccountDetailAccessor>(entryPointSpecificLifetimeManagerFactory)
-                   .RegisterAccessor<AssociatedPosition, AssociatedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
-                   .RegisterAccessor<AssociatedPositionsGroup, AssociatedPositionsGroupAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<Bargain, BargainAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<BargainScanFile, BargainScanFileAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<Bill, BillAccessor>(entryPointSpecificLifetimeManagerFactory)
@@ -365,7 +362,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                    .RegisterAccessor<CategoryOrganizationUnit, CategoryOrganizationUnitAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<CostPerClickCategoryRestriction, CostPerClickCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<Deal, DealAccessor>(entryPointSpecificLifetimeManagerFactory)
-                   .RegisterAccessor<DeniedPosition, DeniedPositionAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<Firm, FirmAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<FirmAddress, FirmAddressAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<FirmAddressCategory, FirmAddressCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)
@@ -385,7 +381,6 @@ namespace NuClear.ValidationRules.Replication.Host.DI
                    .RegisterAccessor<Project, ProjectAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<ReleaseInfo, ReleaseInfoAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<ReleaseWithdrawal, ReleaseWithdrawalAccessor>(entryPointSpecificLifetimeManagerFactory)
-                   .RegisterAccessor<RulesetRule, RulesetRuleAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<SalesModelCategoryRestriction, SalesModelCategoryRestrictionAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<Theme, ThemeAccessor>(entryPointSpecificLifetimeManagerFactory)
                    .RegisterAccessor<ThemeCategory, ThemeCategoryAccessor>(entryPointSpecificLifetimeManagerFactory)

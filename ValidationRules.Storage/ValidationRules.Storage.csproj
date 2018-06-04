@@ -159,7 +159,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityTypeIds.cs" />
+    <Compile Include="Identitites\EntityTypes\EntityTypeIds.cs" />
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
     <Compile Include="FieldComparer\XDocumentComparer.cs" />
     <Compile Include="Connections\AmsConnectionStringIdentity.cs" />
@@ -175,8 +175,6 @@
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisementElementStatus.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisementElementTemplate.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisementTemplate.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeAssociatedPosition.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeBargain.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeBargainFile.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeBill.cs" />
@@ -186,12 +184,12 @@
     <Compile Include="Identitites\EntityTypes\EntityTypeCategoryFirmAddress.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeDeal.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeDeniedPosition.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeFirm.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeFirmAddress.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeFirmContact.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeLegalPerson.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeLegalPersonProfile.cs" />
+    <Compile Include="Identitites\EntityTypes\EntityTypeNomenclatureCategory.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrder.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrderFile.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrderPosition.cs" />
@@ -201,7 +199,6 @@
     <Compile Include="Identitites\EntityTypes\EntityTypePricePosition.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeProject.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeReleaseInfo.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeRuleset.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeTheme.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeThemeCategory.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeThemeOrganizationUnit.cs" />
@@ -210,6 +207,7 @@
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Order.cs" />
     <Compile Include="Model\Erm\AccountDetail.cs" />
+    <Compile Include="Model\Erm\NomenclatureCategory.cs" />
     <Compile Include="Model\Facts\AccountDetail.cs" />
     <Compile Include="Model\Facts\Advertisement.cs" />
     <Compile Include="Model\Facts\EntityName.cs" />

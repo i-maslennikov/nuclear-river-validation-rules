@@ -1,4 +1,4 @@
-﻿namespace NuClear.ValidationRules.Storage
+﻿namespace NuClear.ValidationRules.Storage.Identitites.EntityTypes
 {
     public static class EntityTypeIds
     {
@@ -9,8 +9,6 @@
         public const int AdvertisementElementStatus = 316;
         public const int AdvertisementElementTemplate = 185;
         public const int AdvertisementTemplate = 184;
-        public const int AssociatedPosition = 177;
-        public const int AssociatedPositionsGroup = 176;
         public const int Bargain = 198;
         public const int BargainFile = 204;
         public const int Bill = 188;
@@ -19,7 +17,6 @@
         public const int Category = 160;
         public const int CategoryOrganizationUnit = 161;
         public const int Deal = 199;
-        public const int DeniedPosition = 180;
         public const int Firm = 146;
         public const int FirmAddress = 164;
         public const int CategoryFirmAddress = 166;
@@ -36,9 +33,10 @@
         public const int Project = 158;
         public const int ReleaseInfo = 203;
         public const int ReleaseWithdrawal = 215;
-        public const int Ruleset = 280;
         public const int Theme = 221;
         public const int ThemeCategory = 223;
         public const int ThemeOrganizationUnit = 224;
+
+        public const int NomenclatureCategory = 285;
     }
 }

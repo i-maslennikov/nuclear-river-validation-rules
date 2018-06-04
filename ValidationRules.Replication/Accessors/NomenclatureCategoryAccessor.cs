@@ -24,25 +24,17 @@ namespace NuClear.ValidationRules.Replication.Accessors
         }
 
         public IQueryable<NomenclatureCategory> GetSource()
-            => from pricePosition in _query.For<Erm::PricePosition>().Where(x => x.IsActive && !x.IsDeleted)
-               from position in _query.For<Erm::Position>().Where(x => !x.IsDeleted && x.IsControlledByAmount).Where(x => pricePosition.PositionId == x.Id)
-               group position.Id by new { pricePosition.PriceId, position.CategoryCode }
-               into groups
-               from namePosition in _query.For<Erm::Position>().Where(x => x.Id == groups.Min())
+            => from nomenclatureCategory in _query.For<Erm::NomenclatureCategory>()
                select new NomenclatureCategory
                    {
-                       Id = groups.Key.CategoryCode,
-                       PriceId = groups.Key.PriceId,
-                       Name = namePosition.Name,
+                       Id = nomenclatureCategory.Id,
+                       Name = nomenclatureCategory.Name,
                    };
 
         public FindSpecification<NomenclatureCategory> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
         {
-            // todo: Подумать о пересчёте, сейчас не идеально: изменения Position не приведёт к изменению имени. Должно ли? Пока пойдёт.
-            // А ещё лучше - читать поток или как иначе общаться с мастер-системой.
-            // Или как вариант, захардкодить - и пусть будет. Похоже, справочник менятся редко.
             var ids = commands.Cast<SyncDataObjectCommand>().Select(c => c.DataObjectId).ToList();
-            return SpecificationFactory<NomenclatureCategory>.Contains(x => x.PriceId, ids);
+            return SpecificationFactory<NomenclatureCategory>.Contains(x => x.Id, ids);
         }
 
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<NomenclatureCategory> dataObjects)
@@ -56,9 +48,13 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<NomenclatureCategory> dataObjects)
         {
-            var priceIds = dataObjects.Select(x => x.PriceId);
+            var ids = dataObjects.Select(x => x.Id);
 
-            return new EventCollectionHelper<NomenclatureCategory> { { typeof(Price), priceIds } };
+            var rulesetIds = _query.For<Ruleset.QuantitativeRule>()
+                                   .Where(r => ids.Contains(r.NomenclatureCategoryCode))
+                                   .Select(r => r.RulesetId);
+
+            return new EventCollectionHelper<NomenclatureCategory> { { typeof(Ruleset), rulesetIds } };
         }
     }
 }

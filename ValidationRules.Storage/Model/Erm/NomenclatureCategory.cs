@@ -1,4 +1,4 @@
-﻿namespace NuClear.ValidationRules.Storage.Model.Facts
+﻿namespace NuClear.ValidationRules.Storage.Model.Erm
 {
     public sealed class NomenclatureCategory
     {
