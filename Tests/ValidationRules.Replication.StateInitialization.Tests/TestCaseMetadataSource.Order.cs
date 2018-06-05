@@ -44,7 +44,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Order { Id = 1 },
                     new Facts::OrderPosition { Id = 1, OrderId = 1, PricePositionId = 1 },
                     new Facts::OrderPositionAdvertisement { Id = 1, OrderPositionId = 1, PositionId = 1 },
-                    new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 1, MinAdvertisementAmount = 1, MaxAdvertisementAmount = 10, IsActiveNotDeleted = true },
+                    new Facts::PricePosition { Id = 1, PriceId = 1, PositionId = 1, IsActiveNotDeleted = true },
                     new Facts::Position { Id = 1, IsControlledByAmount = true, CategoryCode = 10 },
                     new Facts::Project { Id = 123 })
                 .Aggregate(

@@ -2,19 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using NuClear.River.Hosting.Common.Settings;
 using NuClear.ValidationRules.Replication.Dto;
+
+using Optional;
 
 namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
 {
     public sealed class RulesetDtoDeserializer : IDeserializer<Confluent.Kafka.Message, RulesetDto>
     {
+        private const string DefaultBusinessModel = "RU";
+
         private readonly string _targetBusinessModel;
+        private static readonly Regex ExtractBusinessModelSuffixRegex = new Regex(@"(?:.+\.)+(?<suffix>\w+)", RegexOptions.Compiled);
 
         public RulesetDtoDeserializer(IEnvironmentSettings environmentSettings)
         {
-            _targetBusinessModel = ExtractBusinessModelSuffix(environmentSettings.EnvironmentName);
+            _targetBusinessModel = environmentSettings.EnvironmentName
+                                                      .Some()
+                                                      .FlatMap(ExtractBusinessModelSuffix)
+                                                      .ValueOr(DefaultBusinessModel);
         }
 
         public IReadOnlyCollection<RulesetDto> Deserialize(Confluent.Kafka.Message kafkaMessage)
@@ -29,8 +38,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
             var rawXmlRulesetMessage = Encoding.UTF8.GetString(kafkaMessagePayload);
             var xmlRulesetMessage = XElement.Parse(rawXmlRulesetMessage);
 
-            var sourceBusinessModel = ExtractBusinessModelSuffix(xmlRulesetMessage.Attribute("SourceCode")?.Value);
-            if (String.Compare(sourceBusinessModel, _targetBusinessModel, StringComparison.InvariantCultureIgnoreCase) != 0)
+            var sourceBusinessModel = xmlRulesetMessage.Attribute("SourceCode")
+                                                       .SomeNotNull()
+                                                       .Map(a => a.Value)
+                                                       .FlatMap(ExtractBusinessModelSuffix)
+                                                       .ValueOr(() => throw new InvalidOperationException("Required attribute \"SourceCode\" was not found"));
+            if (string.Compare(sourceBusinessModel, _targetBusinessModel, StringComparison.InvariantCultureIgnoreCase) != 0)
             {
                 // сообщение предназначено для другой businessmodel
                 return Array.Empty<RulesetDto>();
@@ -39,15 +52,16 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
             return new[] { ConvertToRulesetDto(xmlRulesetMessage) };
         }
 
-        private string ExtractBusinessModelSuffix(string rawValue)
+        private Option<string> ExtractBusinessModelSuffix(string rawValue)
         {
             if (rawValue == null)
             {
                 throw new ArgumentNullException(nameof(rawValue));
             }
 
-            var lastIndex = rawValue.LastIndexOf(".", StringComparison.Ordinal);
-            return rawValue.Substring(lastIndex, rawValue.Length - lastIndex);
+            return ExtractBusinessModelSuffixRegex.Match(rawValue)
+                                                  .SomeWhen(match => match.Success)
+                                                  .Map(match => match.Groups["suffix"].Value);
         }
 
         private static RulesetDto ConvertToRulesetDto(XElement rulesetXml)
@@ -60,16 +74,20 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
                     EndDate = (DateTime?)rulesetXml.Attribute("EndDate"),
                     AssociatedRules = rulesElements.Element("Associated")
                                                    .Elements("Rule")
-                                                   .Select(Convert2AssociatedRule),
+                                                   .Select(Convert2AssociatedRule)
+                                                   .ToList(),
                     DeniedRules = rulesElements.Element("Denied")
                                                .Elements("Rule")
-                                               .Select(Convert2DeniedRule),
+                                               .Select(Convert2DeniedRule)
+                                               .ToList(),
                     QuantitativeRules = rulesElements.Element("Quantitative")
                                                      .Elements("Rule")
-                                                     .Select(Convert2QuantitativeRule),
+                                                     .Select(Convert2QuantitativeRule)
+                                                     .ToList(),
                     Projects = rulesetXml.Element("Branches")
                                          .Elements("Branch")
                                          .Select(b => (long)b.Attribute("Code"))
+                                         .ToList()
                 };
         }
 

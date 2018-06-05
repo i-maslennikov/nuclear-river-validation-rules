@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
                            {
                                Id = x.Id,
                                BeginDate = x.BeginDate,
-                               EndDate = x.EndDate ?? DateTime.MaxValue
+                               EndDate = x.EndDate?.Add(TimeSpan.FromSeconds(1)) ?? DateTime.MaxValue
                            })
                        .ToList();
         }

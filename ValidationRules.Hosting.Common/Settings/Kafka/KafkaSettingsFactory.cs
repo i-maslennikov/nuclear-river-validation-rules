@@ -83,6 +83,8 @@ namespace ValidationRules.Hosting.Common.Settings.Kafka
                     kafkaClientSpecific.Add(defaultSetting.Key, defaultSetting.Value);
                 }
 
+                kafkaConfig.KafkaClientSpecific = kafkaClientSpecific;
+
                 _flows2ConsumerSettingsMap.Add(messageFlow, kafkaConfig);
             }
         }

@@ -30,8 +30,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 Id = x.Id,
                 PriceId = x.PriceId,
                 PositionId = x.PositionId,
-                MaxAdvertisementAmount = x.MaxAdvertisementAmount,
-                MinAdvertisementAmount = x.MinAdvertisementAmount,
                 IsActiveNotDeleted = x.IsActive && !x.IsDeleted
             });
 

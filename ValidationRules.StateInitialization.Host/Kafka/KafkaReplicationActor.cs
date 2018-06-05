@@ -71,16 +71,24 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
 
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
-                        var nonMaxBatchCounter = 0;
+                        int nonMaxBatchCounter = 0;
 
-                        for (;;)
+                        // state init имеет смысл прекращать когда мы вычитали все полные батчи
+                        // а то нам могут до бесконечности подкидывать новых messages
+                        // 1 неполный batch ещё ничего не значит, это может быть начальный batch когда kafka разогревается
+                        // выходим из цикла если вычитали NonMaxBatchCounter неполных батчей
+                        while (nonMaxBatchCounter <= NonMaxBatchCounter)
                         {
                             var batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize);
-
-                            // крутим цикл пока не получим сообщения от kafka
-                            if (batch.Count == 0)
+                            if (batch.Count < _batchSizeSettings.BatchSize)
                             {
-                                continue;
+                                nonMaxBatchCounter++;
+
+                                // крутим цикл пока не получим сообщения от kafka
+                                if (batch.Count == 0)
+                                {
+                                    continue;
+                                }
                             }
 
                             var maxOffsetMesasage = batch.OrderByDescending(x => x.Offset.Value).First();
@@ -98,19 +106,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                             }
 
                             receiver.CompleteBatch(batch);
-
-                            // state init имеет смысл прекращать когда мы вычитали все полные батчи
-                            // а то нам могут до бесконечности подкидывать новых messages
-                            // 1 неполный batch ещё ничего не значит, это может быть начальный batch когда kafka разогревается
-                            // выходим из цикла если вычитали NonMaxBatchCounter неполных батчей
-                            if (batch.Count != _batchSizeSettings.BatchSize)
-                            {
-                                nonMaxBatchCounter++;
-                            }
-                            if (nonMaxBatchCounter == NonMaxBatchCounter)
-                            {
-                                break;
-                            }
                         }
                     }
 

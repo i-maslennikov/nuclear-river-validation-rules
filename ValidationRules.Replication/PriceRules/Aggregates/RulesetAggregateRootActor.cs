@@ -8,9 +8,9 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Storage.Model.Messages;
-using NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
+using Ruleset = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates.Ruleset;
 
 namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 {
@@ -78,6 +78,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     from ruleset in _query.For<Facts::Ruleset>()
                     join project in _query.For<Facts::Ruleset.RulesetProject>() on ruleset.Id equals project.RulesetId
                     join rule in _query.For<Facts::Ruleset.QuantitativeRule>() on ruleset.Id equals rule.RulesetId
+                    join nomenclatureCategory in _query.For<Facts::NomenclatureCategory>() on rule.NomenclatureCategoryCode equals nomenclatureCategory.Id
                     select new Ruleset.AdvertisementAmountRestriction
                     {
                         RulesetId = rule.RulesetId,
@@ -86,7 +87,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         Begin = ruleset.BeginDate,
                         End = ruleset.EndDate,
 
-                        CategoryName = "CategoryCode = " + rule.NomenclatureCategoryCode,
+                        CategoryName = nomenclatureCategory.Name,
                         CategoryCode = rule.NomenclatureCategoryCode,
 
                         Max = rule.Max,

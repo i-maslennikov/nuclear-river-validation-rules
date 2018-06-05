@@ -34,7 +34,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         public static ReplicateInBulkCommand RulesetsToFacts { get; } =
             new ReplicateInBulkCommand(
-                                       new StorageDescriptor(AmsConnectionStringIdentity.Instance, null),
+                                       new StorageDescriptor(RulesetConnectionStringIdentity.Instance, null),
                                        new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
 
         public static ReplicateInBulkCommand AggregatesToMessagesTest { get; } =

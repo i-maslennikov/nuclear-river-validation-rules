@@ -23,11 +23,11 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Position { Id = 2, CategoryCode = 101, IsControlledByAmount = false },
 
                     // Position с ограничениями
-                    new Facts::PricePosition { Id = 2, PriceId = 1, PositionId = 3, MinAdvertisementAmount = 1, MaxAdvertisementAmount = 2, IsActiveNotDeleted = true },
+                    new Facts::PricePosition { Id = 2, PriceId = 1, PositionId = 3, IsActiveNotDeleted = true },
                     new Facts::Position { Id = 3, CategoryCode = 102, IsControlledByAmount = true },
 
                     // Некорректная Position с ограничениями
-                    new Facts::PricePosition { Id = 3, PriceId = 1, PositionId = 4, MinAdvertisementAmount = null, MaxAdvertisementAmount = null, IsActiveNotDeleted = true },
+                    new Facts::PricePosition { Id = 3, PriceId = 1, PositionId = 4, IsActiveNotDeleted = true },
                     new Facts::Position { Id = 4, CategoryCode = 103, IsControlledByAmount = true },
 
                     // associated
