@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Messaging.API.Flows;
 using NuClear.Replication.Core;
@@ -23,9 +24,17 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets
 
         public IReadOnlyCollection<IMessageFlow> AppropriateFlows { get; }
 
-        IReadOnlyCollection<ICommand> IBulkCommandFactory<Confluent.Kafka.Message>.CreateCommands(Confluent.Kafka.Message message)
+        IReadOnlyCollection<ICommand> IBulkCommandFactory<Confluent.Kafka.Message>.CreateCommands(IReadOnlyCollection<Confluent.Kafka.Message> messages)
         {
-            var deserializedDtos = _deserializer.Deserialize(message);
+            var deserializedDtos = messages.AsParallel()
+                                           .Select(message => _deserializer.Deserialize(message))
+                                           .AsSequential()
+                                           .Aggregate(new List<RulesetDto>(messages.Count),
+                                                      (dtos, collection) =>
+                                                          {
+                                                              dtos.AddRange(collection);
+                                                              return dtos;
+                                                          });
             if (deserializedDtos.Count == 0)
             {
                 return Array.Empty<ICommand>();

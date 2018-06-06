@@ -230,7 +230,15 @@ namespace ValidationRules.Hosting.Common
                 public void Dispose()
                 {
                     _cancellationTokenSource.Cancel();
-                    _task?.Wait();
+
+                    try
+                    {
+                        _task?.Wait();
+                    }
+                    catch (AggregateException ae)
+                    {
+                        ae.Handle(e => e is OperationCanceledException);
+                    }
 
                     _consumer.Unsubscribe();
                     _consumer.OnPartitionsAssigned -= OnPartitionsAssigned;

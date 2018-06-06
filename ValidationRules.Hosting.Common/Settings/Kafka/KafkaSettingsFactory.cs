@@ -14,6 +14,7 @@ namespace ValidationRules.Hosting.Common.Settings.Kafka
 {
     public sealed class KafkaSettingsFactory : IKafkaSettingsFactory
     {
+        private const int SingleSupportedPartition = 0;
         private readonly Offset _offset;
 
         private readonly IReadOnlyDictionary<string, object> _defaultKafkaClientSpecificSettings =
@@ -99,7 +100,7 @@ namespace ValidationRules.Hosting.Common.Settings.Kafka
             return new KafkaMessageFlowReceiverSettings
             {
                 Config = kafkaConfig.KafkaClientSpecific,
-                TopicPartitionOffsets = new [] {  new TopicPartitionOffset(kafkaConfig.Topic, 0, _offset) },
+                TopicPartitionOffsets = new [] {  new TopicPartitionOffset(kafkaConfig.Topic, SingleSupportedPartition, _offset) },
                 PollTimeout = kafkaConfig.PoolTimeout
             };
         }
@@ -114,7 +115,7 @@ namespace ValidationRules.Hosting.Common.Settings.Kafka
             return new KafkaMessageFlowInfoSettings
             {
                 Config = kafkaConfig.KafkaClientSpecific,
-                TopicPartition = new TopicPartition(kafkaConfig.Topic, 0),
+                TopicPartition = new TopicPartition(kafkaConfig.Topic, SingleSupportedPartition),
                 InfoTimeout = kafkaConfig.InfoTimeout
             };
         }

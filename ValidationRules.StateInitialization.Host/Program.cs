@@ -12,6 +12,8 @@ using NuClear.River.Hosting.Common.Settings;
 using NuClear.StateInitialization.Core.Actors;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Tracing.API;
+using NuClear.Tracing.Environment;
+using NuClear.Tracing.Log4Net.Config;
 using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 using NuClear.ValidationRules.StateInitialization.Host.Assembling;
@@ -67,6 +69,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             var connectionStringSettings = new ConnectionStringSettingsAspect(connectionStrings);
             var environmentSettings = new EnvironmentSettingsAspect();
 
+            var tracer = CreateTracer(environmentSettings);
+
             var kafkaSettingsFactory =
                 new KafkaSettingsFactory(new Dictionary<IMessageFlow, string>
                                              {
@@ -85,11 +89,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             var kafkaReplicationActor = new KafkaReplicationActor(connectionStringSettings,
                                                                   dataObjectTypesProviderFactory,
                                                                   kafkaMessageFlowReceiverFactory,
+                                                                  new KafkaMessageFlowInfoProvider(kafkaSettingsFactory),
                                                                   new IBulkCommandFactory<Message>[]
                                                                       {
                                                                           new AmsFactsBulkCommandFactory(),
                                                                           new RulesetFactsBulkCommandFactory(environmentSettings)
-                                                                      });
+                                                                      },
+                                                                  tracer);
 
             var schemaInitializationActor = new SchemaInitializationActor(connectionStringSettings);
 
@@ -101,5 +107,19 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
+
+        private static ITracer CreateTracer(IEnvironmentSettings environmentSettings)
+        {
+            return Log4NetTracerBuilder.Use
+                                       .ApplicationXmlConfig
+                                       .Console
+                                       .WithGlobalProperties(x =>
+                                                                 x.Property(TracerContextKeys.Tenant, environmentSettings.EnvironmentName)
+                                                                  .Property(TracerContextKeys.EntryPoint, environmentSettings.EntryPointName)
+                                                                  .Property(TracerContextKeys.EntryPointHost, NetworkInfo.ComputerFQDN)
+                                                                  .Property(TracerContextKeys.EntryPointInstanceId, Guid.NewGuid().ToString()))
+                                       .Build;
+        }
+
     }
 }

@@ -9,6 +9,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
         where TMessage : class
     {
         IReadOnlyCollection<IMessageFlow> AppropriateFlows { get; }
-        IReadOnlyCollection<ICommand> CreateCommands(TMessage message);
+        IReadOnlyCollection<ICommand> CreateCommands(IReadOnlyCollection<TMessage> messages);
     }
 }

@@ -128,6 +128,9 @@
     <Reference Include="2GIS.NuClear.Tracing.Environment, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Tracing.Environment.2.2.3\lib\net461\2GIS.NuClear.Tracing.Environment.dll</HintPath>
     </Reference>
+    <Reference Include="2GIS.NuClear.Tracing.Log4Net, Version=0.0.0.0, Culture=neutral, PublicKeyToken=343b5b3423ae5030, processorArchitecture=MSIL">
+      <HintPath>..\packages\2GIS.NuClear.Tracing.Log4Net.2.2.3\lib\net461\2GIS.NuClear.Tracing.Log4Net.dll</HintPath>
+    </Reference>
     <Reference Include="2GIS.NuClear.Utils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=3a6ebfac29de6b7d, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Utils.1.1.13\lib\portable-net451+win81+wpa81\2GIS.NuClear.Utils.dll</HintPath>
     </Reference>
@@ -146,6 +149,9 @@
     </Reference>
     <Reference Include="linq2db, Version=1.8.3.0, Culture=neutral, PublicKeyToken=f19f8aed7feff67e, processorArchitecture=MSIL">
       <HintPath>..\packages\linq2db.1.8.3\lib\net45\linq2db.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>

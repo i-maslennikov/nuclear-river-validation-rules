@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Messaging.API.Flows;
 using NuClear.Replication.Core;
@@ -22,18 +23,27 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Ams
 
         public IReadOnlyCollection<IMessageFlow> AppropriateFlows { get; }
 
-        public IReadOnlyCollection<ICommand> CreateCommands(Confluent.Kafka.Message kafkaMessage)
+        public IReadOnlyCollection<ICommand> CreateCommands(IReadOnlyCollection<Confluent.Kafka.Message> messages)
         {
-            var dtos = _deserializer.Deserialize(kafkaMessage);
-            if (dtos.Count == 0)
+            var deserializedDtos = messages.AsParallel()
+                                           .Select(message => _deserializer.Deserialize(message))
+                                           .AsSequential()
+                                           .Aggregate(new List<AdvertisementDto>(messages.Count),
+                                                      (dtos, collection) =>
+                                                          {
+                                                              dtos.AddRange(collection);
+                                                              return dtos;
+                                                          });
+
+            if (deserializedDtos.Count == 0)
             {
                 return Array.Empty<ICommand>();
             }
 
             return new[]
                 {
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(Advertisement), dtos),
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(EntityName), dtos)
+                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(Advertisement), deserializedDtos),
+                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(EntityName), deserializedDtos)
                 };
         }
     }

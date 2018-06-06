@@ -22,7 +22,10 @@ using NuClear.StateInitialization.Core.Storage;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
+using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
+
+using ValidationRules.Hosting.Common;
 
 namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
 {
@@ -30,11 +33,14 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
     {
         // сколько неполных батчей мы запроцессим перед тем как выйти
         private const int NonMaxBatchCounter = 5;
+        private const int KafkaWarmupTimeMinutes = 2;
 
         private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
         private readonly IKafkaMessageFlowReceiverFactory _receiverFactory;
+        private readonly KafkaMessageFlowInfoProvider _kafkaMessageFlowInfoProvider;
         private readonly IReadOnlyCollection<IBulkCommandFactory<Confluent.Kafka.Message>> _commandFactories;
+        private readonly ITracer _tracer;
 
         private readonly IAccessorTypesProvider _accessorTypesProvider = new AccessorTypesProvider();
         private readonly DefaultKafkaBatchSizeSettings _batchSizeSettings = new DefaultKafkaBatchSizeSettings();
@@ -43,12 +49,16 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
             IConnectionStringSettings connectionStringSettings,
             IDataObjectTypesProviderFactory dataObjectTypesProviderFactory,
             IKafkaMessageFlowReceiverFactory kafkaMessageFlowReceiverFactory,
-            IReadOnlyCollection<IBulkCommandFactory<Confluent.Kafka.Message>> commandFactories)
+            KafkaMessageFlowInfoProvider kafkaMessageFlowInfoProvider,
+            IReadOnlyCollection<IBulkCommandFactory<Confluent.Kafka.Message>> commandFactories,
+            ITracer tracer)
         {
             _connectionStringSettings = connectionStringSettings;
             _dataObjectTypesProviderFactory = dataObjectTypesProviderFactory;
             _receiverFactory = kafkaMessageFlowReceiverFactory;
+            _kafkaMessageFlowInfoProvider = kafkaMessageFlowInfoProvider;
             _commandFactories = commandFactories;
+            _tracer = tracer;
         }
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
@@ -61,7 +71,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                 using (var transation = new TransactionScope(TransactionScopeOption.RequiresNew, TransactionOptions))
                 using (var targetConnection = CreateDataConnection(command.TargetStorageDescriptor))
                 {
-                    var resolvedCommandFactories = _commandFactories.Where(f => f.AppropriateFlows.Contains(kafkaCommand.MessageFlow));
+                    var resolvedCommandFactories = _commandFactories.Where(f => f.AppropriateFlows.Contains(kafkaCommand.MessageFlow))
+                                                                    .ToList();
                     var actors = CreateActors(dataObjectTypes,
                                               targetConnection,
                                               new BulkCopyOptions
@@ -69,33 +80,32 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                                                   BulkCopyTimeout = (int)command.BulkCopyTimeout.TotalSeconds
                                               });
 
+                    var targetMessageFlowDescription = kafkaCommand.MessageFlow.GetType().Name;
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
-                        int nonMaxBatchCounter = 0;
+                        var lastTargetMessageOffset = _kafkaMessageFlowInfoProvider.GetFlowSize(kafkaCommand.MessageFlow) - 1;
 
-                        // state init имеет смысл прекращать когда мы вычитали все полные батчи
-                        // а то нам могут до бесконечности подкидывать новых messages
-                        // 1 неполный batch ещё ничего не значит, это может быть начальный batch когда kafka разогревается
-                        // выходим из цикла если вычитали NonMaxBatchCounter неполных батчей
-                        while (nonMaxBatchCounter <= NonMaxBatchCounter)
+                        _tracer.Info($"Receiving messages from kafka for flow: {targetMessageFlowDescription}. Last target message offset: {lastTargetMessageOffset}");
+
+                        long currentMessageOffset = 0;
+                        int receivedMessagesQuantity = 0;
+                        while (currentMessageOffset < lastTargetMessageOffset)
                         {
                             var batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize);
-                            if (batch.Count < _batchSizeSettings.BatchSize)
+                            // крутим цикл пока не получим сообщения от kafka, т.к. у приемника kafka есть некоторое время прогрева,
+                            // то после запуска некоторое время могут возвращаться пустые batch, несмотря на фактическое наличие сообщений
+                            if (batch.Count == 0)
                             {
-                                nonMaxBatchCounter++;
-
-                                // крутим цикл пока не получим сообщения от kafka
-                                if (batch.Count == 0)
-                                {
-                                    continue;
-                                }
+                                continue;
                             }
 
-                            var maxOffsetMesasage = batch.OrderByDescending(x => x.Offset.Value).First();
-                            Console.WriteLine($"Flow: {kafkaCommand.MessageFlow.GetType().Name}. Received messages: {batch.Count}. Offset: {maxOffsetMesasage.Offset}");
+                            receivedMessagesQuantity += batch.Count;
+                            currentMessageOffset = batch.Last().Offset.Value;
 
-                            var bulkCommands = batch.SelectMany(message => resolvedCommandFactories.SelectMany(cf => cf.CreateCommands(message)))
-                                                    .ToList();
+                            _tracer.Info($"Flow: {targetMessageFlowDescription}. Received messages: {batch.Count}. Last message offset for received batch: {currentMessageOffset}. Target and current offsets distance: {lastTargetMessageOffset - currentMessageOffset}");
+
+                            var bulkCommands = resolvedCommandFactories.SelectMany(factory => factory.CreateCommands(batch))
+                                                                       .ToList();
 
                             if (bulkCommands.Count > 0)
                             {
@@ -107,6 +117,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
 
                             receiver.CompleteBatch(batch);
                         }
+
+                        _tracer.Info($"Receiving messages from kafka for flow: {targetMessageFlowDescription} finished. Received messages quantity: {receivedMessagesQuantity}");
                     }
 
                     transation.Complete();
@@ -114,12 +126,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
             }
 
             return Array.Empty<IEvent>();
+        }
 
-            IReadOnlyCollection<Type> GetDataObjectTypes(ReplicateInBulkCommand command)
-            {
-                var dataObjectTypesProvider = (DataObjectTypesProvider)_dataObjectTypesProviderFactory.Create(command);
-                return dataObjectTypesProvider.DataObjectTypes;
-            }
+        private IReadOnlyCollection<Type> GetDataObjectTypes(ReplicateInBulkCommand command)
+        {
+            var dataObjectTypesProvider = (DataObjectTypesProvider)_dataObjectTypesProviderFactory.Create(command);
+            return dataObjectTypesProvider.DataObjectTypes;
         }
 
         private IReadOnlyCollection<IActor> CreateActors(IReadOnlyCollection<Type> dataObjectTypes, DataConnection dataConnection, BulkCopyOptions bulkCopyOptions)
@@ -190,7 +202,10 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                 }
             }
 
-            public IReadOnlyCollection<Type> GetAccessorsFor(Type dataObjectType) => AccessorTypes.Value.TryGetValue(dataObjectType, out Type[] result) ? result : Array.Empty<Type>();
+            public IReadOnlyCollection<Type> GetAccessorsFor(Type dataObjectType) => AccessorTypes.Value
+                                                                                                  .TryGetValue(dataObjectType, out Type[] result)
+                                                                                         ? result
+                                                                                         : Array.Empty<Type>();
         }
 
         // BulkInsertDataObjectsCommand для IMemoryBasedDataObjectAccessor
