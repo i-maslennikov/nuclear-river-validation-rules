@@ -2,9 +2,10 @@
 
 using LinqToDB.Data;
 
+using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage.Model.Erm;
 
-namespace NuClear.ValidationRules.SingleCheck.Store
+namespace NuClear.ValidationRules.SingleCheck.DataLoaders
 {
     public static partial class ErmDataLoader
     {

@@ -4,13 +4,14 @@ using System.Linq;
 
 using LinqToDB.Data;
 
+using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage.Model.Erm;
 
-namespace NuClear.ValidationRules.SingleCheck.Store
+namespace NuClear.ValidationRules.SingleCheck.DataLoaders
 {
     public static partial class ErmDataLoader
     {
-        public static void Load(long orderId, DataConnection query, IStore store, out Order resolvedOrder)
+        public static void Load(long orderId, DataConnection query, IStore store, out ResolvedOrderSummary orderSummary)
         {
             var checkOrderIds = new[] { orderId };
 
@@ -19,8 +20,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                          .Execute()
                          .Single();
             store.Add(order);
-
-            resolvedOrder = order;
 
             LoadReleaseWithdrawals(query, order, store);
 
@@ -160,7 +159,11 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                          .Execute();
             store.AddRange(monthlyUsedPrices);
             var usedPriceIds = usedPricePositions.Select(x => x.PriceId).Union(actualPrice != null ? new[] { actualPrice.Id } : Array.Empty<long>()).Union(monthlyUsedPrices.Select(x => x.Id)).ToList();
-            var usedPositionIds = usedPricePositions.Select(x => x.PositionId).Union(opas.Select(y => y.PositionId)).ToList();
+
+            var soldPackagesIds = usedPricePositions.Select(p => p.PositionId).ToList();
+            var soldPackageElementsIds = opas.Select(y => y.PositionId).ToList();
+
+            var usedPositionIds = soldPackagesIds.Union(soldPackageElementsIds).ToList();
 
             var positions = query.GetTable<Position>()
                                  .Where(x => usedPositionIds.Contains(x.Id))
@@ -240,6 +243,17 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             LoadFirm(query, order, firmAddressIds, store);
             LoadBuyHere(query, order, store);
             LoadPoi(query, order, store);
+
+            orderSummary = new ResolvedOrderSummary
+            {
+                BeginDate = order.BeginDistributionDate,
+                EndDate = order.EndDistributionDatePlan,
+
+                ProjectId = project.Id,
+
+                SoldPackagesIds = soldPackagesIds,
+                SoldPackageElementsIds = soldPackageElementsIds
+            };
         }
 
         private static void LoadFirm(DataConnection query, Order order, IReadOnlyCollection<long> additionalFirmIds, IStore store)
@@ -315,6 +329,17 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.AddRange(orders.Select(x => x.opa).Execute());
             store.AddRange(orders.Select(x => x.position).Execute());
             store.AddRange(orders.Select(x => x.pricePosition).Execute()); // Нужны для PriceCOntext.Order.OrderPostion
+        }
+
+        public sealed class ResolvedOrderSummary
+        {
+            public DateTime BeginDate { get; set; }
+            public DateTime EndDate { get; set; }
+
+            public long ProjectId { get; set; }
+
+            public IReadOnlyCollection<long> SoldPackagesIds { get; set; }
+            public IReadOnlyCollection<long> SoldPackageElementsIds { get; set; }
         }
     }
 }

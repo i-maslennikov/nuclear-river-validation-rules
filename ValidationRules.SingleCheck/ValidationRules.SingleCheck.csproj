@@ -178,14 +178,14 @@
     <Compile Include="Optimization\PredicateVisitor.cs" />
     <Compile Include="Optimization\SkipCheckVisitor.cs" />
     <Compile Include="Replicator.cs" />
-    <Compile Include="Store\ErmDataLoader.LoadPoi.cs" />
+    <Compile Include="DataLoaders\ErmDataLoader.LoadPoi.cs" />
     <Compile Include="Store\PersistentTableStoreFactory.cs" />
     <Compile Include="Store\LockManager.cs" />
-    <Compile Include="Store\RulesetsDataLoader.cs" />
+    <Compile Include="DataLoaders\RulesetsDataLoader.cs" />
     <Compile Include="Store\SchemaManager.cs" />
     <Compile Include="Store\HashSetStoreFactory.cs" />
     <Compile Include="Store\IStoreFactory.cs" />
-    <Compile Include="Store\ErmDataLoader.cs" />
+    <Compile Include="DataLoaders\ErmDataLoader.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Store\IStore.cs" />
     <Compile Include="Store\HashSetStore.cs" />
@@ -198,7 +198,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <Compile Include="Store\ErmDataLoader.LoadBuyHere.cs" />
+    <Compile Include="DataLoaders\ErmDataLoader.LoadBuyHere.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ValidationRules.Replication\ValidationRules.Replication.csproj">

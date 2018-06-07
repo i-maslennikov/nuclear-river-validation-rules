@@ -9,6 +9,7 @@ using LinqToDB.Data;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Telemetry.Probing;
+using NuClear.ValidationRules.SingleCheck.DataLoaders;
 using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Model.Erm;
@@ -63,15 +64,15 @@ namespace NuClear.ValidationRules.SingleCheck
                     optimization.PrepareToUse(predicates.Distinct());
                 }
 
-                Order order = null;
+                ErmDataLoader.ResolvedOrderSummary orderSummary;
                 using (Probe.Create("Erm -> Erm slice"))
                 {
-                    ReadErmSlice(orderId, wrap(erm.CreateStore()), out order);
+                    ReadErmSlice(orderId, wrap(erm.CreateStore()), out orderSummary);
                 }
 
                 using (Probe.Create("Rulesets -> Facts"))
                 {
-                    ReadRulesetsSlice(order, wrap(store.CreateStore()));
+                    ReadRulesetsSlice(orderSummary, wrap(store.CreateStore()));
                 }
 
                 using (Probe.Create("Erm slice -> Facts"))
@@ -100,21 +101,21 @@ namespace NuClear.ValidationRules.SingleCheck
             }
         }
 
-        private static void ReadErmSlice(long orderId, IStore store, out Order order)
+        private static void ReadErmSlice(long orderId, IStore store, out ErmDataLoader.ResolvedOrderSummary orderSummary)
         {
             using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             using (var connection = new DataConnection("Erm").AddMappingSchema(Schema.Erm))
             {
-                ErmDataLoader.Load(orderId, connection, store, out order);
+                ErmDataLoader.Load(orderId, connection, store, out orderSummary);
             }
         }
 
-        private static void ReadRulesetsSlice(Order order, IStore store)
+        private static void ReadRulesetsSlice(ErmDataLoader.ResolvedOrderSummary orderSummary, IStore store)
         {
             using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             using (var connection = new DataConnection("Facts").AddMappingSchema(Schema.Facts))
             {
-                RulesetsDataLoader.Load(order, connection, store);
+                RulesetsDataLoader.Load(orderSummary, connection, store);
             }
         }
 

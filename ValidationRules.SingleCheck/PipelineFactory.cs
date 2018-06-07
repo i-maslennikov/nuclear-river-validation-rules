@@ -32,7 +32,7 @@ namespace NuClear.ValidationRules.SingleCheck
 
         public Pipeline Create()
         {
-            var explicitlyAppenedTypes = new[]
+            var explicitlyAppendedTypes = new[]
                 {
                     typeof(Ruleset),
                     typeof(Ruleset.AssociatedRule),
@@ -42,7 +42,7 @@ namespace NuClear.ValidationRules.SingleCheck
                 };
 
             var dataObjectTypes = DataObjectypes.Value
-                                                .Concat(explicitlyAppenedTypes)
+                                                .Concat(explicitlyAppendedTypes)
                                                 .ToList();
 
             var pool = new SchemaManager(new MappingSchema(Facts, Aggregates, Messages, WebApp), dataObjectTypes);
