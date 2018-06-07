@@ -10,16 +10,17 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 {
     public static partial class ErmDataLoader
     {
-        public static void Load(long orderId, DataConnection query, IStore store)
+        public static void Load(long orderId, DataConnection query, IStore store, out Order resolvedOrder)
         {
             var checkOrderIds = new[] { orderId };
 
-            //
             var order = query.GetTable<Order>()
-                             .Where(x => checkOrderIds.Contains(x.Id))
-                             .Execute()
-                             .Single();
+                         .Where(x => checkOrderIds.Contains(x.Id))
+                         .Execute()
+                         .Single();
             store.Add(order);
+
+            resolvedOrder = order;
 
             LoadReleaseWithdrawals(query, order, store);
 
@@ -231,8 +232,11 @@ namespace NuClear.ValidationRules.SingleCheck.Store
                                                       .Execute(); // Можно ужесточить: рубрики из свзанных заказов нам на самом деле не нужны.
             store.AddRange(salesModelCategoryRestrictions);
 
+            var nomenclatureCategories = query.GetTable<NomenclatureCategory>()
+                                              .Execute();
+            store.AddRange(nomenclatureCategories);
+
             LoadAmountControlledSales(query, order, usedPriceIds, store);
-            LoadAssociatedDeniedRules(query, order, usedPriceIds, store);
             LoadFirm(query, order, firmAddressIds, store);
             LoadBuyHere(query, order, store);
             LoadPoi(query, order, store);
@@ -311,84 +315,6 @@ namespace NuClear.ValidationRules.SingleCheck.Store
             store.AddRange(orders.Select(x => x.opa).Execute());
             store.AddRange(orders.Select(x => x.position).Execute());
             store.AddRange(orders.Select(x => x.pricePosition).Execute()); // Нужны для PriceCOntext.Order.OrderPostion
-
-            // Для вычисления названий NomeclatureCategory
-            var positions =
-                from pricePosition in query.GetTable<PricePosition>().Where(x => priceIds.Contains(x.PriceId))
-                from position in query.GetTable<Position>().Where(x => x.Id == pricePosition.PositionId).Where(x => categoryCodes.Contains(x.CategoryCode))
-                select new { pricePosition, position };
-
-            store.AddRange(positions.Select(x => x.pricePosition).Execute());
-            store.AddRange(positions.Select(x => x.position).Execute());
-        }
-
-        private static void LoadAssociatedDeniedRules(DataConnection query, Order order, IReadOnlyCollection<long> priceIds, IStore store)
-        {
-            // Правила на запрещение требуются только по PositionId, которые есть в заказе
-            // Правила на сопутствие требуются только по PositionId или AssociatedPositionId, которые есть в заказе
-            var orderPositions =
-                query.GetTable<OrderPosition>()
-                     .Where(x => x.IsActive && !x.IsDeleted)
-                     .Where(x => x.OrderId == order.Id)
-                     .Select(x => new { x.Id, x.PricePositionId })
-                     .Execute();
-            var orderPositionIds = orderPositions.Select(x => x.Id).ToList();
-            var pricePositionIds = orderPositions.Select(x => x.PricePositionId).Distinct().ToList();
-
-            var positions1 =
-                query.GetTable<PricePosition>()
-                     .Where(x => pricePositionIds.Contains(x.Id))
-                     .Select(x => x.PositionId);
-            var positions2 =
-                query.GetTable<OrderPositionAdvertisement>()
-                     .Where(x => orderPositionIds.Contains(x.OrderPositionId))
-                     .Select(x => x.PositionId);
-
-            var positionIds = positions1.Union(positions2).Execute();
-
-            var deniedPositions = query.GetTable<DeniedPosition>()
-                                       .Where(x => priceIds.Contains(x.PriceId))
-                                       .Where(x => positionIds.Contains(x.PositionId))
-                                       .Execute();
-            store.AddRange(deniedPositions);
-
-            // Группы и позиции, в которых текущий заказ играет роль сопуствующего
-            var associatedGroups =
-                query.GetTable<AssociatedPositionsGroup>()
-                     .Where(x => x.IsActive && !x.IsDeleted && pricePositionIds.Contains(x.PricePositionId))
-                     .Execute();
-            var associatedGroupIds = associatedGroups.Select(x => x.Id).ToList();
-            store.AddRange(associatedGroups);
-
-            var associatedPositions =
-                query.GetTable<AssociatedPosition>()
-                     .Where(x => x.IsActive && !x.IsDeleted && associatedGroupIds.Contains(x.AssociatedPositionsGroupId))
-                     .Execute();
-            store.AddRange(associatedPositions);
-
-            // Группы и позиции, в которых текущий заказ играет роль основного
-            var masterPositions =
-                from g in query.GetTable<AssociatedPositionsGroup>().Where(x => x.IsActive && !x.IsDeleted)
-                from p in query.GetTable<AssociatedPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.AssociatedPositionsGroupId == g.Id)
-                from pp in query.GetTable<PricePosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.Id == g.PricePositionId)
-                where priceIds.Contains(pp.PriceId) && positionIds.Contains(p.PositionId)
-                select new { g, p };
-            store.AddRange(masterPositions.Select(x => x.g).Execute());
-            store.AddRange(masterPositions.Select(x => x.p).Execute());
-
-            var ruleset = query.GetTable<Ruleset>()
-                               .Where(x => !x.IsDeleted && x.Priority != 0)
-                               .OrderByDescending(x => x.Priority)
-                               .Take(1)
-                               .Execute()
-                               .Single();
-            store.Add(ruleset);
-
-            var rulesetRules = query.GetTable<RulesetRule>()
-                                    .Where(x => x.RulesetId == ruleset.Id)
-                                    .Where(x => positionIds.Contains(x.DependentPositionId) || positionIds.Contains(x.PrincipalPositionId))
-                                    .Execute();
-            store.AddRange(rulesetRules);
         }
     }
 }

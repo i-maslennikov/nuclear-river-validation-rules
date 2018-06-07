@@ -63,9 +63,15 @@ namespace NuClear.ValidationRules.SingleCheck
                     optimization.PrepareToUse(predicates.Distinct());
                 }
 
+                Order order = null;
                 using (Probe.Create("Erm -> Erm slice"))
                 {
-                    ReadErmSlice(orderId, wrap(erm.CreateStore()));
+                    ReadErmSlice(orderId, wrap(erm.CreateStore()), out order);
+                }
+
+                using (Probe.Create("Rulesets -> Facts"))
+                {
+                    ReadRulesetsSlice(order, wrap(store.CreateStore()));
                 }
 
                 using (Probe.Create("Erm slice -> Facts"))
@@ -94,12 +100,21 @@ namespace NuClear.ValidationRules.SingleCheck
             }
         }
 
-        private static void ReadErmSlice(long orderId, IStore store)
+        private static void ReadErmSlice(long orderId, IStore store, out Order order)
         {
             using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             using (var connection = new DataConnection("Erm").AddMappingSchema(Schema.Erm))
             {
-                ErmDataLoader.Load(orderId, connection, store);
+                ErmDataLoader.Load(orderId, connection, store, out order);
+            }
+        }
+
+        private static void ReadRulesetsSlice(Order order, IStore store)
+        {
+            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            using (var connection = new DataConnection("Facts").AddMappingSchema(Schema.Facts))
+            {
+                RulesetsDataLoader.Load(order, connection, store);
             }
         }
 
