@@ -239,7 +239,7 @@ function Get-RegexMetadata($Context){
 	$keyValuePairs += Get-DBHostMetadata $Context
 	$keyValuePairs += Get-ValidationUrlMetadata $Context
 	$keyValuePairs += Get-AmsFactsTopicMetadata $Context
-	$keyValuePairs += Get-RulesetsFactsTopicMetadata $Context
+	$keyValuePairs += Get-RulesetsFactsTopicsMetadata $Context
 
 	foreach($keyValuePair in $keyValuePairs.GetEnumerator()){
 		$regex["{$($keyValuePair.Key)}"] = $keyValuePair.Value
