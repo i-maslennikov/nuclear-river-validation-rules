@@ -25,16 +25,14 @@ using NuClear.Storage.API.Specifications;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication.Commands;
 
+using Polly;
+
 using ValidationRules.Hosting.Common;
 
 namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
 {
     internal sealed class KafkaReplicationActor : IActor
     {
-        // сколько неполных батчей мы запроцессим перед тем как выйти
-        private const int NonMaxBatchCounter = 5;
-        private const int KafkaWarmupTimeMinutes = 2;
-
         private readonly IConnectionStringSettings _connectionStringSettings;
         private readonly IDataObjectTypesProviderFactory _dataObjectTypesProviderFactory;
         private readonly IKafkaMessageFlowReceiverFactory _receiverFactory;
@@ -83,7 +81,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                     var targetMessageFlowDescription = kafkaCommand.MessageFlow.GetType().Name;
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
-                        var lastTargetMessageOffset = _kafkaMessageFlowInfoProvider.GetFlowSize(kafkaCommand.MessageFlow) - 1;
+                        // retry добавлен из-за https://github.com/confluentinc/confluent-kafka-dotnet/issues/86
+                        var lastTargetMessageOffset = Policy.Handle<Confluent.Kafka.KafkaException>(exception => exception.Error.Code == Confluent.Kafka.ErrorCode.LeaderNotAvailable)
+                                                            .WaitAndRetry(4,
+                                                                          i => TimeSpan.FromSeconds(5),
+                                                                          (exception, waitSpan, retryAttempt, _) => _tracer.Warn(exception, $"Can't size of kafka topic. Message flow: {targetMessageFlowDescription}. Wait span: {waitSpan}. Retry attempt: {retryAttempt}"))
+                                                            .ExecuteAndCapture(() => _kafkaMessageFlowInfoProvider.GetFlowSize(kafkaCommand.MessageFlow) - 1)
+                                                            .Result;
 
                         _tracer.Info($"Receiving messages from kafka for flow: {targetMessageFlowDescription}. Last target message offset: {lastTargetMessageOffset}");
 
@@ -92,8 +96,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                         while (currentMessageOffset < lastTargetMessageOffset)
                         {
                             var batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize);
-                            // крутим цикл пока не получим сообщения от kafka, т.к. у приемника kafka есть некоторое время прогрева,
-                            // то после запуска некоторое время могут возвращаться пустые batch, несмотря на фактическое наличие сообщений
+                            // крутим цикл пока не получим сообщения от kafka,
+                            // т.к. у приемника kafka есть некоторое время прогрева, то после запуска некоторое время могут возвращаться пустые batch,
+                            // несмотря на фактическое наличие сообщений
                             if (batch.Count == 0)
                             {
                                 continue;
