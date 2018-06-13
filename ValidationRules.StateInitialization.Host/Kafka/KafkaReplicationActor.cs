@@ -83,9 +83,10 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                     {
                         // retry добавлен из-за https://github.com/confluentinc/confluent-kafka-dotnet/issues/86
                         var lastTargetMessageOffset = Policy.Handle<Confluent.Kafka.KafkaException>(exception => exception.Error.Code == Confluent.Kafka.ErrorCode.LeaderNotAvailable)
-                                                            .WaitAndRetry(4,
-                                                                          i => TimeSpan.FromSeconds(5),
-                                                                          (exception, waitSpan, retryAttempt, _) => _tracer.Warn(exception, $"Can't size of kafka topic. Message flow: {targetMessageFlowDescription}. Wait span: {waitSpan}. Retry attempt: {retryAttempt}"))
+                                                            .WaitAndRetryForever(i => TimeSpan.FromSeconds(5),
+                                                                                 (exception, waitSpan) =>
+                                                                                       _tracer.Warn(exception,
+                                                                                                    $"Can't get size of kafka topic. Message flow: {targetMessageFlowDescription}. Wait span: {waitSpan}"))
                                                             .ExecuteAndCapture(() => _kafkaMessageFlowInfoProvider.GetFlowSize(kafkaCommand.MessageFlow) - 1)
                                                             .Result;
 
