@@ -82,13 +82,14 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
                     {
                         // retry добавлен из-за https://github.com/confluentinc/confluent-kafka-dotnet/issues/86
-                        var lastTargetMessageOffset = Policy.Handle<Confluent.Kafka.KafkaException>(exception => exception.Error.Code == Confluent.Kafka.ErrorCode.LeaderNotAvailable)
-                                                            .WaitAndRetryForever(i => TimeSpan.FromSeconds(5),
-                                                                                 (exception, waitSpan) =>
-                                                                                       _tracer.Warn(exception,
-                                                                                                    $"Can't get size of kafka topic. Message flow: {targetMessageFlowDescription}. Wait span: {waitSpan}"))
-                                                            .ExecuteAndCapture(() => _kafkaMessageFlowInfoProvider.GetFlowSize(kafkaCommand.MessageFlow) - 1)
-                                                            .Result;
+                        var lastTargetMessageOffset =
+                            Policy.Handle<Confluent.Kafka.KafkaException>(exception => exception.Error.Code == Confluent.Kafka.ErrorCode.LeaderNotAvailable)
+                                  .WaitAndRetryForever(i => TimeSpan.FromSeconds(5),
+                                                       (exception, waitSpan) =>
+                                                           _tracer.Warn(exception,
+                                                                        $"Can't get size of kafka topic. Message flow: {targetMessageFlowDescription}. Wait span: {waitSpan}"))
+                                  .ExecuteAndCapture(() => _kafkaMessageFlowInfoProvider.GetFlowSize(kafkaCommand.MessageFlow) - 1)
+                                  .Result;
 
                         _tracer.Info($"Receiving messages from kafka for flow: {targetMessageFlowDescription}. Last target message offset: {lastTargetMessageOffset}");
 
