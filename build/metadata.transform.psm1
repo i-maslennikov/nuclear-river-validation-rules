@@ -102,7 +102,7 @@ function Get-RulesetsFactsTopicsMetadata($Context){
 	switch($Context.EnvType){
 		'Test' {
 			return @{
-				'RulesetsFactsTopic' = 'rulesets_prod'
+				'RulesetsFactsTopic' = 'vr_test_rulesets'
 			}
 		 }
 		'Business' {
