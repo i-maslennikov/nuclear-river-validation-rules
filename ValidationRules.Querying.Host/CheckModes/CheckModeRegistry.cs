@@ -288,11 +288,11 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser,
-                         single: RuleSeverityLevel.Info,
-                         singleForApprove: RuleSeverityLevel.Info,
-                         manualReport: RuleSeverityLevel.Info,
-                         prerelease: RuleSeverityLevel.Info,
-                         release: RuleSeverityLevel.Info),
+                         single: RuleSeverityLevel.Warning,
+                         singleForApprove: RuleSeverityLevel.Warning,
+                         manualReport: RuleSeverityLevel.Warning,
+                         prerelease: RuleSeverityLevel.Warning,
+                         release: RuleSeverityLevel.Warning),
 
                     Rule(MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
                          manualReport: RuleSeverityLevel.Info,
@@ -300,9 +300,11 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Info),
 
                     Rule(MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
-                         manualReport: RuleSeverityLevel.Info,
-                         prerelease: RuleSeverityLevel.Info,
-                         release: RuleSeverityLevel.Info),
+                         single: RuleSeverityLevel.Warning,
+                         singleForApprove: RuleSeverityLevel.Warning,
+                         manualReport: RuleSeverityLevel.Warning,
+                         prerelease: RuleSeverityLevel.Warning,
+                         release: RuleSeverityLevel.Warning),
 
                     Rule(MessageTypeCode.AdvertisementMustBelongToFirm,
                          manualReport: RuleSeverityLevel.Error,
