@@ -24,7 +24,8 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         public IReadOnlyCollection<Ruleset> GetDataObjects(ICommand command)
         {
             var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<RulesetDto>();
-            return dtos.Select(x => new Ruleset
+            return dtos.Where(x => !x.IsDeleted)
+                       .Select(x => new Ruleset
                            {
                                Id = x.Id,
                                BeginDate = x.BeginDate,
@@ -48,7 +49,8 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset> dataObjects)
         {
             var rulesetsIds = dataObjects.Select(x => x.Id);
-            var projectIds = _query.For<Ruleset.RulesetProject>().Where(x => rulesetsIds.Contains(x.RulesetId))
+            var projectIds = _query.For<Ruleset.RulesetProject>()
+                                   .Where(x => rulesetsIds.Contains(x.RulesetId))
                                    .Select(x => x.ProjectId)
                                    .Distinct()
                                    .ToList();
@@ -62,7 +64,7 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
                                               .Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
                           select order.FirmId;
 
-            return new EventCollectionHelper<Ruleset> { { typeof(Firm), firmIds } };
+            return new EventCollectionHelper<Ruleset> { { typeof(Firm), firmIds.Distinct() } };
         }
 
         private static DateTime Min(DateTime a, DateTime b)

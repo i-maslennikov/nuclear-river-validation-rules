@@ -279,7 +279,13 @@ namespace NuClear.ValidationRules.Replication.Host.DI
 
             // kafka receiver
             container
-                .RegisterType<KafkaReceiver>(Lifetime.Singleton)
+                .RegisterType<BatchingKafkaReceiverTelemetryDecorator<AmsFactsFlowTelemetryPublisher>>(new InjectionConstructor(new ResolvedParameter<KafkaReceiver>(nameof(AmsFactsFlow)),
+                                                                                                                                typeof(AmsFactsFlowTelemetryPublisher)))
+                .RegisterType<BatchingKafkaReceiverTelemetryDecorator<RulesetFactsFlowTelemetryPublisher>>(new InjectionConstructor(new ResolvedParameter<KafkaReceiver>(nameof(RulesetFactsFlow)),
+                                                                                                                                typeof(RulesetFactsFlowTelemetryPublisher)))
+
+                .RegisterType<KafkaReceiver>(nameof(AmsFactsFlow), Lifetime.Singleton)
+                .RegisterType<KafkaReceiver>(nameof(RulesetFactsFlow), Lifetime.Singleton)
                 .RegisterType<IKafkaMessageFlowReceiverFactory, KafkaMessageFlowReceiverFactory>(Lifetime.Singleton)
                 .RegisterInstance<IKafkaSettingsFactory>(kafkaSettingsFactory)
                 .RegisterType<KafkaMessageFlowInfoProvider>(Lifetime.Singleton);

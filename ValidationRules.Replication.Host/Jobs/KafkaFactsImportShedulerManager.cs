@@ -39,7 +39,10 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         {
             var instanceId = new SimpleInstanceIdGenerator().GenerateInstanceId();
 
-            var threadPool = new SimpleThreadPool(1, ThreadPriority.Normal) { InstanceName = SchedulerName };
+            var threadPool = new SimpleThreadPool(threadCount: 2, threadPriority: ThreadPriority.Normal)
+                {
+                    InstanceName = SchedulerName
+                };
             threadPool.Initialize();
 
             var jobstore = new RAMJobStore

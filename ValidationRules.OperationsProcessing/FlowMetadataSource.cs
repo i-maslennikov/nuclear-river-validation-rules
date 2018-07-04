@@ -6,7 +6,6 @@ using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
-using NuClear.OperationsProcessing.Transports.Kafka;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
 using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
@@ -28,7 +27,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
                                                            .To.Primary().Flow<AmsFactsFlow.AmsFactsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<RulesetFactsFlow.RulesetFactsFlow>()
-                                                           .Receiver<KafkaReceiver>()
+                                                           .Receiver<BatchingKafkaReceiverTelemetryDecorator<RulesetFactsFlowTelemetryPublisher>>()
                                                            .Accumulator<RulesetFactsFlowAccumulator>()
                                                            .Handler<RulesetFactsFlowHandler>()
                                                            .To.Primary().Flow<RulesetFactsFlow.RulesetFactsFlow>().Connect(),

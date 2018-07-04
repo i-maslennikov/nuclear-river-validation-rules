@@ -11,9 +11,6 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.Commands;
 using NuClear.Replication.OperationsProcessing;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
-using NuClear.ValidationRules.Replication;
-using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
@@ -69,7 +66,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
             }
             catch (Exception ex)
             {
-                _tracer.Error(ex, "Error when import facts for AMS");
+                _tracer.Error(ex, "Error when import facts for rulesets");
                 return processingResultsMap.Keys
                                            .Select(bucketId => MessageProcessingStage.Handling
                                                                                           .ResultFor(bucketId)

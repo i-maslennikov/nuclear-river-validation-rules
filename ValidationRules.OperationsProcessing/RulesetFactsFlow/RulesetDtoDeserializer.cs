@@ -72,6 +72,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
                     Id = (long)rulesetXml.Attribute("Code"),
                     BeginDate = (DateTime)rulesetXml.Attribute("BeginDate"),
                     EndDate = (DateTime?)rulesetXml.Attribute("EndDate"),
+                    IsDeleted = ((bool?)rulesetXml.Attribute("IsDeleted")) ?? false,
                     AssociatedRules = rulesElements.Element("Associated")
                                                    .Elements("Rule")
                                                    .Select(Convert2AssociatedRule)

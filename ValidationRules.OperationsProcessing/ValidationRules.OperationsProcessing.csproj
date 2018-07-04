@@ -219,6 +219,7 @@
     <Compile Include="IFlowTelemetryPublisher.cs" />
     <Compile Include="RulesetFactsFlow\RulesetFactsFlow.cs" />
     <Compile Include="RulesetFactsFlow\RulesetFactsFlowHandler.cs" />
+    <Compile Include="RulesetFactsFlow\RulesetFactsFlowTelemetryPublisher.cs" />
     <Compile Include="Transports\BatchingKafkaReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\BatchingServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\XmlEventSerializer.cs" />
