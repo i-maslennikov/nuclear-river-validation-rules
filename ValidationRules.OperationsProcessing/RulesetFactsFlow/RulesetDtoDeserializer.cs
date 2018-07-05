@@ -15,12 +15,12 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
 {
     public sealed class RulesetDtoDeserializer : IDeserializer<Confluent.Kafka.Message, RulesetDto>
     {
-        private readonly IBusinessModelSettings _businessModelSettings;
+        private readonly string _targetBusinessModelAlias;
         private static readonly Regex ExtractBusinessModelSuffixRegex = new Regex(@"(?:.+\.)+(?<suffix>\w+)", RegexOptions.Compiled);
 
         public RulesetDtoDeserializer(IBusinessModelSettings businessModelSettings)
         {
-            _businessModelSettings = businessModelSettings;
+            _targetBusinessModelAlias = Convert2SourceCode(businessModelSettings.BusinessModel);
         }
 
         public IReadOnlyCollection<RulesetDto> Deserialize(Confluent.Kafka.Message kafkaMessage)
@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
                                                        .Map(a => a.Value)
                                                        .FlatMap(ExtractBusinessModelSuffix)
                                                        .ValueOr(() => throw new InvalidOperationException("Required attribute \"SourceCode\" was not found"));
-            if (string.Compare(sourceBusinessModel, _businessModelSettings.BusinessModel, StringComparison.InvariantCultureIgnoreCase) != 0)
+            if (string.Compare(sourceBusinessModel, _targetBusinessModelAlias, StringComparison.InvariantCultureIgnoreCase) != 0)
             {
                 // сообщение предназначено для другой businessmodel
                 return Array.Empty<RulesetDto>();
@@ -141,6 +141,32 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
                     return 3;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(rawValue), rawValue);
+            }
+        }
+
+        private static string Convert2SourceCode(string businessModel)
+        {
+            switch (businessModel)
+            {
+                case "Russia":
+                case "Flamp":
+                    return "RU";
+                case "Cyprus":
+                    return "CY";
+                case "Czech":
+                    return "CZ";
+                case "Chile":
+                    return "CL";
+                case "Ukraine":
+                    return "UA";
+                case "Emirates":
+                    return "AE";
+                case "Kazakhstan":
+                    return "KZ";
+                case "Kyrgyzstan":
+                    return "KG";
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
