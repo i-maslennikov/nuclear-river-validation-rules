@@ -114,6 +114,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                             var bulkCommands = resolvedCommandFactories.SelectMany(factory => factory.CreateCommands(batch))
                                                                        .ToList();
 
+                            _tracer.Info($"Flow: {targetMessageFlowDescription}. Actors count: {actors.Count}. Bulk commands count: {bulkCommands.Count}");
+
                             if (bulkCommands.Count > 0)
                             {
                                 foreach (var actor in actors)
