@@ -172,7 +172,7 @@ namespace NuClear.ValidationRules.Storage
 
             builder.Entity<PriceAggregates::Ruleset.AdvertisementAmountRestriction>()
                    .HasSchemaName(PriceAggregatesSchema)
-                   .HasPrimaryKey(x => new { x.RulesetId, x.CategoryCode });
+                   .HasPrimaryKey(x => new { x.RulesetId, x.ProjectId, x.CategoryCode });
 
             return builder;
         }
