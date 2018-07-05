@@ -4,11 +4,12 @@ using System.Linq;
 
 using NuClear.Messaging.API.Flows;
 using NuClear.Replication.Core;
-using NuClear.River.Hosting.Common.Settings;
 using NuClear.ValidationRules.OperationsProcessing;
 using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Storage.Model.Facts;
+
+using ValidationRules.Hosting.Common.Settings;
 
 namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets
 {
@@ -16,9 +17,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets
     {
         private readonly IDeserializer<Confluent.Kafka.Message, RulesetDto> _deserializer;
 
-        public RulesetFactsBulkCommandFactory(IEnvironmentSettings environmentSettings)
+        public RulesetFactsBulkCommandFactory(IBusinessModelSettings businessModelSettings)
         {
-            _deserializer = new RulesetDtoDeserializer(environmentSettings);
+            _deserializer = new RulesetDtoDeserializer(businessModelSettings);
             AppropriateFlows = new[] { RulesetFactsFlow.Instance };
         }
 

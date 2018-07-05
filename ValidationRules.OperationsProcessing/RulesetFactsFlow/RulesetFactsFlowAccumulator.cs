@@ -2,7 +2,8 @@
 using NuClear.OperationsProcessing.Transports.Kafka;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
-using NuClear.River.Hosting.Common.Settings;
+
+using ValidationRules.Hosting.Common.Settings;
 
 namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
 {
@@ -10,9 +11,9 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
     {
         private readonly ICommandFactory<KafkaMessage> _commandFactory;
 
-        public RulesetFactsFlowAccumulator(IEnvironmentSettings environmentSettings)
+        public RulesetFactsFlowAccumulator(IBusinessModelSettings businessModelSettings)
         {
-            _commandFactory = new RulesetFactsCommandFactory(environmentSettings);
+            _commandFactory = new RulesetFactsCommandFactory(businessModelSettings);
         }
 
         protected override AggregatableMessage<ICommand> Process(KafkaMessage kafkaMessage)

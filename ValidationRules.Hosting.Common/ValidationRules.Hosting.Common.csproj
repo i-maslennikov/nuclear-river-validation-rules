@@ -83,6 +83,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Settings\BusinessModelSettingsAspect.cs" />
+    <Compile Include="Settings\IBusinessModelSettings.cs" />
     <Compile Include="Settings\Connections\ConnectionStrings.cs" />
     <Compile Include="Settings\Kafka\IKafkaMessageFlowInfoSettings.cs" />
     <Compile Include="Settings\Kafka\IKafkaSettingsFactory.cs" />

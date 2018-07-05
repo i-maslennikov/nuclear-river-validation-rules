@@ -4,26 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using NuClear.River.Hosting.Common.Settings;
+
 using NuClear.ValidationRules.Replication.Dto;
 
 using Optional;
+
+using ValidationRules.Hosting.Common.Settings;
 
 namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
 {
     public sealed class RulesetDtoDeserializer : IDeserializer<Confluent.Kafka.Message, RulesetDto>
     {
-        private const string DefaultBusinessModel = "RU";
-
-        private readonly string _targetBusinessModel;
+        private readonly IBusinessModelSettings _businessModelSettings;
         private static readonly Regex ExtractBusinessModelSuffixRegex = new Regex(@"(?:.+\.)+(?<suffix>\w+)", RegexOptions.Compiled);
 
-        public RulesetDtoDeserializer(IEnvironmentSettings environmentSettings)
+        public RulesetDtoDeserializer(IBusinessModelSettings businessModelSettings)
         {
-            _targetBusinessModel = environmentSettings.EnvironmentName
-                                                      .Some()
-                                                      .FlatMap(ExtractBusinessModelSuffix)
-                                                      .ValueOr(DefaultBusinessModel);
+            _businessModelSettings = businessModelSettings;
         }
 
         public IReadOnlyCollection<RulesetDto> Deserialize(Confluent.Kafka.Message kafkaMessage)
@@ -43,7 +40,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
                                                        .Map(a => a.Value)
                                                        .FlatMap(ExtractBusinessModelSuffix)
                                                        .ValueOr(() => throw new InvalidOperationException("Required attribute \"SourceCode\" was not found"));
-            if (string.Compare(sourceBusinessModel, _targetBusinessModel, StringComparison.InvariantCultureIgnoreCase) != 0)
+            if (string.Compare(sourceBusinessModel, _businessModelSettings.BusinessModel, StringComparison.InvariantCultureIgnoreCase) != 0)
             {
                 // сообщение предназначено для другой businessmodel
                 return Array.Empty<RulesetDto>();

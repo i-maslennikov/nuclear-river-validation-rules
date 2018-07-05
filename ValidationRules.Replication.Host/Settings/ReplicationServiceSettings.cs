@@ -16,6 +16,7 @@ using NuClear.ValidationRules.Storage.Connections;
 
 using Quartz.Impl;
 
+using ValidationRules.Hosting.Common.Settings;
 using ValidationRules.Hosting.Common.Settings.Connections;
 
 namespace NuClear.ValidationRules.Replication.Host.Settings
@@ -41,6 +42,7 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
             var quartzProperties = (NameValueCollection)ConfigurationManager.GetSection(StdSchedulerFactory.ConfigurationSectionName);
 
             Aspects.Use(connectionStringSettings)
+                   .Use<BusinessModelSettingsAspect>()
                    .Use<ServiceBusMessageLockRenewalSettings>()
                    .Use<EnvironmentSettingsAspect>()
                    .Use(new QuartzSettingsAspect(connectionStringSettings.GetConnectionString(InfrastructureConnectionStringIdentity.Instance)))

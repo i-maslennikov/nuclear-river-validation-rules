@@ -23,6 +23,7 @@ using NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets;
 using NuClear.ValidationRules.Storage.Connections;
 
 using ValidationRules.Hosting.Common;
+using ValidationRules.Hosting.Common.Settings;
 using ValidationRules.Hosting.Common.Settings.Connections;
 using ValidationRules.Hosting.Common.Settings.Kafka;
 
@@ -68,8 +69,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                                                           RulesetConnectionStringIdentity.Instance);
             var connectionStringSettings = new ConnectionStringSettingsAspect(connectionStrings);
             var environmentSettings = new EnvironmentSettingsAspect();
+            var businessModelSettings = new BusinessModelSettingsAspect();
 
-            var tracer = CreateTracer(environmentSettings);
+            var tracer = CreateTracer(environmentSettings, businessModelSettings);
 
             var kafkaSettingsFactory =
                 new KafkaSettingsFactory(new Dictionary<IMessageFlow, string>
@@ -93,7 +95,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                                                                   new IBulkCommandFactory<Message>[]
                                                                       {
                                                                           new AmsFactsBulkCommandFactory(),
-                                                                          new RulesetFactsBulkCommandFactory(environmentSettings)
+                                                                          new RulesetFactsBulkCommandFactory(businessModelSettings)
                                                                       },
                                                                   tracer);
 
@@ -108,7 +110,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             Console.WriteLine($"Total time: {sw.ElapsedMilliseconds}ms");
         }
 
-        private static ITracer CreateTracer(IEnvironmentSettings environmentSettings)
+        private static ITracer CreateTracer(IEnvironmentSettings environmentSettings, IBusinessModelSettings businessModelSettings)
         {
             return Log4NetTracerBuilder.Use
                                        .ApplicationXmlConfig
@@ -117,7 +119,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                                                                  x.Property(TracerContextKeys.Tenant, environmentSettings.EnvironmentName)
                                                                   .Property(TracerContextKeys.EntryPoint, environmentSettings.EntryPointName)
                                                                   .Property(TracerContextKeys.EntryPointHost, NetworkInfo.ComputerFQDN)
-                                                                  .Property(TracerContextKeys.EntryPointInstanceId, Guid.NewGuid().ToString()))
+                                                                  .Property(TracerContextKeys.EntryPointInstanceId, Guid.NewGuid().ToString())
+                                                                  .Property(nameof(IBusinessModelSettings.BusinessModel), businessModelSettings.BusinessModel))
                                        .Build;
         }
 
