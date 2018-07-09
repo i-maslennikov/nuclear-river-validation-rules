@@ -93,6 +93,9 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<FirmAggregates::Order.PartnerPosition>()
                    .HasSchemaName(FirmAggregatesSchema);
 
+            builder.Entity<FirmAggregates::Order.BasicPackagePosition>()
+                   .HasSchemaName(FirmAggregatesSchema);
+
             return builder;
         }
 

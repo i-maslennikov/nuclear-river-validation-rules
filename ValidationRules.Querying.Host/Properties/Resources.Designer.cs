@@ -738,6 +738,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}.
         /// </summary>
+        internal static string PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser {
+            get {
+                return ResourceManager.GetString("PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}.
+        /// </summary>
         internal static string PartnerAdvertisementShouldNotBeSoldToAdvertiser {
             get {
                 return ResourceManager.GetString("PartnerAdvertisementShouldNotBeSoldToAdvertiser", resourceCulture);
