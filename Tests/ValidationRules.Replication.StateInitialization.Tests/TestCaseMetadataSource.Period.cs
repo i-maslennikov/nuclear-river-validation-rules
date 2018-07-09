@@ -27,20 +27,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderPeriod { OrderId = 4, Begin = MonthStart(2), End = MonthStart(3), Scope = 4 });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement PricePeriod
-            => ArrangeMetadataElement
-                .Config
-                .Name(nameof(PricePeriod))
-                .Fact(
-                    new Facts::Price { Id = 1, BeginDate = MonthStart(1), ProjectId = 123 },
-                    new Facts::Price { Id = 2, BeginDate = MonthStart(2), ProjectId = 123 })
-                .Aggregate(
-                    new Aggregates::Price { Id = 1 },
-                    new Aggregates::Price { Id = 2 },
-                    new Aggregates::Price.PricePeriod { PriceId = 1, ProjectId = 123, Begin = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::Price.PricePeriod { PriceId = 2, ProjectId = 123, Begin = MonthStart(2), End = DateTime.MaxValue });
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement Period
             => ArrangeMetadataElement
                 .Config

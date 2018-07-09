@@ -91,7 +91,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         CategoryCode = rule.NomenclatureCategoryCode,
 
                         Max = rule.Max,
-                        Min = rule.Min,
+                        Min = rule.Min
                     };
 
                 return result;

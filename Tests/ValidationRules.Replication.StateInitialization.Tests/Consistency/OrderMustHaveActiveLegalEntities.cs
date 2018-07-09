@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;

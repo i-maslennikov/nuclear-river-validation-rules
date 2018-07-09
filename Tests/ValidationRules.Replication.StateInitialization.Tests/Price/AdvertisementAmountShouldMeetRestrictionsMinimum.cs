@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
@@ -21,8 +19,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(AdvertisementAmountShouldMeetRestrictionsMinimum))
                 .Aggregate(
-                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 1, CategoryName = "Category", Min = 2, Max = 9 },
-                    new Aggregates::Price.PricePeriod { Begin = MonthStart(1), End = DateTime.MaxValue, ProjectId = 13 },
+                    new Aggregates::Ruleset.AdvertisementAmountRestriction { Begin = MonthStart(1), End = DateTime.MaxValue, ProjectId = 13,
+                        CategoryCode = 1, CategoryName = "Category", Min = 2, Max = 9 },
 
                     // Одобренный заказ на два месяца, поскольку он всего один - будет предупреждение, единичное для этого заказа и массовое.
                     new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 1, ProjectId = 13 },

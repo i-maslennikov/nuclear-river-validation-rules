@@ -1,5 +1,4 @@
 ﻿using NuClear.DataTest.Metamodel.Dsl;
-using NuClear.Model.Common.Entities;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 

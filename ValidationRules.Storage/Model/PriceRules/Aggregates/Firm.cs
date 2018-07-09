@@ -31,7 +31,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long ItemPositionId { get; set; }
             public long PrincipalPositionId { get; set; }
             public int BindingType { get; set; }
-            public PositionSources Source { get; set; }
         }
 
         public class FirmDeniedPosition
@@ -43,7 +42,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long ItemPositionId { get; set; }
             public long DeniedPositionId { get; set; }
             public int BindingType { get; set; }
-            public PositionSources Source { get; set; }
         }
 
         public interface IBindingObject
@@ -52,18 +50,6 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             long? Category1Id { get; }
             long? Category3Id { get; }
             long? FirmAddressId { get; }
-        }
-
-        [Flags]
-        public enum PositionSources
-        {
-            None = 0,
-
-            Opa = 1,
-            Pkg = 1 << 1,
-
-            Price = 1 << 2,
-            Ruleset = 1 << 3,
         }
     }
 }

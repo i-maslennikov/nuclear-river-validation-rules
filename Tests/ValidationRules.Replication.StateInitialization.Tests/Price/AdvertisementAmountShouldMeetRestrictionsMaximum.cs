@@ -5,7 +5,6 @@ using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
@@ -20,7 +19,8 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 .Config
                 .Name(nameof(AdvertisementAmountShouldMeetRestrictionsMaximum))
                 .Aggregate(
-                    new Aggregates::Price.AdvertisementAmountRestriction { CategoryCode = 1, CategoryName = "Category", Max = 2 },
+                    new Aggregates::Ruleset.AdvertisementAmountRestriction { Begin = MonthStart(1), End = DateTime.MaxValue,
+                        CategoryCode = 1, CategoryName = "Category", Max = 2 },
 
                     new Aggregates::Order { Id = 1 },
                     new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 1 },
@@ -43,9 +43,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Order.OrderPeriod { OrderId = 5, Begin = MonthStart(2), End = MonthStart(3), Scope = 5 },
 
                     new Aggregates::Period { Start = MonthStart(1), End = MonthStart(2) },
-                    new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3) },
-                    
-                    new Aggregates::Price.PricePeriod { Begin = MonthStart(1), End = DateTime.MaxValue })
+                    new Aggregates::Period { Start = MonthStart(2), End = MonthStart(3) })
                 .Message(
                     new Messages::Version.ValidationResult
                         {

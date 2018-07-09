@@ -167,28 +167,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new LegalPersonProfile { Id = 1, BargainEndDate = FirstDayJan, WarrantyEndDate = FirstDayFeb, LegalPersonId = 1 });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AssociatedPositionFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AssociatedPositionFacts))
-            .Erm(
-                new Erm::AssociatedPosition { Id = 1, IsActive = true, AssociatedPositionsGroupId = 1, ObjectBindingType = 2, PositionId = 3 },
-                new Erm::AssociatedPosition { Id = 2, IsActive = false, IsDeleted = false },
-                new Erm::AssociatedPosition { Id = 3, IsActive = true, IsDeleted = true })
-            .Fact(
-                new AssociatedPosition { Id = 1, AssociatedPositionsGroupId = 1, ObjectBindingType = 2, PositionId = 3 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement AssociatedPositionsGroupFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(AssociatedPositionsGroupFacts))
-            .Erm(
-                new Erm::AssociatedPositionsGroup { Id = 1, IsActive = true, PricePositionId = 1 },
-                new Erm::AssociatedPositionsGroup { Id = 2, IsActive = false, IsDeleted = false },
-                new Erm::AssociatedPositionsGroup { Id = 3, IsActive = true, IsDeleted = true })
-            .Fact(
-                new AssociatedPositionsGroup { Id = 1, PricePositionId = 1 });
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement CategoryFacts
         => ArrangeMetadataElement.Config
             .Name(nameof(CategoryFacts))
@@ -203,36 +181,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                 new Category { Id = 1, IsActiveNotDeleted = true, L1Id = 1 },
                 new Category { Id = 2, IsActiveNotDeleted = true, L1Id = 1, L2Id = 2 },
                 new Category { Id = 3, IsActiveNotDeleted = true, L1Id = 1, L2Id = 2, L3Id = 3 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement DeniedPositionFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(DeniedPositionFacts))
-            .Erm(
-                new Erm::DeniedPosition { Id = 1, IsActive = true, ObjectBindingType = 1, PositionDeniedId = 2, PositionId = 3, PriceId = 4 },
-                new Erm::DeniedPosition { Id = 2, IsActive = false, IsDeleted = false },
-                new Erm::DeniedPosition { Id = 3, IsActive = true, IsDeleted = true })
-            .Fact(
-                new DeniedPosition { Id = 1, ObjectBindingType = 1, PositionDeniedId = 2, PositionId = 3, PriceId = 4 });
-
-        // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement RulesetFacts
-        => ArrangeMetadataElement.Config
-            .Name(nameof(RulesetFacts))
-            .Erm(
-                new Erm::Ruleset { Id = 1, Priority = 1 },
-                new Erm::RulesetRule { RulesetId = 1, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
-
-                new Erm::Ruleset { Id = 2, Priority = 2 },
-                new Erm::RulesetRule { RulesetId = 2, DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 },
-
-                new Erm::Ruleset { Id = 3, IsDeleted = true },
-                new Erm::RulesetRule { RulesetId = 3 },
-
-                new Erm::Ruleset { Id = 4, Priority = 0 },
-                new Erm::RulesetRule { RulesetId = 4 })
-            .Fact(
-                new RulesetRule { DependentPositionId = 2, ObjectBindingType = 3, PrincipalPositionId = 4 });
 
         // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement OrderFacts

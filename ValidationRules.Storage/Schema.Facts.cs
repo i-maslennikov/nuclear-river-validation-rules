@@ -96,7 +96,8 @@ namespace NuClear.ValidationRules.Storage
                    .HasIndex(x => new { x.EndDistributionFact })
                    .HasIndex(x => new { x.EndDistributionPlan });
             builder.Entity<OrderItem>()
-                   .HasSchemaName(FactsSchema);
+                   .HasSchemaName(FactsSchema)
+                   .HasIndex(x => new { x.OrderId }, x => new { x.ItemPositionId });
             builder.Entity<OrderPosition>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
@@ -169,13 +170,27 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
             builder.Entity<Ruleset.AssociatedRule>()
-                   .HasSchemaName(FactsSchema);
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.RulesetId)
+                   .HasPrimaryKey(x => x.PrincipalNomenclatureId)
+                   .HasPrimaryKey(x => x.AssociatedNomenclatureId)
+                   .HasIndex(x => new {x.RulesetId, x.AssociatedNomenclatureId}, x => new {x.PrincipalNomenclatureId, x.ConsideringBindingObject });
             builder.Entity<Ruleset.DeniedRule>()
-                   .HasSchemaName(FactsSchema);
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.RulesetId)
+                   .HasPrimaryKey(x => x.NomenclatureId)
+                   .HasPrimaryKey(x => x.DeniedNomenclatureId)
+                   .HasIndex(x => new { x.RulesetId, x.NomenclatureId }, x => new { x.DeniedNomenclatureId, x.BindingObjectStrategy });
             builder.Entity<Ruleset.QuantitativeRule>()
-                   .HasSchemaName(FactsSchema);
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.RulesetId)
+                   .HasPrimaryKey(x => x.NomenclatureCategoryCode)
+                   .HasIndex(x => new { x.RulesetId, x.NomenclatureCategoryCode });
             builder.Entity<Ruleset.RulesetProject>()
-                   .HasSchemaName(FactsSchema);
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.RulesetId)
+                   .HasPrimaryKey(x => x.ProjectId)
+                   .HasIndex(x => new { x.ProjectId, x.RulesetId });
 
             return builder;
         }

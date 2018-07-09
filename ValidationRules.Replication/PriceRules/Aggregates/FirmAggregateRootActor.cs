@@ -99,8 +99,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     select new { FirmId = begin.FirmId, Begin = begin.Date, End = end.Value };
 
                 var principals =
-                    from position in _query.For<Facts::OrderItem>()
-                    from order in _query.For<Facts::Order>().Where(x => x.Id == position.OrderId)
+                    from order in _query.For<Facts::Order>()
+                    from position in _query.For<Facts::OrderItem>().Where(x => order.Id == x.OrderId)
                     from period in periods.Where(x => x.FirmId == order.FirmId && x.Begin >= order.BeginDistribution && x.End <= order.EndDistributionPlan)
                     from category in _query.For<Facts::Category>().Where(x => x.Id == position.CategoryId).DefaultIfEmpty()
                     select new Firm.FirmPosition

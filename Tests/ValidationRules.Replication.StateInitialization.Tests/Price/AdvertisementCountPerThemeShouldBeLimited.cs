@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 using NuClear.DataTest.Metamodel.Dsl;
 using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
-using Erm = NuClear.ValidationRules.Storage.Model.Erm;
 using Aggregates = NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates;
 using Messages = NuClear.ValidationRules.Storage.Model.Messages;
 using MessageTypeCode = NuClear.ValidationRules.Storage.Model.Messages.MessageTypeCode;
@@ -62,9 +60,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Period { Start = MonthStart(3), End = MonthStart(4) },
                     new Aggregates::Period { Start = MonthStart(4), End = MonthStart(5) },
                     new Aggregates::Period { Start = MonthStart(5), End = MonthStart(6) },
-                    new Aggregates::Period { Start = MonthStart(6), End = MonthStart(7) },
-
-                    new Aggregates::Price.PricePeriod { Begin = MonthStart(1), End = DateTime.MaxValue })
+                    new Aggregates::Period { Start = MonthStart(6), End = MonthStart(7) })
                 .Message(
                     new Messages::Version.ValidationResult
                         {
