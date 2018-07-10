@@ -288,8 +288,8 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser,
-                         single: RuleSeverityLevel.Error,
-                         singleForApprove: RuleSeverityLevel.Error,
+                         single: RuleSeverityLevel.Warning,
+                         singleForApprove: RuleSeverityLevel.Warning,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
