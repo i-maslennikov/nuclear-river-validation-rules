@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.Practices.Unity;
 
@@ -8,7 +8,6 @@ using NuClear.DataTest.Engine;
 using NuClear.DataTest.Engine.Command;
 using NuClear.DataTest.Metamodel;
 using NuClear.DataTest.Metamodel.Dsl;
-using NuClear.Metamodeling.Elements;
 using NuClear.Metamodeling.Processors;
 using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
@@ -31,9 +30,16 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         {
             StateInitializationTestsRoot.Instance.PerformTypesMassProcessing(Array.Empty<IMassProcessor>(), true, typeof(object));
             _container = new UnityContainer();
+
+            var testCasesMetadataSource = new TestCaseMetadataSource();
+            var requiredContexts = testCasesMetadataSource.Tests
+                                                          .SelectMany(x => x.Arrange.Contexts)
+                                                          .Distinct();
+            var schemasMetadataSource = new SchemaMetadataSource(requiredContexts);
+
             _metadataProvider =
                 new MetadataProvider(
-                    new IMetadataSource[] { new SchemaMetadataSource(), new TestCaseMetadataSource() },
+                    new IMetadataSource[] { schemasMetadataSource, testCasesMetadataSource },
                     new IMetadataProcessor[0]);
 
             _container.RegisterType<ConnectionStringSettingsAspect, RunnerConnectionStringSettings>();
@@ -56,15 +62,13 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         {
         }
 
-        [TestCaseSource(typeof(TestCaseMetadataSource), "Metadata")]
-        public void Test(KeyValuePair<Uri, IMetadataElement> element)
+        [TestCaseSource(typeof(TestCaseMetadataSource), nameof(TestCaseMetadataSource.Tests))]
+        public void Test(TestCaseMetadataElement testCase)
         {
-            var test = element.Value as TestCaseMetadataElement;
+            Assume.That(testCase != null);
+            Assume.That(!testCase.Arrange.IsIgnored);
 
-            Assume.That(test != null);
-            Assume.That(!test.Arrange.IsIgnored);
-
-            _testRunner.Execute(test);
+            _testRunner.Execute(testCase);
         }
     }
 }

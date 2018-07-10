@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.DataTest.Metamodel;
 using NuClear.Metamodeling.Elements;
@@ -31,15 +32,12 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
             .HasConnectionString<MessagesConnectionStringIdentity>()
             .HasSchema(Schema.Messages);
 
-        public SchemaMetadataSource()
+        public SchemaMetadataSource(IEnumerable<string> requiredContexts)
         {
-            Metadata = new Dictionary<Uri, IMetadataElement>
-                        {
-                            { Erm.Identity.Id, Erm },
-                            { Facts.Identity.Id, Facts },
-                            { Aggregates.Identity.Id, Aggregates },
-                            { Messages.Identity.Id, Messages},
-                        };
+            Metadata = new[] { Erm, Facts, Aggregates, Messages }
+                       .Where(x => requiredContexts.Contains(x.Context))
+                       .OfType<IMetadataElement>()
+                       .ToDictionary(x => x.Identity.Id);
         }
 
         public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }
