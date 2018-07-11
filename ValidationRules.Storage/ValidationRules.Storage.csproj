@@ -290,8 +290,6 @@
     <Compile Include="Model\Erm\Price.cs" />
     <Compile Include="Model\Erm\PricePosition.cs" />
     <Compile Include="Model\Erm\Project.cs" />
-    <Compile Include="Model\Erm\Ruleset.cs" />
-    <Compile Include="Model\Erm\RulesetRule.cs" />
     <Compile Include="Model\Facts\Price.cs" />
     <Compile Include="Model\Messages\ValidationResult.cs" />
     <Compile Include="Model\Facts\OrderPositionCostPerClick.cs" />
