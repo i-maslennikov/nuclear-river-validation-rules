@@ -43,8 +43,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                    .GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
                    .Where(property => property.PropertyType == typeof(ArrangeMetadataElement))
                    .Select(property => property.GetValue(null))
-                   .Cast<ArrangeMetadataElement>()
-                   .ToList();
+                   .Cast<ArrangeMetadataElement>();
         }
 
         private static readonly ActMetadataElement ErmToFacts =

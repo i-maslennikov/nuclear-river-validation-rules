@@ -13,8 +13,12 @@ using NuClear.Metamodeling.Provider;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.ValidationRules.Replication.StateInitialization.Tests.DI;
+using NuClear.ValidationRules.Replication.StateInitialization.Tests.Infrastructure;
 
 using NUnit.Framework;
+
+using ContextEntityTypesProvider = NuClear.ValidationRules.Replication.StateInitialization.Tests.Infrastructure.ContextEntityTypesProvider;
+using CreateDatabaseSchemataCommand = NuClear.ValidationRules.Replication.StateInitialization.Tests.Infrastructure.CreateDatabaseSchemataCommand;
 
 namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
@@ -42,9 +46,10 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new IMetadataSource[] { schemasMetadataSource, testCasesMetadataSource },
                     new IMetadataProcessor[0]);
 
-            _container.RegisterType<ConnectionStringSettingsAspect, RunnerConnectionStringSettings>();
-            _container.RegisterType<DataConnectionFactory>();
-            _container.RegisterInstance<IMetadataProvider>(_metadataProvider);
+            _container.RegisterType<ConnectionStringSettingsAspect, RunnerConnectionStringSettings>()
+                      .RegisterType<DataConnectionFactory>()
+                      .RegisterInstance<IMetadataProvider>(_metadataProvider)
+                      .RegisterType<IContextEntityTypesProvider, ContextEntityTypesProvider>();
 
             var dropDatabases = _container.Resolve<DropDatabasesCommand>();
             var createDatabases = _container.Resolve<CreateDatabasesCommand>();

@@ -152,6 +152,9 @@
     <Compile Include="Firm\LinkedFirmShouldBeValid.cs" />
     <Compile Include="Firm\FirmAndOrderShouldBelongTheSameOrganizationUnit.cs" />
     <Compile Include="Firm\FirmShouldHaveLimitedCategoryCount.cs" />
+    <Compile Include="Infrastructure\ContextEntityTypesProvider.cs" />
+    <Compile Include="Infrastructure\CreateDatabaseSchemataCommand.cs" />
+    <Compile Include="Infrastructure\IContextEntityTypesProvider.cs" />
     <Compile Include="Price\FirmAssociatedPositionMustHavePrincipal.cs" />
     <Compile Include="Price\FirmPositionMustNotHaveDeniedPositions.cs" />
     <Compile Include="Price\FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject.cs" />
