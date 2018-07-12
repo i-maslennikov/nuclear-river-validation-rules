@@ -4,6 +4,7 @@ using System.Linq;
 using NuClear.Storage.API.Specifications;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.Specifications
 {
@@ -39,6 +40,12 @@ namespace NuClear.ValidationRules.Replication.Specifications
 
                 public static FindSpecification<Erm::Theme> Theme { get; }
                     = new FindSpecification<Erm::Theme>(x => x.IsActive && !x.IsDeleted);
+            }
+
+            public static class Facts
+            {
+                public static FindSpecification<Facts::Ruleset> Ruleset { get; }
+                    = new FindSpecification<Facts::Ruleset>(x => !x.IsDeleted);
             }
         }
     }

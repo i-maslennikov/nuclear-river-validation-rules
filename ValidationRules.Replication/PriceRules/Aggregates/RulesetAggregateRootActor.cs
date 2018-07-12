@@ -7,6 +7,7 @@ using NuClear.Replication.Core.Equality;
 using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
+using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage.Model.Messages;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
@@ -75,7 +76,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public IQueryable<Ruleset.AdvertisementAmountRestriction> GetSource()
             {
                 var result =
-                    from ruleset in _query.For<Facts::Ruleset>()
+                    from ruleset in _query.For(Specs.Find.Facts.Ruleset)
                     join project in _query.For<Facts::Ruleset.RulesetProject>() on ruleset.Id equals project.RulesetId
                     join rule in _query.For<Facts::Ruleset.QuantitativeRule>() on ruleset.Id equals rule.RulesetId
                     join nomenclatureCategory in _query.For<Facts::NomenclatureCategory>() on rule.NomenclatureCategoryCode equals nomenclatureCategory.Id

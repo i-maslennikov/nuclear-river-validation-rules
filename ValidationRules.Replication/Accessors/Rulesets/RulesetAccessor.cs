@@ -8,6 +8,7 @@ using NuClear.Storage.API.Readings;
 using NuClear.Storage.API.Specifications;
 using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Dto;
+using NuClear.ValidationRules.Replication.Events;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
@@ -24,12 +25,16 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         public IReadOnlyCollection<Ruleset> GetDataObjects(ICommand command)
         {
             var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<RulesetDto>();
+            var now = DateTime.UtcNow;
             return dtos.Where(x => !x.IsDeleted)
                        .Select(x => new Ruleset
                            {
                                Id = x.Id,
                                BeginDate = x.BeginDate,
-                               EndDate = x.EndDate?.Add(TimeSpan.FromSeconds(1)) ?? DateTime.MaxValue
+                               EndDate = x.EndDate?.Add(TimeSpan.FromSeconds(1)) ?? DateTime.MaxValue,
+                               IsDeleted = x.IsDeleted,
+                               Version = x.Version,
+                               ImportedOn = now
                            })
                        .ToList();
         }
@@ -41,10 +46,14 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
 
             return new FindSpecification<Ruleset>(x => ids.Contains(x.Id));
         }
+        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Ruleset> dataObjects)
+            => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Ruleset), x.Id)).ToList();
 
-        public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Ruleset> dataObjects) => Array.Empty<IEvent>();
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Ruleset> dataObjects) => Array.Empty<IEvent>();
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Ruleset> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Ruleset> dataObjects)
+            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Ruleset), x.Id)).ToList();
+
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Ruleset> dataObjects)
+            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Ruleset), x.Id)).ToList();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset> dataObjects)
         {

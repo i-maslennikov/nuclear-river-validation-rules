@@ -7,6 +7,9 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public long Id { get; set; }
         public DateTime BeginDate { get; set; }
         public DateTime EndDate { get; set; }
+        public bool IsDeleted { get; set; }
+        public int Version { get; set; }
+        public DateTime ImportedOn { get; set; }
 
         public sealed class AssociatedRule
         {

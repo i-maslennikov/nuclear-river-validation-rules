@@ -55,7 +55,7 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
                 from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
                 select order.FirmId;
 
-            return new EventCollectionHelper<Ruleset.RulesetProject> { { typeof(Firm), firmIds } };
+            return new EventCollectionHelper<Ruleset.RulesetProject> { { typeof(Firm), firmIds.Distinct() } };
         }
     }
 }

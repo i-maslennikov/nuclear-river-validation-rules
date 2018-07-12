@@ -66,7 +66,8 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
                 from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
                 select order.FirmId;
 
-            return new EventCollectionHelper<Ruleset.AssociatedRule> { { typeof(Firm), firmIdsFromPricePostion.Concat(firmIdsFromOpa) } };
+            return new EventCollectionHelper<Ruleset.AssociatedRule> { { typeof(Firm), firmIdsFromPricePostion.Distinct()
+                                                                                                              .Concat(firmIdsFromOpa.Distinct()) } };
         }
     }
 }

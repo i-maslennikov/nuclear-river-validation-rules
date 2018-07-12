@@ -10,6 +10,7 @@ namespace NuClear.ValidationRules.Replication.Dto
         public DateTime? EndDate { get; set; }
 
         public bool IsDeleted { get; set; }
+        public int Version { get; set; }
 
         public IEnumerable<AssociatedRule> AssociatedRules { get; set; }
         public IEnumerable<DeniedRule> DeniedRules { get; set; }
