@@ -25,7 +25,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             IBulkRepository<Order.FirmOrganiationUnitMismatch> invalidFirmRepository,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
             IBulkRepository<Order.PartnerPosition> premiumProfilePositionRepository,
-            IBulkRepository<Order.BasicPackagePosition> basicPackagePositionRepository)
+            IBulkRepository<Order.FmcgCutoutPosition> fmcgCutoutPositionRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query),
@@ -33,7 +33,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                           HasValueObject(new OrderFirmOrganiationUnitMismatchAccessor(query), invalidFirmRepository),
                           HasValueObject(new OrderInvalidFirmAccessor(query), orderInvalidFirmRepository),
                           HasValueObject(new PartnerPositionAccessor(query), premiumProfilePositionRepository),
-                          HasValueObject(new BasicPackagePositionAccessor(query), basicPackagePositionRepository));
+                          HasValueObject(new FmcgCutoutPositionAccessor(query), fmcgCutoutPositionRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -54,7 +54,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
                         MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement,
                         MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
-                        MessageTypeCode.PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser,
+                        MessageTypeCode.PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser,
                         MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
                     };
 
@@ -122,7 +122,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     {
                         MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement,
                         MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
-                        MessageTypeCode.PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser,
+                        MessageTypeCode.PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser,
                         MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
                     };
 
@@ -157,11 +157,11 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             }
         }
 
-        public sealed class BasicPackagePositionAccessor : DataChangesHandler<Order.BasicPackagePosition>, IStorageBasedDataObjectAccessor<Order.BasicPackagePosition>
+        public sealed class FmcgCutoutPositionAccessor : DataChangesHandler<Order.FmcgCutoutPosition>, IStorageBasedDataObjectAccessor<Order.FmcgCutoutPosition>
         {
             private readonly IQuery _query;
 
-            public BasicPackagePositionAccessor(IQuery query) : base(CreateInvalidator())
+            public FmcgCutoutPositionAccessor(IQuery query) : base(CreateInvalidator())
             {
                 _query = query;
             }
@@ -169,16 +169,16 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             private static IRuleInvalidator CreateInvalidator()
                 => new RuleInvalidator
                     {
-                        MessageTypeCode.PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser
+                        MessageTypeCode.PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser
                     };
 
-            public IQueryable<Order.BasicPackagePosition> GetSource()
+            public IQueryable<Order.FmcgCutoutPosition> GetSource()
             {
                 var addressPositions =
-                    from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodeBasicPackage)
+                    from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodeBasicPackage || x.CategoryCode == Facts::Position.CategoryCodeContextBanner)
                     from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.PositionId == position.Id)
                     from op in _query.For<Facts::OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
-                    select new Order.BasicPackagePosition
+                    select new Order.FmcgCutoutPosition
                     {
                         OrderId = op.OrderId,
                     };
@@ -186,10 +186,10 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                 return addressPositions;
             }
 
-            public FindSpecification<Order.BasicPackagePosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            public FindSpecification<Order.FmcgCutoutPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
-                return new FindSpecification<Order.BasicPackagePosition>(x => aggregateIds.Contains(x.OrderId));
+                return new FindSpecification<Order.FmcgCutoutPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

@@ -74,7 +74,7 @@
         FirmAddressShouldNotHaveMultiplePartnerAdvertisement = 72,
 
         PartnerAdvertisementShouldNotBeSoldToAdvertiser = 74,
-        PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser = 75,
+        PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser = 75,
 
         AmsMessagesShouldBeNew = 80,
 

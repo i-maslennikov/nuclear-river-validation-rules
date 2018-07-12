@@ -7,9 +7,9 @@ using NuClear.ValidationRules.Storage.Model.Messages;
 
 namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
 {
-    public sealed class PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiserMessageComposer : IMessageComposer
+    public sealed class PartnerAdvertisementMustNotCauseProblemsToTheAdvertiserMessageComposer : IMessageComposer
     {
-        public MessageTypeCode MessageType => MessageTypeCode.PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser;
+        public MessageTypeCode MessageType => MessageTypeCode.PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser;
 
         public MessageComposerResult Compose(NamedReference[] references, IReadOnlyDictionary<string, string> extra)
         {
