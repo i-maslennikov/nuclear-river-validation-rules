@@ -66,7 +66,7 @@ namespace NuClear.ValidationRules.SingleCheck.Store
 
             IQueryable<T> IQuery.For<T>(FindSpecification<T> findSpecification)
             {
-                throw new NotSupportedException();
+                return _connection.GetTable<T>().Where(findSpecification);
             }
         }
 
