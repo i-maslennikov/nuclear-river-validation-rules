@@ -26,8 +26,7 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         {
             var dtos = ((ReplaceDataObjectCommand)command).Dtos.Cast<RulesetDto>();
             var now = DateTime.UtcNow;
-            return dtos.Where(x => !x.IsDeleted)
-                       .Select(x => new Ruleset
+            return dtos.Select(x => new Ruleset
                            {
                                Id = x.Id,
                                BeginDate = x.BeginDate,
