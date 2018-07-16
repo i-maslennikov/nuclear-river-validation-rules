@@ -52,7 +52,8 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
             var rulesetIds = _query.For<Ruleset.QuantitativeRule>()
                                    .Where(r => ids.Contains(r.NomenclatureCategoryCode))
-                                   .Select(r => r.RulesetId);
+                                   .Select(r => r.RulesetId)
+                                   .Distinct();
 
             return new EventCollectionHelper<NomenclatureCategory> { { typeof(Ruleset), rulesetIds } };
         }
