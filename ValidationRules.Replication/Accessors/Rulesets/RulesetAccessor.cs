@@ -48,11 +48,8 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Ruleset> dataObjects)
             => dataObjects.Select(x => new DataObjectCreatedEvent(typeof(Ruleset), x.Id)).ToList();
 
-        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Ruleset> dataObjects)
-            => dataObjects.Select(x => new DataObjectUpdatedEvent(typeof(Ruleset), x.Id)).ToList();
-
-        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Ruleset> dataObjects)
-            => dataObjects.Select(x => new DataObjectDeletedEvent(typeof(Ruleset), x.Id)).ToList();
+        public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Ruleset> dataObjects) => Array.Empty<IEvent>();
+        public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Ruleset> dataObjects) => Array.Empty<IEvent>();
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset> dataObjects)
         {
@@ -72,7 +69,11 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
                                               .Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
                           select order.FirmId;
 
-            return new EventCollectionHelper<Ruleset> { { typeof(Firm), firmIds.Distinct() } };
+            return new EventCollectionHelper<Ruleset>
+                {
+                    { typeof(Firm), firmIds.Distinct() },
+                    { typeof(Ruleset), dataObjects.Select(x => x.Id) }
+                };
         }
 
         private static DateTime Min(DateTime a, DateTime b)
