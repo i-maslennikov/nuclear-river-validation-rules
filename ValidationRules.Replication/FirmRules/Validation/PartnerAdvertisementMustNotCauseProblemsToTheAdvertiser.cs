@@ -24,7 +24,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 
         protected override IQueryable<Version.ValidationResult> GetValidationResults(IQuery query)
         {
-            var orderIds = query.For<Order.FmcgCutoutPosition>().Select(x => x.OrderId);
+            var orderIds = query.For<Order.FmcgCutoutPosition>().Select(x => x.OrderId).ToArray();
 
             var messages =
                 from order in query.For<Order>().Where(x => orderIds.Contains(x.Id))
