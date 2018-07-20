@@ -3,7 +3,7 @@ using NuClear.OperationsProcessing.Transports.Kafka;
 using NuClear.Replication.Core;
 using NuClear.Replication.OperationsProcessing;
 
-namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
+namespace NuClear.ValidationRules.OperationsProcessing.Facts.AmsFactsFlow
 {
     public sealed class AmsFactsFlowAccumulator : MessageProcessingContextAccumulatorBase<AmsFactsFlow, KafkaMessage, AggregatableMessage<ICommand>>
     {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Transactions;
 
 using NuClear.Messaging.API.Processing.Actors.Accumulators;
 using NuClear.OperationsTracking.API.UseCases;
@@ -12,11 +9,10 @@ using NuClear.Storage.API.Readings;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.Replication;
 using NuClear.ValidationRules.Replication.Commands;
-using NuClear.ValidationRules.Storage.Model.Erm;
 
-namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
+namespace NuClear.ValidationRules.OperationsProcessing.Facts.ErmFactsFlow
 {
-    public sealed class FactsFlowAccumulator : MessageProcessingContextAccumulatorBase<FactsFlow, TrackedUseCase, AggregatableMessage<ICommand>>
+    public sealed class ErmFactsFlowAccumulator : MessageProcessingContextAccumulatorBase<ErmFactsFlow, TrackedUseCase, AggregatableMessage<ICommand>>
     {
         private const int TotalWaitMilliseconds = 60000;
 
@@ -24,7 +20,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
         private readonly ITracer _tracer;
         private readonly ICommandFactory<TrackedUseCase> _commandFactory;
 
-        public FactsFlowAccumulator(IQuery query, ITracer tracer)
+        public ErmFactsFlowAccumulator(IQuery query, ITracer tracer)
         {
             _query = query;
             _tracer = tracer;
@@ -62,7 +58,7 @@ namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
             {
                 var commands = Enumerable.Empty<ICommand>();
 
-                if (EntityTypeMap.TryGetFactTypes(entityTypeId, out var factTypes))
+                if (EntityTypeMap.TryGetErmFactTypes(entityTypeId, out var factTypes))
                 {
                     var syncDataObjectCommands = from factType in factTypes
                                                  from id in ids

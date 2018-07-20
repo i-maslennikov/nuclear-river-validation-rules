@@ -75,7 +75,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         { MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject, func },
                         { MessageTypeCode.FirmPositionMustNotHaveDeniedPositions, func },
                         { MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject, func },
-                        MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone,
+                        MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone
                     };
 
             private static IReadOnlyCollection<long> GetRelatedOrders(IReadOnlyCollection<Firm.FirmPosition> arg, IQuery query)

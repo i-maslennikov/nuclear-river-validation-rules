@@ -100,14 +100,9 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::OrderItem>()
                           .DependOn<Facts::Category>()
                           .DependOn<Facts::PricePosition>()
-                          .DependOn<Facts::Ruleset>()
-                          .DependOn<Facts::Ruleset.AssociatedRule>()
-                          .DependOn<Facts::Ruleset.DeniedRule>()
-                          .DependOn<Facts::Ruleset.RulesetProject>())
+                          .DependOn<Facts::Ruleset>())
                 .Aggregate<PriceAggregates::Ruleset>(
                     x => x.Match<Facts::Ruleset>()
-                          .DependOn<Facts::Ruleset.QuantitativeRule>()
-                          .DependOn<Facts::Ruleset.RulesetProject>()
                           .DependOn<Facts::NomenclatureCategory>())
 
                 // ProjectAggregates

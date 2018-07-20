@@ -7,7 +7,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
-namespace NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow
+namespace NuClear.ValidationRules.OperationsProcessing.Facts.AmsFactsFlow
 {
     public sealed class AmsFactsCommandFactory : ICommandFactory<KafkaMessage>
     {

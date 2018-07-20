@@ -78,7 +78,7 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
                 from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
                 select order.FirmId;
 
-            return new EventCollectionHelper<Ruleset.DeniedRule> { { typeof(Firm), firmIdsFromPricePostion.Distinct().Concat(firmIdsFromOpa.Distinct()) } };
+            return new EventCollectionHelper<Ruleset> { { typeof(Firm), firmIdsFromPricePostion.Distinct().Concat(firmIdsFromOpa.Distinct()) } };
         }
     }
 }

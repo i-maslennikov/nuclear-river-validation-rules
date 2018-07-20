@@ -9,7 +9,7 @@ using NuClear.ValidationRules.Storage.Model.Facts;
 
 using ValidationRules.Hosting.Common.Settings;
 
-namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
+namespace NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow
 {
     public sealed class RulesetFactsCommandFactory : ICommandFactory<KafkaMessage>
     {

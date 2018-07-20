@@ -11,7 +11,7 @@ using Optional;
 
 using ValidationRules.Hosting.Common.Settings;
 
-namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
+namespace NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow
 {
     public sealed class RulesetDtoDeserializer : IDeserializer<Confluent.Kafka.Message, RulesetDto>
     {

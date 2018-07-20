@@ -2,7 +2,7 @@
 
 using NuClear.Messaging.API.Flows;
 
-namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
+namespace NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow
 {
     public sealed class RulesetFactsFlow : MessageFlowBase<RulesetFactsFlow>
     {

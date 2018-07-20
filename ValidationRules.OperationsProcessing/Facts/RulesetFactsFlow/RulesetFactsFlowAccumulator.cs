@@ -5,7 +5,7 @@ using NuClear.Replication.OperationsProcessing;
 
 using ValidationRules.Hosting.Common.Settings;
 
-namespace NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow
+namespace NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow
 {
     public sealed class RulesetFactsFlowAccumulator : MessageProcessingContextAccumulatorBase<RulesetFactsFlow, KafkaMessage, AggregatableMessage<ICommand>>
     {

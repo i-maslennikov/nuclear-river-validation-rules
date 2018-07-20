@@ -195,6 +195,7 @@
     <Compile Include="Dto\RulesetDto.cs" />
     <Compile Include="PriceRules\Aggregates\RulesetAggregateRootActor.cs" />
     <Compile Include="PriceRules\Validation\PoiAmountForEntranceShouldMeetMaximumRestrictions.cs" />
+    <Compile Include="ReplaceDataObjectsActor.cs" />
     <Compile Include="SystemRules\Validation\AmsMessagesShouldBeNew.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />

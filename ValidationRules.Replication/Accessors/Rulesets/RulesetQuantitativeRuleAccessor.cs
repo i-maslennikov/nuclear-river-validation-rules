@@ -14,11 +14,9 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
 {
     public sealed class RulesetQuantitativeRuleAccessor : IMemoryBasedDataObjectAccessor<Ruleset.QuantitativeRule>, IDataChangesHandler<Ruleset.QuantitativeRule>
     {
-        private readonly IQuery _query;
-
-        public RulesetQuantitativeRuleAccessor(IQuery query)
+        // ReSharper disable once UnusedParameter.Local из-за использования hand-made DI в виде Activator.CreateInstance
+        public RulesetQuantitativeRuleAccessor(IQuery _)
         {
-            _query = query;
         }
 
         public IReadOnlyCollection<Ruleset.QuantitativeRule> GetDataObjects(ICommand command)
@@ -50,7 +48,7 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.QuantitativeRule> dataObjects)
         {
-            return new EventCollectionHelper<Ruleset.QuantitativeRule> { { typeof(Ruleset), dataObjects.Select(x => x.RulesetId) } };
+            return new EventCollectionHelper<Ruleset> { { typeof(Ruleset), dataObjects.Select(x => x.RulesetId) } };
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using NuClear.Messaging.API.Flows;
 using NuClear.Replication.Core;
 using NuClear.ValidationRules.OperationsProcessing;
-using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow;
 using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Storage.Model.Facts;
 

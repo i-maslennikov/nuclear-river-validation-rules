@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.Practices.Unity;
@@ -12,6 +13,10 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 {
     public sealed class UnityDataObjectsActorFactory : IDataObjectsActorFactory
     {
+        private readonly Type _syncDataObjectsActorType = typeof(SyncDataObjectsActor<>);
+        // ReSharper disable once RedundantNameQualifier
+        private readonly Type _replaceDataObjectsActorType = typeof(ValidationRules.Replication.ReplaceDataObjectsActor<>);
+
         private readonly IUnityContainer _unityContainer;
         private readonly IDataObjectTypesProvider _dataObjectTypesProvider;
 
@@ -23,12 +28,14 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Replication
 
         public IReadOnlyCollection<IActor> Create()
         {
-            var syncActorTypes = _dataObjectTypesProvider.Get<ISyncDataObjectCommand>().Select(x => typeof(SyncDataObjectsActor<>).MakeGenericType(x));
-            var replaceActorTypes = _dataObjectTypesProvider.Get<IReplaceDataObjectCommand>().Select(x => typeof(ReplaceDataObjectsActor<>).MakeGenericType(x));
+            var syncActorTypes = _dataObjectTypesProvider.Get<ISyncDataObjectCommand>()
+                                                         .Select(x => _syncDataObjectsActorType.MakeGenericType(x));
+            var replaceActorTypes = _dataObjectTypesProvider.Get<IReplaceDataObjectCommand>()
+                                                            .Select(x => _replaceDataObjectsActorType.MakeGenericType(x));
 
-            var actors = syncActorTypes
-                .Concat(replaceActorTypes)
-                .Select(x => (IActor)_unityContainer.Resolve(x)).ToList();
+            var actors = syncActorTypes.Concat(replaceActorTypes)
+                                       .Select(x => (IActor)_unityContainer.Resolve(x))
+                                       .ToList();
 
             return actors;
         }

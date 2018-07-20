@@ -10,10 +10,10 @@ using NuClear.OperationsLogging.API;
 using NuClear.OperationsLogging.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
-using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
-using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.AmsFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.ErmFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
-using NuClear.ValidationRules.OperationsProcessing.RulesetFactsFlow;
 using NuClear.ValidationRules.Replication.Events;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories
@@ -37,7 +37,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
 
             var vrFactsFlows = new IEquatable<IMessageFlow>[]
                 {
-                    FactsFlow.Instance,
+                    ErmFactsFlow.Instance,
                     AmsFactsFlow.Instance,
                     RulesetFactsFlow.Instance
                 };

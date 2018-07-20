@@ -8,7 +8,7 @@ using NuClear.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
-using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.ErmFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories
@@ -28,7 +28,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
 
         public IServiceBusMessageReceiverSettings CreateReceiverSettings(IMessageFlow messageFlow)
         {
-            if (FactsFlow.Instance.Equals(messageFlow))
+            if (ErmFactsFlow.Instance.Equals(messageFlow))
                 return new Settings
                 {
                     ConnectionString = _serviceBusConnectionString,

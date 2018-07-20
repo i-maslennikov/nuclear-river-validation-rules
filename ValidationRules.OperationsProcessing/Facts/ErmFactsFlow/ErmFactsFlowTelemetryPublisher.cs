@@ -1,12 +1,12 @@
 ﻿using NuClear.Telemetry;
 
-namespace NuClear.ValidationRules.OperationsProcessing.FactsFlow
+namespace NuClear.ValidationRules.OperationsProcessing.Facts.ErmFactsFlow
 {
-    public sealed class FactsFlowTelemetryPublisher : IFlowTelemetryPublisher
+    public sealed class ErmFactsFlowTelemetryPublisher : IFlowTelemetryPublisher
     {
         private readonly ITelemetryPublisher _telemetryPublisher;
 
-        public FactsFlowTelemetryPublisher(ITelemetryPublisher telemetryPublisher)
+        public ErmFactsFlowTelemetryPublisher(ITelemetryPublisher telemetryPublisher)
         {
             _telemetryPublisher = telemetryPublisher;
         }

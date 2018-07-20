@@ -11,7 +11,7 @@ namespace NuClear.ValidationRules.OperationsProcessing
 {
     internal static partial class EntityTypeMap
     {
-        private static readonly Dictionary<int, IReadOnlyCollection<Type>> FactsTypeMap = new Dictionary<int, IReadOnlyCollection<Type>>()
+        private static readonly Dictionary<int, IReadOnlyCollection<Type>> ErmFactsTypeMap = new Dictionary<int, IReadOnlyCollection<Type>>()
             .AddMapping<EntityTypeAccount>(typeof(Facts::Account))
             .AddMapping<EntityTypeAccountDetail>(typeof(Facts::AccountDetail))
             .AddMapping<EntityTypeBargain>(typeof(Facts::Bargain))
@@ -48,9 +48,9 @@ namespace NuClear.ValidationRules.OperationsProcessing
             .AddMapping<EntityTypeThemeCategory>(typeof(Facts::ThemeCategory))
             .AddMapping<EntityTypeThemeOrganizationUnit>(typeof(Facts::ThemeOrganizationUnit));
 
-        public static bool TryGetFactTypes(int entityTypeId, out IReadOnlyCollection<Type> factTypes)
+        public static bool TryGetErmFactTypes(int entityTypeId, out IReadOnlyCollection<Type> factTypes)
         {
-            return FactsTypeMap.TryGetValue(entityTypeId, out factTypes);
+            return ErmFactsTypeMap.TryGetValue(entityTypeId, out factTypes);
         }
 
         private static Dictionary<int, IReadOnlyCollection<Type>> AddMapping<TEntityType>(this Dictionary<int, IReadOnlyCollection<Type>> dictionary, params Type[] types)
