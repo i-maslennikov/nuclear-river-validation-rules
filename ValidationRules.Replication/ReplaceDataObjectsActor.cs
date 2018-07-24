@@ -53,13 +53,19 @@ namespace NuClear.ValidationRules.Replication
                     var findSpecification = _memoryBasedDataObjectAccessor.GetFindSpecification(command);
                     var existingDataObjects = _query.For(findSpecification)
                                                     .ToList();
-                    events.AddRange(_dataChangesHandler.HandleRelates(existingDataObjects));
-                    _bulkRepository.Delete(existingDataObjects);
+                    if (existingDataObjects.Any())
+                    {
+                        events.AddRange(_dataChangesHandler.HandleRelates(existingDataObjects));
+                        _bulkRepository.Delete(existingDataObjects);
+                    }
 
                     var targetDataObjects = _memoryBasedDataObjectAccessor.GetDataObjects(command);
-                    _bulkRepository.Create(targetDataObjects);
-                    events.AddRange(_dataChangesHandler.HandleCreates(targetDataObjects));
-                    events.AddRange(_dataChangesHandler.HandleRelates(targetDataObjects));
+                    if (targetDataObjects.Any())
+                    {
+                        _bulkRepository.Create(targetDataObjects);
+                        events.AddRange(_dataChangesHandler.HandleCreates(targetDataObjects));
+                        events.AddRange(_dataChangesHandler.HandleRelates(targetDataObjects));
+                    }
 
                     transaction.Complete();
                 }

@@ -53,33 +53,33 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset> dataObjects)
         {
+            if (!dataObjects.Any())
+            {
+                return Array.Empty<IEvent>();
+            }
+
             var rulesetsIds = dataObjects.Select(x => x.Id);
             var projectIds = _query.For<Ruleset.RulesetProject>()
                                    .Where(x => rulesetsIds.Contains(x.RulesetId))
                                    .Select(x => x.ProjectId)
                                    .Distinct()
                                    .ToList();
-            var begin = Min(dataObjects.Min(x => x.BeginDate), _query.For<Ruleset>().Where(x => rulesetsIds.Contains(x.Id)).Min(x => x.BeginDate));
-            var end = Max(dataObjects.Max(x => x.EndDate), _query.For<Ruleset>().Where(x => rulesetsIds.Contains(x.Id)).Max(x => x.EndDate));
+
+            var earliestBegin = dataObjects.Min(x => x.BeginDate);
+            var latestEnd = dataObjects.Max(x => x.EndDate);
 
             var firmIds = from project in _query.For<Project>()
                                                 .Where(x => projectIds.Contains(x.Id))
                           from order in _query.For<Order>()
-                                              .Where(x => begin < x.EndDistributionPlan && x.BeginDistribution < end)
+                                              .Where(x => earliestBegin <= x.EndDistributionPlan && x.BeginDistribution < latestEnd)
                                               .Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
                           select order.FirmId;
 
             return new EventCollectionHelper<Ruleset>
                 {
                     { typeof(Firm), firmIds.Distinct() },
-                    { typeof(Ruleset), dataObjects.Select(x => x.Id) }
+                    { typeof(Ruleset), rulesetsIds }
                 };
         }
-
-        private static DateTime Min(DateTime a, DateTime b)
-            => a < b ? a : b;
-
-        private static DateTime Max(DateTime a, DateTime b)
-            => a > b ? a : b;
     }
 }

@@ -165,11 +165,14 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     from item in _query.For<Facts::OrderItem>().Where(x => x.OrderId == order.Id)
                     from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
                     from rp in _query.For<Facts::Ruleset.RulesetProject>().Where(x => x.ProjectId == project.Id)
-                    from ruleset in _query.For(Specs.Find.Facts.Ruleset)
-                                          .Where(x => x.Id == rp.RulesetId
-                                                      && x.BeginDate <= order.BeginDistribution
-                                                      && order.BeginDistribution < x.EndDate)
-                    from rule in _query.For<Facts::Ruleset.AssociatedRule>().Where(x => x.RulesetId == ruleset.Id && x.AssociatedNomenclatureId == item.ItemPositionId)
+                    from rule in _query.For<Facts::Ruleset.AssociatedRule>().Where(x => x.AssociatedNomenclatureId == item.ItemPositionId)
+                    where _query.For(Specs.Find.Facts.Ruleset)
+                                .Where(x => x.Id == rule.RulesetId
+                                            && x.Id == rp.RulesetId
+                                            && x.BeginDate <= order.BeginDistribution
+                                            && order.BeginDistribution < x.EndDate)
+                                .Select(x => 1)
+                                .Any()
                     select new Firm.FirmAssociatedPosition
                         {
                             FirmId = order.FirmId,
