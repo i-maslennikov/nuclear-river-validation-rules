@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 using NuClear.Storage.API.Readings;
 using NuClear.ValidationRules.Replication.Specifications;
@@ -41,8 +40,8 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
                                               new Reference<EntityTypeFirmAddress>(partnerPosition.DestinationFirmAddressId))
                                 .ToXDocument(),
 
-                        PeriodStart = partnerOrder.Begin,
-                        PeriodEnd = partnerOrder.End,
+                        PeriodStart = partnerOrder.Begin > order.Begin ? partnerOrder.Begin : order.Begin ,
+                        PeriodEnd = partnerOrder.End < order.End ? partnerOrder.End : order.End,
                         OrderId = partnerOrder.Id,
                     };
 
