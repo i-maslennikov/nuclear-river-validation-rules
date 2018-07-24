@@ -736,6 +736,15 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Адрес {0} принадлежит фирме-рекламодателю {1} с заказом, содержащим пакет &quot;Базовый&quot; или контекстный банер {2}.
+        /// </summary>
+        internal static string PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser {
+            get {
+                return ResourceManager.GetString("PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}.
         /// </summary>
         internal static string PartnerAdvertisementShouldNotBeSoldToAdvertiser {

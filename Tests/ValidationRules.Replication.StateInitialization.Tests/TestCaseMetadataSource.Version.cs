@@ -1,4 +1,5 @@
 ﻿using NuClear.DataTest.Metamodel.Dsl;
+using NuClear.ValidationRules.Storage.Model.FirmRules.Aggregates;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 using Cache = NuClear.ValidationRules.Storage.Model.Messages.Cache;
@@ -11,7 +12,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
         private static ArrangeMetadataElement Version
         => ArrangeMetadataElement.Config
             .Name(nameof(Version))
-            .Aggregate()
+            .Aggregate(new Order.FmcgCutoutPosition()) // fixme: нужны тесты на новые проверки!
             .Message(new Version(), new Version.ErmState(), new Version.AmsState(), new Cache.ValidationResult())
             .Ignored();
     }

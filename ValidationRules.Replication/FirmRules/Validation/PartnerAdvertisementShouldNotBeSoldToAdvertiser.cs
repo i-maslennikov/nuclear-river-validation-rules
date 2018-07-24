@@ -11,7 +11,7 @@ using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
 namespace NuClear.ValidationRules.Replication.FirmRules.Validation
 {
     /// <summary>
-    /// Для заказов, размещающих позиции партнёрской рекламы (исключая премиум) в карточках фирм-рекламодателей, должно выводиться предупреждение	.
+    /// Для заказов, размещающих позиции партнёрской рекламы в карточках фирм-рекламодателей, должно выводиться предупреждение	.
     /// "Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}"
     /// 
     /// * Не выводить это сообщение в заказе, который размещает ЗМК в карточке своей-же фирмы.
@@ -26,7 +26,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Validation
         {
             var messages =
                 from order in query.For<Order>()
-                from partnerPosition in query.For<Order.PartnerPosition>().Where(x => !x.IsPremium).Where(x => x.DestinationFirmId == order.FirmId)
+                from partnerPosition in query.For<Order.PartnerPosition>().Where(x => x.DestinationFirmId == order.FirmId)
                 from partnerOrder in query.For<Order>().Where(x => x.Id == partnerPosition.OrderId).Where(x => Scope.CanSee(x.Scope, order.Scope)).Where(x => order.Begin < x.End && x.Begin < order.End)
                 where partnerOrder.FirmId != partnerPosition.DestinationFirmId // о позициях в карточках своей фирмы не предупреждаем
                 select new Version.ValidationResult

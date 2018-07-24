@@ -254,10 +254,10 @@
   </data>
   <data name="LinkedFirmAddressShouldBeValid_NotBelongToFirm" xml:space="preserve">
     <value>В позиции {0} найден адрес {1}, не принадлежащий фирме заказа</value>
-  </data>  
+  </data>
   <data name="LinkedFirmAddressShouldBeValid_InvalidBuildingPurpose" xml:space="preserve">
     <value>В позиции {0} найден адрес {1}, привязанный к зданию со специальным назначением</value>
-  </data>  
+  </data>
   <data name="LinkedFirmAddressShouldBeValid_MissingEntrance" xml:space="preserve">
     <value>В позиции {0} найден адрес {1}, не привязанный ко входу</value>
   </data>
@@ -362,5 +362,8 @@
   </data>
   <data name="AtLeastOneLinkedPartnerFirmAddressShouldBeValid" xml:space="preserve">
     <value>В позиции {0} необходимо указать хотя бы один валидный адрес</value>
+  </data>
+  <data name="PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser" xml:space="preserve">
+    <value>Адрес {0} принадлежит фирме-рекламодателю {1} с заказом, содержащим пакет "Базовый" или контекстный банер {2}</value>
   </data>
 </root>
