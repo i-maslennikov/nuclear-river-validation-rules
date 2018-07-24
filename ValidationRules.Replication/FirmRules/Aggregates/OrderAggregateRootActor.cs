@@ -174,16 +174,31 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
             public IQueryable<Order.FmcgCutoutPosition> GetSource()
             {
-                var addressPositions =
-                    from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodeBasicPackage || x.CategoryCode == Facts::Position.CategoryCodeContextBanner)
+                var opaPositions =
+                    from position in _query.For<Facts::Position>()
+                                           .Where(x => x.CategoryCode == Facts::Position.CategoryCodeBasicPackage
+                                                       || x.CategoryCode == Facts::Position.CategoryCodeMediaContextBanner
+                                                       || x.CategoryCode == Facts::Position.CategoryCodeContextBanner)
                     from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.PositionId == position.Id)
                     from op in _query.For<Facts::OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
                     select new Order.FmcgCutoutPosition
-                    {
-                        OrderId = op.OrderId,
-                    };
+                        {
+                            OrderId = op.OrderId,
+                        };
 
-                return addressPositions;
+                var pricePositions =
+                    from position in _query.For<Facts::Position>()
+                                           .Where(x => x.CategoryCode == Facts::Position.CategoryCodeBasicPackage
+                                                       || x.CategoryCode == Facts::Position.CategoryCodeMediaContextBanner
+                                                       || x.CategoryCode == Facts::Position.CategoryCodeContextBanner)
+                    from pp in _query.For<Facts::PricePosition>().Where(x => x.PositionId == position.Id)
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.PricePositionId == pp.Id)
+                    select new Order.FmcgCutoutPosition
+                        {
+                            OrderId = op.OrderId,
+                        };
+
+                return opaPositions.Union(pricePositions);
             }
 
             public FindSpecification<Order.FmcgCutoutPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

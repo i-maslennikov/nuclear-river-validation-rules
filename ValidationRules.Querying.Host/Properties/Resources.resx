@@ -364,6 +364,6 @@
     <value>В позиции {0} необходимо указать хотя бы один валидный адрес</value>
   </data>
   <data name="PartnerAdvertisementCouldNotCauseProblemsToTheAdvertiser" xml:space="preserve">
-    <value>Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}</value>
+    <value>Адрес {0} принадлежит фирме-рекламодателю {1} с заказом, содержащим пакет "Базовый" или контекстный банер {2}</value>
   </data>
 </root>

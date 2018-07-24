@@ -10,7 +10,10 @@ namespace NuClear.ValidationRules.SingleCheck.Store
         {
             const long CategoryCodePremiumAdvertising = 809065011136692321; // Реклама в профилях партнеров (приоритетное размещение)
             const long CategoryCodeAdvertisingAddress = 809065011136692326; // Реклама в профилях партнеров (адреса)
-            var categoryCodes = new[] { CategoryCodePremiumAdvertising, CategoryCodeAdvertisingAddress };
+            const long CategoryCodeBasicPackage = 303; // пакет "Базовый"
+            const long CategoryCodeMediaContextBanner = 395122163464046280; // МКБ
+            const long CategoryCodeContextBanner = 809065011136692318; // КБ
+            var categoryCodes = new[] { CategoryCodePremiumAdvertising, CategoryCodeAdvertisingAddress, CategoryCodeBasicPackage, CategoryCodeMediaContextBanner, CategoryCodeContextBanner };
 
             var positions =
                 query.GetTable<Position>()

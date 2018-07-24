@@ -9,7 +9,8 @@ namespace NuClear.ValidationRules.Storage.Model.Facts
         public const long CategoryCodeAdvertisementInCategory = 38; // Объявление в рубрике(Объявление под списком выдачи)
 
         public const long CategoryCodeBasicPackage = 303; // пакет "Базовый"
-        public const long CategoryCodeContextBanner = 395122163464046280; // МКБ
+        public const long CategoryCodeMediaContextBanner = 395122163464046280; // МКБ
+        public const long CategoryCodeContextBanner = 809065011136692318; // КБ
         public const long CategoryCodePremiumPartnerAdvertising = 809065011136692321; // Реклама в профилях партнеров (приоритетное размещение)
         public const long CategoryCodeCallToAction = 809065011136692314; // Кнопка-действие
         public const long CategoryCodePartnerAdvertisingAddress = 809065011136692326; // Реклама в профилях партнеров (адреса)
