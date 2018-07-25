@@ -45,10 +45,6 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Ruleset.QuantitativeRule> dataObjects) => Array.Empty<IEvent>();
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Ruleset.QuantitativeRule> dataObjects) => Array.Empty<IEvent>();
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Ruleset.QuantitativeRule> dataObjects) => Array.Empty<IEvent>();
-
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.QuantitativeRule> dataObjects)
-        {
-            return new EventCollectionHelper<Ruleset> { { typeof(Ruleset), dataObjects.Select(x => x.RulesetId) } };
-        }
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.QuantitativeRule> dataObjects) => Array.Empty<IEvent>();
     }
 }

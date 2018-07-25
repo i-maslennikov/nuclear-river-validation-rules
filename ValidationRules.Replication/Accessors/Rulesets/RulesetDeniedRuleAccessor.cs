@@ -58,27 +58,6 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Ruleset.DeniedRule> dataObjects) => Array.Empty<IEvent>();
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Ruleset.DeniedRule> dataObjects) => Array.Empty<IEvent>();
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Ruleset.DeniedRule> dataObjects) => Array.Empty<IEvent>();
-
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.DeniedRule> dataObjects)
-        {
-            var positionIds = dataObjects.Select(x => x.NomenclatureId)
-                                         .Union(dataObjects.Select(x => x.DeniedNomenclatureId));
-
-            // Для пакетов и простых позиций
-            var firmIdsFromPricePostion =
-                from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
-                from orderPosition in _query.For<OrderPosition>().Where(x => x.PricePositionId == pricePosition.Id)
-                from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
-                select order.FirmId;
-
-            // Для элементов пакетов и простых позиций
-            var firmIdsFromOpa =
-                from opa in _query.For<OrderPositionAdvertisement>().Where(x => positionIds.Contains(x.PositionId))
-                from orderPosition in _query.For<OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
-                from order in _query.For<Order>().Where(x => x.Id == orderPosition.OrderId)
-                select order.FirmId;
-
-            return new EventCollectionHelper<Ruleset> { { typeof(Firm), firmIdsFromPricePostion.Distinct().Concat(firmIdsFromOpa.Distinct()) } };
-        }
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.DeniedRule> dataObjects) => Array.Empty<IEvent>();
     }
 }

@@ -45,21 +45,6 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects) => Array.Empty<IEvent>();
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects) => Array.Empty<IEvent>();
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects) => Array.Empty<IEvent>();
-
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects)
-        {
-            var projectIds = dataObjects.Select(x => x.ProjectId);
-
-            var firmIds =
-                from project in _query.For<Project>().Where(x => projectIds.Contains(x.Id))
-                from order in _query.For<Order>().Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
-                select order.FirmId;
-
-            return new EventCollectionHelper<Ruleset>
-                {
-                    { typeof(Firm), firmIds.Distinct() },
-                    { typeof(Ruleset), dataObjects.Select(x => x.RulesetId) }
-                };
-        }
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects) => Array.Empty<IEvent>();
     }
 }

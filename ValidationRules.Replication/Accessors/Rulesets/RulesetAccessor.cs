@@ -59,20 +59,14 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
             }
 
             var rulesetsIds = dataObjects.Select(x => x.Id);
-            var projectIds = _query.For<Ruleset.RulesetProject>()
-                                   .Where(x => rulesetsIds.Contains(x.RulesetId))
-                                   .Select(x => x.ProjectId)
-                                   .Distinct()
-                                   .ToList();
 
-            var earliestBegin = dataObjects.Min(x => x.BeginDate);
-            var latestEnd = dataObjects.Max(x => x.EndDate);
-
-            var firmIds = from project in _query.For<Project>()
-                                                .Where(x => projectIds.Contains(x.Id))
+            var firmIds = from ruleset in _query.For<Ruleset>().Where(x => rulesetsIds.Contains(x.Id))
+                          from rulesetProject in _query.For<Ruleset.RulesetProject>().Where(x => x.RulesetId == ruleset.Id)
+                          from project in _query.For<Project>().Where(x => x.Id == rulesetProject.ProjectId)
                           from order in _query.For<Order>()
-                                              .Where(x => earliestBegin <= x.EndDistributionPlan && x.BeginDistribution < latestEnd)
-                                              .Where(x => x.DestOrganizationUnitId == project.OrganizationUnitId)
+                                              .Where(x => ruleset.BeginDate <= x.BeginDistribution
+                                                          && x.BeginDistribution < ruleset.EndDate
+                                                          && x.DestOrganizationUnitId == project.OrganizationUnitId)
                           select order.FirmId;
 
             return new EventCollectionHelper<Ruleset>
