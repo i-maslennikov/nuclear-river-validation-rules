@@ -2,6 +2,7 @@
 
 using LinqToDB.Data;
 
+using NuClear.Utils.Collections;
 using NuClear.ValidationRules.SingleCheck.Store;
 
 using Ruleset = NuClear.ValidationRules.Storage.Model.Facts.Ruleset;
@@ -13,7 +14,7 @@ namespace NuClear.ValidationRules.SingleCheck.DataLoaders
         public static void Load(ErmDataLoader.ResolvedOrderSummary orderSummary, DataConnection query, IStore store)
         {
             var rulesetDtos = query.GetTable<Ruleset>()
-                                   .Where(r => r.BeginDate <= orderSummary.BeginDate && orderSummary.EndDate < r.EndDate)
+                                   .Where(r => !r.IsDeleted && r.BeginDate <= orderSummary.BeginDate && orderSummary.BeginDate < r.EndDate)
                                    .Join(query.GetTable<Ruleset.RulesetProject>(),
                                          ruleset => ruleset.Id,
                                          rulesetProject => rulesetProject.RulesetId,
@@ -32,24 +33,19 @@ namespace NuClear.ValidationRules.SingleCheck.DataLoaders
             var targetRulesetsIds = rulesets.Select(r => r.Id)
                                             .ToList();
 
-            // Правила на запрещение требуются только по PositionId, которые есть в заказе
-            // Правила на сопутствие требуются только по PositionId или AssociatedPositionId, которые есть в заказе
-            var associatedRulesForOrderAsAssociated = query.GetTable<Ruleset.AssociatedRule>()
-                                                           .Where(rule => targetRulesetsIds.Contains(rule.RulesetId)
-                                                                          && orderSummary.SoldPackagesIds.Contains(rule.AssociatedNomenclatureId))
-                                                           .Execute();
-            store.AddRange(associatedRulesForOrderAsAssociated);
-
-            var associatedRulesForOrderAsPrincipal = query.GetTable<Ruleset.AssociatedRule>()
-                                                          .Where(rule => targetRulesetsIds.Contains(rule.RulesetId)
-                                                                         && orderSummary.SoldPackageElementsIds.Contains(rule.PrincipalNomenclatureId))
-                                                          .Execute();
-            store.AddRange(associatedRulesForOrderAsPrincipal);
-
             var usedNomenclatures = orderSummary.SoldPackagesIds
                                                 .Union(orderSummary.SoldPackageElementsIds)
                                                 .ToList();
 
+            // Правила на сопутствие требуются только по PositionId или AssociatedPositionId, которые есть в заказе
+            var associatedRulesForOrder = query.GetTable<Ruleset.AssociatedRule>()
+                                               .Where(rule => targetRulesetsIds.Contains(rule.RulesetId)
+                                                              && (orderSummary.SoldPackagesIds.Contains(rule.AssociatedNomenclatureId)
+                                                                  || usedNomenclatures.Contains(rule.PrincipalNomenclatureId)))
+                                               .Execute();
+            store.AddRange(associatedRulesForOrder);
+
+            // Правила на запрещение требуются только по PositionId, которые есть в заказе
             var deniedRules = query.GetTable<Ruleset.DeniedRule>()
                                    .Where(rule => targetRulesetsIds.Contains(rule.RulesetId)
                                                   && usedNomenclatures.Contains(rule.NomenclatureId)) // т.к. при импорте правил создаем симметричные, то можно фильтровать только по одной из номенклатур правила

@@ -160,8 +160,12 @@ namespace NuClear.ValidationRules.SingleCheck.DataLoaders
             store.AddRange(monthlyUsedPrices);
             var usedPriceIds = usedPricePositions.Select(x => x.PriceId).Union(actualPrice != null ? new[] { actualPrice.Id } : Array.Empty<long>()).Union(monthlyUsedPrices.Select(x => x.Id)).ToList();
 
-            var soldPackagesIds = usedPricePositions.Select(p => p.PositionId).ToList();
-            var soldPackageElementsIds = opas.Select(y => y.PositionId).ToList();
+            var soldPackagesIds = usedPricePositions.Select(p => p.PositionId)
+                                                    .Distinct()
+                                                    .ToList();
+            var soldPackageElementsIds = opas.Select(y => y.PositionId)
+                                             .Distinct()
+                                             .ToList();
 
             var usedPositionIds = soldPackagesIds.Union(soldPackageElementsIds).ToList();
 
