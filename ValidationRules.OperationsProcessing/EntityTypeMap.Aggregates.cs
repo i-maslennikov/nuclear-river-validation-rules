@@ -99,7 +99,6 @@ namespace NuClear.ValidationRules.OperationsProcessing
                           .DependOn<Facts::Order>()
                           .DependOn<Facts::OrderItem>()
                           .DependOn<Facts::Category>()
-                          .DependOn<Facts::PricePosition>()
                           .DependOn<Facts::Ruleset>())
                 .Aggregate<PriceAggregates::Ruleset>(
                     x => x.Match<Facts::Ruleset>()
