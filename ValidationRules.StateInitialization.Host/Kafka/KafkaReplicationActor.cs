@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -76,7 +77,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                                               new BulkCopyOptions
                                               {
                                                   BulkCopyTimeout = (int)command.BulkCopyTimeout.TotalSeconds
-                                              });
+                                              },
+                                              command.DbManagementMode);
 
                     var targetMessageFlowDescription = kafkaCommand.MessageFlow.GetType().Name;
                     using (var receiver = _receiverFactory.Create(kafkaCommand.MessageFlow))
@@ -99,8 +101,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
                         {
                             var batch = receiver.ReceiveBatch(_batchSizeSettings.BatchSize);
                             // крутим цикл пока не получим сообщения от kafka,
-                            // т.к. у приемника kafka есть некоторое время прогрева, то после запуска некоторое время могут возвращаться пустые batch,
-                            // несмотря на фактическое наличие сообщений
+                            // т.к. у клиента kafka есть некоторое время прогрева, то после запуска некоторое время могут возвращаться пустые batch,
+                            // несмотря на фактическое наличие сообщений в topic\partition
                             if (batch.Count == 0)
                             {
                                 continue;
@@ -141,7 +143,10 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
             return dataObjectTypesProvider.DataObjectTypes;
         }
 
-        private IReadOnlyCollection<IActor> CreateActors(IReadOnlyCollection<Type> dataObjectTypes, DataConnection dataConnection, BulkCopyOptions bulkCopyOptions)
+        private IReadOnlyCollection<IActor> CreateActors(IReadOnlyCollection<Type> dataObjectTypes,
+                                                         DataConnection dataConnection,
+                                                         BulkCopyOptions bulkCopyOptions,
+                                                         DbManagementMode dbManagementMode)
         {
             var actors = new List<IActor>();
 
@@ -156,6 +161,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
 
                     actors.Add(actor);
                 }
+            }
+
+            if (dbManagementMode.HasFlag(DbManagementMode.UpdateTableStatistics))
+            {
+                var sqlConnection = (SqlConnection)dataConnection.Connection;
+                actors.Add(new UpdateTableStatisticsActor(sqlConnection));
             }
 
             return actors;

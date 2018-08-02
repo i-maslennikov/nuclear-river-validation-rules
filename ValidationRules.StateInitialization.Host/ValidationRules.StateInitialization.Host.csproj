@@ -232,6 +232,7 @@
     <Compile Include="Kafka\KafkaReplicationActor.cs" />
     <Compile Include="Kafka\KafkaReplicationCommand.cs" />
     <Compile Include="Kafka\Rulesets\RulesetFactsBulkCommandFactory.cs" />
+    <Compile Include="Kafka\UpdateTableStatisticsActor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaInitializationActor.cs" />

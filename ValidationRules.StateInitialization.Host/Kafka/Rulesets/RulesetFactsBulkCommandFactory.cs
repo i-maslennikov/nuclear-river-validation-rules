@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.SqlServer.Management.Smo;
+
 using NuClear.Messaging.API.Flows;
 using NuClear.Replication.Core;
+using NuClear.StateInitialization.Core;
 using NuClear.ValidationRules.OperationsProcessing;
 using NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow;
 using NuClear.ValidationRules.Replication.Dto;
-using NuClear.ValidationRules.Storage.Model.Facts;
 
 using ValidationRules.Hosting.Common.Settings;
+
+using Schema = NuClear.ValidationRules.Storage.Schema;
 
 namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets
 {
@@ -41,14 +45,19 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets
                 return Array.Empty<ICommand>();
             }
 
-            return new[]
-                {
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(Ruleset), deserializedDtos),
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(Ruleset.AssociatedRule), deserializedDtos),
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(Ruleset.DeniedRule), deserializedDtos),
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(Ruleset.QuantitativeRule), deserializedDtos),
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(Ruleset.RulesetProject), deserializedDtos)
-                };
+            var bulkReplicateCommands =
+                DataObjectTypesProviderFactory.RulesetFactTypes
+                                              .Select(factType => new KafkaReplicationActor.BulkInsertDataObjectsCommand(factType, deserializedDtos))
+                                              .OfType<ICommand>();
+
+            var updateStatisticsCommands =
+                DataObjectTypesProviderFactory.RulesetFactTypes
+                                              .Select(factType => Schema.Facts.GetTableName(factType))
+                                              .Select(table => new UpdateTableStatisticsActor.UpdateTableStatisticsCommand(table,
+                                                                                                                           StatisticsTarget.All,
+                                                                                                                           StatisticsScanType.FullScan));
+            return bulkReplicateCommands.Concat(updateStatisticsCommands)
+                                        .ToList();
         }
     }
 }

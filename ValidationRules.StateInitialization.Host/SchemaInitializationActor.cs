@@ -86,9 +86,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         public static SchemaInitializationCommand Facts { get; }
             = new SchemaInitializationCommand(Schema.Facts,
-                                              new HashSet<Type>(DataObjectTypesProviderFactory.FactTypes
-                                                                                              .Concat(DataObjectTypesProviderFactory.AmsFactTypes)
-                                                                                              .Concat(DataObjectTypesProviderFactory.RulesetFactTypes)),
+                                              DataObjectTypesProviderFactory.AllSourcesFactTypes,
                                               FactsConnectionStringIdentity.Instance,
                                               new[] { "Facts" });
 

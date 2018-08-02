@@ -7,7 +7,6 @@ using NuClear.Replication.Core;
 using NuClear.ValidationRules.OperationsProcessing;
 using NuClear.ValidationRules.OperationsProcessing.Facts.AmsFactsFlow;
 using NuClear.ValidationRules.Replication.Dto;
-using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Ams
 {
@@ -40,11 +39,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Ams
                 return Array.Empty<ICommand>();
             }
 
-            return new[]
-                {
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(Advertisement), deserializedDtos),
-                    new KafkaReplicationActor.BulkInsertDataObjectsCommand(typeof(EntityName), deserializedDtos)
-                };
+            return DataObjectTypesProviderFactory.AmsFactTypes
+                                                 .Select(factType => new KafkaReplicationActor.BulkInsertDataObjectsCommand(factType, deserializedDtos))
+                                                 .ToList();
         }
     }
 }

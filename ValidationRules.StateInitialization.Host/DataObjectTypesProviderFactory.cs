@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Commands;
@@ -26,7 +28,13 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
     {
-        public static readonly Type[] FactTypes =
+        public static IReadOnlyCollection<Type> AllSourcesFactTypes =>
+            DataObjectTypesProviderFactory.ErmFactTypes
+                                          .Union(DataObjectTypesProviderFactory.AmsFactTypes)
+                                          .Union(DataObjectTypesProviderFactory.RulesetFactTypes)
+                                          .ToList();
+
+        public static readonly Type[] ErmFactTypes =
             {
                 typeof(Facts::Account),
                 typeof(Facts::AccountDetail),
@@ -184,7 +192,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                     return new KafkaReplicationActor.DataObjectTypesProvider(RulesetFactTypes);
                 }
 
-                return new CommandRegardlessDataObjectTypesProvider(FactTypes);
+                return new CommandRegardlessDataObjectTypesProvider(ErmFactTypes);
             }
 
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)

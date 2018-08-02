@@ -10,49 +10,37 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         private static readonly ExecutionMode ParallelReplication = new ExecutionMode(4, false);
 
         public static ReplicateInBulkCommand AggregatesToMessages { get; } =
-            new ReplicateInBulkCommand(
+            ReplicateFromDbToDbCommand(
                 new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
-                new StorageDescriptor(MessagesConnectionStringIdentity.Instance, Schema.Messages),
-                executionMode: ParallelReplication);
+                new StorageDescriptor(MessagesConnectionStringIdentity.Instance, Schema.Messages));
 
         public static ReplicateInBulkCommand FactsToAggregates { get; } =
-            new ReplicateInBulkCommand(
+            ReplicateFromDbToDbCommand(
                 new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
-                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
-                executionMode: ParallelReplication);
+                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates));
 
         public static ReplicateInBulkCommand ErmToFacts { get; } =
-            new ReplicateInBulkCommand(
+            ReplicateFromDbToDbCommand(
                 new StorageDescriptor(ErmConnectionStringIdentity.Instance, Schema.Erm),
-                new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
-                executionMode: ParallelReplication);
+                new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
 
         public static ReplicateInBulkCommand AmsToFacts { get; } =
-            new ReplicateInBulkCommand(
-                                       new StorageDescriptor(AmsConnectionStringIdentity.Instance, null),
+            new ReplicateInBulkCommand(new StorageDescriptor(AmsConnectionStringIdentity.Instance, null),
                                        new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
 
         public static ReplicateInBulkCommand RulesetsToFacts { get; } =
-            new ReplicateInBulkCommand(
-                                       new StorageDescriptor(RulesetConnectionStringIdentity.Instance, null),
+            new ReplicateInBulkCommand(new StorageDescriptor(RulesetConnectionStringIdentity.Instance, null),
                                        new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
 
-        public static ReplicateInBulkCommand AggregatesToMessagesTest { get; } =
-            new ReplicateInBulkCommand(
-                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
-                new StorageDescriptor(MessagesConnectionStringIdentity.Instance, Schema.Messages),
-                DbManagementMode.None);
-
-        public static ReplicateInBulkCommand FactsToAggregatesTest { get; } =
-            new ReplicateInBulkCommand(
-                new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
-                new StorageDescriptor(AggregatesConnectionStringIdentity.Instance, Schema.Aggregates),
-                DbManagementMode.None);
-
-        public static ReplicateInBulkCommand ErmToFactsTest { get; } =
-            new ReplicateInBulkCommand(
-                new StorageDescriptor(ErmConnectionStringIdentity.Instance, Schema.Erm),
-                new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
-                DbManagementMode.None);
+        /// <summary>
+        /// В databaseManagementMode исключен updatestatistics - причина, т.к. будет выполнен rebuild индексов, то
+        /// статистика при этом будет автоматически пересчитана с FULLSCAN, нет смысла после этого делать updatestatistics
+        /// с меньшим SampleRate потенциально ухудшая качество статистики
+        /// </summary>
+        private static ReplicateInBulkCommand ReplicateFromDbToDbCommand(StorageDescriptor from, StorageDescriptor to) =>
+            new ReplicateInBulkCommand(from,
+                                       to,
+                                       executionMode: ParallelReplication,
+                                       databaseManagementMode: DbManagementMode.DropAndRecreateConstraints | DbManagementMode.EnableIndexManagment);
     }
 }
