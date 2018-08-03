@@ -54,8 +54,8 @@ namespace ValidationRules.Hosting.Common
 
         private int SizeOfInKb(Message message)
         {
-            var keySize = message?.Key.Length ?? 0;
-            var payloadSize = message?.Value.Length ?? 0;
+            var keySize = message.Key?.Length ?? 0;
+            var payloadSize = message.Value?.Length ?? 0;
             return (keySize + payloadSize) / 1024;
         }
 
