@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Microsoft.SqlServer.Management.Smo;
 
@@ -26,24 +24,29 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka
 
         public IReadOnlyCollection<IEvent> ExecuteCommands(IReadOnlyCollection<ICommand> commands)
         {
-            var command = commands.OfType<UpdateTableStatisticsCommand>().SingleOrDefault();
-            if (command == null)
+            var updateStatisticsCommands = commands.OfType<UpdateTableStatisticsCommand>()
+                                                   .ToList();
+
+            if (!updateStatisticsCommands.Any())
             {
                 return Array.Empty<IEvent>();
             }
 
-            try
+            foreach (var command in updateStatisticsCommands)
             {
-                var database = _sqlConnection.GetDatabase();
-                var table = database.GetTable(command.Table);
-                table.UpdateStatistics(command.StatisticsTarget, command.StatisticsScanType);
+                try
+                {
+                    var database = _sqlConnection.GetDatabase();
+                    var table = database.GetTable(command.Table);
+                    table.UpdateStatistics(command.StatisticsTarget, command.StatisticsScanType);
+                }
+                catch (Exception ex)
+                {
+                    throw new DataException($"Error occurred while statistics updating for table {command.Table}", ex);
+                }
+            }
 
-                return Array.Empty<IEvent>();
-            }
-            catch (Exception ex)
-            {
-                throw new DataException($"Error occured while statistics updating for table {command.Table}", ex);
-            }
+            return Array.Empty<IEvent>();
         }
 
         public sealed class UpdateTableStatisticsCommand : ICommand

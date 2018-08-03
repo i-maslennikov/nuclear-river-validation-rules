@@ -228,7 +228,10 @@
     <Compile Include="BulkReplicationCommands.cs" />
     <Compile Include="DataObjectTypesProviderFactory.cs" />
     <Compile Include="Kafka\Ams\AmsFactsBulkCommandFactory.cs" />
+    <Compile Include="Kafka\BulkInsertInMemoryDataObjectsActor.cs" />
+    <Compile Include="Kafka\BulkInsertInMemoryDataObjectsCommand.cs" />
     <Compile Include="Kafka\IBulkCommandFactory.cs" />
+    <Compile Include="Kafka\InMemoryAccessorTypesProvider.cs" />
     <Compile Include="Kafka\KafkaReplicationActor.cs" />
     <Compile Include="Kafka\KafkaReplicationCommand.cs" />
     <Compile Include="Kafka\Rulesets\RulesetFactsBulkCommandFactory.cs" />

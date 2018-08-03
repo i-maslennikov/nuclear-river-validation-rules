@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.DataObjects;
@@ -185,11 +186,11 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             {
                 if (command.SourceStorageDescriptor.ConnectionStringIdentity is AmsConnectionStringIdentity)
                 {
-                    return new KafkaReplicationActor.DataObjectTypesProvider(AmsFactTypes);
+                    return new DataObjectTypesProvider(AmsFactTypes);
                 }
                 else if (command.SourceStorageDescriptor.ConnectionStringIdentity is RulesetConnectionStringIdentity)
                 {
-                    return new KafkaReplicationActor.DataObjectTypesProvider(RulesetFactTypes);
+                    return new DataObjectTypesProvider(RulesetFactTypes);
                 }
 
                 return new CommandRegardlessDataObjectTypesProvider(ErmFactTypes);
@@ -206,6 +207,19 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             }
 
             throw new ArgumentException($"Instance of type IDataObjectTypesProvider cannot be created for connection string name {command.TargetStorageDescriptor.MappingSchema}");
+        }
+
+        // CommandRegardlessDataObjectTypesProvider - он internal в StateInitiallization.Core, пришлось запилить вот это
+        internal sealed class DataObjectTypesProvider : IDataObjectTypesProvider
+        {
+            public IReadOnlyCollection<Type> DataObjectTypes { get; }
+
+            public DataObjectTypesProvider(IReadOnlyCollection<Type> dataObjectTypes)
+            {
+                DataObjectTypes = dataObjectTypes;
+            }
+
+            public IReadOnlyCollection<Type> Get<TCommand>() where TCommand : ICommand => throw new NotImplementedException();
         }
     }
 }

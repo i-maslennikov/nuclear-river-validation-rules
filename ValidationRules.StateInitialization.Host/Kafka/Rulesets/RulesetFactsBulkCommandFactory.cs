@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Microsoft.SqlServer.Management.Smo;
-
 using NuClear.Messaging.API.Flows;
 using NuClear.Replication.Core;
-using NuClear.StateInitialization.Core;
 using NuClear.ValidationRules.OperationsProcessing;
 using NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow;
 using NuClear.ValidationRules.Replication.Dto;
 
 using ValidationRules.Hosting.Common.Settings;
-
-using Schema = NuClear.ValidationRules.Storage.Schema;
 
 namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets
 {
@@ -45,19 +40,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Rulesets
                 return Array.Empty<ICommand>();
             }
 
-            var bulkReplicateCommands =
-                DataObjectTypesProviderFactory.RulesetFactTypes
-                                              .Select(factType => new KafkaReplicationActor.BulkInsertDataObjectsCommand(factType, deserializedDtos))
-                                              .OfType<ICommand>();
-
-            var updateStatisticsCommands =
-                DataObjectTypesProviderFactory.RulesetFactTypes
-                                              .Select(factType => Schema.Facts.GetTableName(factType))
-                                              .Select(table => new UpdateTableStatisticsActor.UpdateTableStatisticsCommand(table,
-                                                                                                                           StatisticsTarget.All,
-                                                                                                                           StatisticsScanType.FullScan));
-            return bulkReplicateCommands.Concat(updateStatisticsCommands)
-                                        .ToList();
+            return DataObjectTypesProviderFactory.RulesetFactTypes
+                                                 .Select(factType => new BulkInsertInMemoryDataObjectsCommand(factType, deserializedDtos))
+                                                 .ToList();
         }
     }
 }

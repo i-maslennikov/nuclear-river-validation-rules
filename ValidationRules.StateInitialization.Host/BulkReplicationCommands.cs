@@ -30,11 +30,12 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         public static ReplicateInBulkCommand RulesetsToFacts { get; } =
             new ReplicateInBulkCommand(new StorageDescriptor(RulesetConnectionStringIdentity.Instance, null),
-                                       new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts));
+                                       new StorageDescriptor(FactsConnectionStringIdentity.Instance, Schema.Facts),
+                                       databaseManagementMode:DbManagementMode.UpdateTableStatistics);
 
         /// <summary>
         /// В databaseManagementMode исключен updatestatistics - причина, т.к. будет выполнен rebuild индексов, то
-        /// статистика при этом будет автоматически пересчитана с FULLSCAN, нет смысла после этого делать updatestatistics
+        /// статистика для индексов при этом будет автоматически пересчитана с FULLSCAN, нет смысла после этого делать updatestatistics
         /// с меньшим SampleRate потенциально ухудшая качество статистики
         /// </summary>
         private static ReplicateInBulkCommand ReplicateFromDbToDbCommand(StorageDescriptor from, StorageDescriptor to) =>

@@ -40,7 +40,7 @@ namespace NuClear.ValidationRules.StateInitialization.Host.Kafka.Ams
             }
 
             return DataObjectTypesProviderFactory.AmsFactTypes
-                                                 .Select(factType => new KafkaReplicationActor.BulkInsertDataObjectsCommand(factType, deserializedDtos))
+                                                 .Select(factType => new BulkInsertInMemoryDataObjectsCommand(factType, deserializedDtos))
                                                  .ToList();
         }
     }
