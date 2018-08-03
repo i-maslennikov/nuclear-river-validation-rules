@@ -54,7 +54,9 @@ namespace ValidationRules.Hosting.Common
 
         private int SizeOfInKb(Message message)
         {
-            return (message.Value.Length + message.Key.Length) / 1024;
+            var keySize = message?.Key.Length ?? 0;
+            var payloadSize = message?.Value.Length ?? 0;
+            return (keySize + payloadSize) / 1024;
         }
 
         private sealed class ByteArrayEqualityComparer : IEqualityComparer<byte[]>
