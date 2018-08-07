@@ -7,45 +7,54 @@ namespace ValidationRules.Hosting.Common
 {
     public sealed class CompactedKafkaMessageQueue
     {
-        private readonly Dictionary<byte[], Message> _dictionary = new Dictionary<byte[], Message>(ByteArrayEqualityComparer.Instance);
+        private readonly Dictionary<byte[], Message> _messageKey2LatestPayloadMap = new Dictionary<byte[], Message>(ByteArrayEqualityComparer.Instance);
 
         public int ActualQueuedKb { get; private set; }
 
         public void Enqueue(Message message)
         {
-            lock (_dictionary)
+            lock (_messageKey2LatestPayloadMap)
             {
-                if (_dictionary.TryGetValue(message.Key, out var existingMessage))
+                if (_messageKey2LatestPayloadMap.TryGetValue(message.Key, out var existingMessage))
                 {
                     ActualQueuedKb -= SizeOfInKb(existingMessage);
                 }
 
-                _dictionary[message.Key] = message;
+                _messageKey2LatestPayloadMap[message.Key] = message;
                 ActualQueuedKb += SizeOfInKb(message);
             }
         }
 
         public void Remove(IEnumerable<Message> messages)
         {
-            lock (_dictionary)
+            lock (_messageKey2LatestPayloadMap)
             {
                 foreach (var message in messages)
                 {
-                    var existingMessage = _dictionary[message.Key];
+                    var existingMessage = _messageKey2LatestPayloadMap[message.Key];
                     if (existingMessage.Offset == message.Offset)
                     {
-                        _dictionary.Remove(message.Key);
+                        _messageKey2LatestPayloadMap.Remove(message.Key);
                         ActualQueuedKb -= SizeOfInKb(message);
                     }
                 }
             }
         }
 
+        public void Clear()
+        {
+            lock (_messageKey2LatestPayloadMap)
+            {
+                _messageKey2LatestPayloadMap.Clear();
+                ActualQueuedKb = 0;
+            }
+        }
+
         public IReadOnlyList<Message> PeekOrderedMessageBatch(int batchSize)
         {
-            lock (_dictionary)
+            lock (_messageKey2LatestPayloadMap)
             {
-                return _dictionary.Values
+                return _messageKey2LatestPayloadMap.Values
                                   .OrderBy(x => x.Offset.Value)
                                   .Take(batchSize)
                                   .ToList();

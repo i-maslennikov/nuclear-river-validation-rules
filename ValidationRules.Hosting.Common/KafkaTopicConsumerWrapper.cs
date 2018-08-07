@@ -14,13 +14,14 @@ namespace ValidationRules.Hosting.Common
     public sealed class KafkaTopicConsumerWrapper : IKafkaMessageFlowReceiver
     {
         private readonly Consumer _consumer;
-        private readonly IEnumerable<TopicPartitionOffset> _topicPartitionOffsets;
+        private readonly IReadOnlyCollection<TopicPartitionOffset> _topicPartitionOffsets;
         private readonly TimeSpan _pollTimeout;
-        private readonly int? _maybeBackpressureQueuedMaxKb;
         private readonly ITracer _tracer;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private readonly CompactedKafkaMessageQueue _messageQueue = new CompactedKafkaMessageQueue();
         private readonly Task _task;
+
+        private readonly Action _backpressureBehaviour;
 
         public KafkaTopicConsumerWrapper(IKafkaMessageFlowReceiverSettings settings, ITracer tracer)
         {
@@ -44,19 +45,22 @@ namespace ValidationRules.Hosting.Common
                     { "api.version.request", true },
                 };
 
-
-            var maybeBackpressureQueuedMaxKb = privateConfig.TryGetValue("queued.max.messages.kbytes", out var rawQueuedMaxKb)
-                                                   ? int.Parse((string)rawQueuedMaxKb)
-                                                   : (int?)null;
+            _topicPartitionOffsets = settings.TopicPartitionOffsets
+                                             .ToList();
+            _pollTimeout = settings.PollTimeout;
+            _tracer = tracer;
 
             _consumer = new Consumer(privateConfig);
 
-            _topicPartitionOffsets = settings.TopicPartitionOffsets;
-            _pollTimeout = settings.PollTimeout;
-            _maybeBackpressureQueuedMaxKb = maybeBackpressureQueuedMaxKb;
-            _tracer = tracer;
+            _backpressureBehaviour = privateConfig.TryGetValue("queued.max.messages.kbytes", out var rawQueuedMaxKb)
+                                         ? (Action)new MaxQueuedKbBackpressureBehaviour(int.Parse((string)rawQueuedMaxKb),
+                                                                                        _topicPartitionOffsets.Select(x => new TopicPartition(x.Topic, x.Partition)),
+                                                                                        _consumer,
+                                                                                        _messageQueue,
+                                                                                        tracer)
+                                             .Execute
+                                         : () => { /* nop backpressure behavior */};
 
-            _consumer.OnMessage += OnMessage;
             _consumer.OnError += OnError;
             _consumer.OnPartitionsAssigned += OnPartitionsAssigned;
             _consumer.OnPartitionsRevoked += OnPartitionsRevoked;
@@ -85,14 +89,32 @@ namespace ValidationRules.Hosting.Common
 
         void IKafkaMessageFlowReceiver.CompleteBatch(IEnumerable<Message> messages)
         {
-            // ReSharper disable once PossibleMultipleEnumeration
-            var maxOffsetMessage = messages.OrderBy(x => x.Offset.Value).LastOrDefault();
-            if (maxOffsetMessage == null)
+            var partitions2LastMessages = messages.GroupBy(x => x.TopicPartition)
+                                                  .Select(group => new
+                                                      {
+                                                          group.Key,
+                                                          MaxOffsetMessage = group.OrderBy(x => x.Offset.Value).LastOrDefault()
+                                                      })
+                                                  .Where(x => x.MaxOffsetMessage != null)
+                                                  .ToDictionary(x => x.Key, x => x.MaxOffsetMessage);
+            if (!partitions2LastMessages.Any())
             {
                 return;
             }
 
-            var committedOffsets = _consumer.CommitAsync(maxOffsetMessage).GetAwaiter().GetResult();
+            var unassignedPartitionsCommitAttempt = partitions2LastMessages.Keys
+                                                                           .Except(_consumer.Assignment)
+                                                                           .ToList();
+            if (unassignedPartitionsCommitAttempt.Any())
+            {
+                var errorMessage = $"Attempt to commit offsets for not assigned partitions: {string.Join(";", unassignedPartitionsCommitAttempt)}";
+                _tracer.Error(errorMessage);
+                throw new KafkaException(new Error(ErrorCode.Unknown, errorMessage));
+            }
+
+            var committedOffsets = _consumer.CommitAsync(partitions2LastMessages.Values.Select(x => x.TopicPartitionOffset))
+                                            .GetAwaiter()
+                                            .GetResult();
             if (committedOffsets.Error.HasError)
             {
                 _tracer.Warn($"KafkaAudit - error occured while committing offsets {committedOffsets.Error}");
@@ -130,10 +152,10 @@ namespace ValidationRules.Hosting.Common
             }
 
             _consumer.Unsubscribe();
+
             _consumer.OnPartitionsAssigned -= OnPartitionsAssigned;
             _consumer.OnPartitionsRevoked -= OnPartitionsRevoked;
             _consumer.OnError -= OnError;
-            _consumer.OnMessage -= OnMessage;
 
             _cancellationTokenSource.Dispose();
             _consumer.Dispose();
@@ -142,7 +164,7 @@ namespace ValidationRules.Hosting.Common
         }
 
         /// <summary>
-        /// Когда Kafka делает consumer неактивным, то тупо блокируется thread на методе Consumer.Poll
+        /// Когда Kafka делает consumer неактивным, то тупо блокируется thread на методе Consumer.Poll/Consume
         /// Чтобы от этого не было разных side effects, используем отдельный цикл для опроса, выполняемый из независимого (от клиентов данного типа) потока
         /// </summary>
         private void PollFunc(object state)
@@ -152,31 +174,23 @@ namespace ValidationRules.Hosting.Common
             // retryable poll loop
             while (!cancellationToken.IsCancellationRequested)
             {
-                var actualQueuedKb = _messageQueue.ActualQueuedKb;
-                if (_maybeBackpressureQueuedMaxKb.HasValue
-                    && _maybeBackpressureQueuedMaxKb.Value <= actualQueuedKb)
-                {
-                    _tracer.Debug($"KafkaAudit. Backpressure mode. Limit for messages in queue is {_maybeBackpressureQueuedMaxKb.Value} Kb. Actual queued {actualQueuedKb} Kb");
-                    Thread.Sleep(1000);
-                    continue;
-                }
+                _backpressureBehaviour.Invoke();
 
                 try
                 {
-                    _consumer.Poll(_pollTimeout);
+                    if (!_consumer.Consume(out var message, _pollTimeout))
+                    {
+                        continue;
+                    }
+
+                    _messageQueue.Enqueue(message);
+                    _tracer.Info($"KafkaAudit - fetch message {message.TopicPartitionOffset}");
                 }
                 catch (Exception ex)
                 {
                     _tracer.Warn(ex, "KafkaAudit - error in poll loop, retrying");
                 }
             }
-        }
-
-        private void OnMessage(object _, Message message)
-        {
-            _messageQueue.Enqueue(message);
-
-            _tracer.Info($"KafkaAudit - fetch message {message.TopicPartitionOffset}");
         }
 
         private void OnPartitionsAssigned(object _, List<TopicPartition> list)
@@ -196,11 +210,68 @@ namespace ValidationRules.Hosting.Common
         private void OnPartitionsRevoked(object _, List<TopicPartition> list)
         {
             _consumer.Unassign();
+            _messageQueue.Clear();
 
             _tracer.Info($"KafkaAudit - revoked partitions: {string.Join(", ", list)}");
         }
 
         // kafka docs: errors should be seen as informational rather than catastrophic
         private void OnError(object _, Error error) => _tracer.Warn($"KafkaAudit - error {error.Reason}");
+
+        private sealed class MaxQueuedKbBackpressureBehaviour
+        {
+            private readonly int _maxQueuedKbThreshold;
+            private readonly IEnumerable<TopicPartition> _targetPartitions;
+            private readonly Consumer _consumer;
+            private readonly CompactedKafkaMessageQueue _messageQueue;
+            private readonly ITracer _tracer;
+
+            private bool _isBackpressureMode;
+
+            public MaxQueuedKbBackpressureBehaviour(
+                int maxQueuedKbThreshold,
+                IEnumerable<TopicPartition> targetPartitions,
+                Consumer consumer,
+                CompactedKafkaMessageQueue messageQueue,
+                ITracer tracer)
+            {
+                _maxQueuedKbThreshold = maxQueuedKbThreshold;
+                _targetPartitions = targetPartitions;
+                _consumer = consumer;
+                _messageQueue = messageQueue;
+                _tracer = tracer;
+            }
+
+            public void Execute()
+            {
+                var actualQueuedKb = _messageQueue.ActualQueuedKb;
+                if (_maxQueuedKbThreshold <= actualQueuedKb)
+                {
+                    if (_isBackpressureMode)
+                    {
+                        return;
+                    }
+
+                    _tracer.Debug($"KafkaAudit. Backpressure mode. Limit for messages in queue is {_maxQueuedKbThreshold} Kb. Actual queued {actualQueuedKb} Kb");
+
+                    var pausedPartitions = _consumer.Pause(_targetPartitions);
+                    foreach (var partition in pausedPartitions)
+                    {
+                        _tracer.Debug($"{partition.TopicPartition} pause attempt finished with result {partition.Error}");
+                    }
+                    _isBackpressureMode = true;
+                }
+                else if (_isBackpressureMode)
+                {
+                    var resumedPartitions = _consumer.Resume(_targetPartitions);
+                    foreach (var partition in resumedPartitions)
+                    {
+                        _tracer.Debug($"{partition.TopicPartition} resume attempt finished with result {partition.Error}");
+                    }
+
+                    _isBackpressureMode = false;
+                }
+            }
+        }
     }
 }
